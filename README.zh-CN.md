@@ -60,13 +60,13 @@
     <th colspan="2">架构图</th>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/tidepool-fig1.png" alt="Tidepool 架构图：上方控制面有 Request Router、Tide Scheduler 和 KV Directory，下方数据面的 prefill 和 decode 实例通过 Transfer Engine 把 KV 块写入共享 KV 缓存池">
+    <td valign="top">
+      <img src="docs/gallery/tidepool-fig1.png" width="400" alt="Tidepool 架构图：上方控制面有 Request Router、Tide Scheduler 和 KV Directory，下方数据面的 prefill 和 decode 实例通过 Transfer Engine 把 KV 块写入共享 KV 缓存池">
       <br><sub><a href="docs/gallery/tidepool-fig1.svg">SVG</a> / <a href="docs/gallery/tidepool-fig1.pdf">PDF</a> /
       <a href="docs/gallery/tidepool-fig1.pptx">PPTX</a></sub>
     </td>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/brickyard-fig1.png" alt="Brickyard 架构图：上方是 CI 服务带，下方的构建池里有 Graph Merger、三阶段的 Build Planner 和带沙箱执行器的 runner；作业 J1 到 J3 用颜色追踪">
+    <td valign="top">
+      <img src="docs/gallery/brickyard-fig1.png" width="400" alt="Brickyard 架构图：上方是 CI 服务带，下方的构建池里有 Graph Merger、三阶段的 Build Planner 和带沙箱执行器的 runner；作业 J1 到 J3 用颜色追踪">
       <br><sub><a href="docs/gallery/brickyard-fig1.svg">SVG</a> / <a href="docs/gallery/brickyard-fig1.pdf">PDF</a> /
       <a href="docs/gallery/brickyard-fig1.pptx">PPTX</a></sub>
     </td>
@@ -75,13 +75,13 @@
     <th colspan="2">机制图</th>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/tidepool-fig4.png" alt="Tidepool 机制图：上下两个甘特图，对比 prefill 之后再传输（decode 在 84 ms 开始）和逐层流式传输（decode 在 57 ms 开始）；空闲时间画成斜线条，关键路径上的传输有橙色边框">
+    <td valign="top">
+      <img src="docs/gallery/tidepool-fig4.png" width="400" alt="Tidepool 机制图：上下两个甘特图，对比 prefill 之后再传输（decode 在 84 ms 开始）和逐层流式传输（decode 在 57 ms 开始）；空闲时间画成斜线条，关键路径上的传输有橙色边框">
       <br><sub><a href="docs/gallery/tidepool-fig4.svg">SVG</a> / <a href="docs/gallery/tidepool-fig4.pdf">PDF</a> /
       <a href="docs/gallery/tidepool-fig4.pptx">PPTX</a></sub>
     </td>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/quota-admission.png" alt="配额准入：左边是服务通过配额客户端向配额管理器预留配额、获准、查询数据库、退还配额的过程，并摊开配额管理器里每个租户的 bucket 记录；右边是配额管理器的三种放置方式 CentralQ、SidecarQ 和 EdgeQ">
+    <td valign="top">
+      <img src="docs/gallery/quota-admission.png" width="400" alt="配额准入：左边是服务通过配额客户端向配额管理器预留配额、获准、查询数据库、退还配额的过程，并摊开配额管理器里每个租户的 bucket 记录；右边是配额管理器的三种放置方式 CentralQ、SidecarQ 和 EdgeQ">
       <br><sub><a href="docs/gallery/quota-admission.svg">SVG</a> / <a href="docs/gallery/quota-admission.pdf">PDF</a> /
       <a href="docs/gallery/quota-admission.pptx">PPTX</a></sub>
     </td>
@@ -168,11 +168,11 @@ playwright install chromium
 
 <table>
   <tr>
-    <td width="50%" valign="top"><img src="docs/pptx/pptx-named-groups.jpg" alt="PowerPoint 选择窗格，列出按图中元素 id 命名的组"><br><sub>每个元素都是一个组合，以它在 spec 中的 id 命名。</sub></td>
-    <td width="50%" valign="top"><img src="docs/pptx/pptx-native-shape.jpg" alt="PowerPoint 设置形状格式面板，显示选中方框的纯色填充和线条"><br><sub>方框是原生形状，填充和线条都能改。</sub></td>
+    <td valign="top"><img src="docs/pptx/pptx-named-groups.jpg" width="400" alt="PowerPoint 选择窗格，列出按图中元素 id 命名的组"><br><sub>每个元素都是一个组合，以它在 spec 中的 id 命名。</sub></td>
+    <td valign="top"><img src="docs/pptx/pptx-native-shape.jpg" width="400" alt="PowerPoint 设置形状格式面板，显示选中方框的纯色填充和线条"><br><sub>方框是原生形状，填充和线条都能改。</sub></td>
   </tr>
   <tr>
-    <td colspan="2" valign="top"><img src="docs/pptx/pptx-live-text.jpg" alt="在 PowerPoint 里编辑标签文字，功能区显示字体 Helvetica Neue"><br><sub>标签是可编辑的文本，字体与图中一致。</sub></td>
+    <td colspan="2" valign="top"><img src="docs/pptx/pptx-live-text.jpg" width="826" alt="在 PowerPoint 里编辑标签文字，功能区显示字体 Helvetica Neue"><br><sub>标签是可编辑的文本，字体与图中一致。</sub></td>
   </tr>
 </table>
 

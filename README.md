@@ -62,13 +62,13 @@ Chinese text and formulas are supported too. The systems, components and numbers
     <th colspan="2">Architecture figures</th>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/tidepool-fig1.png" alt="Tidepool architecture: a control plane with Request Router, Tide Scheduler and KV Directory above a data plane of prefill and decode instances whose Transfer Engines stream KV blocks into a pooled KV cache">
+    <td valign="top">
+      <img src="docs/gallery/tidepool-fig1.png" width="400" alt="Tidepool architecture: a control plane with Request Router, Tide Scheduler and KV Directory above a data plane of prefill and decode instances whose Transfer Engines stream KV blocks into a pooled KV cache">
       <br><sub><a href="docs/gallery/tidepool-fig1.svg">SVG</a> / <a href="docs/gallery/tidepool-fig1.pdf">PDF</a> /
       <a href="docs/gallery/tidepool-fig1.pptx">PPTX</a></sub>
     </td>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/brickyard-fig1.png" alt="Brickyard architecture: a CI service band above a build pool with a Graph Merger, a three-stage Build Planner and runners with sandbox executors; jobs J1 to J3 are tracked by colour">
+    <td valign="top">
+      <img src="docs/gallery/brickyard-fig1.png" width="400" alt="Brickyard architecture: a CI service band above a build pool with a Graph Merger, a three-stage Build Planner and runners with sandbox executors; jobs J1 to J3 are tracked by colour">
       <br><sub><a href="docs/gallery/brickyard-fig1.svg">SVG</a> / <a href="docs/gallery/brickyard-fig1.pdf">PDF</a> /
       <a href="docs/gallery/brickyard-fig1.pptx">PPTX</a></sub>
     </td>
@@ -77,13 +77,13 @@ Chinese text and formulas are supported too. The systems, components and numbers
     <th colspan="2">Mechanism figures</th>
   </tr>
   <tr>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/tidepool-fig4.png" alt="Tidepool mechanism: two Gantt panels comparing transfer after prefill, where decode starts at 84 ms, with layer-wise streaming, where decode starts at 57 ms; idle time is hatched and the transfers on the critical path are outlined">
+    <td valign="top">
+      <img src="docs/gallery/tidepool-fig4.png" width="400" alt="Tidepool mechanism: two Gantt panels comparing transfer after prefill, where decode starts at 84 ms, with layer-wise streaming, where decode starts at 57 ms; idle time is hatched and the transfers on the critical path are outlined">
       <br><sub><a href="docs/gallery/tidepool-fig4.svg">SVG</a> / <a href="docs/gallery/tidepool-fig4.pdf">PDF</a> /
       <a href="docs/gallery/tidepool-fig4.pptx">PPTX</a></sub>
     </td>
-    <td width="50%" valign="top">
-      <img src="docs/gallery/quota-admission.png" alt="Quota admission: on the left a service and its quota client reserve quota from the quota manager, are admitted, query the database and refund, with the quota manager's per-tenant bucket record opened up; on the right three placements of the quota manager, CentralQ, SidecarQ and EdgeQ">
+    <td valign="top">
+      <img src="docs/gallery/quota-admission.png" width="400" alt="Quota admission: on the left a service and its quota client reserve quota from the quota manager, are admitted, query the database and refund, with the quota manager's per-tenant bucket record opened up; on the right three placements of the quota manager, CentralQ, SidecarQ and EdgeQ">
       <br><sub><a href="docs/gallery/quota-admission.svg">SVG</a> / <a href="docs/gallery/quota-admission.pdf">PDF</a> /
       <a href="docs/gallery/quota-admission.pptx">PPTX</a></sub>
     </td>
@@ -178,11 +178,11 @@ same coordinates as the SVG.
 
 <table>
   <tr>
-    <td width="50%" valign="top"><img src="docs/pptx/pptx-named-groups.jpg" alt="PowerPoint selection pane listing groups named after the figure's element ids"><br><sub>Every element is a group named after its id in the spec.</sub></td>
-    <td width="50%" valign="top"><img src="docs/pptx/pptx-native-shape.jpg" alt="PowerPoint Format Shape pane for a selected box, showing its solid fill and line"><br><sub>Boxes are native shapes with their own fill and line.</sub></td>
+    <td valign="top"><img src="docs/pptx/pptx-named-groups.jpg" width="400" alt="PowerPoint selection pane listing groups named after the figure's element ids"><br><sub>Every element is a group named after its id in the spec.</sub></td>
+    <td valign="top"><img src="docs/pptx/pptx-native-shape.jpg" width="400" alt="PowerPoint Format Shape pane for a selected box, showing its solid fill and line"><br><sub>Boxes are native shapes with their own fill and line.</sub></td>
   </tr>
   <tr>
-    <td colspan="2" valign="top"><img src="docs/pptx/pptx-live-text.jpg" alt="Editing the text of a label in PowerPoint, with the Helvetica Neue font shown in the ribbon"><br><sub>Labels are live text in the figure's own font.</sub></td>
+    <td colspan="2" valign="top"><img src="docs/pptx/pptx-live-text.jpg" width="826" alt="Editing the text of a label in PowerPoint, with the Helvetica Neue font shown in the ribbon"><br><sub>Labels are live text in the figure's own font.</sub></td>
   </tr>
 </table>
 
