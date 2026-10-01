@@ -1,0 +1,162 @@
+{
+  "paper_id": "nsdi23-009",
+  "fig": "1",
+  "system": {
+    "name": "Shepherd",
+    "one_liner": "a DNN model serving system that makes latency-SLO-aware model provisioning and request scheduling decisions across a GPU cluster",
+    "domain": [
+      "ml-systems",
+      "cloud",
+      "scheduling"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Request streams",
+        "role": "incoming inference requests for a model and latency SLO, with arbitrary bursty arrival patterns",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Model Serving System",
+        "role": "generic serving system that schedules models and requests onto GPU workers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Model provision",
+        "role": "decides which models are loaded on which and how many GPUs",
+        "container": "Model Serving System",
+        "novel": false
+      },
+      {
+        "name": "Request Serving",
+        "role": "decides how incoming requests are routed and batched for serving",
+        "container": "Model Serving System",
+        "novel": false
+      },
+      {
+        "name": "GPU Cluster",
+        "role": "the pool of GPU workers that run the served models",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Worker 1",
+        "role": "one GPU worker holding a set of models in GPU memory",
+        "container": "GPU Cluster",
+        "novel": false
+      },
+      {
+        "name": "Worker n",
+        "role": "another GPU worker holding a different set of models in GPU memory",
+        "container": "GPU Cluster",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Request streams",
+        "to": "Model Serving System",
+        "what": "inference requests from each stream",
+        "step": null
+      },
+      {
+        "from": "Model Serving System",
+        "to": "Worker 1",
+        "what": "provisioning and serving decisions",
+        "step": null
+      },
+      {
+        "from": "Model Serving System",
+        "to": "Worker n",
+        "what": "provisioning and serving decisions",
+        "step": null
+      }
+    ],
+    "key_idea": "Inference request streams arrive at a model serving system that makes model-provisioning and request-serving decisions to schedule DNN models across workers in a GPU cluster.",
+    "reading_order": "Left to right: Request streams feed the Model Serving System's two decision boxes, which schedule models onto Workers in the GPU Cluster."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.98,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9d9",
+        "used_for": "Worker header bars (Worker 1, Worker n)"
+      },
+      {
+        "hex": "#ffb3ef",
+        "used_for": "model M1 shape icon on Worker 1"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "model M2 shape icon on Worker 1"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "pale blue model shape icon on Worker n"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale green triangle model icon on Worker n"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.95pt solid strokes on boxes; dashed boxes frame each request-stream chart",
+    "font": "Times New Roman serif, 4-7pt, bold for section titles (Request streams, Model Serving System, GPU Cluster) and box labels",
+    "corners": "mixed",
+    "arrows": "orthogonal arrows with triangular heads; the link from the serving system to the GPU cluster forks into a bidirectional double-headed connector",
+    "icons": "vector: small rate-vs-time charts for each request stream, and simple shapes (rectangle, hexagon, star, triangle) representing individual models in GPU memory"
+  },
+  "encoding": {
+    "color_means": "orange = Model provision, blue = Request Serving (the two scheduling decision modules); pink/yellow/blue/green shapes = distinct DNN models (M1-M4) resident in a worker's GPU memory; gray header = worker identity bar",
+    "line_style_means": "dashed boxes group each request stream's arrival-rate chart; solid arrows show request/decision flow between the three stages",
+    "emphasis": "distinct shapes and colors per model (M1...M4) visually convey that many different DNN models can be co-located in one worker's GPU memory, motivating the scheduling problem",
+    "reusable_patterns": [
+      "three-stage input-process-output pipeline (streams -> serving system -> GPU cluster)",
+      "small inset charts to characterize input workload shape"
+    ],
+    "weaknesses": [
+      "model shapes (star, triangle, hexagon) are not explained by any legend beyond the M1..M4 subscript labels",
+      "the bidirectional link to workers does not distinguish which direction carries which information"
+    ]
+  },
+  "tags": [
+    "model-serving",
+    "gpu-scheduling",
+    "dnn-inference",
+    "request-batching",
+    "cluster-scheduling",
+    "resource-provisioning"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "We focus on Deep Neural Network (DNN) model serving systems",
+      "the system makes two scheduling decisions: model provisioning decisions to determine which models should be loaded on which",
+      "Figure 1: High-level architecture of model serving system"
+    ]
+  },
+  "summary": "This figure gives the high-level, generic architecture of a DNN model serving system, used as background before the paper introduces its own system. Multiple request streams, each with its own bursty arrival-rate-over-time pattern, feed into a central Model Serving System. That system makes two kinds of scheduling decisions, shown as an orange 'Model provision' box and a blue 'Request Serving' box: which models to load on which GPUs, and how to route and batch incoming requests. A bidirectional link fans out to a GPU Cluster of workers (Worker 1 ... Worker n), each holding a different set of co-located models in GPU memory, drawn as distinct colored shapes (M1-M4). The figure motivates the joint provisioning-and-serving scheduling problem that the paper's system, Shepherd, is designed to solve.",
+  "summary_zh": "该图展示 DNN 模型服务系统的通用高层架构：多路请求流进入服务系统，系统做模型部署与请求调度两类决策，再分发到 GPU 集群中承载不同模型的各个 Worker 上执行。",
+  "confidence": "high",
+  "notes": "Figure 1 appears in the Background section as the generic architecture of DNN model serving systems in general, not Shepherd's own novel design (described later), so all components are marked non-novel.",
+  "venue": "NSDI23"
+}

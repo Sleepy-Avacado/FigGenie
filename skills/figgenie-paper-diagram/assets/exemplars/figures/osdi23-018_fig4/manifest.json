@@ -1,0 +1,47 @@
+{
+  "id": "osdi23-018_fig4",
+  "paper_id": "osdi23-018",
+  "fig": "4",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 4: Conveyor Architecture.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.7,
+  "n_components": 13,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-018/osdi23-018_fig4_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-018/osdi23-018_fig4_p10_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "A textbook hub-spoke: Conveyor Core's shared database sits at the centre with circled steps 1-7 radiating out to Release Creator, Run Scheduler and Run Manager, plus two dashed pluggable-service groups as sub-spokes.",
+      "what_to_learn": "Number every arrow touching the hub in one continuous sequence (1-7) so a reader can replay one full request cycle through a database-centred hub, and group interchangeable plug-ins (Artifact Finders, Action Services) in a dashed box; this exemplar's own weakness is skipping a legend for its dashed-vs-solid convention."
+    },
+    {
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "High-confidence, 13-component exemplar with a numbered 7-step path through the Conveyor Core hub, flanked by two dashed pill-columns of interchangeable plug-ins, Artifact Finders on one side and Action Services on the other.",
+      "what_to_learn": "Draw each side column as a dashed group box containing named interchangeable plug-ins (finders, action services) rather than one generic label, and number the full request path across both wings so a reader can follow create-then-run without a separate legend; add a legend anyway once box types multiply beyond dashed-versus-solid."
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "paper_id": "nsdi26-087",
+  "fig": "3",
+  "system": {
+    "name": "Phantora",
+    "one_liner": "a simulation framework that reuses unmodified ML framework code to estimate distributed training performance",
+    "domain": [
+      "ml-systems",
+      "simulation"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Training Script",
+        "role": "unmodified user training code executed inside each container",
+        "container": "Containers",
+        "novel": false
+      },
+      {
+        "name": "Framework",
+        "role": "unmodified ML framework layer",
+        "container": "Containers",
+        "novel": false
+      },
+      {
+        "name": "PyTorch",
+        "role": "minimally modified to interact with Phantora's simulator",
+        "container": "Containers",
+        "novel": false
+      },
+      {
+        "name": "Phantora Tracer",
+        "role": "instruments PyTorch via runtime patching to intercept computation/communication calls",
+        "container": "PyTorch",
+        "novel": true
+      },
+      {
+        "name": "Phantora NCCL",
+        "role": "constructed replacement that redirects communication calls into the simulator",
+        "container": "Containers",
+        "novel": true
+      },
+      {
+        "name": "Phantora CUDA Runtime",
+        "role": "constructed replacement that redirects CUDA calls into the simulator",
+        "container": "Containers",
+        "novel": true
+      },
+      {
+        "name": "Event Queue",
+        "role": "central discrete-event queue receiving computation/communication events and timestamp sync signals",
+        "container": "Phantora Simulator",
+        "novel": true
+      },
+      {
+        "name": "Computation Simulator",
+        "role": "profiles a computation kernel's execution time using a single real GPU",
+        "container": "Phantora Simulator",
+        "novel": true
+      },
+      {
+        "name": "Network Simulator",
+        "role": "event-driven flow-level network simulator estimating communication completion time",
+        "container": "Phantora Simulator",
+        "novel": true
+      },
+      {
+        "name": "Performance Estimation Cache",
+        "role": "caches profiled (kernel, tensor-shape) performance results",
+        "container": "Phantora Simulator",
+        "novel": true
+      },
+      {
+        "name": "PyTorch",
+        "role": "real PyTorch instance on the single profiling GPU used to time new kernels",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Containers",
+        "to": "Event Queue",
+        "what": "computation and communication events with timestamp synchronization",
+        "step": null
+      },
+      {
+        "from": "Event Queue",
+        "to": "Computation Simulator",
+        "what": "computation events",
+        "step": null
+      },
+      {
+        "from": "Event Queue",
+        "to": "Network Simulator",
+        "what": "communication events",
+        "step": null
+      },
+      {
+        "from": "Computation Simulator",
+        "to": "Performance Estimation Cache",
+        "what": "Phantora control flow (cache lookup/store)",
+        "step": null
+      },
+      {
+        "from": "Performance Estimation Cache",
+        "to": "PyTorch (1 GPU)",
+        "what": "Phantora control flow to profile a new (kernel, tensor-shape) combination",
+        "step": null
+      }
+    ],
+    "key_idea": "Each container runs an almost-unmodified ML framework stack whose computation and communication calls are redirected via runtime patching into a separate Phantora Simulator, which profiles kernels on a single real GPU and simulates the network, so applications cannot tell they are running on Phantora.",
+    "reading_order": "left stack of Container cards, then right into the Phantora Simulator box via the color-coded event arrows, ending at the external PyTorch/1 GPU box"
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.05,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c6e0b5",
+        "used_for": "unmodified components (Training Script, Framework) in Containers"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "minimally modified PyTorch box (dark green)"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "Phantora Simulator components (Event Queue, Computation/Network Simulator, Performance Estimation Cache)"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "computation-event arrow color and legend swatch"
+      },
+      {
+        "hex": "#ff9933",
+        "used_for": "timestamp-synchronization arrow color and legend swatch"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "external PyTorch (1 GPU) box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black, ~0.33pt",
+    "font": "Calibri/Calibri-Bold sans, 5.5-6.5pt",
+    "corners": "square",
+    "arrows": "double-headed arrows color-coded per legend (orange = timestamp sync, green = communication events, black = Phantora control flow, blue = computation events)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green shades mark code reused unmodified or minimally modified from the ML framework; blue marks new components built by Phantora",
+    "line_style_means": "arrow color encodes event type: orange timestamp sync, green communication events, blue computation events, black Phantora control flow",
+    "emphasis": "the blue Phantora Simulator box contrasts with the green Container stack to show how little of the real framework needs modification",
+    "reusable_patterns": [
+      "stacked container cards feeding a separate simulator box via color-coded event arrows"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "simulation",
+    "distributed training",
+    "ML systems",
+    "code reuse",
+    "event-driven simulation"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.5)"
+    ],
+    "evidence": [
+      "Figure 3 shows Phantora's architecture.",
+      "Components in light green are unmodified, components in green are minimally modiﬁed",
+      "components in blue are constructed by Phantora."
+    ]
+  },
+  "summary": "Figure 3 shows Phantora's architecture for simulating distributed ML training performance while reusing real framework code. On the left, each Container runs an unmodified Training Script and Framework plus a minimally-modified PyTorch instrumented with a Phantora Tracer, alongside constructed Phantora NCCL and Phantora CUDA Runtime replacements. These emit computation and communication events (blue/green arrows) plus timestamp-synchronization signals (orange arrows) to a central Event Queue in the Phantora Simulator. The Event Queue dispatches computation events to a Computation Simulator, which profiles new (kernel, tensor-shape) combinations on a single real GPU via a Performance Estimation Cache, and communication events to an event-driven Network Simulator. Because only PyTorch's internals are patched at the Python runtime-patching level, applications cannot tell they are running on Phantora rather than a physical GPU cluster, letting Phantora reuse most of the existing ML software stack unmodified.",
+  "summary_zh": "图3展示Phantora架构：容器内未修改的训练脚本、框架与轻度修改的PyTorch通过Tracer把计算和通信事件送入模拟器的事件队列，分别交给计算模拟器（用单GPU分析核函数并缓存结果）和网络模拟器处理。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

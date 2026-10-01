@@ -1,0 +1,230 @@
+{
+  "paper_id": "asplos25-053",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "GPUlog",
+    "one_liner": "a GPU-based Datalog engine backend that implements relational algebra kernels over a range-indexed hash data structure (HISA)",
+    "domain": [
+      "databases",
+      "GPU-computing",
+      "Datalog"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how a GPU thread strides through the outer relation Foo and probes a hash-indexed sorted array built over the inner relation Bar to produce per-thread join results",
+    "base": "table",
+    "elements": [
+      {
+        "name": "Outer Relation",
+        "kind": "box",
+        "role": "the 3-attribute relation Foo, accessed by GPU threads in strided column groups",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T0",
+        "kind": "label",
+        "role": "first thread's stride/column group over the outer relation",
+        "container": "Outer Relation",
+        "highlighted": false
+      },
+      {
+        "name": "Tn",
+        "kind": "label",
+        "role": "last thread's stride/column group over the outer relation",
+        "container": "Outer Relation",
+        "highlighted": false
+      },
+      {
+        "name": "Join",
+        "kind": "label",
+        "role": "the join operator combining Outer and Inner relations on their shared first two columns",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Hash Table",
+        "kind": "box",
+        "role": "hashes each join-key tuple to a value pointing into the sorted index array",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "K: hash(1,2)",
+        "kind": "cell",
+        "role": "example hash-table key computed from a join-key tuple",
+        "container": "Hash Table",
+        "highlighted": false
+      },
+      {
+        "name": "V: 0",
+        "kind": "cell",
+        "role": "value paired with a hash key, an offset into the sorted index array",
+        "container": "Hash Table",
+        "highlighted": false
+      },
+      {
+        "name": "Inner Relation",
+        "kind": "box",
+        "role": "the 3-attribute relation Bar, organized as a hash-indexed sorted array (HISA)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Sorted Index Array",
+        "kind": "row",
+        "role": "array of tuple positions sorted by join key, probed via the hash table's value",
+        "container": "Inner Relation",
+        "highlighted": false
+      },
+      {
+        "name": "Data Array",
+        "kind": "row",
+        "role": "the actual Bar tuple data referenced by the sorted index array",
+        "container": "Inner Relation",
+        "highlighted": false
+      },
+      {
+        "name": "Join Results",
+        "kind": "box",
+        "role": "per-stride output table produced by matching outer tuples to probed inner tuples",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Outer Relation",
+        "to": "Join",
+        "what": "each thread's strided outer tuple enters the join operator",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Join",
+        "to": "Hash Table",
+        "what": "the outer tuple's join-key columns are hashed to probe a matching entry",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Hash Table",
+        "to": "Sorted Index Array",
+        "what": "the hash table's value is an offset range into the sorted index array",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "Sorted Index Array",
+        "to": "Data Array",
+        "what": "sorted index entries point to matching tuples' positions in the data array",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "Data Array",
+        "to": "Join Results",
+        "what": "matched inner tuples are combined with the outer tuple to produce that thread's join result rows",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "concrete 3-attribute tuples for Outer relation Foo and Inner relation Bar, worked hash key/value pairs (e.g. K: hash(1,2), V: 0), and the resulting per-stride Join Results tables (T0, ..., Tn)",
+      "linked_by": "colour (red values, green positions, purple keys, olive stored values) and matching column position across Outer Relation, Hash Table probes, and Join Results",
+      "result_cells": "the small Join Results tables on the right, one per thread stride"
+    },
+    "key_idea": "GPUlog parallelizes a join by having each GPU thread stride through the outer relation and probe a shared hash-indexed sorted array (HISA) built from the inner relation, so many threads can look up matches concurrently instead of scanning.",
+    "reading_order": "top-left Outer Relation (columns T0..Tn), down through the Join operator into the Hash Table (key/value examples), continuing to the Inner Relation's Sorted Index Array and Data Array, then across to the per-thread Join Results tables on the right"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.55,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red tuple attribute values throughout Outer/Inner relations and Join Results"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "dark green array index/position numbers"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple hash-table key expressions (K: hash(...))"
+      },
+      {
+        "hex": "#7f6000",
+        "used_for": "dark olive hash-table stored values (V: ...)"
+      }
+    ],
+    "background": "white",
+    "fill": "none",
+    "stroke": "thin (~0.36pt) black table-cell borders; dashed rounded rectangles grouping the four logical regions",
+    "corners": "mixed",
+    "arrows": "many thin black arrows fanning out from Outer Relation columns down to Hash Table probes",
+    "font": "Calibri / Cambria Math sans-serif, 4-9pt, bold headers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red = raw tuple attribute values; green = array index/position numbers; purple = hash-table key expressions; olive/brown = hash-table stored values",
+    "line_style_means": "dashed rounded boxes group the four logical regions (Outer Relation, Hash Table, Inner Relation, Join Results); solid thin arrows fan out from outer-relation columns to hash-table probes",
+    "state_means": "not applicable; a single static frame with no before/after state",
+    "marker_means": "no numbered step markers; T0..Tn column labels identify which GPU thread's stride a group of numbers belongs to",
+    "emphasis": "the fan of arrows from the Outer Relation into the Hash Table visually emphasizes that many threads probe the same shared hash table concurrently",
+    "reusable_patterns": [
+      "a worked numeric join example split into dashed-bordered regions (outer relation, hash index, inner relation, results) connected by many-to-one probing arrows"
+    ],
+    "weaknesses": [
+      "extremely dense small (4-9pt) numerals with only colour to group them make the figure hard to read without zooming in",
+      "no explicit legend defines what the red/green/purple/olive numbers mean, so the colour coding must be inferred from context"
+    ]
+  },
+  "tags": [
+    "Datalog",
+    "GPU-databases",
+    "hash-join",
+    "HISA",
+    "relational-algebra",
+    "GPUlog"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 GPUlog: GPU-powered datalog engine"
+    ],
+    "evidence": [
+      "This join operation involves two relations, each with three attributes, sharing the first two columns as join columns",
+      "Each GPU thread concurrently retrieves a tuple within a stride",
+      "The range queries are facilitated by using the hash table and the sorted index array"
+    ]
+  },
+  "summary": "This figure works through GPUlog's GPU-parallel hash join between two 3-attribute relations, Foo (outer) and Bar (inner), that share their first two columns as join keys. The Outer Relation is divided into strides (columns T0 through Tn), one tuple per GPU thread per stride, so many threads retrieve outer tuples concurrently. Each thread's tuple feeds the Join operator, which hashes the shared join-key columns to probe a Hash Table (worked examples like K: hash(1,2), V: 0); the resulting value is an offset into the Inner Relation's Sorted Index Array, itself built over a Data Array of Bar's tuples, together forming the hash-indexed sorted array (HISA). Matching inner tuples found through this probe are combined with the outer tuple to produce that thread's rows in the per-stride Join Results tables shown on the right. Colour-coded numerals (red values, green positions, purple keys, olive stored values) let the reader trace one concrete tuple's path from the outer relation through the hash index to its joined result.",
+  "summary_zh": "该图演示GPUlog在GPU上并行执行哈希连接的过程：外关系Foo按线程分stride并发取元组，经Join操作对共享的前两列做哈希，探查Hash Table得到偏移，定位到内关系Bar的Sorted Index Array和Data Array（即HISA结构），匹配元组与外元组组合，产生各线程的Join Results表。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

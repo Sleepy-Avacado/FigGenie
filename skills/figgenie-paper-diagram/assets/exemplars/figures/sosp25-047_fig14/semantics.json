@@ -1,0 +1,257 @@
+{
+  "paper_id": "sosp25-047",
+  "fig": "14",
+  "kind": "mechanism",
+  "system": {
+    "name": "Tempo",
+    "one_liner": "a deep learning system that compiles a declarative, recurrent-tensor program into a whole-program-optimized schedule via a symbolic dependence graph",
+    "domain": [
+      "deep-learning-compilers",
+      "polyhedral-scheduling",
+      "tensor-programs"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how Tempo turns a logical-time dependency graph into ILP constraints, solves for a schedule, and scans it into an AST",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "x",
+        "kind": "row",
+        "role": "the input tensor's nodes, one per logical timestep t=0..7",
+        "container": "Domain (Logical Time)",
+        "highlighted": false
+      },
+      {
+        "name": "y",
+        "kind": "row",
+        "role": "the output tensor's nodes, each depending on a window of x (t to min(t+3,T))",
+        "container": "Domain (Logical Time)",
+        "highlighted": true
+      },
+      {
+        "name": "Domain",
+        "kind": "label",
+        "role": "constraint bounding x[t] and y[t] to 0<=t<T=8",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Validity",
+        "kind": "label",
+        "role": "constraint giving the dependency range x[t:min(t+3,T)] -> y[t]",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Proximity",
+        "kind": "label",
+        "role": "objective term x[min(t+3,T)] -> y[t] guiding the scheduler toward temporal locality",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "θ",
+        "kind": "label",
+        "role": "the schedule function solved by the ILP, shown skewing nodes from Domain into Schedule",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "for c0 in 0...10",
+        "kind": "node",
+        "role": "AST root loop scanning every execution-time step, marked as 'happens-before' sequential",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "sequence",
+        "kind": "node",
+        "role": "AST node enforcing the happens-before order of the loop body",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "if c0<=7",
+        "kind": "node",
+        "role": "AST branch guarding when x is executed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "if c0>=3",
+        "kind": "node",
+        "role": "AST branch guarding when y is executed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "exec x[c0]",
+        "kind": "node",
+        "role": "AST leaf executing x at the current loop index",
+        "container": "if c0<=7",
+        "highlighted": false
+      },
+      {
+        "name": "exec y[c0-3]",
+        "kind": "node",
+        "role": "AST leaf executing y, reading the shifted index c0-3",
+        "container": "if c0>=3",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "x",
+        "to": "y",
+        "what": "y[t] depends on the window x[t:min(t+3,T)]",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Domain (Logical Time)",
+        "to": "Domain",
+        "what": "the SDG's domain/validity/proximity are read off directly as polyhedral constraints",
+        "kind": "mapping",
+        "step": "1"
+      },
+      {
+        "from": "Domain",
+        "to": "θ",
+        "what": "solving the ILP over these constraints yields a schedule function theta",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "θ",
+        "to": "Schedule (Execution Time)",
+        "what": "applying theta skews each node from its logical-time position to an execution-time position, delaying y by 3 steps",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "Schedule (Execution Time)",
+        "to": "for c0 in 0...10",
+        "what": "scanning the schedule produces the imperative AST's loop and branch structure",
+        "kind": "mapping",
+        "step": "4"
+      }
+    ],
+    "panels": [
+      {
+        "label": "Domain (Logical Time)",
+        "axis": "time",
+        "differs": "template/first frame: x and y nodes positioned by logical time t=0..7 (T-1=7), with dependency arrows still in their original, unscheduled order",
+        "verdict": null
+      },
+      {
+        "label": "Schedule (Execution Time)",
+        "axis": "time",
+        "differs": "the same x/y nodes repositioned by the solved schedule function theta into execution-time slots 0..9, delaying y's execution by 3 steps relative to x",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Tempo turns a symbolic dependency graph's domain and validity/proximity constraints into an integer linear program, solves it for a schedule function theta that reorders nodes from logical to execution time, and scans that schedule into a branching imperative loop.",
+    "reading_order": "top-left Domain graph, right to the Constraints box (1), down to Solve ILP (2) and the theta-skewed Schedule graph (3), then right to the AST (4)"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.87,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cce5ff",
+        "used_for": "pale blue fill of every x node"
+      },
+      {
+        "hex": "#cdeb8b",
+        "used_for": "pale green fill of every y node"
+      },
+      {
+        "hex": "#7ea6e0",
+        "used_for": "deeper blue accent on the x label/lane"
+      },
+      {
+        "hex": "#97d077",
+        "used_for": "deeper green accent on the y label/lane"
+      },
+      {
+        "hex": "#ea4c43",
+        "used_for": "red highlighted dependency arrow singling out one example edge in both the Domain and Schedule graphs"
+      },
+      {
+        "hex": "#1a1a1a",
+        "used_for": "near-black fill of the many gray dependency arrows and AST tree text"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the Constraints box and AST node boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray arrows for ordinary dependencies; thin black lines for the AST tree and axis ticks",
+    "corners": "square",
+    "arrows": "many thin gray diagonal arrows linking x to y nodes, with one highlighted in red; bold black numbered pipeline arrows connecting the four diagrams",
+    "font": "monospace (Courier New) for the constraint formulas and AST code fragments; sans-serif (Arial) for labels and captions",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks x nodes/labels and green marks y nodes/labels throughout; red highlights one specific dependency edge so the reader can track how its shape changes from the Domain graph to the Schedule graph",
+    "line_style_means": "thin gray arrows are ordinary x-to-y dependencies; the same edge recoloured red in both graphs traces one concrete example dependency before and after scheduling",
+    "state_means": "the Domain (Logical Time) and Schedule (Execution Time) graphs are the same x/y node set before and after applying the solved schedule function theta, so node identity (colour, row) stays fixed while only horizontal position shifts",
+    "marker_means": "circled numbers 1-4 order the pipeline: turning the SDG into constraints, solving the ILP, obtaining the schedule (theta), and scanning it into an AST",
+    "emphasis": "the red-highlighted edge and the visible rightward skew of y's nodes between the Domain and Schedule graphs make the 3-step scheduling delay directly visible, not just stated in the constraint text",
+    "reusable_patterns": [
+      "a before/after node-link graph pair (skewed by a solved transform) flanked by the formal constraints that produced it and the code artifact it compiles to, tied together by a numbered pipeline"
+    ],
+    "weaknesses": [
+      "the theta label marking step 3 is small and sits between the two graphs without its own arrow, so its role as 'the solved schedule being applied' is easy to miss versus the numbered 1/2/4 steps"
+    ]
+  },
+  "tags": [
+    "polyhedral-scheduling",
+    "ILP",
+    "dataflow-graph",
+    "AST-generation",
+    "Tempo"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Scheduling SDGs with the Polyhedral Model"
+    ],
+    "evidence": [
+      "Fig. 14 shows the scheduling approach in Tempo",
+      "Tempo stores the resulting schedule function",
+      "We describe how Tempo scans the schedule to produce an imperative program AST"
+    ]
+  },
+  "summary": "Figure 14 shows how Tempo schedules the example y[t] = f(x[t:min(t+3,T)]) with T=8. The Domain (Logical Time) graph draws x and y as two rows of nodes indexed 0 to T-1=7, with gray dependency arrows (one highlighted red) linking each y[t] to its x window. Step 1 reads this SDG directly into Domain, Validity, and Proximity polyhedral constraints. Step 2 solves an ILP over those constraints (via the Pluto scheduler) to find a schedule function theta; applying it (3) skews the same x/y nodes into the Schedule (Execution Time) graph, delaying y's execution by 3 steps relative to x, shown by the same red edge now spanning further right. Step 4 scans this schedule into an imperative AST: a 'for c0 in 0...10' loop whose happens-before sequence branches into 'if c0<=7: exec x[c0]' and 'if c0>=3: exec y[c0-3]'.",
+  "summary_zh": "该图示Tempo为y[t]=f(x[t:min(t+3,T)])调度：①逻辑时间图读为约束；②求解ILP得调度函数θ；③据θ错位节点得执行时间图，y延迟3步；④扫描调度生成AST分支执行x[c0]/y[c0-3]。",
+  "confidence": "high",
+  "notes": "Added 'walkthrough' as a secondary group alongside the prior pass's 'evolution': the figure's four circled numbers (1-4) trace an explicit pipeline (SDG to constraints, ILP, schedule, AST scan) in addition to the Domain/Schedule before-after pair. Also corrected base from 'graph' to 'mixed', since the figure combines a node-link graph, a constraints text box, and an AST tree.",
+  "venue": "SOSP25"
+}

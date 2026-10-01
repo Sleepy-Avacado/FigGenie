@@ -1,0 +1,245 @@
+{
+  "paper_id": "osdi23-031",
+  "fig": "tex1",
+  "kind": "mechanism",
+  "system": {
+    "name": "NCC",
+    "one_liner": "a concurrency-control protocol for strictly serializable datastores that commits naturally-consistent concurrent transactions without unnecessary aborts or validation overhead",
+    "domain": [
+      "distributed transactions",
+      "concurrency control",
+      "databases"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "comparing dOCC, which falsely aborts a naturally-consistent transaction, against NCC, which commits both via timestamps and a safeguard check",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "CL1",
+        "kind": "lane",
+        "role": "client 1's lifeline, issuing tx1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "lane",
+        "role": "version timeline of key A, starting at version A0",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "lane",
+        "role": "version timeline of key B, starting at version B0",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CL2",
+        "kind": "lane",
+        "role": "client 2's lifeline, issuing tx2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "tx1",
+        "kind": "label",
+        "role": "client 1's transaction, reads A and writes B",
+        "container": "CL1",
+        "highlighted": false
+      },
+      {
+        "name": "tx2",
+        "kind": "label",
+        "role": "client 2's transaction, reads A and writes B",
+        "container": "CL2",
+        "highlighted": false
+      },
+      {
+        "name": "Exec",
+        "kind": "label",
+        "role": "execution phase of the protocol",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Validate",
+        "kind": "label",
+        "role": "validation phase, where dOCC checks for conflicts and can hold locks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Commit",
+        "kind": "label",
+        "role": "successful completion of tx1's protocol",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Abort",
+        "kind": "label",
+        "role": "tx2 is forced to abort after failing validation",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "lock icon",
+        "kind": "icon",
+        "role": "B is locked by tx1 during validation, then unlocked, blocking tx2's conflicting write",
+        "container": "B",
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "CL1",
+        "to": "A",
+        "what": "tx1 reads A (r1A)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "CL2",
+        "to": "A",
+        "what": "tx2 reads A (r2A)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "CL1",
+        "to": "B",
+        "what": "tx1 writes B (w1B), acquiring its lock",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "CL2",
+        "to": "B",
+        "what": "tx2 attempts to write B (w2B) but finds it locked",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "CL2",
+        "what": "the lock held on B blocks tx2's validation, leading to its abort",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) dOCC baseline",
+        "axis": "alternatives",
+        "differs": "tx1 (cyan) locks B during validation, so tx2's (orange) conflicting write finds B unavailable and tx2 is Aborted despite being naturally consistent",
+        "verdict": "tx2 falsely aborted"
+      },
+      {
+        "label": "(b) timestamp refinement examples",
+        "axis": "alternatives",
+        "differs": "a separate set of read/write transactions with different pre-assigned timestamps shows how each access refines a version's (t_w,t_r) pair",
+        "verdict": null
+      },
+      {
+        "label": "(c) NCC",
+        "axis": "alternatives",
+        "differs": "re-runs the same tx1(t=4)/tx2(t=8) from (a) under NCC: pre-assignment plus a safeguard check (SG) lets both Async Commit, with no lock or abort",
+        "verdict": "both transactions commit"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "each version's timestamp pair (t_w, t_r) and each transaction's pre-assigned timestamp, shown numerically at every lifeline crossing",
+      "linked_by": "colour",
+      "result_cells": "cyan values belong to tx1's lineage, orange to tx2's; each panel ends in a labelled outcome (Commit/Abort in (a), refined (t_w,t_r) pairs in (b), Async Commit in (c))"
+    },
+    "key_idea": "The same two naturally-consistent transactions that dOCC's locking validation falsely aborts under contention are both committed by NCC's timestamp pre-assignment, refinement, and safeguard check, with a middle panel showing how per-version timestamps get refined.",
+    "reading_order": "left to right along each lifeline in (a) watching tx2 hit the lock and abort; then (b)'s refinement examples; then (c) re-running (a)'s scenario to see both transactions succeed"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 1.62,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#00b0f0",
+        "used_for": "cyan: tx1/CL1's lifeline, labels, and version values throughout all three panels"
+      },
+      {
+        "hex": "#ff9300",
+        "used_for": "orange: tx2/CL2's lifeline, labels, and version values throughout all three panels"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of small annotation boxes (e.g. version-name boxes like {A0}, and the SG safeguard checkbox)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin grey lifeline arrows and crossing diagonals; black for the lock icon and SG/RTC callout boxes",
+    "corners": "mixed",
+    "arrows": "many thin crossing diagonal arrows between lifelines representing request/response messages, open arrowheads; a dashed cyan arrow in (b) tracking one version's timestamp update",
+    "font": "sans (HelveticaNeue/HelveticaNeue-Medium), 11-20pt, bold for key labels",
+    "icons": "a padlock icon (locked/unlocked) on B in (a); a small 'SG' safeguard checkbox and 'RTC' callout in (c)"
+  },
+  "encoding": {
+    "color_means": "cyan marks everything belonging to tx1's/CL1's lineage; orange marks everything belonging to tx2's/CL2's lineage, consistently across all three panels",
+    "line_style_means": "solid diagonal arrows carry request/response messages between lifelines; a dashed cyan arrow in (b) specifically tracks one version's timestamp being refined",
+    "state_means": "the outcome in each panel (Commit vs Abort in (a), Async Commit in (c)) is told apart by explicit text labels rather than colour or ghosting",
+    "marker_means": "a padlock icon marks a locked/unlocked key; 'SG' marks NCC's added safeguard check",
+    "emphasis": "re-using the identical tx1/tx2 cyan/orange colouring and values across (a) and (c) lets the reader directly see the same scenario succeed under NCC where it failed under dOCC",
+    "reusable_patterns": [
+      "swimlane timelines for two clients and the keys they touch, with per-client colour coding kept consistent across a 'before' and 'after' panel to highlight a protocol fix"
+    ],
+    "weaknesses": [
+      "panel (b) uses different transactions/timestamps from (a) and (c), so a reader must notice the scenario has changed before comparing it against the other two panels"
+    ]
+  },
+  "tags": [
+    "NCC",
+    "dOCC",
+    "timestamp-inversion",
+    "strict-serializability",
+    "concurrency-control",
+    "natural-consistency"
+  ],
+  "provenance": {
+    "sections": [
+      "§Protocol Basics",
+      "§Exploiting Natural Consistency"
+    ],
+    "evidence": [
+      "NCC can commit both transactions with timestamp pre-assignment, refinement, and the safeguard check (denoted by SG).",
+      "such contention windows lead to false aborts, where a transaction is aborted despite being consistent.",
+      "dOCC incurs unnecessary validation costs, and could be falsely aborted due to lock unavailability."
+    ]
+  },
+  "summary": "This three-panel figure from NCC's background section illustrates the timestamp-inversion pitfall and NCC's fix using swimlane timelines for CL1, key A, key B, and CL2. In (a), dOCC baseline, tx1 (cyan) and tx2 (orange) both read A and write B; tx1 locks B during validation, so tx2's conflicting write is blocked and tx2 is Aborted even though the two transactions are naturally consistent. Panel (b) is a separate set of examples showing how each read or write refines a version's (t_w, t_r) timestamp pair. In (c), NCC re-runs the exact same tx1/tx2 scenario from (a) but with pre-assigned timestamps, refinement, and a safeguard check (SG); both transactions now reach Async Commit, with no locking and no false abort.",
+  "summary_zh": "该图用CL1/A/B/CL2泳道时间线说明时间戳倒置问题及NCC的解法：(a)dOCC基线中tx1(蓝)在验证阶段锁住B，导致自然一致的tx2(橙)被错误Abort；(b)另举例说明每次读写如何修正版本的(t_w,t_r)时间戳对；(c)NCC用时间戳预分配、修正与安全检查(SG)重跑同一场景，两个事务均异步提交成功。",
+  "confidence": "high",
+  "notes": "Combined all three source SVGs (texfig1a_bg, texfig1b_bg_p2, texfig1c_bg_p3) to build style.palette, since the context file's given colour histogram covers all three files' fills/strokes together; grep against each file individually confirmed the same two colours (#00b0f0, #ff9300) recur in all three panels. Panel (b) illustrates a general timestamp-refinement rule with different transactions/values than (a)/(c)'s shared tx1/tx2 scenario; it is still listed as a comparison-axis panel since it is one of the figure's three lettered sub-figures, but its differing scenario is called out in its own 'differs' text rather than treated as a strict alternative outcome.",
+  "venue": "OSDI23"
+}

@@ -1,0 +1,171 @@
+{
+  "paper_id": "asplos26-080",
+  "fig": "5",
+  "system": {
+    "name": "TetriServe",
+    "one_liner": "a DiT serving system using step-level sequence parallelism and round-based scheduling to maximize SLO attainment",
+    "domain": [
+      "ml-systems",
+      "model-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Request Tracker",
+        "role": "records each request's resolution, state, and deadline, and receives request status updates from workers",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "applies a deadline-aware GPU allocation policy and packs requests into scheduling rounds",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Deadline-Aware GPU Allocation",
+        "role": "determines GPU allocation (step numbers per GPU) for each request for one scheduling round",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Round Request Packing",
+        "role": "jointly packs requests into the current scheduling round to minimize late completions",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Execution Engine",
+        "role": "runs the dispatched requests on GPU workers to compute diffusion steps",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU Worker-0",
+        "role": "one of 8 GPU workers executing diffusion steps for assigned requests",
+        "container": "Execution Engine",
+        "novel": false
+      },
+      {
+        "name": "Latent Manager",
+        "role": "manages intermediate latents (e.g., R1, R2) produced by GPU workers during diffusion",
+        "container": "Execution Engine",
+        "novel": true
+      },
+      {
+        "name": "R1",
+        "role": "intermediate latent state for Request 1 tracked by the Latent Manager",
+        "container": "Latent Manager",
+        "novel": true
+      },
+      {
+        "name": "R2",
+        "role": "intermediate latent state for Request 2 tracked by the Latent Manager",
+        "container": "Latent Manager",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Request Tracker",
+        "to": "Scheduler",
+        "what": "request resolution, state, deadline",
+        "step": 1
+      },
+      {
+        "from": "Scheduler",
+        "to": "Execution Engine",
+        "what": "submitted request steps (GPU allocation per request)",
+        "step": 2
+      },
+      {
+        "from": "Execution Engine",
+        "to": "Latent Manager",
+        "what": "intermediate diffusion latents",
+        "step": 3
+      },
+      {
+        "from": "Execution Engine",
+        "to": "Request Tracker",
+        "what": "request status update",
+        "step": 4
+      }
+    ],
+    "key_idea": "TetriServe centers on a round-based loop where the Request Tracker feeds deadline information to the Scheduler, which allocates GPUs at the step level and dispatches requests to the Execution Engine, whose workers update shared latents and report completion status back to the tracker.",
+    "reading_order": "Top-left Request Tracker with request table (R1, R2 with step counts), arrow 1 to Scheduler (top area with GPU allocation and packing sub-blocks), arrow 2 to Execution Engine's GPU workers (top-right), arrow 3 into Latent Manager, arrow 4 back down to Request Tracker."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a6caec",
+        "used_for": "light blue fill for Request 2 / GPU Worker allocation cells shown as blue"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "orange fill for Request 1's GPU allocation cells and GPU Worker-0 box"
+      },
+      {
+        "hex": "#f2aa84",
+        "used_for": "secondary orange fill accent for related allocation cells"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines, dark navy stroke on the Request Tracker table rows",
+    "font": "ArialMT / Arial-BoldMT sans, 4.5-10.5pt",
+    "corners": "mixed",
+    "arrows": "thin black orthogonal arrows with filled heads, annotated with circled step numbers 1-4",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange marks Request 1 and its 2-GPU allocation; blue marks Request 2 and its 1-GPU allocation, illustrating how the round-based scheduler assigns different GPU counts to different requests",
+    "line_style_means": null,
+    "emphasis": "circled step numbers 1-4 trace the request lifecycle around the diagram, and color-coded request rows (orange/blue) directly visualize the deadline-aware GPU allocation example from the text",
+    "reusable_patterns": [
+      "three-box control loop (tracker -> scheduler -> execution engine) with numbered lifecycle arrows",
+      "color-coded request table showing per-request step/GPU allocation over a timeline"
+    ],
+    "weaknesses": [
+      "dense small text in the request-tracker table and GPU worker list reduces legibility at small size",
+      "no explicit legend defining what the numbered cells in the R1/R2 rows represent beyond the caption text"
+    ]
+  },
+  "tags": [
+    "diffusion-model-serving",
+    "scheduling",
+    "SLO",
+    "sequence-parallelism",
+    "GPU-allocation",
+    "request-lifecycle"
+  ],
+  "provenance": {
+    "sections": [
+      "3 TetriServe Overview (p.5)"
+    ],
+    "evidence": [
+      "The Scheduler then places it into the next scheduling round",
+      "it selects Request 1 to run 20 steps on 2 GPUs (orange) and Request 2 to run 15 steps on 1 GPU (blue)",
+      "workers notify the request tracker to update dependent steps"
+    ]
+  },
+  "summary": "This figure shows TetriServe's overall architecture together with a concrete request lifecycle example. Three main components are drawn: the Request Tracker (top-left), which records each request's resolution, state and deadline in a colored table (Request 1 in orange running 20 steps on 2 GPUs, Request 2 in blue running 15 steps on 1 GPU); the Scheduler (top-middle), containing a deadline-aware GPU allocation policy and a round-based request-packing mechanism; and the Execution Engine (right), with 8 GPU workers computing diffusion steps and a Latent Manager tracking each request's intermediate latents (R1, R2). Four circled numbers trace the lifecycle: (1) the tracker informs the scheduler of incoming requests, (2) the scheduler submits request steps to the execution engine, (3) workers produce latents managed by the latent manager, and (4) workers report status back to the request tracker, closing the loop each round.",
+  "summary_zh": "该图展示TetriServe的整体架构与请求生命周期：请求跟踪器记录请求的分辨率、状态和截止时间（如橙色请求1用2个GPU跑20步，蓝色请求2用1个GPU跑15步）；调度器进行截止时间感知的GPU分配与请求打包；执行引擎中的GPU worker计算扩散步骤，由潜变量管理器管理中间结果，四个编号步骤展示了请求从提交到状态回传的完整闭环。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

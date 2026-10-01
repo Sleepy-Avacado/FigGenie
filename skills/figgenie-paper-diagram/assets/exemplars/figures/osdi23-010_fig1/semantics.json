@@ -1,0 +1,161 @@
+{
+  "paper_id": "osdi23-010",
+  "fig": "1",
+  "system": {
+    "name": "DuVisor",
+    "one_liner": "a delegated virtualization architecture that runs per-VM hypervisor processes in user mode via a hardware Delegated Virtualization Extension",
+    "domain": [
+      "virtualization",
+      "os-kernel",
+      "security"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "VM",
+        "role": "the guest virtual machine hosted by each hypervisor design",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Hypervisor",
+        "role": "monolithic hypervisor running entirely in kernel mode",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Helper",
+        "role": "user-mode helper process (or management VM) that hypervisor functions are offloaded to",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Driver",
+        "role": "kernel-mode driver retained in the host kernel after offloading functions to the Helper",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DuVisor",
+        "role": "per-VM hypervisor process running in user mode that handles the VM plane directly via DV-Ext",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "DV-driver",
+        "role": "tiny kernel-mode driver remaining after the VM plane is offloaded to DuVisor",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "VM",
+        "to": "Hypervisor",
+        "what": "interact (VM exits handled directly in kernel mode)",
+        "step": null
+      },
+      {
+        "from": "VM",
+        "to": "Driver",
+        "what": "interact (VM exits trapped to the host kernel)",
+        "step": null
+      },
+      {
+        "from": "Driver",
+        "to": "Helper",
+        "what": "offload (general hypervisor functions moved to user mode)",
+        "step": null
+      },
+      {
+        "from": "VM",
+        "to": "DuVisor",
+        "what": "interact (VM exits handled in user mode via DV-Ext)",
+        "step": null
+      },
+      {
+        "from": "DV-driver",
+        "to": "DuVisor",
+        "what": "offload (VM-plane functions delegated to the user-mode DuVisor process)",
+        "step": null
+      }
+    ],
+    "key_idea": "Mainstream hypervisors progressively moved functions from kernel mode toward user mode (a to c), but this paper's delegated virtualization (d) goes further by running the whole VM plane in a user-mode DuVisor process enabled by a new hardware extension.",
+    "reading_order": "Left to right across the four lettered panels (a) to (d), matching the historical progression named in the caption, with a legend at the top explaining arrow and fill meanings."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "letters",
+    "panels": 4,
+    "column": "double",
+    "aspect": 3.61,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#002eff",
+        "used_for": "blue dashed 'Interact' arrows between VM and hypervisor/driver components"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of general-function and VM-plane-function boxes (e.g. Hypervisor, Helper, Driver)"
+      },
+      {
+        "hex": "#ff9300",
+        "used_for": "orange dashed 'Offload' arrows and the hardware-extension hatch pattern"
+      }
+    ],
+    "background": "white",
+    "fill": "mixed",
+    "stroke": "thin black borders, dashed for offloaded/helper boxes, solid horizontal rules dividing U/K (and H/V) mode lanes",
+    "font": "mixed serif/italic (Times New Roman), 7-9pt, italic for panel captions",
+    "corners": "square",
+    "arrows": "dashed colored arrows (blue for Interact, orange for Offload) with small vector icons for hypervisor/driver/VM boxes",
+    "icons": "vector icons representing hypervisor, helper, driver and VM boxes as small tiled squares"
+  },
+  "encoding": {
+    "color_means": "blue = Interact, orange = Offload; gray fill = general/VM-plane function, black fill = hypervisor-plane function, hatched fill = hardware extension",
+    "line_style_means": "dashed arrows denote the Interact and Offload relationships named in the legend; horizontal rules separate privilege-mode lanes (U/K, and H/V in panels c-d)",
+    "emphasis": "the four panels are arranged left to right so the reader sees hypervisor functions migrate progressively out of kernel mode, culminating in DuVisor's fully user-mode VM plane",
+    "reusable_patterns": [
+      "small multiples comparing an architecture's evolution across labeled panels",
+      "swimlane rows encoding privilege/execution mode"
+    ],
+    "weaknesses": [
+      "very small text and icons at this figure size",
+      "legend swatches are visually similar (gray shades) and easy to confuse without zooming in"
+    ]
+  },
+  "tags": [
+    "virtualization",
+    "hypervisor",
+    "hardware-extension",
+    "user-mode",
+    "security-isolation",
+    "comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2-3)",
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "The architectural evolvement of mainstream hypervisors (a→b→c) that gradually demote hypervisor functionalities out of kernel mode",
+      "U and K represent user mode and kernel mode; H and V are hypervisor mode and virtualization mode",
+      "delegated virtualization ofﬂoads the VM plane...into per-VM hypervisors running in user mode, called DuVisor"
+    ]
+  },
+  "summary": "This figure compares four hypervisor architectures to motivate DuVisor, a delegated virtualization design. Panel (a) shows a monolithic hypervisor running entirely in kernel mode; panel (b) shows mainstream hypervisors offloading general functions to a user-mode Helper process or management VM while a Driver remains in the kernel; panel (c) shows hardware virtualization extensions (like RISC-V H-Ext) adding H/V modes alongside U/K; and panel (d) shows this paper's delegated virtualization, where a user-mode DuVisor process handles the entire VM plane via a new hardware extension, leaving only a tiny DV-driver in the kernel. Blue dashed arrows marked 'Interact' and orange dashed arrows marked 'Offload' show how responsibilities move between modes, and gray/black/hatched fills distinguish general, VM-plane, hypervisor-plane and hardware-extension elements per the legend at the top.",
+  "summary_zh": "该图对比四种虚拟化架构演变：内核态单体 Hypervisor，卸载至用户态 Helper，引入硬件 H/V 模式，直至本文的委托虚拟化，将 VM 平面完全交给用户态 DuVisor。",
+  "confidence": "medium",
+  "notes": "Panels (a)-(c) depict prior/mainstream hypervisor designs described only briefly in the introduction; exact internal box labels (e.g. 'Helper', 'Driver') are read from the figure itself since the surrounding text does not spell out every sub-box name.",
+  "venue": "OSDI23"
+}

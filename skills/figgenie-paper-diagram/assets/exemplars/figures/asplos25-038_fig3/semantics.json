@@ -1,0 +1,248 @@
+{
+  "paper_id": "asplos25-038",
+  "fig": "3",
+  "system": {
+    "name": "Dilu",
+    "one_liner": "a cross-layer, GPU-based serverless DL serving system that supports fine-grained, adaptive two-dimensional GPU resourcing-on-demand",
+    "domain": [
+      "cloud",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Profiler",
+        "role": "acquires resource plans for DL functions via pruning-search trials, producing resourcing metadata",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Metadata",
+        "role": "per-function resource plan data (type, SMR, MS, IBS, ...) produced by the Profiler",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Gateway",
+        "role": "receives deployed functions and dispatches requests to target modules",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Workload Monitor",
+        "role": "monitors incoming request workload inside the Gateway",
+        "container": "Gateway",
+        "novel": true
+      },
+      {
+        "name": "Load Balancer",
+        "role": "balances dispatched requests inside the Gateway",
+        "container": "Gateway",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "manages instance deployment requirements of DL tasks",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Affinity-First Collocation",
+        "role": "scheduling principle collocating functions by affinity",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Defragmentation Collocation",
+        "role": "scheduling principle collocating functions to reduce GPU fragmentation",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Global Scaler",
+        "role": "informs the scheduler to horizontally scale DL functions (launch/terminate instances)",
+        "container": "Scaling Plane",
+        "novel": true
+      },
+      {
+        "name": "Local Scaler",
+        "role": "distributed per-GPU-server component that vertically resizes SM quotas for functions",
+        "container": "Scaling Plane",
+        "novel": true
+      },
+      {
+        "name": "Function Instances",
+        "role": "running instances of DL functions serving dispatched requests",
+        "container": "Serving Plane",
+        "novel": false
+      },
+      {
+        "name": "GPUs",
+        "role": "shared GPU hardware on each cluster node hosting collocated function instances",
+        "container": "Serving Plane",
+        "novel": false
+      },
+      {
+        "name": "Cluster",
+        "role": "set of nodes (Node-1, Node-2, Node-n) hosting GPUs and function instances",
+        "container": "Serving Plane",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Developer",
+        "to": "Profiler",
+        "what": "submitted DL function program with QoS description",
+        "step": 1
+      },
+      {
+        "from": "Developer",
+        "to": "Gateway",
+        "what": "deployed function",
+        "step": 2
+      },
+      {
+        "from": "Profiler",
+        "to": "Gateway",
+        "what": "resourcing metadata",
+        "step": null
+      },
+      {
+        "from": "Gateway",
+        "to": "Scheduler",
+        "what": "deployment/scheduling request",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Global Scaler",
+        "what": "launch/terminate instance decisions",
+        "step": 3
+      },
+      {
+        "from": "User",
+        "to": "Gateway",
+        "what": "invocation request",
+        "step": 4
+      },
+      {
+        "from": "Gateway",
+        "to": "Global Scaler",
+        "what": "dispatch of workload information",
+        "step": 5
+      },
+      {
+        "from": "Global Scaler",
+        "to": "Local Scaler",
+        "what": "adaptive 2D co-scaling coordination",
+        "step": null
+      },
+      {
+        "from": "Local Scaler",
+        "to": "Function Instances",
+        "what": "kernel & token issue control",
+        "step": null
+      },
+      {
+        "from": "Function Instances",
+        "to": "GPUs",
+        "what": "collocated execution",
+        "step": null
+      }
+    ],
+    "key_idea": "Dilu splits into a Control Plane (profiling, gateway, scheduling), a Scaling Plane (adaptive 2D co-scaling via a global and per-server local scalers), and a Serving Plane (collocated function instances on shared GPUs across cluster nodes).",
+    "reading_order": "Top-down and numbered: Developer/User actions at top (submit, deploy, invoke) flow down through the Control Plane, into the Scaling Plane's global/local scalers, and finally into the Serving Plane's function instances on GPUs across cluster nodes."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.48,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff9300",
+        "used_for": "orange fill for numbered step badges and some scaled-out function-instance cubes"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple accents for the Control Plane / Gateway icon and label"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "light blue background for the Scaling Plane band"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue arrows carrying metadata/info flow into the Gateway"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill for baseline function-instance cubes"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "light gray fill for the Profiler and Scheduler container backgrounds"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red dashed line tracing the user invoke path down into the serving plane"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on boxes, dashed black arrows for control actions, solid gray double arrows for scaler coordination",
+    "font": "Arial/Arial-Bold sans-serif, 4-6.5pt, bold for component and plane titles",
+    "corners": "mixed",
+    "arrows": "dashed black arrows for submit/deploy/launch/dispatch actions, solid gray bidirectional arrows between Global and Local Scalers, red dashed arrow tracing the invoke path, blue arrows for metadata/info flow",
+    "icons": "person icons for Developer and User, small isometric-cube icons for the Gateway and Scheduler headers, cube icons for Function Instances, chip icons for GPUs"
+  },
+  "encoding": {
+    "color_means": "purple = Control Plane elements (Gateway), yellow/gold = Scheduler, blue = Scaling Plane background and metadata-flow arrows, orange/green/blue small cubes = function instances (orange marking newly scaled-out replicas), red dashed = the end-to-end user invoke path",
+    "line_style_means": "dashed black arrows show discrete control actions (submit, deploy, launch/terminate, invoke, dispatch), numbered 1-5; solid gray double arrows show continuous adaptive 2D co-scaling coordination between global and local scalers",
+    "emphasis": "the five numbered steps overlaid on three color-labeled horizontal planes (Control/Scaling/Serving) narrate the full request lifecycle from developer submission to GPU-level execution",
+    "reusable_patterns": [
+      "three-tier layered plane architecture (control/scaling/serving)",
+      "numbered action arrows narrating an end-to-end workflow",
+      "small cube icons denoting per-node collocated function instances"
+    ],
+    "weaknesses": [
+      "dense combination of numbered steps, colored arrows, and nested sub-boxes may be hard to trace at a glance",
+      "several distinct arrow colors (black dashed, gray solid, blue, red) are not explained by an in-figure legend"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "gpu-sharing",
+    "elasticity",
+    "autoscaling",
+    "scheduling",
+    "cloud"
+  ],
+  "provenance": {
+    "sections": [
+      "3 System Design (p.5)"
+    ],
+    "evidence": [
+      "The system architecture is depicted in Figure 3. It consists of a control plane, a scaling plane, and a serving plane.",
+      "Users submit DL function programs with pre-defined QoS descriptions to the system",
+      "The global scaler informs the scheduler to carry out horizontal scaling of DL functions, including launching and terminating instances"
+    ]
+  },
+  "summary": "This figure shows Dilu's three-plane system architecture for GPU resourcing-on-demand in serverless deep learning serving. In the Control Plane, a Developer submits a DL function with QoS descriptions to the Profiler (step 1), which produces resourcing metadata, and deploys it to the Gateway (step 2), which forwards it to the Scheduler; the Scheduler applies affinity-first and defragmentation collocation principles to launch or terminate instances via the Global Scaler (step 3). When a User invokes a function (step 4), the Gateway's Workload Monitor and Load Balancer dispatch the request (step 5) toward the Scaling Plane, where a Global Scaler coordinates with per-server Local Scalers in an adaptive 2D co-scaling loop (horizontal launch/terminate plus vertical SM-quota resizing). The Serving Plane at the bottom shows the resulting Function Instances collocated on shared GPUs across cluster nodes (Node-1, Node-2, Node-n). Numbered dashed arrows narrate the five-step control flow, while a red dashed line traces the invoke request down to an actual instance.",
+  "summary_zh": "该图展示 Dilu 的三层架构：控制平面（Profiler、Gateway、Scheduler）负责提交部署与调度，扩缩平面（Global Scaler 与各服务器 Local Scaler）执行自适应二维协同扩缩，服务平面在共享 GPU 上运行各节点的函数实例，编号箭头串联起完整请求流程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

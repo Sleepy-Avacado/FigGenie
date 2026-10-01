@@ -1,0 +1,47 @@
+{
+  "id": "sosp25-064_fig5",
+  "paper_id": "sosp25-064",
+  "fig": "5",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 5. The pod-wide allocator allocates PCIe resources to instances. It also manages load balancing and failover.",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.37,
+  "n_components": 7,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-064/sosp25-064_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-064/sosp25-064_fig5_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A star example: a dashed allocator hub on top with two colour-coded resource pools, bold red Control Path arrows fanning down to Host 1 ... Host N spokes sharing one identical internal template.",
+      "what_to_learn": "Give the hub a dashed boundary and colour its internal resource pools by type (orange SSD, teal NIC), then draw only Host 1 and Host N with an ellipsis between, each an identical Instance-plus-Engine box, and put the fan-out arrows in one bold accent colour."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar: the dashed Pod-Wide Allocator box nests a Logical SSD Pool and a Logical NIC Pool, each nesting Free, Allocated and Failed sub-boxes, in just 7 components and depth 3.",
+      "what_to_learn": "Split a shared allocator into side-by-side same-shape sub-pools, each nesting the identical three-state vocabulary, free, allocated, failed, so the two resource types stay visually parallel, and reserve one bold colour for the control-path arrows leaving the whole nested block."
+    }
+  ]
+}

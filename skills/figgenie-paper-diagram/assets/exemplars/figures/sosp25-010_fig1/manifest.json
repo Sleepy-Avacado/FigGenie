@@ -1,0 +1,41 @@
+{
+  "id": "sosp25-010_fig1",
+  "paper_id": "sosp25-010",
+  "fig": "1",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 1. Architecture of Atmosphere. Containers 𝐴and 𝐵are untrusted but can establish communication with a verified container 𝑉. Thread 𝑇1 invokes the send() system call to pass a page to 𝑇2 which is already waiting on the endpoint inside the microkernel.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "matplotlib",
+  "aspect": 1.73,
+  "n_components": 14,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-010/sosp25-010_fig1_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-010/sosp25-010_fig1_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Medium-confidence, rank-7 exemplar of the horizontal variant: a formally verified container V sits between untrusted peers A and B, all three resting above the microkernel's endpoint data structures in the band below.",
+      "what_to_learn": "Flank the trusted middle component with its untrusted peers in one row rather than stacking all three, and match send()/recv() call labels on the two boxes that actually interact; the weakness here is that the third peer is drawn but never wired to anything, so give every peer at least one visible arrow."
+    }
+  ]
+}

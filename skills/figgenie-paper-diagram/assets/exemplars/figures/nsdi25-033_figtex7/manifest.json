@@ -1,0 +1,47 @@
+{
+  "id": "nsdi25-033_figtex7",
+  "paper_id": "nsdi25-033",
+  "fig": "tex7",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "SuperServe 's Architecture. SuperServe consists of a router, scheduler, workers and a supernetwork profiler. Clients submit queries with a specified latency constraint (SLO) asynchronously. 182 - 188 represents the critical path of the query in SuperServe . The latency profile estimation is done apr",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.27,
+  "n_components": 10,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-033/src/texfig7_system_arch.svg",
+    "preview.png": "lab/extracted/nsdi25-033/src/texfig7_system_arch.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A numbered star exemplar: circled steps 0-7 trace one query from client through the Router hub's EDF queue and scheduler out to two colour-coded Worker spokes, with an inset heatmap explaining the offline profiler.",
+      "what_to_learn": "Run one continuous numbered path (0-7) from client through the hub's internal EDF queue, scheduler and dispatcher out to the workers and back, and let two colour-coded example queries (green, blue) walk the same numbered path to different spokes to show scheduling in action, not just structure."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Two embedded charts, not one drawn callout: a latency heatmap and a Pareto accuracy-vs-latency scatterplot sit beside the router-and-workers architecture, together standing in for the offline Supernetwork Profiler that feeds the scheduler.",
+      "what_to_learn": "When the thing you need to explain is a data-driven decision rather than a drawn component, inset an actual chart (a heatmap, a Pareto curve) next to the architecture instead of forcing it into a box; keep the figure's own colour-coded example queries walking through both the diagram and, implicitly, the chart's axes."
+    }
+  ]
+}

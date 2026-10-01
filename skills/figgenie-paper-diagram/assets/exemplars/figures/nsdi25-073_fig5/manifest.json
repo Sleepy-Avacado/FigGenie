@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-073_fig5",
+  "paper_id": "nsdi25-073",
+  "fig": "5",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 5: GPU disaggregation at different levels.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.51,
+  "n_components": 14,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "low",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-073/nsdi25-073_fig5_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-073/nsdi25-073_fig5_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Low-confidence, flawed matrix exemplar: four numbered panels repeat a layered stack split into Local/Remote columns to show where GPU disaggregation cuts the stack, but one panel breaks the two-column pattern the others share.",
+      "what_to_learn": "Repeat one layered stack across numbered panels and move only the Local/Remote boundary and its link type between panels; keep every panel's column structure identical, since dropping the split in just one panel, and never mapping fill colours to layer names elsewhere, breaks the comparison's consistency."
+    }
+  ]
+}

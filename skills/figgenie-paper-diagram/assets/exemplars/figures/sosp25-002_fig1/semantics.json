@@ -1,0 +1,212 @@
+{
+  "paper_id": "sosp25-002",
+  "fig": "1",
+  "system": {
+    "name": "Simbricks",
+    "one_liner": "a general full-stack simulation framework (in the style of Simbricks) combining a host simulator (gem5) with accelerator simulators over a simulated interconnect",
+    "domain": [
+      "hardware-software co-simulation",
+      "computer architecture",
+      "accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Application 1",
+        "role": "an unmodified application running on top of the simulated OS",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Application 2",
+        "role": "another unmodified application running on top of the simulated OS",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Operating System",
+        "role": "the unmodified OS that, with the applications, runs natively inside gem5's simulated CPU",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "gem5",
+        "role": "cycle-accurate system simulator that models the host CPU, cache, memory, and device interfaces",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU Simulator",
+        "role": "simulates the host CPU with cycle-level fidelity",
+        "container": "gem5",
+        "novel": false
+      },
+      {
+        "name": "Devices",
+        "role": "grouping of simulated device interfaces exposed by gem5, including the Accelerator Adapter",
+        "container": "gem5",
+        "novel": false
+      },
+      {
+        "name": "Accelerator Adapter",
+        "role": "gem5-side device model that exposes the accelerator to the simulated host over MMIO and DMA",
+        "container": "Devices",
+        "novel": false
+      },
+      {
+        "name": "Cache Simulator",
+        "role": "simulates the host's cache hierarchy",
+        "container": "gem5",
+        "novel": false
+      },
+      {
+        "name": "Memory Simulator",
+        "role": "simulates the host's main memory, target of accelerator DMA",
+        "container": "gem5",
+        "novel": false
+      },
+      {
+        "name": "Interconnect Simulator",
+        "role": "simulates the interconnect (e.g., PCIe) linking the host simulator to the accelerator simulators",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Accelerator Simulators",
+        "role": "grouping of alternative accelerator-simulation approaches (RTL or a custom Model)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RTL",
+        "role": "register-transfer-level simulator of the accelerator",
+        "container": "Accelerator Simulators",
+        "novel": false
+      },
+      {
+        "name": "Model",
+        "role": "a custom, presumably higher-level model of the accelerator",
+        "container": "Accelerator Simulators",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "CPU Simulator",
+        "to": "Accelerator Adapter",
+        "what": "MMIO Read/Write (bidirectional)",
+        "step": null
+      },
+      {
+        "from": "Accelerator Adapter",
+        "to": "Memory Simulator",
+        "what": "DMA (accelerator-initiated direct memory access, bidirectional)",
+        "step": null
+      },
+      {
+        "from": "Accelerator Adapter",
+        "to": "Interconnect Simulator",
+        "what": "requests/data passed to the simulated interconnect (bidirectional)",
+        "step": null
+      },
+      {
+        "from": "Interconnect Simulator",
+        "to": "RTL",
+        "what": "requests/data passed to the RTL accelerator simulator (bidirectional)",
+        "step": null
+      },
+      {
+        "from": "Interconnect Simulator",
+        "to": "Model",
+        "what": "requests/data passed to the custom accelerator model (bidirectional)",
+        "step": null
+      }
+    ],
+    "key_idea": "The figure shows a Simbricks-style full-stack simulator where gem5 cycle-accurately simulates the host (CPU, cache, memory, and a device adapter) while separate RTL or custom-model simulators model accelerators, connected through a simulated interconnect via MMIO and DMA interfaces.",
+    "reading_order": "Top-down then left-right: applications/OS sit above gem5 (CPU/cache/memory/device simulators), which connects rightward through the Interconnect Simulator to the RTL/Model accelerator simulators."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.04,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill for the software-stack box (Application 1/2, Operating System)"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "very light blue fill for the outer gem5 box"
+      },
+      {
+        "hex": "#c9daf8",
+        "used_for": "light blue fill for the Devices and Cache/Memory Simulator sub-groups"
+      },
+      {
+        "hex": "#f4cccc",
+        "used_for": "pale red/pink fill for the Accelerator Simulators box"
+      },
+      {
+        "hex": "#f3f3f3",
+        "used_for": "light gray fill for individual leaf boxes (CPU Simulator, Accelerator Adapter, Cache/Memory Simulator, Interconnect Simulator, RTL, Model)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray borders on the small boxes; dashed orange divider lines within the Application/OS and Cache/Memory groupings",
+    "font": "Aptos sans, about 5-6.5pt, bold for the group-level labels (Operating System, gem5, Accelerator Simulators)",
+    "corners": "mixed",
+    "arrows": "thin black bidirectional arrows (MMIO Read/Write, DMA) plus bidirectional arrows linking the Interconnect Simulator to the Accelerator Adapter, RTL, and Model boxes",
+    "icons": "bitmap: nearly every box appears to be a rasterized, softly shadowed rectangle (typical of a PowerPoint export) rather than a vector-drawn shape"
+  },
+  "encoding": {
+    "color_means": "tan = the software stack (applications + OS), blue = gem5 (host simulator) and its device/cache-memory sub-groups, gray = individual simulator component boxes, pink = the accelerator simulators (RTL or custom model)",
+    "line_style_means": "dashed orange lines separate conceptually distinct layers within the same colored group (applications vs. OS; cache vs. memory), not a control-vs-data distinction",
+    "emphasis": "color blocking groups the figure into three zones (tan software stack, blue gem5 host, pink accelerator simulators), visually mirroring the caption's framing of gem5 as simulating the host while RTL/Model simulate the accelerators",
+    "reusable_patterns": [
+      "three color-coded zones (software stack, host simulator, accelerator simulator) linked through a dedicated interconnect-simulator box",
+      "paired sub-boxes separated by a dashed divider reused twice (Application/OS and Cache/Memory) to suggest a consistent layering convention",
+      "labeled bidirectional arrows (MMIO Read/Write, DMA) naming the specific interfaces crossing a simulation boundary"
+    ],
+    "weaknesses": [
+      "the caption is cut off mid-sentence ('but different placements, such as ha...'), so its discussion of alternative accelerator placements beyond PCIe is unavailable here",
+      "the text says the software stack runs 'in' gem5, but no arrow connects the tan software-stack box to the blue gem5 box, only vertical adjacency"
+    ]
+  },
+  "tags": [
+    "hardware-software co-simulation",
+    "gem5",
+    "accelerator simulation",
+    "full-stack simulation",
+    "MMIO",
+    "DMA",
+    "interconnect simulation"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Overview (p.3)"
+    ],
+    "evidence": [
+      "the host processor and memory subsystem are often simulated using system simulators like gem5",
+      "The developer runs their unmodified software stack (the application + OS) in gem5, which simulates the target system",
+      "Gem5 simulates the host system, while RTL simulators or custom models simulate the accelerators."
+    ]
+  },
+  "summary": "This figure gives background, not the paper's own contribution: a simplified, Simbricks-style full-stack simulation framework for hardware-accelerated software stacks. A tan box holds the unmodified software stack (Application 1, Application 2, and the Operating System); it runs inside the blue gem5 box below, which cycle-accurately simulates the host system via a CPU Simulator, a Cache/Memory Simulator pair, and a Devices group containing an Accelerator Adapter. The CPU Simulator and Accelerator Adapter exchange MMIO Read/Write, and the adapter exchanges DMA traffic with the Memory Simulator. To the right, a vertical Interconnect Simulator box (representing simulated PCIe, among other placements) links the Accelerator Adapter to a separate pink Accelerator Simulators zone, where either an RTL simulator or a custom Model simulates the accelerator itself.",
+  "summary_zh": "图1为背景框架：软件栈(App1/2+OS)运行于gem5之上，gem5含CPU/缓存/内存模拟器与Accelerator Adapter，经MMIO/DMA交互；右侧经Interconnect连接RTL/Model加速器模拟器。",
+  "confidence": "high",
+  "notes": "This figure depicts prior-art/background (a Simbricks-style baseline using gem5) per its own caption, not the paper's novel NEX/DSim design, which the text says later replaces the gem5 component shown here (in a subsequent figure not included in this batch); all components are therefore marked novel:false.",
+  "venue": "SOSP25"
+}

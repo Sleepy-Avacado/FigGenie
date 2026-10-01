@@ -1,0 +1,203 @@
+{
+  "paper_id": "osdi25-016",
+  "fig": "8",
+  "system": {
+    "name": "KPerfIR (region-based timing tool)",
+    "one_liner": "a compiler-integrated GPU profiling tool whose region-based timing component manages a hierarchical on-GPU trace buffer",
+    "domain": [
+      "performance-tooling",
+      "gpu-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Global Memory",
+        "role": "final destination where the full trace and metadata are copied at kernel end",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Program Trace",
+        "role": "the reconstructed execution trace stored in global memory",
+        "container": "Global Memory",
+        "novel": true
+      },
+      {
+        "name": "Meta Data",
+        "role": "extra metadata (thread block index, warp-level indices, recorded slot counts) attached for trace reconstruction",
+        "container": "Global Memory",
+        "novel": true
+      },
+      {
+        "name": "Computing Units",
+        "role": "the GPU streaming multiprocessors, each holding a shared-memory profiling buffer and executing warp groups",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Shared Memory",
+        "role": "on-chip memory holding the per-SM profiling data buffer",
+        "container": "Computing Units",
+        "novel": true
+      },
+      {
+        "name": "Buffer 0",
+        "role": "a non-overlapping profiling space assigned to one warp group",
+        "container": "Shared Memory",
+        "novel": true
+      },
+      {
+        "name": "Buffer 1",
+        "role": "a non-overlapping profiling space assigned to another warp group",
+        "container": "Shared Memory",
+        "novel": true
+      },
+      {
+        "name": "Buffer 2",
+        "role": "a non-overlapping profiling space assigned to another warp group",
+        "container": "Shared Memory",
+        "novel": true
+      },
+      {
+        "name": "Record Slot",
+        "role": "a filled slot in a buffer holding a start/end profiling record",
+        "container": "Buffer 0",
+        "novel": true
+      },
+      {
+        "name": "Empty Slot",
+        "role": "an unused slot available for future profiling records",
+        "container": "Buffer 0",
+        "novel": true
+      },
+      {
+        "name": "Warp Group 0",
+        "role": "a group of warps writing records into its assigned buffer region",
+        "container": "Computing Units",
+        "novel": false
+      },
+      {
+        "name": "Warp Group 1",
+        "role": "another group of warps writing records into its assigned buffer region",
+        "container": "Computing Units",
+        "novel": false
+      },
+      {
+        "name": "Region 0",
+        "role": "a profiled code region tracked by a warp group",
+        "container": "Warp Group 0",
+        "novel": true
+      },
+      {
+        "name": "Region 1",
+        "role": "another profiled code region tracked by a warp group",
+        "container": "Warp Group 0",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Warp Group 0",
+        "to": "Buffer 0",
+        "what": "start/end profiling records",
+        "step": null
+      },
+      {
+        "from": "Warp Group 1",
+        "to": "Buffer 1",
+        "what": "start/end profiling records",
+        "step": null
+      },
+      {
+        "from": "Shared Memory",
+        "to": "Global Memory",
+        "what": "entire data buffer copied at kernel end",
+        "step": null
+      },
+      {
+        "from": "Computing Units",
+        "to": "Meta Data",
+        "what": "thread block index, warp-level indices, recorded slot counts",
+        "step": null
+      }
+    ],
+    "key_idea": "Each computing unit's shared memory is split into non-overlapping, per-warp-group record-slot buffers that fill up as warp groups profile regions, and the entire buffer plus reconstruction metadata is copied to global memory once at kernel end.",
+    "reading_order": "Bottom-up: warp groups and their tracked regions at the bottom write into shared-memory buffers of record/empty slots within each computing unit, which are copied up into the Program Trace and Meta Data in Global Memory at the top."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "bottom-up",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.02,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff3e0",
+        "used_for": "light orange fill of the Global Memory and Buffer boxes"
+      },
+      {
+        "hex": "#e8f5e9",
+        "used_for": "light green fill of Record Slot boxes"
+      },
+      {
+        "hex": "#ffebee",
+        "used_for": "light pink fill of Empty Slot or Region boxes"
+      },
+      {
+        "hex": "#e3f2fd",
+        "used_for": "light blue fill of Program Trace / Meta Data boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark borders, dashed boundary around the Computing Units region and around stacked replica panels",
+    "font": "HelveticaNeue sans, small (~5.5pt)",
+    "corners": "mixed",
+    "arrows": "thin dashed/solid arrows linking slots to buffers and buffers up to Global Memory",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = memory buffer containers (Global Memory, per-warp-group Buffers), green = filled record slots, pink = empty slots or region markers, blue = trace/metadata output",
+    "line_style_means": "dashed boxes delimit replicated computing units and internal buffer/warp-group groupings; arrows show the bottom-up data path from warp groups to global memory",
+    "emphasis": "the nested, stacked replication of computing-unit buffers visually conveys the non-overlapping, per-warp-group partitioning that avoids synchronization overhead",
+    "reusable_patterns": [
+      "GPU memory hierarchy diagram (global memory over shared memory over per-warp buffers)",
+      "stacked replica panels to depict multiple identical computing units"
+    ],
+    "weaknesses": [
+      "dense small text with many similarly styled nested boxes at this scale"
+    ]
+  },
+  "tags": [
+    "gpu-profiling",
+    "memory-hierarchy",
+    "trace-buffer",
+    "compiler-tooling",
+    "runtime"
+  ],
+  "provenance": {
+    "sections": [
+      "5 The Region-based Timing Tool (p.9-11)"
+    ],
+    "evidence": [
+      "The system accommodating the storage at each memory hierarchy is shown in Fig. 8",
+      "The data buffer is split into profiling spaces by warp groups with non-overlapping record slots",
+      "including thread block index, warp-level indices, and a number of recorded slots in each warp group"
+    ]
+  },
+  "summary": "This figure shows the memory management design of KPerfIR's region-based timing tool on a GPU. At the bottom, Warp Group 0 and Warp Group 1 (each tracking profiled code Regions) write start/end profiling records into non-overlapping Record Slots within per-warp-group Buffers (Buffer 0, Buffer 1, Buffer 2) held in each computing unit's Shared Memory; unused capacity is shown as Empty Slots. The figure depicts several stacked Computing Units to indicate this structure is replicated across the GPU's streaming multiprocessors. At the end of the kernel, each unit's entire data buffer, along with extra reconstruction metadata (thread block index, warp-level indices, and recorded-slot counts), is copied up into Global Memory as the Program Trace and Meta Data. The diagram is a compact, pastel-colored (orange/green/pink/blue) nested-box memory-hierarchy figure drawn bottom-up.",
+  "summary_zh": "该图展示 KPerfIR 基于区域的计时工具的内存管理设计：每个计算单元的共享内存被划分为按 warp group 分配、互不重叠的记录槽缓冲区，内核结束时整个缓冲区连同用于重建轨迹的元数据被一次性拷贝到全局内存中。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

@@ -1,0 +1,198 @@
+{
+  "paper_id": "osdi23-001",
+  "fig": "3",
+  "system": {
+    "name": "Welder",
+    "one_liner": "a deep learning compiler that schedules memory access holistically by connecting and scheduling a tile-based data-flow graph across a hierarchical memory abstraction",
+    "domain": [
+      "ml-systems",
+      "compilers",
+      "deep-learning"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DNN Model",
+        "role": "the full input deep learning model",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Tile-graph",
+        "role": "WELDER's data-flow graph of tile-based operators converted from the DNN model",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Tile-graph Scheduler",
+        "role": "schedules the tile-graph by connecting graph regions and scheduling sub-graphs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Graph Connecting",
+        "role": "connects tile-graph regions ahead of scheduling",
+        "container": "Tile-graph Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Sub-graph Scheduling",
+        "role": "schedules connected sub-graphs for memory-aware execution",
+        "container": "Tile-graph Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Tile-graph Scheduling Interface",
+        "role": "common interface exposing scheduling decisions to the memory-hierarchy mapping below",
+        "container": "Tile-graph Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Hierarchical Tile-Graph on Abstracted Accelerator",
+        "role": "maps the scheduled tile-graph onto an abstracted accelerator's multi-level memory hierarchy",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "L0-Mem",
+        "role": "top level of the abstracted accelerator's memory hierarchy",
+        "container": "Hierarchical Tile-Graph on Abstracted Accelerator",
+        "novel": true
+      },
+      {
+        "name": "L1-Mem",
+        "role": "middle level of the abstracted accelerator's memory hierarchy",
+        "container": "Hierarchical Tile-Graph on Abstracted Accelerator",
+        "novel": true
+      },
+      {
+        "name": "L2-Mem",
+        "role": "bottom level of the abstracted accelerator's memory hierarchy",
+        "container": "Hierarchical Tile-Graph on Abstracted Accelerator",
+        "novel": true
+      },
+      {
+        "name": "Hardware Accelerators",
+        "role": "physical hardware the scheduled, memory-mapped tile-graph ultimately runs on",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "DNN Model",
+        "to": "Tile-graph",
+        "what": "WELDER converts the full DNN model into a data-flow graph of tile-based operators",
+        "step": null
+      },
+      {
+        "from": "Tile-graph",
+        "to": "Tile-graph Scheduler",
+        "what": "tile-graph handed to the scheduler for graph connecting and sub-graph scheduling",
+        "step": null
+      },
+      {
+        "from": "Graph Connecting",
+        "to": "Sub-graph Scheduling",
+        "what": "connected graph regions passed to sub-graph scheduling",
+        "step": null
+      },
+      {
+        "from": "Tile-graph Scheduler",
+        "to": "Tile-graph Scheduling Interface",
+        "what": "scheduling decisions exposed through a common interface",
+        "step": null
+      },
+      {
+        "from": "Tile-graph Scheduling Interface",
+        "to": "Hierarchical Tile-Graph on Abstracted Accelerator",
+        "what": "scheduled tile-graph mapped onto the abstracted accelerator's L0/L1/L2 memory hierarchy",
+        "step": null
+      },
+      {
+        "from": "Hierarchical Tile-Graph on Abstracted Accelerator",
+        "to": "Hardware Accelerators",
+        "what": "the mapped, hierarchical tile-graph executed on hardware accelerators",
+        "step": null
+      }
+    ],
+    "key_idea": "WELDER converts a full DNN model into a tile-based data-flow graph, schedules it holistically (connecting and scheduling sub-graphs through one interface), and maps the result onto an abstracted accelerator's multi-level memory hierarchy before running it on hardware accelerators.",
+    "reading_order": "Top-down: DNN Model into the Tile-graph, down into the Tile-graph Scheduler (Graph Connecting / Sub-graph Scheduling / its interface), down into the L0/L1/L2 memory hierarchy, down to Hardware Accelerators."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.29,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#5b9bd5",
+        "used_for": "lighter blue fill for the Graph Connecting box"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "darker blue fill for the Sub-graph Scheduling box and L1-Mem squares"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red squares/arrow highlighting a specific tile mapping in the memory hierarchy"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "gray L2-Mem squares and generic borders"
+      },
+      {
+        "hex": "#a5a5a5",
+        "used_for": "gray accents/borders"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.46pt, dashed arrow highlighting a tile mapped across L1-Mem",
+    "font": "Calibri sans, 7.5pt",
+    "corners": "mixed",
+    "arrows": "straight arrows with filled heads (32 heads) connecting the layered boxes",
+    "icons": "7 small icons depicting generic tile-based operator shapes chained together in the Tile-graph"
+  },
+  "encoding": {
+    "color_means": "blue shades distinguish Graph Connecting from Sub-graph Scheduling; red highlights one tile's placement/movement across the L0/L1/L2 memory hierarchy; gray marks the lowest (L2) memory level",
+    "line_style_means": "a red dashed arrow traces how a single tile is mapped/moved across memory levels",
+    "emphasis": "stacking the tile-graph, its scheduler, and the memory hierarchy as separate labeled bands emphasizes WELDER's holistic view spanning compute scheduling and memory placement together",
+    "reusable_patterns": [
+      "compiler-stack diagram with input model at top and hardware at bottom, scheduling and memory-hierarchy layers in between"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "dnn-compiler",
+    "tile-based-scheduling",
+    "memory-hierarchy",
+    "hardware-accelerators",
+    "tile-graph"
+  ],
+  "provenance": {
+    "sections": [
+      "3 WELDER Design (p.4)"
+    ],
+    "evidence": [
+      "Figure 3 shows the system overview.",
+      "WELDER takes a full DNN model as input and converts it into a data-flow graph of tile-based"
+    ]
+  },
+  "summary": "Figure 3 is WELDER's system overview, drawn as a top-down compiler stack. A DNN Model is converted into a Tile-graph, a data-flow graph of tile-based operators (shown as a chain of generic operator icons). The Tile-graph Scheduler then performs Graph Connecting and Sub-graph Scheduling, exposing its decisions through a Tile-graph Scheduling Interface. Below this, the scheduled tile-graph is mapped as a Hierarchical Tile-Graph onto an Abstracted Accelerator's three-level memory hierarchy (L0-Mem, L1-Mem, L2-Mem), with a highlighted red dashed path showing one tile's placement across levels. Finally, this hierarchical, scheduled representation runs on the underlying Hardware Accelerators. The available body text is cut off just after introducing the tile-based data-flow graph, so the deeper mechanics of scheduling and memory mapping are read primarily from the figure's own labels.",
+  "summary_zh": "图3为WELDER系统概览：DNN模型转换为基于分块的数据流图（Tile-graph），经调度器（图连接与子图调度）通过统一接口映射到抽象加速器的L0/L1/L2三级内存层次，最终在硬件加速器上执行。",
+  "confidence": "medium",
+  "notes": "The body paragraph available in the context is cut off mid-sentence right after introducing the tile-based data-flow graph, so component roles for the scheduler and memory-hierarchy layers are read mainly from the figure's own labels rather than confirmed prose.",
+  "venue": "OSDI23"
+}

@@ -1,0 +1,291 @@
+{
+  "paper_id": "sosp25-017",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "Tai Chi",
+    "one_liner": "a hardware/software co-designed SmartNIC scheduler that coordinates control-plane tasks and data-plane services via a hybrid virtualization unifying physical and virtual CPUs",
+    "domain": [
+      "SmartNICs",
+      "cloud-scheduling",
+      "virtualization"
+    ],
+    "abstraction": "virtualization layer"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how Tai Chi registers a vCPU as a native CPU and then intercepts/routes each inter-processor interrupt via source/destination CPU-state checks",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "vCPU1",
+        "kind": "lane",
+        "role": "the virtual CPU being created and registered, timeline shown at top of panel (a)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "OS",
+        "kind": "lane",
+        "role": "operating system timeline; hosts the Unified IPI Orchestrator that intercepts boot IPIs",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CPU0",
+        "kind": "lane",
+        "role": "physical CPU timeline that sends the initialization/startup IPIs driving vCPU1's activation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Unified IPI Orchestrator",
+        "kind": "box",
+        "role": "intercepts every IPI transmission and routes it according to source/destination CPU state",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Creating vCPU1",
+        "kind": "label",
+        "role": "event marking when the OS creates vCPU1 with metadata such as CPU ID and LAPIC ID",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Initializing vCPU1",
+        "kind": "label",
+        "role": "first CPU0 phase, sending the IPIs that begin activating vCPU1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Startuping vCPU1",
+        "kind": "label",
+        "role": "second CPU0 phase continuing vCPU1's boot sequence",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Responding",
+        "kind": "label",
+        "role": "final CPU0 phase after which vCPU1 is online and treated as a native CPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "vCPU or pCPU",
+        "kind": "box",
+        "role": "the IPI's originating processor, entering the routing logic in panel (b)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Source CPU state?",
+        "kind": "node",
+        "role": "decision testing whether the source is a physical (P) or virtual (V) CPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "vCPU scheduler",
+        "kind": "box",
+        "role": "invoked on a VM-exit when the source is a vCPU; reissues the IPI so it propagates across the virtualization boundary",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Destination CPU state?",
+        "kind": "node",
+        "role": "decision testing whether the destination is a physical (P) or virtual (V) CPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Injecting IPIs",
+        "kind": "label",
+        "role": "outcome when the destination is a vCPU; the orchestrator injects the IPI directly, waking a sleeping vCPU first if needed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "writing MSR to send IPIs",
+        "kind": "label",
+        "role": "outcome when the destination is a pCPU; delivered via a low-level Model-Specific Register write",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "vCPU1",
+        "to": "OS",
+        "what": "the OS creates vCPU1 with metadata (CPU ID, LAPIC ID) and registers it, initially offline",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "CPU0",
+        "to": "Unified IPI Orchestrator",
+        "what": "CPU0 sends boot-related IPIs (Initializing, Startuping, Responding) that the orchestrator intercepts",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Unified IPI Orchestrator",
+        "to": "vCPU1",
+        "what": "the orchestrator routes the intercepted IPIs to vCPU1, activating it until it is treated as a native CPU",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "vCPU or pCPU",
+        "to": "vCPU scheduler",
+        "what": "a vCPU source triggers a VM-exit, handing control to the vCPU scheduler, which reissues the IPI",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "vCPU scheduler",
+        "to": "Destination CPU state?",
+        "what": "the reissued IPI (now as pCPU) proceeds to the destination-side state check",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Destination CPU state?",
+        "to": "Injecting IPIs",
+        "what": "a vCPU destination gets the IPI injected directly, woken first if sleeping",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Destination CPU state?",
+        "to": "writing MSR to send IPIs",
+        "what": "a pCPU destination gets the IPI delivered via a low-level MSR write",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "P (physical/native CPU)",
+        "V (virtual CPU)"
+      ],
+      "transitions": [
+        {
+          "from": "vCPU or pCPU (source)",
+          "to": "vCPU scheduler",
+          "guard": "source CPU state = V, triggering a VM-exit"
+        },
+        {
+          "from": "vCPU scheduler",
+          "to": "pCPU (reissued)",
+          "guard": "IPI reissued so it propagates across the virtualization boundary"
+        },
+        {
+          "from": "pCPU",
+          "to": "Injecting IPIs",
+          "guard": "destination CPU state = V (runnable/running, or woken if sleeping)"
+        },
+        {
+          "from": "pCPU",
+          "to": "writing MSR to send IPIs",
+          "guard": "destination CPU state = P"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "Source CPU state?",
+          "branches": [
+            "pCPU: no special action, proceed directly",
+            "vCPU: VM-exit to the vCPU scheduler, which reissues the IPI"
+          ]
+        },
+        {
+          "question": "Destination CPU state?",
+          "branches": [
+            "pCPU: deliver via low-level MSR write",
+            "vCPU: inject the IPI directly, waking it first if sleeping"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "The Unified IPI Orchestrator delivers the boot IPIs that turn a new vCPU into a native CPU, and for every later IPI checks source/destination CPU state to route it via the vCPU scheduler or deliver it directly.",
+    "reading_order": "left to right along each of the three timelines in (a), top to bottom through the source-state then destination-state decision diamonds in (b)"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.22,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#999999",
+        "used_for": "gray fill of the three active named boxes (Unified IPI Orchestrator, vCPU scheduler, vCPU or pCPU)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black lines for timelines, box outlines, and decision diamonds",
+    "corners": "square",
+    "arrows": "thin black arrows on each timeline and connecting flowchart nodes; a dashed horizontal rule separates the two panels",
+    "font": "sans-serif (HelveticaNeue), bold for box labels and panel titles",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "a single gray fill marks the three active named boxes; everything else is black-on-white line art",
+    "line_style_means": "solid arrows trace timelines and control flow; a dashed rule separates the registration timeline (a) from the IPI-routing flowchart (b)",
+    "state_means": "small two-row tables (CPU0: P, CPU1: V) at each decision diamond show the example physical (P) vs virtual (V) state being tested",
+    "marker_means": null,
+    "emphasis": "the gray Unified IPI Orchestrator box straddles all three timelines in (a), visually showing that every registration IPI passes through it",
+    "reusable_patterns": [
+      "a multi-lane timeline for a registration sequence paired with a two-stage decision-diamond flowchart (source-state then destination-state) for the general-case routing logic"
+    ],
+    "weaknesses": [
+      "panel (a)'s arrows into and out of the Orchestrator box are not individually labelled, so exactly which IPI corresponds to which arrow must be inferred from the adjacent phase labels"
+    ]
+  },
+  "tags": [
+    "SmartNIC",
+    "interrupt-routing",
+    "IPI",
+    "virtualization",
+    "vCPU-scheduling",
+    "Tai-Chi"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design"
+    ],
+    "evidence": [
+      "the vCPU scheduler creates vCPUs with metadata (e.g., CPU ID, LAPIC ID) and registers them with the OS",
+      "IPIs involve source CPU and destination CPU",
+      "no special action is taken if the source CPU is a pCPU"
+    ]
+  },
+  "summary": "Figure 8 shows two related mechanisms inside Tai Chi's unified IPI orchestrator. In (a) Registering vCPU as native CPU, a 3-lane timeline traces how the vCPU scheduler creates vCPU1 (initially offline); CPU0 then sends a sequence of boot-related IPIs, Initializing vCPU1, Startuping vCPU1, Responding, which the orchestrator intercepts and routes to vCPU1 until the OS treats it as a native CPU. In (b) Intercepting and routing IPI, every IPI from a vCPU or pCPU first hits a Source CPU state decision: a pCPU source proceeds directly, while a vCPU source triggers a VM-exit so the vCPU scheduler reissues it. A second Destination CPU state decision then either injects the IPI into a vCPU, waking it first if sleeping, or writes an MSR to deliver it to a pCPU.",
+  "summary_zh": "该图示Tai Chi统一IPI编排器：(a)时间线示CPU0经初始化/启动/响应三阶段发IPI，编排器拦截转发给新建vCPU1，使其被OS视为原生CPU；(b)流程图示IPI按源/目的CPU的P/V状态经调度器转发或直接注入/写MSR送达。",
+  "confidence": "high",
+  "notes": "Corrected base from the prior pass's 'component' to 'mixed': panel (a) is drawn as a 3-lane timeline and panel (b) as a decision flowchart, neither of which is a component/datapath diagram.",
+  "venue": "SOSP25"
+}

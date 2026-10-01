@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-091_fig12",
+  "paper_id": "nsdi23-091",
+  "fig": "12",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 12: Transmitter radio hardware architecture.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.92,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-091/nsdi23-091_fig12_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-091/nsdi23-091_fig12_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "A monochrome circuit-schematic pair where the same left-to-right signal chain (oscillator, PA, antenna) appears in both panels, and the entire argument is made by (b) visibly containing fewer blocks than (a).",
+      "what_to_learn": "When the contribution is component removal rather than a single marked difference, just draw the simplified signal chain with visibly fewer blocks in the same left-to-right order as the baseline; add the power numbers on the schematic itself, since this figure leaves the savings claim only in the caption."
+    }
+  ]
+}

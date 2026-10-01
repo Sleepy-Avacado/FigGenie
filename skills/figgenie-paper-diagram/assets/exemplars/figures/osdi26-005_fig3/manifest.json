@@ -1,0 +1,42 @@
+{
+  "id": "osdi26-005_fig3",
+  "paper_id": "osdi26-005",
+  "fig": "3",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 3: The system architecture and design overview of Prism.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.77,
+  "n_components": 12,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-005/src/fig3_overview.svg",
+    "preview.png": "lab/extracted/osdi26-005/src/fig3_overview.png",
+    "print.png": "lab/extracted/osdi26-005/osdi26-005_fig3_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A star exemplar that annotates each mechanism with its paper section number (section 5, 6.1, 6.3) on the diagram itself, with Frontend as hub fanning into GPU group 0 ... GPU group n spokes.",
+      "what_to_learn": "Tie each drawn mechanism to its paper section number right on the box, so the figure doubles as a reading index; but name what the ellipsis between group 0 and group n hides, since leaving it uncounted is this exemplar's own recorded weakness."
+    }
+  ]
+}

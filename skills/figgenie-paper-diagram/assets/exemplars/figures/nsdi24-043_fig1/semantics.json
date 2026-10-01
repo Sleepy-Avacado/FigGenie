@@ -1,0 +1,273 @@
+{
+  "paper_id": "nsdi24-043",
+  "fig": "1",
+  "system": {
+    "name": "LLM development pipeline",
+    "one_liner": "the end-to-end pipeline studied by this characterization of large language model development in the datacenter",
+    "domain": [
+      "ml-systems",
+      "datacenter"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Data Preparation",
+        "role": "gathers and preprocesses training data via a process pipeline into data stores",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Process Pipeline",
+        "role": "collects, curates and tokenizes raw data",
+        "container": "Data Preparation",
+        "novel": false
+      },
+      {
+        "name": "Collection",
+        "role": "gathers raw data",
+        "container": "Process Pipeline",
+        "novel": false
+      },
+      {
+        "name": "Curation",
+        "role": "cleans and filters collected data",
+        "container": "Process Pipeline",
+        "novel": false
+      },
+      {
+        "name": "Tokenization",
+        "role": "converts curated data into tokens",
+        "container": "Process Pipeline",
+        "novel": false
+      },
+      {
+        "name": "Data Stores",
+        "role": "stores processed datasets",
+        "container": "Data Preparation",
+        "novel": false
+      },
+      {
+        "name": "Pretraining Datasets",
+        "role": "unlabeled corpora used for pretraining",
+        "container": "Data Stores",
+        "novel": false
+      },
+      {
+        "name": "Alignment Datasets",
+        "role": "datasets used for the alignment stage",
+        "container": "Data Stores",
+        "novel": false
+      },
+      {
+        "name": "Pretraining",
+        "role": "trains the base model using a training recipe and placement strategy",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Training Recipe",
+        "role": "defines model selection, data sampling and hyperparameter configuration",
+        "container": "Pretraining",
+        "novel": false
+      },
+      {
+        "name": "Model Selection",
+        "role": "chooses the model architecture",
+        "container": "Training Recipe",
+        "novel": false
+      },
+      {
+        "name": "Data Sampling",
+        "role": "determines how training data is sampled",
+        "container": "Training Recipe",
+        "novel": false
+      },
+      {
+        "name": "Hyperparameter Configuration",
+        "role": "sets training hyperparameters",
+        "container": "Training Recipe",
+        "novel": false
+      },
+      {
+        "name": "Placement Strategy",
+        "role": "chooses data, pipeline and tensor parallelism placement",
+        "container": "Pretraining",
+        "novel": false
+      },
+      {
+        "name": "Alignment",
+        "role": "adapts the pretrained model via fine-tuning, RLHF and prompt engineering",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Fine-tuning",
+        "role": "adjusts model weights on task-specific data",
+        "container": "Alignment",
+        "novel": false
+      },
+      {
+        "name": "RLHF",
+        "role": "aligns the model using reinforcement learning from human feedback",
+        "container": "Alignment",
+        "novel": false
+      },
+      {
+        "name": "Prompt Engineering",
+        "role": "adapts model behavior via prompt design",
+        "container": "Alignment",
+        "novel": false
+      },
+      {
+        "name": "Evaluation",
+        "role": "assesses model quality across tasks and metrics",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Multi-task",
+        "role": "evaluates across multiple tasks",
+        "container": "Evaluation",
+        "novel": false
+      },
+      {
+        "name": "Multi-metric",
+        "role": "evaluates using multiple metrics",
+        "container": "Evaluation",
+        "novel": false
+      },
+      {
+        "name": "Distributed Eval.",
+        "role": "runs evaluation in a distributed manner",
+        "container": "Evaluation",
+        "novel": false
+      },
+      {
+        "name": "Deployment",
+        "role": "converts and quantizes the model for serving",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Conversion",
+        "role": "converts the model format for deployment",
+        "container": "Deployment",
+        "novel": false
+      },
+      {
+        "name": "Quantization",
+        "role": "reduces model precision for efficient serving",
+        "container": "Deployment",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Data Preparation",
+        "to": "Pretraining",
+        "what": "prepared datasets",
+        "step": 1
+      },
+      {
+        "from": "Pretraining",
+        "to": "Alignment",
+        "what": "pretrained model, periodically",
+        "step": 2
+      },
+      {
+        "from": "Alignment",
+        "to": "Evaluation",
+        "what": "aligned model",
+        "step": 3
+      },
+      {
+        "from": "Evaluation",
+        "to": "Deployment",
+        "what": "evaluated model",
+        "step": 4
+      },
+      {
+        "from": "Pretraining",
+        "to": "Evaluation",
+        "what": "periodic alignment and evaluation loop (gray circular arrow)",
+        "step": null
+      }
+    ],
+    "key_idea": "LLM development follows five stages, from data preparation through pretraining, alignment, evaluation and deployment, with pretraining periodically looping back into alignment and evaluation to assess and adjust intermediate models.",
+    "reading_order": "numbered circled stages guide the eye: ① Data Preparation, ② Pretraining, ③ Alignment, ④ Evaluation, ⑤ Deployment, with a gray circular arrow marking the periodic loop between pretraining, alignment and evaluation."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.32,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#2a7ada",
+        "used_for": "stage title bars, borders and arrows"
+      },
+      {
+        "hex": "#deedfb",
+        "used_for": "box backgrounds"
+      },
+      {
+        "hex": "#cdcdcd",
+        "used_for": "database/cylinder icons and other gray icon fills"
+      },
+      {
+        "hex": "#404040",
+        "used_for": "body text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "blue dashed borders around the five stage boxes",
+    "font": "Arial sans, 7pt, bold for stage titles",
+    "corners": "rounded",
+    "arrows": "blue solid arrows between stages, gray curved arrow for the periodic loop",
+    "icons": "vector icons: database cylinders for data stores, stacked-bar icon for placement strategy, cloud icon for deployment, checklist icon for evaluation, gear icons for alignment"
+  },
+  "encoding": {
+    "color_means": "blue = the five main pipeline-stage blocks and their connecting arrows; gray circular arrow = periodic feedback rather than a one-way stage transition",
+    "line_style_means": null,
+    "emphasis": "circled stage numbers and the distinct gray loop arrow draw attention to the iterative relationship between pretraining, alignment and evaluation, as called out in the text",
+    "reusable_patterns": [
+      "five-stage lifecycle grid with numbered ordering and a feedback loop drawn as a separate curved arrow"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-development",
+    "pretraining",
+    "alignment",
+    "evaluation",
+    "deployment",
+    "pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "Figure 1 depicts the comprehensive LLM development pipeline",
+      "encompassing five distinct stages (blue blocks)",
+      "grey circular arrow indicates that the pretraining stage enables periodical alignment"
+    ]
+  },
+  "summary": "This paper characterizes large language model development in the datacenter, and Figure 1 lays out the comprehensive LLM development pipeline it studies. Five circled-numbered, blue-outlined stage boxes are arranged in a grid: ① Data Preparation (containing a Process Pipeline of Collection/Curation/Tokenization and Data Stores holding Pretraining and Alignment Datasets), ② Pretraining (a Training Recipe of Model Selection/Data Sampling/Hyperparameter Configuration alongside a Placement Strategy diagram of data/pipeline/tensor parallelism), ③ Alignment (Fine-tuning, RLHF, Prompt Engineering), ④ Evaluation (Multi-task, Multi-metric, Distributed Eval.) and ⑤ Deployment (Conversion, Quantization). Blue arrows connect the stages in numbered order, while a distinct gray circular arrow links Pretraining back to Alignment and Evaluation, depicting the periodic loop where intermediate models are assessed and configurations adjusted on the fly. Small vector icons (database cylinders, gears, a cloud) mark each sub-step, giving the dense, single-column figure an at-a-glance map of the whole lifecycle.",
+  "summary_zh": "该图展示LLM开发的五个阶段流水线：数据准备、预训练、对齐、评测与部署，用蓝色方框和编号箭头依次连接，灰色环形箭头表示预训练阶段与对齐、评测之间的周期性反馈循环。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

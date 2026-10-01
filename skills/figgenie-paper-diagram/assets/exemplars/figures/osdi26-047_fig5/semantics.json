@@ -1,0 +1,239 @@
+{
+  "paper_id": "osdi26-047",
+  "fig": "5",
+  "system": {
+    "name": "SEER",
+    "one_liner": "an online context-learning rollout subsystem that speeds up synchronous LLM reinforcement learning via divided rollout, context-aware scheduling, and grouped speculative decoding",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Request Buffer",
+        "role": "provides a global view of pending and in-progress rollout work, tracking request chunks",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Context Manager",
+        "role": "logically centralized manager maintaining group-level contextual views and driving scheduling/draft decisions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Divided Rollout Scheduler (§4.2)",
+        "role": "breaks each request into smaller schedulable units for fine-grained placement",
+        "container": "Context Manager",
+        "novel": true
+      },
+      {
+        "name": "Context-aware Scheduler (§4.3)",
+        "role": "uses learned length context to approximate a longest-first policy reducing tail latency",
+        "container": "Context Manager",
+        "novel": true
+      },
+      {
+        "name": "Grouped Draft Server (§4.4)",
+        "role": "builds group-level speculative decoding and adjusts draft lengths adaptively",
+        "container": "Context Manager",
+        "novel": true
+      },
+      {
+        "name": "Inference Engine Pool",
+        "role": "hosts multiple model-serving instances backed by a distributed KVCache pool",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Instance 1",
+        "role": "a model-serving instance holding request chunks",
+        "container": "Inference Engine Pool",
+        "novel": false
+      },
+      {
+        "name": "Instance 2",
+        "role": "a model-serving instance holding request chunks",
+        "container": "Inference Engine Pool",
+        "novel": false
+      },
+      {
+        "name": "Instance 3",
+        "role": "a model-serving instance holding request chunks",
+        "container": "Inference Engine Pool",
+        "novel": false
+      },
+      {
+        "name": "Instance N",
+        "role": "a model-serving instance shown with KVCache load/offload and speculative draft interaction",
+        "container": "Inference Engine Pool",
+        "novel": false
+      },
+      {
+        "name": "Draft Client",
+        "role": "per-instance client participating in grouped speculative decoding",
+        "container": "Instance",
+        "novel": true
+      },
+      {
+        "name": "KVCache Load/Offload",
+        "role": "moves KVCache between hierarchical storage tiers for an instance",
+        "container": "Instance N",
+        "novel": true
+      },
+      {
+        "name": "KVCache Pooling with Hierarchical Storage",
+        "role": "distributed KVCache pool spanning GPU and CPU tiers, enabling migration across nodes without recomputation",
+        "container": "Inference Engine Pool",
+        "novel": true
+      },
+      {
+        "name": "Async Batch API for Clients",
+        "role": "asynchronous client-facing interface for submitting rollout requests",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Request Buffer",
+        "to": "Inference Engine Pool",
+        "what": "Divided Requests",
+        "step": null
+      },
+      {
+        "from": "Inference Engine Pool",
+        "to": "Request Buffer",
+        "what": "Stream Responses",
+        "step": null
+      },
+      {
+        "from": "Request Buffer",
+        "to": "Context Manager",
+        "what": "Req. States",
+        "step": null
+      },
+      {
+        "from": "Context Manager",
+        "to": "Request Buffer",
+        "what": "Scheduling",
+        "step": null
+      },
+      {
+        "from": "Instance N",
+        "to": "Context Manager",
+        "what": "Append",
+        "step": null
+      },
+      {
+        "from": "Context Manager",
+        "to": "Instance N",
+        "what": "Sync",
+        "step": null
+      },
+      {
+        "from": "Instance N",
+        "to": "Draft Client",
+        "what": "Speculate",
+        "step": null
+      }
+    ],
+    "key_idea": "SEER's rollout subsystem coordinates a Request Buffer and a Context Manager (running divided-rollout scheduling, context-aware scheduling, and grouped speculative decoding) above an Inference Engine Pool with hierarchical GPU/CPU KVCache pooling, separating ordinary request flow from a distinct context flow used for scheduling and speculation.",
+    "reading_order": "Top to bottom: Async Batch API and Request Buffer at top exchange request states with the Context Manager on the right, which drives scheduling and speculative decoding on the Inference Engine Pool instances below, each spanning GPU and CPU KVCache tiers."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.93,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "red outline for speculative-request rows and red dashed Context Flow arrows"
+      },
+      {
+        "hex": "#fbe3d6",
+        "used_for": "peach hatch fill for Completed Chunk and Draft Client boxes"
+      },
+      {
+        "hex": "#caeefb",
+        "used_for": "light cyan fill for GPU-side instance chunk rows"
+      },
+      {
+        "hex": "#fce8c5",
+        "used_for": "pale yellow fill for the Context-aware Scheduler box"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill of the legend box and instance container backgrounds"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "pale blue fill accent for Unscheduled Chunk"
+      },
+      {
+        "hex": "#d7e4be",
+        "used_for": "pale green fill for the Grouped Draft Server box"
+      },
+      {
+        "hex": "#fcbeb6",
+        "used_for": "pink fill for the Divided Rollout Scheduler box"
+      },
+      {
+        "hex": "#d9f2d0",
+        "used_for": "pale green hatch fill variant for chunk state"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.34pt, dashed on grouping boxes (Request Buffer, Context Manager, Inference Engine Pool, CPU band)",
+    "font": "Arial/Arial-Italic sans-serif, 4-6pt",
+    "corners": "mixed",
+    "arrows": "solid black arrows for request flow, dashed red arrows for context flow",
+    "icons": "none beyond the legend's colored chunk swatches"
+  },
+  "encoding": {
+    "color_means": "red = speculative request rows and context-flow signaling, peach/orange hatch = completed chunks, pale blue = unscheduled chunks, pale yellow = context-aware scheduling, pale green = grouped draft server/speculative decoding, light cyan = GPU-resident chunk state",
+    "line_style_means": "solid black arrows denote Request Flow (dispatch/streaming of requests and responses); dashed red arrows denote Context Flow (state sync, scheduling signals, speculative append/sync)",
+    "emphasis": "an explicit inline legend maps chunk hatching patterns and the two arrow styles to specific request states, letting the reader read each instance's scheduling state directly off its row of chunks",
+    "reusable_patterns": [
+      "control components (Request Buffer + Context Manager) sitting above a pool of execution instances, with a shared legend distinguishing data flow from context/control flow"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm reinforcement learning",
+    "rollout",
+    "kvcache pooling",
+    "speculative decoding",
+    "scheduling",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design of SEER (p.7)"
+    ],
+    "evidence": [
+      "the rollout subsystem is organized into three tightly connected components as illustrated in Figure 5",
+      "An Inference Engine Pool hosts multiple model-serving instances backed by a distributed KVCache pool",
+      "a logically centralized Context Manager maintains group-level contextual views and drives scheduling"
+    ]
+  },
+  "summary": "This figure gives the overview of SEER's rollout subsystem for fast synchronous LLM reinforcement learning. Three tightly connected components are shown: a Request Buffer giving a global view of pending and in-progress rollout work via chunk state (Spec. Req., Completed, In-flight, Unscheduled); a Context Manager housing three techniques (Divided Rollout Scheduler §4.2, Context-aware Scheduler §4.3, Grouped Draft Server §4.4) that drive scheduling and draft-generation decisions; and an Inference Engine Pool of model-serving instances backed by a distributed, hierarchically stored (GPU/CPU) KVCache pool, each instance running a Draft Client for group-level speculative decoding. The diagram distinguishes ordinary Request Flow (solid black arrows) from Context Flow (dashed red arrows) used for state syncing, scheduling and speculation, with an inline legend explaining the chunk-state color/hatch coding. It is a dashed-bordered, hatch-filled box diagram organized top-down from client-facing request handling to the GPU/CPU inference pool.",
+  "summary_zh": "该图展示了 SEER 系统概览：请求缓冲区维护请求分块状态，上下文管理器统筹三项技术（分割式调度、上下文感知调度、分组草稿服务器），驱动下方由 GPU/CPU 分层 KVCache 支撑的推理引擎实例池；图中以实线区分请求流、虚线红色区分上下文流。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

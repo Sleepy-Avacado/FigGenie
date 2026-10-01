@@ -1,0 +1,314 @@
+{
+  "paper_id": "osdi24-003",
+  "fig": "11",
+  "kind": "mechanism",
+  "system": {
+    "name": "Data-flow Availability",
+    "one_liner": "a proposed availability property and enforcement approach that propagates timing constraints consistently across the layers of autonomous cyber-physical systems",
+    "domain": [
+      "os-kernel",
+      "real-time-systems",
+      "robotics"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how a Prioritize/Abort decision from one timing inconsistency is applied consistently across middleware, kernel and network schedulers",
+    "base": "component",
+    "elements": [
+      {
+        "name": "T_k+1",
+        "kind": "box",
+        "role": "task instance A at time k+1 (pale pink Task Instance box)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T_k (Task Instance A)",
+        "kind": "box",
+        "role": "task instance A at time k (rose Task Instance box), later prioritized",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "T_k (Timing Vertex B)",
+        "kind": "box",
+        "role": "timing vertex for a task of application B (green box), the entity Tk/Tk+1 of A is compared against",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "comparator node that receives the task instances and timing vertex and flags a timing inconsistency",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Inconsistency",
+        "kind": "label",
+        "role": "names the condition C detects between the compared timing entities",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Prioritize",
+        "kind": "label",
+        "role": "decision outcome that boosts a schedulable entity's priority; recurs at every layer in green",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Abort",
+        "kind": "label",
+        "role": "decision outcome that cancels a schedulable entity; recurs at every layer in red",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Handler",
+        "kind": "box",
+        "role": "top-level timing-constraint-violation handler that receives the Abort/Prioritize decision",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Middleware-level Task Scheduler",
+        "kind": "box",
+        "role": "middleware layer that applies Prioritize/Abort to thread pools",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Thread Pool #1",
+        "kind": "lane",
+        "role": "thread pool holding Tk (prioritized), a neutral thread, and Tk+1 (aborted)",
+        "container": "Middleware-level Task Scheduler",
+        "highlighted": false
+      },
+      {
+        "name": "Thread Pool #2",
+        "kind": "lane",
+        "role": "another, unaffected thread pool in the same middleware scheduler",
+        "container": "Middleware-level Task Scheduler",
+        "highlighted": false
+      },
+      {
+        "name": "Kernel-level Task Scheduler",
+        "kind": "box",
+        "role": "OS layer that applies the same Prioritize/Abort decision to real-time kernel threads",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Network Packet Scheduler",
+        "kind": "box",
+        "role": "I/O layer queue that applies Prioritize to the packet belonging to the same schedulable entity",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "New Packet",
+        "kind": "port",
+        "role": "incoming packet entering the network queue, prioritized ahead of others",
+        "container": "Network Packet Scheduler",
+        "highlighted": false
+      },
+      {
+        "name": "Decision",
+        "kind": "icon",
+        "role": "a gate marking where the Prioritize/Abort instruction is applied at that layer; drawn once per layer",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "T_k+1",
+        "to": "C",
+        "what": "Task Instance A's Tk+1 feeds the inconsistency comparison",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "T_k (Task Instance A)",
+        "to": "C",
+        "what": "Task Instance A's Tk feeds the inconsistency comparison",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "T_k (Timing Vertex B)",
+        "to": "C",
+        "what": "application B's Tk timing vertex feeds the comparison",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "Handler",
+        "what": "a detected inconsistency raises Abort/Prioritize to the Handler",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Handler",
+        "to": "Middleware-level Task Scheduler",
+        "what": "the Abort/Prioritize decision propagates down to the middleware layer",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Middleware-level Task Scheduler",
+        "to": "Kernel-level Task Scheduler",
+        "what": "the same decision propagates down to the kernel layer",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Kernel-level Task Scheduler",
+        "to": "Network Packet Scheduler",
+        "what": "the decision finally propagates to the network I/O layer",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Prioritize",
+        "to": "Thread Pool #1",
+        "what": "raises Tk's thread priority within the pool",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Abort",
+        "to": "Thread Pool #1",
+        "what": "cancels Tk+1's thread within the pool",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Prioritize",
+        "to": "Network Packet Scheduler",
+        "what": "moves the associated packet ahead in the queue",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Prioritized",
+        "Aborted"
+      ],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "does comparing Tk/Tk+1 (task instance A) against the Timing Vertex (task B) at C reveal a timing inconsistency?",
+          "branches": [
+            "Prioritize",
+            "Abort"
+          ]
+        },
+        {
+          "question": "at each scheduling layer's Decision gate, apply Prioritize or Abort to this layer's representation of the entity (thread or packet)?",
+          "branches": [
+            "Prioritize → colour it rose",
+            "Abort → colour it pale pink"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "A single timing-inconsistency verdict (Prioritize Tk, Abort Tk+1) is associated once and then re-applied with the same colour coding at the middleware, kernel and network layers.",
+    "reading_order": "top: task instances and timing vertices feed the inconsistency check and Handler; then down through the Middleware, Kernel and Network scheduler boxes in turn"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.33,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e7e7e7",
+        "used_for": "light gray fill of the three scheduler-layer container panels (Middleware/Kernel/Network) and the Handler box"
+      },
+      {
+        "hex": "#d6aba6",
+        "used_for": "dusty rose fill marking Tk, the task instance that gets Prioritized, repeated in every layer"
+      },
+      {
+        "hex": "#b8c1ce",
+        "used_for": "blue-gray fill of the neutral filler thread/packet blocks and the C inconsistency-check node"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "medium gray arrowheads and the pale Tk+1 (Abort) block outlines"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "dark gray body text and box borders"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.1pt strokes, a mix of solid and dashed outlines (dashed on the pale Tk+1 box)",
+    "corners": "rounded",
+    "arrows": "many small solid black arrowheads (17), some curved, connecting the task/timing boxes into the inconsistency node and chaining the three scheduler layers",
+    "font": "HelveticaNeue sans, 4.5-7pt, bold for roughly 30% of labels (Prioritize/Abort/Handler headings)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "rose/dusty-pink = the Tk task instance that is Prioritized; pale pink = Tk+1 marked for Abort; blue-gray = a neutral, unaffected thread or packet; green text = Prioritize; red text = Abort/Inconsistency",
+    "line_style_means": "solid arrows carry the decision/data from the timing comparison down through Handler and the three scheduler layers; dashed outline distinguishes the lighter Tk+1 box",
+    "state_means": "Prioritized vs Aborted is told apart purely by fill colour (rose vs pale pink) and by the green/red caption text repeated identically at every layer",
+    "marker_means": "the letters A, B, C label the two task-instance owners and the comparison node; 'Decision' labels the gate at each layer boundary where the Prioritize/Abort instruction is applied",
+    "emphasis": "the same rose/pale-pink colour pair and green/red Prioritize/Abort labels are repeated unchanged at all three scheduler layers, visually proving the decision is consistent end-to-end",
+    "reusable_patterns": [
+      "one decision computed once at the top and re-drawn with identical colour coding at every layer of a stacked system to show consistent propagation"
+    ],
+    "weaknesses": [
+      "reusing bare letters A/B/C for both task owners and the comparison node, and 'T_k'/'T_k+1' for boxes in four different places, forces the reader to track meaning by position rather than by label"
+    ]
+  },
+  "tags": [
+    "real-time-scheduling",
+    "cross-layer",
+    "timing-constraint",
+    "priority-inheritance",
+    "Kairos",
+    "TDFG"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Design and Implementation of Kairos (p.10)"
+    ],
+    "evidence": [
+      "Kairos draws inspiration from the Path concept from Scout system",
+      "Path is updated to reflect the chain of schedulable entities that leads to execution",
+      "associating schedulable entities to data flows in TDFG"
+    ]
+  },
+  "summary": "Data-flow Availability proposes tracking a task-and-data-flow graph (TDFG) so that timing-constraint handling stays consistent across the many abstraction layers of an autonomous system's software stack. This figure illustrates Kairos's cross-layer scheduling association for one such decision: two instances of a task (Tk+1, Tk) and a Timing Vertex from a second task feed a comparison node C, which flags an 'Inconsistency' and raises a Prioritize-or-Abort verdict to a top-level Handler. The same verdict, coloured identically (rose for the prioritized Tk, pale pink for the aborted Tk+1), is then re-applied unchanged at three lower layers: the Middleware-level Task Scheduler colours the matching threads inside Thread Pool #1, the Kernel-level Task Scheduler applies it to kernel threads, and the Network Packet Scheduler moves the matching packet ahead in its queue, each behind its own 'Decision' gate.",
+  "summary_zh": "该图展示Kairos如何把Tk/Tk+1与另一任务的Timing Vertex比较得到的Prioritize/Abort判定，经Handler后原样传递到中间件、内核和网络三层调度器，用相同颜色标出优先与终止的实体。",
+  "confidence": "low",
+  "notes": "the paragraph only references Figure 11 once ('as shown in Figure 11') without describing Handler, C, the Decision gates, Thread Pool #1/#2 or the Network Packet Scheduler; those labels and the logic block are read directly from the figure. style.palette falls back to the measured PDF-extracted-SVG attributes since no separate source-SVG histogram was provided for this figure.",
+  "venue": "OSDI24"
+}

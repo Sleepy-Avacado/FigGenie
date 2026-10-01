@@ -1,0 +1,56 @@
+{
+  "id": "sosp25-060_fig4",
+  "kind": "mechanism",
+  "paper_id": "sosp25-060",
+  "fig": "4",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 4: Balanced and aligned cache eviction policy can improve hit rate.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "table",
+  "subject": "comparing imbalanced, unaligned, and balanced-aligned KV-cache eviction policies across two heterogeneous layer types",
+  "arrangement": "panels-column",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.72,
+  "n_elements": 13,
+  "n_relations": 4,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "tikz",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-060/src/fig4_align_eviction.svg",
+    "preview.png": "lab/extracted/sosp25-060/src/fig4_align_eviction.png",
+    "print.png": "lab/extracted/sosp25-060/sosp25-060_fig4_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Only evicting the same tokens in balanced numbers across both layer types keeps their caches aligned, so a later request can still hit; imbalanced or unaligned eviction breaks the hit.",
+      "what_to_learn": "One shared start fanning out to lettered outcomes, each ending in a pass/fail icon; the arrow labels carry the alternative's name",
+      "note_source": "doc"
+    }
+  ]
+}

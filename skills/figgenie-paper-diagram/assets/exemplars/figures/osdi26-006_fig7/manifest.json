@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-006_fig7",
+  "paper_id": "osdi26-006",
+  "fig": "7",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 7: Overview of memory channel allocation and abstraction (§4.1). To allocate memory channels to VMs, the hypervisor maps the VM’s guest physical memory to memory devices on the target channels (a). Memory on each channel is then exposed as a C-NUMA node (i.e., cNode) in the guest OS, and mult",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 4.28,
+  "n_components": 10,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-006/osdi26-006_fig7_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-006/osdi26-006_fig7_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence two-panel pick where panel (b) floorplans the real hardware: physical DIMM and CXL channels sit below a dashed guest-OS boundary, grouped by curly brace into per-channel nodes and coarser socket-level nodes above it.",
+      "what_to_learn": "Use a dashed boundary line to separate physical hardware channels from the virtualized abstraction built on top, and group repeated identical channels into a higher-level node with a curly brace rather than nested boxes; read the dense abbreviation legend first, since it gates both panels and is this figure's own weakness."
+    }
+  ]
+}

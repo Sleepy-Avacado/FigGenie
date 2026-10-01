@@ -1,0 +1,240 @@
+{
+  "template": "host-device",
+  "n": 29,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-051_fig4",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated three-box testbed variant: Compute Node, Switch, and Memory Node mirror the identical Network-Interface/PHY/SerDes tier stack, with the interconnect drawn as literal orange Ethernet cables into labeled P0/P1 ports rather than an abstract band.",
+      "what_to_learn": "When the interconnect is itself hardware worth showing, draw it as literal cabling with named ports (P0/P1) instead of a plain arrow, and mirror three color-coded node boxes (compute, switch, memory) with the same internal tier stack so the reader can compare them at a glance.",
+      "dir": "../figures/asplos25-051_fig4"
+    },
+    {
+      "id": "asplos25-132_fig4",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Densest host-device figure here (900+ shapes, double column, star-rated): a CPU issues commands over a Shared Buffer to a color-coded 4x4 heterogeneous CGRA tile mesh (red BrT, gold CoT, gray BaT tiles).",
+      "what_to_learn": "Color each tile type in a heterogeneous accelerator mesh by function (red, gold, gray) so the reader sees the mix at a glance, and use dashed insets to zoom into one tile's internal datapath; cap the insets at one or two, since three competing zooms in this figure fight the main diagram for attention.",
+      "dir": "../figures/asplos25-132_fig4"
+    },
+    {
+      "id": "asplos25-167_fig1",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "The purest host-device stack: SmartNIC tiers on top, a PCIe MMIO/DMA band in the middle, host tiers mirrored below.",
+      "what_to_learn": "Mirror the two sides around a named interconnect band; the band is a full-width row, not an arrow.",
+      "dir": "../figures/asplos25-167_fig1"
+    },
+    {
+      "id": "asplos26-067_fig3",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated symmetric-heterogeneous variant: private caches under two differently-colored protocol domains (pink Intel, purple Arm) read bottom-up through numbered request/response arrows into a shared dashed 'CXL Bridges' band and a shared Global Directory on top.",
+      "what_to_learn": "Give two heterogeneous host domains their own protocol color (pink, purple) that stays constant from their private caches up to the shared bridge, draw the bridge as one dashed band straddling both domains rather than a separate box, and number every request/response arrow even though this traversal runs bottom-up.",
+      "dir": "../figures/asplos26-067_fig3"
+    },
+    {
+      "id": "asplos26-100_fig3",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated: a green RTOSUnit device plugs into several points of a yellow RISC-V host processor (pipeline, duplicated register file, CSRs, memory arbiter), with lettered interface arrows (a)-(g) keyed to the text instead of a legend.",
+      "what_to_learn": "Color the device you are contributing green and the host structures it modifies yellow so the split is legible at a glance, then key each of its many wires into the host (pipeline, register file, CSRs, memory arbiter) with a letter cross-referenced in prose rather than crowding the figure with a legend.",
+      "dir": "../figures/asplos26-100_fig3"
+    },
+    {
+      "id": "nsdi24-062_fig5",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Medium-confidence but star-rated: five FPGA-resident modules (M1-M5) sit inside one dashed FPGA boundary between RNIC and Host, with an inside legend naming three arrow classes and three numbered circles marking the asynchronous analysis path.",
+      "what_to_learn": "Number every module consistently (M1-M5) so prose and figure cross-reference cleanly, dash exactly the one path the text calls asynchronous while keeping the main forwarding path's arrows solid, and put the two-or-three-color arrow legend inside the boundary box it explains rather than off to the side.",
+      "dir": "../figures/nsdi24-062_fig5"
+    },
+    {
+      "id": "nsdi26-021_fig10",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated: sender and receiver CIPU diagrams mirror each other with their two offload sub-boxes swapped in order, keying nine circled steps to a middle panel that also draws the packet as colored header segments.",
+      "what_to_learn": "Mirror sender and receiver by swapping the internal order of their shared sub-boxes (Bifrost/AVS becomes AVS/Bifrost) so the drawing itself shows the protocol is symmetric, and key numbered steps to named optimizations plus a packet-format strip in one shared middle panel, accepting the reader must glance away from both diagrams to read it.",
+      "dir": "../figures/nsdi26-021_fig10"
+    },
+    {
+      "id": "nsdi26-087_fig3",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Real-system side vs simulator side with a four-entry legend across the top encoding event type by arrow colour.",
+      "what_to_learn": "When the two sides exchange several kinds of event, encode the kind in arrow colour and put the legend above the whole figure.",
+      "dir": "../figures/nsdi26-087_fig3"
+    },
+    {
+      "id": "osdi24-034_fig6",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "An explicit boxed legend maps dashed to the management path and solid to the data path, separating the dashed host-side transport region above from the solid NIC hardware (TX Merge, RX Split, Flow Table) below.",
+      "what_to_learn": "Put a small boxed legend that names dashed as the management path and solid as the data path, then honor it everywhere: dashed for the host-side software containers, solid for the on-chip hardware, and color the two traffic directions (blue send, red receive) only where they physically cross at the net port.",
+      "dir": "../figures/osdi24-034_fig6"
+    },
+    {
+      "id": "osdi25-031_fig6",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "The only double-column host-device figure in the corpus, with a right-hand legend for within-GPU (solid) vs via-PCIe (dashed) movement.",
+      "what_to_learn": "At double column, stack GPU memory over CPU memory on the left and run the numbered mechanism left-to-right across both.",
+      "dir": "../figures/osdi25-031_fig6"
+    },
+    {
+      "id": "osdi26-020_figtex7",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "GPU / CPU / CXL-Mem boxes with circled numbers 1-3 that index a right-hand list rather than an arrow sequence.",
+      "what_to_learn": "Circled numbers can be an index into a legend list instead of a temporal order; say which by where the numbers point. (No PDF-extracted print.png; TeX-only figure.)",
+      "dir": "../figures/osdi26-020_figtex7"
+    },
+    {
+      "id": "osdi26-040_fig6",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated: matching section-number tags and identical blue fill tie the compute blade's cache controller directly to the switch's cache directory across the split, though the switch's own Control Plane band is left unlabeled inside.",
+      "what_to_learn": "Tag two mechanisms that must be read together, one on the host side and one on the device side, with the same paper-section number and fill color so the eye links them without an arrow; don't leave a named band like Control Plane empty, or its role stays implicit as it does here.",
+      "dir": "../figures/osdi26-040_fig6"
+    },
+    {
+      "id": "sosp25-002_fig1",
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated three-zone host-device figure: tan software stack sits above blue gem5 host (CPU/cache/memory simulators) which reaches a pink Accelerator Simulator zone through a dedicated Interconnect Simulator box, with MMIO and DMA arrows individually labeled.",
+      "what_to_learn": "Give the interconnect itself a named box (Interconnect Simulator) between the two color-coded zones instead of a bare arrow, and label the crossing arrows with the actual interface name (MMIO Read/Write, DMA); but unlike here, draw an arrow, not just vertical adjacency, when one box is said to run inside another.",
+      "dir": "../figures/sosp25-002_fig1"
+    },
+    {
+      "id": "asplos25-002_fig9",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "A software instance of the template: per-host Mint-agent/collector components connect via numbered, colored arrows to a separate Mint-backend, with a below-figure icon legend decoding the common-pattern, variable-parameter, and bloom-filter glyphs used on both sides.",
+      "what_to_learn": "Host-device does not require hardware: split a per-host agent from its backend service the same way, reuse one small icon set (pattern/parameter/metadata glyphs) on both sides so the legend only has to be defined once, and color the arrows by what they always report versus what they only report when sampled.",
+      "dir": "../figures/asplos25-002_fig9"
+    },
+    {
+      "id": "asplos25-107_fig6",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Client | server with an inset that zooms the SSD internals, and 6 circled numbers spanning both levels.",
+      "what_to_learn": "Numbering may cross the zoom boundary: steps 1-6 run through both the top-level machines and the zoomed SSD, tying the levels together.",
+      "dir": "../figures/asplos25-107_fig6"
+    },
+    {
+      "id": "asplos25-148_fig5",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Extreme size asymmetry: a small CPU/Controller pair broadcasts instructions into a large 3D grid of homogeneous vertex/edge PUs, with an inside dashed legend for the per-PU instruction/state/response cycle and a time axis beside the grid.",
+      "what_to_learn": "Let the two sides be wildly unequal in size when the paper's point is scale: a tiny controller box against a wall of identical device units, connected by fan-out (broadcast) and fan-in (convergecast) arrows, with a small dashed legend for the repeating per-unit cycle placed beside the small side.",
+      "dir": "../figures/asplos25-148_fig5"
+    },
+    {
+      "id": "asplos26-014_fig5",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Three vertical lanes - Grace CPU | NVLINK-C2C (900GB/s) | Hopper GPU - with per-side optimisation boxes.",
+      "what_to_learn": "Give the interconnect its own lane and label it with its bandwidth; per-side contributions then sit in the lanes they belong to.",
+      "dir": "../figures/asplos26-014_fig5"
+    },
+    {
+      "id": "asplos26-057_fig1",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Simple, single-flow host-device figure: shadow-stacked host boxes (implying N repeated hosts) sit symmetrically against one CXL memory-node box, joined by a single CXL Links arrow, though neither the host count nor request-vs-response direction is labeled.",
+      "what_to_learn": "A shadow-stacked box implies repetition even at nesting depth 2 with no lanes, but unlike this figure, label the stack with its count or an explicit N so the reader is not left guessing; also name what direction an interconnect arrow carries (request vs response) rather than leaving one plain arrow to mean everything.",
+      "dir": "../figures/asplos26-057_fig1"
+    },
+    {
+      "id": "asplos26-063_fig8",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Minimalist variant: plain margin labels 'CNs' and 'MNs', not a boxed band, stand in for the compute/memory-pool split, while colored bold-italic headings (teal Pipeline Execution, red Cache Management) flag the paper's two named mechanisms.",
+      "what_to_learn": "When space is tight, replace the usual boxed interconnect band with a single margin label per tier (CNs / MNs) and rely on it alone to mark the boundary; reuse a bold-italic color per named technique (teal, red) across figures so a reader recognizes the same mechanism later without re-reading a legend.",
+      "dir": "../figures/asplos26-063_fig8"
+    },
+    {
+      "id": "nsdi23-046_fig4",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "One of the corpus's rare bottom-up host-device figures: a packet climbs from the tan RMT Pipeline through the on-NIC scheduler and load balancer, crosses PCIe, and lands in repeated Core 1...N schedulers above.",
+      "what_to_learn": "Bottom-up is almost never used in this corpus, but it works here because the physical packet path genuinely rises from NIC to host; if your data truly flows upward, orient the figure that way rather than forcing top-down, and repeat the identical per-core sub-structure (Core 1...N) to show scale-out feeding a shared Core Allocator.",
+      "dir": "../figures/nsdi23-046_fig4"
+    },
+    {
+      "id": "nsdi23-077_fig4",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Medium-confidence top-down variant: three vertical colored paths (Outbound blue, Inbound-Fast solid red, Inbound-Slow dashed red) run through both sides of an explicit PCIe boundary, making solid-vs-dashed red read directly as hardware-vs-software retransmission.",
+      "what_to_learn": "Run each named path, labeled inline at the top instead of a legend box, as one vertical colored line from the software layer through the PCIe boundary into the matching hardware block, and use solid versus dashed on the same color to split a fast hardware path from its slow software fallback.",
+      "dir": "../figures/nsdi23-077_fig4"
+    },
+    {
+      "id": "nsdi24-106_fig2",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Sparse, icon-only figure (9 components, no fill colors): a thin dashed Client box sits opposite a heavier Edge box holding all three intelligence modules, split by a plain dashed-vs-solid legend for control versus content data.",
+      "what_to_learn": "Make the size imbalance do the argument for you: draw the thin client as a small box with only two items while every piece of intelligence piles into the edge/host box, and use icon line art with a single dashed-vs-solid legend instead of color when the point is thin-vs-capable, not many flow types.",
+      "dir": "../figures/nsdi24-106_fig2"
+    },
+    {
+      "id": "nsdi25-006_fig15",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Deployment-style figure with photographic server and device icons instead of abstract boxes: only the inserted Tooth module is outlined red inside a plain codec pipeline, and three colored lines fan out to three player devices.",
+      "what_to_learn": "When the paper's contribution is one small module inserted into an existing pipeline, outline just that box in red and leave its neighbors plain rather than recoloring the whole chain; realistic device photos can stand in for the host and client, but keep enough labels that arrow direction is not left to guesswork.",
+      "dir": "../figures/nsdi25-006_fig15"
+    },
+    {
+      "id": "nsdi25-036_fig2",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Client-cloud host-device variant: only the two novel modules, blue Game Frame Interceptor and green Remote VSync Coordinator labels, are colored against an otherwise plain black-and-white baseline pipeline (Input Injection, Game Rendering, Frame Encoding).",
+      "what_to_learn": "Leave the reused baseline pipeline plain black-and-white and color only the boxes and labels you are contributing (blue, green here); but unlike this figure, still add a small legend for those colors and draw an explicit arrow for a component like the Remote VSync Coordinator instead of implying its connections by position.",
+      "dir": "../figures/nsdi25-036_fig2"
+    },
+    {
+      "id": "nsdi26-109_fig3",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Double-column layout centers a literal circular free-list ring (Head/Tail, entries, null) inside the MN's Free MW Queue, with five circled steps and a dashed chain (MWTable to MW to Memory Chunk) crossing the CN/MN boundary.",
+      "what_to_learn": "Draw a ring buffer or free list as an actual circle with Head/Tail arrows and a null slot rather than a generic queue box, chain each table entry to its resource with a dashed indirection arrow, and number the steps so they cross the host/device boundary through explicit NIC boxes on both sides.",
+      "dir": "../figures/nsdi26-109_fig3"
+    },
+    {
+      "id": "osdi26-051_fig5",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Dense 14-component figure whose red-numbered 1-8 sequence overlays a Borrower/Lender pair sharing a coherent memory space, with a top four-color legend (control, command, data, metadata) the reader must cross-reference against numbers placed far below it.",
+      "what_to_learn": "Number the resource-sharing protocol steps in one bold color directly on the repeated peer boxes (Borrower/Lender) so the sequence reads without a key; but place the flow-type legend near those numbers, not at the opposite end of the figure, since this one forces a long eye trip between the two.",
+      "dir": "../figures/osdi26-051_fig5"
+    },
+    {
+      "id": "osdi26-079_fig3",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Double-column, dense figure mirrors the identical learned-index tree on both sides of a dashed NIC-Host PCIe divider, using matched cyan/orange region colors and green-highlighted 'new' nodes to show structural updates crossing the boundary.",
+      "what_to_learn": "Mirror the exact same data structure on both sides of the host/device boundary using two background tints (cyan device, orange host), reuse identical node names on both copies but recolor the ones a structural update just changed, and route curved cross-boundary arrows to carry the sync messages by name (patch, stitch).",
+      "dir": "../figures/osdi26-079_fig3"
+    },
+    {
+      "id": "sosp23-007_fig2",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Medium-confidence, top-down split: a large Local Node (DRAM cache sections, application processes, local Mira Runtime) sits above a small Far-Memory Node running the same-named Mira Runtime (remote), joined by one plain labeled network/interconnect arrow.",
+      "what_to_learn": "Reuse the exact same component name on both sides (Mira Runtime local vs remote) so the reader sees mirrored halves of one system, and let the two sides be unequal in size when one genuinely does more work; keep small repeated cache-section icons visually distinct, unlike here.",
+      "dir": "../figures/sosp23-007_fig2"
+    },
+    {
+      "id": "sosp24-035_fig7",
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Offline | Online split by a dashed vertical rule, with CPU and GPU sides, an icon legend on top and circled numbers 1-4.",
+      "what_to_learn": "One figure can carry two orthogonal splits (offline/online vertically, CPU/GPU horizontally) if each uses a different device: a dashed rule for one, lane labels for the other.",
+      "dir": "../figures/sosp24-035_fig7"
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "paper_id": "sosp24-035",
+  "fig": "7",
+  "system": {
+    "name": "PowerInfer",
+    "one_liner": "a high-speed LLM inference engine on a PC with a single consumer-grade GPU exploiting activation locality",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "LLM",
+        "role": "input model whose activation patterns are profiled",
+        "container": "Offline",
+        "novel": false
+      },
+      {
+        "name": "Profiler & Solver",
+        "role": "offline profiler collecting activation data and solving hot/cold neuron placement",
+        "container": "Offline",
+        "novel": true
+      },
+      {
+        "name": "Hot",
+        "role": "frequently activated neurons, preloaded on GPU",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cold",
+        "role": "rarely activated neurons, kept on CPU",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CPU Executor",
+        "role": "executes computation for cold-activated neurons on CPU",
+        "container": "Online",
+        "novel": true
+      },
+      {
+        "name": "GPU Executor",
+        "role": "executes computation for hot-activated neurons on GPU with predicated activation",
+        "container": "Online",
+        "novel": true
+      },
+      {
+        "name": "Predicated Activation",
+        "role": "runtime prediction of whether a neuron will be active",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CPU Core",
+        "role": "CPU compute unit",
+        "container": "CPU",
+        "novel": false
+      },
+      {
+        "name": "GPU SM",
+        "role": "GPU streaming multiprocessor compute unit",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "CPU Mem",
+        "role": "stores cold-neuron weights on CPU",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "GPU Mem",
+        "role": "stores hot-neuron weights on GPU",
+        "container": "GPU",
+        "novel": true
+      },
+      {
+        "name": "PCIe",
+        "role": "interconnect between CPU and GPU components",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "LLM",
+        "to": "Profiler & Solver",
+        "what": "activation profiling",
+        "step": 1
+      },
+      {
+        "from": "Profiler & Solver",
+        "to": "Profiler & Solver",
+        "what": "hot/cold neuron partitioning",
+        "step": 2
+      },
+      {
+        "from": "Profiler & Solver",
+        "to": "CPU Mem",
+        "what": "cold-neuron weight placement",
+        "step": 3
+      },
+      {
+        "from": "Profiler & Solver",
+        "to": "GPU Mem",
+        "what": "hot-neuron weight placement",
+        "step": 3
+      },
+      {
+        "from": "CPU Executor",
+        "to": "GPU Executor",
+        "what": "calculation/loading over PCIe",
+        "step": 4
+      }
+    ],
+    "key_idea": "An offline profiler classifies neurons as hot or cold based on activation frequency; online, hot neurons are preloaded on the GPU and cold neurons stay on the CPU, with a predicated-activation executor on each side computing only the neurons likely to be active.",
+    "reading_order": "left to right: Offline box (LLM, Profiler & Solver with hot/cold neuron grids) feeds into the Online box on the right, split top (CPU/GPU Executors) and bottom (CPU/GPU Mem), connected via PCIe, with a legend of icons at the top."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.75,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#035f00",
+        "used_for": "hot neurons (frequently activated)"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "cold neurons (rarely activated)"
+      },
+      {
+        "hex": "#003dff",
+        "used_for": "GPU-related elements and loading arrows"
+      },
+      {
+        "hex": "#ffbe78",
+        "used_for": "CPU Core icons"
+      },
+      {
+        "hex": "#ede8f2",
+        "used_for": "GPU SM icon fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.75pt black/colored dashed strokes separating Offline/Online and CPU/GPU regions, mixed corners",
+    "font": "HelveticaNeue-Bold / Helvetica sans",
+    "corners": "mixed",
+    "arrows": "circled numbered curved arrows; red arrows for calculation, blue arrows for loading, per the inline legend",
+    "icons": "small square icons for hot/cold neurons, CPU core, GPU SM; circle icon for predicated activation"
+  },
+  "encoding": {
+    "color_means": "green = hot (frequently-activated) neurons preloaded on GPU, gray = cold neurons kept on CPU, blue = GPU-side loading/compute elements",
+    "line_style_means": "red arrows denote calculation, blue arrows denote loading, per the figure's own legend",
+    "emphasis": "an explicit top legend plus color-coded hot/cold neuron squares are carried consistently from the offline profiler through to CPU/GPU memory layout",
+    "reusable_patterns": [
+      "offline/online two-phase architecture with an explicit icon legend",
+      "host-device split connected via PCIe"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-inference",
+    "activation-sparsity",
+    "gpu-cpu-hybrid",
+    "offloading",
+    "neuron-locality"
+  ],
+  "provenance": {
+    "sections": [
+      "4 PowerInfer Overview (p.5)"
+    ],
+    "evidence": [
+      "Figure 7 presents an architectural overview of PowerInfer, comprising both offline and online components.",
+      "PowerInfer preloads the GPU with weights for neurons that activate frequently",
+      "the inference engine loads two types of neurons into both GPU and CPU"
+    ]
+  },
+  "summary": "PowerInfer speeds up LLM inference on a single consumer GPU by exploiting the locality of neuron activations. Figure 7 shows its architecture and workflow split into an Offline and an Online phase, with an inline icon legend (hot/cold neuron, predicated activation, CPU core, GPU SM, calculation vs. loading arrows) at the top. Offline, a Profiler & Solver analyzes the LLM's activation data and partitions neurons into hot (frequently activated, green) and cold (rarely activated, gray) sets. Online, these placements determine that hot-neuron weights are preloaded into GPU Mem and cold-neuron weights stay in CPU Mem; a GPU Executor and CPU Executor each use predicated activation to compute only the neurons predicted active, communicating over PCIe. Circled numbers trace the flow from profiling through partitioning to the online CPU/GPU execution and data loading.",
+  "summary_zh": "图7展示PowerInfer的离线-在线架构：离线阶段的Profiler & Solver依据激活频率将神经元分为热（绿色，常激活）与冷（灰色，少激活）；在线阶段热神经元权重预载入GPU显存、冷神经元留在CPU内存，CPU与GPU执行器通过PCIe协同、按预测激活仅计算所需神经元，图顶部附带图标图例。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

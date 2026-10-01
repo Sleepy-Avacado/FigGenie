@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-110_fig2",
+  "paper_id": "asplos25-110",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. A high level overview of the Virgo microarchi- tecture. The Gemmini-based matrix unit is disaggregated out from the SIMT cores into a separate unit in the cluster. Dashed lines indicate optionally instantiated modules for evaluation, such as the core-coupled Tensor Core.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "illustrator",
+  "aspect": 1.3,
+  "n_components": 31,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-110/src/fig2_fig-cluster-architecture.svg",
+    "preview.png": "lab/extracted/asplos25-110/src/fig2_fig-cluster-architecture.png",
+    "print.png": "lab/extracted/asplos25-110/asplos25-110_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "The reference doc's own canonical block-floorplan example: two SIMT cores sit beside a disaggregated Gemmini systolic array, with a right-side legend naming exactly three traffic colors (main-memory, shared-memory, DMA) across 31 components.",
+      "what_to_learn": "Cap the traffic-color legend at three classes exactly, put it in a free column on the right, and use dashed module outlines for hardware blocks that only exist in some evaluation configurations; expect this density (277 shapes) to require careful, uncluttered grouping into named regions (Tensor Core, Shared Memory, Gemmini)."
+    }
+  ]
+}

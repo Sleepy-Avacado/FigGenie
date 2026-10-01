@@ -1,0 +1,276 @@
+{
+  "paper_id": "osdi25-033",
+  "fig": "4",
+  "system": {
+    "name": "FuseLink",
+    "one_liner": "a GPU communication system that routes worker data through shared relay buffers to whichever NIC among several is idle",
+    "domain": [
+      "networking",
+      "gpu-communication",
+      "distributed"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "CPU",
+        "role": "hosts the Net Op. Queues and issues control-path signaling to GPU workers via shared memory",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Net Op. Queues",
+        "role": "per-worker network operation queues used for control-path communication via shared memory",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "W0",
+        "role": "GPU worker 0; in this example it sends via both NIC 0 and NIC 1 (relaying through GPU1)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "W1",
+        "role": "GPU worker 1; in this example it is not sending any traffic, so its GPU1 Mem buffer and NIC are borrowed by W0",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "W2",
+        "role": "GPU worker 2; sends its own data independently via GPU2 Mem to its NIC",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "W3",
+        "role": "GPU worker 3; sends its own data independently via GPU3 Mem to its NIC",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU0 Mem",
+        "role": "relay buffer in GPU0's memory receiving W0's data directly",
+        "container": "Buffers",
+        "novel": true
+      },
+      {
+        "name": "GPU1 Mem",
+        "role": "relay buffer in GPU1's memory receiving W0's data via NVLink so it can also be sent through NIC1",
+        "container": "Buffers",
+        "novel": true
+      },
+      {
+        "name": "GPU2 Mem",
+        "role": "relay buffer in GPU2's memory for W2's data",
+        "container": "Buffers",
+        "novel": true
+      },
+      {
+        "name": "GPU3 Mem",
+        "role": "relay buffer in GPU3's memory for W3's data",
+        "container": "Buffers",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "routes data to relays and monitors NIC load, posting to an idle NIC's queue pairs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "route data to relays (4.1, 4.2)",
+        "role": "Scheduler subroutine that selects which relay buffer/GPU to route outgoing data to",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "monitor NIC (4.3)",
+        "role": "Scheduler subroutine that tracks NIC sending load status",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "QPs",
+        "role": "queue pairs the Scheduler posts to on an idle NIC for transmission",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "CPU",
+        "to": "W0",
+        "what": "control path via shmem",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "W1",
+        "what": "control path via shmem",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "W2",
+        "what": "control path via shmem",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "W3",
+        "what": "control path via shmem",
+        "step": null
+      },
+      {
+        "from": "W0",
+        "to": "GPU0 Mem",
+        "what": "data (send buffer)",
+        "step": null
+      },
+      {
+        "from": "W0",
+        "to": "GPU1 Mem",
+        "what": "data via NVLink",
+        "step": null
+      },
+      {
+        "from": "GPU0 Mem",
+        "to": "NICs",
+        "what": "data path",
+        "step": null
+      },
+      {
+        "from": "GPU1 Mem",
+        "to": "NICs",
+        "what": "data path",
+        "step": null
+      },
+      {
+        "from": "W2",
+        "to": "GPU2 Mem",
+        "what": "data (send buffer)",
+        "step": null
+      },
+      {
+        "from": "GPU2 Mem",
+        "to": "NICs",
+        "what": "data path",
+        "step": null
+      },
+      {
+        "from": "W3",
+        "to": "GPU3 Mem",
+        "what": "data (send buffer)",
+        "step": null
+      },
+      {
+        "from": "GPU3 Mem",
+        "to": "NICs",
+        "what": "data path",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "QPs",
+        "what": "post to idle NIC",
+        "step": null
+      }
+    ],
+    "key_idea": "FuseLink's scheduler routes each GPU worker's outgoing data through a relay buffer in some GPU's memory (possibly reached via NVLink from another GPU) and posts it to whichever NIC is idle, decoupling workers from fixed NIC assignment.",
+    "reading_order": "Left to right: CPU issues control signals (dashed) to each GPU worker row; colored solid arrows trace each worker's data through a GPU-memory relay buffer to its NIC(s)."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.41,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b85450",
+        "used_for": "brick red for the dashed CPU-to-worker control-path lines (legend: control path via shmem)"
+      },
+      {
+        "hex": "#e8e8e8",
+        "used_for": "light gray shading of each worker's row band and the CPU/Scheduler panels"
+      },
+      {
+        "hex": "#789dd4",
+        "used_for": "medium blue for W0's data-path arrows (direct to GPU0 Mem and via NVLink to GPU1 Mem)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue fill of the GPU0 Mem and GPU1 Mem relay-buffer icons"
+      },
+      {
+        "hex": "#9ad479",
+        "used_for": "medium green for W2's data-path arrow to GPU2 Mem"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green fill of the GPU2 Mem relay-buffer icon"
+      },
+      {
+        "hex": "#b188c4",
+        "used_for": "medium purple for W3's data-path arrow to GPU3 Mem"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "light purple fill of the GPU3 Mem relay-buffer icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1pt solid outlines on boxes; dashed red lines for control paths; each relay-buffer's stacked-square icon has a darker outline matching its fill hue",
+    "font": "sans-serif (embedded/subset font), 4.5-7.5pt, moderately bold for box titles",
+    "corners": "square",
+    "arrows": "thick solid colored arrows for data paths (one color per flow), thin dashed red lines for control paths, thin black arrow for Scheduler-to-QPs; a stacked-square icon denotes a relay buffer",
+    "icons": "stacked-square 'relay buffer' icon (repeated 3x per GPU to suggest multiple buffers), per the legend"
+  },
+  "encoding": {
+    "color_means": "each data-path arrow and its destination relay buffer share one hue per logical flow (blue = W0's traffic reaching GPU0/GPU1 Mem, green = W2's own traffic, purple = W3's own traffic); red dashed lines mark control-path signaling instead of data",
+    "line_style_means": "dashed red = control path via shared memory; solid thick colored arrows = data path; both are spelled out in the bottom legend",
+    "emphasis": "Using the same blue for both the GPU0 Mem and GPU1 Mem arrows/buffers, even though they sit on separate worker rows, visually shows FuseLink's key trick: an idle worker's (W1's) GPU memory and NIC can be borrowed, via NVLink, to give a busy worker (W0) a second network path",
+    "reusable_patterns": [
+      "separate legend-defined line styles for control path vs data path",
+      "color reused across rows to show one flow borrowing another row's resources",
+      "stacked-icon shorthand for 'one of several buffer instances'"
+    ],
+    "weaknesses": [
+      "colors are not explained in the legend itself (only line/box styles are), so mapping blue/green/purple to specific workers relies on reading the caption"
+    ]
+  },
+  "tags": [
+    "gpu-communication",
+    "multi-nic",
+    "rdma",
+    "networking",
+    "load-balancing",
+    "gpu-server"
+  ],
+  "provenance": {
+    "sections": [
+      "3 FuseLink Overview (p.6)"
+    ],
+    "evidence": [
+      "FuseLink selects a router GPU for relaying data to the NIC.",
+      "In Figure 4, GPU1 is the router when GPU0 sends via NIC1.",
+      "Figure 4 shows data routing through NVLink from GPU0 to GPU1 and sent through NIC1."
+    ]
+  },
+  "summary": "Figure 4 shows FuseLink's architecture in a GPU server with four GPU workers (W0-W3) and four NICs. A CPU issues control-path signaling over shared memory (red dashed lines) to each worker's Net Op. Queues, while colored data-path arrows trace each worker's outgoing data through a relay buffer in GPU memory to a NIC. The figure illustrates one concrete example: W0 sends via both NIC 0 (directly from GPU0 Mem) and NIC 1, reaching the latter by routing data over NVLink into GPU1 Mem, since W1 is idle and not using its own NIC. W2 and W3 independently send through their own GPU2 Mem and GPU3 Mem buffers. A Scheduler block routes data to relays and monitors NIC load, posting transmissions to an idle NIC's queue pairs (QPs). A legend defines control path, data path, and relay buffer.",
+  "summary_zh": "图4展示FuseLink架构(4个GPU worker、4块网卡):CPU经共享内存发控制信号,worker数据经GPU显存relay buffer送往网卡;W0借NVLink经空闲W1的GPU1显存双网卡发送;调度器负责路由与监控。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

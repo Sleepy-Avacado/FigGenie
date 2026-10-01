@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-045_figtex1",
+  "paper_id": "osdi23-045",
+  "fig": "tex1",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Overview of MGG.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "chrome",
+  "aspect": 2.52,
+  "n_components": 15,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-045/src/texfig1_overview_v2.svg",
+    "preview.png": "lab/extracted/osdi23-045/src/texfig1_overview_v2.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "System box with an external hardware platform and a red-highlighted optimizer closing the tuning loop back into the system.",
+      "what_to_learn": "Accent-colour only the box that closes the loop; the dashed system boundary then separates 'what we built' from the platform it runs on."
+    }
+  ]
+}

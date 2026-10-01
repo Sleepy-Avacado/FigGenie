@@ -1,0 +1,187 @@
+{
+  "paper_id": "nsdi26-036",
+  "fig": "3",
+  "system": {
+    "name": "MoCE",
+    "one_liner": "a framework that mixes context-aware diagnostic experts via a policy layer, control plane, and execution plane to find incident root causes",
+    "domain": [
+      "observability",
+      "reliability",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Policy layer",
+        "container": null,
+        "role": "decides how to combine experts, which experts to run, and how much historical data to analyze",
+        "novel": true
+      },
+      {
+        "name": "Library of Experts",
+        "container": null,
+        "role": "collection of pre-built context-aware expert DAGs that the policy layer selects from",
+        "novel": true
+      },
+      {
+        "name": "Control plane",
+        "container": null,
+        "role": "creates a LazyDAG instance for the analysis based on the policies, running experts over telemetry to produce root causes",
+        "novel": true
+      },
+      {
+        "name": "Execution plane",
+        "container": null,
+        "role": "schedules all database and compute operations of the resulting MoCE DAG",
+        "novel": true
+      },
+      {
+        "name": "Anomaly",
+        "container": "Control plane",
+        "role": "the input anomaly incident specification that triggers the analysis",
+        "novel": false
+      },
+      {
+        "name": "Telemetry 1",
+        "container": "Control plane",
+        "role": "one telemetry source fed into an expert in the LazyDAG",
+        "novel": false
+      },
+      {
+        "name": "Telemetry 2",
+        "container": "Control plane",
+        "role": "another telemetry source fed into an expert in the LazyDAG",
+        "novel": false
+      },
+      {
+        "name": "MoCE DAG",
+        "container": "Execution plane",
+        "role": "the concrete DAG of database and compute operations scheduled by the execution plane",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Library of Experts",
+        "to": "Policy layer",
+        "what": "available experts",
+        "step": null
+      },
+      {
+        "from": "Policy layer",
+        "to": "Control plane",
+        "what": "policies",
+        "step": null
+      },
+      {
+        "from": "Anomaly",
+        "to": "Control plane",
+        "what": "anomaly incident",
+        "step": null
+      },
+      {
+        "from": "Telemetry 1",
+        "to": "Control plane",
+        "what": "telemetry data",
+        "step": null
+      },
+      {
+        "from": "Telemetry 2",
+        "to": "Control plane",
+        "what": "telemetry data",
+        "step": null
+      },
+      {
+        "from": "Control plane",
+        "to": "Execution plane",
+        "what": "MoCE DAG",
+        "step": null
+      }
+    ],
+    "key_idea": "MoCE diagnoses incidents in four layers: a policy layer chooses experts and history length, a library supplies expert DAGs, a control plane runs a LazyDAG over telemetry to get root causes, and an execution plane schedules the resulting operations.",
+    "reading_order": "Top-down: Policy layer and Library of Experts side by side, then through a dashed divider into the Control plane's DAG, then into the Execution plane below."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 4,
+    "column": "single",
+    "aspect": 1.27,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#156082",
+        "used_for": "dark cyan/blue structural lines of the Library of Experts diagrams"
+      },
+      {
+        "hex": "#83cbeb",
+        "used_for": "light cyan triangle icons for telemetry/anomaly inputs"
+      },
+      {
+        "hex": "#c04f15",
+        "used_for": "burnt-orange fill of the RC/merge boxes in the Control plane's DAG"
+      },
+      {
+        "hex": "#13501b",
+        "used_for": "dark green diamond icons for expert computation nodes"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray fill of the Policy layer's bullet list and Execution plane icons"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.45pt) strokes, dashed horizontal rules separating the four layers",
+    "font": "Gill Sans-like sans, 3.5-9.5pt, no bold weight, larger sizes for section titles",
+    "corners": "mixed",
+    "arrows": "many small straight arrows with filled heads inside the DAG diagrams, plus larger connecting arrows between layers",
+    "icons": "vector icons: a person/brain icon (Policy layer), small DAG glyphs (Library of Experts), database cylinder icons (Execution plane)"
+  },
+  "encoding": {
+    "color_means": "dark blue/cyan = structural elements of the expert DAGs, green diamonds = expert computation nodes, orange = merged root-cause/RC output boxes, light-blue triangles = telemetry/anomaly inputs",
+    "line_style_means": "dashed horizontal rules separate the four logical layers (policy, library, control, execution); solid arrows show data flow within and between layers",
+    "emphasis": "the four layers are stacked and visually separated by dashed rules and bold section titles, mirroring the caption's explicit (a)-(d) component list; the Control plane's internal DAG reuses the Library of Experts' icon style to show it instantiates one of those expert graphs",
+    "reusable_patterns": [
+      "stacked layered system diagram with an explicit small-multiples panel for a component that has many instances",
+      "database/pipeline icon row for the execution/scheduling layer"
+    ],
+    "weaknesses": [
+      "the internal DAG node labels in the Control plane are set in very small text that is hard to read even in the source figure",
+      "no explicit legend for the triangle vs. diamond icon shapes"
+    ]
+  },
+  "tags": [
+    "root-cause-analysis",
+    "troubleshooting",
+    "mixture-of-experts",
+    "DAG-scheduling",
+    "observability",
+    "policy-control-execution"
+  ],
+  "provenance": {
+    "sections": [
+      "3 MoCE Design Overview (p.6)",
+      "4 MoCE Detailed Design (p.7)"
+    ],
+    "evidence": [
+      "MoCE is organized across four logical layers as shown in Figure 3",
+      "the DAG framework to author new context-aware experts (for the library of experts)",
+      "the mixture policy for routing incidents and combining results from experts"
+    ]
+  },
+  "summary": "Figure 3 shows the top-level architecture of MoCE, a root-cause diagnosis framework for Internet-scale services, organized into four logical layers. A Policy layer (top-left) decides how to combine experts, which experts to run, and how much historical data to analyze, drawing on a Library of Experts (top-right, shown as a small-multiples grid of expert DAGs). Below a dashed divider, the Control plane creates a LazyDAG instance from an anomaly specification and telemetry inputs, running expert computations (green diamond nodes) that merge into root causes. A second divider leads to the Execution plane, which schedules the resulting MoCE DAG's database and compute operations, shown as a row of pipeline/database icons. The figure is a compact, icon-heavy stacked-layer diagram using dark blue, green, and orange flat fills with no numbered steps.",
+  "summary_zh": "该图展示MoCE系统四层架构：策略层决定如何组合专家及分析的历史数据长度，专家库提供多种上下文相关专家DAG；控制平面基于策略生成LazyDAG处理异常与遥测数据得到根因；执行平面调度MoCE DAG的数据库与计算操作。",
+  "confidence": "medium",
+  "notes": "inner DAG node labels in the Control plane (the small RC.. boxes and the merge box) are too small to read reliably from the preview, so they are omitted as named components.",
+  "venue": "NSDI26"
+}

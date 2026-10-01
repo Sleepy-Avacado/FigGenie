@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-045_fig4",
+  "paper_id": "nsdi25-045",
+  "fig": "4",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 4: Overview of ZTS.",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.04,
+  "n_components": 10,
+  "n_flows": 10,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-045/nsdi25-045_fig4_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-045/nsdi25-045_fig4_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence double-column pipeline in the phase-divided variant: a dashed horizontal rule splits the canvas into a Policy-Authoring band and an Implementing/Monitoring band, while three circled numbers trace the green process boxes across both.",
+      "what_to_learn": "Use a single dashed rule across the whole canvas to separate two operational phases instead of drawing two boxes, keep the numbered main-path boxes one colour against plain icon inputs, and label each phase in coloured text at the rule itself."
+    }
+  ]
+}

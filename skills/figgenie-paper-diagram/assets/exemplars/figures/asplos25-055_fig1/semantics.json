@@ -1,0 +1,210 @@
+{
+  "paper_id": "asplos25-055",
+  "fig": "1",
+  "system": {
+    "name": "Contract Shadow Logic",
+    "one_liner": "a formal RTL verification technique that scales secure-speculation contract checking to out-of-order processors",
+    "domain": [
+      "security",
+      "hardware-verification"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "ISA1",
+        "role": "single-cycle reference machine running program P with one secret memory instance",
+        "container": "(a) Baseline",
+        "novel": false
+      },
+      {
+        "name": "ISA2",
+        "role": "single-cycle reference machine running program P with a differing secret memory instance",
+        "container": "(a) Baseline",
+        "novel": false
+      },
+      {
+        "name": "1-cycle Processor",
+        "role": "single-cycle ISA-level machine used to define the contract constraint check",
+        "container": "(a) Baseline",
+        "novel": false
+      },
+      {
+        "name": "Contract Constraint Check",
+        "role": "equivalence check on O_ISA deciding whether program P must be protected",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "All Programs",
+        "role": "the universe of programs filtered by the contract constraint check",
+        "container": "(a) Baseline",
+        "novel": false
+      },
+      {
+        "name": "OoO1",
+        "role": "out-of-order processor instance with a secret memory instance",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "OoO2",
+        "role": "out-of-order processor instance with a differing secret memory instance",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "IF",
+        "role": "instruction fetch stage of the out-of-order pipeline",
+        "container": "OoO1 / OoO2",
+        "novel": false
+      },
+      {
+        "name": "ID",
+        "role": "instruction decode stage of the out-of-order pipeline",
+        "container": "OoO1 / OoO2",
+        "novel": false
+      },
+      {
+        "name": "ROB",
+        "role": "reorder buffer stage of the out-of-order pipeline",
+        "container": "OoO1 / OoO2",
+        "novel": false
+      },
+      {
+        "name": "Commit",
+        "role": "commit stage of the out-of-order pipeline",
+        "container": "OoO1 / OoO2",
+        "novel": false
+      },
+      {
+        "name": "FU",
+        "role": "functional unit executing instructions",
+        "container": "OoO1 / OoO2",
+        "novel": false
+      },
+      {
+        "name": "MEM",
+        "role": "memory unit of the out-of-order processor",
+        "container": "OoO1 / OoO2",
+        "novel": false
+      },
+      {
+        "name": "Leakage Assertion Check",
+        "role": "equivalence check on O_muArch deciding whether the microarchitecture leaks the secret",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "1-cycle Processor",
+        "to": "Contract Constraint Check",
+        "what": "O_ISA (ISA-level observation)",
+        "step": null
+      },
+      {
+        "from": "OoO1",
+        "to": "Leakage Assertion Check",
+        "what": "O_muArch (microarchitecture-level observation)",
+        "step": null
+      },
+      {
+        "from": "OoO2",
+        "to": "Leakage Assertion Check",
+        "what": "O_muArch (microarchitecture-level observation)",
+        "step": null
+      },
+      {
+        "from": "OoO1",
+        "to": "Contract Constraint Check",
+        "what": "O_ISA computed directly on the out-of-order machine via shadow logic",
+        "step": null
+      }
+    ],
+    "key_idea": "Fold the ISA-level contract constraint check into shadow logic attached to the out-of-order processors, reducing a four-machine verification problem to two machines plus shadow logic.",
+    "reading_order": "Left panel (a) baseline read top-to-bottom then right; the black arrow leads to panel (b) which mirrors the OoO boxes with the ISA check now embedded via shadow logic."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.13,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "O_muArch labels and the leakage-assertion-check dotted connectors (blue)"
+      },
+      {
+        "hex": "#385723",
+        "used_for": "O_ISA labels and the contract-constraint-check dashed connectors (dark green)"
+      },
+      {
+        "hex": "#2e75b6",
+        "used_for": "secondary blue accent on connectors/icons"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "secondary green accent on connectors/icons"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "lighter green accent on connectors/icons"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black boxes with thin (~0.23pt) solid outlines; colored dashed/dotted lines for the two signal paths",
+    "font": "Calibri sans, 4-5.5pt, bold used sparingly for panel labels (a)/(b)",
+    "corners": "square",
+    "arrows": "orthogonal with small filled/open triangular heads; a large black block arrow connects the two panels",
+    "icons": "vector: funnel/filter over 'All Programs', magnifying glass over the leakage check, pickaxe icon marking the added shadow logic"
+  },
+  "encoding": {
+    "color_means": "green = O_ISA / ISA-level contract-constraint-check path, blue = O_muArch / microarchitecture-level leakage-assertion-check path",
+    "line_style_means": "dashed green = ISA-level equivalence-check signal, dotted blue = microarchitecture-level equivalence-check signal",
+    "emphasis": "a pickaxe icon on the contract-constraint-check box in panel (b) marks it as the newly added shadow logic versus the unchanged baseline in panel (a)",
+    "reusable_patterns": [
+      "baseline-vs-proposed two-panel comparison sharing identical processor-block iconography",
+      "labeled dashed/dotted signal paths threading between repeated processor blocks"
+    ],
+    "weaknesses": [
+      "dense ISA notation (O_ISA, O_muArch) requires the caption/text to decode",
+      "icons (funnel, magnifying glass, pickaxe) are not explained by an in-figure legend"
+    ]
+  },
+  "tags": [
+    "speculative-execution",
+    "RTL-verification",
+    "formal-methods",
+    "hardware-security",
+    "contract-based-verification",
+    "out-of-order-processor"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Motivation and Insights (p.4)",
+      "4 Motivation and Insights (p.5)"
+    ],
+    "evidence": [
+      "visualized in Fig. 1(a)",
+      "shown in Fig. 1(b)",
+      "single-cycle machine is contained in the out-of-order machine"
+    ]
+  },
+  "summary": "This two-panel figure from the Contract Shadow Logic paper contrasts a baseline RTL security-verification scheme (a) with the proposed technique (b). In the baseline, two single-cycle processors running the same program under differing secret memories feed a Contract Constraint Check producing an ISA-level observation O_ISA, while two out-of-order processors — each with IF, ID, ROB, FU, MEM and Commit stages — feed a Leakage Assertion Check producing a microarchitectural observation O_muArch, together requiring four state machines. Panel (b) shows the contract constraint check folded directly into shadow logic attached to the two out-of-order processors, cutting the verification problem to two machines plus lightweight shadow logic. Boxes are plain white rectangles with thin black outlines; colored dashed (green) and dotted (blue) lines distinguish the ISA-level and microarchitecture-level equivalence-check signals, and small icons (funnel, magnifying glass, pickaxe) annotate the filtering, checking, and newly-added logic.",
+  "summary_zh": "图1对比了基线验证方案(a)与Contract Shadow Logic方案(b)：基线用四台状态机分别做ISA级契约约束检查和乱序处理器泄漏断言检查；新方案把约束检查以影子逻辑直接嵌入乱序处理器，将四机问题降为两机加影子逻辑，绿色虚线与蓝色点线区分两类等价性检查信号。",
+  "confidence": "medium",
+  "notes": "The pipeline stage boxes (IF/ID/ROB/FU/MEM/Commit) are standard out-of-order microarchitecture labels not individually explained in the excerpted text; their roles are inferred from general architecture convention plus the figure.",
+  "venue": "ASPLOS25"
+}

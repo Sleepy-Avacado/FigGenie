@@ -1,0 +1,279 @@
+{
+  "paper_id": "sosp25-039",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "TRIP",
+    "one_liner": "TRIP is Votegral's in-person registration component that lets voters create real and fake voting credentials at a kiosk without trusting the hardware",
+    "domain": [
+      "e-voting",
+      "coercion-resistance",
+      "security-protocols"
+    ],
+    "abstraction": "protocol"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how a voter moves through check-in, credentialing, check-out, and activation stages, each in a different supervision/environment setting",
+    "base": "scene",
+    "elements": [
+      {
+        "name": "Check-In",
+        "kind": "label",
+        "role": "first stage heading: a supervised public environment",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Voter",
+        "kind": "actor",
+        "role": "the person registering; walks through all four stages",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Official",
+        "kind": "actor",
+        "role": "registration staff who authenticate the voter and later display a credential",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Authenticate",
+        "kind": "label",
+        "role": "the Check-In stage's action: the official verifies the voter's eligibility",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Check-In Ticket",
+        "kind": "icon",
+        "role": "artifact handed to the voter at Check-In, admitting them to Credentialing",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Credentialing",
+        "kind": "label",
+        "role": "second stage heading: a supervised private environment where phones are barred",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Kiosk",
+        "kind": "actor",
+        "role": "device the voter alone uses in the privacy booth to print credentials",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Create Credentials",
+        "kind": "label",
+        "role": "the Credentialing stage's action: printing one real and any fake credentials",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Credentials",
+        "kind": "icon",
+        "role": "the printed credentials the voter carries out of Credentialing",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Check-Out",
+        "kind": "label",
+        "role": "third stage heading: back to a supervised environment",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Display A Credential",
+        "kind": "label",
+        "role": "the Check-Out stage's action: the voter shows a credential before leaving",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Credential Activation",
+        "kind": "label",
+        "role": "fourth stage heading: an unsupervised private environment",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Device",
+        "kind": "icon",
+        "role": "the voter's own device on which a credential is later activated as real",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Activate Real Credential",
+        "kind": "label",
+        "role": "the final stage's action: privately marking which credential is genuine",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Voter",
+        "to": "Official",
+        "what": "the voter authenticates with the official to receive a check-in ticket",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "Check-In Ticket",
+        "to": "Kiosk",
+        "what": "the check-in ticket admits the voter to the privacy-booth kiosk",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Kiosk",
+        "to": "Credentials",
+        "what": "the kiosk creates real and fake paper credentials for the voter to carry out",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Credentials",
+        "to": "Official",
+        "what": "the voter presents a credential for the official to display at check-out",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "Credentials",
+        "to": "Device",
+        "what": "the voter later activates a real credential on their own device",
+        "kind": "control",
+        "step": "4"
+      }
+    ],
+    "panels": [
+      {
+        "label": "Check-In",
+        "axis": "time",
+        "differs": "template/first frame: in a supervised public environment (dashed border), the Voter authenticates with an Official to receive a Check-In Ticket",
+        "verdict": null
+      },
+      {
+        "label": "Credentialing",
+        "axis": "time",
+        "differs": "supervised private environment (bold solid border, phones barred); the voter uses a Kiosk alone to create real and fake Credentials",
+        "verdict": null
+      },
+      {
+        "label": "Check-Out",
+        "axis": "time",
+        "differs": "back to a supervised environment (dashed border); the voter displays a credential to an Official before leaving",
+        "verdict": null
+      },
+      {
+        "label": "Credential Activation",
+        "axis": "time",
+        "differs": "unsupervised private environment (dash-dot border); the voter activates a chosen credential as the real one on their own Device",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "A voter's registration moves through four stages of decreasing supervision: public check-in, private kiosk credentialing (real and fake), supervised check-out display, then unsupervised activation of the real credential.",
+    "reading_order": "left to right along the Time arrow through Check-In, Credentialing, Check-Out, and Credential Activation, reading each stage's icons above its action label"
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "bold-stroke",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.95,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cdcdcd",
+        "used_for": "light gray fill of the plain voter/pedestrian figures and desks"
+      },
+      {
+        "hex": "#646881",
+        "used_for": "muted blue-gray fill of the Official/attendant figures, distinguishing staff from voters"
+      },
+      {
+        "hex": "#0d5480",
+        "used_for": "deeper blue fill accenting the Device (phone) icon"
+      },
+      {
+        "hex": "#929292",
+        "used_for": "medium gray fill of the Kiosk icon"
+      },
+      {
+        "hex": "#bccdda",
+        "used_for": "pale blue-gray fill of the Check-In Ticket icon"
+      },
+      {
+        "hex": "#d3eef7",
+        "used_for": "very pale cyan fill of the Device's screen"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black outlines throughout; each stage's frame border uses a different dash pattern (dashed, solid, or dash-dot) to encode its environment",
+    "corners": "rounded",
+    "arrows": "a single bold black horizontal Time arrow runs beneath all four stages; small envelope icons mark artifacts (ticket, credentials) handed from one stage to the next",
+    "font": "bold sans-serif stage headers; plain sans-serif action captions and legend text",
+    "icons": "pictographic person silhouettes (voter, official), a kiosk icon, a red no-phone prohibition icon, an envelope icon for handed credentials, and a smartphone Device icon"
+  },
+  "encoding": {
+    "color_means": "blue-gray tints the Official/attendant figures to distinguish staff from the plain gray voter figures; blue also accents the Device icon",
+    "line_style_means": "the frame border style is the key code: dashed = supervised public environment, solid = supervised private environment, dash-dot = unsupervised private environment",
+    "state_means": "each of the four dashed/solid/dash-dot frames is one successive stage of the same voter's registration, arranged left to right along the Time arrow",
+    "marker_means": null,
+    "emphasis": "the Credentialing frame is drawn with a bold solid border and a red no-phone icon, marking it as the security-critical step where real and fake credentials are created",
+    "reusable_patterns": [
+      "a left-to-right stage timeline where each frame's border line-style itself encodes a classification (here, supervision/privacy level), explained in a small legend below"
+    ],
+    "weaknesses": [
+      "the 'Voter' icon reappears unlabelled in later stages, so the reader must infer that the same generic gray figure represents the same voter throughout purely from position along the timeline"
+    ]
+  },
+  "tags": [
+    "e-voting",
+    "coercion-resistance",
+    "voter-registration",
+    "credential-issuance",
+    "TRIP",
+    "Votegral"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Votegral design overview"
+    ],
+    "evidence": [
+      "Registering to use Votegral involves the following main steps, which Fig. 1 illustrates at a high level",
+      "A registration official verifies each voter's eligibility, then gives the voter a check-in ticket",
+      "the voter (1) authenticates to an official at a check-in desk to obtain a check-in ticket"
+    ]
+  },
+  "summary": "Figure 1 lays out the TRIP voter-registration workflow within Votegral as four stages along a time arrow, each framed with a border style that encodes its supervision level. In Check-In (supervised public environment, dashed border), the Voter authenticates with an Official to get a Check-In Ticket. In Credentialing (supervised private environment, bold solid border, phones barred), the voter alone uses a Kiosk to create real and fake paper credentials. In Check-Out (dashed border again), the voter presents and an Official displays a credential before leaving. Finally, in Credential Activation (unsupervised private environment, dash-dot border), only later and without anyone watching, the voter activates whichever credential is the genuine one on their own Device.",
+  "summary_zh": "该图示TRIP注册流程沿时间轴分四阶段，边框样式标注监管级别：先公开监管下经Official认证领票；再私密监管下独自用Kiosk制作真假凭证；随后出示凭证签出；最后于无监管私密环境中在自己设备激活真凭证，隐私递增保障胁迫下可交出假凭证。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

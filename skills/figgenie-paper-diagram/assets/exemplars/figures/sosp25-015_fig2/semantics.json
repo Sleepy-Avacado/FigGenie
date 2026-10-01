@@ -1,0 +1,161 @@
+{
+  "paper_id": "sosp25-015",
+  "fig": "2",
+  "system": {
+    "name": "LithOS",
+    "one_liner": "a GPU operating system for fine-grained, transparent management of GPU resources across ML workloads",
+    "domain": [
+      "ml-systems",
+      "os-kernel"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "HBM",
+        "role": "GPU off-chip memory",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "L2 Cache",
+        "role": "shared cache between HBM and the GPC grid",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPC",
+        "role": "General Processing Cluster, a collection of multiple TPCs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "TPC",
+        "role": "Thread Processing Cluster, contains a small number of SMs",
+        "container": "GPC",
+        "novel": false
+      },
+      {
+        "name": "SM",
+        "role": "Streaming Multiprocessor, composed of tens of cores",
+        "container": "TPC",
+        "novel": false
+      },
+      {
+        "name": "L0 Instruction Cache",
+        "role": "instruction cache inside an SM",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "Register File",
+        "role": "per-SM register storage",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "Warp Scheduler",
+        "role": "schedules warps of threads within an SM",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "CUDA Cores",
+        "role": "general-purpose execution units within an SM",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "Tensor Cores",
+        "role": "specialized matrix-multiply execution units within an SM",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "L1 Cache & Shared Memory",
+        "role": "per-SM local cache and shared memory",
+        "container": "SM",
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "illustrates the nested hardware hierarchy of a modern GPU (HBM/L2, GPC, TPC, SM) with a magnified callout of one SM's internals",
+    "reading_order": "left to right: HBM/L2 cache, the GPC grid of TPCs/SMs, then a zoomed callout of one SM's components on the right"
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.49,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "HBM and L2 Cache memory columns"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "TPC boxes"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "SM boxes"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "SM-internal components in the zoomed callout (instruction cache, register file, warp scheduler, tensor cores, L1 cache/shared memory)"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "GPC label text and box strokes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark navy (~0.37pt) on all boxes",
+    "font": "sans-serif (Aptos), 4.5-8pt",
+    "corners": "square",
+    "arrows": "none, dashed connector lines to the zoomed SM callout",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow = memory (HBM, L2 Cache), blue = TPC groups, orange/peach = SM units, green = SM-internal components",
+    "line_style_means": null,
+    "emphasis": "a magnified callout panel on the right zooms into one SM's internals, dashed lines connecting it back to the SM grid",
+    "reusable_patterns": [
+      "nested hierarchical box diagram of hardware components with a magnified callout panel"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "gpu-architecture",
+    "gpu-scheduling",
+    "hardware-hierarchy",
+    "tpc",
+    "streaming-multiprocessor"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Related Work (p.3)"
+    ],
+    "evidence": [
+      "Figure 2 depicts a typical GPU architecture",
+      "Each GPC is a collection of multiple Thread Processing Clusters (TPCs)",
+      "Each TPC includes a small number of Streaming Multiprocessors (SMs)"
+    ]
+  },
+  "summary": "LithOS is a first-step GPU operating system that manages GPU resources at fine granularity — including a TPC-level spatial scheduler, transparent kernel atomization, hardware right-sizing, and power management — to improve isolation and utilization for ML workloads. Figure 2 is a background diagram (not LithOS-specific) that explains the hardware hierarchy LithOS operates on: HBM and an L2 cache feed a General Processing Cluster (GPC) built from a grid of Thread Processing Clusters (TPCs), each holding two Streaming Multiprocessors (SMs). A dashed connector zooms one SM into a magnified callout showing its L0 instruction cache, register file, warp scheduler, CUDA cores, tensor cores, and L1 cache/shared memory. Nested, color-coded boxes (yellow memory, blue TPCs, orange SMs, green SM internals) make the containment hierarchy explicit, giving readers the hardware vocabulary needed to follow LithOS's TPC-granular scheduling and atomization mechanisms.",
+  "summary_zh": "图2为背景图，展示现代GPU的层级结构：HBM与L2缓存、GPC内的TPC/SM网格，右侧放大展示SM内部指令缓存、寄存器堆、warp调度器与CUDA/Tensor核心，为LithOS的TPC级调度提供硬件背景。",
+  "confidence": "medium",
+  "notes": "background hardware figure explaining GPU architecture terminology, not depicting LithOS's own components",
+  "venue": "SOSP25"
+}

@@ -1,0 +1,203 @@
+{
+  "paper_id": "asplos26-129",
+  "fig": "2",
+  "system": {
+    "name": "SpeContext",
+    "one_liner": "an algorithm-system co-design that uses a distilled LM to speculatively identify and prefetch sparse KV cache for long-context LLM reasoning",
+    "domain": [
+      "ml-systems",
+      "llm-inference",
+      "memory-management"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Layer_l",
+        "role": "one decoding layer performing QKV projection, KV cache retrieve-and-load, and attention",
+        "container": "Decoding Phase",
+        "novel": false
+      },
+      {
+        "name": "KV Cache Retrieve and Load",
+        "role": "existing paradigm's layer-wise retrieval operation, the source of synchronization overhead",
+        "container": "Layer_l",
+        "novel": false
+      },
+      {
+        "name": "Selected KV Cache",
+        "role": "KV pairs selected by retrieval and offloaded to GPU HBM / CPU DRAM",
+        "container": "Decoding Phase",
+        "novel": false
+      },
+      {
+        "name": "Original LLM",
+        "role": "baseline model performing full, non-sparse attention for comparison",
+        "container": "Key Insight panel",
+        "novel": false
+      },
+      {
+        "name": "Distilled LM (DLM)",
+        "role": "small distilled model whose attention focus is used as a speculative retrieval proxy for the original LLM",
+        "container": "Key Insight panel",
+        "novel": true
+      },
+      {
+        "name": "Efficient Retrieval Alg.",
+        "role": "retrieval algorithm whose accuracy objective is aligned with the LLM's accuracy",
+        "container": "Key Insight panel",
+        "novel": true
+      },
+      {
+        "name": "Lightweight Retrieval head",
+        "role": "pruned DLM component (~0.03B params) that selects important tokens before LLM inference",
+        "container": "C1 panel",
+        "novel": true
+      },
+      {
+        "name": "Asynchronous prefetch dataflow / Elastic Loading",
+        "role": "prefetches only the differing KV pairs between adjacent decoding steps in parallel with LLM inference",
+        "container": "C2 panel",
+        "novel": true
+      },
+      {
+        "name": "Adaptive memory management system",
+        "role": "allocates GPU HBM / CPU DRAM memory across LLM layers using a theoretical memory model",
+        "container": "C3 panel",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Prompt/New Token",
+        "to": "Layer_l",
+        "what": "token input to the decoding pipeline",
+        "step": null
+      },
+      {
+        "from": "Layer_l",
+        "to": "Selected KV Cache",
+        "what": "select important KV pairs",
+        "step": null
+      },
+      {
+        "from": "Selected KV Cache",
+        "to": "GPU HBM / CPU DRAM",
+        "what": "offload of retained KV cache",
+        "step": null
+      },
+      {
+        "from": "Distilled LM (DLM)",
+        "to": "Efficient Retrieval Alg.",
+        "what": "attention-weight-based token importance",
+        "step": null
+      },
+      {
+        "from": "Distilled LM (DLM)",
+        "to": "Lightweight Retrieval head",
+        "what": "pruning to a lightweight retrieval head",
+        "step": null
+      },
+      {
+        "from": "Lightweight Retrieval head",
+        "to": "LLM",
+        "what": "selected token indices",
+        "step": null
+      }
+    ],
+    "key_idea": "Existing layer-wise KV retrieval is slow and inflexible for long-context reasoning, but a distilled LM's attention focus mirrors the original LLM's, motivating SpeContext's three contributions: a lightweight retrieval head, an asynchronous elastic-loading prefetch dataflow, and adaptive memory management.",
+    "reading_order": "Left panel (a) walks through the existing decoding-phase pipeline and its three numbered challenges; middle panel (b) shows the key insight that a distilled LM mirrors the original LLM's information focus; right panel (c) maps that insight onto three contributions C1-C3 tied to later sections."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.17,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3a8237",
+        "used_for": "green borders/labels marking the paper's own insight and contribution boxes (Key Insight, C1/C2/C3)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red highlighted overhead annotations and the 'Efficient Retrieval Alg.' box in panel (b)"
+      },
+      {
+        "hex": "#767171",
+        "used_for": "dark gray fills/outlines for generic architecture boxes (Original LLM, KV Cache Retrieve and Load)"
+      },
+      {
+        "hex": "#faebc7",
+        "used_for": "tan fills for prompt/token and data blocks"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "light gray panel/container backgrounds"
+      },
+      {
+        "hex": "#dbefda",
+        "used_for": "light green fills behind the contribution boxes in panel (c)"
+      },
+      {
+        "hex": "#fad1d1",
+        "used_for": "light pink fills highlighting retrieved/selected KV blocks"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin black strokes on most boxes, dashed borders around panel groupings",
+    "font": "Arial sans, 4.5-11.5pt, moderate bold use for headings",
+    "corners": "mixed",
+    "arrows": "orthogonal and curved arrows with filled heads, dense in panel (c)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = SpeContext's own insight/contributions, red = existing paradigm's bottleneck or overhead, gray = generic baseline architecture boxes, tan/pink = data or KV-cache blocks",
+    "line_style_means": "dashed = grouping boundary around panels and contribution sub-boxes, solid/curved = data-flow arrows",
+    "emphasis": "red overhead callouts in panel (a) draw attention to the three challenges, while green boxes in panels (b) and (c) highlight the key insight and the three proposed contributions",
+    "reusable_patterns": [
+      "three-panel motivation figure: problem breakdown -> key insight -> contribution roadmap",
+      "circled numbers marking sequential challenges annotated on an existing pipeline"
+    ],
+    "weaknesses": [
+      "very dense with many small text annotations",
+      "panel (c)'s internal C2/C3 sub-diagrams are compressed and hard to read at reduced size"
+    ]
+  },
+  "tags": [
+    "llm-inference",
+    "kv-cache",
+    "speculative-decoding",
+    "long-context-reasoning",
+    "sparsity",
+    "memory-management",
+    "overview"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "1 Introduction (p.3)",
+      "1 Introduction (p.4)"
+    ],
+    "evidence": [
+      "Three challenges in existing algorithm paradigm in the long-context reasoning scenario",
+      "Distilled language model exhibits similar information focus",
+      "Contributions from Section 4 to Section 6"
+    ]
+  },
+  "summary": "This three-panel motivation/overview figure introduces SpeContext, a system for efficient long-context LLM reasoning. Panel (a) walks through the existing decoding-phase pipeline (per-layer QKV, KV Cache Retrieve and Load, Attention) and annotates three challenges: time-consuming layer-wise retrieval (up to 60% overhead), complete retention of newly generated KV pairs, and performance degradation with growing sequence length, illustrated with offload to GPU HBM/CPU DRAM. Panel (b) shows the paper's key insight: a Distilled LM (DLM) exhibits attention focus similar to the Original LLM, so retrieval accuracy can be aligned with model accuracy, illustrated with a shared-answer example. Panel (c) maps this insight to three contributions labeled C1-C3: a lightweight retrieval head pruned from the DLM, an asynchronous prefetch dataflow with elastic loading, and an adaptive memory management system, each tied to its later section. Colors distinguish existing-paradigm problems (red/gray) from the paper's own insight and contributions (green).",
+  "summary_zh": "该图分三部分概述SpeContext：(a) 现有解码流程中KV缓存逐层检索带来的三大挑战（延迟、完整保留新KV、序列增长性能退化）；(b) 关键洞察——蒸馏小模型与原始LLM的注意力关注点相似；(c) 据此提出的三项贡献C1轻量检索头、C2异步弹性预取、C3自适应内存管理，分别对应后续章节。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

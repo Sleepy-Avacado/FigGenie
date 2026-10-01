@@ -1,0 +1,207 @@
+{
+  "paper_id": "asplos25-151",
+  "fig": "13",
+  "kind": "mechanism",
+  "system": {
+    "name": "Fat-Tree QRAM",
+    "one_liner": "a quantum random access memory architecture that pipelines O(log N) queries in O(log N) time using O(N) qubits",
+    "domain": [
+      "quantum-computing",
+      "quantum-memory"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how the four elementary QRAM router operations (LOAD, TRANSPORT, ROUTE, STORE) move a qubit token between ports",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "ESCAPE",
+        "kind": "port",
+        "role": "the external port at the top of the tree where a query's qubit enters or exits the router hierarchy",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "router",
+        "kind": "node",
+        "role": "one QRAM router, drawn as a circle containing a central state node and its ports; the router the operation acts on is filled green",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "central state node",
+        "kind": "node",
+        "role": "a router's own state: grey when idle, blue when actively configured for routing, orange when it stores a qubit",
+        "container": "router",
+        "highlighted": false
+      },
+      {
+        "name": "port",
+        "kind": "port",
+        "role": "one of a router's three connection points (one parent-facing, two child-facing) where a qubit token can sit; orange when it holds the token",
+        "container": "router",
+        "highlighted": false
+      },
+      {
+        "name": "qubit token",
+        "kind": "icon",
+        "role": "the orange dot marking where the qubit being loaded, moved, routed, or stored currently sits",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "ESCAPE",
+        "to": "router",
+        "what": "the escape line connects the tree's external port to the root router's top port",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "central state node",
+        "to": "port",
+        "what": "a router's centre connects to each of its three ports",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "router",
+        "to": "router",
+        "what": "a parent router's child-facing port connects to its child router's parent-facing port",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "qubit token",
+        "to": "port",
+        "what": "each of the four operations moves the token to a new port, or into the router's own state node",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) LOAD",
+        "axis": "alternatives",
+        "differs": "introduces a qubit token onto the tree's top ESCAPE port from outside; no router is highlighted since the token is not yet inside any router",
+        "verdict": null
+      },
+      {
+        "label": "(b) TRANSPORT",
+        "axis": "alternatives",
+        "differs": "moves the token from the highlighted router's own child-facing port, across the connecting edge, onto the neighbouring child router's port",
+        "verdict": null
+      },
+      {
+        "label": "(c) ROUTE",
+        "axis": "alternatives",
+        "differs": "moves the token from the highlighted router's incoming (parent-facing) port to one of its own outgoing (child-facing) ports",
+        "verdict": null
+      },
+      {
+        "label": "(d) STORE",
+        "axis": "alternatives",
+        "differs": "moves the token from the highlighted router's incoming port into the router's own central state node, turning a passing token into resident storage",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Four primitive instructions manipulate a qubit token's position on the router tree: LOAD introduces it at the escape port, TRANSPORT slides it across an edge, ROUTE switches it between a router's own ports, and STORE commits it into a router's state.",
+    "reading_order": "each of the four lettered panels (a)-(d) reads left to right as a before/after pair around a grey LOAD/TRANSPORT/ROUTE/STORE arrow; compare across panels to see where the green-highlighted router and the orange token differ"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 4,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 4,
+    "column": "single",
+    "aspect": 1.93,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#eeeeee",
+        "used_for": "light grey fill of unhighlighted router circles"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "dark grey fill of the solid block arrows between each before/after pair"
+      },
+      {
+        "hex": "#f9cb9c",
+        "used_for": "orange fill of the qubit token and of a router's centre once it stores that qubit"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "green fill highlighting the router the operation acts on"
+      },
+      {
+        "hex": "#a4c2f4",
+        "used_for": "blue fill of a router's centre when it is actively configured for routing"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin uniform dark-grey (#595959) outlines on every circle and connecting edge",
+    "corners": "square",
+    "arrows": "one solid dark-grey block arrow per panel, unlabelled arrowhead shape, captioned with the operation name",
+    "font": "small (4-6pt) sans-serif labels for ESCAPE, the panel letters, and the operation names",
+    "icons": "none beyond the plain circle/port glyphs making up the router tree"
+  },
+  "encoding": {
+    "color_means": "green highlights the router the current operation acts on; orange marks the qubit token's current location; blue marks a router's centre when it holds active routing state; grey is the idle/default fill",
+    "line_style_means": "solid lines only; tree edges connect a router's ports to its parent or child router, with no dashing used",
+    "state_means": "before vs after is told apart by which port or node is orange (holds the token) and, for STORE, whether the router's centre is grey (empty) or orange (holding data)",
+    "marker_means": "the letters (a)-(d) name the four elementary operations; ESCAPE labels the tree's external interface port",
+    "emphasis": "the green fill isolates exactly one router per panel, and the single orange dot is the only warm colour against an otherwise grey tree, drawing the eye straight to the moved qubit",
+    "reusable_patterns": [
+      "an instruction-set catalog drawn as repeated before/after pairs of the same small structure, one pair per operation",
+      "a single highlighted sub-structure (green) plus a single moving token (orange) isolating what changed"
+    ],
+    "weaknesses": [
+      "the distinction between a router's blue 'active' centre and grey 'idle' centre is not explained anywhere in the visible caption text",
+      "child routers two levels down are drawn identically in every panel even though they are never the ones acted on, adding visual repetition without new information"
+    ]
+  },
+  "tags": [
+    "QRAM",
+    "router",
+    "instruction-set",
+    "fat-tree",
+    "qubit-routing",
+    "data-structure-operations"
+  ],
+  "provenance": {
+    "sections": [
+      "Appendix A.1 Step-by-step Query Procedure"
+    ],
+    "evidence": [
+      "Diagram depicting the effects of the first four fundamental operations: LOAD, TRANSPORT, ROUTE, STORE.",
+      "The router highlighted in green denotes the router the operation is performed on.",
+      "We formally define the elementary QRAM instructions as follows with Figure 13 providing a visual representation"
+    ]
+  },
+  "summary": "This appendix figure defines the four elementary instructions of the Fat-Tree QRAM's router data structure by showing each one's effect on a small 3-router tree. Every panel is a before/after pair around a grey arrow named LOAD, TRANSPORT, ROUTE, or STORE: LOAD places a qubit token (orange) onto the tree's external ESCAPE port; TRANSPORT slides the token from a highlighted router's own port across an edge onto the adjacent child router's port; ROUTE moves the token from a highlighted router's incoming port to one of its own outgoing ports, choosing a branch; and STORE moves an incoming token into the router's own central state node, turning a passing qubit into resident storage. The router each operation acts on is filled green, isolating the one part of the tree that changes in each definition.",
+  "summary_zh": "该图定义Fat-Tree QRAM的四条基本指令：LOAD将令牌放上ESCAPE端口；TRANSPORT使其跨边移至相邻路由器；ROUTE在路由器内切换入出端口；STORE将其存入路由器中心状态，绿色标出操作所在路由器。",
+  "confidence": "high",
+  "notes": "Added 'comparison' as a secondary group alongside the prior primary 'evolution': the four lettered panels are also parallel definitions of alternative operations, not successive moments of one instance, even though each panel individually is a before/after pair. The context file's caption text is truncated mid-sentence ('...while the blue rout'), so the meaning of a router's blue centre (an active routing state, as opposed to idle grey or stored orange) is inferred from the figure, not fully confirmed by the quoted text. Measured attributes list fill as 'hatch', but no hatching is visible in the rendered PNG at available resolution, so style.fill is reported as flat from direct observation.",
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,342 @@
+{
+  "paper_id": "osdi23-020",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "IronSync",
+    "one_liner": "a methodology and toolkit for automated modular reasoning about complex concurrent systems by sharding a global state machine across fine-grained locks",
+    "domain": [
+      "formal verification",
+      "concurrency",
+      "systems programming"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "one DoTransfer(A,B,$7) execution tracking ghost shard values against physical heap values through locks and an atomic ghost transition",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Unlocked Heap",
+        "kind": "lane",
+        "role": "shared heap; unlocked accounts' ghost/physical pairs live here when not held by a thread",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Thread 1",
+        "kind": "lane",
+        "role": "a second thread whose account C is never touched by the pictured transfer",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Thread 2",
+        "kind": "lane",
+        "role": "the thread executing the pictured DoTransfer(A,B,$7) call",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Client",
+        "kind": "lane",
+        "role": "issues the txfr request and receives the ack",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "global view",
+        "kind": "lane",
+        "role": "(b) the GSM's single abstract state, one ghost shard set with no physical counterpart",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ghost",
+        "kind": "label",
+        "role": "legend: dashed cyan box style denotes a ghost (specification-level) value",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "physical",
+        "kind": "label",
+        "role": "legend: solid yellow box style denotes the physical (implementation) value stored in memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "slot",
+        "role": "account A's ghost/physical value pair; moves between Unlocked Heap and Thread 2 as it is locked/unlocked, changing from 9 to 2",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "B",
+        "kind": "slot",
+        "role": "account B's ghost/physical value pair; moves the same way, changing from 1 to 8",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "C",
+        "kind": "slot",
+        "role": "account C's ghost/physical value pair; stays in Thread 1 throughout, constant at 1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ghost transition",
+        "kind": "label",
+        "role": "the instantaneous hatched band where every ghost shard atomically jumps to its post-transfer value",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Client",
+        "to": "Thread 2",
+        "what": "client requests transfer of $7 from A to B",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "Unlocked Heap",
+        "to": "Thread 2",
+        "what": "Thread 2 acquires lock A, gaining its ghost shard and physical pointer",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Unlocked Heap",
+        "to": "Thread 2",
+        "what": "Thread 2 acquires lock B the same way",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "A",
+        "to": "A",
+        "what": "physical A is decremented from 9 to 2 (debit A)",
+        "kind": "transition",
+        "step": "4"
+      },
+      {
+        "from": "B",
+        "to": "B",
+        "what": "physical B is incremented from 1 to 8 (credit B)",
+        "kind": "transition",
+        "step": "5"
+      },
+      {
+        "from": "A",
+        "to": "A",
+        "what": "ghost A atomically jumps to 2, matching the GSM's one global step",
+        "kind": "transition",
+        "step": "6"
+      },
+      {
+        "from": "B",
+        "to": "B",
+        "what": "ghost B atomically jumps to 8, matching the GSM's one global step",
+        "kind": "transition",
+        "step": "6"
+      },
+      {
+        "from": "Thread 2",
+        "to": "Unlocked Heap",
+        "what": "both accounts' now-consistent ghost/physical pairs return to the shared heap (unlock A, unlock B)",
+        "kind": "transition",
+        "step": "7"
+      },
+      {
+        "from": "Thread 2",
+        "to": "Client",
+        "what": "Thread 2 replies once the transfer is complete (ack txfr)",
+        "kind": "control",
+        "step": "8"
+      }
+    ],
+    "panels": [
+      {
+        "label": "t0: initial",
+        "axis": "time",
+        "differs": "before any action: A:9/B:1 both in Unlocked Heap, C:1 in Thread 1, no locks held",
+        "verdict": null
+      },
+      {
+        "label": "after lock A, lock B",
+        "axis": "time",
+        "differs": "A and B's ghost/physical pairs have moved into Thread 2's row; both still read 9 and 1",
+        "verdict": null
+      },
+      {
+        "label": "after debit A, credit B",
+        "axis": "time",
+        "differs": "physical values change to A:2, B:8 while the ghost values still read A:9, B:1",
+        "verdict": null
+      },
+      {
+        "label": "ghost transition (instantaneous)",
+        "axis": "time",
+        "differs": "ghost values atomically jump to A:2, B:8, matching the global-view GSM's single atomic transition",
+        "verdict": null
+      },
+      {
+        "label": "after unlock A, unlock B, ack txfr",
+        "axis": "time",
+        "differs": "A and B's now-consistent pairs return to the Unlocked Heap and Thread 2 acknowledges the client",
+        "verdict": null
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Client → Thread 2",
+        "what": "client requests transfer of $7 from A to B",
+        "carries": "txfr(A,B,$7)"
+      },
+      {
+        "marker": "2",
+        "at": "lock A",
+        "what": "Thread 2 acquires lock A",
+        "carries": "A's ghost shard + physical pointer"
+      },
+      {
+        "marker": "3",
+        "at": "lock B",
+        "what": "Thread 2 acquires lock B",
+        "carries": "B's ghost shard + physical pointer"
+      },
+      {
+        "marker": "4",
+        "at": "debit A",
+        "what": "physical A is decremented from 9 to 2",
+        "carries": "physical value of A"
+      },
+      {
+        "marker": "5",
+        "at": "credit B",
+        "what": "physical B is incremented from 1 to 8",
+        "carries": "physical value of B"
+      },
+      {
+        "marker": "6",
+        "at": "ghost transition",
+        "what": "ghost shards for A and B atomically jump to 2 and 8, matching the GSM's one global step",
+        "carries": "ghost shards A, B"
+      },
+      {
+        "marker": "7",
+        "at": "unlock A / unlock B",
+        "what": "both accounts' now-consistent pairs return to the shared heap",
+        "carries": "A, B pairs"
+      },
+      {
+        "marker": "8",
+        "at": "ack txfr",
+        "what": "Thread 2 acknowledges completion to the client",
+        "carries": "ack"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "each account's ghost and physical value, shown numerically at every lifeline crossing",
+      "linked_by": "colour",
+      "result_cells": "dashed cyan boxes show the ghost value, solid yellow boxes show the physical value, both labelled with the account name and current numeric balance"
+    },
+    "key_idea": "As Thread 2 executes one $7 transfer under separate A/B locks, the physical balances update first and the ghost (specification) values catch up atomically in one instantaneous step that exactly matches the GSM's single global transition.",
+    "reading_order": "left to right along (a)'s time axis: request, lock A, lock B, debit A, credit B, the instantaneous ghost transition, unlock A/B, ack; then (b)'s aligned global view"
+  },
+  "layout": {
+    "arrangement": "stacked-timeline",
+    "panel_count": 5,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "double",
+    "aspect": 2.48,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#afe9dd",
+        "used_for": "pale cyan-green fill of dashed ghost-value boxes (e.g. the dashed 'A:9' boxes)"
+      },
+      {
+        "hex": "#ffff00",
+        "used_for": "yellow fill of solid physical-value boxes (e.g. the solid 'A:9' boxes)"
+      },
+      {
+        "hex": "#ececec",
+        "used_for": "light-grey banding alternating between the Unlocked Heap / Thread 1 / Thread 2 / Client lanes"
+      },
+      {
+        "hex": "#ffe6d5",
+        "used_for": "pale peach fill of the lock A / lock B / unlock A / unlock B action ovals"
+      },
+      {
+        "hex": "#e3dbdb",
+        "used_for": "pale mauve fill of the debit A / credit B ovals and the req/ack rounded end-caps"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin black outlines; dashed teal outline specifically for ghost-value boxes, solid black for physical-value boxes",
+    "corners": "mixed",
+    "arrows": "thin black curved arrows linking a value box to its next position/state; two short arrows in the global-view row marking the atomic A/B jump",
+    "font": "sans (DejaVu Sans), 6-6.5pt, small bold digits on changed values",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "cyan/dashed = ghost (specification) value; yellow/solid = physical (implementation) value; grey banding separates the Unlocked Heap / Thread 1 / Thread 2 / Client lanes",
+    "line_style_means": "dashed outline marks a ghost-value box, solid outline marks a physical-value box; a hatched vertical band marks the instantaneous ghost-transition instant",
+    "state_means": "before/after is told apart by column position along the time axis and by which lane (Unlocked Heap vs Thread 2) currently holds a value pair",
+    "marker_means": "bold text on a value (e.g. 'A:2') marks that this is the instruction where the value just changed",
+    "emphasis": "the hatched 'instantaneous' band isolates the single ghost-transition instant so it visually cannot be confused with the surrounding gradual physical updates",
+    "reusable_patterns": [
+      "a swimlane timeline where a specification-level (ghost) copy and an implementation-level (physical) copy of the same value are drawn as paired boxes that travel together, with one isolated instant where the ghost jumps to re-sync"
+    ],
+    "weaknesses": [
+      "many near-identical small boxes across 8+ time columns make it easy to lose track of which column corresponds to which named action without following the ovals carefully"
+    ]
+  },
+  "tags": [
+    "IronSync",
+    "ghost-state",
+    "linearizability",
+    "concurrent-verification",
+    "state-machine-refinement",
+    "lock-based-concurrency"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 The Core IronSync Methodology (p.7)"
+    ],
+    "evidence": [
+      "which shows one invocation of the DoTransfer method from Figure 8",
+      "Time runs along the x-axis; each vertical gradation represents a fine-grained period, such as a single instruction.",
+      "regardless of low-level thread interleaving, from GSM’s global perspective, the state advances through a sequence of atomic global transitions"
+    ]
+  },
+  "summary": "This figure from IronSync's core methodology section shows one invocation of the DoTransfer method as Thread 2 moves $7 from account A to B. Along a time-in-instructions axis, dashed cyan boxes (ghost values) and solid yellow boxes (physical values) for A, B, and C move between the Unlocked Heap, Thread 2, and Client lanes as Thread 2 locks A, locks B, debits A's physical value from 9 to 2, and credits B's physical value from 1 to 8. A hatched 'instantaneous' band marks the ghost transition, where both ghost values atomically jump to match the already-updated physical values, before Thread 2 unlocks A and B and acknowledges the client. The aligned (b) global view shows the same single atomic jump in the GSM's abstract state, tying the concrete execution to the abstract proof.",
+  "summary_zh": "该图展示IronSync中一次DoTransfer($7, A到B)的执行：沿时间轴，虚线青色的ghost值与实心黄色的physical值随线程2加锁A、加锁B、扣A、贷B移动；在灰色斜纹的瞬时ghost transition处两者原子跳变到新值后解锁并应答，(b)全局视图同步展示这一原子跳变。",
+  "confidence": "high",
+  "notes": "Added 'walkthrough' as a secondary group alongside the prior 'evolution': the eight named action ovals (lock A, lock B, debit A, credit B, ghost transition, unlock A, unlock B, ack txfr) trace one request through the structure in order via labelled arrows, matching the documented evolution+walkthrough overlap category. content.panels collapses the many fine-grained per-instruction time columns into 5 representative states (matching the schema's convention of describing the semantic evolution frames rather than the index's raw (a)/(b) panel count of 2, which is kept in layout.panels).",
+  "venue": "OSDI23"
+}

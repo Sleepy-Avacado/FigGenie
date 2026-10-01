@@ -1,0 +1,187 @@
+{
+  "paper_id": "sosp25-054",
+  "fig": "3",
+  "system": {
+    "name": "PhoenixOS",
+    "one_liner": "the first OS service that can concurrently checkpoint and restore GPU processes, using validated speculation of GPU memory accesses",
+    "domain": [
+      "os-kernel",
+      "gpu-systems",
+      "fault-tolerance"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "PhOS cmd-line interface",
+        "role": "lets users checkpoint, migrate, or restore a running GPU process by its PID",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "A GPU process",
+        "role": "the target application process being checkpointed/restored",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "App code",
+        "role": "application code running in the GPU process",
+        "container": "A GPU process",
+        "novel": false
+      },
+      {
+        "name": "PhOS frontend (GPU API interceptor)",
+        "role": "per-process frontend library embedded in the GPU driver/toolkit that facilitates C/R and traces read/write sets",
+        "container": "A GPU process",
+        "novel": true
+      },
+      {
+        "name": "GPU driver",
+        "role": "vendor GPU driver the frontend is embedded into",
+        "container": "A GPU process",
+        "novel": false
+      },
+      {
+        "name": "GPUs",
+        "role": "hardware GPUs used by the process",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PhOS backend",
+        "role": "backend module that performs the actual checkpoint and restore",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU CR",
+        "role": "PHOS's own GPU checkpoint/restore engine",
+        "container": "PhOS backend",
+        "novel": true
+      },
+      {
+        "name": "CRIU",
+        "role": "reused tool used to checkpoint and restore CPU process state",
+        "container": "PhOS backend",
+        "novel": false
+      },
+      {
+        "name": "GPU context pool",
+        "role": "pool of GPU execution contexts managed by the backend",
+        "container": "PhOS backend",
+        "novel": true
+      },
+      {
+        "name": "Checkpoint image source",
+        "role": "pluggable storage backend for checkpoint images (memory/SSD/RDMA/NVM)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Buffer 0 / Buffer 1",
+        "role": "buffers used for GPU data transfer during checkpoint/restore",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "PhOS cmd-line interface",
+        "to": "PhOS frontend (GPU API interceptor)",
+        "what": "checkpoint/migrate/restore command over IPC/LFC",
+        "step": 1
+      },
+      {
+        "from": "App code",
+        "to": "PhOS frontend (GPU API interceptor)",
+        "what": "intercepted GPU API calls traced for read/write sets",
+        "step": 2
+      },
+      {
+        "from": "PhOS frontend (GPU API interceptor)",
+        "to": "PhOS backend",
+        "what": "checkpoint/restore requests and traced access information",
+        "step": 3
+      },
+      {
+        "from": "PhOS backend",
+        "to": "Checkpoint image source",
+        "what": "checkpoint image data written to or read from pluggable storage",
+        "step": null
+      }
+    ],
+    "key_idea": "shows PHOS's three core components — a command-line tool, a per-process frontend library that intercepts GPU API calls, and a backend that performs checkpoint/restore using CRIU (for CPU state) and its own GPU engine — and how they communicate via IPC/LFC",
+    "reading_order": "follows circled numbers: ❶ the cmd-line tool, then ❷ the frontend intercepting GPU API calls inside the process, then ❸ the backend performing C/R against a pluggable checkpoint image source"
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.92,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "circled step-number markers (1, 2, 3)"
+      },
+      {
+        "hex": "#ffc0ff",
+        "used_for": "GPU CR component inside PhOS backend"
+      },
+      {
+        "hex": "#bfbfff",
+        "used_for": "CRIU component inside PhOS backend"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black, ~0.42pt, solid",
+    "font": "Lato sans plus Courier New for the command-line snippet",
+    "corners": "square",
+    "arrows": "solid black arrows, some curved, 7 arrowheads",
+    "icons": "small GPU chip icons and a camera/checkpoint icon"
+  },
+  "encoding": {
+    "color_means": "red circled numbers mark the three-step control flow; pink and blue distinguish PHOS's own GPU checkpoint/restore module from the reused CRIU component for CPU state",
+    "line_style_means": null,
+    "emphasis": "circled numbered steps and a camera/checkpoint icon call out PHOS's checkpoint action and the sequence of interception, request, and execution",
+    "reusable_patterns": [
+      "numbered client-frontend-backend architecture with a pluggable storage backend box"
+    ],
+    "weaknesses": [
+      "monospace command-line snippet and small buffer icons add visual clutter relative to the diagram's size"
+    ]
+  },
+  "tags": [
+    "gpu-checkpointing",
+    "process-migration",
+    "criu",
+    "fault-tolerance",
+    "gpu-os"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Phoenixos (Phos) (p.4)"
+    ],
+    "evidence": [
+      "Figure 3 shows PHOS's architecture that has three core system components",
+      "Our backend uses CRIU [18] to checkpoint and restore CPU process states",
+      "it will communicate with the frontend library embedded in the GPU driver"
+    ]
+  },
+  "summary": "PhoenixOS (PHOS) is the first OS service that can concurrently checkpoint and restore GPU processes, using validated speculation of GPU memory accesses to retrofit CPU-style copy-on-write and on-demand restore techniques for GPUs. Figure 3 shows PHOS's three core components with a numbered control flow: a command-line tool (1) lets users checkpoint, migrate, or restore a GPU process by PID, sending a request over IPC/LFC; inside 'A GPU process,' the PHOS frontend (2), a GPU API interceptor sitting between the app code and the GPU driver, traces GPU read/write sets; the PHOS backend (3) performs the actual checkpoint/restore, combining a pink 'GPU CR' engine with the reused CRIU tool (blue) for CPU process state, drawing from a GPU context pool and writing to a pluggable checkpoint image source (memory, SSD, RDMA, NVM) via intermediate buffers.",
+  "summary_zh": "图3展示PHOS三大组件：命令行工具经IPC/LFC与嵌入GPU驱动的前端拦截器通信，追踪读写集，后端结合自研GPU CR引擎与CRIU完成检查点/恢复，支持多种存储后端。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

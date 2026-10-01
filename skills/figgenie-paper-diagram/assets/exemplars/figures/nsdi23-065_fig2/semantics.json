@@ -1,0 +1,178 @@
+{
+  "paper_id": "nsdi23-065",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Nu",
+    "one_liner": "a runtime that decomposes application state into proclets so resources can be reassigned across machines at microsecond scale",
+    "domain": [
+      "distributed systems",
+      "resource management"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how one proclet migrates from Machine 0 to Machine 1 while other proclets in the same logical process stay put",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Machine 0",
+        "kind": "lane",
+        "role": "host machine currently running Logical Process A and most of Logical Process B",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Machine 1",
+        "kind": "lane",
+        "role": "host machine that receives the migrated proclet and keeps running Logical Process B",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Logical Process A",
+        "kind": "box",
+        "role": "a logical process whose proclets are unaffected by the migration",
+        "container": "Machine 0",
+        "highlighted": false
+      },
+      {
+        "name": "Logical Process B",
+        "kind": "box",
+        "role": "the logical process losing one proclet, which migrates away from Machine 0",
+        "container": "Machine 0",
+        "highlighted": true
+      },
+      {
+        "name": "Logical Process B",
+        "kind": "box",
+        "role": "the same logical process, now also holding the proclet that migrated in from Machine 0",
+        "container": "Machine 1",
+        "highlighted": true
+      },
+      {
+        "name": "Runtime",
+        "kind": "box",
+        "role": "per-machine runtime layer that hosts and schedules each process's proclets",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Proclets (threads + heaps)",
+        "kind": "label",
+        "role": "annotation naming what the heap-circle-plus-thread-squiggle icons represent",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Machine 0",
+        "to": "Machine 1",
+        "what": "Migration: one proclet (heap + threads) of Logical Process B relocates from Machine 0 to Machine 1, leaving a dashed ghost circle behind",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "single frame (before/after overlaid)",
+        "axis": "time",
+        "differs": "a dashed ghost circle in Machine 0's Logical Process B group marks the proclet's vacated old slot; a solid circle in Machine 1's Logical Process B group shows its new slot",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Because a proclet already bundles its own heap and threads as a self-contained partition, migrating it between machines is just relocating that unit, not a special operation.",
+    "reading_order": "left to right across Machine 0's two process groups, then along the curved blue migration arrow into Machine 1's Logical Process B group"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "dashed-ghost",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.65,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#548235",
+        "used_for": "green fill of the 'Logical Process A' bar"
+      },
+      {
+        "hex": "#2e75b6",
+        "used_for": "blue fill of the 'Logical Process B' bars in both machines and the 'Proclets (threads + heaps)' annotation"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray fill of the 'Runtime' bars"
+      },
+      {
+        "hex": "#c0c0c0",
+        "used_for": "light-gray highlight box behind the 'Migration' label"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue curved arrow tracing the proclet's migration path"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines for proclet circles/squiggles, dashed gray for the Machine boundaries, dashed black for the ghost proclet circle",
+    "corners": "square",
+    "arrows": "one curved blue arrow with a solid head, labelled 'Migration' in red on a light-gray callout",
+    "font": "sans (Calibri / Calibri-Italic), small labels with italics for the proclets annotation",
+    "icons": "about 22 small icons: circle-and-squiggle glyphs representing proclet heaps and threads, one drawn dashed as a ghost"
+  },
+  "encoding": {
+    "color_means": "green marks Logical Process A, blue marks Logical Process B in both machines and its proclet legend, gray marks the shared Runtime layer, and red singles out the 'Migration' label",
+    "line_style_means": "a dashed circle (vs. solid) marks a proclet's old, now-vacated slot; the Machine boundaries are also dashed to denote a loose grouping rather than a physical enclosure",
+    "state_means": "before vs. after is told apart by dashed-ghost (old, empty slot) vs. solid (current slot) proclet icons, linked by the labelled migration arrow",
+    "marker_means": "not applicable; no numbered markers are used",
+    "emphasis": "the dashed ghost circle and the red 'Migration' arrow single out the one migrating proclet against the otherwise-static rows of proclets",
+    "reusable_patterns": [
+      "a dashed ghost icon at the old slot plus a curved arrow to the new slot, depicting migration in one static frame",
+      "colour-coded process bars shared across machine groupings to show which logical process owns which proclets"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "logical-process",
+    "proclet",
+    "migration",
+    "resource-fungibility",
+    "microsecond-scale",
+    "Nu"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 The Logical Process Abstraction"
+    ],
+    "evidence": [
+      "Proclets can be individually migrated between machines to relieve resource pressure",
+      "Proclets are fine-grained partitions of program state that form units of migration.",
+      "Proclets rapidly migrate to other machines in response to resource pressure."
+    ]
+  },
+  "summary": "This figure shows Nu's core migration mechanism for logical processes. Two machines each run a runtime layer hosting one or more logical processes, which are themselves collections of proclets, fine-grained partitions of program state drawn as a heap circle with thread squiggles. Machine 0 hosts Logical Process A and part of Logical Process B; Machine 1 hosts the rest of Logical Process B. A dashed, ghosted circle inside Machine 0's Logical Process B group marks a proclet's old position, and a curved blue arrow labelled 'Migration' traces its move to a solid circle in Machine 1's Logical Process B group. Because a proclet already bundles its own heap and threads, relocating it between machines needs no special migration protocol beyond moving that self-contained unit, letting Nu reassign resources at microsecond scale.",
+  "summary_zh": "该图展示Nu的迁移机制：机器0上逻辑进程B的一个proclet（堆+线程）以虚线幽灵圆圈标记原位置，经蓝色迁移箭头移动到机器1上实心圆圈的新位置，而进程A及其余proclet保持不变，体现迁移即整体重定位。",
+  "confidence": "high",
+  "notes": "Palette hex values come from the index's measured-attributes summary, since no source-SVG colour histogram exists for this figure; colours are matched to the figure by visual inspection. 'Logical Process B' is drawn once in Machine 0 and again in Machine 1 (kept as literal duplicate labels); the migration relation is expressed at the Machine (lane) level to avoid ambiguity.",
+  "venue": "NSDI23"
+}

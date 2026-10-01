@@ -1,0 +1,56 @@
+{
+  "id": "nsdi24-029_fig6",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-029",
+  "fig": "6",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 6: Illustrations of different migration strategies over a 3×4 parallel configuration facing 2 preempted instances.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "data-structure",
+  "subject": "how intra-stage, inter-stage, and pipeline migration each reassign a 3x4 grid of instances after 2 preemptions",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "strike",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 5.5,
+  "n_elements": 10,
+  "n_relations": 2,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-029/src/fig6_migration2.svg",
+    "preview.png": "lab/extracted/nsdi24-029/src/fig6_migration2.png",
+    "print.png": "lab/extracted/nsdi24-029/nsdi24-029_fig6_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Parcae recovers from preemptions with three migration strategies over the same instance grid: swap in a same-stage peer (intra-stage), reassign a spare instance to a different stage (inter-stage), or reshuffle every surviving instance into a new pipeline layout.",
+      "what_to_learn": "before-grid → labelled rule box → after-grid, repeated per panel; a dashed hatched box holds whatever falls out",
+      "note_source": "doc"
+    }
+  ]
+}

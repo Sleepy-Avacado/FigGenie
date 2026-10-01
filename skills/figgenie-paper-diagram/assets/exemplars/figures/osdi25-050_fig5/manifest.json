@@ -1,0 +1,56 @@
+{
+  "id": "osdi25-050_fig5",
+  "kind": "mechanism",
+  "paper_id": "osdi25-050",
+  "fig": "5",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 5: A illustration of networking in MAAS with NVLink (a) and without it. Note that the 256 Gbps PCIe is shared between two GPUs attached to it [48].",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "topology",
+  "subject": "how GPU-to-GPU bandwidth differs between an NVSwitch/NVLink fabric and a shared PCIe link when no NVLink is present",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "identical",
+  "delta_marking": "none",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 2.69,
+  "n_elements": 8,
+  "n_relations": 4,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-050/src/fig5_gputopo.svg",
+    "preview.png": "lab/extracted/osdi25-050/src/fig5_gputopo.png",
+    "print.png": "lab/extracted/osdi25-050/osdi25-050_fig5_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "NVLink connects all of a server's GPUs through an NVSwitch at 1.6 Tbps per GPU, far faster than the 200 Gbps inter-server RDMA network; without NVLink, GPU pairs instead share just a 256 Gbps PCIe link.",
+      "what_to_learn": "two identical Server0/RDMA/Server1/NIC templates side by side, differing only in how the bottom row of GPUs is interconnected",
+      "note_source": "record"
+    }
+  ]
+}

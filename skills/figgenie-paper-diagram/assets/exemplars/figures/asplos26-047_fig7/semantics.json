@@ -1,0 +1,230 @@
+{
+  "paper_id": "asplos26-047",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "COMPAS",
+    "one_liner": "an architecture for multivariate trace estimation across networked quantum processors via a distributed multi-party SWAP test",
+    "domain": [
+      "quantum-computing",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "anatomy",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how two shared-control Toffoli gates are decomposed, reordered via commutation rules, and parallelized into Fanout gates",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "|φ>",
+        "kind": "lane",
+        "role": "the shared control qubit wire common to both Toffoli gates",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "ρ_i^(1), ρ_j^(1)",
+        "kind": "lane",
+        "role": "the two target qubits of the first Toffoli gate",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ρ_i^(2), ρ_j^(2)",
+        "kind": "lane",
+        "role": "the two target qubits of the second Toffoli gate",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T / T†",
+        "kind": "node",
+        "role": "single-qubit T (pi/8) gate or its inverse, part of the optimal Toffoli decomposition",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H",
+        "kind": "node",
+        "role": "Hadamard gate framing the decomposition on the target wires",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CNOT",
+        "kind": "node",
+        "role": "two-qubit controlled-NOT gate connecting two wires (dot=control, oplus=target)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Fanout gate",
+        "kind": "node",
+        "role": "two or more CNOTs sharing the same control qubit, executed together in a single parallel step",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Step: 1-8",
+        "kind": "label",
+        "role": "numbers the eight parallel time-steps the reordered circuit in panel (c) executes in",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "blue/gold shading",
+        "kind": "box",
+        "role": "groups the gates belonging to the first (blue) vs second (gold) Toffoli's decomposition, consistently across panels",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "|φ>",
+        "to": "Fanout gate",
+        "what": "the shared control qubit drives paired CNOTs at the same step, forming a Fanout gate",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "T / T†",
+        "to": "CNOT",
+        "what": "single-qubit T/T† gates alternate with CNOTs in the optimal Toffoli decomposition",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fanout gate",
+        "to": "Step: 1-8",
+        "what": "commuting the two decompositions' CNOTs together lets matching-control pairs execute at the same numbered step instead of sequentially",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "blue/gold shading",
+        "to": "T / T†",
+        "what": "colour tracks which of the two original Toffoli gates each drawn gate descends from, across all three panels",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1-2",
+        "at": "rho_i/rho_j pairs",
+        "what": "local CNOT and T gates within each Toffoli's own two target qubits run independently in the blue and gold blocks",
+        "carries": "the two decompositions' internal gates"
+      },
+      {
+        "marker": "3",
+        "at": "phi -> rho_i(1), rho_i(2)",
+        "what": "the shared control qubit phi fires a Fanout gate, driving both blocks' CNOTs into rho_i at the same step instead of sequentially",
+        "carries": "shared-control CNOT pair"
+      },
+      {
+        "marker": "7",
+        "at": "phi -> rho_i(1), rho_i(2)",
+        "what": "a second Fanout gate merges the decompositions' later shared-control CNOTs into one step",
+        "carries": "shared-control CNOT pair"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Two Toffoli gates sharing one control qubit would normally run sequentially; decomposing each into T-gates and then using commutation rules to push matching-control CNOTs together turns them into parallel Fanout gates, cutting circuit depth without changing the T-depth.",
+    "reading_order": "(a) first: a compact shared-control Toffoli pair expanded into its optimal T-gate decomposition; (b) the two commutation rules used to reorder gates; (c) the final circuit, read left to right through 8 numbered steps, where matching-control CNOTs from both decompositions have been merged into simultaneous Fanout gates"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.97,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue shading marking every gate belonging to the first Toffoli's decomposition"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "gold/yellow shading marking every gate belonging to the second Toffoli's decomposition"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of every gate box (T, T†, H, U1, U2, Rz) so it sits opaquely on the wires"
+      },
+      {
+        "hex": "#2f528f",
+        "used_for": "dark-blue outline stroke of the blue shaded box"
+      },
+      {
+        "hex": "#7f807f",
+        "used_for": "grey secondary outline/accent stroke"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "very thin (~0.27pt median) black wires and gate outlines; coloured (blue/gold) box outlines framing each Toffoli's gate group",
+    "corners": "square",
+    "arrows": "none; only plain wires and gate connector lines",
+    "font": "mixed serif (Computer Modern) math symbols with sans-serif (Calibri) labels, very small (2.5-5.5pt)",
+    "icons": "standard quantum-circuit glyphs: filled dot (control), oplus (CNOT target), boxed single-letter gate labels (T, T†, H, U1, U2, Rz)"
+  },
+  "encoding": {
+    "color_means": "blue = every gate belonging to the first Toffoli's decomposition, gold/yellow = every gate belonging to the second Toffoli's decomposition, consistent across all three panels",
+    "line_style_means": "solid wires and gate connectors throughout; dashed grey vertical rules in panel (c) divide the circuit into its 8 numbered steps",
+    "state_means": "not a before/after state; colour instead tracks which of the two original Toffoli gates each drawn gate descends from, across the decomposition, the rule panel, and the parallel result",
+    "marker_means": "plain numerals 1-8 in panel (c) order the circuit's parallel time-steps; T/T†/H/U1/U2/Rz(theta) label each single- or two-qubit gate",
+    "emphasis": "a control dot on |φ> feeding two simultaneous CNOT targets, one in the blue block and one in the gold block, marks exactly where the commutation rules let a Fanout gate replace two sequential gates",
+    "reusable_patterns": [
+      "consistent two-colour shading tracking which of two originally-sequential operations a gate belongs to, carried across multiple panels of a derivation",
+      "a small 'rule' panel of equivalent circuit fragments used to justify a reordering applied in a following panel",
+      "a numbered step axis over a quantum circuit to make parallel execution explicit"
+    ],
+    "weaknesses": [
+      "extremely dense, very small (2.5-5.5pt) text makes panel (c) hard to read without zooming",
+      "panel (b)'s commutation rules are generic (U1, U2, Rz(theta)) and require the reader to map them back onto the specific T/H gates used in panels (a) and (c)"
+    ]
+  },
+  "tags": [
+    "quantum-circuits",
+    "Toffoli-gate",
+    "Fanout",
+    "gate-parallelization",
+    "commutation-rules",
+    "COMPAS"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Approach"
+    ],
+    "evidence": [
+      "We first place two shared-control Toffoli gates in the circuit, as shown in Fig. 7a.",
+      "using the commutation rules in Fig. 7b, we push backward the CNOTs and single-qubit gates from the second Toffoli",
+      "When two CNOTs share the same control qubit, they form a Fanout gate."
+    ]
+  },
+  "summary": "This figure derives a parallel implementation of two shared-control Toffoli gates. Panel (a) expands the compact shared-control Toffoli pair (control qubit phi, targets rho_i/rho_j for each of two copies) into its optimal T-gate decomposition (7 T gates, T-depth 4), shaded blue for the first Toffoli and gold for the second. Panel (b) states two generic commutation rules: gates sharing a control commute regardless of vertical order, and a single-qubit rotation commutes past a CNOT it does not control. Panel (c) applies these rules to push the second decomposition's CNOTs and single-qubit gates backward until CNOTs that share the control qubit phi line up in the same step, merging into Fanout gates; the resulting 8-step circuit keeps the optimal T-depth of 4 while executing both Toffolis with far less overall depth than running them sequentially.",
+  "summary_zh": "该图推导两个共享控制比特的Toffoli门并行实现：(a)展开为最优T门分解(蓝/金标记两个Toffoli)；(b)给出两条对易规则；(c)据此把共享控制位φ的CNOT重排到同一步，合并为Fanout门，8步电路T深度仍为4。",
+  "confidence": "high",
+  "notes": "Added 'walkthrough' as a secondary group alongside prior primary 'anatomy': panel (c) has an explicit numbered Step: 1-8 axis tracing execution order, which the v3 rules treat as a walkthrough signal, even though panels (a)-(b) are non-sequential definitions/rules more typical of anatomy. Remapped base from prior 'circuit' (not in the mechanism base enum) to 'timeline', matching the same remap already used for this paper's other circuit figure (asplos26-047_figtex2). The steps list captures the general Fanout-merging pattern visible in panel (c) (local gates in steps 1-2, shared-control Fanout gates around steps 3 and 7); exact gate-to-step alignment beyond this general pattern is a visual read of a very dense diagram and is not separately confirmed by the (truncated) quoted text.",
+  "venue": "ASPLOS26"
+}

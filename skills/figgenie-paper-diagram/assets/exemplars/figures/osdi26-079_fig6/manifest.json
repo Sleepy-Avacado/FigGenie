@@ -1,0 +1,63 @@
+{
+  "id": "osdi26-079_fig6",
+  "kind": "mechanism",
+  "paper_id": "osdi26-079",
+  "fig": "6",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 6: Host-side patching protocol.",
+  "groups_in_record": [
+    "evolution",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "tree",
+  "subject": "how a NIC-triggered buffer patch merges into the host tree and propagates level by level to the root",
+  "arrangement": "frames-column",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 0.86,
+  "n_elements": 10,
+  "n_relations": 5,
+  "n_panels": 3,
+  "n_steps": 6,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-079/osdi26-079_fig6_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-079/osdi26-079_fig6_p9_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "A five-step lock/copy/stitch/unlock protocol merges NIC-buffered entries into new tree nodes and, frame by frame, repeats itself one level higher up the host tree until the update reaches the root.",
+      "what_to_learn": "One numbered 1–5 recipe listed in a side legend and replayed identically at each of three tree levels",
+      "note_source": "doc"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A five-step lock/copy/stitch/unlock protocol merges NIC-buffered entries into new tree nodes and, frame by frame, repeats itself one level higher up the host tree until the update reaches the root.",
+      "what_to_learn": "One numbered 1–5 recipe listed in a side legend and replayed identically at each of three tree levels",
+      "note_source": "doc"
+    }
+  ]
+}

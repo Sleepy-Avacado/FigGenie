@@ -1,0 +1,261 @@
+{
+  "paper_id": "asplos25-100",
+  "fig": "3",
+  "system": {
+    "name": "Llama2 (decoder-only LLM background)",
+    "one_liner": "background explanation of a decoder-only transformer LLM's prefill/decoding stages and the Llama2 block's internal computation",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Prompt (LLM is a)",
+        "role": "input prompt processed in the prefill stage",
+        "container": "(a) LLM Example",
+        "novel": false
+      },
+      {
+        "name": "Decoder (Prefill Stage)",
+        "role": "stack of decoder blocks encoding prompt tokens in parallel",
+        "container": "(a) LLM Example",
+        "novel": false
+      },
+      {
+        "name": "Decoder (Decoding Stage)",
+        "role": "stack of decoder blocks generating output tokens sequentially",
+        "container": "(a) LLM Example",
+        "novel": false
+      },
+      {
+        "name": "Input Emb.",
+        "role": "embeds the previous token",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "Self Attention",
+        "role": "computes attention over context",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "Add & Norm",
+        "role": "residual connection and normalization after attention/FFN",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "Feed Forward",
+        "role": "feed-forward network layer of the decoder block",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "Output Emb.",
+        "role": "projects hidden state to vocabulary logits",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "SoftMax",
+        "role": "converts logits to probabilities",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "Top-k Sampling",
+        "role": "samples the next token from top-k probabilities",
+        "container": "(b) Decoder",
+        "novel": false
+      },
+      {
+        "name": "RMSNorm",
+        "role": "normalization applied before attention and FFN",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      },
+      {
+        "name": "Wq, Wk, Wv",
+        "role": "weight matrices projecting input to query/key/value vectors",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      },
+      {
+        "name": "Rotary Embedding",
+        "role": "applies rotary positional embedding to query and key",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      },
+      {
+        "name": "Key Cache",
+        "role": "stores past keys for autoregressive decoding",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      },
+      {
+        "name": "Value Cache",
+        "role": "stores past values for autoregressive decoding",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      },
+      {
+        "name": "Wo",
+        "role": "output projection of the attention layer",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      },
+      {
+        "name": "W1, W2, W3",
+        "role": "SwiGLU feed-forward network weight matrices",
+        "container": "(c) Llama2 Block Architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Prompt (LLM is a)",
+        "to": "Decoder (Prefill Stage)",
+        "what": "prompt tokens processed in parallel",
+        "step": null
+      },
+      {
+        "from": "Decoder (Prefill Stage)",
+        "to": "Decoder (Decoding Stage)",
+        "what": "context for sequential token generation",
+        "step": null
+      },
+      {
+        "from": "Input Emb.",
+        "to": "Self Attention",
+        "what": "embedded token",
+        "step": null
+      },
+      {
+        "from": "Self Attention",
+        "to": "Add & Norm",
+        "what": "attention output",
+        "step": null
+      },
+      {
+        "from": "Add & Norm",
+        "to": "Feed Forward",
+        "what": "normalized residual",
+        "step": null
+      },
+      {
+        "from": "Feed Forward",
+        "to": "Output Emb.",
+        "what": "output of the final decoder layer",
+        "step": null
+      },
+      {
+        "from": "Output Emb.",
+        "to": "SoftMax",
+        "what": "logits",
+        "step": null
+      },
+      {
+        "from": "SoftMax",
+        "to": "Top-k Sampling",
+        "what": "probabilities",
+        "step": null
+      },
+      {
+        "from": "Wq, Wk, Wv",
+        "to": "Key Cache",
+        "what": "projected key vector",
+        "step": null
+      },
+      {
+        "from": "Wq, Wk, Wv",
+        "to": "Value Cache",
+        "what": "projected value vector",
+        "step": null
+      }
+    ],
+    "key_idea": "A background figure explaining how a decoder-only LLM (exemplified by Llama2) processes tokens in prefill and decoding stages, the internal structure of a decoder block, and the detailed attention/FFN computation, motivating why LLM inference needs a KV cache and is memory-bandwidth bound.",
+    "reading_order": "Left to right across three panels: (a) prefill then decoding-stage token flow, (b) one decoder block's internal layers, (c) Llama2's detailed attention and FFN computation."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 0.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#9dc3e6",
+        "used_for": "weight-matrix and cache boxes (Wq/Wk/Wv, Value Cache, W1/W2/W3) in the Llama2 block"
+      },
+      {
+        "hex": "#f8cbad",
+        "used_for": "Add & Norm boxes and the Key Cache"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "Decoder block boxes in the prefill/decoding stacks"
+      },
+      {
+        "hex": "#a9d18e",
+        "used_for": "Self Attention and Feed Forward boxes"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "accent highlight box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.57pt median, dashed lines used for the ×N loop brackets",
+    "font": "Nimbus Roman/Cambria Math serif, 7-10.5pt",
+    "corners": "mixed",
+    "arrows": "42 arrowheads, straight orthogonal lines",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = attention/FFN compute layers, orange = normalization/cache boxes, blue = weight matrices and value cache",
+    "line_style_means": "dashed brackets mark the ×N repeated decoder-block loop",
+    "emphasis": "panel (c)'s expanded circuit-like view of RMSNorm/attention/FFN math emphasizes the fine-grained computation an LLM-inference accelerator must handle",
+    "reusable_patterns": [
+      "three-panel background figure moving from coarse pipeline stages to a fully expanded per-layer compute graph"
+    ],
+    "weaknesses": [
+      "very dense, small text in panel (c) may be hard to read at figure scale"
+    ]
+  },
+  "tags": [
+    "llm-inference",
+    "transformer",
+    "decoder-only",
+    "llama2",
+    "kv-cache",
+    "background"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Background (p.4)"
+    ],
+    "evidence": [
+      "decoder-only LLM initially processes a user prompt in the \"prefill\" stage",
+      "decoder transformer blocks consist of a self attention and a feed-forward network (FFN) layer",
+      "Llama2 model architecture as a representative LLM"
+    ]
+  },
+  "summary": "This is a background figure (not a diagram of the paper's own CENT system) explaining how decoder-only LLMs like Llama2 work, motivating CENT's memory-centric design. Panel (a) contrasts the prefill stage, which encodes prompt tokens in parallel through N decoder blocks, with the decoding stage, which generates tokens sequentially. Panel (b) expands one decoder block into input embedding, self-attention, add-and-norm, and feed-forward sublayers feeding an output embedding, softmax, and top-k sampling. Panel (c) drills further into Llama2's block, showing RMSNorm, the Wq/Wk/Wv projections with rotary embedding, key/value caches, the output projection Wo, and the SwiGLU feed-forward network built from W1, W2, W3. Blue, orange, and green flat-filled boxes distinguish weight/cache, normalization, and compute-layer elements.",
+  "summary_zh": "该图为背景说明图，展示解码器LLM（以Llama2为例）的预填充与解码两阶段、单个解码器块的内部结构（自注意力、前馈网络等），以及Llama2块中RMSNorm、Q/K/V投影、旋转位置编码、KV缓存与SwiGLU前馈网络的详细计算过程。",
+  "confidence": "high",
+  "notes": "This is a background figure explaining generic decoder-only LLM / Llama2 internals, not a diagram of the paper's own CENT system.",
+  "venue": "ASPLOS25"
+}

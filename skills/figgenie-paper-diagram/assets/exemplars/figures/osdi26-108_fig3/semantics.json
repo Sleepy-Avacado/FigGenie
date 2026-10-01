@@ -1,0 +1,194 @@
+{
+  "paper_id": "osdi26-108",
+  "fig": "3",
+  "system": {
+    "name": "TrainMover",
+    "one_liner": "an interruption-resilient runtime that migrates ML training jobs with minimized downtime instead of restarting them",
+    "domain": [
+      "ml-systems",
+      "fault-tolerance"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "TrainMover",
+        "role": "top timeline: splits migration into a background preparation phase and a brief switching phase",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Stayers",
+        "role": "machines that continue training normally throughout migration",
+        "container": "TrainMover",
+        "novel": false
+      },
+      {
+        "name": "Leaver",
+        "role": "the machine being replaced, exits after the switching phase completes",
+        "container": "TrainMover",
+        "novel": false
+      },
+      {
+        "name": "Joiner",
+        "role": "the replacement machine prepared in the background and switched in to take over the leaver's role",
+        "container": "TrainMover",
+        "novel": true
+      },
+      {
+        "name": "Preparation Phase",
+        "role": "background phase where the joiner's training stack is prepared without affecting the foreground job",
+        "container": "TrainMover",
+        "novel": true
+      },
+      {
+        "name": "Switching Phase",
+        "role": "brief phase where the joiner synchronizes to the latest training state and takes over the leaver",
+        "container": "TrainMover",
+        "novel": true
+      },
+      {
+        "name": "CCL Switchover",
+        "role": "the communication-library switchover mechanism used during the switching phase",
+        "container": "Switching Phase",
+        "novel": true
+      },
+      {
+        "name": "Parameter Transmission",
+        "role": "transfer of training state from leaver to joiner during switching",
+        "container": "Switching Phase",
+        "novel": true
+      },
+      {
+        "name": "Training Timeline",
+        "role": "shared horizontal timeline comparing TrainMover against stop-reschedule-restart",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Stop-reschedule-restart",
+        "role": "bottom timeline: the baseline approach that stops, reschedules, and restarts training from checkpoint",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Stop & Reschedule",
+        "role": "baseline phase where training is stopped and machines are rescheduled",
+        "container": "Stop-reschedule-restart",
+        "novel": false
+      },
+      {
+        "name": "Restart",
+        "role": "baseline phase where training resumes from a checkpoint after rescheduling",
+        "container": "Stop-reschedule-restart",
+        "novel": false
+      },
+      {
+        "name": "Checkpoint",
+        "role": "saved training state loaded to restart training in the baseline approach",
+        "container": "Restart",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Leaver",
+        "to": "Joiner",
+        "what": "Parameter Transmission during CCL Switchover",
+        "step": null
+      },
+      {
+        "from": "Preparation Phase",
+        "to": "Switching Phase",
+        "what": "joiner ready, foreground job finishes current iteration",
+        "step": null
+      },
+      {
+        "from": "Checkpoint",
+        "to": "Restart",
+        "what": "checkpoint loading to resume training",
+        "step": null
+      }
+    ],
+    "key_idea": "TrainMover overlaps a background preparation phase with ongoing training and uses a brief switching phase to hand off state directly between machines, achieving far less downtime than stopping, rescheduling, and restarting from checkpoint.",
+    "reading_order": "Top row (TrainMover) read left to right across a shared training timeline through preparation and switching phases with minimized downtime; bottom row (stop-reschedule-restart) read the same way, showing a much longer stop/restart gap on the same timeline for comparison."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.0,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red text/arrows/X marks highlighting the switching phase, CCL switchover, and failure/removal markers"
+      },
+      {
+        "hex": "#ffeed9",
+        "used_for": "light orange background shading the Preparation Phase region"
+      },
+      {
+        "hex": "#d9e7fd",
+        "used_for": "light blue fill for Joiner boxes"
+      },
+      {
+        "hex": "#e9e9e9",
+        "used_for": "light gray fill for Leaver/Stayer boxes"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "orange accent highlighting minimized-downtime annotation"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.3pt gray/black borders, dashed rounded rectangles grouping Stayers/Leaver/Joiner",
+    "font": "Arial/Arial-Italic sans, 4.5-10.5pt, italic for phase labels",
+    "corners": "mixed",
+    "arrows": "many thin curved/orthogonal arrows (68 heads) tracing machine roles and parameter transmission across the timeline",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red highlights the switching phase, CCL switchover, and removed/failed machines; light orange marks the preparation phase; light blue marks joiner machines; gray marks unaffected stayers and the retired leaver",
+    "line_style_means": "dashed rounded boxes group repeated machine roles (stayers, leaver, joiner); red X marks indicate a leaver/machine being removed from training",
+    "emphasis": "a shared horizontal Training Timeline directly under both rows lets the reader visually compare TrainMover's short switching-phase downtime against the much longer stop/restart gap below, with a green 'Minimized Downtime' annotation calling out the difference",
+    "reusable_patterns": [
+      "two stacked timelines sharing one time axis to contrast a new system's downtime against a baseline",
+      "color-coded machine roles (stayer/leaver/joiner) tracked consistently across phases"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "fault-tolerance",
+    "ml-training",
+    "live-migration",
+    "downtime-reduction",
+    "checkpointing",
+    "distributed-training"
+  ],
+  "provenance": {
+    "sections": [
+      "3 TrainMover Overview (p.5)"
+    ],
+    "evidence": [
+      "instead of long restarting (bottom), TrainMover (top) splits the migration into two phases",
+      "in the preparation phase, TrainMover prepares the joiners' training stack in the background",
+      "the system enters the switching phase and synchronizes each joiner to the latest training state"
+    ]
+  },
+  "summary": "This figure contrasts TrainMover with a stop-reschedule-restart baseline along a shared Training Timeline. The top row shows TrainMover: Stayers keep training normally while a Leaver is replaced by a Joiner, first prepared in a light-orange-shaded background Preparation Phase, then handed off during a brief red-highlighted Switching Phase via CCL Switchover and Parameter Transmission, after which the leaver exits and the joiner takes over its role - contributing only a short pause to the shared timeline. The bottom row shows the baseline: training stops entirely during Stop & Reschedule (with a leaver marked by a red X) and only resumes after a full Restart that reloads a Checkpoint, producing a much longer downtime segment on the same timeline. A green 'Minimized Downtime' annotation calls out the difference between the two approaches' pause lengths.",
+  "summary_zh": "该图对比TrainMover与停止-重调度-重启基线：TrainMover在共享训练时间轴上，后台准备阶段(浅橙)让新机器就绪后仅需短暂切换阶段(红色，含CCL切换与参数传输)即可替换旧机器；基线方案则需完全停止训练、重调度并从检查点重启，停机时间明显更长，绿色标注凸显TrainMover的停机最小化优势。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

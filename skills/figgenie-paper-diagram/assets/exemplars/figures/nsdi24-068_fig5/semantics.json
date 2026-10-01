@@ -1,0 +1,217 @@
+{
+  "paper_id": "nsdi24-068",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": null,
+    "one_liner": "a decision process (paired with a hyperparameter search) that helps practitioners pick a suitable max-min fair resource allocator without wastefully running every allocator in parallel",
+    "domain": [
+      "resource-allocation",
+      "max-min-fairness",
+      "graph-optimization"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how to pick a max-min fair resource allocator based on whether fairness is guaranteed and what is prioritized",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Fairness Guarantee",
+        "kind": "node",
+        "role": "root decision: does the user require a strict fairness guarantee?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Prioritizes",
+        "kind": "node",
+        "role": "second decision, reached when no strict fairness guarantee is required: which pair of properties does the user prioritize?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GB, α",
+        "kind": "box",
+        "role": "recommendation when a fairness guarantee is required: the GB allocator, tuned by its α parameter",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GB, high α or EB, low #bins",
+        "kind": "box",
+        "role": "recommendation when prioritizing speed and efficiency",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "EB, #bins",
+        "kind": "box",
+        "role": "recommendation when prioritizing fairness and efficiency",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Adaptive Waterfiller, #iterations",
+        "kind": "box",
+        "role": "recommendation when prioritizing fairness and speed",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Fairness Guarantee",
+        "to": "GB, α",
+        "what": "Yes",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Fairness Guarantee",
+        "to": "Prioritizes",
+        "what": "No",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Prioritizes",
+        "to": "GB, high α or EB, low #bins",
+        "what": "Speed + Efficiency",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Prioritizes",
+        "to": "EB, #bins",
+        "what": "Fairness + Efficiency",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Prioritizes",
+        "to": "Adaptive Waterfiller, #iterations",
+        "what": "Fairness + Speed",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "Fairness Guarantee",
+          "branches": [
+            "Yes -> GB, α",
+            "No -> Prioritizes"
+          ]
+        },
+        {
+          "question": "Prioritizes",
+          "branches": [
+            "Speed + Efficiency -> GB, high α or EB, low #bins",
+            "Fairness + Efficiency -> EB, #bins",
+            "Fairness + Speed -> Adaptive Waterfiller, #iterations"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "Practitioners can pick a suitable max-min fair allocator with two questions: whether a strict fairness guarantee is required (routing to GB), and if not, which pair of properties they prioritize, each routing to a different named allocator and parameter.",
+    "reading_order": "left to right: start at 'Fairness Guarantee', branch to 'GB, α' on 'Yes' or into 'Prioritizes' on 'No', then to one of three labelled recommendation boxes."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.72,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0b5394",
+        "used_for": "outline of the four recommendation boxes and their bold text"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "fill of the 'Fairness Guarantee' and 'Prioritizes' decision boxes"
+      },
+      {
+        "hex": "#fde2e4",
+        "used_for": "fill of the 'Adaptive Waterfiller, #iterations' recommendation box"
+      },
+      {
+        "hex": "#e2ece9",
+        "used_for": "fill of the 'GB, high α or EB, low #bins' recommendation box"
+      },
+      {
+        "hex": "#cddafd",
+        "used_for": "fill of the 'EB, #bins' recommendation box"
+      },
+      {
+        "hex": "#bee1e6",
+        "used_for": "fill of the 'GB, α' recommendation box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black outlines and arrows for the two decision boxes; dark navy blue outlines for the four coloured recommendation boxes",
+    "corners": "rounded",
+    "arrows": "thin black solid arrows with solid heads, each labelled with its Yes/No or priority-pair condition along the edge",
+    "font": "Calibri-Bold for box labels, Times New Roman for the edge condition text",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each of the four possible recommendations gets its own pastel fill (pink, pale green, pale lavender, pale cyan) purely to visually separate the outcomes; the two decision boxes are left white/unfilled with a plain black outline",
+    "line_style_means": "every edge is a plain solid black arrow; only the adjacent text (Yes/No, or a pair of prioritized properties) distinguishes one branch from another",
+    "state_means": "not applicable; this is a one-shot decision tree, not alternating states",
+    "marker_means": "no numbered or symbolic markers; branch conditions are written in full words (Yes, No, Speed + Efficiency, Fairness + Efficiency, Fairness + Speed) beside each arrow",
+    "emphasis": "colouring only the four terminal recommendation boxes, while leaving the two decision boxes plain, draws the eye straight to the actionable outcome of each path",
+    "reusable_patterns": [
+      "a two-level decision tree where each leaf is a distinctly coloured recommendation box naming a concrete choice and its tuning parameter"
+    ],
+    "weaknesses": [
+      "the three-way branch out of 'Prioritizes' is a fan of three separate arrows rather than a binary split, so it reads less like a strict binary decision tree than the 'tree' base label suggests"
+    ]
+  },
+  "tags": [
+    "max-min-fairness",
+    "resource-allocation",
+    "decision-tree",
+    "allocator-selection",
+    "hyperparameter-tuning"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Motivation and Overall Approach"
+    ],
+    "evidence": [
+      "We suggest a simple decision process along with a hyperparameter search to help practitioners choose a suitable allocator",
+      "An example of how to pick the right allocator.",
+      "A sensitivity analysis in sec:eval indicates that this decision process is robust."
+    ]
+  },
+  "summary": "Figure 5 gives a worked example of the two-question decision tree the paper uses to pick a suitable max-min fair allocator, avoiding the waste of running every allocator in parallel. The first question, 'Fairness Guarantee,' asks whether the user needs a strict guarantee: if yes, the tree recommends the GB allocator, tuned by its α parameter. If no, a second box, 'Prioritizes,' asks which pair of properties the user cares about most: Speed + Efficiency routes to GB with a high α or EB with a low bin count; Fairness + Efficiency routes to EB, tuned by its number of bins; and Fairness + Speed routes to the Adaptive Waterfiller, tuned by its iteration count. Each outcome is its own pastel-coloured box naming the allocator and the parameter to tune.",
+  "summary_zh": "图5给出选择最大最小公平分配器的决策树实例：先问是否需要严格公平保证（是则选GB配合α），否则再问优先速度、效率还是公平，分别推荐GB/EB或自适应注水算法。",
+  "confidence": "high",
+  "notes": "system.name left null: the context's paper text never resolves the paper's own system name, only the unexpanded LaTeX macros \\sysname/\\systitle, so no proper noun is stated anywhere in the given evidence.",
+  "venue": "NSDI24"
+}

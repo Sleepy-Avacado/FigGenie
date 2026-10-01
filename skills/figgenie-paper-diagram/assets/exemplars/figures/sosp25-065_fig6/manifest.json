@@ -1,0 +1,41 @@
+{
+  "id": "sosp25-065_fig6",
+  "paper_id": "sosp25-065",
+  "fig": "6",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 6. Sandman system diagram (§4.2).",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.54,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-065/sosp25-065_fig6_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-065/sosp25-065_fig6_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Overlays two named flow classes, black I/O Flow and blue Scheduling Flow, on the same Main Core/Worker Core boxes, with an inside top legend and circled steps 1-3 numbering only the control arrows.",
+      "what_to_learn": "Put the two-arrow-color legend and polling-icon key in one top-left inside block, then number only the control-flow arrows (steps 1-3) while leaving the data arrows unnumbered so the eye separates what happens always from what the scheduler decides."
+    }
+  ]
+}

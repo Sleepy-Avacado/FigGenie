@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-097_fig4",
+  "paper_id": "asplos26-097",
+  "fig": "4",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 4. Skyler architecture and analysis pipeline. The sys- tem takes source code and IaC templates as input, builds a serverless graph, attaches provider-specific cost models, and executes symbolic queries to predict API invocation costs.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.72,
+  "n_components": 11,
+  "n_flows": 10,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-097/asplos26-097_fig4_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-097/asplos26-097_fig4_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Reassigned from dataflow-dag by the note-writer: a plain five-box left-to-right pipeline; the 'Serverless Graph' is a named artifact passed between boxes but never actually drawn as nodes and edges anywhere in the figure.",
+      "what_to_learn": "The transferable move is pipeline's: run coloured dashed bands along the bottom naming which paper section documents each stage, and group the plugin-style services (S3, SQS, Pub/Sub) as small icons inside one stage rather than drawing each as a separate box."
+    }
+  ]
+}

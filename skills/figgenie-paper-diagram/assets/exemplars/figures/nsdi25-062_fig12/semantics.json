@@ -1,0 +1,264 @@
+{
+  "paper_id": "nsdi25-062",
+  "fig": "12",
+  "kind": "mechanism",
+  "system": {
+    "name": "RegenHance",
+    "one_liner": "a region-based content enhancement system for efficient video analytics at the edge, using profile-based execution planning across heterogeneous hardware",
+    "domain": [
+      "video-analytics",
+      "edge-computing",
+      "systems-for-ml"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how RegenHance profiles DFG components across hardware, then dynamic-programs a CPU/GPU execution schedule meeting performance targets",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "① DFG",
+        "kind": "label",
+        "role": "step 1: build the dataflow graph of the analytical task from decode through detection",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Decode",
+        "kind": "node",
+        "role": "DFG node D, decodes the input video stream",
+        "container": "① DFG",
+        "highlighted": false
+      },
+      {
+        "name": "Importance Pred.",
+        "kind": "node",
+        "role": "DFG node P, predicts which regions matter for accuracy",
+        "container": "① DFG",
+        "highlighted": false
+      },
+      {
+        "name": "Region Enhan.",
+        "kind": "node",
+        "role": "DFG node E, enhances the important regions' content",
+        "container": "① DFG",
+        "highlighted": false
+      },
+      {
+        "name": "Semantic Seg.",
+        "kind": "node",
+        "role": "DFG node S, one of the two downstream analytics tasks",
+        "container": "① DFG",
+        "highlighted": false
+      },
+      {
+        "name": "Obj. Det.",
+        "kind": "node",
+        "role": "DFG node O, the other downstream analytics task",
+        "container": "① DFG",
+        "highlighted": false
+      },
+      {
+        "name": "② Profile",
+        "kind": "label",
+        "role": "step 2: profile each DFG component's throughput on each hardware option",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Model@HW",
+        "kind": "table",
+        "role": "profiling table; each row is one model component run on one hardware unit at a given batch size",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "③ Dynamic Programming",
+        "kind": "box",
+        "role": "step 3: search over batch-size choices per component to meet the latency/accuracy targets",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Exec Plan",
+        "kind": "box",
+        "role": "the output of the dynamic-programming search: a concrete assignment of batch sizes and hardware",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "④ Schedule",
+        "kind": "row",
+        "role": "step 4: the resulting CPU/GPU timeline that executes the plan",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CPU",
+        "kind": "lane",
+        "role": "timeline lane showing Decode/Importance-Prediction blocks scheduled on the CPU",
+        "container": "④ Schedule",
+        "highlighted": false
+      },
+      {
+        "name": "GPU",
+        "kind": "lane",
+        "role": "timeline lane showing Region-Enhancement/Segmentation/Detection blocks scheduled on the GPU",
+        "container": "④ Schedule",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "① DFG",
+        "to": "② Profile",
+        "what": "DFG components are what get profiled for throughput",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "② Profile",
+        "to": "③ Dynamic Programming",
+        "what": "profiled Bat/Cos/TPS numbers feed the batch-size search",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "③ Dynamic Programming",
+        "to": "Exec Plan",
+        "what": "the DP search outputs a concrete execution plan",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "Exec Plan",
+        "to": "④ Schedule",
+        "what": "the plan is realized as a CPU/GPU timeline",
+        "kind": "control",
+        "step": "4"
+      }
+    ],
+    "panels": [
+      {
+        "label": "① DFG",
+        "axis": "time",
+        "differs": "template/start: the analytical task is expressed as a dataflow graph of Decode/Importance Pred./Region Enhan./Semantic Seg./Obj. Det. nodes",
+        "verdict": null
+      },
+      {
+        "label": "② Profile",
+        "axis": "time",
+        "differs": "each DFG node@hardware combination is profiled for batch size (Bat), time cost (Cos) and resulting throughput (TPS)",
+        "verdict": null
+      },
+      {
+        "label": "③ Dynamic Programming",
+        "axis": "time",
+        "differs": "profiled numbers are searched over to output an Exec Plan meeting the latency/accuracy targets",
+        "verdict": null
+      },
+      {
+        "label": "④ Schedule",
+        "axis": "time",
+        "differs": "the Exec Plan becomes a concrete CPU/GPU timeline, e.g. CPU alternating D/P blocks while GPU runs E/S/E/O blocks",
+        "verdict": "ours"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the profiling table's concrete Bat/Cos/TPS numbers for each Model@HW row (e.g. SR@CPU: 1/270/3; P@GPU: 4/4.2/952)",
+      "linked_by": "colour-coded row bands matching each DFG node's colour, and position within the Model@HW table",
+      "result_cells": "red-outlined table rows mark the specific (Bat, Cos, TPS) values the dynamic-programming search actually selected for the final schedule"
+    },
+    "key_idea": "RegenHance plans execution for a multi-model video-analytics pipeline in four steps: express the task as a dataflow graph, profile every component's throughput on every available hardware unit at different batch sizes, run a dynamic-programming search over these profiles to meet a latency/accuracy target, and realize the result as a concrete CPU/GPU schedule.",
+    "reading_order": "left to right through the four circled steps: ① the DFG, ② its profiling table, ③ the dynamic-programming search producing an Exec Plan, ④ the resulting CPU/GPU schedule timeline"
+  },
+  "layout": {
+    "arrangement": "other",
+    "panel_count": 4,
+    "frame_template": "free",
+    "delta_marking": "badge",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.83,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c5e0b4",
+        "used_for": "light green fill for the Decode/Semantic-Seg./Obj.-Det. DFG nodes, matching table rows and schedule blocks for those components"
+      },
+      {
+        "hex": "#f8cbad",
+        "used_for": "light orange/peach fill for the Region-Enhancement-related DFG node, table rows and schedule block"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "light blue fill for the Importance-Prediction DFG node, table rows and schedule block"
+      },
+      {
+        "hex": "#e8c3e0",
+        "used_for": "light pink/purple fill, another component's colour band in the table"
+      },
+      {
+        "hex": "#ea5455",
+        "used_for": "red outline highlighting the specific table rows selected by the dynamic-programming search"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid table gridlines; ~3pt dashed arrows between steps; ~1pt red outline on selected rows",
+    "corners": "mixed",
+    "arrows": "dashed dark arrows connecting the four numbered steps; thin solid arrows inside the DFG",
+    "font": "Arial / Arial-Bold sans, ~5.5-7.5pt, bold for step titles and the table header",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each DFG component (Decode, Importance Pred., Region Enhan., Semantic Seg., Obj. Det.) has its own fill colour, reused consistently in the profiling table's row bands and in the final CPU/GPU schedule blocks",
+    "line_style_means": "dashed arrows link the four numbered steps; solid thin lines are internal DFG edges and table gridlines",
+    "state_means": "not a before/after comparison; the four frames instead show successive stages of one planning pipeline, tied together by shared per-component colour coding",
+    "marker_means": "circled numbers ①-④ order the four planning stages; the red outline marks exactly which profiled (Bat, Cos, TPS) row each component's chosen configuration comes from",
+    "emphasis": "reusing one colour per component across the DFG, the profiling table and the final schedule is the figure's main device for tracking the same component end to end",
+    "reusable_patterns": [
+      "a numbered, four-stage pipeline diagram (graph, table, algorithm box, timeline) unified by consistent per-item colour coding across every stage"
+    ],
+    "weaknesses": [
+      "four visually very different diagram types are packed into one figure, and matching a schedule block back to its DFG node relies entirely on remembering the colour code rather than on shared labels"
+    ]
+  },
+  "tags": [
+    "video-analytics",
+    "execution-planning",
+    "dynamic-programming",
+    "heterogeneous-scheduling",
+    "worked-example"
+  ],
+  "provenance": {
+    "sections": [
+      "3 RegenHance Design (p.9)"
+    ],
+    "evidence": [
+      "Our crucial choice is to assign each component’s input tensor size",
+      "Batching execution, i.e., grouping input matrices into one, is well known to achieve high processor utilization by DNNs",
+      "it also allows the inference engines to achieve various throughputs by adjusting different batch sizes"
+    ]
+  },
+  "summary": "Figure 12 walks through RegenHance's profile-based execution planning for a 7-stream, <1s-latency/>0.9-accuracy workload on one CPU plus one GPU. Step ① expresses the analytical task as a dataflow graph (Decode, Importance Pred., Region Enhan., Semantic Seg., Obj. Det.). Step ② profiles every component on every hardware option at several batch sizes, recording batch size (Bat), time cost (Cos) and throughput (TPS) in a Model@HW table. Step ③ runs a dynamic-programming search over these profiles to pick a batch size and hardware assignment (Exec Plan) meeting the target latency and accuracy. Step ④ realizes that plan as a concrete schedule: the CPU alternates Decode/Importance-Prediction blocks while the GPU runs Region-Enhancement/Segmentation/Detection blocks. A consistent colour per component runs through the DFG, the profiling table's row bands, and the final schedule blocks, letting a reader trace one component across all four stages.",
+  "summary_zh": "该图演示RegenHance四步执行规划：①任务表示为DFG；②各硬件画像记录Bat/Cos/TPS；③动态规划搜索满足目标的Exec Plan；④落地为CPU/GPU调度时间线，同一组件颜色贯穿全程。",
+  "confidence": "high",
+  "notes": "prior base 'table' corrected to 'mixed' since the four stages are drawn as four distinct structure types (graph, table, algorithm box, timeline), not one table throughout. layout.arrangement uses 'other' because the four stages are laid out in an irregular grid (DFG top-left, table top-right, DP box middle-left, schedule spanning the bottom) rather than a clean row or column.",
+  "venue": "NSDI25"
+}

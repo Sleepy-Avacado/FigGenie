@@ -1,0 +1,42 @@
+{
+  "id": "sosp23-013_fig4",
+  "paper_id": "sosp23-013",
+  "fig": "4",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 4. Oobleck’s planning algorithm overview. First, it generates a set of pipeline templates, a combination of which can utilize all available nodes. A template is a specification of pipelines, how many nodes are assigned and how GPUs in the nodes should be mapped to pipeline stages. Then, pipel",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 3.68,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-013/src/fig4a_planning_overview_left.svg",
+    "preview.png": "lab/extracted/sosp23-013/src/fig4a_planning_overview_left.png",
+    "print.png": "lab/extracted/sosp23-013/sosp23-013_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Reassigned from composite-figure by the note-writer: both panels are sequential stages of one planning algorithm, template generation then plan instantiation, sharing one grayscale grid-of-squares glyph as a running anchor; that is two-panel's two-stages-of-one-thing case, not composite-figure's mix of unlike kinds.",
+      "what_to_learn": "Reuse one consistent glyph, here a grid of light/medium/dark squares sized by node count, across every panel of a multi-stage algorithm figure so a template's identity carries from generation through instantiation to the best-plan output; that continuity is a two-panel technique, not a reason to fragment into unlike-kind composite panels."
+    }
+  ]
+}

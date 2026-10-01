@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-088_fig11",
+  "paper_id": "asplos26-088",
+  "fig": "11",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 11. Overall of architecture of Neo.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.09,
+  "n_components": 7,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-088/src/fig11_architecture-overview.svg",
+    "preview.png": "lab/extracted/asplos26-088/src/fig11_architecture-overview.png",
+    "print.png": "lab/extracted/asplos26-088/asplos26-088_fig11_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Near-monochrome tikz pipeline (1 hue, gray_frac 0.0) whose dashed callouts expand two engines into their replicated cores.",
+      "what_to_learn": "Dashed leader lines mean containment/zoom, solid arrows mean data flow; keeping the two line styles disjoint lets one figure carry both relations."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated: dashed expansion lines fan from Sorting and Rasterization engines to two differently sized unit lists, sixteen Sorting Cores elided as '...' but only four Rasterization Cores enumerated in full since the count is small.",
+      "what_to_learn": "Match the elision to the count: when a repeated unit list is long (sixteen sorting cores here), collapse it with an ellipsis, but when short enough to read at a glance (four rasterization cores), just enumerate every one, using dashed leader lines to expand either list beside the main diagram."
+    }
+  ]
+}

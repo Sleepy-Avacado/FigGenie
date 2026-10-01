@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-051_fig1",
+  "paper_id": "asplos25-051",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. Memory disaggregation over Ethernet.",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.23,
+  "n_components": 9,
+  "n_flows": 2,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-051/src/fig1_fig1.svg",
+    "preview.png": "lab/extracted/asplos25-051/src/fig1_fig1.png",
+    "print.png": "lab/extracted/asplos25-051/asplos25-051_fig1_p2_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Stacked (not side-by-side) comparison joined by an explicit 'V.S.' divider, with a dashed bracket naming the paper's scope.",
+      "what_to_learn": "Stack the two designs vertically when each is wide; a centred 'V.S.' label plus a dashed 'focus of this paper' bracket replaces sub-captions."
+    },
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "Star, high-confidence nested-stack exemplar: each Compute Node and Memory Node box nests a NIC box that itself nests a three-level protocol stack, MAC and PHY, mirrored on both sides of a V.S. comparison.",
+      "what_to_learn": "Draw a protocol stack as boxes literally inside the NIC box that owns it, one level per layer, and repeat the identical nest on both compute and memory nodes so a labelled dashed bracket can span just the layers that are the paper's actual focus."
+    },
+    {
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Uses the literal V.S. rule for wide halves: a compact one-line baseline stacked over a wider two-node Ethernet Fabric design, with the paper's contribution named in orange text and bracketed rather than boxed.",
+      "what_to_learn": "When one half is much simpler than the other, stack them top-to-bottom with a horizontal V.S. rule instead of forcing equal-width side-by-side panels, and name the paper's scope with a coloured label plus dashed bracket rather than a boxed outline."
+    }
+  ]
+}

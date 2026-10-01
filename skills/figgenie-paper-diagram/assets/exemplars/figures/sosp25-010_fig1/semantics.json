@@ -1,0 +1,210 @@
+{
+  "paper_id": "sosp25-010",
+  "fig": "1",
+  "system": {
+    "name": "Atmosphere",
+    "one_liner": "a formally verified Rust microkernel, proved with Verus, supporting strict isolation for mixed-criticality systems",
+    "domain": [
+      "os-kernel",
+      "security",
+      "formal-verification"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "A (untrusted)",
+        "role": "an untrusted, unverified container that can perform arbitrary system calls with arbitrary arguments",
+        "container": "Boot (root) container",
+        "novel": true
+      },
+      {
+        "name": "T1",
+        "role": "thread in container A; invokes send() to pass a page",
+        "container": "A (untrusted)",
+        "novel": true
+      },
+      {
+        "name": "Page",
+        "role": "memory page passed by T1 via send()",
+        "container": "A (untrusted)",
+        "novel": true
+      },
+      {
+        "name": "V (verified)",
+        "role": "the single container whose functional correctness is formally proved, mediating between A and B",
+        "container": "Boot (root) container",
+        "novel": true
+      },
+      {
+        "name": "T2",
+        "role": "thread in container V; waits on the endpoint and invokes recv() to receive the page",
+        "container": "V (verified)",
+        "novel": true
+      },
+      {
+        "name": "Receive virtual address",
+        "role": "the virtual address T2 receives via recv(ep, va)",
+        "container": "V (verified)",
+        "novel": true
+      },
+      {
+        "name": "B (untrusted)",
+        "role": "a second untrusted, unverified container, isolated from A but also able to communicate with V",
+        "container": "Boot (root) container",
+        "novel": true
+      },
+      {
+        "name": "T3",
+        "role": "thread in container B",
+        "container": "B (untrusted)",
+        "novel": true
+      },
+      {
+        "name": "Boot (root) container",
+        "role": "outer container from which A, V, and B are established",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Atmosphere microkernel",
+        "role": "the verified microkernel implementing the endpoint-based IPC mechanism underlying send()/recv()",
+        "container": "Containers",
+        "novel": true
+      },
+      {
+        "name": "List of T1's endpoints",
+        "role": "T1's endpoint list inside the microkernel",
+        "container": "Atmosphere microkernel",
+        "novel": true
+      },
+      {
+        "name": "Endpoint",
+        "role": "a shared endpoint object referenced by both T1's and T2's endpoint lists",
+        "container": "Atmosphere microkernel",
+        "novel": true
+      },
+      {
+        "name": "List of T2's endpoints",
+        "role": "T2's endpoint list inside the microkernel",
+        "container": "Atmosphere microkernel",
+        "novel": true
+      },
+      {
+        "name": "List of T3's endpoints",
+        "role": "T3's endpoint list inside the microkernel",
+        "container": "Atmosphere microkernel",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "T1",
+        "to": "T2",
+        "what": "a page passed via send(ep, va)/recv(ep, va) over a shared endpoint",
+        "step": null
+      },
+      {
+        "from": "T2",
+        "to": "List of T2's endpoints",
+        "what": "recv(ep, va) call reaching into the microkernel's endpoint list",
+        "step": null
+      },
+      {
+        "from": "List of T1's endpoints",
+        "to": "Endpoint",
+        "what": "endpoint reference",
+        "step": null
+      },
+      {
+        "from": "List of T2's endpoints",
+        "to": "Endpoint",
+        "what": "endpoint reference",
+        "step": null
+      }
+    ],
+    "key_idea": "Untrusted containers A and B can only interact through a single verified container V; V's proved functional correctness guarantees isolation and non-interference between A and B even as both exchange pages/endpoints with V via the microkernel's shared endpoint structures.",
+    "reading_order": "Left to right across three sibling containers (A untrusted, V verified, B untrusted) inside a Boot root container; an arrow from V's recv() drops down into the Atmosphere microkernel's endpoint data structures below."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.73,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a8d6ec",
+        "used_for": "pale blue fill of the verified container V"
+      },
+      {
+        "hex": "#c2d7bd",
+        "used_for": "pale green fill of the untrusted containers A and B"
+      },
+      {
+        "hex": "#bed7c5",
+        "used_for": "pale green fill of the Page box inside A"
+      },
+      {
+        "hex": "#b6d8e0",
+        "used_for": "very pale blue background fill of the bottom Atmosphere microkernel box"
+      },
+      {
+        "hex": "#88e2fc",
+        "used_for": "brighter cyan fill of the endpoint-list cells inside the microkernel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark strokes, dashed for container/trust boundaries (A/V/B outlines and the outer Boot root container), solid for the microkernel box and endpoint cells",
+    "font": "DejaVu Sans, very small (about 2.5-5pt), matplotlib-rendered labels",
+    "corners": "mixed: rounded containers, square microkernel/endpoint cells",
+    "arrows": "thin curved arrows with small filled heads connecting threads to data/endpoints, plus wavy freehand lines depicting each thread's execution",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale green = untrusted containers A and B; pale blue = the formally verified container V; light cyan = the Atmosphere microkernel's internal endpoint data structures",
+    "line_style_means": "dashed outlines = container/trust boundaries (per-container box and the outer Boot/root container); solid arrows = data/pointer references",
+    "emphasis": "placing the single verified container V between the two untrusted containers, with matching send()/recv() call labels, foregrounds the claim that untrusted peers can only interact safely through the verified middle container",
+    "reusable_patterns": [
+      "row of peer isolation domains (containers) sitting above a shared kernel data-structure diagram",
+      "matched pairs of system-call labels (send/recv) on two peer boxes to depict one IPC operation"
+    ],
+    "weaknesses": [
+      "only the T1/T2 (A/V) send-recv interaction is drawn concretely; container B's role in the untrusted-peer relationship described in the caption is not visually connected to anything, so it reads as inert"
+    ]
+  },
+  "tags": [
+    "formal verification",
+    "microkernel",
+    "Rust",
+    "Verus",
+    "IPC",
+    "isolation"
+  ],
+  "provenance": {
+    "sections": [
+      "3 System Architecture (p.5)",
+      "4 Verification (p.9)"
+    ],
+    "evidence": [
+      "the microkernel can establish communication channel with a third container V",
+      "A and B do not interfere with each other but are allowed to establish communication with V",
+      "V may receive pages and endpoints from A and B, but never shares them across container boundaries"
+    ]
+  },
+  "summary": "Atmosphere is a formally verified Rust microkernel, built and proved with Verus, supporting strict isolation for mixed-criticality systems. Figure 1 shows its architecture as two rows: on top, three sibling containers - untrusted A, formally verified V, and untrusted B - sit inside an outer 'Boot (root) container', each running one thread (T1, T2, T3); below, a separate 'Containers' row shows the Atmosphere microkernel's internal endpoint data structures (per-thread endpoint lists converging on shared Endpoint cells). The figure illustrates one concrete interaction: T1 in A calls send(ep, va) to pass a Page, while T2 in V, already waiting via recv(ep, va), receives the virtual address; an arrow traces this recv() call down into the microkernel's endpoint lists. The design lets A and B interact only through V, whose proved functional correctness guarantees isolation between them.",
+  "summary_zh": "图1示Atmosphere：A(不可信)、V(已验证)、B(不可信)三容器并列于Boot根容器内，各运行一线程；T1经send()传Page，V中T2以recv()接收；箭头指向微内核端点数据结构，示A、B只能经V通信。",
+  "confidence": "medium",
+  "notes": "layout-proposal: hub-container-over-substrate - a trusted hub container (V) flanked by two untrusted peer containers (A, B) sits above a separate microkernel row exposing the shared endpoint data structures that connect them; 'layered' captures the two-row structure but not the hub-and-spoke trust pattern among the containers.",
+  "venue": "SOSP25"
+}

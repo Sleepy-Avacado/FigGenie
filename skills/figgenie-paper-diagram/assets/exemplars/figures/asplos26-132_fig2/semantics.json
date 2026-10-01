@@ -1,0 +1,211 @@
+{
+  "paper_id": "asplos26-132",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "DIP",
+    "one_liner": "a dynamic, modality-aware pipeline scheduling framework that separates and rebalances per-modality computation to train large multimodal models (LMMs) efficiently",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how one multimodal prompt (text+image+video) is tokenized by 3 modality encoders, processed by the backbone, and decoded to audio/image",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Text encoder",
+        "kind": "box",
+        "role": "encodes the plain-text spans of the prompt into text tokens",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Image encoder",
+        "kind": "box",
+        "role": "encodes the embedded image into a fixed run of image tokens (256 tokens)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Video encoder",
+        "kind": "box",
+        "role": "encodes the embedded video clip into a fixed run of video tokens (4096 tokens)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Backbone Model",
+        "kind": "box",
+        "role": "the transformer backbone that consumes the full mixed-modality token sequence and produces output representations",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Audio decoder",
+        "kind": "box",
+        "role": "decodes part of the backbone's output into a spoken-audio response",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Image decoder",
+        "kind": "box",
+        "role": "decodes part of the backbone's output into a generated image",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "6 tokens / 256 tokens / 2 tokens / 4096 tokens",
+        "kind": "label",
+        "role": "counts of tokens produced by each modality span: 6 for the leading text, 256 for the image, 2 for 'in video', 4096 for the video clip",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Text encoder",
+        "to": "Backbone Model",
+        "what": "text tokens (6 plus 2, from the leading prompt words and 'in video') feed into the backbone's input sequence",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Image encoder",
+        "to": "Backbone Model",
+        "what": "256 image tokens feed into the backbone's input sequence",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Video encoder",
+        "to": "Backbone Model",
+        "what": "4096 video tokens feed into the backbone's input sequence",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Backbone Model",
+        "to": "Audio decoder",
+        "what": "part of the backbone's output representation is routed to speech synthesis",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Backbone Model",
+        "to": "Image decoder",
+        "what": "part of the backbone's output representation is routed to image generation",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "One multimodal prompt mixing text with an embedded image and video is tokenized by three separate modality encoders into one combined sequence for the backbone model, whose output is split back out through an audio decoder and an image decoder.",
+    "reading_order": "Top to bottom: the prompt sentence, then its three colour-matched encoders, then the tokenized sequence with per-span counts, down into the backbone, then out to the two decoders and response."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff7442",
+        "used_for": "border/highlight of the Image encoder and Image decoder boxes and the funnel from the prompt's image icon"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "fill of the image-token squares"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "fill of the Text encoder label and the neutral funnel/trapezoid connector shapes"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "fill of the Video encoder label box"
+      },
+      {
+        "hex": "#cce5ff",
+        "used_for": "fill of the video-token squares"
+      },
+      {
+        "hex": "#007fff",
+        "used_for": "border of the Video encoder box and its funnel from the prompt's video icon"
+      },
+      {
+        "hex": "#e6ffcc",
+        "used_for": "fill of the Audio decoder box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black outlines on token boxes and the Backbone Model box; coloured outlines on the three encoder/decoder labels matching their modality",
+    "font": "monospace (FiraCode) for the prompt sentence, token boxes and response text; sans-serif (Calibri) for box labels",
+    "corners": "mixed",
+    "arrows": "plain straight black arrows, no curvature, from encoders into Backbone Model and from Backbone Model out to the two decoders",
+    "icons": "small inline image and video-camera glyphs embedded in the prompt and response text, standing in for the actual media"
+  },
+  "encoding": {
+    "color_means": "orange = image modality (encoder, tokens, decoder); blue = video modality (encoder, tokens); grey = plain text modality; green = the audio output path; each colour is used consistently on the encoder/decoder box, its funnel, and its token squares",
+    "line_style_means": "solid black arrows only; funnel/trapezoid shapes (not arrows) visually map an encoder label down to its span of tokens",
+    "state_means": "not applicable: a single static snapshot of one example prompt, not multiple frames",
+    "marker_means": "no numbered or symbolic markers; token counts (6, 256, 2, 4096) are plain text under bracket-style extent markers",
+    "emphasis": "the Backbone Model box is drawn larger and bolder than the encoder/decoder boxes, centred as the single point every modality's tokens pass through before fanning back out to audio and image outputs",
+    "reusable_patterns": [
+      "colour-matching an inline icon in a sentence to the encoder that processes it and to the resulting run of tokens",
+      "bracket-with-count annotations under a token sequence to mark how many tokens one modality span occupies",
+      "a central box narrower at the point of maximum fan-in/fan-out (many token types in, two decoders out)"
+    ],
+    "weaknesses": [
+      "the dashed-outline squares in the output token row are not explained anywhere in the figure and require guessing (e.g. placeholder tokens for the interleaved image reference)",
+      "no arrow or colour links the output token row back to which decoder (audio vs image) produced which token"
+    ]
+  },
+  "tags": [
+    "large-multimodal-model",
+    "tokenization",
+    "modality-encoder",
+    "backbone-model",
+    "multimodal-generation",
+    "vision-language-model"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Dynamic Imbalance Characterization (p.3)"
+    ],
+    "evidence": [
+      "users can interleave text, images, and video within a single query",
+      "The LMM can respond in text or speech, and generate images using diffusion modules",
+      "converted into tokens by corresponding modality encoders, which are further processed by the backbone model"
+    ]
+  },
+  "summary": "Figure 2 gives a concrete example of how a large multimodal model (LMM) processes a mixed-modality prompt. The example query, Locate the first appearance of an image in a video clip, embeds an image and a video clip inside text. Three colour-matched modality encoders tokenize their respective spans: a text encoder for the surrounding words (6 and 2 tokens), an orange image encoder for the embedded image (256 tokens), and a blue video encoder for the video clip (4096 tokens). All tokens are concatenated into one sequence fed into the Backbone Model, whose output fans back out to an audio decoder producing a spoken response and an image decoder producing a generated image, together yielding the mixed text and image response shown below the diagram.",
+  "summary_zh": "图2示例说明LMM如何处理多模态提示：文本、图像、视频编码器分别处理文字与嵌入的图片(256token)、视频(4096token)，拼接后送入Backbone Model，再分流给音频解码器与图像解码器，生成文字、语音与图像混合回应。",
+  "confidence": "high",
+  "notes": "Kept worked_example=false as prior: the 6/256/2/4096 token counts are bracket annotations under the token row (labelling span extents), not a table/matrix of values that is itself the figure's content, so they do not meet the worked-example bar even though they are concrete numbers.",
+  "venue": "ASPLOS26"
+}

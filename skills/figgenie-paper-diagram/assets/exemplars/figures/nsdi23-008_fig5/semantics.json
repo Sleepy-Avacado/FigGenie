@@ -1,0 +1,269 @@
+{
+  "paper_id": "nsdi23-008",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "LemonNFV",
+    "one_liner": "a framework that consolidates heterogeneous network functions into one line-rate binary and lets their per-flow state migrate freely between cores",
+    "domain": [
+      "networking",
+      "NFV"
+    ],
+    "abstraction": "network function"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a new NIC rule migrates one packet class's traffic and LEMON state from core C1 to C2",
+    "base": "component",
+    "elements": [
+      {
+        "name": "NIC",
+        "kind": "box",
+        "role": "issues the new steering rule that reassigns a packet class to a different core",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "P1",
+        "kind": "icon",
+        "role": "packet class permanently bound to core C1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "P2",
+        "kind": "icon",
+        "role": "packet class being migrated from C1 to C2",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "P3",
+        "kind": "icon",
+        "role": "packet class permanently bound to core C2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C1",
+        "kind": "node",
+        "role": "core that loses P2 after the migration",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C2",
+        "kind": "node",
+        "role": "core that gains P2 after the migration",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "M1",
+        "kind": "box",
+        "role": "LEMON instance dedicated to packet class P1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "M2",
+        "kind": "box",
+        "role": "LEMON instance dedicated to packet class P2, now run on C2",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "M3",
+        "kind": "box",
+        "role": "LEMON instance dedicated to packet class P3",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "NIC",
+        "to": "P2",
+        "what": "new rule tags P2 traffic for the new queue",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "P1",
+        "to": "C1",
+        "what": "P1 traffic stays bound to C1",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "P2",
+        "to": "C1",
+        "what": "old binding, superseded by the migration",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "P2",
+        "to": "C2",
+        "what": "new binding after migration (highlighted path)",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "P3",
+        "to": "C2",
+        "what": "P3 traffic stays bound to C2",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C1",
+        "to": "M1",
+        "what": "C1 executes LEMON M1",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "C2",
+        "to": "M2",
+        "what": "C2 now executes LEMON M2 with P2's migrated state",
+        "kind": "control",
+        "step": "4"
+      },
+      {
+        "from": "C2",
+        "to": "M3",
+        "what": "C2 executes LEMON M3",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "single frame (before/after overlaid)",
+        "axis": "time",
+        "differs": "a solid arrow shows the original P2→C1 binding; the red dashed arrow shows the new P2→C2 binding created by the migration",
+        "verdict": null
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "NIC",
+        "what": "NIC issues a new rule: P2 → C2",
+        "carries": "new steering rule"
+      },
+      {
+        "marker": "2",
+        "at": "C2",
+        "what": "P2 is now handled by C2",
+        "carries": "packet class P2"
+      },
+      {
+        "marker": "3",
+        "at": "C1",
+        "what": "C1 no longer sees P2",
+        "carries": null
+      },
+      {
+        "marker": "4",
+        "at": "C2",
+        "what": "C2 processes P2 with LEMON M2",
+        "carries": "P2's migrated LEMON state"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "One new NIC rule can hand a packet class's traffic to another core, and because code and state both live inside the LEMON binary, relocating execution is itself the state migration.",
+    "reading_order": "left to right from the NIC and its new rule, through packet classes P1-P3, to cores C1-C2, to their LEMON instances, following the red dashed arrow for the changed path"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.85,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ebf2e0",
+        "used_for": "pale-green fill of the core circles C1 and C2"
+      },
+      {
+        "hex": "#fdebdd",
+        "used_for": "pale-peach fill of the packet-class circles P1-P3"
+      },
+      {
+        "hex": "#fff4cd",
+        "used_for": "pale-yellow fill of the LEMON boxes M1-M3"
+      },
+      {
+        "hex": "#ed1f24",
+        "used_for": "red dashed arrow and text marking the new P2→C2 migration path"
+      },
+      {
+        "hex": "#231f20",
+        "used_for": "near-black text and box/arrow outlines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.5pt) solid black outlines, red dashed for the migrated path",
+    "corners": "rounded",
+    "arrows": "thin curved solid black arrows for steady-state bindings, one curved dashed red arrow for the migration",
+    "font": "mixed sans/serif, 5-7pt labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = cores, peach = packet classes, yellow = LEMON instances, red = the one path that changed",
+    "line_style_means": "solid arrows show steady-state bindings; the dashed red arrow shows the newly created binding after migration",
+    "state_means": "before vs after is told apart by solid vs dashed-red arrow colour plus the numbered captions",
+    "marker_means": "numbers 1-4 order the steps of the migration procedure",
+    "emphasis": "red colour and dashed stroke pull the eye to the single changed P2→C2 path amid otherwise-static bindings",
+    "reusable_patterns": [
+      "accent-coloured dashed arrow marking a changed binding amid unchanged ones",
+      "numbered callouts narrating a state change within one static frame"
+    ],
+    "weaknesses": [
+      "overlays the old and new bindings for P2 in a single frame, which reads correctly only if the viewer follows the numbered captions"
+    ]
+  },
+  "tags": [
+    "NFV",
+    "migration",
+    "core-affinity",
+    "packet-steering",
+    "load-balancing",
+    "LemonNFV"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Detailed Design of LemonNFV"
+    ],
+    "evidence": [
+      "Figure 5 shows a simple migration scenario, where the operator allocates two cores",
+      "LemonNFV will create three LEMONs (M1–M3) dedicated for P1–P3",
+      "Assume we want to migrate P2 to C2."
+    ]
+  },
+  "summary": "This figure illustrates LemonNFV's intra-server migration mechanism, which relocates a packet class's traffic and NF state between cores without any dedicated migration interface. Two cores, C1 and C2, each run LEMON instances dedicated to specific packet classes: M1 for P1, M2 for P2, and M3 for P3. The numbered walkthrough shows migrating packet class P2 from C1 to C2: (1) the hypervisor issues a new steering rule to the NIC redirecting P2's queue, (2) P2 is now handled by C2, (3) C1 stops seeing P2 traffic, and (4) C2 executes LEMON M2, so P2's state effectively moves with it. Because both executable code and state live inside the LEMON binary, relocating where it runs is equivalent to migrating the packet class's state, letting LemonNFV rebalance load across cores cheaply.",
+  "summary_zh": "该图展示LemonNFV的核间迁移机制：NIC下发新规则后，数据包类P2从核C1改由C2处理，其对应的LEMON实例M2随之在C2执行，代码与状态一体迁移，实现负载再平衡。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

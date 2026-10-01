@@ -1,0 +1,5378 @@
+{
+  "generated_by": "figgenie-paper-diagram/scripts/distill/build_exemplars.py",
+  "selection": "scripts/distill/exemplar_selection.json",
+  "corpus": {
+    "semantics": "lab/extracted/corpus_semantics.jsonl",
+    "index": "lab/extracted/corpus_index.csv",
+    "filter": "index row type=='diagram' and subtype=='architecture' and aesthetic=='good' (727 records at selection time, 2026-09-07; the corpus holds 726 after sosp25-047_fig4 was reclassified to mechanism on 2026-09-09)"
+  },
+  "n_figures": 339,
+  "n_slots": 486,
+  "by_template": {
+    "pipeline": 38,
+    "layered": 34,
+    "two-panel": 27,
+    "control-data": 26,
+    "hub-spoke": 24,
+    "matrix": 29,
+    "host-device": 29,
+    "nested-stack": 29,
+    "baseline-vs-ours": 16,
+    "overview-with-inset": 19,
+    "control-loop": 24,
+    "phase-lanes": 22,
+    "replicated-grid": 25,
+    "multi-tier": 16,
+    "dataflow-dag": 23,
+    "n-panel-comparison": 21,
+    "composite-figure": 26,
+    "mirrored-pair": 17,
+    "flanked-core": 18,
+    "block-floorplan": 23
+  },
+  "layout": "<template>/index.json lists that template's exemplars (architecture); mechanism/<group>/index.json lists a v3 group's exemplars (mechanism); figures/<id>/{source.svg, preview.png?, print.png?, semantics.json, manifest.json} holds each figure once, manifest.kind says which kind it is",
+  "provenance": "Figures are reproduced from published OSDI/NSDI/SOSP/ASPLOS papers for style reference only.",
+  "total_bytes": 141624824,
+  "figures": [
+    {
+      "id": "asplos25-002_fig9",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/asplos25-002_fig9"
+    },
+    {
+      "id": "asplos25-004_figtex9",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/asplos25-004_figtex9"
+    },
+    {
+      "id": "asplos25-012_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack",
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos25-012_fig2"
+    },
+    {
+      "id": "asplos25-025_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos25-025_fig3"
+    },
+    {
+      "id": "asplos25-028_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/asplos25-028_fig2"
+    },
+    {
+      "id": "asplos25-031_fig9",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos25-031_fig9"
+    },
+    {
+      "id": "asplos25-034_fig8",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos25-034_fig8"
+    },
+    {
+      "id": "asplos25-036_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos25-036_fig3"
+    },
+    {
+      "id": "asplos25-038_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/asplos25-038_fig3"
+    },
+    {
+      "id": "asplos25-039_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "nested-stack",
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos25-039_fig3"
+    },
+    {
+      "id": "asplos25-043_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "nested-stack"
+      ],
+      "dir": "figures/asplos25-043_fig5"
+    },
+    {
+      "id": "asplos25-046_fig13",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/asplos25-046_fig13"
+    },
+    {
+      "id": "asplos25-046_fig14",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos25-046_fig14"
+    },
+    {
+      "id": "asplos25-051_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "nested-stack",
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/asplos25-051_fig1"
+    },
+    {
+      "id": "asplos25-051_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data",
+        "mirrored-pair"
+      ],
+      "dir": "figures/asplos25-051_fig2"
+    },
+    {
+      "id": "asplos25-051_fig4",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device",
+        "mirrored-pair"
+      ],
+      "dir": "figures/asplos25-051_fig4"
+    },
+    {
+      "id": "asplos25-052_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel",
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/asplos25-052_fig1"
+    },
+    {
+      "id": "asplos25-052_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke",
+        "nested-stack",
+        "control-loop"
+      ],
+      "dir": "figures/asplos25-052_fig5"
+    },
+    {
+      "id": "asplos25-055_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/asplos25-055_fig1"
+    },
+    {
+      "id": "asplos25-056_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos25-056_fig3"
+    },
+    {
+      "id": "asplos25-064_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/asplos25-064_fig1"
+    },
+    {
+      "id": "asplos25-069_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/asplos25-069_fig1"
+    },
+    {
+      "id": "asplos25-074_fig7",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered",
+        "nested-stack"
+      ],
+      "dir": "figures/asplos25-074_fig7"
+    },
+    {
+      "id": "asplos25-077_figtex1",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/asplos25-077_figtex1"
+    },
+    {
+      "id": "asplos25-080_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel",
+        "nested-stack",
+        "mirrored-pair"
+      ],
+      "dir": "figures/asplos25-080_fig1"
+    },
+    {
+      "id": "asplos25-082_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/asplos25-082_fig1"
+    },
+    {
+      "id": "asplos25-082_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos25-082_fig3"
+    },
+    {
+      "id": "asplos25-083_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos25-083_fig1"
+    },
+    {
+      "id": "asplos25-094_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "composite-figure"
+      ],
+      "dir": "figures/asplos25-094_fig2"
+    },
+    {
+      "id": "asplos25-094_fig6",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos25-094_fig6"
+    },
+    {
+      "id": "asplos25-096_figtex5",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "nested-stack",
+        "pipeline"
+      ],
+      "dir": "figures/asplos25-096_figtex5"
+    },
+    {
+      "id": "asplos25-097_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/asplos25-097_fig1"
+    },
+    {
+      "id": "asplos25-097_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/asplos25-097_fig2"
+    },
+    {
+      "id": "asplos25-098_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos25-098_fig2"
+    },
+    {
+      "id": "asplos25-100_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos25-100_fig3"
+    },
+    {
+      "id": "asplos25-100_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data",
+        "replicated-grid",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos25-100_fig5"
+    },
+    {
+      "id": "asplos25-100_fig9",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "phase-lanes",
+        "composite-figure"
+      ],
+      "dir": "figures/asplos25-100_fig9"
+    },
+    {
+      "id": "asplos25-101_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset",
+        "phase-lanes",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/asplos25-101_fig1"
+    },
+    {
+      "id": "asplos25-101_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/asplos25-101_fig5"
+    },
+    {
+      "id": "asplos25-107_fig6",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device",
+        "nested-stack",
+        "overview-with-inset",
+        "multi-tier"
+      ],
+      "dir": "figures/asplos25-107_fig6"
+    },
+    {
+      "id": "asplos25-108_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos25-108_fig5"
+    },
+    {
+      "id": "asplos25-109_fig4",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/asplos25-109_fig4"
+    },
+    {
+      "id": "asplos25-110_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/asplos25-110_fig1"
+    },
+    {
+      "id": "asplos25-110_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos25-110_fig2"
+    },
+    {
+      "id": "asplos25-111_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/asplos25-111_fig2"
+    },
+    {
+      "id": "asplos25-114_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos25-114_fig5"
+    },
+    {
+      "id": "asplos25-117_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/asplos25-117_fig2"
+    },
+    {
+      "id": "asplos25-131_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/asplos25-131_fig2"
+    },
+    {
+      "id": "asplos25-132_fig4",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/asplos25-132_fig4"
+    },
+    {
+      "id": "asplos25-132_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix",
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos25-132_fig5"
+    },
+    {
+      "id": "asplos25-132_fig6",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos25-132_fig6"
+    },
+    {
+      "id": "asplos25-138_fig17",
+      "venue": "ASPLOS25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/asplos25-138_fig17"
+    },
+    {
+      "id": "asplos25-140_fig7",
+      "venue": "ASPLOS25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/asplos25-140_fig7"
+    },
+    {
+      "id": "asplos25-142_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos25-142_fig5"
+    },
+    {
+      "id": "asplos25-146_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "nested-stack"
+      ],
+      "dir": "figures/asplos25-146_fig3"
+    },
+    {
+      "id": "asplos25-147_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "overview-with-inset",
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos25-147_fig2"
+    },
+    {
+      "id": "asplos25-148_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device",
+        "phase-lanes",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos25-148_fig5"
+    },
+    {
+      "id": "asplos25-151_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/asplos25-151_fig1"
+    },
+    {
+      "id": "asplos25-157_fig2",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset",
+        "composite-figure",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos25-157_fig2"
+    },
+    {
+      "id": "asplos25-157_fig3",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "mirrored-pair"
+      ],
+      "dir": "figures/asplos25-157_fig3"
+    },
+    {
+      "id": "asplos25-157_fig7",
+      "venue": "ASPLOS25",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos25-157_fig7"
+    },
+    {
+      "id": "asplos25-160_fig5",
+      "venue": "ASPLOS25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos25-160_fig5"
+    },
+    {
+      "id": "asplos25-167_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/asplos25-167_fig1"
+    },
+    {
+      "id": "asplos25-168_fig11",
+      "venue": "ASPLOS25",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos25-168_fig11"
+    },
+    {
+      "id": "asplos25-177_fig1",
+      "venue": "ASPLOS25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "composite-figure"
+      ],
+      "dir": "figures/asplos25-177_fig1"
+    },
+    {
+      "id": "asplos26-002_fig1",
+      "venue": "ASPLOS26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/asplos26-002_fig1"
+    },
+    {
+      "id": "asplos26-006_fig2",
+      "venue": "ASPLOS26",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos26-006_fig2"
+    },
+    {
+      "id": "asplos26-008_fig1",
+      "venue": "ASPLOS26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/asplos26-008_fig1"
+    },
+    {
+      "id": "asplos26-008_fig3",
+      "venue": "ASPLOS26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/asplos26-008_fig3"
+    },
+    {
+      "id": "asplos26-008_figtex6",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos26-008_figtex6"
+    },
+    {
+      "id": "asplos26-013_fig10",
+      "venue": "ASPLOS26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos26-013_fig10"
+    },
+    {
+      "id": "asplos26-013_fig13",
+      "venue": "ASPLOS26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes",
+        "composite-figure"
+      ],
+      "dir": "figures/asplos26-013_fig13"
+    },
+    {
+      "id": "asplos26-013_fig2",
+      "venue": "ASPLOS26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/asplos26-013_fig2"
+    },
+    {
+      "id": "asplos26-013_fig7",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos26-013_fig7"
+    },
+    {
+      "id": "asplos26-014_fig5",
+      "venue": "ASPLOS26",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device",
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos26-014_fig5"
+    },
+    {
+      "id": "asplos26-019_fig1",
+      "venue": "ASPLOS26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/asplos26-019_fig1"
+    },
+    {
+      "id": "asplos26-019_fig4",
+      "venue": "ASPLOS26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "control-loop",
+        "replicated-grid",
+        "flanked-core"
+      ],
+      "dir": "figures/asplos26-019_fig4"
+    },
+    {
+      "id": "asplos26-021_fig6",
+      "venue": "ASPLOS26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "n-panel-comparison",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos26-021_fig6"
+    },
+    {
+      "id": "asplos26-021_fig8",
+      "venue": "ASPLOS26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos26-021_fig8"
+    },
+    {
+      "id": "asplos26-026_fig4",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos26-026_fig4"
+    },
+    {
+      "id": "asplos26-026_fig5",
+      "venue": "ASPLOS26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos26-026_fig5"
+    },
+    {
+      "id": "asplos26-028_fig2",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/asplos26-028_fig2"
+    },
+    {
+      "id": "asplos26-029_fig9",
+      "venue": "ASPLOS26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos26-029_fig9"
+    },
+    {
+      "id": "asplos26-036_fig8",
+      "venue": "ASPLOS26",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data",
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos26-036_fig8"
+    },
+    {
+      "id": "asplos26-056_fig5",
+      "venue": "ASPLOS26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "control-loop",
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos26-056_fig5"
+    },
+    {
+      "id": "asplos26-057_fig1",
+      "venue": "ASPLOS26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/asplos26-057_fig1"
+    },
+    {
+      "id": "asplos26-060_fig7",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos26-060_fig7"
+    },
+    {
+      "id": "asplos26-060_fig8",
+      "venue": "ASPLOS26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos26-060_fig8"
+    },
+    {
+      "id": "asplos26-063_fig8",
+      "venue": "ASPLOS26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/asplos26-063_fig8"
+    },
+    {
+      "id": "asplos26-066_fig6",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos26-066_fig6"
+    },
+    {
+      "id": "asplos26-067_fig3",
+      "venue": "ASPLOS26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device",
+        "mirrored-pair"
+      ],
+      "dir": "figures/asplos26-067_fig3"
+    },
+    {
+      "id": "asplos26-074_fig9",
+      "venue": "ASPLOS26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "composite-figure",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos26-074_fig9"
+    },
+    {
+      "id": "asplos26-076_fig2",
+      "venue": "ASPLOS26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos26-076_fig2"
+    },
+    {
+      "id": "asplos26-078_fig3",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos26-078_fig3"
+    },
+    {
+      "id": "asplos26-080_fig5",
+      "venue": "ASPLOS26",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/asplos26-080_fig5"
+    },
+    {
+      "id": "asplos26-088_fig11",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "replicated-grid"
+      ],
+      "dir": "figures/asplos26-088_fig11"
+    },
+    {
+      "id": "asplos26-088_fig12",
+      "venue": "ASPLOS26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack",
+        "composite-figure"
+      ],
+      "dir": "figures/asplos26-088_fig12"
+    },
+    {
+      "id": "asplos26-088_fig14",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos26-088_fig14"
+    },
+    {
+      "id": "asplos26-089_fig2",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/asplos26-089_fig2"
+    },
+    {
+      "id": "asplos26-092_fig3",
+      "venue": "ASPLOS26",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/asplos26-092_fig3"
+    },
+    {
+      "id": "asplos26-094_fig9",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset"
+      ],
+      "dir": "figures/asplos26-094_fig9"
+    },
+    {
+      "id": "asplos26-097_fig4",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos26-097_fig4"
+    },
+    {
+      "id": "asplos26-100_fig3",
+      "venue": "ASPLOS26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device",
+        "block-floorplan"
+      ],
+      "dir": "figures/asplos26-100_fig3"
+    },
+    {
+      "id": "asplos26-100_fig6",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos26-100_fig6"
+    },
+    {
+      "id": "asplos26-102_fig1",
+      "venue": "ASPLOS26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/asplos26-102_fig1"
+    },
+    {
+      "id": "asplos26-102_fig3",
+      "venue": "ASPLOS26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/asplos26-102_fig3"
+    },
+    {
+      "id": "asplos26-113_fig8",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "control-loop",
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos26-113_fig8"
+    },
+    {
+      "id": "asplos26-125_fig4",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/asplos26-125_fig4"
+    },
+    {
+      "id": "asplos26-127_fig11",
+      "venue": "ASPLOS26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/asplos26-127_fig11"
+    },
+    {
+      "id": "asplos26-127_fig12",
+      "venue": "ASPLOS26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos26-127_fig12"
+    },
+    {
+      "id": "asplos26-129_fig2",
+      "venue": "ASPLOS26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/asplos26-129_fig2"
+    },
+    {
+      "id": "asplos26-129_fig5",
+      "venue": "ASPLOS26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/asplos26-129_fig5"
+    },
+    {
+      "id": "asplos26-132_fig6",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/asplos26-132_fig6"
+    },
+    {
+      "id": "asplos26-132_fig7",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos26-132_fig7"
+    },
+    {
+      "id": "asplos26-139_fig11",
+      "venue": "ASPLOS26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/asplos26-139_fig11"
+    },
+    {
+      "id": "asplos26-139_fig7",
+      "venue": "ASPLOS26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/asplos26-139_fig7"
+    },
+    {
+      "id": "asplos26-142_fig4",
+      "venue": "ASPLOS26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/asplos26-142_fig4"
+    },
+    {
+      "id": "asplos26-152_fig5",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/asplos26-152_fig5"
+    },
+    {
+      "id": "asplos26-154_fig9",
+      "venue": "ASPLOS26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/asplos26-154_fig9"
+    },
+    {
+      "id": "nsdi23-004_fig1",
+      "venue": "NSDI23",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/nsdi23-004_fig1"
+    },
+    {
+      "id": "nsdi23-004_fig2",
+      "venue": "NSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/nsdi23-004_fig2"
+    },
+    {
+      "id": "nsdi23-009_fig1",
+      "venue": "NSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/nsdi23-009_fig1"
+    },
+    {
+      "id": "nsdi23-025_fig4",
+      "venue": "NSDI23",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data",
+        "control-loop"
+      ],
+      "dir": "figures/nsdi23-025_fig4"
+    },
+    {
+      "id": "nsdi23-027_fig1",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/nsdi23-027_fig1"
+    },
+    {
+      "id": "nsdi23-027_fig5",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi23-027_fig5"
+    },
+    {
+      "id": "nsdi23-029_fig3",
+      "venue": "NSDI23",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/nsdi23-029_fig3"
+    },
+    {
+      "id": "nsdi23-035_fig3",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi23-035_fig3"
+    },
+    {
+      "id": "nsdi23-039_fig7",
+      "venue": "NSDI23",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/nsdi23-039_fig7"
+    },
+    {
+      "id": "nsdi23-045_fig2",
+      "venue": "NSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "overview-with-inset"
+      ],
+      "dir": "figures/nsdi23-045_fig2"
+    },
+    {
+      "id": "nsdi23-046_fig4",
+      "venue": "NSDI23",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi23-046_fig4"
+    },
+    {
+      "id": "nsdi23-046_fig6",
+      "venue": "NSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline",
+        "block-floorplan"
+      ],
+      "dir": "figures/nsdi23-046_fig6"
+    },
+    {
+      "id": "nsdi23-047_fig4",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack",
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi23-047_fig4"
+    },
+    {
+      "id": "nsdi23-047_fig7",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "replicated-grid"
+      ],
+      "dir": "figures/nsdi23-047_fig7"
+    },
+    {
+      "id": "nsdi23-052_fig5",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/nsdi23-052_fig5"
+    },
+    {
+      "id": "nsdi23-067_fig4",
+      "venue": "NSDI23",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke",
+        "block-floorplan"
+      ],
+      "dir": "figures/nsdi23-067_fig4"
+    },
+    {
+      "id": "nsdi23-068_fig1",
+      "venue": "NSDI23",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "nested-stack",
+        "multi-tier",
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi23-068_fig1"
+    },
+    {
+      "id": "nsdi23-070_fig2",
+      "venue": "NSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/nsdi23-070_fig2"
+    },
+    {
+      "id": "nsdi23-070_fig3",
+      "venue": "NSDI23",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/nsdi23-070_fig3"
+    },
+    {
+      "id": "nsdi23-077_fig4",
+      "venue": "NSDI23",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi23-077_fig4"
+    },
+    {
+      "id": "nsdi23-077_fig6",
+      "venue": "NSDI23",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi23-077_fig6"
+    },
+    {
+      "id": "nsdi23-083_fig3",
+      "venue": "NSDI23",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke",
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi23-083_fig3"
+    },
+    {
+      "id": "nsdi23-084_fig3",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi23-084_fig3"
+    },
+    {
+      "id": "nsdi23-085_fig8",
+      "venue": "NSDI23",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack",
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi23-085_fig8"
+    },
+    {
+      "id": "nsdi23-091_fig12",
+      "venue": "NSDI23",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/nsdi23-091_fig12"
+    },
+    {
+      "id": "nsdi24-003_fig1",
+      "venue": "NSDI24",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix",
+        "replicated-grid"
+      ],
+      "dir": "figures/nsdi24-003_fig1"
+    },
+    {
+      "id": "nsdi24-004_fig8",
+      "venue": "NSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/nsdi24-004_fig8"
+    },
+    {
+      "id": "nsdi24-023_fig3",
+      "venue": "NSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi24-023_fig3"
+    },
+    {
+      "id": "nsdi24-029_fig7",
+      "venue": "NSDI24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/nsdi24-029_fig7"
+    },
+    {
+      "id": "nsdi24-036_fig1",
+      "venue": "NSDI24",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi24-036_fig1"
+    },
+    {
+      "id": "nsdi24-041_fig12",
+      "venue": "NSDI24",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi24-041_fig12"
+    },
+    {
+      "id": "nsdi24-043_fig1",
+      "venue": "NSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/nsdi24-043_fig1"
+    },
+    {
+      "id": "nsdi24-062_fig2",
+      "venue": "NSDI24",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/nsdi24-062_fig2"
+    },
+    {
+      "id": "nsdi24-062_fig5",
+      "venue": "NSDI24",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi24-062_fig5"
+    },
+    {
+      "id": "nsdi24-064_fig3",
+      "venue": "NSDI24",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi24-064_fig3"
+    },
+    {
+      "id": "nsdi24-072_fig9",
+      "venue": "NSDI24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi24-072_fig9"
+    },
+    {
+      "id": "nsdi24-086_fig22",
+      "venue": "NSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "replicated-grid"
+      ],
+      "dir": "figures/nsdi24-086_fig22"
+    },
+    {
+      "id": "nsdi24-087_fig2",
+      "venue": "NSDI24",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "overview-with-inset",
+        "dataflow-dag"
+      ],
+      "dir": "figures/nsdi24-087_fig2"
+    },
+    {
+      "id": "nsdi24-089_fig1",
+      "venue": "NSDI24",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/nsdi24-089_fig1"
+    },
+    {
+      "id": "nsdi24-095_fig2",
+      "venue": "NSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/nsdi24-095_fig2"
+    },
+    {
+      "id": "nsdi24-096_fig1",
+      "venue": "NSDI24",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi24-096_fig1"
+    },
+    {
+      "id": "nsdi24-106_fig2",
+      "venue": "NSDI24",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi24-106_fig2"
+    },
+    {
+      "id": "nsdi24-107_fig5",
+      "venue": "NSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi24-107_fig5"
+    },
+    {
+      "id": "nsdi25-006_fig15",
+      "venue": "NSDI25",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi25-006_fig15"
+    },
+    {
+      "id": "nsdi25-026_fig4",
+      "venue": "NSDI25",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/nsdi25-026_fig4"
+    },
+    {
+      "id": "nsdi25-030_fig1",
+      "venue": "NSDI25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi25-030_fig1"
+    },
+    {
+      "id": "nsdi25-032_fig4",
+      "venue": "NSDI25",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/nsdi25-032_fig4"
+    },
+    {
+      "id": "nsdi25-033_figtex7",
+      "venue": "NSDI25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "overview-with-inset"
+      ],
+      "dir": "figures/nsdi25-033_figtex7"
+    },
+    {
+      "id": "nsdi25-035_fig3",
+      "venue": "NSDI25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi25-035_fig3"
+    },
+    {
+      "id": "nsdi25-036_fig19",
+      "venue": "NSDI25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi25-036_fig19"
+    },
+    {
+      "id": "nsdi25-036_fig2",
+      "venue": "NSDI25",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi25-036_fig2"
+    },
+    {
+      "id": "nsdi25-045_fig4",
+      "venue": "NSDI25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/nsdi25-045_fig4"
+    },
+    {
+      "id": "nsdi25-052_fig2",
+      "venue": "NSDI25",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/nsdi25-052_fig2"
+    },
+    {
+      "id": "nsdi25-054_fig2",
+      "venue": "NSDI25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered",
+        "nested-stack"
+      ],
+      "dir": "figures/nsdi25-054_fig2"
+    },
+    {
+      "id": "nsdi25-054_fig4",
+      "venue": "NSDI25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi25-054_fig4"
+    },
+    {
+      "id": "nsdi25-067_fig7",
+      "venue": "NSDI25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag",
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi25-067_fig7"
+    },
+    {
+      "id": "nsdi25-073_fig5",
+      "venue": "NSDI25",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/nsdi25-073_fig5"
+    },
+    {
+      "id": "nsdi25-073_fig7",
+      "venue": "NSDI25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi25-073_fig7"
+    },
+    {
+      "id": "nsdi25-081_fig4",
+      "venue": "NSDI25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi25-081_fig4"
+    },
+    {
+      "id": "nsdi26-004_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/nsdi26-004_fig1"
+    },
+    {
+      "id": "nsdi26-017_fig5",
+      "venue": "NSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/nsdi26-017_fig5"
+    },
+    {
+      "id": "nsdi26-020_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/nsdi26-020_fig1"
+    },
+    {
+      "id": "nsdi26-021_fig10",
+      "venue": "NSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device",
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi26-021_fig10"
+    },
+    {
+      "id": "nsdi26-028_fig2",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi26-028_fig2"
+    },
+    {
+      "id": "nsdi26-028_fig5",
+      "venue": "NSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/nsdi26-028_fig5"
+    },
+    {
+      "id": "nsdi26-030_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/nsdi26-030_fig1"
+    },
+    {
+      "id": "nsdi26-030_fig2",
+      "venue": "NSDI26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/nsdi26-030_fig2"
+    },
+    {
+      "id": "nsdi26-032_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/nsdi26-032_fig1"
+    },
+    {
+      "id": "nsdi26-036_fig3",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/nsdi26-036_fig3"
+    },
+    {
+      "id": "nsdi26-042_fig8",
+      "venue": "NSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/nsdi26-042_fig8"
+    },
+    {
+      "id": "nsdi26-044_fig3",
+      "venue": "NSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/nsdi26-044_fig3"
+    },
+    {
+      "id": "nsdi26-052_fig7",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/nsdi26-052_fig7"
+    },
+    {
+      "id": "nsdi26-053_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "baseline-vs-ours",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi26-053_fig1"
+    },
+    {
+      "id": "nsdi26-054_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "overview-with-inset"
+      ],
+      "dir": "figures/nsdi26-054_fig1"
+    },
+    {
+      "id": "nsdi26-065_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi26-065_fig1"
+    },
+    {
+      "id": "nsdi26-069_fig3",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/nsdi26-069_fig3"
+    },
+    {
+      "id": "nsdi26-072_fig8",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi26-072_fig8"
+    },
+    {
+      "id": "nsdi26-082_fig2",
+      "venue": "NSDI26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/nsdi26-082_fig2"
+    },
+    {
+      "id": "nsdi26-082_fig6",
+      "venue": "NSDI26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "dataflow-dag"
+      ],
+      "dir": "figures/nsdi26-082_fig6"
+    },
+    {
+      "id": "nsdi26-086_fig2",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "multi-tier"
+      ],
+      "dir": "figures/nsdi26-086_fig2"
+    },
+    {
+      "id": "nsdi26-087_fig3",
+      "venue": "NSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/nsdi26-087_fig3"
+    },
+    {
+      "id": "nsdi26-090_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi26-090_fig1"
+    },
+    {
+      "id": "nsdi26-090_fig4",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi26-090_fig4"
+    },
+    {
+      "id": "nsdi26-091_fig4",
+      "venue": "NSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/nsdi26-091_fig4"
+    },
+    {
+      "id": "nsdi26-092_fig6",
+      "venue": "NSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data",
+        "flanked-core"
+      ],
+      "dir": "figures/nsdi26-092_fig6"
+    },
+    {
+      "id": "nsdi26-104_fig13",
+      "venue": "NSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/nsdi26-104_fig13"
+    },
+    {
+      "id": "nsdi26-104_fig6",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "overview-with-inset",
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi26-104_fig6"
+    },
+    {
+      "id": "nsdi26-109_fig3",
+      "venue": "NSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device",
+        "nested-stack"
+      ],
+      "dir": "figures/nsdi26-109_fig3"
+    },
+    {
+      "id": "nsdi26-115_fig2",
+      "venue": "NSDI26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/nsdi26-115_fig2"
+    },
+    {
+      "id": "nsdi26-118_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/nsdi26-118_fig1"
+    },
+    {
+      "id": "nsdi26-120_fig7",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi26-120_fig7"
+    },
+    {
+      "id": "nsdi26-124_fig4",
+      "venue": "NSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data",
+        "replicated-grid"
+      ],
+      "dir": "figures/nsdi26-124_fig4"
+    },
+    {
+      "id": "nsdi26-126_fig8",
+      "venue": "NSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/nsdi26-126_fig8"
+    },
+    {
+      "id": "nsdi26-133_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "mirrored-pair"
+      ],
+      "dir": "figures/nsdi26-133_fig1"
+    },
+    {
+      "id": "nsdi26-133_fig4",
+      "venue": "NSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline",
+        "block-floorplan"
+      ],
+      "dir": "figures/nsdi26-133_fig4"
+    },
+    {
+      "id": "nsdi26-140_fig8",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/nsdi26-140_fig8"
+    },
+    {
+      "id": "nsdi26-142_fig3",
+      "venue": "NSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/nsdi26-142_fig3"
+    },
+    {
+      "id": "nsdi26-142_fig4",
+      "venue": "NSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "replicated-grid",
+        "block-floorplan"
+      ],
+      "dir": "figures/nsdi26-142_fig4"
+    },
+    {
+      "id": "nsdi26-143_fig1",
+      "venue": "NSDI26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/nsdi26-143_fig1"
+    },
+    {
+      "id": "osdi23-001_fig3",
+      "venue": "OSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/osdi23-001_fig3"
+    },
+    {
+      "id": "osdi23-003_fig4",
+      "venue": "OSDI23",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/osdi23-003_fig4"
+    },
+    {
+      "id": "osdi23-003_fig5",
+      "venue": "OSDI23",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "multi-tier"
+      ],
+      "dir": "figures/osdi23-003_fig5"
+    },
+    {
+      "id": "osdi23-008_fig12",
+      "venue": "OSDI23",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/osdi23-008_fig12"
+    },
+    {
+      "id": "osdi23-008_fig2",
+      "venue": "OSDI23",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke",
+        "nested-stack",
+        "control-loop",
+        "replicated-grid"
+      ],
+      "dir": "figures/osdi23-008_fig2"
+    },
+    {
+      "id": "osdi23-008_fig3",
+      "venue": "OSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/osdi23-008_fig3"
+    },
+    {
+      "id": "osdi23-010_fig1",
+      "venue": "OSDI23",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/osdi23-010_fig1"
+    },
+    {
+      "id": "osdi23-013_fig2",
+      "venue": "OSDI23",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi23-013_fig2"
+    },
+    {
+      "id": "osdi23-018_fig4",
+      "venue": "OSDI23",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke",
+        "flanked-core"
+      ],
+      "dir": "figures/osdi23-018_fig4"
+    },
+    {
+      "id": "osdi23-021_fig4",
+      "venue": "OSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/osdi23-021_fig4"
+    },
+    {
+      "id": "osdi23-022_fig2",
+      "venue": "OSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/osdi23-022_fig2"
+    },
+    {
+      "id": "osdi23-033_fig10",
+      "venue": "OSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/osdi23-033_fig10"
+    },
+    {
+      "id": "osdi23-037_fig3",
+      "venue": "OSDI23",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi23-037_fig3"
+    },
+    {
+      "id": "osdi23-039_fig3",
+      "venue": "OSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline",
+        "control-loop"
+      ],
+      "dir": "figures/osdi23-039_fig3"
+    },
+    {
+      "id": "osdi23-040_fig6",
+      "venue": "OSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline",
+        "replicated-grid",
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi23-040_fig6"
+    },
+    {
+      "id": "osdi23-045_figtex1",
+      "venue": "OSDI23",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/osdi23-045_figtex1"
+    },
+    {
+      "id": "osdi23-048_fig1",
+      "venue": "OSDI23",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi23-048_fig1"
+    },
+    {
+      "id": "osdi23-050_fig4",
+      "venue": "OSDI23",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel",
+        "baseline-vs-ours",
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi23-050_fig4"
+    },
+    {
+      "id": "osdi23-053_fig3",
+      "venue": "OSDI23",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag",
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi23-053_fig3"
+    },
+    {
+      "id": "osdi24-001_fig9",
+      "venue": "OSDI24",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/osdi24-001_fig9"
+    },
+    {
+      "id": "osdi24-009_fig4",
+      "venue": "OSDI24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/osdi24-009_fig4"
+    },
+    {
+      "id": "osdi24-009_fig6",
+      "venue": "OSDI24",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "nested-stack"
+      ],
+      "dir": "figures/osdi24-009_fig6"
+    },
+    {
+      "id": "osdi24-014_fig2",
+      "venue": "OSDI24",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data",
+        "control-loop"
+      ],
+      "dir": "figures/osdi24-014_fig2"
+    },
+    {
+      "id": "osdi24-015_fig1",
+      "venue": "OSDI24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/osdi24-015_fig1"
+    },
+    {
+      "id": "osdi24-015_fig5",
+      "venue": "OSDI24",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/osdi24-015_fig5"
+    },
+    {
+      "id": "osdi24-022_fig7",
+      "venue": "OSDI24",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi24-022_fig7"
+    },
+    {
+      "id": "osdi24-025_fig6",
+      "venue": "OSDI24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack",
+        "replicated-grid"
+      ],
+      "dir": "figures/osdi24-025_fig6"
+    },
+    {
+      "id": "osdi24-032_fig9",
+      "venue": "OSDI24",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/osdi24-032_fig9"
+    },
+    {
+      "id": "osdi24-034_fig6",
+      "venue": "OSDI24",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device",
+        "nested-stack",
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi24-034_fig6"
+    },
+    {
+      "id": "osdi24-036_fig8",
+      "venue": "OSDI24",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/osdi24-036_fig8"
+    },
+    {
+      "id": "osdi24-039_fig1",
+      "venue": "OSDI24",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/osdi24-039_fig1"
+    },
+    {
+      "id": "osdi24-040_fig1",
+      "venue": "OSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/osdi24-040_fig1"
+    },
+    {
+      "id": "osdi24-041_fig3",
+      "venue": "OSDI24",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel",
+        "nested-stack"
+      ],
+      "dir": "figures/osdi24-041_fig3"
+    },
+    {
+      "id": "osdi24-046_fig2",
+      "venue": "OSDI24",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi24-046_fig2"
+    },
+    {
+      "id": "osdi24-050_fig6",
+      "venue": "OSDI24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "pipeline",
+        "replicated-grid",
+        "mirrored-pair"
+      ],
+      "dir": "figures/osdi24-050_fig6"
+    },
+    {
+      "id": "osdi24-052_fig6",
+      "venue": "OSDI24",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix",
+        "dataflow-dag"
+      ],
+      "dir": "figures/osdi24-052_fig6"
+    },
+    {
+      "id": "osdi25-002_fig7",
+      "venue": "OSDI25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/osdi25-002_fig7"
+    },
+    {
+      "id": "osdi25-003_fig2",
+      "venue": "OSDI25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "overview-with-inset"
+      ],
+      "dir": "figures/osdi25-003_fig2"
+    },
+    {
+      "id": "osdi25-007_fig5",
+      "venue": "OSDI25",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/osdi25-007_fig5"
+    },
+    {
+      "id": "osdi25-009_fig3",
+      "venue": "OSDI25",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/osdi25-009_fig3"
+    },
+    {
+      "id": "osdi25-016_fig1",
+      "venue": "OSDI25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/osdi25-016_fig1"
+    },
+    {
+      "id": "osdi25-016_fig8",
+      "venue": "OSDI25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "nested-stack"
+      ],
+      "dir": "figures/osdi25-016_fig8"
+    },
+    {
+      "id": "osdi25-031_fig6",
+      "venue": "OSDI25",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/osdi25-031_fig6"
+    },
+    {
+      "id": "osdi25-033_fig4",
+      "venue": "OSDI25",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/osdi25-033_fig4"
+    },
+    {
+      "id": "osdi25-050_fig6",
+      "venue": "OSDI25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "replicated-grid"
+      ],
+      "dir": "figures/osdi25-050_fig6"
+    },
+    {
+      "id": "osdi25-051_fig4",
+      "venue": "OSDI25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "mirrored-pair"
+      ],
+      "dir": "figures/osdi25-051_fig4"
+    },
+    {
+      "id": "osdi26-005_fig3",
+      "venue": "OSDI26",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke"
+      ],
+      "dir": "figures/osdi26-005_fig3"
+    },
+    {
+      "id": "osdi26-006_fig7",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi26-006_fig7"
+    },
+    {
+      "id": "osdi26-018_fig7",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi26-018_fig7"
+    },
+    {
+      "id": "osdi26-020_figtex7",
+      "venue": "OSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device",
+        "flanked-core"
+      ],
+      "dir": "figures/osdi26-020_figtex7"
+    },
+    {
+      "id": "osdi26-020_figtex8",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-020_figtex8"
+    },
+    {
+      "id": "osdi26-025_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/osdi26-025_fig2"
+    },
+    {
+      "id": "osdi26-030_figtex2",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/osdi26-030_figtex2"
+    },
+    {
+      "id": "osdi26-040_fig6",
+      "venue": "OSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/osdi26-040_fig6"
+    },
+    {
+      "id": "osdi26-043_fig1",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-043_fig1"
+    },
+    {
+      "id": "osdi26-044_fig4",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/osdi26-044_fig4"
+    },
+    {
+      "id": "osdi26-046_fig8",
+      "venue": "OSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "control-loop",
+        "replicated-grid"
+      ],
+      "dir": "figures/osdi26-046_fig8"
+    },
+    {
+      "id": "osdi26-047_fig5",
+      "venue": "OSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data",
+        "replicated-grid"
+      ],
+      "dir": "figures/osdi26-047_fig5"
+    },
+    {
+      "id": "osdi26-050_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "mirrored-pair"
+      ],
+      "dir": "figures/osdi26-050_fig2"
+    },
+    {
+      "id": "osdi26-051_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/osdi26-051_fig2"
+    },
+    {
+      "id": "osdi26-051_fig5",
+      "venue": "OSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/osdi26-051_fig5"
+    },
+    {
+      "id": "osdi26-052_fig1",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/osdi26-052_fig1"
+    },
+    {
+      "id": "osdi26-054_fig7",
+      "venue": "OSDI26",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix",
+        "mirrored-pair"
+      ],
+      "dir": "figures/osdi26-054_fig7"
+    },
+    {
+      "id": "osdi26-054_fig9",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/osdi26-054_fig9"
+    },
+    {
+      "id": "osdi26-059_fig5",
+      "venue": "OSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi26-059_fig5"
+    },
+    {
+      "id": "osdi26-060_fig1",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-060_fig1"
+    },
+    {
+      "id": "osdi26-060_fig8",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack",
+        "flanked-core"
+      ],
+      "dir": "figures/osdi26-060_fig8"
+    },
+    {
+      "id": "osdi26-061_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel",
+        "replicated-grid",
+        "composite-figure"
+      ],
+      "dir": "figures/osdi26-061_fig2"
+    },
+    {
+      "id": "osdi26-063_fig5",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-063_fig5"
+    },
+    {
+      "id": "osdi26-063_fig8",
+      "venue": "OSDI26",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/osdi26-063_fig8"
+    },
+    {
+      "id": "osdi26-065_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/osdi26-065_fig2"
+    },
+    {
+      "id": "osdi26-071_fig3",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-071_fig3"
+    },
+    {
+      "id": "osdi26-076_fig5",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/osdi26-076_fig5"
+    },
+    {
+      "id": "osdi26-078_fig3",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/osdi26-078_fig3"
+    },
+    {
+      "id": "osdi26-079_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered",
+        "block-floorplan"
+      ],
+      "dir": "figures/osdi26-079_fig2"
+    },
+    {
+      "id": "osdi26-079_fig3",
+      "venue": "OSDI26",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/osdi26-079_fig3"
+    },
+    {
+      "id": "osdi26-085_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/osdi26-085_fig2"
+    },
+    {
+      "id": "osdi26-090_fig7",
+      "venue": "OSDI26",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "pipeline"
+      ],
+      "dir": "figures/osdi26-090_fig7"
+    },
+    {
+      "id": "osdi26-092_fig1",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/osdi26-092_fig1"
+    },
+    {
+      "id": "osdi26-094_fig1",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/osdi26-094_fig1"
+    },
+    {
+      "id": "osdi26-094_fig5",
+      "venue": "OSDI26",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-094_fig5"
+    },
+    {
+      "id": "osdi26-098_fig2",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/osdi26-098_fig2"
+    },
+    {
+      "id": "osdi26-108_fig3",
+      "venue": "OSDI26",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel",
+        "phase-lanes"
+      ],
+      "dir": "figures/osdi26-108_fig3"
+    },
+    {
+      "id": "osdi26-127_fig1",
+      "venue": "OSDI26",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/osdi26-127_fig1"
+    },
+    {
+      "id": "sosp23-006_fig3",
+      "venue": "SOSP23",
+      "corpus_template": "pipeline",
+      "source_kind": "pdf",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/sosp23-006_fig3"
+    },
+    {
+      "id": "sosp23-007_fig2",
+      "venue": "SOSP23",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/sosp23-007_fig2"
+    },
+    {
+      "id": "sosp23-011_fig3",
+      "venue": "SOSP23",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "baseline-vs-ours"
+      ],
+      "dir": "figures/sosp23-011_fig3"
+    },
+    {
+      "id": "sosp23-013_fig3",
+      "venue": "SOSP23",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data",
+        "nested-stack",
+        "replicated-grid"
+      ],
+      "dir": "figures/sosp23-013_fig3"
+    },
+    {
+      "id": "sosp23-013_fig4",
+      "venue": "SOSP23",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/sosp23-013_fig4"
+    },
+    {
+      "id": "sosp23-016_fig4",
+      "venue": "SOSP23",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "hub-spoke",
+        "replicated-grid"
+      ],
+      "dir": "figures/sosp23-016_fig4"
+    },
+    {
+      "id": "sosp23-037_fig2",
+      "venue": "SOSP23",
+      "corpus_template": "matrix",
+      "source_kind": "pdf",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/sosp23-037_fig2"
+    },
+    {
+      "id": "sosp24-005_fig4",
+      "venue": "SOSP24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "control-loop"
+      ],
+      "dir": "figures/sosp24-005_fig4"
+    },
+    {
+      "id": "sosp24-007_fig7",
+      "venue": "SOSP24",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/sosp24-007_fig7"
+    },
+    {
+      "id": "sosp24-011_fig8",
+      "venue": "SOSP24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered",
+        "nested-stack"
+      ],
+      "dir": "figures/sosp24-011_fig8"
+    },
+    {
+      "id": "sosp24-020_fig3",
+      "venue": "SOSP24",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/sosp24-020_fig3"
+    },
+    {
+      "id": "sosp24-024_fig4",
+      "venue": "SOSP24",
+      "corpus_template": "matrix",
+      "source_kind": "author",
+      "templates": [
+        "matrix"
+      ],
+      "dir": "figures/sosp24-024_fig4"
+    },
+    {
+      "id": "sosp24-027_fig4",
+      "venue": "SOSP24",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/sosp24-027_fig4"
+    },
+    {
+      "id": "sosp24-028_fig2",
+      "venue": "SOSP24",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "control-loop"
+      ],
+      "dir": "figures/sosp24-028_fig2"
+    },
+    {
+      "id": "sosp24-035_fig1",
+      "venue": "SOSP24",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "overview-with-inset"
+      ],
+      "dir": "figures/sosp24-035_fig1"
+    },
+    {
+      "id": "sosp24-035_fig7",
+      "venue": "SOSP24",
+      "corpus_template": "host-device",
+      "source_kind": "author",
+      "templates": [
+        "host-device",
+        "nested-stack"
+      ],
+      "dir": "figures/sosp24-035_fig7"
+    },
+    {
+      "id": "sosp24-041_fig1",
+      "venue": "SOSP24",
+      "corpus_template": "pipeline",
+      "source_kind": "author",
+      "templates": [
+        "phase-lanes"
+      ],
+      "dir": "figures/sosp24-041_fig1"
+    },
+    {
+      "id": "sosp24-041_fig5",
+      "venue": "SOSP24",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/sosp24-041_fig5"
+    },
+    {
+      "id": "sosp25-002_fig1",
+      "venue": "SOSP25",
+      "corpus_template": "host-device",
+      "source_kind": "pdf",
+      "templates": [
+        "host-device"
+      ],
+      "dir": "figures/sosp25-002_fig1"
+    },
+    {
+      "id": "sosp25-007_fig2",
+      "venue": "SOSP25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag"
+      ],
+      "dir": "figures/sosp25-007_fig2"
+    },
+    {
+      "id": "sosp25-010_fig1",
+      "venue": "SOSP25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "flanked-core"
+      ],
+      "dir": "figures/sosp25-010_fig1"
+    },
+    {
+      "id": "sosp25-011_fig7",
+      "venue": "SOSP25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/sosp25-011_fig7"
+    },
+    {
+      "id": "sosp25-013_fig5",
+      "venue": "SOSP25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "dataflow-dag",
+        "flanked-core"
+      ],
+      "dir": "figures/sosp25-013_fig5"
+    },
+    {
+      "id": "sosp25-015_fig2",
+      "venue": "SOSP25",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "nested-stack",
+        "overview-with-inset",
+        "block-floorplan"
+      ],
+      "dir": "figures/sosp25-015_fig2"
+    },
+    {
+      "id": "sosp25-017_fig1",
+      "venue": "SOSP25",
+      "corpus_template": "two-panel",
+      "source_kind": "pdf",
+      "templates": [
+        "n-panel-comparison"
+      ],
+      "dir": "figures/sosp25-017_fig1"
+    },
+    {
+      "id": "sosp25-020_fig3",
+      "venue": "SOSP25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/sosp25-020_fig3"
+    },
+    {
+      "id": "sosp25-029_fig2",
+      "venue": "SOSP25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "mirrored-pair"
+      ],
+      "dir": "figures/sosp25-029_fig2"
+    },
+    {
+      "id": "sosp25-032_fig4",
+      "venue": "SOSP25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data",
+        "control-loop"
+      ],
+      "dir": "figures/sosp25-032_fig4"
+    },
+    {
+      "id": "sosp25-035_fig1",
+      "venue": "SOSP25",
+      "corpus_template": "layered",
+      "source_kind": "pdf",
+      "templates": [
+        "layered",
+        "nested-stack"
+      ],
+      "dir": "figures/sosp25-035_fig1"
+    },
+    {
+      "id": "sosp25-035_fig2",
+      "venue": "SOSP25",
+      "corpus_template": "other",
+      "source_kind": "pdf",
+      "templates": [
+        "composite-figure"
+      ],
+      "dir": "figures/sosp25-035_fig2"
+    },
+    {
+      "id": "sosp25-043_fig6",
+      "venue": "SOSP25",
+      "corpus_template": "two-panel",
+      "source_kind": "author",
+      "templates": [
+        "two-panel"
+      ],
+      "dir": "figures/sosp25-043_fig6"
+    },
+    {
+      "id": "sosp25-053_fig4",
+      "venue": "SOSP25",
+      "corpus_template": "control-data",
+      "source_kind": "author",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/sosp25-053_fig4"
+    },
+    {
+      "id": "sosp25-054_fig3",
+      "venue": "SOSP25",
+      "corpus_template": "other",
+      "source_kind": "author",
+      "templates": [
+        "multi-tier"
+      ],
+      "dir": "figures/sosp25-054_fig3"
+    },
+    {
+      "id": "sosp25-060_fig5",
+      "venue": "SOSP25",
+      "corpus_template": "layered",
+      "source_kind": "author",
+      "templates": [
+        "layered"
+      ],
+      "dir": "figures/sosp25-060_fig5"
+    },
+    {
+      "id": "sosp25-061_fig7",
+      "venue": "SOSP25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "author",
+      "templates": [
+        "replicated-grid"
+      ],
+      "dir": "figures/sosp25-061_fig7"
+    },
+    {
+      "id": "sosp25-064_fig5",
+      "venue": "SOSP25",
+      "corpus_template": "hub-spoke",
+      "source_kind": "pdf",
+      "templates": [
+        "hub-spoke",
+        "nested-stack"
+      ],
+      "dir": "figures/sosp25-064_fig5"
+    },
+    {
+      "id": "sosp25-065_fig6",
+      "venue": "SOSP25",
+      "corpus_template": "control-data",
+      "source_kind": "pdf",
+      "templates": [
+        "control-data"
+      ],
+      "dir": "figures/sosp25-065_fig6"
+    },
+    {
+      "id": "asplos25-006_fig1",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-006_fig1",
+      "arrangement": "panels-column",
+      "base": "component",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "asplos25-018_fig6",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-018_fig6",
+      "arrangement": "panels-row",
+      "base": "scene",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "asplos25-033_fig4",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-033_fig4",
+      "arrangement": "single",
+      "base": "data-structure",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos25-034_fig1",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-034_fig1",
+      "arrangement": "single",
+      "base": "scene",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos25-038_fig1",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-038_fig1",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "asplos25-046_fig16",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-046_fig16",
+      "arrangement": "panels-row",
+      "base": "timeline",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos25-047_fig4",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-047_fig4",
+      "arrangement": "frames-row",
+      "base": "mixed",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos25-053_fig4",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-053_fig4",
+      "arrangement": "single",
+      "base": "table",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos25-082_fig2",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-082_fig2",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos25-091_fig2",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-091_fig2",
+      "arrangement": "panels-column",
+      "base": "data-structure",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos25-092_fig5",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "pdf",
+      "dir": "figures/asplos25-092_fig5",
+      "arrangement": "panels-grid",
+      "base": "state-machine",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos25-142_fig6",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "pdf",
+      "dir": "figures/asplos25-142_fig6",
+      "arrangement": "single",
+      "base": "graph",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos25-147_fig6",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-147_fig6",
+      "arrangement": "panels-row",
+      "base": "topology",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos25-151_fig12",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-151_fig12",
+      "arrangement": "single",
+      "base": "table",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos25-151_fig13",
+      "kind": "mechanism",
+      "venue": "ASPLOS25",
+      "source_kind": "author",
+      "dir": "figures/asplos25-151_fig13",
+      "arrangement": "panels-grid",
+      "base": "tree",
+      "groups": [
+        "comparison",
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos26-013_fig8",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-013_fig8",
+      "arrangement": "panels-row",
+      "base": "mixed",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos26-021_fig1",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-021_fig1",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "comparison",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos26-026_fig10",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-026_fig10",
+      "arrangement": "panels-column",
+      "base": "table",
+      "groups": [
+        "comparison",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos26-026_fig9",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-026_fig9",
+      "arrangement": "single",
+      "base": "tree",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos26-030_fig9",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-030_fig9",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos26-041_fig7",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "pdf",
+      "dir": "figures/asplos26-041_fig7",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "asplos26-047_fig7",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-047_fig7",
+      "arrangement": "panels-grid",
+      "base": "timeline",
+      "groups": [
+        "walkthrough",
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos26-047_figtex2",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-047_figtex2",
+      "arrangement": "panels-row",
+      "base": "timeline",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "asplos26-053_fig1",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "pdf",
+      "dir": "figures/asplos26-053_fig1",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos26-057_fig9",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "pdf",
+      "dir": "figures/asplos26-057_fig9",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos26-067_fig5",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "pdf",
+      "dir": "figures/asplos26-067_fig5",
+      "arrangement": "panels-row",
+      "base": "state-machine",
+      "groups": [
+        "comparison",
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos26-074_fig4",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-074_fig4",
+      "arrangement": "panels-column",
+      "base": "component",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "asplos26-076_fig9",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-076_fig9",
+      "arrangement": "panels-row",
+      "base": "topology",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos26-091_fig2",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "pdf",
+      "dir": "figures/asplos26-091_fig2",
+      "arrangement": "panels-column",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "asplos26-094_fig2",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-094_fig2",
+      "arrangement": "panels-grid",
+      "base": "mixed",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "asplos26-094_fig3",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-094_fig3",
+      "arrangement": "panels-grid",
+      "base": "mixed",
+      "groups": [
+        "evolution",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "asplos26-103_figtex7",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-103_figtex7",
+      "arrangement": "single",
+      "base": "graph",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos26-132_fig2",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-132_fig2",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "asplos26-148_fig4",
+      "kind": "mechanism",
+      "venue": "ASPLOS26",
+      "source_kind": "author",
+      "dir": "figures/asplos26-148_fig4",
+      "arrangement": "single",
+      "base": "scene",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi23-003_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi23-003_fig7",
+      "arrangement": "frames-row",
+      "base": "table",
+      "groups": [
+        "evolution",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi23-008_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi23-008_fig5",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "evolution",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi23-042_fig11",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-042_fig11",
+      "arrangement": "stacked-timeline",
+      "base": "timeline",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi23-042_fig13",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-042_fig13",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi23-065_fig2",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi23-065_fig2",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi23-073_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi23-073_fig4",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi23-076_fig23",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-076_fig23",
+      "arrangement": "panels-row",
+      "base": "tree",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi23-079_fig1",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-079_fig1",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi23-079_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-079_fig7",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi23-085_fig1",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-085_fig1",
+      "arrangement": "panels-row",
+      "base": "topology",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi23-089_fig1",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-089_fig1",
+      "arrangement": "single",
+      "base": "topology",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi23-089_fig2",
+      "kind": "mechanism",
+      "venue": "NSDI23",
+      "source_kind": "author",
+      "dir": "figures/nsdi23-089_fig2",
+      "arrangement": "single",
+      "base": "topology",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi24-018_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-018_fig4",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi24-023_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-023_fig5",
+      "arrangement": "frames-row",
+      "base": "data-structure",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi24-023_figtex23",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-023_figtex23",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi24-023_figtex7",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-023_figtex7",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi24-029_fig6",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-029_fig6",
+      "arrangement": "panels-row",
+      "base": "data-structure",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi24-031_fig9",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-031_fig9",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi24-061_fig3",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-061_fig3",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi24-067_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-067_fig5",
+      "arrangement": "single",
+      "base": "tree",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi24-068_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-068_fig5",
+      "arrangement": "single",
+      "base": "tree",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi24-068_figtex18",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-068_figtex18",
+      "arrangement": "single",
+      "base": "circuit",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi24-079_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-079_fig7",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi24-086_fig11",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-086_fig11",
+      "arrangement": "frames-column",
+      "base": "component",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi24-086_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-086_fig7",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi24-095_fig3",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "author",
+      "dir": "figures/nsdi24-095_fig3",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi24-097_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-097_fig7",
+      "arrangement": "panels-row",
+      "base": "graph",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi24-105_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi24-105_fig5",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi25-016_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-016_fig7",
+      "arrangement": "single",
+      "base": "tree",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi25-027_fig1",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-027_fig1",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi25-034_fig6",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-034_fig6",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi25-035_fig1",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi25-035_fig1",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "comparison",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi25-037_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi25-037_fig4",
+      "arrangement": "panels-row",
+      "base": "tree",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi25-040_fig10",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-040_fig10",
+      "arrangement": "frames-row",
+      "base": "data-structure",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi25-044_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi25-044_fig7",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi25-044_fig9",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi25-044_fig9",
+      "arrangement": "panels-grid",
+      "base": "mixed",
+      "groups": [
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi25-047_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-047_fig5",
+      "arrangement": "other",
+      "base": "graph",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi25-062_fig12",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-062_fig12",
+      "arrangement": "other",
+      "base": "mixed",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi25-064_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI25",
+      "source_kind": "author",
+      "dir": "figures/nsdi25-064_fig4",
+      "arrangement": "inset",
+      "base": "mixed",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi26-022_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-022_fig4",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi26-023_fig9",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-023_fig9",
+      "arrangement": "panels-grid",
+      "base": "timeline",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi26-030_fig8",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-030_fig8",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "nsdi26-036_fig8",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi26-036_fig8",
+      "arrangement": "single",
+      "base": "graph",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi26-037_fig3",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-037_fig3",
+      "arrangement": "single",
+      "base": "tree",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi26-043_fig5",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-043_fig5",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi26-043_fig9",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-043_fig9",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi26-043_figtex18",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-043_figtex18",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi26-074_fig2",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-074_fig2",
+      "arrangement": "panels-grid",
+      "base": "graph",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi26-074_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-074_fig4",
+      "arrangement": "panels-grid",
+      "base": "graph",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi26-075_fig11",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi26-075_fig11",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi26-082_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-082_fig4",
+      "arrangement": "panels-row",
+      "base": "graph",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "nsdi26-095_fig3",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/nsdi26-095_fig3",
+      "arrangement": "single",
+      "base": "topology",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "nsdi26-126_figtex7",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-126_figtex7",
+      "arrangement": "panels-row",
+      "base": "tree",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "nsdi26-131_fig4",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-131_fig4",
+      "arrangement": "single",
+      "base": "topology",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "nsdi26-131_fig7",
+      "kind": "mechanism",
+      "venue": "NSDI26",
+      "source_kind": "author",
+      "dir": "figures/nsdi26-131_fig7",
+      "arrangement": "panels-row",
+      "base": "topology",
+      "groups": [
+        "comparison",
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi23-020_fig9",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/osdi23-020_fig9",
+      "arrangement": "stacked-timeline",
+      "base": "timeline",
+      "groups": [
+        "evolution",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi23-022_fig6",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/osdi23-022_fig6",
+      "arrangement": "single",
+      "base": "mixed",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "osdi23-029_fig3",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "author",
+      "dir": "figures/osdi23-029_fig3",
+      "arrangement": "panels-row",
+      "base": "table",
+      "groups": [
+        "comparison",
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi23-031_figtex1",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "author",
+      "dir": "figures/osdi23-031_figtex1",
+      "arrangement": "panels-row",
+      "base": "timeline",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "osdi23-032_fig8",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "pdf",
+      "dir": "figures/osdi23-032_fig8",
+      "arrangement": "panels-row",
+      "base": "flowchart",
+      "groups": [
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi23-048_fig4",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "author",
+      "dir": "figures/osdi23-048_fig4",
+      "arrangement": "panels-row",
+      "base": "timeline",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "osdi23-049_fig10",
+      "kind": "mechanism",
+      "venue": "OSDI23",
+      "source_kind": "author",
+      "dir": "figures/osdi23-049_fig10",
+      "arrangement": "single",
+      "base": "code",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi24-003_fig11",
+      "kind": "mechanism",
+      "venue": "OSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/osdi24-003_fig11",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "osdi24-004_fig2",
+      "kind": "mechanism",
+      "venue": "OSDI24",
+      "source_kind": "author",
+      "dir": "figures/osdi24-004_fig2",
+      "arrangement": "panels-row",
+      "base": "timeline",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "osdi24-015_fig3",
+      "kind": "mechanism",
+      "venue": "OSDI24",
+      "source_kind": "author",
+      "dir": "figures/osdi24-015_fig3",
+      "arrangement": "panels-column",
+      "base": "timeline",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "osdi24-020_fig4",
+      "kind": "mechanism",
+      "venue": "OSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/osdi24-020_fig4",
+      "arrangement": "single",
+      "base": "timeline",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi24-024_fig9",
+      "kind": "mechanism",
+      "venue": "OSDI24",
+      "source_kind": "author",
+      "dir": "figures/osdi24-024_fig9",
+      "arrangement": "single",
+      "base": "data-structure",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi24-051_fig4",
+      "kind": "mechanism",
+      "venue": "OSDI24",
+      "source_kind": "pdf",
+      "dir": "figures/osdi24-051_fig4",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "osdi25-003_fig4",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-003_fig4",
+      "arrangement": "panels-row",
+      "base": "mixed",
+      "groups": [
+        "comparison",
+        "anatomy"
+      ]
+    },
+    {
+      "id": "osdi25-010_fig7",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "pdf",
+      "dir": "figures/osdi25-010_fig7",
+      "arrangement": "panels-row",
+      "base": "state-machine",
+      "groups": [
+        "comparison",
+        "logic",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi25-013_fig2",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-013_fig2",
+      "arrangement": "panels-grid",
+      "base": "table",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi25-016_fig6",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-016_fig6",
+      "arrangement": "panels-grid",
+      "base": "code",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi25-031_fig11",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-031_fig11",
+      "arrangement": "panels-grid",
+      "base": "table",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi25-031_fig8",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-031_fig8",
+      "arrangement": "inset",
+      "base": "data-structure",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi25-038_fig9",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "pdf",
+      "dir": "figures/osdi25-038_fig9",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "osdi25-050_fig10",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-050_fig10",
+      "arrangement": "single",
+      "base": "topology",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "osdi25-050_fig5",
+      "kind": "mechanism",
+      "venue": "OSDI25",
+      "source_kind": "author",
+      "dir": "figures/osdi25-050_fig5",
+      "arrangement": "panels-row",
+      "base": "topology",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "osdi26-024_fig3",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "author",
+      "dir": "figures/osdi26-024_fig3",
+      "arrangement": "panels-row",
+      "base": "tree",
+      "groups": [
+        "comparison",
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi26-024_fig9",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "author",
+      "dir": "figures/osdi26-024_fig9",
+      "arrangement": "frames-row",
+      "base": "tree",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi26-037_fig5",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-037_fig5",
+      "arrangement": "single",
+      "base": "code",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi26-040_fig1",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-040_fig1",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "osdi26-048_fig2",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-048_fig2",
+      "arrangement": "single",
+      "base": "mixed",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi26-068_fig6",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-068_fig6",
+      "arrangement": "frames-row",
+      "base": "timeline",
+      "groups": [
+        "comparison",
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi26-076_fig8",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-076_fig8",
+      "arrangement": "panels-row",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "osdi26-079_fig6",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-079_fig6",
+      "arrangement": "frames-column",
+      "base": "tree",
+      "groups": [
+        "evolution",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi26-082_fig3",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-082_fig3",
+      "arrangement": "single",
+      "base": "graph",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "osdi26-086_fig1",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-086_fig1",
+      "arrangement": "frames-row",
+      "base": "flowchart",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "osdi26-122_fig12",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-122_fig12",
+      "arrangement": "inset",
+      "base": "component",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "osdi26-136_fig7",
+      "kind": "mechanism",
+      "venue": "OSDI26",
+      "source_kind": "pdf",
+      "dir": "figures/osdi26-136_fig7",
+      "arrangement": "panels-grid",
+      "base": "state-machine",
+      "groups": [
+        "evolution",
+        "logic"
+      ]
+    },
+    {
+      "id": "sosp23-002_fig5",
+      "kind": "mechanism",
+      "venue": "SOSP23",
+      "source_kind": "author",
+      "dir": "figures/sosp23-002_fig5",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp23-016_fig5",
+      "kind": "mechanism",
+      "venue": "SOSP23",
+      "source_kind": "author",
+      "dir": "figures/sosp23-016_fig5",
+      "arrangement": "single",
+      "base": "data-structure",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp23-030_fig8",
+      "kind": "mechanism",
+      "venue": "SOSP23",
+      "source_kind": "author",
+      "dir": "figures/sosp23-030_fig8",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp24-007_fig3",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "author",
+      "dir": "figures/sosp24-007_fig3",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp24-011_fig7",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "author",
+      "dir": "figures/sosp24-011_fig7",
+      "arrangement": "panels-row",
+      "base": "topology",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "sosp24-011_figtex2",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "author",
+      "dir": "figures/sosp24-011_figtex2",
+      "arrangement": "single",
+      "base": "topology",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp24-014_fig6",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "pdf",
+      "dir": "figures/sosp24-014_fig6",
+      "arrangement": "single",
+      "base": "flowchart",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "sosp24-017_fig9",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "pdf",
+      "dir": "figures/sosp24-017_fig9",
+      "arrangement": "panels-column",
+      "base": "mixed",
+      "groups": [
+        "comparison",
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp24-024_fig3",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "author",
+      "dir": "figures/sosp24-024_fig3",
+      "arrangement": "panels-row",
+      "base": "data-structure",
+      "groups": [
+        "comparison",
+        "evolution"
+      ]
+    },
+    {
+      "id": "sosp24-035_fig2",
+      "kind": "mechanism",
+      "venue": "SOSP24",
+      "source_kind": "author",
+      "dir": "figures/sosp24-035_fig2",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "comparison",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp25-001_fig11",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-001_fig11",
+      "arrangement": "panels-column",
+      "base": "data-structure",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "sosp25-001_fig12",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-001_fig12",
+      "arrangement": "single",
+      "base": "graph",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp25-008_fig3",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-008_fig3",
+      "arrangement": "panels-row",
+      "base": "component",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp25-017_fig8",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "pdf",
+      "dir": "figures/sosp25-017_fig8",
+      "arrangement": "panels-column",
+      "base": "mixed",
+      "groups": [
+        "logic"
+      ]
+    },
+    {
+      "id": "sosp25-024_fig1",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "pdf",
+      "dir": "figures/sosp25-024_fig1",
+      "arrangement": "panels-column",
+      "base": "scene",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "sosp25-039_fig1",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-039_fig1",
+      "arrangement": "frames-row",
+      "base": "scene",
+      "groups": [
+        "evolution"
+      ]
+    },
+    {
+      "id": "sosp25-039_fig3",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-039_fig3",
+      "arrangement": "panels-row",
+      "base": "data-structure",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp25-042_fig3",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "pdf",
+      "dir": "figures/sosp25-042_fig3",
+      "arrangement": "single",
+      "base": "component",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp25-047_fig14",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-047_fig14",
+      "arrangement": "panels-column",
+      "base": "mixed",
+      "groups": [
+        "evolution",
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp25-047_fig15",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-047_fig15",
+      "arrangement": "panels-row",
+      "base": "graph",
+      "groups": [
+        "anatomy"
+      ]
+    },
+    {
+      "id": "sosp25-053_fig5",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-053_fig5",
+      "arrangement": "single",
+      "base": "state-machine",
+      "groups": [
+        "walkthrough"
+      ]
+    },
+    {
+      "id": "sosp25-060_fig4",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "author",
+      "dir": "figures/sosp25-060_fig4",
+      "arrangement": "panels-column",
+      "base": "table",
+      "groups": [
+        "comparison"
+      ]
+    },
+    {
+      "id": "sosp25-063_fig2",
+      "kind": "mechanism",
+      "venue": "SOSP25",
+      "source_kind": "pdf",
+      "dir": "figures/sosp25-063_fig2",
+      "arrangement": "stacked-timeline",
+      "base": "state-machine",
+      "groups": [
+        "logic"
+      ]
+    }
+  ],
+  "mechanism": {
+    "selection": "scripts/distill/exemplar_selection_mechanism.json",
+    "corpus": {
+      "semantics": "lab/extracted/corpus_semantics.jsonl",
+      "index": "lab/extracted/corpus_index.csv",
+      "filter": "record kind == 'mechanism' and index row diagram/mechanism/good; candidates = mech-prescreen/semantics/candidate_ids.txt",
+      "decisions": "../../../exemplar-review/mechanism/decisions.json",
+      "n_candidates": 152,
+      "n_dropped": 5,
+      "n_starred": 73,
+      "n_moved": 1
+    },
+    "n_figures": 146,
+    "n_slots": 175,
+    "by_group": {
+      "comparison": 35,
+      "evolution": 33,
+      "logic": 31,
+      "walkthrough": 43,
+      "anatomy": 33
+    }
+  }
+}

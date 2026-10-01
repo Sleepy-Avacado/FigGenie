@@ -1,0 +1,113 @@
+{
+  "paper_id": "osdi24-009",
+  "fig": "4",
+  "system": {
+    "name": "Chop Chop",
+    "one_liner": "a Byzantine atomic broadcast protocol that uses a broker layer between clients and servers to reach the network's throughput limit",
+    "domain": [
+      "distributed-systems",
+      "consensus"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Clients",
+        "role": "broadcast messages to the system; assumed possibly Byzantine",
+        "container": "Submission Distillation",
+        "novel": null
+      },
+      {
+        "name": "Broker",
+        "role": "untrusted intermediary that distills client submissions before forwarding them to servers",
+        "container": "Submission Distillation",
+        "novel": true
+      },
+      {
+        "name": "Server",
+        "role": "one of a fixed set of 3f+1 servers running Atomic Broadcast among themselves and delivering messages",
+        "container": "Chop Chop Atomic Broadcast",
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Clients",
+        "to": "Broker",
+        "what": "broadcast client messages",
+        "step": null
+      },
+      {
+        "from": "Broker",
+        "to": "Server",
+        "what": "submitted messages",
+        "step": null
+      },
+      {
+        "from": "Server",
+        "to": "Server",
+        "what": "Atomic Broadcast instance among servers",
+        "step": null
+      }
+    ],
+    "key_idea": "Chop Chop inserts an untrusted broker layer between clients and servers to distill client submissions, enabling a much faster client-to-server Atomic Broadcast built on top of a slower broker-to-server Atomic Broadcast among the 3f+1 servers.",
+    "reading_order": "top to bottom: four Clients feed two Brokers, which feed three interconnected Servers, with an outer 'Submission Distillation' label over clients/brokers and an outer 'Chop Chop Atomic Broadcast' label over the whole diagram."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.98,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [],
+    "background": "white",
+    "fill": "none",
+    "stroke": "black boxes with rounded corners; colored outer grouping ellipses",
+    "font": "Arial, 5.5-8pt",
+    "corners": "rounded",
+    "arrows": "orthogonal, bidirectional, filled arrowheads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange outer ellipse ('Chop Chop Atomic Broadcast') and blue inner ellipse ('Submission Distillation') label the two protocol phases/scopes rather than the boxes themselves",
+    "line_style_means": "double-headed arrows show bidirectional message flow between layered process groups; dashed double arrows connect servers to each other",
+    "emphasis": "the untrusted broker layer sits visually between clients and servers, emphasizing it as the novel intermediary the system introduces",
+    "reusable_patterns": [
+      "three-tier layered process diagram (clients-brokers-servers) wrapped in labeled scope ellipses"
+    ],
+    "weaknesses": [
+      "component boxes carry no fill color, so all semantic grouping is conveyed only by the two labeled outer ellipses"
+    ]
+  },
+  "tags": [
+    "Byzantine fault tolerance",
+    "atomic broadcast",
+    "consensus",
+    "broker",
+    "distributed systems"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Chop Chop (p.6)"
+    ],
+    "evidence": [
+      "Chop Chop involves three types of processes (Fig. 4): broadcasting clients, delivering servers and a layer of broadcast-facilitating brokers",
+      "Servers run an Atomic Broadcast instance among themselves, to which brokers submit messages",
+      "Chop Chop can be extended for reconfiguration thanks to its modular use of Atomic Broadcast"
+    ]
+  },
+  "summary": "Chop Chop is a Byzantine atomic broadcast protocol designed to reach the network's throughput limit by inserting an untrusted broker layer between broadcasting clients and delivering servers. Figure 4 shows the resulting three-tier architecture: four (possibly Byzantine) Clients at the top feed two untrusted Brokers, which submit distilled messages to three Servers (each tolerating up to f Byzantine servers out of 3f+1) that run a broker-to-server Atomic Broadcast instance among themselves. Two labeled ellipses group the diagram: an inner blue 'Submission Distillation' ellipse spanning Clients and Brokers, and an outer orange 'Chop Chop Atomic Broadcast' ellipse spanning the whole system, reflecting the protocol's two-phase design (distillation then atomic broadcast). The figure is a simple, unfilled black-and-white box diagram with rounded corners and bidirectional arrows, with color used only for the two scope-labeling ellipses.",
+  "summary_zh": "图4展示Chop Chop架构：客户端(可能拜占庭)将消息发给不受信任的中介Broker，再由Broker提交给服务器；服务器之间(3f+1台，容忍拜占庭故障)运行原子广播协议，图中用蓝色椭圆标出'提交蒸馏'范围，橙色椭圆标出整个'Chop Chop原子广播'范围。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

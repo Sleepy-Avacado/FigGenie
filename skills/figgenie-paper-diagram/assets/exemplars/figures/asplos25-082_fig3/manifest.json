@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-082_fig3",
+  "paper_id": "asplos25-082",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. The top half part illustrates the two-phase check- pointing workflow (GPU-to-CPU snapshot + CPU-to-Storage persist) during a distributed training. The training employs 4-degree DP across two nodes, each equipped with two GPUs. Data-parallel sharding is utilized to minimize the volume of da",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.44,
+  "n_components": 11,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-082/src/fig3_Two_Stage_Checkpointing.svg",
+    "preview.png": "lab/extracted/asplos25-082/src/fig3_Two_Stage_Checkpointing.png",
+    "print.png": "lab/extracted/asplos25-082/asplos25-082_fig3_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Star exemplar of the pipeline-plus-aligned-timeline variant: a two-phase checkpoint pipeline (GPU-to-CPU snapshot, CPU-to-storage persist) sits directly above a synchronized train/checkpoint timeline that red-flags the one stall case.",
+      "what_to_learn": "Stack a structural diagram directly over a time axis sharing its horizontal alignment, so a highlighted timeline event reads as a direct consequence of the boxes above it; reserve red for the one failure case and use dashed brackets to group timeline phases."
+    },
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Architecture on top, an aligned Train / Checkpoint / Time lane stack underneath, with a red stall block calling out the cost.",
+      "what_to_learn": "Stack the timeline directly under the architecture and align columns so a block on the timeline sits under the component that produced it."
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "group": "comparison",
+  "n": 35,
+  "stars": 21,
+  "how_to_read": "open ../../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see; these are references to strengthen a layout derived from your figure's own needs -- borrow the device that serves it, never the layout wholesale",
+  "exemplars": [
+    {
+      "id": "asplos25-018_fig6",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Two policies drawn on the identical satellite x day grid; only the reference arrows' source row changes, making the cause of the lower change-% immediately traceable.",
+      "what_to_learn": "Keep the satellite-row/day-column grid, colours and callout box identical across panels, and change only each dashed arrow's source row (same satellite vs. any satellite) so the drop in change-% reads on its own — but satellite icons stay unlabelled.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos25-018_fig6"
+    },
+    {
+      "id": "asplos25-038_fig1",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Moving from exclusive, to static, to on-demand GPU allocation packs the same four training/inference functions onto fewer GPUs (4 to 3 to 2) by matching each function's actual compute request/limit instead of over- or statically provisioning it.",
+      "what_to_learn": "One full-width legend above three panels; identical icon chain inside each; one bold verdict line at the same y in every panel",
+      "note_source": "doc",
+      "dir": "../../figures/asplos25-038_fig1"
+    },
+    {
+      "id": "asplos26-026_fig10",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Capturing one CUDAGraph per strategy wastes memory linearly with strategy count; bucketing batch sizes, disaggregating target/draft capture, and merging strategies that share parameters keeps memory nearly flat while still gaining the throughput of many adaptive strategies.",
+      "what_to_learn": "A two-line check/cross scorecard under every alternative; roman numerals for the sub-steps that build the winner",
+      "note_source": "doc",
+      "dir": "../../figures/asplos26-026_fig10"
+    },
+    {
+      "id": "asplos26-067_fig5",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Four-panel figure where a numbered synthesis pipeline (with a feedback loop) sits beside the resulting protocol trace and the two original protocols it fuses, using one shared sequence-diagram notation throughout.",
+      "what_to_learn": "Draw the synthesized protocol and both source protocols with the same lifeline-plus-boxed-state notation so states and messages line up panel to panel, and carry one two-colour domain tint through every panel.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos26-067_fig5"
+    },
+    {
+      "id": "asplos26-074_fig4",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Two stacked circuit variants share one input row and one four-colour weight-value key, so shrinking 16 multipliers to 4 shared accumulators is visible as a colour count, not a claim.",
+      "what_to_learn": "Stack both variants on one aligned input row, colour every occurrence of the same weight value identically in both, so sixteen boxes shrinking to four reads as a colour count — but the routing order still needs tracing.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos26-074_fig4"
+    },
+    {
+      "id": "nsdi24-029_fig6",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Parcae recovers from preemptions with three migration strategies over the same instance grid: swap in a same-stage peer (intra-stage), reassign a spare instance to a different stage (inter-stage), or reshuffle every surviving instance into a new pipeline layout.",
+      "what_to_learn": "before-grid → labelled rule box → after-grid, repeated per panel; a dashed hatched box holds whatever falls out",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi24-029_fig6"
+    },
+    {
+      "id": "nsdi24-095_fig3",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "One baseline self-loop cell versus two unrolled staircases; a single yellow halo shows exactly what a memory-constrained switch must keep between steps — one hidden state or all raw inputs.",
+      "what_to_learn": "Redraw the same GRU box as a diagonal staircase across time, grey out steps outside focus, and wrap only what must persist in constrained storage with one yellow halo — small around one hidden state, wide around every raw input.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi24-095_fig3"
+    },
+    {
+      "id": "nsdi24-097_fig7",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Pairs a shared-origin phase-plane trajectory comparison with stacked good/bad time-series panels on one time axis, showing why a good initial position gives a larger, more usable respiration signal.",
+      "what_to_learn": "Fan two trajectories from one shared origin in a phase-plane panel, then stack the matching good/bad time-series beneath shared dashed reference lines so amplitude differences line up visually — but (a)'s colours don't match (b)/(c)'s.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi24-097_fig7"
+    },
+    {
+      "id": "nsdi25-035_fig1",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same coloured step-blocks reused in both panels so the reader sees which steps (thread switching, context save) vanish moving from synchronous to asynchronous.",
+      "what_to_learn": "Colour-code each step type once (orange = context ops, blue = request/poll) and reuse those colours in both panels, then bracket the idle span the async version fills with useful work instead of a thread switch.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi25-035_fig1"
+    },
+    {
+      "id": "nsdi26-074_fig4",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Four-panel comparison: a legend table defining three coloured path variables, a shared background-traffic graph, then two solutions overlaying different numeric splits on those same coloured paths.",
+      "what_to_learn": "Define each alternate path's colour once in a legend table, redraw the identical background graph per solution, and change only the numbers stacked on each coloured edge — but two stacked numbers per short segment make the graph dense.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi26-074_fig4"
+    },
+    {
+      "id": "nsdi26-082_fig4",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Base model plus LoRA drawn once with '?' placeholders to pose the search, then four numbered single-layer templates get recombined pairwise into the full candidate graphs being compared.",
+      "what_to_learn": "Give each small reusable unit a number badge once (① Linear with its tensor-state tags on every edge), then build every candidate by stacking two numbered units and swapping only the one connecting communication operator between them.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi26-082_fig4"
+    },
+    {
+      "id": "osdi23-029_fig3",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "A GPU x memory-budget grid comparing replication vs model-parallel placement across the same three budget rows, using identical model colours and only labeling the shared row axis once.",
+      "what_to_learn": "Keep one colour per model across both panels; draw it as a whole tile under replication and subdivide that tile into shards under model parallelism, sharing one 1x/2x/4x row axis across the divider — but identical shard groups go unnoticed.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi23-029_fig3"
+    },
+    {
+      "id": "osdi25-003_fig4",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same worker pipeline drawn twice, coloured red vs green, making an abstract 'imbalance' concrete as one heavier micro-batch; the other panel maps a chunk onto the mask rows it touches.",
+      "what_to_learn": "Draw the same worker pipeline twice, colouring only the rows that differ (red = heavy micro-batch, green = light) to make 'imbalance' visible at a glance; elsewhere, map a chunk's label directly onto the mask rows it occupies.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi25-003_fig4"
+    },
+    {
+      "id": "osdi25-010_fig7",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Two identical page-state-machine templates side by side (state spine + numbered steps + linked epoch-phase column), differing only by one extra intermediate state and its numbering.",
+      "what_to_learn": "Draw each variant as an identical spine of numbered states with a phase column linked by short cross-arrows and a return loop on the left; give the busier variant one extra spine state and renumber after it.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi25-010_fig7"
+    },
+    {
+      "id": "osdi26-024_fig3",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same BFS/DFS branch templates drawn twice, before/after; a single vertical dashed rule marks the reward-wait barrier that the after-panel fills with new green speculative boxes.",
+      "what_to_learn": "Keep the identical branch layout in both panels and mark the blocking point as one vertical dashed rule; fill past it with solid green boxes for confirmed speculation and dashed-outline boxes for a second, unconfirmed layer.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi26-024_fig3"
+    },
+    {
+      "id": "osdi26-040_fig1",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Locks for disaggregated shared memory can be layered on top of cache coherence (redundant transactions), bypass it entirely (losing optimizations), or, as proposed, generalize the same substrate to implement both, unifying the two layers.",
+      "what_to_learn": "Dashed vertical rules instead of panel boxes; a bold descriptive caption per panel instead of (a)/(b)/(c) — and the cost: an automated panel counter reads it as one panel",
+      "note_source": "doc",
+      "dir": "../../figures/osdi26-040_fig1"
+    },
+    {
+      "id": "sosp24-011_fig7",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same 3x4 data-parallel x pipeline-stage worker grid drawn twice: one clustered whole-column failure (checkpoint needed) versus scattered failures leaving one live worker per column (training survives).",
+      "what_to_learn": "Ring one whole failed column in a dashed box labelled by name for the worst case; for the survivable case, scatter the same failure icons so every column still keeps one active worker — but red/black arrows go unexplained.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp24-011_fig7"
+    },
+    {
+      "id": "sosp24-024_fig3",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "One coloured Input/Weight/Output key from the whole-matrix panel is reused unchanged through both partition variants, and a nested Step/Shift/Step insert shows the exact tiles trading places.",
+      "what_to_learn": "Fix one colour per Input row-block, Weight column-block and Output block in the whole-operator panel, reuse those exact colours in every partitioned variant, and show the trade as a half-filled output block that a Shift sub-frame completes.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp24-024_fig3"
+    },
+    {
+      "id": "sosp24-035_fig2",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same CPU-Mem/CPU/GPU/GPU-Mem template with a PCIe bar reused for both offloading designs; circled numbered arrows trace which layer or result crosses the bus and when.",
+      "what_to_learn": "Reuse one CPU-Mem/CPU-icon/GPU-icon/GPU-Mem template over a PCIe bar for both designs, numbering each cross-bus arrow in order, and show idle vs busy compute by icon fill density alone — but that convention has no legend.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp24-035_fig2"
+    },
+    {
+      "id": "sosp25-001_fig11",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "A triangular masked-attention block map, coloured data-vs-compute, whose colours carry into flat per-device shelves for two placements so the reader can just count blue tiles to see the imbalance vanish.",
+      "what_to_learn": "Draw the triangular block map once, colour data vs compute blocks, then reuse those colours in flat per-device shelves so imbalance is countable at a glance — but no arrows mark which block moved between placements.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp25-001_fig11"
+    },
+    {
+      "id": "sosp25-024_fig1",
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "One shared two-icon system legend at top, then growing question-complexity is shown purely by stretching the same retrieve-then-answer chain to more links across three stacked panels.",
+      "what_to_learn": "State the RAG system once as a tiny two-icon legend, then reuse one fixed shape (question, retrieved document, answer) across all three panels, growing only how many times it repeats — one-shot, then chained sub-questions, then an open iterative loop.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp25-024_fig1"
+    },
+    {
+      "id": "asplos25-006_fig1",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Contrasting batch parallelism's full-parameter AllReduce of gradients with Z3/FSDP's sharded design, which AllGathers parameters just-in-time and ReduceScatters gradients, trading extra communication for lower peak memory.",
+      "what_to_learn": "Stack the alternatives when the template is a wide left-to-right chain; let an added element (thick blue bars) plus renamed labels be the entire delta",
+      "note_source": "doc",
+      "dir": "../../figures/asplos25-006_fig1"
+    },
+    {
+      "id": "asplos25-151_fig13",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Four primitive instructions manipulate a qubit token's position on the router tree: LOAD introduces it at the escape port, TRANSPORT slides it across an edge, ROUTE switches it between a router's own ports, and STORE commits it into a router's state.",
+      "what_to_learn": "an instruction-set catalog drawn as repeated before/after pairs of the same small structure, one pair per operation; a single highlighted sub-structure (green) plus a single moving token (orange) isolating what changed",
+      "note_source": "record",
+      "dir": "../../figures/asplos25-151_fig13"
+    },
+    {
+      "id": "asplos26-021_fig1",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "An analog crossbar reproduces a matrix-vector multiply physically: matrix values become programmed conductances, input-vector values become row voltages, Ohm's law multiplies them at each junction, and Kirchhoff's current law accumulates the products down each column into the result.",
+      "what_to_learn": "a plain arithmetic panel paired with a physically-realized circuit panel computing the same worked example; consistent per-value colour coding carried from a circuit diagram into the arithmetic equations that verify it; circled step numbers overlaid on a crossbar to narrate program -> multiply -> accumulate -> result",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-021_fig1"
+    },
+    {
+      "id": "asplos26-047_figtex2",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Four circuit designs for the multi-party SWAP test trade GHZ-state width against circuit depth when scaling to n-qubit states; the paper's scheme (d) uses parallel Toffoli-via-Fanout gates to get both optimal depth and width.",
+      "what_to_learn": "four aligned circuit-diagram panels compared side by side with a swapped-in replacement block for one datapath; per-panel derived-cost caption (depth, GHZ width) below each design variant",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-047_figtex2"
+    },
+    {
+      "id": "nsdi23-076_fig23",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "The same double-binary-tree shape admits many different node-number permutations that all balance communication load equally, leaving freedom to pick one that also fits the network topology.",
+      "what_to_learn": "identical tree skeleton repeated side by side with only the node numbering changed to depict alternative permutations; a double binary tree drawn as two mirrored trees stacked, sharing the same node IDs split between leaf and internal role",
+      "note_source": "record",
+      "dir": "../../figures/nsdi23-076_fig23"
+    },
+    {
+      "id": "nsdi25-037_fig4",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Plain BDDs (a) duplicate a 14-node srcIP/srcPort sub-structure once per forwarding path because interleaved field variables cannot be merged; decoupling each field into its own reduced BDD (b) cuts this to 24 nodes but cannot alone represent multiple packet sets; layering a Network Decision Diagram (c) on top of the…",
+      "what_to_learn": "One worked example redrawn in three encodings, with a red box on the sub-structure the text counts",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi25-037_fig4"
+    },
+    {
+      "id": "nsdi26-131_fig7",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Deriving two edge-disjoint paths per router tolerates any single link failure, but simulating the network under B's real deny-p policy shows B's import of [B,D] actually violates that fault-tolerance contract.",
+      "what_to_learn": "the same small network topology redrawn with two different annotation conventions (path arrows vs numbered route lists) to move from design intent to diagnosed behaviour",
+      "note_source": "record",
+      "dir": "../../figures/nsdi26-131_fig7"
+    },
+    {
+      "id": "osdi23-048_fig4",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "SNIC's extra internal PCIe switch adds a second PCIe hop that READ must cross twice round-trip, while WRITE saves one hop by completing at the switch instead of returning all the way to the RNIC core.",
+      "what_to_learn": "Two tiny swimlanes where the only difference is one extra lane; count the crossings, no colour needed",
+      "note_source": "doc",
+      "dir": "../../figures/osdi23-048_fig4"
+    },
+    {
+      "id": "osdi24-004_fig2",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Illustrates why a server's effective throughput drops when it serves few long requests instead of many short ones, since more decode tokens serialize into longer per-request time.",
+      "what_to_learn": "stacked request bars split into a solid prompt segment and a cell-segmented decode-token tail, bracketed with a plain-language throughput verdict",
+      "note_source": "record",
+      "dir": "../../figures/osdi24-004_fig2"
+    },
+    {
+      "id": "osdi24-015_fig3",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Comparing four ways to start model B while A infers shows that only live-migrating A's state (not reloading it) avoids hurting either model's latency.",
+      "what_to_learn": "shared Setup diagram at top feeding four stacked identical Server1/Server2 Gantt-style timelines, each closed off by a checkmark/cross Performance column",
+      "note_source": "record",
+      "dir": "../../figures/osdi24-015_fig3"
+    },
+    {
+      "id": "osdi25-050_fig5",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "NVLink connects all of a server's GPUs through an NVSwitch at 1.6 Tbps per GPU, far faster than the 200 Gbps inter-server RDMA network; without NVLink, GPU pairs instead share just a 256 Gbps PCIe link.",
+      "what_to_learn": "two identical Server0/RDMA/Server1/NIC templates side by side, differing only in how the bottom row of GPUs is interconnected",
+      "note_source": "record",
+      "dir": "../../figures/osdi25-050_fig5"
+    },
+    {
+      "id": "osdi26-068_fig6",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Two lettered replay scenarios show how CURP+Raft's view-change recovery can either silently drop a fast-committed command (Case 1) or let a recovered leader commit two conflicting commands out of their promised order (Case 2).",
+      "what_to_learn": "a fixed 5-row server roster redrawn frame by frame with coloured message arrows and leader/crash icons updating state, repeated once per failure-case row",
+      "note_source": "record",
+      "dir": "../../figures/osdi26-068_fig6"
+    },
+    {
+      "id": "sosp24-017_fig9",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Literally draws which files are shared vs private via a labelled brace and a single highlighted mountpoint, then turns the overlay-fs equation (base + modification) into a matched stacked-box diagram.",
+      "what_to_learn": "Use a labelled brace under a group of sibling nodes to mark what's reused/shared, highlight the one reconfigurable node in red, then draw 'X = A + B' composition as vertically stacked, colour-matched boxes.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp24-017_fig9"
+    },
+    {
+      "id": "sosp25-060_fig4",
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Only evicting the same tokens in balanced numbers across both layer types keeps their caches aligned, so a later request can still hit; imbalanced or unaligned eviction breaks the hit.",
+      "what_to_learn": "One shared start fanning out to lettered outcomes, each ending in a pass/fail icon; the arrow labels carry the alternative's name",
+      "note_source": "doc",
+      "dir": "../../figures/sosp25-060_fig4"
+    }
+  ]
+}

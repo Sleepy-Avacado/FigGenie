@@ -1,0 +1,260 @@
+{
+  "paper_id": "asplos25-025",
+  "fig": "3",
+  "system": {
+    "name": "GraphPipe",
+    "one_liner": "a distributed training system that exploits graph pipeline parallelism (GPP) to partition and schedule DNN training across devices",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DNN Computation Graph",
+        "role": "input DAG describing the model's operators and dependencies",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Mini-batch Size",
+        "role": "input training batch size",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Device Cluster",
+        "role": "input topology of assigned GPU devices",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Pipeline Stage Partitioner (Sec 5)",
+        "role": "partitions the DNN graph into pipeline stages using series/parallel decomposition, device assignment, and micro-batch adjustment",
+        "container": "GraphPipe",
+        "novel": true
+      },
+      {
+        "name": "Model Partitioning",
+        "role": "decomposes the DNN graph via series and parallel decomposition into candidate partitions",
+        "container": "Pipeline Stage Partitioner (Sec 5)",
+        "novel": true
+      },
+      {
+        "name": "Series Decomposition",
+        "role": "splits the graph into sequential sub-parts",
+        "container": "Model Partitioning",
+        "novel": true
+      },
+      {
+        "name": "Parallel Decomposition",
+        "role": "splits the graph into concurrently executable sub-parts",
+        "container": "Model Partitioning",
+        "novel": true
+      },
+      {
+        "name": "Device Assignment",
+        "role": "assigns partitioned graph segments to devices/stages (S1-S5)",
+        "container": "Pipeline Stage Partitioner (Sec 5)",
+        "novel": true
+      },
+      {
+        "name": "Micro-batch Adjustment",
+        "role": "adjusts micro-batch sizes per stage after device assignment",
+        "container": "Pipeline Stage Partitioner (Sec 5)",
+        "novel": true
+      },
+      {
+        "name": "Static Micro-batch Scheduler (Sec 6)",
+        "role": "computes an optimized micro-batch schedule given the partition, respecting device memory limits",
+        "container": "GraphPipe",
+        "novel": true
+      },
+      {
+        "name": "Memory Usage",
+        "role": "panel showing per-stage memory usage against the device memory limit",
+        "container": "Static Micro-batch Scheduler (Sec 6)",
+        "novel": false
+      },
+      {
+        "name": "Device Memory Limit",
+        "role": "threshold (OOM boundary) that the schedule must not exceed",
+        "container": "Static Micro-batch Scheduler (Sec 6)",
+        "novel": false
+      },
+      {
+        "name": "Stages",
+        "role": "ordered pipeline stages (S1-S5) produced by the partitioner",
+        "container": "Static Micro-batch Scheduler (Sec 6)",
+        "novel": false
+      },
+      {
+        "name": "Pipeline Schedule",
+        "role": "panel showing the resulting forward/backward pass schedule across stages",
+        "container": "Static Micro-batch Scheduler (Sec 6)",
+        "novel": false
+      },
+      {
+        "name": "Forward Passes",
+        "role": "forward-pass execution blocks in the pipeline schedule",
+        "container": "Pipeline Schedule",
+        "novel": false
+      },
+      {
+        "name": "Backward Passes",
+        "role": "backward-pass execution blocks in the pipeline schedule",
+        "container": "Pipeline Schedule",
+        "novel": false
+      },
+      {
+        "name": "Distributed Runtime",
+        "role": "executes the optimized GPP training strategy (stage partition and micro-batch schedule)",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DNN Computation Graph",
+        "to": "GraphPipe",
+        "what": "model graph as input",
+        "step": null
+      },
+      {
+        "from": "Mini-batch Size",
+        "to": "GraphPipe",
+        "what": "batch size as input",
+        "step": null
+      },
+      {
+        "from": "Device Cluster",
+        "to": "GraphPipe",
+        "what": "device topology as input",
+        "step": null
+      },
+      {
+        "from": "Model Partitioning",
+        "to": "Device Assignment",
+        "what": "candidate graph partition",
+        "step": null
+      },
+      {
+        "from": "Device Assignment",
+        "to": "Micro-batch Adjustment",
+        "what": "stage/device assignment",
+        "step": null
+      },
+      {
+        "from": "Pipeline Stage Partitioner (Sec 5)",
+        "to": "Static Micro-batch Scheduler (Sec 6)",
+        "what": "model partition, device assignment, micro-batch sizes",
+        "step": null
+      },
+      {
+        "from": "Static Micro-batch Scheduler (Sec 6)",
+        "to": "Pipeline Stage Partitioner (Sec 5)",
+        "what": "optimized micro-batch schedule",
+        "step": null
+      },
+      {
+        "from": "GraphPipe",
+        "to": "Distributed Runtime",
+        "what": "optimized GPP training strategy (stage partition, micro-batch schedule)",
+        "step": null
+      }
+    ],
+    "key_idea": "GraphPipe takes a DNN graph, mini-batch size, and device topology, and jointly searches stage partitions and micro-batch schedules (respecting device memory limits) to produce a GPP training strategy for the distributed runtime.",
+    "reading_order": "Top-down: Input panel, into the boxed GraphPipe region (Pipeline Stage Partitioner above, Static Micro-batch Scheduler below, connected by bidirectional arrows), down to the Distributed Runtime box."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.81,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae3f3",
+        "used_for": "light blue background panels for decomposition/graph sub-diagrams"
+      },
+      {
+        "hex": "#203864",
+        "used_for": "dark navy graph node circles, arrows, and section headers"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill for mini-batch bars and memory-usage bars"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "light peach fill for pipeline stage boxes (S1-S5)"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "pale blue fill for forward-pass blocks in the pipeline schedule"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for backward-pass blocks in the pipeline schedule"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red dashed partition-boundary and OOM/device-memory-limit lines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thick black borders around the major boxes (GraphPipe, sub-panels), thinner borders on nested elements, red dashed lines for partition cuts and memory limits",
+    "font": "Calibri sans-serif, 4-12pt, bold for section titles",
+    "corners": "mixed",
+    "arrows": "solid black arrows for top-level data flow (Input to GraphPipe to Distributed Runtime) and bidirectional arrows between the partitioner and scheduler; curved black arrows link stages S1-S5 in the schedule panel",
+    "icons": "small circle-and-arrow glyphs representing DNN graph nodes/edges and device-cluster nodes"
+  },
+  "encoding": {
+    "color_means": "navy = DNN graph nodes/edges and structural elements, green = mini-batch/memory-usage bars, peach/orange = pipeline stage groupings (S1-S5), pale blue/yellow = forward vs. backward pass blocks, red = partition cut lines and the device memory limit",
+    "line_style_means": "red dashed vertical lines mark where the graph is cut into stages and where the device memory limit (OOM) lies; black solid/curved arrows show data flow and stage ordering",
+    "emphasis": "the thick-bordered GraphPipe box groups the two co-designed components (partitioner and scheduler) with an explicit bidirectional arrow pair, visually asserting that partitioning and scheduling are jointly optimized",
+    "reusable_patterns": [
+      "three-tier layered system diagram (Input / core system / Runtime output)",
+      "small inline sub-diagrams (DAG decomposition, memory bars, pipeline schedule) embedded inside the architecture boxes"
+    ],
+    "weaknesses": [
+      "high information density with several nested sub-panels may be hard to parse at a glance",
+      "color meaning for forward vs backward pass blocks is not labeled with an explicit legend key"
+    ]
+  },
+  "tags": [
+    "pipeline-parallelism",
+    "dnn-training",
+    "graph-partitioning",
+    "micro-batch-scheduling",
+    "distributed-training",
+    "system-overview"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Problem Formulation (p.5)",
+      "6 Static Micro-Batch Scheduler (p.8)"
+    ],
+    "evidence": [
+      "Figure 3 illustrates an overview of GraphPipe, a system that accelerates distributed DNN training at scale using GPP.",
+      "GraphPipe includes three key components: a pipeline stage partitioner, a static micro-batch scheduler, and a distributed runtime.",
+      "Taking as input (a) the computation graph of a DNN, (b) mini-batch size, and (c) the topology of assigned GPUs"
+    ]
+  },
+  "summary": "This figure gives a top-down overview of GraphPipe, a distributed DNN training system based on graph pipeline parallelism (GPP). It takes as input a DNN computation graph, a mini-batch size, and a device cluster topology. Inside the GraphPipe box, a Pipeline Stage Partitioner (Sec 5) performs model partitioning (series and parallel decomposition of the DAG), device assignment into stages S1-S5, and micro-batch adjustment; it exchanges information bidirectionally with a Static Micro-batch Scheduler (Sec 6), which balances memory usage against a device memory limit (avoiding OOM) and produces a forward/backward-pass pipeline schedule. The resulting optimized GPP training strategy (stage partition plus micro-batch schedule) is handed to a Distributed Runtime for execution. The figure uses nested boxes, small inline diagrams (graph decompositions, memory bars, schedule blocks), and red dashed lines to mark partition cuts and the memory limit.",
+  "summary_zh": "该图展示 GraphPipe 系统概览：输入 DNN 计算图、mini-batch 大小与设备集群拓扑后，流水线阶段划分器与静态 micro-batch 调度器双向交互，兼顾设备显存限制生成优化的 GPP 训练策略，交由分布式运行时执行。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "nsdi23-079_fig7",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-079",
+  "fig": "7",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 7: FSM describing our page management when remote-memory pressure is detected.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "state-machine",
+  "subject": "how a page cycles between hot, cold, and swapped-out states, and when it keeps or releases its swap-entry reservation",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.76,
+  "n_elements": 5,
+  "n_relations": 8,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-079/src/fig7_state-machine.svg",
+    "preview.png": "lab/extracted/nsdi23-079/src/fig7_state-machine.png",
+    "print.png": "lab/extracted/nsdi23-079/nsdi23-079_fig7_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Splitting the cold-page state in two, with and without a remembered swap-entry, lets Canvas make repeated swap-outs lock-free instead of reallocating an entry every time.",
+      "what_to_learn": "Keep the node small (a digit), put the state's name outside it as a heading, guards in italic on curved arrows",
+      "note_source": "doc"
+    }
+  ]
+}

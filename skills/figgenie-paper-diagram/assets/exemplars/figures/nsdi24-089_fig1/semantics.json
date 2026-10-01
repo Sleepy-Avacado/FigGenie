@@ -1,0 +1,205 @@
+{
+  "paper_id": "nsdi24-089",
+  "fig": "1",
+  "system": {
+    "name": "Pudica",
+    "one_liner": "a congestion-control system for cloud gaming that jointly adjusts frame bitrate and packet pacing rate to minimize queuing delay",
+    "domain": [
+      "networking",
+      "cloud-gaming"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Screen display",
+        "role": "displays the decoded game frame locally",
+        "container": "End device (Client)",
+        "novel": false
+      },
+      {
+        "name": "Command sender",
+        "role": "sends collected user operations to the cloud server",
+        "container": "End device (Client)",
+        "novel": false
+      },
+      {
+        "name": "Frame decoder",
+        "role": "decodes received game frame packets",
+        "container": "End device (Client)",
+        "novel": false
+      },
+      {
+        "name": "Frame receiver",
+        "role": "receives game frame packets from the network",
+        "container": "End device (Client)",
+        "novel": false
+      },
+      {
+        "name": "Command receiver",
+        "role": "receives user operations from the end device",
+        "container": "Cloud gaming server",
+        "novel": false
+      },
+      {
+        "name": "Graphics renderer",
+        "role": "runs the game engine and renders the corresponding game frame",
+        "container": "Cloud gaming server",
+        "novel": false
+      },
+      {
+        "name": "Frame encoder",
+        "role": "compresses the rendered game frame at a given bitrate",
+        "container": "Cloud gaming server",
+        "novel": false
+      },
+      {
+        "name": "Frame sender",
+        "role": "sends compressed game frame packets at a given pacing rate",
+        "container": "Cloud gaming server",
+        "novel": false
+      },
+      {
+        "name": "Congestion controller",
+        "role": "adjusts both frame bitrate and packet pacing rate before transmitting game frames",
+        "container": "Cloud gaming server",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Command sender",
+        "to": "Command receiver",
+        "what": "operation commands (e.g. mouse clicks, finger taps) over the Internet",
+        "step": null
+      },
+      {
+        "from": "Command receiver",
+        "to": "Graphics renderer",
+        "what": "user operations driving the game engine",
+        "step": null
+      },
+      {
+        "from": "Graphics renderer",
+        "to": "Frame encoder",
+        "what": "rendered game frame",
+        "step": null
+      },
+      {
+        "from": "Congestion controller",
+        "to": "Frame encoder",
+        "what": "bitrate",
+        "step": null
+      },
+      {
+        "from": "Congestion controller",
+        "to": "Frame sender",
+        "what": "pacing rate",
+        "step": null
+      },
+      {
+        "from": "Frame encoder",
+        "to": "Frame sender",
+        "what": "compressed game frame",
+        "step": null
+      },
+      {
+        "from": "Frame sender",
+        "to": "Frame receiver",
+        "what": "game frames as network packets over the Internet",
+        "step": null
+      },
+      {
+        "from": "Frame receiver",
+        "to": "Frame decoder",
+        "what": "received game frame packets",
+        "step": null
+      },
+      {
+        "from": "Frame decoder",
+        "to": "Screen display",
+        "what": "decoded game frame",
+        "step": null
+      }
+    ],
+    "key_idea": "The cloud gaming pipeline sends operation commands from client to server and streams rendered game frames back, with Pudica's congestion controller adjusting both frame bitrate and packet pacing rate before transmission.",
+    "reading_order": "Left to right: Client commands cross the Internet to the Server's renderer; the Congestion controller paces encoded frames back through Frame sender to the Client's decoder and display."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.72,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue titles/borders of the End device (Client) and Cloud gaming server dashed boxes"
+      },
+      {
+        "hex": "#a9d18e",
+        "used_for": "green fill of the eight internal function boxes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red italic Pacing rate / Bitrate control-signal labels"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "orange fill of the Congestion controller box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.71pt, dashed borders around the Client and Server groupings",
+    "font": "ArialMT / Arial-BoldMT, 5.5-6pt, sparingly bold",
+    "corners": "mixed",
+    "arrows": "a few clean solid arrows with filled heads for commands and game frames between client and server",
+    "icons": "a small Internet/cloud bitmap icon plus a few vector glyphs"
+  },
+  "encoding": {
+    "color_means": "blue marks the two device/server boundaries, green marks their internal function modules, orange marks the Congestion controller, red marks the two control signals (Pacing rate, Bitrate) it produces",
+    "line_style_means": "dashed borders outline the Client and Server as logical groupings; solid arrows carry operation commands and game frames between them via the Internet",
+    "emphasis": "the Congestion controller is the only orange box and the only source of labeled red control signals, isolating Pudica's contribution within an otherwise symmetric, generic client/server pipeline",
+    "reusable_patterns": [
+      "mirrored two-panel client/server pipeline connected by a network cloud icon",
+      "a single highlighted control component feeding labeled control signals into an otherwise uniform pipeline"
+    ],
+    "weaknesses": [
+      "no legend explaining the green-vs-orange color coding",
+      "the two 2x2 function grids look similar enough that labels must be read closely to see they differ"
+    ]
+  },
+  "tags": [
+    "cloud-gaming",
+    "congestion-control",
+    "bitrate-adaptation",
+    "packet-pacing",
+    "low-latency-streaming"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "2 Background and Related Work (p.3)"
+    ],
+    "evidence": [
+      "the end device collects user operations and immediately sends them to the cloud server",
+      "the corresponding game frame is rendered on the server, streamed to the end device, and displayed locally",
+      "namely the frame bitrate and packet sending pace"
+    ]
+  },
+  "summary": "This figure depicts a typical cloud gaming system as client/server panels connected over the Internet. The End device (Client) collects user operations (e.g. mouse clicks, finger taps) via its Command sender and, on the other side, decodes and shows incoming frames via Frame receiver, Frame decoder, and Screen display. The Cloud gaming server receives operations at Command receiver, runs the game engine in Graphics renderer, and streams the result out through Frame encoder and Frame sender. An orange Congestion controller—Pudica's contribution—sits beside the encoder/sender pair, issuing red-labeled Bitrate and Pacing rate signals that adjust image compression and packet-sending pace before game frames are transmitted, aiming to minimize queuing delay. Both device panels mirror each other's internal 2x2 grid of green function boxes, with dashed borders marking their boundaries.",
+  "summary_zh": "该图展示典型云游戏系统：客户端通过命令发送器把操作指令经互联网传给云端服务器，服务器渲染游戏画面后由帧编码器/发送器传回；橙色的拥塞控制器（Pudica 贡献）在传输前同时调整帧码率与数据包发送节奏，以降低排队延迟。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

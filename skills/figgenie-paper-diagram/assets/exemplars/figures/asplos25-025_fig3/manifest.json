@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-025_fig3",
+  "paper_id": "asplos25-025",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. Overview of GraphPipe. It consists of a pipeline stage partitioner and a micro-batch scheduler. Given a DNN computation graph, mini-batch size, and device configura- tion, they interact with each other to produce an optimized GPP training strategy as output. The output can be launched on t",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 0.81,
+  "n_components": 17,
+  "n_flows": 8,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-025/src/fig3_overview_v4.svg",
+    "preview.png": "lab/extracted/asplos25-025/src/fig3_overview_v4.png",
+    "print.png": "lab/extracted/asplos25-025/asplos25-025_fig3_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A real DAG appears as the input artefact at the top, then reappears as small inline sub-diagrams inside the system's stage boxes.",
+      "what_to_learn": "A DAG can be an inline glyph: draw it small inside the box that consumes it rather than giving it its own panel."
+    }
+  ]
+}

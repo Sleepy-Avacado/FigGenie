@@ -1,0 +1,269 @@
+{
+  "paper_id": "nsdi24-086",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "NN-defined Modulator",
+    "one_liner": "a reconfigurable, portable software modulator for IoT gateways built from neural-network-defined signal processing modules",
+    "domain": [
+      "networking",
+      "iot",
+      "ml-systems"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "the internal datapath of the NN-defined modulator template: a transposed convolutional layer feeding a sparse fully-connected layer",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Re(s_ij)",
+        "kind": "port",
+        "role": "input: the real part of the symbol vector",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Im(s_ij)",
+        "kind": "port",
+        "role": "input: the imaginary part of the symbol vector",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Transposed Convolutional Layer",
+        "kind": "box",
+        "role": "container layer whose kernels are set by the basis functions, producing four channel outputs from the two input groups",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Re(φ_ij)",
+        "kind": "icon",
+        "role": "kernel tensor (orange/green) applied within the transposed convolutional layer",
+        "container": "Transposed Convolutional Layer",
+        "highlighted": false
+      },
+      {
+        "name": "Im(φ_ij)",
+        "kind": "icon",
+        "role": "kernel tensor (red/blue) applied within the transposed convolutional layer",
+        "container": "Transposed Convolutional Layer",
+        "highlighted": false
+      },
+      {
+        "name": "Fully-Connected Layer",
+        "kind": "box",
+        "role": "container layer that linearly merges the four channel outputs into the two modulated-signal outputs; 0-weight connections are omitted",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "+1",
+        "kind": "label",
+        "role": "weight on a retained connection (green channel to Re(S[n]); purple and red channels to Im(S[n]))",
+        "container": "Fully-Connected Layer",
+        "highlighted": false
+      },
+      {
+        "name": "-1",
+        "kind": "label",
+        "role": "weight on the blue channel's connection to Re(S[n])",
+        "container": "Fully-Connected Layer",
+        "highlighted": true
+      },
+      {
+        "name": "Re(S[n])",
+        "kind": "port",
+        "role": "output: the real part of the modulated signal",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Im(S[n])",
+        "kind": "port",
+        "role": "output: the imaginary part of the modulated signal",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Re(s_ij)",
+        "to": "Transposed Convolutional Layer",
+        "what": "real part of the symbol vector enters the conv layer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Im(s_ij)",
+        "to": "Transposed Convolutional Layer",
+        "what": "imaginary part of the symbol vector enters the conv layer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Transposed Convolutional Layer",
+        "to": "Fully-Connected Layer",
+        "what": "four channel outputs (green, purple, blue, red) computed from the Re(φ)/Im(φ) kernels",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fully-Connected Layer",
+        "to": "Re(S[n])",
+        "what": "+1 (green channel)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fully-Connected Layer",
+        "to": "Re(S[n])",
+        "what": "-1 (blue channel)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fully-Connected Layer",
+        "to": "Im(S[n])",
+        "what": "+1 (purple channel)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fully-Connected Layer",
+        "to": "Im(S[n])",
+        "what": "+1 (red channel)",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "The NN-defined modulator's template is a transposed convolutional layer, whose kernels come from the modulation basis functions, followed by a sparse fully-connected layer that keeps only four ±1-weighted connections to combine the four channels into the modulated signal's real and imaginary parts.",
+    "reading_order": "left to right: Re(s_ij) and Im(s_ij) enter the Transposed Convolutional Layer, its four channel outputs cross into the Fully-Connected Layer, and four colour-coded, ±1-labelled arrows carry them to the outputs."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.23,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b4c7dc",
+        "used_for": "front/top bevel faces of the Fully-Connected Layer's four channel tensors"
+      },
+      {
+        "hex": "#c2d2e3",
+        "used_for": "secondary bevel face of the Fully-Connected Layer's channel tensors"
+      },
+      {
+        "hex": "#909fb0",
+        "used_for": "shadow/side bevel face of the Fully-Connected Layer's channel tensors"
+      },
+      {
+        "hex": "#b2b2b2",
+        "used_for": "front bevel face of the plain grey input/output tensors (Re/Im(s_ij), Re/Im(S[n]))"
+      },
+      {
+        "hex": "#c1c1c1",
+        "used_for": "secondary bevel face of the plain grey input/output tensors"
+      },
+      {
+        "hex": "#8e8e8e",
+        "used_for": "shadow/side bevel face of the plain grey input/output tensors"
+      },
+      {
+        "hex": "#729fcf",
+        "used_for": "block-arrow icons carrying data between stages"
+      },
+      {
+        "hex": "#ff972f",
+        "used_for": "orange half of the Re(φ_ij) kernel-tensor icon"
+      },
+      {
+        "hex": "#77bc65",
+        "used_for": "green half of the Re(φ_ij) kernel-tensor icon"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "outline of the red-outlined FC channel tensor and its arrow to Im(S[n])"
+      },
+      {
+        "hex": "#00a933",
+        "used_for": "outline of the green-outlined FC channel tensor and its arrow to Re(S[n])"
+      },
+      {
+        "hex": "#800080",
+        "used_for": "outline of the purple-outlined FC channel tensor and its arrow to Im(S[n])"
+      },
+      {
+        "hex": "#2a6099",
+        "used_for": "outline of the blue-outlined FC channel tensor and its arrow to Re(S[n])"
+      }
+    ],
+    "background": "white",
+    "fill": "flat with a 3D bevel (front/top/side shading) on every tensor cube",
+    "stroke": "black outlines by default; each Fully-Connected-Layer channel tensor is outlined in its own colour (green, purple, blue, red) matching its output arrow",
+    "corners": "rounded",
+    "arrows": "light-blue block arrows carry data between the input tensors, the two dotted-bordered layers, and the four FC channels; four colour-coded arrows (green, purple, dark-blue, red) carry each FC channel to Re(S[n]) or Im(S[n]), each labelled with its ±1 weight",
+    "font": "Liberation Sans, small, all-bold",
+    "icons": "isometric 3D stacked-cube tensor icons throughout; two dotted rounded rectangles group the Transposed Convolutional Layer and the Fully-Connected Layer"
+  },
+  "encoding": {
+    "color_means": "orange/green and red/blue two-tone cubes distinguish the Re(φ) and Im(φ) kernel tensors inside the convolutional layer; in the fully-connected layer, each of the four channel tensors is outlined in its own colour (green, purple, blue, red), and that same colour carries through to its output arrow and ±1 weight label",
+    "line_style_means": "solid arrows throughout represent dataflow; dashed/dotted lines are used only for the two layer-boundary boxes, not for data",
+    "state_means": "not applicable; this is a single static component view, not alternative states",
+    "marker_means": "the +1 / -1 text beside each fully-connected arrow is the retained weight of that (otherwise pruned) connection; the caption notes all 0-weight connections are omitted entirely",
+    "emphasis": "drawing only four coloured arrows inside the Fully-Connected Layer, each carrying a visible ±1 label, makes the sparsity of the layer (all other weights are 0 and omitted) the clear takeaway",
+    "reusable_patterns": [
+      "two dashed-outline layer boxes chained left to right, each containing colour-coded 3D tensor icons, with the second layer's few surviving connections individually weight-labelled"
+    ],
+    "weaknesses": [
+      "the +1 label is reused on three different arrows (green, purple, and red channels), so the reader must track arrow colour rather than the label text to tell the four weighted connections apart",
+      "the correspondence between the four fully-connected input channels and the earlier Re(φ)/Im(φ) kernel tensors is not colour-matched, so tracing which kernel produced which channel requires reading the surrounding paper text"
+    ]
+  },
+  "tags": [
+    "neural-modulator",
+    "transposed-convolution",
+    "fully-connected-layer",
+    "sparse-weights",
+    "software-defined-radio",
+    "NN-defined-modulator"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Template of NN-defined Modulator (p.5)"
+    ],
+    "evidence": [
+      "we can express the whole modulation process in Equation (4) as an NN-defined template modulator in Figure 7",
+      "Diagram of the template of NN-defined modulator. 0-weight connections are omitted in the fully-connected layer.",
+      "Its weight are set as [+1,0,0,−1] and [0,+1,+1,0] according to the coefficients in Equation (4)"
+    ]
+  },
+  "summary": "Figure 7 diagrams the internal template shared by every NN-defined modulator instance: a transposed convolutional layer followed by a sparse fully-connected layer. The real and imaginary parts of the input symbol vector, Re(s_ij) and Im(s_ij), each pass through the convolutional layer, whose kernels are set directly from the modulation scheme's basis functions (Re(φ_ij) and Im(φ_ij)), producing four channel outputs. The fully-connected layer then linearly combines these four channels into the modulated signal's real and imaginary parts, Re(S[n]) and Im(S[n]); per the caption, only the non-zero, ±1-weighted connections are drawn; every 0-weight connection is omitted. Each surviving connection is drawn in its own colour (green, purple, blue, red) and labelled with its weight, showing concretely how the coefficients from the paper's modulation equation map onto this compact two-layer neural template.",
+  "summary_zh": "图7展示NN模块化调制器的通用模板：输入实部/虚部经转置卷积层（核由基函数决定）生成四路通道，再经稀疏全连接层（仅保留±1权重，0权重连接被省略）线性组合得到输出实部与虚部。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

@@ -1,0 +1,42 @@
+{
+  "id": "nsdi23-047_fig7",
+  "paper_id": "nsdi23-047",
+  "fig": "7",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 7: Structure and workﬂow of feature cache engine.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "chrome",
+  "aspect": 1.06,
+  "n_components": 11,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-047/src/fig7_multi_level_cache.svg",
+    "preview.png": "lab/extracted/nsdi23-047/src/fig7_multi_level_cache.png",
+    "print.png": "lab/extracted/nsdi23-047/nsdi23-047_fig7_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Three identical worker columns inside one outer boundary with a shared queue, plus an inside legend for link types.",
+      "what_to_learn": "Replicas as columns share a horizontal resource above and below them; the legend then only needs to explain the link colours between columns."
+    }
+  ]
+}

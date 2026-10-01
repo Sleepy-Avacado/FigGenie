@@ -1,0 +1,202 @@
+{
+  "paper_id": "sosp24-024",
+  "fig": "4",
+  "system": {
+    "name": "T10",
+    "one_liner": "a DL compiler exploiting inter-core communication and distributed on-chip memory on inter-core-connected AI chips",
+    "domain": [
+      "compiler",
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DNN Model",
+        "role": "input model to be compiled",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Compute-Shift Execution Plans",
+        "role": "represents partitioning and communication patterns of an operator via rTensor (§4.1 & §4.2)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Op 0 Execution Plan",
+        "role": "example execution plan for one operator, with alternative plans",
+        "container": "Compute-Shift Execution Plans",
+        "novel": true
+      },
+      {
+        "name": "Intra-Operator Tradeoff",
+        "role": "selects Pareto-optimal execution plans trading memory for time (§4.3.1)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Plan Selection",
+        "role": "chooses best vs. bad plans based on memory and time",
+        "container": "Intra-Operator Tradeoff",
+        "novel": true
+      },
+      {
+        "name": "Hardware Abstraction and Mapping",
+        "role": "maps a plan to kernel code via allocate/compute/shift device interfaces (§4.4)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Plan to Kernel",
+        "role": "compiles a selected plan into device kernel code",
+        "container": "Hardware Abstraction and Mapping",
+        "novel": true
+      },
+      {
+        "name": "Hardware Specification",
+        "role": "describes SRAM/Core layout of the target chip",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "IPU_code.cpp",
+        "role": "generated device code output",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Inter-Operator Tradeoff",
+        "role": "holistic memory reconciliation across operators for end-to-end plan selection (§4.3.2)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Plan Setup",
+        "role": "decides active/idle setup between successive operator plans",
+        "container": "Inter-Operator Tradeoff",
+        "novel": true
+      },
+      {
+        "name": "End-to-End Plan Selection",
+        "role": "picks the end-to-end plan minimizing total SRAM idle time",
+        "container": "Inter-Operator Tradeoff",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DNN Model",
+        "to": "Compute-Shift Execution Plans",
+        "what": "operator partitioning via rTensor",
+        "step": null
+      },
+      {
+        "from": "Compute-Shift Execution Plans",
+        "to": "Intra-Operator Tradeoff",
+        "what": "candidate execution plans",
+        "step": null
+      },
+      {
+        "from": "Intra-Operator Tradeoff",
+        "to": "Inter-Operator Tradeoff",
+        "what": "Pareto-optimal per-operator plans",
+        "step": null
+      },
+      {
+        "from": "Inter-Operator Tradeoff",
+        "to": "Hardware Abstraction and Mapping",
+        "what": "selected end-to-end plan",
+        "step": null
+      },
+      {
+        "from": "Hardware Abstraction and Mapping",
+        "to": "IPU_code.cpp",
+        "what": "compiled device code",
+        "step": null
+      }
+    ],
+    "key_idea": "T10 turns a DNN model into compute-shift execution plans via the rTensor abstraction, selects Pareto-optimal plans per operator and then holistically across operators to balance memory and inter-core communication, before mapping the result to device kernel code.",
+    "reading_order": "clockwise across four labeled quadrants: DNN model and compute-shift plans top-left, intra-operator tradeoff/plan selection top-right, hardware abstraction/plan-to-kernel bottom-left, inter-operator tradeoff/end-to-end plan selection bottom-right."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#6c8ebf",
+        "used_for": "hardware/SRAM and core boxes"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "execution-plan / kernel operation boxes"
+      },
+      {
+        "hex": "#82b366",
+        "used_for": "compute-shift plan boxes"
+      },
+      {
+        "hex": "#b85450",
+        "used_for": "tradeoff/highlight annotations (e.g. best vs. bad plans)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "plan selection / plan setup panel backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin colored strokes matching each fill (draw.io default styling), square corners",
+    "font": "Arial sans plus Courier New for code snippets",
+    "corners": "square",
+    "arrows": "thin black/colored arrows and curved connectors linking the four sub-diagrams",
+    "icons": "vector SRAM/Core grid boxes and small line-chart icons for tradeoff curves"
+  },
+  "encoding": {
+    "color_means": "color groups distinguish the four design sections: green = compute-shift plans, orange = kernel-level operations, blue = hardware abstraction, red = tradeoff comparison highlights",
+    "line_style_means": null,
+    "emphasis": "four color-coded quadrants, each tied to a named subsection (§4.1-§4.4), walk through the compiler pipeline from DNN model to generated device code",
+    "reusable_patterns": [
+      "2x2 grid of labeled sub-diagrams each keyed to a paper subsection"
+    ],
+    "weaknesses": [
+      "very dense (about 270 shapes per 100pt2), hard to read at reduced size",
+      "many similar pastel colors without an explicit legend"
+    ]
+  },
+  "tags": [
+    "dl-compiler",
+    "inter-core-communication",
+    "tensor-partitioning",
+    "hardware-mapping",
+    "ipu"
+  ],
+  "provenance": {
+    "sections": [
+      "4 System Design of T10 (p.4)"
+    ],
+    "evidence": [
+      "We present the overview of T10 in Figure 4",
+      "T10 introduces the RotatingTensor (rTensor) abstraction to represent the partitioning and communication patterns",
+      "The plan is compiled onto the processor using three abstracted device interfaces"
+    ]
+  },
+  "summary": "T10 is a DL compiler that exploits inter-core communication bandwidth and distributed on-chip memory on chips like the Graphcore IPU. Figure 4 gives the system overview as four color-coded, labeled quadrants tied to paper subsections. Top-left, a DNN model is turned into compute-shift execution plans via the rTensor abstraction (§4.1-4.2), shown with an example Op 0 plan. Top-right, an intra-operator tradeoff stage selects Pareto-optimal plans balancing memory and execution time, distinguishing best from bad plans (§4.3.1). Bottom-right, an inter-operator tradeoff stage performs holistic end-to-end plan selection minimizing total SRAM idle time across operators (§4.3.2). Bottom-left, the chosen plan is mapped through hardware abstraction interfaces (allocate/compute/shift) into generated device code such as IPU_code.cpp (§4.4). The figure is very densely packed, drawn in drawio style with many small colored boxes and code snippets.",
+  "summary_zh": "图4以四个按小节编号、颜色区分的象限展示T10编译器架构：DNN模型经rTensor转为计算-移位执行计划，再分别做算子内（时间-内存权衡）和算子间（SRAM空闲最小化）的方案选择，最终经硬件抽象映射生成设备代码，图中信息密度很高。",
+  "confidence": "medium",
+  "notes": "The body text describes the four design stages generally but does not spell out every box label seen in this dense drawio diagram; some component names/roles are inferred primarily from the figure.",
+  "venue": "SOSP24"
+}

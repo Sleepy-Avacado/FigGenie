@@ -1,0 +1,54 @@
+{
+  "id": "osdi26-060_fig8",
+  "paper_id": "osdi26-060",
+  "fig": "8",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 8: BatchGen system architecture with master-worker organization, API endpoints, and inference engine.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.15,
+  "n_components": 15,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-060/src/fig8_system_architecture.svg",
+    "preview.png": "lab/extracted/osdi26-060/src/fig8_system_architecture.png",
+    "print.png": "lab/extracted/osdi26-060/osdi26-060_fig8_p11_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar in monochrome grayscale, using only shading depth, not colour, to distinguish the Master Node band from the nested Worker Node band, across 15 components at nesting depth 3.",
+      "what_to_learn": "When colour is not carrying meaning, differentiate nested tiers by shading depth alone, darker gray for the outer container and lighter for inner boxes, and place matched request/response queue icons flanking the control boxes they feed so the master-to-worker path stays readable in one grayscale palette."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar in monochrome grayscale where the Worker Node box nests a Coroutine Runtime box that itself nests the Batch Oriented Inference Engine and Scheduler side by side, to depth 3, across 15 components.",
+      "what_to_learn": "When colour is not available to mark nesting, use shading depth alone, each level of containment one shade darker or lighter than its parent, and keep the innermost pair of boxes the same size so the reader reads them as siblings at the same depth."
+    },
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-4, high-confidence 15-component exemplar: Request/Response Queues flank the Offline Profiler and Plan Optimizer as a small core, itself sandwiched between an HTTP-server interface band above and a GPU-Pool-bearing Worker Node band below.",
+      "what_to_learn": "The flanked-core sandwich can nest inside a larger layered stack: draw the two queues as small pills on either side of the planning core rather than as generic arrows, and give the bottom hardware band its own internal grid of managers instead of a single box."
+    }
+  ]
+}

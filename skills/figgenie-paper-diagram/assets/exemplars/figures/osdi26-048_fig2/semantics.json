@@ -1,0 +1,426 @@
+{
+  "paper_id": "osdi26-048",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "LiteSwitch",
+    "one_liner": "a hardware/software mechanism that harvests sub-microsecond CXL memory stalls by swapping in another thread with minimal context switching",
+    "domain": [
+      "computer architecture",
+      "operating systems",
+      "CXL memory"
+    ],
+    "abstraction": "OS/hardware co-design"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how LiteSwitch detects an L1 miss to CXL memory and swaps in a bundled thread via a same-address-space jump",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "SOFTWARE BUNDLING",
+        "kind": "lane",
+        "role": "region for OS-level thread bundling around the runqueue",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "runqueue",
+        "kind": "box",
+        "role": "OS scheduler's queue of runnable threads",
+        "container": "SOFTWARE BUNDLING",
+        "highlighted": false
+      },
+      {
+        "name": "bundle",
+        "kind": "box",
+        "role": "group of threads (A and B) formed so scheduling policy still applies",
+        "container": "SOFTWARE BUNDLING",
+        "highlighted": false
+      },
+      {
+        "name": "Thread B",
+        "kind": "row",
+        "role": "the helper thread inside the bundle, swapped in during the stall",
+        "container": "bundle",
+        "highlighted": false
+      },
+      {
+        "name": "Thread A",
+        "kind": "row",
+        "role": "the thread that stalls on the load",
+        "container": "bundle",
+        "highlighted": true
+      },
+      {
+        "name": "All scheduling policies are enforced",
+        "kind": "label",
+        "role": "callout noting the bundle preserves OS scheduling semantics",
+        "container": "SOFTWARE BUNDLING",
+        "highlighted": false
+      },
+      {
+        "name": "SAME ADDRESS SPACE",
+        "kind": "lane",
+        "role": "region noting the handler and hardware path share one address space",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "SOFTWARE HANDLER",
+        "kind": "lane",
+        "role": "sub-region for the bitmap and LiteSwitch handler",
+        "container": "SAME ADDRESS SPACE",
+        "highlighted": false
+      },
+      {
+        "name": "bitmap",
+        "kind": "box",
+        "role": "table of address ranges (e.g., 0x9140-0x9166) deciding whether xstate save/restore is needed",
+        "container": "SOFTWARE HANDLER",
+        "highlighted": false
+      },
+      {
+        "name": "LiteSwitch handler",
+        "kind": "box",
+        "role": "selects Thread B, restores GPRs, and skips xsave/xrstor when safe",
+        "container": "SOFTWARE HANDLER",
+        "highlighted": true
+      },
+      {
+        "name": "no xstate!",
+        "kind": "label",
+        "role": "callout confirming the bitmap lookup found no xstate save needed",
+        "container": "SOFTWARE HANDLER",
+        "highlighted": true
+      },
+      {
+        "name": "OFFLINE XSTATE ANALYSIS",
+        "kind": "lane",
+        "role": "sub-region for the offline disassembly that builds the bitmap",
+        "container": "SAME ADDRESS SPACE",
+        "highlighted": false
+      },
+      {
+        "name": "prog.xstatedump",
+        "kind": "box",
+        "role": "dumped address ranges needing xstate, derived offline",
+        "container": "OFFLINE XSTATE ANALYSIS",
+        "highlighted": false
+      },
+      {
+        "name": "prog",
+        "kind": "box",
+        "role": "the target program binary with symbol table, disassembled to find function boundaries",
+        "container": "OFFLINE XSTATE ANALYSIS",
+        "highlighted": false
+      },
+      {
+        "name": "Thread A stalls",
+        "kind": "label",
+        "role": "marks the point on the timeline where Thread A's load blocks",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Thread B continues",
+        "kind": "label",
+        "role": "marks that Thread B keeps running past the stall point",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "0x9204: MOV %r10, 0x1234(%rip)",
+        "kind": "box",
+        "role": "the stalling load instruction executed by Thread A",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PA = 0x4567",
+        "kind": "box",
+        "role": "physical address produced by address translation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L1/L2/LLC",
+        "kind": "icon",
+        "role": "on-chip cache hierarchy checked for the load, shown missing",
+        "container": "HARDWARE LDMB",
+        "highlighted": false
+      },
+      {
+        "name": "LLC miss!",
+        "kind": "label",
+        "role": "callout marking the cache-lookup outcome that triggers harvesting",
+        "container": "HARDWARE LDMB",
+        "highlighted": true
+      },
+      {
+        "name": "Memory controller",
+        "kind": "box",
+        "role": "routes the physical address to DDR or CXL",
+        "container": "HARDWARE LDMB",
+        "highlighted": false
+      },
+      {
+        "name": "DDR?",
+        "kind": "label",
+        "role": "one routing branch of the memory controller",
+        "container": "Memory controller",
+        "highlighted": false
+      },
+      {
+        "name": "CXL?",
+        "kind": "label",
+        "role": "the routing branch taken, confirmed by the checkmark",
+        "container": "Memory controller",
+        "highlighted": true
+      },
+      {
+        "name": "HARDWARE LDMB",
+        "kind": "lane",
+        "role": "region for the hardware Location-Dependent Memory Branching path",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "runqueue",
+        "to": "bundle",
+        "what": "formation (B1)",
+        "kind": "control",
+        "step": "B1"
+      },
+      {
+        "from": "bundle",
+        "to": "runqueue",
+        "what": "dismantle (B2)",
+        "kind": "control",
+        "step": "B2"
+      },
+      {
+        "from": "0x9204: MOV %r10, 0x1234(%rip)",
+        "to": "PA = 0x4567",
+        "what": "address translation",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "PA = 0x4567",
+        "to": "L1/L2/LLC",
+        "what": "cache lookup (L1)",
+        "kind": "data",
+        "step": "L1"
+      },
+      {
+        "from": "L1/L2/LLC",
+        "to": "Memory controller",
+        "what": "routing (L2)",
+        "kind": "data",
+        "step": "L2"
+      },
+      {
+        "from": "Memory controller",
+        "to": "CXL?",
+        "what": "routes to CXL memory",
+        "kind": "control",
+        "step": "L2"
+      },
+      {
+        "from": "Memory controller",
+        "to": "LiteSwitch handler",
+        "what": "same-address-space jump (L3)",
+        "kind": "control",
+        "step": "L3"
+      },
+      {
+        "from": "Memory controller",
+        "to": "Thread B continues",
+        "what": "async processing (L4)",
+        "kind": "control",
+        "step": "L4"
+      },
+      {
+        "from": "LiteSwitch handler",
+        "to": "bitmap",
+        "what": "bitmap lookup for rip=0x9204 (H2)",
+        "kind": "control",
+        "step": "H2"
+      },
+      {
+        "from": "bitmap",
+        "to": "LiteSwitch handler",
+        "what": "no xstate! result (H2)",
+        "kind": "data",
+        "step": "H2"
+      },
+      {
+        "from": "prog",
+        "to": "prog.xstatedump",
+        "what": "extract & disassemble function boundaries (X1)",
+        "kind": "dependency",
+        "step": "X1"
+      },
+      {
+        "from": "LiteSwitch handler",
+        "to": "Thread B continues",
+        "what": "minimal context switch (H3)",
+        "kind": "control",
+        "step": "H3"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "B1",
+        "at": "bundle",
+        "what": "the runqueue's threads are formed into a bundle (Thread A + Thread B) so scheduling policy is enforced",
+        "carries": "Thread A, Thread B"
+      },
+      {
+        "marker": "L1",
+        "at": "L1/L2/LLC",
+        "what": "Thread A's load at rip=0x9204 is looked up in the cache and misses",
+        "carries": "PA = 0x4567"
+      },
+      {
+        "marker": "L2",
+        "at": "Memory controller",
+        "what": "the physical address is routed; the target resides on CXL, not DDR",
+        "carries": "PA"
+      },
+      {
+        "marker": "L3",
+        "at": "LiteSwitch handler",
+        "what": "a same-address-space jump redirects execution into the LiteSwitch handler",
+        "carries": "control flow"
+      },
+      {
+        "marker": "H1",
+        "at": "bitmap",
+        "what": "the bitmap is populated with a runtime base-address mapping (e.g., 0x8000)",
+        "carries": "address ranges"
+      },
+      {
+        "marker": "X1",
+        "at": "prog.xstatedump",
+        "what": "offline disassembly of prog extracts function boundaries into the xstate dump used to build the bitmap",
+        "carries": "function boundaries"
+      },
+      {
+        "marker": "H2",
+        "at": "bitmap",
+        "what": "the handler looks up rip=0x9204 in the bitmap to check whether xstate is needed",
+        "carries": "rip=0x9204"
+      },
+      {
+        "marker": "H3",
+        "at": "LiteSwitch handler",
+        "what": "a minimal context switch (GPR save/restore only, xsave/xrstor skipped) selects Thread B",
+        "carries": "GPR state"
+      },
+      {
+        "marker": "L4",
+        "at": "Memory controller",
+        "what": "the CXL access proceeds asynchronously in hardware while Thread B runs",
+        "carries": "memory request"
+      },
+      {
+        "marker": "B2",
+        "at": "bundle",
+        "what": "after harvesting, the bundle is dismantled back into the runqueue",
+        "carries": "Thread A, Thread B"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A cache-detected CXL-bound stall on Thread A is redirected, within the same address space and with a minimal xstate-skipping context switch, into a pre-bundled Thread B.",
+    "reading_order": "Start at the 0x9204 load in Hardware LDMB, follow the cache-miss and routing arrows up into the Software Handler, then to Offline Xstate Analysis and Software Bundling."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.9,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0b5394",
+        "used_for": "text/lines of the HARDWARE LDMB path (cache lookup, routing, address translation, L1-L4 badges)"
+      },
+      {
+        "hex": "#38761d",
+        "used_for": "text/lines of the SOFTWARE HANDLER path (H1-H3 badges, bitmap, runtime mapping, no xstate! callout)"
+      },
+      {
+        "hex": "#3d85c6",
+        "used_for": "medium-blue accents on hardware boxes"
+      },
+      {
+        "hex": "#cfe2f3",
+        "used_for": "fill of the light-blue hardware boxes (L1/L2/LLC, Memory controller, instruction box)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "moderately thick (~1.5pt); dashed lines mark the lane boundaries and the Thread A/B timeline, solid lines carry data/control arrows",
+    "font": "mixed serif/bold-sans (TimesNewRomanPSMT, Arial-BoldMT), 6-8pt, about half bold",
+    "corners": "mixed (square boxes; notched-corner 'card' shapes for runqueue/bundle)",
+    "arrows": "numerous straight and curved arrowheads, colour-coded per region, each usually carrying an inline lettered step code",
+    "icons": "a red X icon marks the LLC miss; a green checkmark marks confirmed routing/lookup outcomes"
+  },
+  "encoding": {
+    "color_means": "orange marks the software-bundling steps (B1/B2), green marks the software-handler/bitmap steps (H1-H3), maroon marks the offline xstate-analysis step (X1), and blue marks the hardware LDMB path (L1-L4)",
+    "line_style_means": "solid arrows show the concrete data/control path for this traced event; dashed lines mark the Thread A/B timeline boundary and the asynchronous CXL access (L4)",
+    "state_means": "not before/after states; colour and lane boxes instead separate the four cooperating subsystems (bundling, handler, offline analysis, hardware)",
+    "marker_means": "lettered circular badges (B, H, X, L + number) key each arrow to one step of the stall-harvesting walkthrough; red X = cache miss, green check = confirmed outcome",
+    "emphasis": "the black 'Thread A stalls' / 'Thread B continues' bar cuts across the middle, anchoring every coloured step to a single moment in the timeline",
+    "reusable_patterns": [
+      "one horizontal stall/continue timeline threading through colour-coded, lettered steps across separate subsystem boxes"
+    ],
+    "weaknesses": [
+      "with 10 lettered steps across 4 regions the figure is very dense, and the causal order across the B/H/X/L letter families is not made explicit by the numbering alone"
+    ]
+  },
+  "tags": [
+    "stall harvesting",
+    "context switch",
+    "CXL memory",
+    "thread scheduling",
+    "cache miss",
+    "hardware/software co-design"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design"
+    ],
+    "evidence": [
+      "LITESWITCH detects stalls online and per-access in hardware to leverage first-hand hint of latency formation",
+      "LITESWITCH delivers stall notifications via lightweight control-flow jumps, confining harvesting activities within the same address space",
+      "When Thread A executes a load (rip = 0x9204) that L1 misses the cache, the memory controller"
+    ]
+  },
+  "summary": "Figure 2 walks through one stall-harvesting event in LiteSwitch's architecture, tracing ten lettered steps across four regions. In 'Software Bundling,' the runqueue forms (B1) and later dismantles (B2) a bundle holding Thread A and Thread B so scheduling policy still applies. When Thread A's load at rip=0x9204 misses the cache (L1) inside 'Hardware LDMB,' the Memory controller routes the physical address to CXL rather than DDR (L2) and triggers a same-address-space jump (L3) into the 'Software Handler.' There, the handler's bitmap lookup for rip=0x9204 (H2), built at runtime (H1) from an offline disassembly of the program's function boundaries (X1), confirms no xstate save is needed, so a minimal context switch (H3) selects Thread B, which keeps running while the CXL access completes asynchronously (L4).",
+  "summary_zh": "图2用字母编号步骤展示LiteSwitch处理线程停顿：线程A的load在L1缺失，控制器判目标为CXL并跳转到handler；查位图确认无需保存xstate，最小上下文切换后线程B继续，CXL访问异步完成。",
+  "confidence": "medium",
+  "notes": "Corrected base from the prior pass's 'architecture' (not a valid value in this schema's enum) to 'mixed', since the figure combines component boxes, a stall/continue timeline, and lettered flow arrows. The paper text is truncated right after '...the memory controller', so the causal order and exact interaction of the H1/H2/H3/X1 steps relative to L1-L4 are reconstructed from the figure's own labels and arrows, not confirmed by running text.",
+  "venue": "OSDI26"
+}

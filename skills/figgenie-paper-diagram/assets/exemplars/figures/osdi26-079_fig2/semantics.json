@@ -1,0 +1,162 @@
+{
+  "paper_id": "osdi26-079",
+  "fig": "2",
+  "system": {
+    "name": "DPA-Store",
+    "one_liner": "a NIC-resident ordered key-value store that answers requests on-path using a learned index, running on a SmartNIC's DPA cores",
+    "domain": [
+      "networking",
+      "storage"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "CPU",
+        "role": "host processor",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "Host DRAM",
+        "role": "host memory accessible via DMA from the SmartNIC",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "eSwitch",
+        "role": "embedded switch that steers packets within the BlueField-3",
+        "container": "BlueField-3",
+        "novel": false
+      },
+      {
+        "name": "DPA",
+        "role": "on-path Data Path Accelerator cluster (16 RISC-V cores) that processes packets and can DMA to host memory",
+        "container": "BlueField-3",
+        "novel": false
+      },
+      {
+        "name": "DPA memory",
+        "role": "memory local to the DPA cores",
+        "container": "BlueField-3",
+        "novel": false
+      },
+      {
+        "name": "NIC DRAM",
+        "role": "16GB DDR5 memory on the SmartNIC",
+        "container": "BlueField-3",
+        "novel": false
+      },
+      {
+        "name": "ARM",
+        "role": "off-path ARM CPU that runs a dedicated OS for control-plane management and accelerator access",
+        "container": "BlueField-3",
+        "novel": false
+      },
+      {
+        "name": "Network fabric (Ethernet, InfiniBand)",
+        "role": "external network the SmartNIC's RX/TX ports connect to",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "DPA",
+        "to": "Host DRAM",
+        "what": "direct memory access (DMA) to host memory over PCIe",
+        "step": null
+      },
+      {
+        "from": "DPA",
+        "to": "DPA memory",
+        "what": "local memory access",
+        "step": null
+      },
+      {
+        "from": "eSwitch",
+        "to": "DPA",
+        "what": "steers incoming RX packets to the DPA cores",
+        "step": null
+      }
+    ],
+    "key_idea": "The BlueField-3 SmartNIC pairs an on-path DPA core cluster with an off-path ARM control CPU and its own DRAM, and in NIC mode the DPA can DMA results directly into host memory.",
+    "reading_order": "Top-down: host CPU/DRAM, across the PCIe bus, into the BlueField-3 package (eSwitch, DPA, ARM, NIC DRAM), down to the network fabric."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.04,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ae4132",
+        "used_for": "dark red fill for the CPU icon box"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "dark gray text/outline"
+      },
+      {
+        "hex": "#b0e3e6",
+        "used_for": "cyan fill for the BlueField-3 outer box"
+      },
+      {
+        "hex": "#e2f6f9",
+        "used_for": "pale cyan fill for sub-blocks inside BlueField-3 (DPA, NIC DRAM)"
+      },
+      {
+        "hex": "#fad9d5",
+        "used_for": "pale pink/red fill for the Host DRAM box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin strokes (~0.67pt), no dashing",
+    "font": "Times-Roman serif, 6.5-8.5pt, bold for section labels",
+    "corners": "mixed",
+    "arrows": "a handful of thin arrows showing the DMA and RX/TX paths",
+    "icons": "vector chip icons for the CPU, DPA and ARM blocks"
+  },
+  "encoding": {
+    "color_means": "pale red marks host-side memory, cyan marks the BlueField-3 SmartNIC and its internal blocks, dark red marks the CPU icon",
+    "line_style_means": null,
+    "emphasis": "a single 'DMA' arrow crossing the PCIe boundary calls out BlueField-3's ability to write directly into host memory when configured in NIC mode",
+    "reusable_patterns": [
+      "layered host/bus/device/network stack for a SmartNIC background figure"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "smartnic",
+    "bluefield-3",
+    "dpa",
+    "rdma",
+    "hardware-background"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background & Related Work (p.4)"
+    ],
+    "evidence": [
+      "it offers an off-path ARM CPU and an on-path DPA cluster",
+      "The DPA subsystem consists of 16 physical RISC-V cores, each running at 1.8 GHz",
+      "The ARM CPU allows the BlueField-3 to run a dedicated operating system"
+    ]
+  },
+  "summary": "This is a background figure explaining the NVIDIA BlueField-3 SmartNIC that DPA-Store, an ordered network-datapath key-value store, is built on. Drawn as a layered stack, a host CPU and Host DRAM sit above a PCIe bus, below which the BlueField-3 package contains an eSwitch, an on-path DPA cluster (16 RISC-V cores at 1.8GHz) with its own DPA memory, an off-path ARM CPU for control-plane management, and 16GB of NIC DRAM; RX/TX ports connect down to the Ethernet/InfiniBand network fabric. A DMA arrow crosses the PCIe boundary to Host DRAM, illustrating that in NIC mode the DPA can write results directly into host memory, a capability DPA-Store's host-side tree updates rely on.",
+  "summary_zh": "背景图展示DPA-Store所依托的BlueField-3网卡架构:主机CPU/DRAM经PCIe连至网卡内eSwitch、片上DPA(16核RISC-V)、ARM CPU与NIC DRAM,DPA可DMA直访主机内存。",
+  "confidence": "high",
+  "notes": "Background hardware figure (BlueField-3 platform); DPA-Store's own architecture is shown separately in Figure 3 of the same paper.",
+  "venue": "OSDI26"
+}

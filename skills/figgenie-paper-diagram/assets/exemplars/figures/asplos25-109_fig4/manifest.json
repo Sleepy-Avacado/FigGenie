@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-109_fig4",
+  "paper_id": "asplos25-109",
+  "fig": "4",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 4. Overview of Virtuoso’s Architecture.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.72,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-109/src/fig4_virtuoso_overview.svg",
+    "preview.png": "lab/extracted/asplos25-109/src/fig4_virtuoso_overview.png",
+    "print.png": "lab/extracted/asplos25-109/asplos25-109_fig4_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Two named horizontal bands bridged by an identically labelled 'Communication Interface' in each, with two colour-coded channels.",
+      "what_to_learn": "When two subsystems talk over a channel, draw the same interface box in both bands - the repeated label is what makes the boundary legible."
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "paper_id": "osdi26-079",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "DPA-Store",
+    "one_liner": "an ordered network-data-path key-value store that maintains its index tree directly from the NIC",
+    "domain": [
+      "key-value-store",
+      "RDMA",
+      "NIC-offload"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a NIC-triggered buffer patch merges into the host tree and propagates level by level to the root",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Inner",
+        "kind": "node",
+        "role": "an internal (non-leaf) node of the host tree; repeated at every internal position",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L",
+        "kind": "node",
+        "role": "a leaf node of the host tree holding data entries",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "(...)",
+        "kind": "node",
+        "role": "an elided/collapsed subtree not relevant to this patch path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NIC",
+        "kind": "actor",
+        "role": "the network interface whose buffered insert triggered this patch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "buf",
+        "kind": "icon",
+        "role": "the NIC's buffer holding entries not yet merged into the host tree",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Inner (new subtree)",
+        "kind": "node",
+        "role": "the newly trained subtree produced by merging buffered entries, not yet attached",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "case A",
+        "kind": "label",
+        "role": "branch taken when step 2 produces exactly one new node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "case B",
+        "kind": "label",
+        "role": "branch taken when step 2 produces more than one new node, requiring the parent to be repeated",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "lock icon (black)",
+        "kind": "icon",
+        "role": "marks that a parent node is currently located and locked on the host",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "lock icon (green)",
+        "kind": "icon",
+        "role": "marks that a parent node has just been unlocked, releasing it",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "NIC",
+        "to": "buf",
+        "what": "the NIC's insert buffer fills up, triggering the patch thread",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "buf",
+        "to": "L",
+        "what": "buffered entries are copied, merged, and trained into new leaf node(s)",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Inner",
+        "to": "Inner",
+        "what": "the parent Inner node is located and locked on the host before it is modified",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "L",
+        "to": "Inner (new subtree)",
+        "what": "the parent's connection is updated to point at the top of the new subtree via enqueued copy-stitch and connect-stitch commands",
+        "kind": "pointer",
+        "step": "4"
+      },
+      {
+        "from": "Inner",
+        "to": "Inner",
+        "what": "the parent is unlocked once the new subtree is attached, letting old descendants detach for later reallocation",
+        "kind": "control",
+        "step": "5"
+      }
+    ],
+    "panels": [
+      {
+        "label": "i)",
+        "axis": "time",
+        "differs": "template: the rightmost Inner node at the lowest patched level has its parent locked (step 3) while its buffered NIC entry and a sibling leaf merge into one new leaf via steps 1-4, then the parent unlocks (step 5)",
+        "verdict": null
+      },
+      {
+        "label": "ii)",
+        "axis": "time",
+        "differs": "the patch has propagated one level up: the previous new leaf now sits as a full Inner node (case A) or as two leaves (case B) attached under a newly locked parent one level higher",
+        "verdict": null
+      },
+      {
+        "label": "iii)",
+        "axis": "time",
+        "differs": "the patch reaches the tree's root level: the new subtree (case A: one Inner node, or case B: two Inner nodes with leaf children) attaches under the root, which is locked then unlocked, and the process is marked 'patch finished'",
+        "verdict": null
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Patch thread",
+        "what": "'Patch' thread gets insert-buffer full cmd",
+        "carries": "insert-buffer-full command"
+      },
+      {
+        "marker": "2",
+        "at": "buffer entries",
+        "what": "entries are copied, merged and trained into new node(s)",
+        "carries": "buffered entries turned into trained node(s)"
+      },
+      {
+        "marker": "3",
+        "at": "parent node",
+        "what": "parent is located and locked on host",
+        "carries": "lock on the parent node"
+      },
+      {
+        "marker": "?",
+        "at": "decision point",
+        "what": "did step 2 result in exactly one new node? case A: yes, goto step 4; case B: no, repeat for parent at step 2",
+        "carries": "branch outcome (case A or case B)"
+      },
+      {
+        "marker": "4",
+        "at": "parent connection",
+        "what": "parent connection is updated with the top of the new subtree; copy-stitch and connect-stitch commands are enqueued",
+        "carries": "copy-stitch and connect-stitch commands"
+      },
+      {
+        "marker": "5",
+        "at": "parent node",
+        "what": "parent is unlocked; old descendants stay locked and are detached, with reallocation possible after the epoch period",
+        "carries": "unlock signal; detached old descendants"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A five-step lock/copy/stitch/unlock protocol merges NIC-buffered entries into new tree nodes and, frame by frame, repeats itself one level higher up the host tree until the update reaches the root.",
+    "reading_order": "Top to bottom through frames i)-iii); within each, follow the red NIC arrow and circled steps 1-5 from the buffer up into the locked parent."
+  },
+  "layout": {
+    "arrangement": "frames-column",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.86,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff3333",
+        "used_for": "red NIC arrow, 'NIC' label, and the numbered step markers/circles"
+      },
+      {
+        "hex": "#ffe6e6",
+        "used_for": "pale-pink fill of the 'buf' circle icon"
+      },
+      {
+        "hex": "#d6b656",
+        "used_for": "gold/orange fill and outline of the newly trained subtree nodes (Inner/L) being attached"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "grey dashed 'case A' / 'case B' labels and brackets"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light-grey fill of the 'patch finished' tag and neutral highlight boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat, with the new subtree filled solid gold/orange against otherwise unfilled white tree boxes",
+    "stroke": "thin black tree-box outlines; thin orange/gold lines connecting the buffer to the new subtree; dashed grey outlines on the case A/B labels",
+    "corners": "square",
+    "arrows": "a bold red arrow from NIC into the buffer; thin curved gold lines from the buffer/leaf into the new subtree; plain black tree edges",
+    "font": "serif (Times-Roman) body text with a monospaced font (Courier New) for the 'patch finished' tag",
+    "icons": "a padlock icon (black=locked, green=unlocked) beside the active parent node; a red circular 'buf' icon beside the NIC arrow"
+  },
+  "encoding": {
+    "color_means": "red marks the NIC and its buffered insert path; gold/orange marks the newly trained subtree not yet fully attached; black vs green padlocks mark a parent node as locked vs just unlocked; grey dashed labels mark the two branches, case A and case B",
+    "line_style_means": "solid black lines draw the fixed tree structure; curved gold lines trace how buffered/leaf data feeds into the new subtree; dashed grey brackets group the case A and case B alternatives",
+    "state_means": "the three frames (i, ii, iii) are told apart by which tree level currently holds the locked parent and the gold new-subtree, showing the patch has moved up one level each time",
+    "marker_means": "circled numbers 1-5 and a circled '?' order the steps of the protocol listed at the right, repeated identically inside each of the three frames",
+    "emphasis": "the gold-highlighted new subtree and the black/green padlock pair draw the eye to exactly which node is being modified and whether it is currently locked, in every frame",
+    "reusable_patterns": [
+      "an identical numbered lock/copy/stitch/unlock recipe replayed at successively higher tree levels across three stacked frames, with a shared side legend spelling out each numbered step"
+    ],
+    "weaknesses": [
+      "case A and case B are only distinguished by a small grey dashed tag, easy to miss next to the much bolder gold highlighting",
+      "the same step numbers (1-5) repeat in every frame without a frame-level index, so referring to 'step 3' alone does not say which frame"
+    ]
+  },
+  "tags": [
+    "tree-update-protocol",
+    "RDMA",
+    "NIC-offload",
+    "locking",
+    "host-tree",
+    "DPA-Store",
+    "key-value-store"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 DPA-Store: Architecture & Implementation"
+    ],
+    "evidence": [
+      "we propagate the changes to the NIC-side tree using our stitcher threads",
+      "We enqueue the individual node updates to the stitcher queues as COPY stitches",
+      "a single CONNECT stitch command is issued that translates to a single pointer swap"
+    ]
+  },
+  "summary": "Figure 6 walks through DPA-Store's host-side patching protocol as it climbs the host tree one level per frame (i, ii, iii). In each frame, the same numbered recipe applies: a 'Patch' thread reacts to an insert-buffer-full command from the NIC (1), buffered entries are copied, merged, and trained into new node(s) (2), the parent is located and locked on the host (3), and a branch decides whether step 2 produced exactly one new node (case A, proceed) or more than one (case B, repeat at the parent). Once resolved, the parent's connection is updated to point at the new gold-highlighted subtree via enqueued copy-stitch and connect-stitch commands (4), and the parent is unlocked while its old, now-detached descendants remain reallocatable after an epoch (5). Frame iii reaches the root and the patch is marked finished.",
+  "summary_zh": "图6展示DPA-Store主机补丁协议逐层更新宿主树：每帧重复同一编号步骤——收到缓冲区满命令、条目合并成新节点、锁定父节点、按case A/B分支更新父连接并解锁，直到根节点补丁完成。",
+  "confidence": "high",
+  "notes": "corrected primary group from the prior 'walkthrough' to 'evolution' (walkthrough kept as a secondary label): the figure redraws the same host-tree instance in three stacked frames (i, ii, iii) as the patch climbs one level per frame, which the v3 rule ranks as evolution before walkthrough; the numbered 1-5 protocol is a step recipe repeated identically inside each frame rather than one continuous path.",
+  "venue": "OSDI26"
+}

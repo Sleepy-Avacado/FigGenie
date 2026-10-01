@@ -1,0 +1,41 @@
+{
+  "id": "sosp23-037_fig2",
+  "paper_id": "sosp23-037",
+  "fig": "2",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 2. Architectures of prior SLSs and TreeSLS. Prior SLSs build an illusion of single-level storage upon the volatile runtime and persistent disks or SSDs. TreeSLS builds on the single-tier NVM acting as both runtime memory and stor- age. DRAM can store recoverable state and cache frequently acc",
+  "corpus_template": "matrix",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.42,
+  "n_components": 12,
+  "n_flows": 1,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-037/sosp23-037_fig2_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp23-037/sosp23-037_fig2_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, medium-confidence matrix exemplar comparing three systems in three columns against shared row labels in a left gutter, with the contribution's column visibly simpler, one merged box instead of split caches.",
+      "what_to_learn": "Keep row labels in one left gutter shared by every column so structural simplification reads at a glance from box count alone; the record warns that a highlight colour used on only two small icons is easy to miss, so give an important cue more than a token-sized swatch."
+    }
+  ]
+}

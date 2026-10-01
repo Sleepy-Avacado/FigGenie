@@ -1,0 +1,162 @@
+{
+  "paper_id": "osdi24-032",
+  "fig": "9",
+  "system": {
+    "name": "BurstCBS",
+    "one_liner": "a burstable cloud block storage system on Data Processing Units combining queue scaling, I/O scheduling, and cost estimation",
+    "domain": [
+      "storage",
+      "cloud",
+      "dpu"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "FPGA",
+        "role": null,
+        "container": "SA Data Plane",
+        "novel": false
+      },
+      {
+        "name": "SA Control Thread",
+        "role": null,
+        "container": "SA Data Plane",
+        "novel": true
+      },
+      {
+        "name": "High-Perf Queue Scaling",
+        "role": "high-performance queue scaling component of BurstCBS",
+        "container": "SA Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Burstable I/O Scheduler",
+        "role": "burstable I/O scheduler component of BurstCBS",
+        "container": "SA Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Vectorized I/O Cost Estimator",
+        "role": "vectorized I/O cost estimator component of BurstCBS",
+        "container": "SA Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Inter-thread load balance",
+        "role": null,
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Intra-thread scheduling",
+        "role": null,
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "SA Control Thread",
+        "to": "FPGA",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "High-Perf Queue Scaling",
+        "to": "Inter-thread load balance",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Burstable I/O Scheduler",
+        "to": "Intra-thread scheduling",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Vectorized I/O Cost Estimator",
+        "to": "Intra-thread scheduling",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "BurstCBS runs parallel SA Control Threads on an FPGA data plane while a separate SA Control Plane of three components (queue scaling, burstable I/O scheduling, vectorized cost estimation) governs inter- and intra-thread scheduling.",
+    "reading_order": "Left: SA Data Plane with an FPGA driving several SA Control Threads; dashed lines lead right into the SA Control Plane's three stacked components and their scheduling outputs."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.13,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b5c7e7",
+        "used_for": "SA Control Thread box fills"
+      },
+      {
+        "hex": "#8faadd",
+        "used_for": "FPGA box fill / border accent"
+      },
+      {
+        "hex": "#f9ccad",
+        "used_for": "the High-Perf Queue Scaling box"
+      },
+      {
+        "hex": "#ffe798",
+        "used_for": "the Burstable I/O Scheduler box"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "the Vectorized I/O Cost Estimator box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.57pt, dashed lines fanning from the SA Control Threads into the SA Control Plane box",
+    "font": "sans (Arial-Bold/ArialMT), 5.5-7.5pt, bold section labels",
+    "corners": "mixed",
+    "arrows": "solid blue arrows between FPGA and control threads; hollow chevron block arrows from control-plane components to their outcomes",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "peach, yellow, and green distinguish BurstCBS's three named control-plane components (queue scaling, I/O scheduler, cost estimator); blue marks the data-plane's FPGA and control threads",
+    "line_style_means": "dashed lines connect each SA Control Thread to the shared SA Control Plane logic that manages it; solid/hollow arrows show the resulting load-balancing and scheduling actions",
+    "emphasis": "the figure is split into two explicitly labeled boxes, SA Data Plane and SA Control Plane, so the reader immediately sees which parts are hardware threads and which are BurstCBS's three software components",
+    "reusable_patterns": [
+      "explicit control-plane/data-plane box split with dashed fan-out from data-plane units into a stacked list of control components"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "cloud-storage",
+    "dpu",
+    "io-scheduling",
+    "burstable-performance",
+    "queue-scaling"
+  ],
+  "provenance": {
+    "sections": [
+      "4 BurstCBS Overview (p.6)"
+    ],
+    "evidence": [
+      "BurstCBS is designed and implemented as a standalone system package on xDPU",
+      "BurstCBS consists of three key components: high-performance queue scaling, burstable I/O scheduler, and vectorized I/O cost estimator"
+    ]
+  },
+  "summary": "This figure gives an overview of BurstCBS, a burstable cloud block storage package running on a Data Processing Unit (xDPU). The diagram is split into two explicitly labeled boxes. The left 'SA Data Plane' box contains an FPGA driving several parallel SA Control Thread units. Dashed lines fan from those threads into the right 'SA Control Plane' box, which stacks BurstCBS's three key components named directly in the paper text: High-Perf Queue Scaling, Burstable I/O Scheduler, and Vectorized I/O Cost Estimator. Solid and hollow arrows lead from these components to two labeled outcomes, inter-thread load balance and intra-thread scheduling, showing how the control plane's software logic governs the data plane's hardware threads. Peach, yellow, and green fills distinguish the three control-plane components, while blue marks the FPGA data plane.",
+  "summary_zh": "该图展示 BurstCBS：左侧 SA Data Plane（FPGA 驱动多个控制线程）经虚线连接右侧 SA Control Plane 三个组件，分别驱动线程间负载均衡与线程内调度。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

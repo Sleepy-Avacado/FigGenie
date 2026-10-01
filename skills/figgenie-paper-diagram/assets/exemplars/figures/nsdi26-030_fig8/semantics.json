@@ -1,0 +1,341 @@
+{
+  "paper_id": "nsdi26-030",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "EROICA",
+    "one_liner": "online performance troubleshooting for large-scale model training that detects slowdowns without source-code instrumentation",
+    "domain": [
+      "ml-systems",
+      "performance-monitoring",
+      "distributed-training"
+    ],
+    "abstraction": "runtime-agent"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how EROICA detects the training-iteration boundary and then watches for performance degradation using a sliding D/O event window",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "D",
+        "kind": "label",
+        "role": "legend swatch: a Dataloader.next() event",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "O",
+        "kind": "label",
+        "role": "legend swatch: an Optimizer.step() event",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Iteration Detection",
+        "kind": "box",
+        "role": "buffers a recent D/O event sequence and looks for M identical repeats to identify the training-iteration pattern",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Recent event sequence (D D O O D)",
+        "kind": "row",
+        "role": "concrete worked-example buffer contents shown inside the Iteration Detection box",
+        "container": "Iteration Detection",
+        "highlighted": false
+      },
+      {
+        "name": "Find M Iterations?",
+        "kind": "node",
+        "role": "decision diamond: have M identical training-iteration sequences been seen yet?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Performance degradation detection",
+        "kind": "box",
+        "role": "once the iteration pattern is known, continuously matches incoming events against it and times each iteration",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Recent event sequence (D D O O D D O)",
+        "kind": "row",
+        "role": "concrete worked-example buffer contents shown inside the Performance degradation detection box",
+        "container": "Performance degradation detection",
+        "highlighted": false
+      },
+      {
+        "name": "End of a Iteration?",
+        "kind": "node",
+        "role": "decision diamond: has a complete training-iteration sequence just been matched?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "No iteration end for K events?",
+        "kind": "node",
+        "role": "decision diamond: have K consecutive events arrived without completing a sequence (training appears blocked)?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Performance degradation?",
+        "kind": "node",
+        "role": "decision diamond: does the just-completed iteration's duration exceed the recent-shortest by 5%, or is elapsed time >= 5x average?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Start Profiling",
+        "kind": "box",
+        "role": "triggered once degradation is confirmed; notifies daemons to begin synchronized profiling",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Iteration Detection",
+        "to": "Find M Iterations?",
+        "what": "each new D/O event is checked against the buffered sequence",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Find M Iterations?",
+        "to": "Iteration Detection",
+        "what": "NO: keep buffering more events",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Find M Iterations?",
+        "to": "Performance degradation detection",
+        "what": "YES: training iteration identified, hand off to degradation monitoring",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Performance degradation detection",
+        "to": "End of a Iteration?",
+        "what": "each new D/O event is checked for iteration completion",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "End of a Iteration?",
+        "to": "Performance degradation?",
+        "what": "YES: a full iteration just matched, so its duration is evaluated",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "End of a Iteration?",
+        "to": "No iteration end for K events?",
+        "what": "NO: sequence not yet complete, check whether it has stalled",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "No iteration end for K events?",
+        "to": "Iteration Detection",
+        "what": "YES: K consecutive events without completion, re-detect the iteration pattern from scratch",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "No iteration end for K events?",
+        "to": "Performance degradation detection",
+        "what": "NO: still within budget, keep monitoring",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Performance degradation?",
+        "to": "Start Profiling",
+        "what": "YES: degradation confirmed, trigger synchronized profiling",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Performance degradation?",
+        "to": "Performance degradation detection",
+        "what": "NO: no degradation, resume monitoring",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Start Profiling",
+        "to": "Performance degradation detection",
+        "what": "profiling started, monitoring continues",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "values": {
+      "what": "the concrete D/O event sequences shown inside both processing boxes ('D D O O D' in Iteration Detection, 'D D O O D D O' in Performance degradation detection)",
+      "linked_by": "position: each letter's place in its box's 'Recent event sequence' row, coloured pink for D and yellow for O",
+      "result_cells": "no separate result cells; the sequences themselves are what the adjacent Find-M-Iterations/End-of-Iteration decisions read and judge"
+    },
+    "logic": {
+      "states": [
+        "Iteration Detection",
+        "Performance degradation detection",
+        "Start Profiling"
+      ],
+      "transitions": [
+        {
+          "from": "Iteration Detection",
+          "to": "Performance degradation detection",
+          "guard": "Find M Iterations? = yes"
+        },
+        {
+          "from": "Performance degradation detection",
+          "to": "Iteration Detection",
+          "guard": "No iteration end for K events? = yes"
+        },
+        {
+          "from": "Performance degradation detection",
+          "to": "Start Profiling",
+          "guard": "End of a Iteration? = yes AND Performance degradation? = yes"
+        },
+        {
+          "from": "Start Profiling",
+          "to": "Performance degradation detection",
+          "guard": "profiling triggered, resume monitoring"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "Find M Iterations? (M identical D/O sequences seen?)",
+          "branches": [
+            "yes -> identify training iteration, hand off to degradation detection",
+            "no -> keep buffering in Iteration Detection"
+          ]
+        },
+        {
+          "question": "End of a Iteration? (has a full sequence just matched?)",
+          "branches": [
+            "yes -> check Performance degradation?",
+            "no -> check No iteration end for K events?"
+          ]
+        },
+        {
+          "question": "Performance degradation? (duration threshold or blocked-time threshold exceeded?)",
+          "branches": [
+            "yes -> Start Profiling",
+            "no -> keep monitoring"
+          ]
+        },
+        {
+          "question": "No iteration end for K events? (K consecutive events without completing a sequence?)",
+          "branches": [
+            "yes -> back to Iteration Detection to redetect",
+            "no -> keep monitoring"
+          ]
+        }
+      ]
+    },
+    "key_idea": "EROICA first learns a training job's iteration boundary from a repeating D/O event pattern, then continuously re-checks that pattern's timing, falling back to re-detection if the pattern ever stops matching for too long.",
+    "reading_order": "left block (Iteration Detection with its worked D/O buffer and Find-M-Iterations diamond) feeds right into the larger right block (Performance degradation detection with its own buffer and three chained diamonds), with loop-back arrows returning to each block and Start Profiling at the bottom"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.16,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill of the 'Iteration Detection' and 'Performance degradation detection' boxes"
+      },
+      {
+        "hex": "#ff7e79",
+        "used_for": "salmon/pink fill of the 'D' (Dataloader.next()) legend swatch and matching cells in the worked event-sequence rows"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill of the 'O' (Optimizer.step()) legend swatch and matching cells in the worked event-sequence rows"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale-green fill of the decision diamonds"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light-gray fill of the 'Start Profiling' rounded box"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "dark-navy stroke outlining boxes, diamonds, and arrows"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "green stroke of the check-mark glyphs on YES branches"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.31pt) navy outlines",
+    "corners": "mixed",
+    "arrows": "thin navy arrows with solid heads, right-angle routing, several long loop-back paths",
+    "font": "sans (Arial-Bold / DengXian-Bold), 5-5.5pt, heavily bold (bold fraction 0.73)",
+    "icons": "small red X and green check glyphs marking each diamond's NO/YES outcome"
+  },
+  "encoding": {
+    "color_means": "blue marks the two processing boxes; pale green marks decision diamonds; pink marks Dataloader.next() events and yellow marks Optimizer.step() events, both in the legend and inside the worked event-sequence rows; gray marks the Start Profiling action",
+    "line_style_means": "not used to distinguish relation kinds; all arrows are solid navy, distinguished by their loop-back routing and adjacent check/cross glyphs",
+    "state_means": "not applicable; a one-shot cyclic flowchart rather than a before/after or alternatives figure",
+    "marker_means": "green check and red cross glyphs mark each diamond's YES/NO outcome; the D/O letters mark event type",
+    "emphasis": "concrete D/O event-sequence rows are drawn inside both processing boxes, grounding the otherwise-abstract detection loop in a specific worked example of what the sliding window holds",
+    "reusable_patterns": [
+      "two adjacent processing boxes, each holding a worked example of its own sliding-window buffer, linked by a chain of yes/no decision diamonds with loop-back arrows to either box"
+    ],
+    "weaknesses": [
+      "many small, dense labels and stacked diamonds on the right make the three chained decisions easy to misread without careful tracing"
+    ]
+  },
+  "tags": [
+    "EROICA",
+    "performance-troubleshooting",
+    "iteration-detection",
+    "degradation-detection",
+    "profiling",
+    "LLM-training"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 EROICA Design"
+    ],
+    "evidence": [
+      "After detecting M (=10 in practice) identical sequences starting with dataloader.next() and ending with optimizer.step()",
+      "The average duration of the recent N (=50 in practice) iterations exceeds the recent shortest iteration time",
+      "If EROICA fails to match a training iteration after K (=200 in practice) consecutive event receptions"
+    ]
+  },
+  "summary": "This figure is a flowchart of EROICA's two-phase iteration- and degradation-detection loop. In Iteration Detection, EROICA buffers a recent D/O event sequence, shown concretely as 'D D O O D', and checks whether M identical repeats have occurred; once found, the training-iteration pattern is identified and handed to Performance degradation detection. That stage keeps its own worked event buffer and checks whether a full iteration has just completed. A completed iteration's duration is checked against a degradation threshold, triggering Start Profiling on a hit or otherwise resuming monitoring; an incomplete iteration is checked against a K-event stall limit, which either resumes monitoring or sends the process back to Iteration Detection to re-learn the pattern. The concrete D/O sequences inside both boxes ground the abstract sliding-window logic in a traceable example.",
+  "summary_zh": "该图为EROICA两阶段流程：先据D/O事件序列（如D D O O D）判断重复M次以定迭代模式；再持续匹配，按迭代耗时超阈值触发Profiling，或K次未完成则回退重检。",
+  "confidence": "high",
+  "notes": "worked_example corrected from the prior label's False to True: the figure embeds concrete 'Recent event sequence' rows (e.g. 'D D O O D') inside both processing boxes as the running example of the sliding-window buffer, matching the prior label's own 'note' field ('Concrete D/O event-queue worked example drives the detection loop'), which the prior boolean had not reflected. base corrected from the prior 'component' to 'flowchart' for the same reason as other decision-diamond control-logic figures in this corpus.",
+  "venue": "NSDI26"
+}

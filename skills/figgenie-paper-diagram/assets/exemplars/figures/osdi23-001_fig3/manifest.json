@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-001_fig3",
+  "paper_id": "osdi23-001",
+  "fig": "3",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 3: System overview of WELDER.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.29,
+  "n_components": 11,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-001/osdi23-001_fig3_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-001/osdi23-001_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The Tile-graph row shows a real merge, two input nodes converging into the first operator, before flowing through alternating orange/blue nodes, nested inside a layered compiler stack down to a memory hierarchy.",
+      "what_to_learn": "Even a mostly-linear operator graph earns dataflow-dag treatment the moment two nodes merge into one, so draw that merge explicitly (two boxes, one arrowhead) rather than smoothing it into a chain, and carry a highlighted path in one colour (red) down through the memory-hierarchy bands it maps onto."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-044_fig3",
+  "paper_id": "nsdi26-044",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Fig. 3: FRACTAL’s architecture. From a client shell script, FRACTAL uses PaSh-JIT to build a DFG, applies annotations to isolate the unsafe main subgraph (A1), and splits the rest into regular and merger subgraphs at HDFS block boundaries. It then instruments each edge with remote-pipe primitives (A",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 2.77,
+  "n_components": 17,
+  "n_flows": 12,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "letters",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-044/nsdi26-044_fig3_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-044/nsdi26-044_fig3_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The left DFG uses small blue Remote-Pipe circles and an inline Main/Merger/Regular legend to show two pipe-chains, blk1 and blk2, actually merging at a sort -m node, all tied to prose by A1-A6/B1-B4 callouts.",
+      "what_to_learn": "Key a pipe-chain DFG with an inline colour-swatch legend right next to the graph, mark actual merge points with a small circle glyph, and tag every region with letter-number callouts (A1-A6, B1-B4); keep the DFG's pipe-chain style and the downstream box architecture visually consistent, since here they read as two stitched figures."
+    }
+  ]
+}

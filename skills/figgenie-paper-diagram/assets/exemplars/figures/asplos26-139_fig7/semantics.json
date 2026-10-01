@@ -1,0 +1,178 @@
+{
+  "paper_id": "asplos26-139",
+  "fig": "7",
+  "system": {
+    "name": "Nemo",
+    "one_liner": "a set-associative flash cache for tiny objects that reduces write amplification via SG-level batching, bloom-filter indexing, and hybrid hotness tracking",
+    "domain": [
+      "storage",
+      "flash",
+      "caching"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "SG",
+        "role": "mutable in-memory Set-Group aggregating incoming objects in the Buffer Area",
+        "container": "DRAM",
+        "novel": true
+      },
+      {
+        "name": "Index Group",
+        "role": "in-memory structure buffering and updating bloom filters for incoming objects",
+        "container": "DRAM",
+        "novel": true
+      },
+      {
+        "name": "Index Cache",
+        "role": "caches the PBFGs of frequently accessed objects, extracted from the on-flash Index Pool",
+        "container": "DRAM",
+        "novel": true
+      },
+      {
+        "name": "Hotness Tracker",
+        "role": "maintains per-object access counters used to infer object hotness",
+        "container": "DRAM",
+        "novel": true
+      },
+      {
+        "name": "SG Pool",
+        "role": "on-flash pool of immutable, flushed SGs (SG0-SG4) managed in FIFO order",
+        "container": "FLASH",
+        "novel": true
+      },
+      {
+        "name": "Index Pool",
+        "role": "on-flash pool of flushed index groups (Index Group0-2) storing bloom filters",
+        "container": "FLASH",
+        "novel": true
+      },
+      {
+        "name": "Evicted SG",
+        "role": "the earliest SG evicted from the on-flash SG pool when the cache is full",
+        "container": "FLASH",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "SG",
+        "to": "SG Pool",
+        "what": "Flush of the in-memory SG once full",
+        "step": null
+      },
+      {
+        "from": "Index Group",
+        "to": "Index Pool",
+        "what": "Flush of the in-memory index group",
+        "step": null
+      },
+      {
+        "from": "Index Pool",
+        "to": "Index Cache",
+        "what": "Extract Hot PBFG",
+        "step": null
+      },
+      {
+        "from": "Index Cache",
+        "to": "Evicted SG",
+        "what": "Combine with hotness info to guide object eviction/writeback",
+        "step": null
+      },
+      {
+        "from": "Hotness Tracker",
+        "to": "Evicted SG",
+        "what": "Combine with cached PBFGs to guide object eviction",
+        "step": null
+      }
+    ],
+    "key_idea": "Nemo separates a fast-changing in-memory DRAM layer (mutable SG buffer, index group, index cache, hotness tracker) from an immutable on-flash FLASH layer (SG pool, index pool), flushing and evicting at SG granularity to keep writes flash-friendly and batched.",
+    "reading_order": "Top DRAM band shows the Buffer Area (SG, Index Group), Index Cache, and Hotness Tracker; a Flush arrow moves both down into the bottom FLASH band's SG Pool and Index Pool, with an Extract/Combine path feeding hot PBFGs back up to guide eviction of the on-flash Evicted SG."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.18,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7030a0",
+        "used_for": "purple section header/border for the DRAM (in-memory) region"
+      },
+      {
+        "hex": "#588e32",
+        "used_for": "green section header/border for the FLASH (on-flash) region and SG cell outlines"
+      },
+      {
+        "hex": "#2e54a1",
+        "used_for": "blue fill of the Index Cache / Index Group boxes"
+      },
+      {
+        "hex": "#e3f2d9",
+        "used_for": "light green fill of individual SG/Set cells within the Buffer Area and SG Pool"
+      },
+      {
+        "hex": "#fadbdf",
+        "used_for": "light pink fill of the Hotness Tracker icon/box"
+      },
+      {
+        "hex": "#262626",
+        "used_for": "dark gray general box borders and text"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin colored strokes matching each box's category, dashed boundary around the DRAM and FLASH regions",
+    "font": "GillSansMT sans, 6-8pt, non-bold",
+    "corners": "mixed",
+    "arrows": "orthogonal, filled triangular heads, curved arrows for the Extract/Combine feedback path",
+    "icons": "bitmap: small icons for SG cells and objects"
+  },
+  "encoding": {
+    "color_means": "purple = DRAM (in-memory) region, green = FLASH (on-flash) region, blue = index-cache/index-group structures, light green = individual set/SG cells, pink = hotness-tracker",
+    "line_style_means": "dashed = DRAM/FLASH region boundary; solid/curved arrows = Flush and Extract/Combine data-flow paths",
+    "emphasis": "the horizontal DRAM/FLASH split visually separates cheap in-memory mutation from batched, immutable on-flash storage, which is the core mechanism reducing write amplification",
+    "reusable_patterns": [
+      "two-tier memory-hierarchy diagram (DRAM buffer vs. flash pool) with explicit flush arrows",
+      "small colored grid cells representing sets within a larger logical group"
+    ],
+    "weaknesses": [
+      "the feedback path from Index Cache/Hotness Tracker to eviction is drawn with light curved arrows that are easy to overlook"
+    ]
+  },
+  "tags": [
+    "flash-cache",
+    "write-amplification",
+    "bloom-filter",
+    "hotness-tracking",
+    "set-associative-cache",
+    "overview"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Nemo Design (p.6)",
+      "4 Nemo Design (p.7)"
+    ],
+    "evidence": [
+      "Figure 7 presents the overview of Nemo.",
+      "Nemo only keeps frequently updated metadata in memory, while storing rarely updated metadata on flash",
+      "the frequently accessed objects' PBFGs are cached in the index cache"
+    ]
+  },
+  "summary": "This figure gives the overall architecture of Nemo, a flash cache for tiny objects. It is split into an upper DRAM region and a lower FLASH region. In DRAM, a Buffer Area holds a mutable Set-Group (SG) aggregating incoming objects and an Index Group buffering bloom filters, alongside an Index Cache holding the PBFGs of frequently accessed objects and a Hotness Tracker maintaining per-object access counters. Once full, the SG and Index Group are flushed to the on-flash SG Pool and Index Pool respectively, which are managed in FIFO order (shown as SG0-SG4 and Index Group0-2). Hot PBFGs are extracted from the Index Pool back into the Index Cache, and this cached hotness information is combined with the Hotness Tracker to guide which objects are retained versus evicted when an Evicted SG is reclaimed. Boxes use flat/hatched purple, green, and blue fills with dashed region boundaries.",
+  "summary_zh": "该图展示Nemo整体架构：DRAM区域包含缓冲区(可变SG、索引组)、索引缓存(缓存热点PBFG)和热度跟踪器；SG与索引组写满后刷新到FLASH区域的SG池和索引池(FIFO管理)；索引池中的热点PBFG被提取回索引缓存，并与热度跟踪器结合，指导被淘汰SG中对象的去留。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

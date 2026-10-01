@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-013_fig13",
+  "paper_id": "asplos26-013",
+  "fig": "13",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 13. Alleviating unbalanced workloads between GPEs.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "visio",
+  "aspect": 2.89,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "digits",
+  "panels": 3,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-013/src/fig13_Balance.svg",
+    "preview.png": "lab/extracted/asplos26-013/src/fig13_Balance.png",
+    "print.png": "lab/extracted/asplos26-013/asplos26-013_fig13_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated: panels (a) and (b) draw the same GPE0-3 lanes as a Gantt timeline before and after rebalancing, letting shrunken idle gaps argue the fix, before panel (c) shows the scheduler hardware that produces it.",
+      "what_to_learn": "Draw the identical set of per-lane Gantt bars twice, once unbalanced and once rebalanced, so the reader compares idle-gap width directly instead of reading numbers; but keep labels at a readable size, since this figure's 2-3.5pt text is illegible without zooming."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Before (a) and after (b) Gantt-style GPE timelines share an identical per-lane skeleton to show reduced idle gray time, while panel (c) mixes in the scheduler/workload-table/alpha-buffer hardware that implements the rebalancing.",
+      "what_to_learn": "Pair an identical-skeleton before/after timeline (same GPE lanes, same block width) with a separate hardware block-diagram panel that implements the fix, mixing a timeline kind with an architecture kind under one figure; keep font size well above this figure's illegible 2-3.5pt, a listed weakness."
+    }
+  ]
+}

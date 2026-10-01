@@ -1,0 +1,267 @@
+{
+  "paper_id": "asplos26-078",
+  "fig": "3",
+  "system": {
+    "name": "Camp",
+    "one_liner": "a framework that predicts CXL-induced slowdown from DRAM-only profiling to guide memory tiering and interleaving decisions",
+    "domain": [
+      "memory-systems",
+      "cxl",
+      "performance-modeling"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DRAM-only Profiling",
+        "role": "baseline profiling run used as Camp's input for per-component slowdown prediction",
+        "container": "Profiling",
+        "novel": false
+      },
+      {
+        "name": "+CXL Run (BW-bound)",
+        "role": "additional profiling run on CXL, needed only for bandwidth-bound workloads' interleaving prediction",
+        "container": "Profiling",
+        "novel": false
+      },
+      {
+        "name": "Latency, MLP",
+        "role": "per-component signal capturing latency and memory-level-parallelism pressure",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "LFB/SQ, prefetch",
+        "role": "per-component signal capturing line-fill-buffer/store-queue and prefetching pressure",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "SB backpressure",
+        "role": "per-component signal capturing store-buffer backpressure",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "S_DRd",
+        "role": "predicted slowdown component from demand reads",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "S_Cache",
+        "role": "predicted slowdown component from cache/prefetching effects",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "S_Store",
+        "role": "predicted slowdown component from stores",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "Slowdown S_total",
+        "role": "combined overall predicted slowdown",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "MLP Invariance",
+        "role": "model of memory-level parallelism used for interleaving prediction on bandwidth-bound workloads",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "Interleaving Model",
+        "role": "closed-form model predicting performance across DRAM-CXL interleaving ratios",
+        "container": "Models (§4–§5)",
+        "novel": true
+      },
+      {
+        "name": "Colocation",
+        "role": "use case: scheduling colocated workloads using Camp's slowdown predictions",
+        "container": "Use Cases (§6)",
+        "novel": false
+      },
+      {
+        "name": "Best-shot Interleaving",
+        "role": "use case: Camp's interleaving policy chosen from the Interleaving Model's predicted curve",
+        "container": "Use Cases (§6)",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DRAM-only Profiling",
+        "to": "Latency, MLP",
+        "what": "per-component pressure signal extraction",
+        "step": null
+      },
+      {
+        "from": "DRAM-only Profiling",
+        "to": "LFB/SQ, prefetch",
+        "what": "per-component pressure signal extraction",
+        "step": null
+      },
+      {
+        "from": "DRAM-only Profiling",
+        "to": "SB backpressure",
+        "what": "per-component pressure signal extraction",
+        "step": null
+      },
+      {
+        "from": "Latency, MLP",
+        "to": "S_DRd",
+        "what": "per-component slowdown estimate",
+        "step": null
+      },
+      {
+        "from": "LFB/SQ, prefetch",
+        "to": "S_Cache",
+        "what": "per-component slowdown estimate",
+        "step": null
+      },
+      {
+        "from": "SB backpressure",
+        "to": "S_Store",
+        "what": "per-component slowdown estimate",
+        "step": null
+      },
+      {
+        "from": "S_DRd",
+        "to": "Slowdown S_total",
+        "what": "combined into the overall slowdown",
+        "step": null
+      },
+      {
+        "from": "S_Cache",
+        "to": "Slowdown S_total",
+        "what": "combined into the overall slowdown",
+        "step": null
+      },
+      {
+        "from": "S_Store",
+        "to": "Slowdown S_total",
+        "what": "combined into the overall slowdown",
+        "step": null
+      },
+      {
+        "from": "Slowdown S_total",
+        "to": "Colocation",
+        "what": "predicted slowdown driving colocation scheduling",
+        "step": null
+      },
+      {
+        "from": "Slowdown S_total",
+        "to": "Interleaving Model",
+        "what": "predicted slowdown feeding the interleaving model",
+        "step": null
+      },
+      {
+        "from": "+CXL Run (BW-bound)",
+        "to": "MLP Invariance",
+        "what": "bandwidth-bound profiling signal",
+        "step": null
+      },
+      {
+        "from": "MLP Invariance",
+        "to": "Interleaving Model",
+        "what": "MLP invariance used to predict interleaving performance",
+        "step": null
+      },
+      {
+        "from": "Interleaving Model",
+        "to": "Best-shot Interleaving",
+        "what": "predicted performance curve driving the interleaving choice",
+        "step": null
+      }
+    ],
+    "key_idea": "Camp turns DRAM-only profiling signals into per-component slowdown estimates and a combined slowdown score, feeding both colocation scheduling and CXL/DRAM interleaving decisions.",
+    "reading_order": "Left to right across the Profiling, Models, and Use Cases column headers."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.64,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9ff",
+        "used_for": "fill of the profiling input boxes (DRAM-only Profiling, +CXL Run)"
+      },
+      {
+        "hex": "#e0ffe0",
+        "used_for": "fill of the three per-component pressure-signal boxes (Latency/MLP, LFB/SQ prefetch, SB backpressure)"
+      },
+      {
+        "hex": "#ffe8d1",
+        "used_for": "fill of the three per-component slowdown boxes (S_DRd, S_Cache, S_Store)"
+      },
+      {
+        "hex": "#fffbcc",
+        "used_for": "pale yellow fill of the combined Slowdown S_total box"
+      },
+      {
+        "hex": "#ccecfc",
+        "used_for": "fill of the MLP Invariance and Interleaving Model boxes"
+      },
+      {
+        "hex": "#f4d1dd",
+        "used_for": "fill of the two use-case output boxes (Colocation, Best-shot Interleaving)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt borders; dashed for the Models group box and the two-lane divider",
+    "font": "Linux Libertine serif, 6-8pt, no bold (italic column headers)",
+    "corners": "square",
+    "arrows": "thin black arrows, mostly without visible arrowheads in the extracted vector data",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "purple = raw profiling-run inputs, green = per-component pressure signals, tan = per-component slowdown estimates, pale yellow = the combined total slowdown, blue = the interleaving-side models, pink = the two use-case outputs",
+    "line_style_means": null,
+    "emphasis": "the dashed box around the three-signal/three-slowdown decomposition visually isolates Camp's core per-component modeling step from its single-input/single-output profiling and use-case stages",
+    "reusable_patterns": [
+      "three parallel same-shaped signal-to-slowdown conversions merged into one combined score",
+      "column headers (Profiling / Models / Use Cases) labelling a left-to-right pipeline instead of an explicit swimlane box"
+    ],
+    "weaknesses": [
+      "arrows carry no text labels, so the exact meaning of each connection relies on adjacent box names alone",
+      "the two pipelines (top: 3-way decomposition; bottom: interleaving) share only implicit visual alignment, not an explicit lane boundary"
+    ]
+  },
+  "tags": [
+    "cxl",
+    "heterogeneous-memory",
+    "performance-prediction",
+    "memory-tiering",
+    "interleaving"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Camp Overview (p.4-5)"
+    ],
+    "evidence": [
+      "Camp observes how a workload stresses the CPU pipeline on DRAM, predicts how those stresses amplify on slower memory",
+      "Camp implements the insights through a three-stage pipeline for CXL and interleaving slowdown prediction",
+      "It extracts microarchitectural signatures from a standard DRAM-only run, transforms them into per-component slowdown forecasts"
+    ]
+  },
+  "summary": "Figure 3 is the Camp framework overview, organized as a three-stage pipeline: Profiling, Models, and Use Cases. A DRAM-only Profiling run feeds three per-component pressure signals (Latency/MLP, LFB/SQ & prefetch, SB backpressure) inside a dashed group, each converted into a per-component slowdown estimate (S_DRd, S_Cache, S_Store) that are combined into an overall Slowdown S_total, which in turn drives Colocation decisions. In parallel, an additional '+CXL Run (BW-bound)' feeds an MLP Invariance step and, together with the Slowdown output, an Interleaving Model that drives Best-shot Interleaving decisions. The figure's own key idea, stated in its caption, is that DRAM-only profiling alone exposes the PMU signals needed to predict per-component slowdown, while the extra CXL run is only needed for bandwidth-bound workloads' interleaving prediction, and both feed directly into the paper's two practical placement use cases.",
+  "summary_zh": "该图为Camp框架概览，呈三段式流水线：DRAM画像信号分解为三项分量减速，汇总为总减速率S_total以指导协同调度决策；额外的CXL运行则支持插值模型以指导Best-shot插值策略。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,64 @@
+{
+  "id": "sosp25-047_fig14",
+  "kind": "mechanism",
+  "paper_id": "sosp25-047",
+  "fig": "14",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Fig. 14: How Tempo schedules 𝑦[𝑡] = 𝑓(𝑥[𝑡:𝑚𝑖𝑛(𝑡+3,𝑇)])",
+  "groups_in_record": [
+    "evolution",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "mixed",
+  "subject": "how Tempo turns a logical-time dependency graph into ILP constraints, solves for a schedule, and scans it into an AST",
+  "arrangement": "panels-column",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.87,
+  "n_elements": 12,
+  "n_relations": 5,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-047/src/fig14_sched_viz.svg",
+    "preview.png": "lab/extracted/sosp25-047/src/fig14_sched_viz.png",
+    "print.png": "lab/extracted/sosp25-047/sosp25-047_fig14_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "Chains four representations of the same schedule (symbolic graph, formal constraints, solved graph, generated code) into one numbered pipeline so the same dependency structure visibly survives each transform.",
+      "what_to_learn": "Draw the same two-row dependency graph twice, logical-time then execution-time, and make the ILP's solution visible as a literal geometric skew (angle θ) between the two layouts; number the pipeline 1-4, flanked by the formal constraints and the emitted code.",
+      "note_source": "agent"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Chains four representations of the same schedule (symbolic graph, formal constraints, solved graph, generated code) into one numbered pipeline so the same dependency structure visibly survives each transform.",
+      "what_to_learn": "Draw the same two-row dependency graph twice, logical-time then execution-time, and make the ILP's solution visible as a literal geometric skew (angle θ) between the two layouts; number the pipeline 1-4, flanked by the formal constraints and the emitted code.",
+      "note_source": "agent"
+    }
+  ]
+}

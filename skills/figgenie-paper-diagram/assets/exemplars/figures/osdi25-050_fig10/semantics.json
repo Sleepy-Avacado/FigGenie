@@ -1,0 +1,273 @@
+{
+  "paper_id": "osdi25-050",
+  "fig": "10",
+  "kind": "mechanism",
+  "system": {
+    "name": "BlitzScale",
+    "one_liner": "a fast, live autoscaling system for large-model serving that uses O(1) host caching",
+    "domain": [
+      "ML-serving",
+      "autoscaling",
+      "GPU-cluster-networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how BlitzScale models cluster GPU connectivity as scale-up NVLink groups atop a scale-out leaf-spine RDMA network",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "Spine network",
+        "kind": "icon",
+        "role": "top-level network fabric connecting all leaf switches and reaching the GPU cluster; deliberately left unmodelled",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A GPU cluster",
+        "kind": "icon",
+        "role": "one cluster of GPU-hosting servers, whose internal NIC/GPU/NVLink structure is exploded on the right",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "LeafID:",
+        "kind": "label",
+        "role": "names the leaf-switch identifiers used below",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L1",
+        "kind": "node",
+        "role": "first leaf switch, connecting a set of nodes to the spine",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L2",
+        "kind": "node",
+        "role": "second leaf switch, connecting another set of nodes to the spine",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Scale out network, e.g., RDMA",
+        "kind": "label",
+        "role": "names the dashed red links from leaf switches down to nodes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node1",
+        "kind": "node",
+        "role": "first server node under leaf L1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NodeM",
+        "kind": "node",
+        "role": "last server node under leaf L1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NodeM+1",
+        "kind": "node",
+        "role": "first server node under leaf L2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "BWi",
+        "kind": "label",
+        "role": "names the per-GPU bandwidth of the link between a GPU's NIC and its leaf switch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NIC",
+        "kind": "port",
+        "role": "one of eight NIC ports, each attached to one GPU, carrying that GPU's scale-out bandwidth",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU",
+        "kind": "node",
+        "role": "one of eight GPUs in the exploded scale-up group",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Scale_x",
+        "kind": "label",
+        "role": "names the scale-up dimension/group being illustrated on the right",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ScaleUp Network, e.g., NVLink",
+        "kind": "label",
+        "role": "names the full-mesh links drawn beneath the GPU row",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Spine network",
+        "to": "L1",
+        "what": "the spine network links down to leaf switch L1",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Spine network",
+        "to": "L2",
+        "what": "the spine network links down to leaf switch L2",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Spine network",
+        "to": "A GPU cluster",
+        "what": "the spine network also reaches the modelled GPU cluster",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "L1",
+        "to": "Node1",
+        "what": "leaf switch L1 connects to its nodes over the scale-out RDMA network",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "L2",
+        "to": "NodeM+1",
+        "what": "leaf switch L2 connects to its nodes over the scale-out RDMA network",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A GPU cluster",
+        "to": "NIC",
+        "what": "the GPU cluster box is exploded into the NIC/GPU scale-up illustration on the right",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "GPU",
+        "what": "each GPU's NIC carries that GPU's BWi bandwidth down to it",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "GPU",
+        "to": "GPU",
+        "what": "GPUs are interconnected in a full mesh by the modelled ScaleUp NVLink network",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "BlitzScale models cluster networking at two levels: a leaf-to-spine RDMA topology for scale-out traffic between nodes, and a full-mesh NVLink group for scale-up traffic between the GPUs inside one node/cluster.",
+    "reading_order": "From the Spine network cloud down to leaf switches and their nodes on the left, then to the GPU cluster box and its exploded NIC/GPU/NVLink mesh on the right."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": true,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.17,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "dashed scale-out RDMA links from leaf switches to nodes, and (at reduced opacity) the pink-tinted NIC boxes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "small bright-red pin/dot marking the top of each NIC box"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "grey leaf-switch and server-rack icon bodies"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "amber accents on the switch/server icons"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light-grey panel background shading, e.g. behind the GPU-cluster box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat, with some icons using layered greyscale shading for a 3D switch/server look",
+    "stroke": "mostly thin black outlines (median ~0.5pt) plus dark-green box borders on GPU/NIC boxes and red dashed scale-out links",
+    "corners": "rounded",
+    "arrows": "thin black connecting lines from the spine to leaf switches and the GPU cluster, plus short red dashed ticks for the scale-out links",
+    "font": "sans (Lato, Calibri), italic for network/label captions, bold for switch/node names",
+    "icons": "small raster server-rack, network-switch, and NIC/GPU glyph icons"
+  },
+  "encoding": {
+    "color_means": "green-bordered boxes mark the GPU/NIC compute-and-networking hardware; red marks the scale-out RDMA links and the NIC's bandwidth pin; grey/amber shading is decorative icon styling rather than a semantic code",
+    "line_style_means": "dashed red ticks denote the scale-out RDMA connections from leaf switches to nodes; thin solid black lines connect the spine to leaf switches and to the GPU cluster; curved grey arcs beneath the GPU row denote the scale-up NVLink mesh",
+    "state_means": "not applicable - the figure models one static network hierarchy rather than alternative or evolving states",
+    "marker_means": "no numbered markers; subscripted labels (BWi, Scale_x) name the modelled bandwidth and scale dimension at each level",
+    "emphasis": "leader lines zoom from the small 'A GPU cluster' icon into a larger exploded NIC/GPU/NVLink diagram, drawing attention to the scale-up structure the paper's model focuses on",
+    "reusable_patterns": [
+      "a cloud-to-switch-to-node network hierarchy with one node zoomed into its NIC/accelerator/interconnect internals"
+    ],
+    "weaknesses": [
+      "the spine network's own topology is left undrawn (an empty cloud), matching the text's choice not to model it, but this could be misread as an omission",
+      "leaf switches beyond L1/L2 are compressed to an ellipsis, so the modelled leaf count is not visible"
+    ]
+  },
+  "tags": [
+    "network-modelling",
+    "GPU-cluster",
+    "leaf-spine-topology",
+    "NVLink",
+    "RDMA",
+    "BlitzScale",
+    "scale-up-scale-out"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Detailed Design and Implementation"
+    ],
+    "evidence": [
+      "each GPU (i) has a BWi bandwidth connected to a leaf switch",
+      "leaf switches are connected to spine switches, with inter-leaf bandwidth equal to or smaller than the intra-leaf bandwidth",
+      "we don’t model the spine network and rely on upper-tier protocols"
+    ]
+  },
+  "summary": "Figure 10 shows how BlitzScale abstracts a GPU cluster's network into two layers for its scaling model. On the left, a Spine network cloud connects down to leaf switches (L1, L2, ...), each linking over a scale-out RDMA network to a set of server nodes (Node1...NodeM under L1, NodeM+1... under L2); GPUs behind the same leaf switch are treated as fully meshed at min(BWi, BWj) bandwidth. On the right, the 'A GPU cluster' box is exploded to show what fast scale-up networking looks like inside one group: each GPU's NIC carries its own BWi bandwidth, and the GPUs themselves are joined by a full-mesh ScaleUp Network such as NVLink, whose 1,600-3,600 Gbps interconnect makes scaling within the group essentially free. The spine network itself is deliberately left unmodelled, relying on existing multipathing protocols.",
+  "summary_zh": "图10展示BlitzScale的网络建模：左侧脊-叶结构经RDMA scale-out连接节点；右侧放大展示组内NIC/GPU经NVLink scale-up全互联，带宽记为BWi，脊网络本身不建模。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

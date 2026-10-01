@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-060_fig8",
+  "paper_id": "asplos26-060",
+  "fig": "8",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 8. Overview of HILOS, a ready-to-use framework.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "illustrator",
+  "aspect": 1.52,
+  "n_components": 13,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-060/src/fig8_impl.svg",
+    "preview.png": "lab/extracted/asplos26-060/src/fig8_impl.png",
+    "print.png": "lab/extracted/asplos26-060/asplos26-060_fig8_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Three-tier stack whose bottom tier is one SmartSSD drawn twice with an ellipsis, with novel parts highlighted green.",
+      "what_to_learn": "Replication lives in one tier only; keep the tiers above it singular so the figure does not read as N whole systems."
+    }
+  ]
+}

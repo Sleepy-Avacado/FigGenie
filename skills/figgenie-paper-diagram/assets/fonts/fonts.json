@@ -1,0 +1,373 @@
+{
+  "_doc": "Font map for figgenie-paper-diagram. Keys are font *keys* used in figure specs (meta.font). Each entry lists the family names it substitutes (aliases, matched case-insensitively, PDF subset prefixes like ABCDEF+ stripped), the open font files shipped in this directory, the CSS stack to declare on the root <svg>, and the license. Files are resolved relative to this directory. Families with empty `files` and a `system_files` map are not shipped: the scripts look them up in `system_font_dirs` (first matching file per weight, glob patterns allowed) and embed a subset only when `embeddable` is true (open licences). `cjk_default` is the CJK companion added automatically whenever a figure's text contains CJK characters (`script: cjk` families hold the CJK glyphs; the Latin family stays first in the stack).",
+  "default": "helvetica",
+  "generic": {
+    "sans-serif": "helvetica",
+    "serif": "times",
+    "monospace": "dejavu-mono"
+  },
+  "families": {
+    "helvetica": {
+      "display": "Helvetica / Helvetica Neue (TeX Gyre Heros)",
+      "css_family": "TeX Gyre Heros",
+      "aliases": [
+        "Helvetica",
+        "Helvetica Neue",
+        "HelveticaNeue",
+        "Helvetica-Bold",
+        "Nimbus Sans",
+        "Nimbus Sans L",
+        "NimbusSanL",
+        "TeX Gyre Heros",
+        "TeXGyreHeros",
+        "Swiss"
+      ],
+      "files": {
+        "regular": "texgyreheros-regular.otf",
+        "bold": "texgyreheros-bold.otf",
+        "italic": "texgyreheros-italic.otf",
+        "bolditalic": "texgyreheros-bolditalic.otf"
+      },
+      "stack": "'TeX Gyre Heros', 'Helvetica Neue', Helvetica, Arimo, Arial, sans-serif",
+      "license": "GUST Font License (free to embed and redistribute)",
+      "corpus_share": "Helvetica family 15% of good architecture figures"
+    },
+    "arial": {
+      "display": "Arial (Arimo, metric-compatible)",
+      "css_family": "Arimo",
+      "aliases": [
+        "Arial",
+        "ArialMT",
+        "Arial-BoldMT",
+        "Liberation Sans",
+        "LiberationSans",
+        "Arimo"
+      ],
+      "files": {
+        "regular": "Arimo-Regular.ttf",
+        "bold": "Arimo-Bold.ttf",
+        "italic": "Arimo-Italic.ttf",
+        "bolditalic": "Arimo-BoldItalic.ttf"
+      },
+      "stack": "Arimo, 'Liberation Sans', Arial, Helvetica, sans-serif",
+      "license": "SIL OFL 1.1",
+      "corpus_share": "Arial 27% of good architecture figures (most common)"
+    },
+    "calibri": {
+      "display": "Calibri (Carlito, metric-compatible)",
+      "css_family": "Carlito",
+      "aliases": [
+        "Calibri",
+        "Calibri-Bold",
+        "Carlito",
+        "Aptos",
+        "Segoe UI",
+        "SegoeUI"
+      ],
+      "files": {
+        "regular": "Carlito-Regular.ttf",
+        "bold": "Carlito-Bold.ttf",
+        "italic": "Carlito-Italic.ttf",
+        "bolditalic": "Carlito-BoldItalic.ttf"
+      },
+      "stack": "Carlito, Calibri, 'Segoe UI', Arimo, Arial, sans-serif",
+      "license": "SIL OFL 1.1",
+      "corpus_share": "Calibri 15% (PowerPoint figures); Aptos 2.5% mapped here as nearest"
+    },
+    "times": {
+      "display": "Times New Roman (Tinos, metric-compatible)",
+      "css_family": "Tinos",
+      "aliases": [
+        "Times New Roman",
+        "TimesNewRoman",
+        "TimesNewRomanPSMT",
+        "TimesNewRomanPS",
+        "Times",
+        "Times-Roman",
+        "Liberation Serif",
+        "Tinos",
+        "Nimbus Roman",
+        "Nimbus Roman No9 L",
+        "NimbusRomNo9L"
+      ],
+      "files": {
+        "regular": "Tinos-Regular.ttf",
+        "bold": "Tinos-Bold.ttf",
+        "italic": "Tinos-Italic.ttf",
+        "bolditalic": "Tinos-BoldItalic.ttf"
+      },
+      "stack": "Tinos, 'Times New Roman', Times, 'TeX Gyre Termes', serif",
+      "license": "SIL OFL 1.1",
+      "corpus_share": "Times family 11%"
+    },
+    "termes": {
+      "display": "Times-like for TeX documents (TeX Gyre Termes)",
+      "css_family": "TeX Gyre Termes",
+      "aliases": [
+        "TeX Gyre Termes",
+        "TeXGyreTermes",
+        "txr",
+        "ptm"
+      ],
+      "files": {
+        "regular": "texgyretermes-regular.otf",
+        "bold": "texgyretermes-bold.otf",
+        "italic": "texgyretermes-italic.otf",
+        "bolditalic": "texgyretermes-bolditalic.otf"
+      },
+      "stack": "'TeX Gyre Termes', Tinos, 'Times New Roman', serif",
+      "license": "GUST Font License"
+    },
+    "computer-modern": {
+      "display": "Computer Modern Roman (Latin Modern Roman 10)",
+      "css_family": "Latin Modern Roman",
+      "aliases": [
+        "Computer Modern",
+        "Computer Modern Roman",
+        "CMR10",
+        "CMR",
+        "CMBX10",
+        "Latin Modern Roman",
+        "LMRoman10",
+        "LMRoman10-Regular",
+        "LM Roman 10"
+      ],
+      "files": {
+        "regular": "lmroman10-regular.otf",
+        "bold": "lmroman10-bold.otf",
+        "italic": "lmroman10-italic.otf",
+        "bolditalic": "lmroman10-bolditalic.otf"
+      },
+      "stack": "'Latin Modern Roman', 'Computer Modern', 'TeX Gyre Termes', serif",
+      "license": "GUST Font License",
+      "corpus_share": "TikZ figures (14% of sourced good figures) use CM/LM"
+    },
+    "computer-modern-sans": {
+      "display": "Computer Modern Sans (Latin Modern Sans 10)",
+      "css_family": "Latin Modern Sans",
+      "aliases": [
+        "Computer Modern Sans",
+        "CMSS10",
+        "CMSS",
+        "Latin Modern Sans",
+        "LMSans10",
+        "LMSans10-Regular",
+        "LM Sans 10"
+      ],
+      "files": {
+        "regular": "lmsans10-regular.otf",
+        "bold": "lmsans10-bold.otf",
+        "italic": "lmsans10-oblique.otf",
+        "bolditalic": "lmsans10-boldoblique.otf"
+      },
+      "stack": "'Latin Modern Sans', 'Computer Modern Sans', 'TeX Gyre Heros', sans-serif",
+      "license": "GUST Font License"
+    },
+    "dejavu": {
+      "display": "DejaVu Sans (matplotlib default; Verdana-like)",
+      "css_family": "DejaVu Sans",
+      "aliases": [
+        "DejaVu Sans",
+        "DejaVuSans",
+        "Verdana",
+        "Bitstream Vera Sans"
+      ],
+      "files": {
+        "regular": "DejaVuSans.ttf",
+        "bold": "DejaVuSans-Bold.ttf",
+        "italic": "DejaVuSans-Oblique.ttf"
+      },
+      "stack": "'DejaVu Sans', Verdana, Arimo, sans-serif",
+      "license": "Bitstream Vera / DejaVu license (free redistribution)",
+      "corpus_share": "DejaVu 0.7%, Verdana 1.4%"
+    },
+    "inter": {
+      "display": "Inter (modern UI sans)",
+      "css_family": "Inter",
+      "aliases": [
+        "Inter"
+      ],
+      "files": {
+        "regular": "Inter-Regular.otf",
+        "bold": "Inter-Bold.otf",
+        "italic": "Inter-Italic.otf",
+        "bolditalic": "Inter-BoldItalic.otf"
+      },
+      "stack": "Inter, Roboto, Arimo, sans-serif",
+      "license": "SIL OFL 1.1"
+    },
+    "roboto": {
+      "display": "Roboto",
+      "css_family": "Roboto",
+      "aliases": [
+        "Roboto"
+      ],
+      "files": {
+        "regular": "Roboto-Regular.otf",
+        "bold": "Roboto-Bold.otf",
+        "italic": "Roboto-Italic.otf",
+        "bolditalic": "Roboto-BoldItalic.otf"
+      },
+      "stack": "Roboto, Arimo, Arial, sans-serif",
+      "license": "Apache 2.0"
+    },
+    "source-sans": {
+      "display": "Source Sans Pro",
+      "css_family": "Source Sans Pro",
+      "aliases": [
+        "Source Sans Pro",
+        "Source Sans 3",
+        "SourceSansPro",
+        "Source Sans"
+      ],
+      "files": {
+        "regular": "SourceSansPro-Regular.otf",
+        "bold": "SourceSansPro-Bold.otf",
+        "italic": "SourceSansPro-RegularIt.otf",
+        "bolditalic": "SourceSansPro-BoldIt.otf"
+      },
+      "stack": "'Source Sans Pro', 'Source Sans 3', Arimo, sans-serif",
+      "license": "SIL OFL 1.1"
+    },
+    "dejavu-mono": {
+      "display": "DejaVu Sans Mono (code labels) — not shipped; falls back to system monospace",
+      "css_family": "DejaVu Sans Mono",
+      "aliases": [
+        "DejaVu Sans Mono",
+        "Consolas",
+        "Menlo",
+        "Courier New",
+        "Courier",
+        "Monaco",
+        "Inconsolata",
+        "Source Code Pro"
+      ],
+      "files": {},
+      "stack": "'DejaVu Sans Mono', Menlo, Consolas, 'Courier New', monospace",
+      "license": "n/a (system fallback)"
+    },
+    "source-han-sans": {
+      "display": "Source Han Sans / 思源黑体 (= Noto Sans CJK), CJK companion of Source Sans Pro",
+      "css_family": "Source Han Sans CN",
+      "script": "cjk",
+      "aliases": [
+        "Source Han Sans",
+        "Source Han Sans CN",
+        "Source Han Sans SC",
+        "Source Han Sans TC",
+        "SourceHanSansCN",
+        "SourceHanSansSC",
+        "思源黑体",
+        "思源黑体 CN",
+        "Noto Sans CJK SC",
+        "Noto Sans CJK",
+        "Noto Sans SC",
+        "NotoSansCJKsc",
+        "PingFang SC",
+        "苹方",
+        "Microsoft YaHei",
+        "微软雅黑",
+        "SimHei",
+        "黑体",
+        "Hiragino Sans GB",
+        "冬青黑体简体中文"
+      ],
+      "files": {},
+      "system_files": {
+        "regular": [
+          "SourceHanSansCN-Regular.otf",
+          "SourceHanSansCN-Regular*.otf",
+          "SourceHanSansSC-Regular.otf",
+          "SourceHanSansCN-Normal*.otf",
+          "SourceHanSans-Regular.ttc",
+          "SourceHanSansCN-Medium*.otf",
+          "NotoSansCJKsc-Regular.otf",
+          "NotoSansCJK-Regular.ttc",
+          "NotoSansSC-Regular.ttf",
+          "NotoSansSC-Regular.otf",
+          "NotoSansSC[wght].ttf"
+        ],
+        "bold": [
+          "SourceHanSansCN-Bold.otf",
+          "SourceHanSansCN-Bold*.otf",
+          "SourceHanSansSC-Bold.otf",
+          "SourceHanSans-Bold.ttc",
+          "NotoSansCJKsc-Bold.otf",
+          "NotoSansCJK-Bold.ttc",
+          "NotoSansSC-Bold.ttf",
+          "NotoSansSC-Bold.otf"
+        ]
+      },
+      "embeddable": true,
+      "stack": "'Source Han Sans CN', 'Source Han Sans SC', 'Noto Sans CJK SC', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif",
+      "pair_with": "source-sans",
+      "license": "SIL OFL 1.1 — not shipped (10–20 MB per face); resolved from the system, subsetted to the figure's characters and embedded",
+      "corpus_share": "n/a — the corpus is English-only; use for Chinese theses / CN venues together with source-sans for Latin"
+    },
+    "source-han-serif": {
+      "display": "Source Han Serif / 思源宋体 (= Noto Serif CJK), for theses that set figures in 宋体",
+      "css_family": "Source Han Serif CN",
+      "script": "cjk",
+      "aliases": [
+        "Source Han Serif",
+        "Source Han Serif CN",
+        "Source Han Serif SC",
+        "SourceHanSerifCN",
+        "SourceHanSerifSC",
+        "思源宋体",
+        "思源宋体 CN",
+        "Noto Serif CJK SC",
+        "Noto Serif SC",
+        "NotoSerifCJKsc",
+        "SimSun",
+        "宋体",
+        "Songti SC",
+        "STSong",
+        "华文宋体"
+      ],
+      "files": {},
+      "system_files": {
+        "regular": [
+          "SourceHanSerifCN-Regular.otf",
+          "SourceHanSerifCN-Regular*.otf",
+          "SourceHanSerifSC-Regular.otf",
+          "SourceHanSerifCN-Medium*.otf",
+          "SourceHanSerifCN-SemiBold*.otf",
+          "SourceHanSerif-Regular.ttc",
+          "NotoSerifCJKsc-Regular.otf",
+          "NotoSerifCJK-Regular.ttc",
+          "NotoSerifSC-Regular.ttf",
+          "NotoSerifSC-Regular.otf"
+        ],
+        "bold": [
+          "SourceHanSerifCN-Bold.otf",
+          "SourceHanSerifCN-Bold*.otf",
+          "SourceHanSerifSC-Bold.otf",
+          "SourceHanSerifCN-SemiBold*.otf",
+          "SourceHanSerif-Bold.ttc",
+          "NotoSerifCJKsc-Bold.otf",
+          "NotoSerifCJK-Bold.ttc",
+          "NotoSerifSC-Bold.ttf",
+          "NotoSerifSC-Bold.otf"
+        ]
+      },
+      "embeddable": true,
+      "stack": "'Source Han Serif CN', 'Source Han Serif SC', 'Noto Serif CJK SC', 'Noto Serif SC', 'Songti SC', SimSun, serif",
+      "pair_with": "times",
+      "license": "SIL OFL 1.1 — not shipped; resolved from the system, subsetted and embedded",
+      "corpus_share": "n/a"
+    }
+  },
+  "cjk_default": "source-han-sans",
+  "system_font_dirs": [
+    "~/Library/Fonts",
+    "/Library/Fonts",
+    "/System/Library/Fonts",
+    "/System/Library/Fonts/Supplemental",
+    "/usr/share/fonts",
+    "/usr/local/share/fonts",
+    "~/.fonts",
+    "~/.local/share/fonts",
+    "C:/Windows/Fonts"
+  ]
+}

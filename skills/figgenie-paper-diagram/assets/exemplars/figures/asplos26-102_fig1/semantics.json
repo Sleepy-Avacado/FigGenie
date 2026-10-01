@@ -1,0 +1,172 @@
+{
+  "paper_id": "asplos26-102",
+  "fig": "1",
+  "system": {
+    "name": "FlashMem",
+    "one_liner": "a memory-streaming framework that reduces memory use and latency for large-scale and multi-DNN inference on mobile GPUs",
+    "domain": [
+      "mobile-systems",
+      "ml-systems",
+      "memory-management"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Disk",
+        "role": "on-device storage holding DNN weights before loading",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "UM",
+        "role": "unified memory that first receives weights streamed from disk",
+        "container": "Mobile GPU architecture",
+        "novel": false
+      },
+      {
+        "name": "TM",
+        "role": "texture memory holding weights reorganized into 2.5D tiled layout",
+        "container": "Mobile GPU architecture",
+        "novel": false
+      },
+      {
+        "name": "L2",
+        "role": "shared L2 cache between unified memory and the streaming multiprocessors",
+        "container": "Mobile GPU architecture",
+        "novel": false
+      },
+      {
+        "name": "SM0",
+        "role": "streaming multiprocessor executing DNN compute, reading through its Texture Cache",
+        "container": "DNN Execution",
+        "novel": false
+      },
+      {
+        "name": "SM1",
+        "role": "second streaming multiprocessor, symmetric to SM0",
+        "container": "DNN Execution",
+        "novel": false
+      },
+      {
+        "name": "Texture Cache",
+        "role": "per-SM cache exploiting 2D spatial locality of texture memory",
+        "container": "SM0 / SM1",
+        "novel": false
+      },
+      {
+        "name": "Preemptible pool",
+        "role": "multi-DNN strategy where a high-priority model can interrupt or replace a lower-priority one in execution",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FIFO queue",
+        "role": "multi-DNN strategy where models are queued and executed sequentially, the strategy FlashMem targets",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Disk",
+        "to": "UM",
+        "what": "DNN weights loaded from disk",
+        "step": 1
+      },
+      {
+        "from": "UM",
+        "to": "TM",
+        "what": "weights transformed into 2.5D texture memory layout",
+        "step": 2
+      },
+      {
+        "from": "TM",
+        "to": "SM0 / SM1",
+        "what": "weights consumed during execution via the Texture Cache",
+        "step": 3
+      }
+    ],
+    "key_idea": "mobile GPU inference pays a multi-step disk-to-UM-to-TM-to-SM weight transfer cost, and this cost repeats for every model when multiple DNNs are run FIFO-style, motivating FlashMem's streaming approach",
+    "reading_order": "left panel (a) top-to-bottom follows the numbered weight-transfer path from disk through UM and TM to the SMs; right panels (b) and (c), stacked below the 'Input' label, contrast preemptible versus FIFO multi-DNN scheduling"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.89,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7ea6e0",
+        "used_for": "SM / Texture Cache / UM blocks in the mobile GPU memory hierarchy"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "secondary memory-hierarchy boxes (L2, UM)"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "Texture Memory (TM) and Disk boxes"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "preemptible pool boxes in panel (b)"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "FIFO queue boxes in panel (c)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.4pt thin strokes, square-cornered boxes",
+    "font": "Times New Roman serif for labels, bold-oblique Helvetica for panel letters, small sizes ~5.5-6.5pt",
+    "corners": "square",
+    "arrows": "thin orthogonal and slightly curved arrows tracing the numbered weight-transfer path",
+    "icons": "vector icons representing small DNN graphs (nodes/edges) queued in the preemptible pool and FIFO queue"
+  },
+  "encoding": {
+    "color_means": "distinct pastel fills separate the mobile-GPU memory-hierarchy blocks (blue/purple) from the multi-DNN scheduling illustrations (pink for preemptible, orange for FIFO)",
+    "line_style_means": null,
+    "emphasis": "circled step numbers (1, 2, 3) trace the costly multi-hop weight path in panel (a), directly motivating why panel (c)'s FIFO scheduling repeats that cost per model",
+    "reusable_patterns": [
+      "numbered hardware memory-hierarchy diagram paired with side-by-side scheduling-strategy comparison panels"
+    ],
+    "weaknesses": [
+      "high shape/text density (361 shapes) in a single-column figure makes the memory-hierarchy labels small and busy"
+    ]
+  },
+  "tags": [
+    "mobile-gpu",
+    "texture-memory",
+    "multi-dnn-scheduling",
+    "memory-hierarchy",
+    "on-device-inference"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.2)",
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "Figure 1 (a) illustrates the multi-step path to transfer these weights from disk to UM",
+      "moving through UM to TM ( 2 ), and executing on SM",
+      "two representative approaches for multi-DNN usage on mobile devices are FIFO ... and preemptive"
+    ]
+  },
+  "summary": "FlashMem targets efficient execution of large and multi-DNN workloads on mobile GPUs by streaming weights instead of fully preloading them. Figure 1 sets up the motivation in three panels. Panel (a) shows the hierarchical mobile-GPU memory system -- Disk, Unified Memory (UM), Texture Memory (TM), L2 cache, and per-SM Texture Caches feeding SM0/SM1 -- with three numbered steps tracing how weights move from disk into UM, are reorganized into 2.5D texture layout in TM, and are finally consumed during execution on the streaming multiprocessors. Panels (b) and (c), under a shared 'Input: images, audio, texts...' label, contrast two multi-DNN support strategies: a preemptible pool where a high-priority model can interrupt another, and a FIFO queue where models execute strictly in sequence. The figure is a dense, square-cornered block diagram using pastel color blocks and small DNN-graph icons to keep the memory hierarchy and the scheduling comparison visually distinct.",
+  "summary_zh": "该图分三部分呈现动机：(a) 展示移动 GPU 存储层次（磁盘、统一内存UM、纹理内存TM、L2、SM及纹理缓存）及权重经三个编号步骤传输执行的路径；(b)(c) 对比两种多DNN调度策略——可抢占池与FIFO队列，说明FlashMem所针对的重复加载开销问题。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

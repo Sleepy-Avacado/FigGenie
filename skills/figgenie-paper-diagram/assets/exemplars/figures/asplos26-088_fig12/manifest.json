@@ -1,0 +1,54 @@
+{
+  "id": "asplos26-088_fig12",
+  "paper_id": "asplos26-088",
+  "fig": "12",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 12. Microarchitecture of Sorting Engine.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.53,
+  "n_components": 10,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-088/src/fig12_architecture-sorting-engine.svg",
+    "preview.png": "lab/extracted/asplos26-088/src/fig12_architecture-sorting-engine.png",
+    "print.png": "lab/extracted/asplos26-088/asplos26-088_fig12_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence layered exemplar of a stepwise zoom: 16 replicated Sorting Cores collapse into one expanded core, linked by a dashed containment line to a further-expanded, blue-highlighted unit below, across 2 panels and nesting depth 3.",
+      "what_to_learn": "Chain two successive zoom-ins top to bottom, engine to one core to one sub-unit, using dashed connector lines to mean containment rather than dataflow, and highlight only the final, most novel block in accent colour; the record's own weakness warns to label small symbols like a comparator explicitly instead of relying on convention."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Three containment levels drawn top-to-bottom (Sorting Engine -> Sorting Core -> MSU+) with the focal unit highlighted in blue.",
+      "what_to_learn": "Draw each level once, connect levels with dashed leaders, and reserve the accent fill for the innermost novel unit."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "A stepwise zoom runs from the 16-core Sorting Engine list into one Core's layout, then into the MSU+'s dual-buffer filter-and-mux detail, joined by dashed lines, with the final, most-novel block highlighted in light blue.",
+      "what_to_learn": "Chain dashed zoom connectors through two levels (engine to core to sub-unit) and reserve one accent colour (light blue) for only the deepest, most novel block so the eye knows exactly which of several nested boxes is the actual contribution; label every symbol explicitly, since this figure's unlabelled '>' comparator relies on visual convention alone."
+    }
+  ]
+}

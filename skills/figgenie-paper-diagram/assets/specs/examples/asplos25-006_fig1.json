@@ -1,0 +1,443 @@
+{
+ "meta": {
+  "id": "asplos25-006-fig1",
+  "title": "Batch parallelism vs Z3/FSDP: where the collectives sit",
+  "system": {
+   "name": "Z3 / FSDP",
+   "one_liner": "sharded data parallelism that AllGathers parameters just before use and ReduceScatters gradients"
+  },
+  "kind": "mechanism",
+  "figure_kind": "mechanism",
+  "venue_style": "acm",
+  "column": "single",
+  "width_pt": 240,
+  "max_height_pt": 240,
+  "template": "mechanism",
+  "direction": "left-right",
+  "panels": 2,
+  "palette": "categorical-outline",
+  "font": "arial",
+  "step_markers": "none",
+  "language": "en",
+  "version": 1,
+  "mechanism": {
+   "group": "comparison",
+   "groups": [],
+   "worked_example": false,
+   "base": "component",
+   "arrangement": "panels-column",
+   "frame_template": "aligned",
+   "delta_marking": "colour",
+   "zoom_callout": false,
+   "notes": "same fwd/bwd/update skeleton drawn twice; only the collective ops and the parameter labels differ"
+  },
+  "caption_draft": "Figure 1. Batch parallelism (top) keeps a full copy of the parameters on every device and AllReduces the gradients; Z3/FSDP (bottom) shards the parameters, AllGathers them just before the forward and backward passes and ReduceScatters the gradients.",
+  "_source": "asplos25-006_fig1 (corpus semantics record, kind mechanism)",
+  "_notes": "Reverse-engineered example of the mechanism branch: a comparison with two vertically stacked panels that share one template; the second panel adds the AllGather bars and renames the collective."
+ },
+ "panels": [
+  {
+   "id": "p-batch",
+   "label": "Batch parallelism",
+   "axis": "alternatives",
+   "order": 0,
+   "differs": "",
+   "verdict": ""
+  },
+  {
+   "id": "p-fsdp",
+   "label": "Z3 / FSDP",
+   "axis": "alternatives",
+   "order": 1,
+   "template_of": "p-batch",
+   "differs": "parameters are sharded across devices: an AllGather bar precedes fwd and bwd, the gradient collective is a ReduceScatter, and every parameter label carries its shard index",
+   "verdict": ""
+  }
+ ],
+ "containers": [
+  {
+   "id": "device-1",
+   "label": "Device 1",
+   "kind": "dashed",
+   "role": "existing",
+   "title_position": "top-left",
+   "order": 0
+  },
+  {
+   "id": "device-2",
+   "label": "Device 2",
+   "kind": "dashed",
+   "role": "existing",
+   "title_position": "bottom-left",
+   "order": 1
+  }
+ ],
+ "nodes": [
+  {
+   "id": "batch-1",
+   "label": "batch[0]",
+   "kind": "note",
+   "role": "existing",
+   "order": 0
+  },
+  {
+   "id": "fwd-1",
+   "label": "fwd",
+   "kind": "compute",
+   "parent": "device-1",
+   "role": "existing",
+   "size_hint": "s",
+   "order": 1
+  },
+  {
+   "id": "bwd-1",
+   "label": "bwd",
+   "kind": "compute",
+   "parent": "device-1",
+   "role": "existing",
+   "order": 2
+  },
+  {
+   "id": "update-1",
+   "label": "update",
+   "kind": "compute",
+   "parent": "device-1",
+   "role": "existing",
+   "order": 4
+  },
+  {
+   "id": "params-1",
+   "label": "params",
+   "kind": "note",
+   "parent": "device-1",
+   "role": "existing",
+   "order": 0
+  },
+  {
+   "id": "newparams-1",
+   "label": "new params",
+   "kind": "note",
+   "role": "existing",
+   "order": 5,
+   "parent": "device-1",
+   "note": "sits at the right edge of the device box, where the update arrow leaves it"
+  },
+  {
+   "id": "batch-2",
+   "label": "batch[1]",
+   "kind": "note",
+   "role": "existing",
+   "order": 0
+  },
+  {
+   "id": "fwd-2",
+   "label": "fwd",
+   "kind": "compute",
+   "parent": "device-2",
+   "role": "existing",
+   "size_hint": "s",
+   "order": 1
+  },
+  {
+   "id": "bwd-2",
+   "label": "bwd",
+   "kind": "compute",
+   "parent": "device-2",
+   "role": "existing",
+   "order": 2
+  },
+  {
+   "id": "update-2",
+   "label": "update",
+   "kind": "compute",
+   "parent": "device-2",
+   "role": "existing",
+   "order": 4
+  },
+  {
+   "id": "params-2",
+   "label": "params",
+   "kind": "note",
+   "parent": "device-2",
+   "role": "existing",
+   "order": 0
+  },
+  {
+   "id": "newparams-2",
+   "label": "new params",
+   "kind": "note",
+   "role": "existing",
+   "order": 5,
+   "parent": "device-2"
+  },
+  {
+   "id": "reduce",
+   "label": "⊕",
+   "sublabel": "AllReduce gradients",
+   "kind": "compute",
+   "role": "existing",
+   "size_hint": "s",
+   "order": 3,
+   "note": "one tall box between the two devices, spanning both rows; the collective's name sits beside it in the accent colour"
+  },
+  {
+   "id": "gather-1a",
+   "label": "",
+   "kind": "port",
+   "parent": "device-1",
+   "role": "novel",
+   "emphasis": "accent",
+   "panel": "p-fsdp",
+   "order": 1,
+   "note": "thin vertical accent bar on the path into fwd: the AllGather of the parameter shard"
+  },
+  {
+   "id": "gather-1b",
+   "label": "",
+   "kind": "port",
+   "parent": "device-1",
+   "role": "novel",
+   "emphasis": "accent",
+   "panel": "p-fsdp",
+   "order": 2,
+   "note": "second bar between fwd and bwd"
+  },
+  {
+   "id": "gather-2a",
+   "label": "",
+   "kind": "port",
+   "parent": "device-2",
+   "role": "novel",
+   "emphasis": "accent",
+   "panel": "p-fsdp",
+   "order": 1
+  },
+  {
+   "id": "gather-2b",
+   "label": "",
+   "kind": "port",
+   "parent": "device-2",
+   "role": "novel",
+   "emphasis": "accent",
+   "panel": "p-fsdp",
+   "order": 2
+  }
+ ],
+ "edges": [
+  {
+   "id": "e-in-1",
+   "from": "batch-1",
+   "to": "fwd-1",
+   "kind": "data",
+   "head": "filled"
+  },
+  {
+   "id": "e-fb-1",
+   "from": "fwd-1",
+   "to": "bwd-1",
+   "kind": "data"
+  },
+  {
+   "id": "e-grad-1",
+   "from": "bwd-1",
+   "to": "reduce",
+   "kind": "data",
+   "label": "",
+   "route_hint": "straight into the shared collective box"
+  },
+  {
+   "id": "e-red-1",
+   "from": "reduce",
+   "to": "update-1",
+   "kind": "data"
+  },
+  {
+   "id": "e-out-1",
+   "from": "update-1",
+   "to": "newparams-1",
+   "kind": "data"
+  },
+  {
+   "id": "e-p-1",
+   "from": "params-1",
+   "to": "fwd-1",
+   "kind": "feedback",
+   "route": "orthogonal",
+   "route_hint": "from the params label along the top of the device box, dropping into fwd and bwd",
+   "to_side": "top"
+  },
+  {
+   "id": "e-p-1b",
+   "from": "params-1",
+   "to": "bwd-1",
+   "kind": "feedback",
+   "to_side": "top"
+  },
+  {
+   "id": "e-in-2",
+   "from": "batch-2",
+   "to": "fwd-2",
+   "kind": "data"
+  },
+  {
+   "id": "e-fb-2",
+   "from": "fwd-2",
+   "to": "bwd-2",
+   "kind": "data"
+  },
+  {
+   "id": "e-grad-2",
+   "from": "bwd-2",
+   "to": "reduce",
+   "kind": "data"
+  },
+  {
+   "id": "e-red-2",
+   "from": "reduce",
+   "to": "update-2",
+   "kind": "data"
+  },
+  {
+   "id": "e-out-2",
+   "from": "update-2",
+   "to": "newparams-2",
+   "kind": "data"
+  },
+  {
+   "id": "e-p-2",
+   "from": "params-2",
+   "to": "fwd-2",
+   "kind": "feedback",
+   "route_hint": "along the bottom of the device box",
+   "to_side": "bottom"
+  },
+  {
+   "id": "e-p-2b",
+   "from": "params-2",
+   "to": "bwd-2",
+   "kind": "feedback",
+   "to_side": "bottom"
+  }
+ ],
+ "deltas": [
+  {
+   "id": "d-reduce",
+   "panel": "p-fsdp",
+   "target": "reduce",
+   "change": "changed",
+   "with": "ReduceScatter gradients",
+   "marking": "colour",
+   "note": "the sublabel changes; the box itself is identical"
+  },
+  {
+   "id": "d-params-1",
+   "panel": "p-fsdp",
+   "target": "params-1",
+   "change": "changed",
+   "with": "params[0]",
+   "marking": "none"
+  },
+  {
+   "id": "d-params-2",
+   "panel": "p-fsdp",
+   "target": "params-2",
+   "change": "changed",
+   "with": "params[1]",
+   "marking": "none"
+  },
+  {
+   "id": "d-new-1",
+   "panel": "p-fsdp",
+   "target": "newparams-1",
+   "change": "changed",
+   "with": "new params[0]",
+   "marking": "none"
+  },
+  {
+   "id": "d-new-2",
+   "panel": "p-fsdp",
+   "target": "newparams-2",
+   "change": "changed",
+   "with": "new params[1]",
+   "marking": "none"
+  },
+  {
+   "id": "d-gather-1a",
+   "panel": "p-fsdp",
+   "target": "gather-1a",
+   "change": "added",
+   "marking": "colour"
+  },
+  {
+   "id": "d-gather-1b",
+   "panel": "p-fsdp",
+   "target": "gather-1b",
+   "change": "added",
+   "marking": "colour"
+  },
+  {
+   "id": "d-gather-2a",
+   "panel": "p-fsdp",
+   "target": "gather-2a",
+   "change": "added",
+   "marking": "colour"
+  },
+  {
+   "id": "d-gather-2b",
+   "panel": "p-fsdp",
+   "target": "gather-2b",
+   "change": "added",
+   "marking": "colour"
+  }
+ ],
+ "annotations": [
+  {
+   "id": "a-allgather",
+   "text": "AllGather params",
+   "kind": "delta",
+   "anchor": "gather-1a",
+   "side": "left",
+   "leader": false,
+   "panel": "p-fsdp",
+   "notes": "set in the accent colour like the collective names; it names all four bars, so place it once between the two devices"
+  }
+ ],
+ "constraints": [
+  {
+   "kind": "same-row",
+   "targets": [
+    "fwd-1",
+    "bwd-1",
+    "update-1"
+   ],
+   "note": "one pass per row"
+  },
+  {
+   "kind": "same-row",
+   "targets": [
+    "fwd-2",
+    "bwd-2",
+    "update-2"
+   ]
+  },
+  {
+   "kind": "same-column",
+   "targets": [
+    "fwd-1",
+    "fwd-2"
+   ],
+   "note": "the two devices mirror each other so the shared collective box can sit between them"
+  },
+  {
+   "kind": "same-column",
+   "targets": [
+    "update-1",
+    "update-2"
+   ]
+  }
+ ],
+ "legend": {
+  "mode": "none"
+ },
+ "notes": "The drawer draws panel p-batch from the template, then p-fsdp = the same template with the deltas applied: four accent bars added on the fwd/bwd path, the collective renamed, shard indices on the parameter labels. Panel titles are not drawn in the original; they come from the caption."
+}

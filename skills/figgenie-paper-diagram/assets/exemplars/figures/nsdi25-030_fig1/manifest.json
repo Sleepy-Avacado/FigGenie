@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-030_fig1",
+  "paper_id": "nsdi25-030",
+  "fig": "1",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 1: The system deployment and internal architecture of the Fungible FS1600 EBOF platform. (a) depicts our evaluation testbed. (b)/(c) show the front/back panels of the chassis. (d) details the internal architecture of an FS1600. which exposes the EBOF’s internal execution characteristics and a",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 3.19,
+  "n_components": 20,
+  "n_flows": 6,
+  "nesting_depth": 5,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 4,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-030/nsdi25-030_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-030/nsdi25-030_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Two framed chassis photos (24-bay front, 12-port back) sit beside a fully labelled internal diagram of one switch fanning into two identical 12-SSD pipelines, at nesting depth 5, the deepest figure in this set.",
+      "what_to_learn": "Frame a chassis photo with a thin border so it reads as one panel, not decoration, and reserve the fullest label depth (nesting depth 5 here) for the paper's own dual-pipeline internal view; avoid this figure's own weakness of collapsing 24 SSDs to bare ellipses with only a few labelled."
+    }
+  ]
+}

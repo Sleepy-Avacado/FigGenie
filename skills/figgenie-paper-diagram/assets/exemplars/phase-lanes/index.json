@@ -1,0 +1,184 @@
+{
+  "template": "phase-lanes",
+  "n": 22,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-082_fig3",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Architecture on top, an aligned Train / Checkpoint / Time lane stack underneath, with a red stall block calling out the cost.",
+      "what_to_learn": "Stack the timeline directly under the architecture and align columns so a block on the timeline sits under the component that produced it.",
+      "dir": "../figures/asplos25-082_fig3"
+    },
+    {
+      "id": "asplos25-094_fig6",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Offline/online phase boxes on top with the execution pipeline expanded into IO-thread and inference-thread lanes below.",
+      "what_to_learn": "Expand only the phase that has interesting concurrency into lanes; the others stay as plain boxes.",
+      "dir": "../figures/asplos25-094_fig6"
+    },
+    {
+      "id": "asplos25-100_fig9",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "A minor but real phase device: panel (a) runs one vertical time arrow past stacked Decoder 0/1/2 boxes showing a prompt's blocks processed one at a time, before panel (b) zooms into the per-layer mapping.",
+      "what_to_learn": "When only one stage of a bigger figure is genuinely sequential, don't force the whole thing into lanes: draw one small vertical time arrow beside the sequential boxes (Decoder 0, 1, 2...) and keep the rest of the figure as an ordinary architecture diagram.",
+      "dir": "../figures/asplos25-100_fig9"
+    },
+    {
+      "id": "asplos25-101_fig1",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated 4-panel figure where concurrency is the claim: panels (b)-(d) reuse the same Decoding-box drawing but stack one, two, or two-per-request token rows through it to contrast serial, batched, and speculative decoding.",
+      "what_to_learn": "To contrast concurrency strategies, redraw the identical pipeline box two or three times and vary only how many token rows run through it in parallel, letting the row count itself, not new geometry, carry the difference between serial, batched, and speculative execution.",
+      "dir": "../figures/asplos25-101_fig1"
+    },
+    {
+      "id": "asplos25-132_fig5",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated round-by-round grid: Round 1-3 columns cross Case 1/Case 2 lanes, each cell showing the same four colored buffer segments so xbar-routed element-wise ops (Case 1) visibly contrast with DMA-buffered reduction ops (Case 2).",
+      "what_to_learn": "When two execution modes need comparing across the same repeating rounds, draw a small Round-by-Round-times-Case grid instead of one long timeline, keep the same colored segments in every cell so the eye tracks what changes, and reuse one arrow color per data item (Block-1/2/3) to trace it across rounds.",
+      "dir": "../figures/asplos25-132_fig5"
+    },
+    {
+      "id": "asplos26-013_fig13",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated: panels (a) and (b) draw the same GPE0-3 lanes as a Gantt timeline before and after rebalancing, letting shrunken idle gaps argue the fix, before panel (c) shows the scheduler hardware that produces it.",
+      "what_to_learn": "Draw the identical set of per-lane Gantt bars twice, once unbalanced and once rebalanced, so the reader compares idle-gap width directly instead of reading numbers; but keep labels at a readable size, since this figure's 2-3.5pt text is illegible without zooming.",
+      "dir": "../figures/asplos26-013_fig13"
+    },
+    {
+      "id": "asplos26-036_fig8",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Only the interesting phase gets lanes: the multiplex engine box alone expands into a two-row Gantt of PL and D micro-batches, with dashed sync lines and one Time arrow, inside an otherwise ordinary control-loop figure.",
+      "what_to_learn": "Expand only the one phase with interesting concurrency into a small lanes/Gantt device (rows for PL and D micro-batches, dashed sync lines, one Time arrow) nested inside a single box, rather than converting an entire control-loop figure into a timeline.",
+      "dir": "../figures/asplos26-036_fig8"
+    },
+    {
+      "id": "nsdi26-052_fig7",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "A table-as-lanes variant: each Frame ID is a row and Arrival/Departure time are phase columns in a status table, the oldest incomplete row flagged by an 'Earliest' arrow, paired with a plain device relay diagram.",
+      "what_to_learn": "A phase-lanes device does not need boxes: a literal table works too, with each tracked item as a row (a lane) and each event time as a column (a phase); highlight the one row that matters (here, the earliest still-incomplete frame) instead of adding a separate callout.",
+      "dir": "../figures/nsdi26-052_fig7"
+    },
+    {
+      "id": "osdi26-020_figtex8",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated, the reference doc's own baseline-vs-ours cross-reference for phase-lanes: two column-aligned stacked timelines (Baseline CPU-GEMV, Cocoon-Emb) share iteration boundaries as dotted verticals, with four circled steps and a red Speedup bracket comparing their total lengths.",
+      "what_to_learn": "Stack the before and after timelines directly on top of each other at the same horizontal scale, mark shared iteration boundaries with dotted verticals so the eye can compare like-for-like, number the optimization steps that shorten the new timeline, and close with one bracket that measures the total speedup.",
+      "dir": "../figures/osdi26-020_figtex8"
+    },
+    {
+      "id": "osdi26-043_fig1",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated, textbook two-lane Gantt: Rollout Pool and Training Pool are named lanes holding colored phase blocks, idle gaps highlighted red as 'Dependency Bubbles', with a bracket below measuring solo iteration time against a co-scheduled meta-iteration.",
+      "what_to_learn": "Name the lanes in a left gutter (Rollout Pool, Training Pool), keep every block aligned to one shared time grid so idle gaps are visible rather than compressed away, color the red idle blocks as the named defect ('Dependency Bubbles'), and put a measurement bracket under each timeline to state exactly what got shorter.",
+      "dir": "../figures/osdi26-043_fig1"
+    },
+    {
+      "id": "osdi26-071_fig3",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated: a coarse lifecycle timeline (Factory to Data Center Operation) highlights one stage, Online SDC Detection, in red and drops a shaded wedge into AEGIS's per-GPU timeline, where circled steps 1-5 flag one suspicious op.",
+      "what_to_learn": "Draw a coarse lifecycle timeline across the top, pick out the one stage your system owns in a distinct color, and drop a shaded wedge straight down from it into the detailed mechanism diagram, reusing numbered steps to walk sense-then-verify across a per-unit execution timeline inside that mechanism.",
+      "dir": "../figures/osdi26-071_fig3"
+    },
+    {
+      "id": "osdi26-094_fig5",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated: four Instance Scheduler lanes share one Time axis, blue/green Gantt blocks marked with check or cross insert points, TTFT/TPOT brackets on the bars, and a fourth lane drawn as a dashed ghost for scaling.",
+      "what_to_learn": "Give each parallel scheduler its own named lane under one shared Time axis, mark exact insertion points on the Gantt blocks with tiny check/cross icons instead of prose, measure TTFT/TPOT as brackets directly on the bars, and draw a not-yet-existing lane as a dashed ghost copy to show elastic scale-out.",
+      "dir": "../figures/osdi26-094_fig5"
+    },
+    {
+      "id": "sosp24-041_fig1",
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Three instance lanes separated by dashed rules, with lane labels on the right and phase brackets underneath.",
+      "what_to_learn": "Lanes (who) run horizontally with labels in one gutter; phases (when) are dashed vertical rules with brackets under the axis - the two never share a device.",
+      "dir": "../figures/sosp24-041_fig1"
+    },
+    {
+      "id": "asplos25-098_fig2",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "A figure whose right panel hides a real phase device: colored memory squares stack at future time ticks along a labeled Timeline arrow, with a red dashed box marking the window compared against Available Memory.",
+      "what_to_learn": "A future-facing prediction can still use a real time axis: stack small colored usage squares at each future tick (t, t+1, t+2...) under one labeled Timeline arrow, and draw a dashed box around exactly the window your decision compares, here peak projected memory against the available budget.",
+      "dir": "../figures/asplos25-098_fig2"
+    },
+    {
+      "id": "asplos25-148_fig5",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "An unusual phase variant: instead of a horizontal time arrow, five measurement-round labels (t=1us to t=5us) run along the receding depth of a 3D isometric grid of vertex/edge PUs, replacing dashed phase columns with perspective.",
+      "what_to_learn": "A time axis does not have to run left-to-right along the bottom: this figure stacks its five measurement rounds into the depth of a 3D grid instead, which is a legitimate but riskier alternative to labeled vertical phase rules, since perspective compresses the later time steps.",
+      "dir": "../figures/asplos25-148_fig5"
+    },
+    {
+      "id": "asplos26-088_fig14",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Two named lanes with a Time arrow and a right-hand legend; overlap between lanes is the entire message.",
+      "what_to_learn": "Two lanes plus one horizontal Time arrow is enough for a pipelining claim; blank cells in the first column show the pipeline fill cost.",
+      "dir": "../figures/asplos26-088_fig14"
+    },
+    {
+      "id": "asplos26-089_fig2",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "A minimal single-lane instance: one repeating Fwd/Bwd timeline runs across the top under one Time arrow, while four numbered SNIP steps hang off it as an asynchronous side process feeding a before/after precision comparison below.",
+      "what_to_learn": "Keep the recurring training loop as one plain lane under a single Time arrow, and let an asynchronous side process (numbered steps in their own color) hang off that lane without sharing its axis; keep the color legend next to the panel it explains, not far below it as this figure does.",
+      "dir": "../figures/asplos26-089_fig2"
+    },
+    {
+      "id": "nsdi23-004_fig2",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Reassigned from control-loop by the note-writer: three side-by-side lifecycle columns (Initialization, Runtime, Management) numbered 1-7 with no return arrow or cycle anywhere; this is a phase-lanes lifecycle figure, not control-loop.",
+      "what_to_learn": "Number steps continuously across adjacent lifecycle columns (1-3 in column one, 4-6 in column two, 7 in column three) instead of restarting the count per column, so the reader can tell setup, runtime, and management apart while still reading one global sequence.",
+      "dir": "../figures/nsdi23-004_fig2"
+    },
+    {
+      "id": "nsdi26-091_fig4",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Two Local Scheduler lanes, each a colored Gantt of micro-request segments (orange prefill, blue decode) on a shared Time axis, sit beneath one Global Scheduler whose circled steps 1-7 close a partition-predict-route-feedback loop.",
+      "what_to_learn": "Split one long request bar into colored sub-segments (prefill orange, decode blue) at the exact token position it was partitioned, lay two such lanes side by side under one Time axis labeled Unified Instances, and close a feedback loop back to the scheduler above with performance metrics rather than leaving the loop implied.",
+      "dir": "../figures/nsdi26-091_fig4"
+    },
+    {
+      "id": "osdi26-060_fig1",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Clean two-panel timeline pair: batch inference's long BCT bracket spans completed sub-batches while shorter SCT brackets mark each one, against interactive inference's TTFT/TPOT brackets over a single token sequence on the same time axis.",
+      "what_to_learn": "Use double-headed brackets to name and measure intervals directly on the time axis (BCT spanning the whole batch, SCT per sub-batch, TTFT/TPOT per token) instead of describing durations in prose, and give each contrasting regime its own panel on the same axis style.",
+      "dir": "../figures/osdi26-060_fig1"
+    },
+    {
+      "id": "osdi26-063_fig5",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Four-row drill-down: a full 1F1B training-iteration timeline zooms via curved arrows into one transformer block's two-nanobatch overlap schedule, then a single partition's kernel timeline, ending in two Pareto-frontier scatterplots the schedule was chosen from.",
+      "what_to_learn": "Chain three Gantt-style rows at increasing zoom (full pipeline, one block's overlap, one partition's kernels) with dashed separators and curved arrows pointing to the row below, then close with the actual optimization plot the chosen schedule came from; keep one consistent color per category across every row.",
+      "dir": "../figures/osdi26-063_fig5"
+    },
+    {
+      "id": "osdi26-108_fig3",
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "The reference doc's own cross-reference for phase-lanes: TrainMover's row and the baseline row sit column-aligned under one shared Training Timeline arrow, so the bottom row's longer gap visually proves the downtime claim without a number.",
+      "what_to_learn": "Put one shared time arrow directly under two stacked system rows drawn to the same horizontal scale, keep matching phases (preparation, switching) column-aligned between them, and let the visual length of the gap, not a caption number, carry the downtime comparison; color-code recurring machine roles (stayer, leaver, joiner) consistently in both rows.",
+      "dir": "../figures/osdi26-108_fig3"
+    }
+  ]
+}

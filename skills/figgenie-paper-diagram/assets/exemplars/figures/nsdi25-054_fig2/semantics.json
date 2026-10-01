@@ -1,0 +1,226 @@
+{
+  "paper_id": "nsdi25-054",
+  "fig": "2",
+  "system": {
+    "name": "GRANNY",
+    "one_liner": "a runtime for granular management of compute-intensive cloud applications that cross-compiles code to WebAssembly and virtualizes OpenMP/MPI/POSIX backends",
+    "domain": [
+      "cloud-computing",
+      "runtime-systems",
+      "hpc"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Granule",
+        "role": "an OS thread inside the VM running isolated WebAssembly application code, the unit GRANNY manages",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Thread + CGroup + Net NS",
+        "role": "OS-level isolation mechanisms wrapping a Granule",
+        "container": "Granule",
+        "novel": false
+      },
+      {
+        "name": "Application code (WebAssembly)",
+        "role": "memory-safe, platform-independent application binary, cross-compiled to WebAssembly, restricted to pre-defined backend operations",
+        "container": "Granule",
+        "novel": false
+      },
+      {
+        "name": "Control point",
+        "role": "boundary at which application code calls into a supported runtime backend API, where GRANNY intercepts control",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "MPI backend",
+        "role": "implements MPI_* operations (e.g., MPI_Barrier) for Granules",
+        "container": "Granny runtime",
+        "novel": true
+      },
+      {
+        "name": "POSIX backend",
+        "role": "implements fd_*, mmap, and other POSIX operations for Granules",
+        "container": "Granny runtime",
+        "novel": true
+      },
+      {
+        "name": "OMP backend",
+        "role": "implements kmpc*/omp* OpenMP operations for Granules",
+        "container": "Granny runtime",
+        "novel": true
+      },
+      {
+        "name": "Granny core",
+        "role": "shared runtime core keeping per-Granule state (message mailboxes, FD tables, SHM mappings) and decoupling backends from the OS",
+        "container": "Granny runtime",
+        "novel": true
+      },
+      {
+        "name": "Message mailboxes",
+        "role": "per-Granule mailbox structure used by the MPI backend for message passing",
+        "container": "Granny core",
+        "novel": true
+      },
+      {
+        "name": "FD tables",
+        "role": "mapping between WebAssembly file descriptors and OS file descriptors, maintained by the POSIX backend",
+        "container": "Granny core",
+        "novel": true
+      },
+      {
+        "name": "SHM mappings",
+        "role": "shared-memory mappings used by the OMP backend",
+        "container": "Granny core",
+        "novel": true
+      },
+      {
+        "name": "Granny runtime",
+        "role": "runtime layer hosting the three backends and the Granny core, decoupling Granules from the host OS",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Linux",
+        "role": "host OS providing net, fs, threads, ns, and cgroups primitives that the Granny runtime relies on via system calls",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application code (WebAssembly)",
+        "to": "Control point",
+        "what": "calls to supported runtime backend APIs (OpenMP, MPI, POSIX)",
+        "step": null
+      },
+      {
+        "from": "Control point",
+        "to": "MPI backend",
+        "what": "MPI_* calls",
+        "step": null
+      },
+      {
+        "from": "Control point",
+        "to": "POSIX backend",
+        "what": "fd_*, mmap calls",
+        "step": null
+      },
+      {
+        "from": "Control point",
+        "to": "OMP backend",
+        "what": "kmpc*/omp* calls",
+        "step": null
+      },
+      {
+        "from": "MPI backend",
+        "to": "Granny core",
+        "what": "per-Granule state updates (message mailboxes)",
+        "step": null
+      },
+      {
+        "from": "POSIX backend",
+        "to": "Granny core",
+        "what": "FD table updates",
+        "step": null
+      },
+      {
+        "from": "OMP backend",
+        "to": "Granny core",
+        "what": "SHM mapping updates",
+        "step": null
+      },
+      {
+        "from": "Granny runtime",
+        "to": "Linux",
+        "what": "system calls",
+        "step": null
+      }
+    ],
+    "key_idea": "GRANNY sandboxes application code as a WebAssembly Granule that can only reach the OS through control points into color-coded MPI/POSIX/OMP backends sharing one runtime core.",
+    "reading_order": "top to bottom: Granule's WebAssembly code, down through a Control point into the three parallel Granny runtime backends and shared core, then down to Linux via a system call"
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.42,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#82b366",
+        "used_for": "POSIX backend box border/fill"
+      },
+      {
+        "hex": "#b85450",
+        "used_for": "MPI backend box border, and the Thread+CGroup+NetNS dashed outline"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "OMP backend box border"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "OMP backend box fill"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "MPI backend box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark outlines ~0.79pt; dashed boxes for isolation/grouping (Granule, Granny core)",
+    "font": "monospace (Cousine) for code identifiers, sans-serif (Arimo) for labels, 3-8pt",
+    "corners": "square",
+    "arrows": "thin arrows connecting Application code down through Control point into the three backends, then into Granny core, and down to Linux via System call",
+    "icons": "vector icon: small envelope/mailbox icon representing Message mailboxes"
+  },
+  "encoding": {
+    "color_means": "each backend has its own color (red = MPI, green = POSIX, blue = OMP) to distinguish the three parallel runtime backends sitting on the shared Granny core",
+    "line_style_means": "dashed boxes mark isolation/grouping boundaries (the Granule's Thread+CGroup+NetNS wrapper, the Granny core's internal state)",
+    "emphasis": "the vertical stack (Granule over Granny runtime over Linux) with 'Control point' and 'System call' labeled on the connecting arrows emphasizes GRANNY's two interception boundaries",
+    "reusable_patterns": [
+      "layered software stack with a middle layer split into color-coded parallel backends sharing one core state manager, sitting over the host OS"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "webassembly",
+    "hpc",
+    "openmp",
+    "mpi",
+    "cloud-runtime",
+    "sandboxing"
+  ],
+  "provenance": {
+    "sections": [
+      "3 GRANNY Design (p.5)",
+      "3 GRANNY Design (p.6)",
+      "4 Granule Management (p.6)"
+    ],
+    "evidence": [
+      "Fig. 2 shows the GRANNY architecture",
+      "GRANNY takes control over Granule execution at control points",
+      "The GRANNY backends are built on top of a shared GRANNY runtime core"
+    ]
+  },
+  "summary": "GRANNY manages compute-intensive applications in the cloud at the granularity of a 'Granule': an OS thread, wrapped in a Thread+CGroup+NetNS sandbox, running application code cross-compiled to WebAssembly. Figure 2 shows this as a layered stack: application code can only reach the outside world through a Control point into one of three color-coded Granny runtime backends -- MPI backend, POSIX backend, and OMP backend -- all built on a shared Granny core that keeps per-Granule state (message mailboxes, FD tables, SHM mappings) and decouples the backends from the OS. The Granny runtime then defers to the host Linux kernel's net, fs, threads, ns, and cgroups facilities via ordinary system calls. This design lets Granules execute side by side in one address space while GRANNY intercepts every backend call as a control point for scheduling and migration.",
+  "summary_zh": "图2展示GRANNY架构：Granule运行WebAssembly代码，经Control point调用MPI/POSIX/OMP三种后端；三者共享Granny core维护邮箱、文件描述符表和共享内存映射，再经系统调用依赖Linux。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

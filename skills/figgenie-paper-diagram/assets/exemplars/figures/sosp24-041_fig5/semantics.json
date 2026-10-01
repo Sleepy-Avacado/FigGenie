@@ -1,0 +1,188 @@
+{
+  "paper_id": "sosp24-041",
+  "fig": "5",
+  "system": {
+    "name": "LoongServe",
+    "one_liner": "an LLM serving system using elastic sequence parallelism to adapt parallelism degree to variable-length requests and phases",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "SIB",
+        "role": "scaling information base; supplies profiling results used by the global manager",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LoongServe Global Manager",
+        "role": "manages requests, elastic instances and the unified KV cache pool with a global view",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Dispatcher",
+        "role": "dispatches requests to elastic instances",
+        "container": "LoongServe Global Manager",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "schedules batches/parallelism configuration for elastic instances",
+        "container": "LoongServe Global Manager",
+        "novel": true
+      },
+      {
+        "name": "Elasticity Controller",
+        "role": "controls scaling of elastic instances up and down",
+        "container": "LoongServe Global Manager",
+        "novel": true
+      },
+      {
+        "name": "LoongServe Scale Up",
+        "role": "adds elastic instances/resources at runtime (§4)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LoongServe Scale Down",
+        "role": "removes elastic instances/resources at runtime (§4)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU",
+        "role": "physical device backing each elastic instance",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Unified Distributed KV Cache Pool",
+        "role": "GPU memory pool storing key-value tensors at token granularity across elastic instances to reduce fragmentation (§4)",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "SIB",
+        "to": "LoongServe Global Manager",
+        "what": "profiling results",
+        "step": null
+      },
+      {
+        "from": "LoongServe Global Manager",
+        "to": "LoongServe Scale Up",
+        "what": "scaling decision",
+        "step": null
+      },
+      {
+        "from": "LoongServe Global Manager",
+        "to": "LoongServe Scale Down",
+        "what": "scaling decision",
+        "step": null
+      },
+      {
+        "from": "LoongServe Scale Up",
+        "to": "GPU",
+        "what": "elastic instance scale-up control",
+        "step": null
+      },
+      {
+        "from": "LoongServe Scale Down",
+        "to": "GPU",
+        "what": "elastic instance scale-down control",
+        "step": null
+      },
+      {
+        "from": "GPU",
+        "to": "Unified Distributed KV Cache Pool",
+        "what": "key-value cache storage across instances",
+        "step": null
+      }
+    ],
+    "key_idea": "a global manager, informed by a scaling information base, dispatches and schedules requests and elastically scales GPU-backed instances up or down, all sharing one unified distributed key-value cache pool.",
+    "reading_order": "top-down: SIB feeds the LoongServe Global Manager (Dispatcher, Scheduler, Elasticity Controller) at top, which drives scale up/down actions on the row of GPUs, all sitting above the shared KV cache pool at the bottom."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.59,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "Global Manager outer panel and SIB/scale-up box fills"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "Dispatcher and Elasticity Controller boxes"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Scheduler box"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "scale bars/arrows over GPUs"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "Unified Distributed KV Cache Pool bottom band"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "light gray thin borders, dashed line separating the manager panel from the instance/GPU layer",
+    "font": "Arial-Bold/SimHei sans, ~8pt bold throughout",
+    "corners": "mixed",
+    "arrows": "straight, filled/open triangular heads pointing down from manager to GPUs",
+    "icons": "vector GPU chip icons, a database-cylinder icon for SIB"
+  },
+  "encoding": {
+    "color_means": "pastel colors distinguish the manager's three sub-components (Dispatcher, Scheduler, Elasticity Controller) and separate scale-up (left, orange-tinted) from scale-down (right, green-tinted) actions",
+    "line_style_means": "dashed horizontal divider separates the control-plane (Global Manager) from the data-plane (GPU instances and KV cache)",
+    "emphasis": "the GPU row and yellow KV cache pool band at the bottom draw attention to the shared resource that elasticity operates over",
+    "reusable_patterns": [
+      "control-plane panel on top driving a homogeneous row of compute devices sharing a resource pool below"
+    ],
+    "weaknesses": [
+      "scale-up and scale-down bars have no explicit legend explaining exact bar semantics"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "elastic-scaling",
+    "kv-cache",
+    "global-manager",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 LoongServe Overview (p.4)"
+    ],
+    "evidence": [
+      "Figure 5 shows the architecture of LoongServe.",
+      "LoongServe consists of a set of elastic instances and a global manager.",
+      "forms a unified distributed key-value cache pool"
+    ]
+  },
+  "summary": "This figure gives the system overview of LoongServe, an elastic LLM serving system. At the top, the LoongServe Global Manager, informed by a Scaling Information Base (SIB), contains a Dispatcher, Scheduler, and Elasticity Controller that jointly manage requests and elastic instances with a global view. Below a dashed divider, this control plane drives LoongServe Scale Up and LoongServe Scale Down actions over a row of GPU-backed elastic instances, all of which share a Unified Distributed KV Cache Pool spanning all instances at token granularity to reduce memory fragmentation. The diagram is a compact top-down layered architecture using pastel flat-filled boxes for the manager's sub-components, a database icon for the SIB, GPU chip icons in a row, and a colored band at the bottom for the shared cache pool, visually separating control-plane decision-making from the elastic data-plane resources it manages.",
+  "summary_zh": "该图展示LoongServe系统总体架构：顶部LoongServe全局管理器（含Dispatcher、Scheduler、Elasticity Controller）依据SIB的画像信息进行请求与弹性实例的全局管理，驱动下方GPU实例的弹性扩容(Scale Up)与缩容(Scale Down)，所有实例共享底部统一分布式KV缓存池以减少显存碎片。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

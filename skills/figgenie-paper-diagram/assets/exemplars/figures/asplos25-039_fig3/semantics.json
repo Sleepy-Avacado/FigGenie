@@ -1,0 +1,308 @@
+{
+  "paper_id": "asplos25-039",
+  "fig": "3",
+  "system": {
+    "name": "Helix",
+    "one_liner": "a distributed LLM serving system that formulates inference over heterogeneous GPUs and networks as a max-flow problem to plan placement and scheduling",
+    "domain": [
+      "ml-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Profiler",
+        "role": "gathers cluster information used for model placement planning",
+        "container": "Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Model Placement Planner",
+        "role": "plans model placement across the cluster once, using cluster info",
+        "container": "Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "assigns each new request a per-request execution pipeline",
+        "container": "Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Coordinator",
+        "role": "the logically centralized node that runs the planner/scheduler and connects into the compute-node graph",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Type-1",
+        "role": "one class of heterogeneous GPU compute node hosting model layers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Type-2",
+        "role": "another class of heterogeneous GPU compute node hosting model layers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Type-3",
+        "role": "another class of heterogeneous GPU compute node hosting model layers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Model Layer",
+        "role": "a model layer assigned to and hosted on a compute node",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Compute Node",
+        "role": "zoomed-in view of a node executing its assigned layers via per-layer queues",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Queue 1",
+        "role": "input queue buffering requests before Layer 1 on the compute node",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Layer 1",
+        "role": "a model layer executed on the compute node",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Queue 2",
+        "role": "input queue buffering requests before Layer 2 on the compute node",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Layer 2",
+        "role": "a model layer executed on the compute node",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Queue 3",
+        "role": "input queue buffering requests before Layer 3 on the compute node",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Layer 3",
+        "role": "a model layer executed on the compute node",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Request Tensor",
+        "role": "input tensor arriving at the compute node for inference",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "New Request",
+        "role": "external input event triggering the scheduler",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Worker Finished",
+        "role": "external input event notifying the coordinator a worker completed",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Profiler",
+        "to": "Model Placement Planner",
+        "what": "Cluster Info",
+        "step": null
+      },
+      {
+        "from": "Model Placement Planner",
+        "to": "Scheduler",
+        "what": "Placement",
+        "step": null
+      },
+      {
+        "from": "Model Placement Planner",
+        "to": "Coordinator",
+        "what": "Init Worker",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Coordinator",
+        "what": "Worker Exec (per-request pipeline assignment)",
+        "step": null
+      },
+      {
+        "from": "New Request",
+        "to": "Scheduler",
+        "what": "triggers per-request scheduling",
+        "step": null
+      },
+      {
+        "from": "Worker Finished",
+        "to": "Scheduler",
+        "what": "worker completion notification",
+        "step": null
+      },
+      {
+        "from": "Coordinator",
+        "to": "Type-2",
+        "what": "request forwarded to the first node in the assigned pipeline",
+        "step": null
+      },
+      {
+        "from": "Type-2",
+        "to": "Type-1",
+        "what": "request forwarded along the pipeline",
+        "step": null
+      },
+      {
+        "from": "Type-1",
+        "to": "Type-2",
+        "what": "request forwarded along the pipeline",
+        "step": null
+      },
+      {
+        "from": "Type-1",
+        "to": "Type-3",
+        "what": "request forwarded along the pipeline",
+        "step": null
+      },
+      {
+        "from": "Request Tensor",
+        "to": "Compute Node",
+        "what": "input tensor for inference",
+        "step": null
+      },
+      {
+        "from": "Queue 1",
+        "to": "Layer 1",
+        "what": "buffered request",
+        "step": null
+      },
+      {
+        "from": "Layer 1",
+        "to": "Queue 2",
+        "what": "layer output",
+        "step": null
+      },
+      {
+        "from": "Queue 2",
+        "to": "Layer 2",
+        "what": "buffered request",
+        "step": null
+      },
+      {
+        "from": "Layer 2",
+        "to": "Queue 3",
+        "what": "layer output",
+        "step": null
+      },
+      {
+        "from": "Queue 3",
+        "to": "Layer 3",
+        "what": "buffered request",
+        "step": null
+      }
+    ],
+    "key_idea": "A Coordinator plans model placement once and then schedules each new request onto a per-request pipeline across heterogeneous GPU node types, where each compute node executes its assigned layers through per-layer queues.",
+    "reading_order": "Left to right: the Coordinator's internal planning pipeline (Profiler to Planner to Scheduler), then out into the cluster graph of colored compute-node types, zooming into one Compute Node's queue/layer chain on the right."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.12,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe699",
+        "used_for": "yellow fill for Type-1 compute nodes"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "light blue fill for Type-2 compute nodes"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "light green fill for Type-3 compute nodes"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "gray fill for Model Layer bar icons and the Coordinator node box"
+      },
+      {
+        "hex": "#a8d08c",
+        "used_for": "darker green fill for the Model Placement Planner box"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "light gray background for the overall Coordinator container"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on boxes and nodes, dashed lines linking the cluster-graph nodes to their zoomed detail views",
+    "font": "mixed Times New Roman / Consolas, 6.5-10pt",
+    "corners": "mixed",
+    "arrows": "solid black arrows for the planning pipeline and layer-to-layer data flow; plain lines connecting cluster-graph nodes to represent the network topology",
+    "icons": "small vertical-bar icons representing Model Layers stacked inside each compute-node circle"
+  },
+  "encoding": {
+    "color_means": "yellow = Type-1 GPU compute nodes, blue = Type-2 GPU compute nodes, green = Type-3 GPU compute nodes, gray bars = individual model layers hosted on a node",
+    "line_style_means": "solid arrows show the coordinator's internal planning data flow and per-node layer pipelines; plain connecting lines show the heterogeneous GPU/network topology the coordinator schedules requests over",
+    "emphasis": "the middle cluster-graph panel visually foregrounds GPU heterogeneity (three node colors) and per-node model-layer assignment, which is what Helix's max-flow formulation optimizes over",
+    "reusable_patterns": [
+      "control subsystem (profiler/planner/scheduler) feeding a colored heterogeneous-node topology graph",
+      "zoomed-in detail panel showing per-layer queue execution inside one node"
+    ],
+    "weaknesses": [
+      "the small 'Coordinator' node box in the cluster graph and the outer 'Coordinator' container share the same name, which can read as ambiguous"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "heterogeneous-gpus",
+    "max-flow",
+    "model-placement",
+    "request-scheduling",
+    "distributed-inference"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Helix Runtime (p.8)"
+    ],
+    "evidence": [
+      "Fig. 3 shows the overview of Helix.",
+      "In Helix, the coordinator plans model placement as described in Sec. 4.4.",
+      "the coordinator node runs Helix scheduler to assign it a per-request pipeline and sends it to the first node"
+    ]
+  },
+  "summary": "This figure gives an overview of Helix, an LLM serving system for heterogeneous GPU clusters. On the left, a Coordinator container shows the control flow: a Profiler gathers Cluster Info for a Model Placement Planner, which runs once per cluster to decide model placement (Init Worker), while a Scheduler uses that placement plus incoming New Request and Worker Finished events to assign each request a per-request pipeline (Worker Exec). The middle panel shows the resulting cluster as a graph of heterogeneous compute nodes colored by GPU type (Type-1 yellow, Type-2 blue, Type-3 green), each hosting a stack of model-layer icons, connected to a small Coordinator node. The right panel zooms into one Compute Node, showing how a Request Tensor flows through alternating per-layer Queues and Layers (Queue 1/Layer 1/Queue 2/Layer 2/Queue 3/Layer 3) as it executes the layers assigned to that node. A bottom legend defines the node-type colors and the model-layer icon.",
+  "summary_zh": "该图展示 Helix 系统概览：协调器（Profiler、模型放置规划器、调度器）负责一次性模型放置与逐请求流水线调度，中间图展示按 GPU 类型着色的异构计算节点拓扑，右侧放大展示单个计算节点内按层排队执行的过程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

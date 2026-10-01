@@ -1,0 +1,392 @@
+{
+  "paper_id": "nsdi24-079",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "MESSI",
+    "one_liner": "a model-based testing system that encodes BGP behavior (decision process, route filtering, regex matching) in the Zen solver-aided language to systematically generate test cases for BGP implementations",
+    "domain": [
+      "networking",
+      "BGP",
+      "testing"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how MESSI finds a positive test example covering DFA state 5 by chaining two paths, start to 5 to accept",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "1",
+        "kind": "state",
+        "role": "the DFA's starting state, marked by an incoming arrow from nowhere and a distinct fill colour",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "2",
+        "kind": "state",
+        "role": "an intermediate state on the plain path from state 1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3",
+        "kind": "state",
+        "role": "intermediate state on path P1, reached from state 1",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "4",
+        "kind": "state",
+        "role": "intermediate state reached from both state 2 and state 5",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "5",
+        "kind": "state",
+        "role": "the target state to be covered (highlighted yellow); P1 ends here and P2 starts here",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "6",
+        "kind": "state",
+        "role": "intermediate state reached from states 4 and 7, and itself reaching back to state 5",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "7",
+        "kind": "state",
+        "role": "intermediate state on path P2, reached from state 5",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "8",
+        "kind": "state",
+        "role": "a state with a self-loop, reached from state 9",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "9",
+        "kind": "state",
+        "role": "intermediate state on path P2, reached from state 7",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "10",
+        "kind": "state",
+        "role": "the DFA's accepting state (double-circled, green fill); path P2 ends here",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "11",
+        "kind": "state",
+        "role": "a state with a self-loop, reached from state 6",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "1",
+        "to": "2",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "2",
+        "to": "4",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "6",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "4",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "6",
+        "to": "5",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "7",
+        "to": "6",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "6",
+        "to": "11",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "11",
+        "to": "11",
+        "what": "self-loop",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "9",
+        "to": "8",
+        "what": null,
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "8",
+        "to": "8",
+        "what": "self-loop",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "3",
+        "what": "P1 (dotted maroon): start of the path to the coverage target",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "3",
+        "to": "5",
+        "what": "P1 (dotted maroon): reaches the coverage target state 5",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "5",
+        "to": "7",
+        "what": "P2 (dashed brown): leaves the covered state 5 toward the accepting state",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "7",
+        "to": "9",
+        "what": "P2 (dashed brown)",
+        "kind": "transition",
+        "step": "4"
+      },
+      {
+        "from": "9",
+        "to": "10",
+        "what": "P2 (dashed brown): reaches the accepting state 10",
+        "kind": "transition",
+        "step": "5"
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+      ],
+      "transitions": [
+        {
+          "from": "1",
+          "to": "2",
+          "guard": null
+        },
+        {
+          "from": "1",
+          "to": "3",
+          "guard": "P1"
+        },
+        {
+          "from": "3",
+          "to": "5",
+          "guard": "P1"
+        },
+        {
+          "from": "2",
+          "to": "4",
+          "guard": null
+        },
+        {
+          "from": "4",
+          "to": "6",
+          "guard": null
+        },
+        {
+          "from": "5",
+          "to": "4",
+          "guard": null
+        },
+        {
+          "from": "6",
+          "to": "5",
+          "guard": null
+        },
+        {
+          "from": "5",
+          "to": "7",
+          "guard": "P2"
+        },
+        {
+          "from": "7",
+          "to": "6",
+          "guard": null
+        },
+        {
+          "from": "7",
+          "to": "9",
+          "guard": "P2"
+        },
+        {
+          "from": "9",
+          "to": "10",
+          "guard": "P2"
+        },
+        {
+          "from": "9",
+          "to": "8",
+          "guard": null
+        },
+        {
+          "from": "8",
+          "to": "8",
+          "guard": "self-loop"
+        },
+        {
+          "from": "6",
+          "to": "11",
+          "guard": null
+        },
+        {
+          "from": "11",
+          "to": "11",
+          "guard": "self-loop"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "To build a positive test case exercising DFA state 5, MESSI concatenates two paths: P1 (1→3→5) from the start to the target state, and P2 (5→7→9→10) from the target onward to an accepting state.",
+    "reading_order": "starts at state 1, follows dotted maroon P1 up through state 3 to target state 5, then dashed brown P2 through 7 and 9 to accepting state 10; plain black edges show the rest."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.51,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bf8040",
+        "used_for": "dashed path-P2 edges (5→7→9→10), captioned as 'dashed brown'"
+      },
+      {
+        "hex": "#990000",
+        "used_for": "dotted path-P1 edges (1→3→5), captioned as 'dotted maroon'"
+      },
+      {
+        "hex": "#b3b3e0",
+        "used_for": "fill of the start state (1)"
+      },
+      {
+        "hex": "#fffac2",
+        "used_for": "fill of the coverage-target state (5)"
+      },
+      {
+        "hex": "#bce4bc",
+        "used_for": "fill of the accepting state (10)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black circles and solid arrows for the plain DFA edges; coloured dotted/dashed arrows for the two highlighted paths",
+    "corners": "rounded (circular state nodes)",
+    "arrows": "solid black arrows for ordinary DFA transitions (including self-loops on states 8 and 11); a red dotted arrow pair for path P1 (1→3→5); an orange/brown dashed arrow chain for path P2 (5→7→9→10)",
+    "font": "Nimbus Roman serif digits inside each state circle",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue fills the start state (1), yellow fills the coverage-target state (5), and green fills the accepting state (10); red dotted and orange/brown dashed line styles mark the two highlighted paths P1 and P2 respectively",
+    "line_style_means": "solid black lines are ordinary DFA transitions; a dotted red line is path P1 (start to target); a dashed orange/brown line is path P2 (target to accept)",
+    "state_means": "the three special roles (start, target, accepting) are told apart by fill colour, and a double circle marks the accepting state",
+    "marker_means": "no numbered markers; the two different dash/colour styles are themselves the only markers distinguishing the two stitched-together paths from the rest of the graph and from each other",
+    "emphasis": "colouring only three of the eleven states and drawing only two path-segments in a non-solid style isolates exactly the path MESSI needs, letting it stand out against the otherwise plain black-and-white DFA",
+    "reusable_patterns": [
+      "a plain state-machine diagram with two differently-styled highlighted paths stitched together at a shared target state to build one worked example"
+    ],
+    "weaknesses": [
+      "the caption calls path P2 'dashed brown' but the rendered colour reads closer to orange/tan",
+      "self-loops on states 8 and 11 are drawn but never explained in the given text, so their role in the DFA is unclear from this figure alone"
+    ]
+  },
+  "tags": [
+    "DFA",
+    "test-generation",
+    "coverage-criteria",
+    "path-finding",
+    "BGP-testing",
+    "MESSI"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Model Based Testing for BGP (p.8)"
+    ],
+    "evidence": [
+      "To generate a positive example that covers state 5 in the above figure, we first find a path P1",
+      "Then we find another path P2 (dashed brown) from state 5 to the accepting state 10",
+      "generated positive and negative examples using the coverage algorithm (Figure 7) with a total of 253,958 test cases"
+    ]
+  },
+  "summary": "Figure 7 shows how MESSI's coverage algorithm builds a positive test example that exercises a chosen DFA state, using state 5 as the illustration. Among the DFA's eleven states, 1 is the start state, 5 is the target to be covered, and 10 is the sole accepting state. MESSI first searches for a path P1 (dotted maroon) from the start state to the target, here 1→3→5; it then searches for a second path P2 (dashed brown/orange) from that target onward to an accepting state, here 5→7→9→10. Concatenating the two paths, 1→3→5→7→9→10, yields one complete run of the automaton that both passes through state 5 and ends in acceptance. The rest of the DFA's transitions, including self-loops on states 8 and 11, are drawn in plain black and play no part in this particular example.",
+  "summary_zh": "图7展示MESSI覆盖算法构造正例的方法：先找路径P1(1→3→5，红点线)到达目标状态5，再找路径P2(5→7→9→10，橙虚线)到达接受态10，拼接两段路径即为正例。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

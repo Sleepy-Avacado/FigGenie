@@ -1,0 +1,163 @@
+{
+  "paper_id": "nsdi25-052",
+  "fig": "2",
+  "system": {
+    "name": "Quicksand",
+    "one_liner": "a system that harnesses stranded datacenter resources by decomposing applications into granular, dynamically placed and migrated compute/memory proclets",
+    "domain": [
+      "distributed-systems",
+      "resource-management",
+      "datacenter"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Machine 1",
+        "role": "host machine with available RAM but CPU capacity nearly depleted",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Machine 2",
+        "role": "host machine with available CPU capacity",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "memory proclet",
+        "role": "granular abstraction managing megabytes of heap data; placed where RAM is available",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "compute proclet",
+        "role": "granular abstraction managing a set of computing threads; placed where CPU is available",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "hybrid proclet",
+        "role": "proclet combining both CPU and RAM for workloads needing a mix of both resources",
+        "container": "Machine 1",
+        "novel": true
+      },
+      {
+        "name": "new proclets",
+        "role": "newly created proclets shown split off and placed where RAM/CPU is available",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CPU",
+        "role": "per-machine CPU utilization bar, flagged with a warning icon when nearly full",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RAM",
+        "role": "per-machine RAM utilization bar, flagged with a warning icon when nearly full",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Machine 1",
+        "to": "Machine 2",
+        "what": "compute proclets migrated as Machine 1's CPU nears capacity",
+        "step": null
+      },
+      {
+        "from": "new proclets",
+        "to": "Machine 1",
+        "what": "newly split memory proclets placed where RAM is available",
+        "step": null
+      },
+      {
+        "from": "new proclets",
+        "to": "Machine 2",
+        "what": "newly split compute proclets placed where CPU is available",
+        "step": null
+      }
+    ],
+    "key_idea": "Quicksand dynamically places, splits, merges, and migrates fine-grained compute and memory proclets across machines to follow real-time RAM/CPU availability and relieve oversubscription.",
+    "reading_order": "left to right: Machine 1 (RAM-rich, CPU-constrained, shown splitting/migrating proclets) compared against Machine 2 (CPU-rich), framed by a legend above and per-machine CPU/RAM bars below"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.09,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#8faadc",
+        "used_for": "memory proclet boxes and the RAM utilization bar"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "compute proclet boxes and the CPU utilization bar"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "'new proclets' (memory) outline and label text"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "'new proclets' (compute) outline and label text"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "hybrid proclet boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed dark outlines around each Machine box, ~0.37pt",
+    "font": "sans-serif (Calibri, italic annotations), 5-6.5pt",
+    "corners": "mixed",
+    "arrows": "dashed curved arrow labeled 'migrate' between machines; short arrows labeled 'split' and 'merge' within each machine",
+    "icons": "none (proclets drawn as small colored rectangles; a warning-triangle icon marks the depleted resource bar)"
+  },
+  "encoding": {
+    "color_means": "blue marks a memory proclet, orange marks a compute proclet, gray marks a hybrid proclet that uses both; the same blue/orange coding is reused in the CPU/RAM utilization bars below each machine",
+    "line_style_means": "dashed arrows mark dynamic proclet operations (new proclet placement, migration) as opposed to the solid static outlines of the machines and proclets",
+    "emphasis": "a warning-triangle icon on each machine's nearly-full resource bar visually justifies why proclets split, merge, and migrate between them",
+    "reusable_patterns": [
+      "two-machine, color-coded resource-pressure comparison with per-resource utilization bars and dynamic split/merge/migrate arrows"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "resource-disaggregation",
+    "granular-computing",
+    "proclet",
+    "datacenter-scheduling",
+    "load-balancing"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "Quicksand places resource proclets where they are avail- able",
+      "Quick- sand splits, merges, and migrates resource proclets as they grow, shrink, and as resource pressure",
+      "Quicksand migrates com- pute proclets to the right machine where additional CPUs are available"
+    ]
+  },
+  "summary": "Quicksand harnesses stranded datacenter resources by decomposing applications into fine-grained 'resource proclets' that its runtime places, splits, merges, and migrates according to live resource availability. Figure 2 illustrates this with two machines side by side: Machine 1 has spare RAM but CPU nearing capacity (flagged with a warning icon on its CPU bar), while Machine 2 has spare CPU but RAM nearing capacity. Blue memory proclets are placed on Machine 1 and orange compute proclets on Machine 2, matching each resource type to where it is available; Machine 1 also hosts a gray hybrid proclet that needs both CPU and RAM. Dashed arrows show new proclets being created and placed, a proclet splitting on Machine 1, another merging on Machine 2, and compute proclets migrating from the CPU-constrained Machine 1 to the CPU-rich Machine 2.",
+  "summary_zh": "图2用两台机器展示Quicksand的proclet管理：机器1内存充裕CPU将满，机器2则CPU充裕内存趋满；蓝色内存proclet置于机器1，橙色计算proclet置于机器2，箭头展示拆分合并迁移过程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

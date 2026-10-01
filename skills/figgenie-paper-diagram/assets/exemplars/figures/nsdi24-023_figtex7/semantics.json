@@ -1,0 +1,196 @@
+{
+  "paper_id": "nsdi24-023",
+  "fig": "tex7",
+  "kind": "mechanism",
+  "system": {
+    "name": "GRACE",
+    "one_liner": "a loss-resilient real-time video system built on a neural video codec jointly trained under packet losses",
+    "domain": [
+      "video",
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "why Grace waits for the next packet only until a deadline before decoding with the packets it has",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Arrival of the (i-1)th pkt",
+        "kind": "label",
+        "role": "marks an earlier utility jump at a packet arrival, before the highlighted window",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Arrival of the i th pkt",
+        "kind": "label",
+        "role": "marks the moment t_i when the ith packet arrives and utility jumps up to Q(i)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "High utility, if the (i+1)th pkt arrives before t*",
+        "kind": "label",
+        "role": "names the favourable outcome: an early (i+1)th packet keeps utility high",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Same utility as decoding with the first i pkts at t_i",
+        "kind": "label",
+        "role": "marks the red reference line: the utility floor equal to deciding at t_i with only i packets",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Q(i+1) - Q(i)",
+        "kind": "label",
+        "role": "the utility gap the receiver could gain by waiting for the (i+1)th packet",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Low utility, if the (i+1)th pkt arrives after t*",
+        "kind": "label",
+        "role": "names the unfavourable outcome: a late (i+1)th packet leaves utility low",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "t_i",
+        "kind": "label",
+        "role": "the time the ith packet arrives; utility decay starts from here",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t*",
+        "kind": "label",
+        "role": "the computed deadline separating the high- from the low-utility outcome",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Utility (Q - βt)",
+        "kind": "label",
+        "role": "y-axis: utility decays linearly with elapsed time since the last packet",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "time",
+        "kind": "label",
+        "role": "x-axis along which packet arrivals and the deadline are placed",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Arrival of the i th pkt",
+        "to": "t*",
+        "what": "utility decays linearly from the jump at t_i until the deadline t*",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "t*",
+        "to": "High utility, if the (i+1)th pkt arrives before t*",
+        "what": "an (i+1)th packet arriving before the deadline yields the high-utility branch",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "t*",
+        "to": "Low utility, if the (i+1)th pkt arrives after t*",
+        "what": "an (i+1)th packet arriving after the deadline yields the low-utility branch",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Grace's receiver waits for a still-missing packet only until a computed deadline t*, because waiting past that point yields lower utility than decoding immediately with the packets already in hand.",
+    "reading_order": "left to right along the time axis, following each sawtooth reset at a packet arrival, then down the decay curve to the deadline t*, comparing the high- and low-utility callouts on either side."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "",
+    "aspect": 2.24,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9d9",
+        "used_for": "fill of the speech-bubble annotation callouts (packet-arrival and high/low-utility labels)"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "fill of axis arrowheads and secondary callout/tail shapes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thick (~3pt) black sawtooth utility curve; thin black axis arrows; thin dashed black guide lines dropping to t_i and t* on the time axis; a thin red horizontal reference line",
+    "corners": "rounded",
+    "arrows": "thin grey/black axis arrows for time and utility; dashed vertical drop-lines at t_i and t*",
+    "font": "Calibri plus CambriaMath for symbols, italic for variable names, bold for the 'High'/'Low'/'before'/'after' callout emphasis",
+    "icons": "none beyond the speech-bubble callout shapes"
+  },
+  "encoding": {
+    "color_means": "grey fills the annotation speech bubbles that explain each marked point on the curve; a red line marks the reference utility level equal to deciding at t_i with only i packets; black is used for the curve itself and default text",
+    "line_style_means": "the thick black sawtooth line is the utility-over-time curve; dashed vertical black lines drop from the curve to the t_i and t* tick marks; the thin red horizontal line marks a reference utility value",
+    "state_means": "the two possible outcomes (high vs low utility) are told apart only by which callout applies, keyed to whether the next packet's drop-line falls before or after the t* line",
+    "marker_means": "bold 'High'/'Low' and 'before'/'after' words inside the callouts mark which branch holds; no numbered or circled markers are used",
+    "emphasis": "placing the 'High utility' and 'Low utility' callouts on either side of the dashed t* line, with the key words bolded, makes the deadline's effect on the outcome the focal point of the figure",
+    "reusable_patterns": [
+      "a decaying sawtooth curve annotated with speech-bubble callouts marking a threshold that splits a favourable from an unfavourable outcome"
+    ],
+    "weaknesses": [
+      "the underlying decision logic (wait vs. decode now, and the deadline formula) is stated only via callouts and the surrounding text, not drawn as an explicit decision node or branch",
+      "no legend or explicit units are given for the axes beyond the symbolic Q - βt expression"
+    ]
+  },
+  "tags": [
+    "packet-scheduling",
+    "deadline-based-decoding",
+    "utility-function",
+    "loss-resilience",
+    "receiver-policy",
+    "GRACE"
+  ],
+  "provenance": {
+    "sections": [
+      "§protocol-nsdi-v1"
+    ],
+    "evidence": [
+      "Grace waits for the next frame until a deadline, after which the utility is lower",
+      "the receiver will immediately decode the frame if all packets of the frame have arrived",
+      "the receiver will wait longer if the improvement in quality by getting one more packet"
+    ]
+  },
+  "summary": "Figure tex7 explains the deadline that governs when Grace's receiver decodes a frame. Utility (Q minus beta times elapsed time) rises sharply at each packet arrival and then decays; the curve is annotated with callouts marking the arrivals of the (i-1)th and ith packets. After the ith packet arrives at t_i, the receiver computes a deadline t* from the expected gain Q(i+1)-Q(i) of waiting for one more packet. If the (i+1)th packet arrives before t*, utility stays high; if it arrives after t*, the receiver instead decodes immediately with only i packets, and utility is low, no better than deciding at t_i. A red reference line marks that break-even utility level. The figure argues the receiver should wait longer only when the potential quality gain from one more packet is larger, but never past the point where waiting no longer pays off.",
+  "summary_zh": "图解释Grace接收端的解码截止时间机制：效用随时间衰减，每次收包跳升；计算出的t*之前收到下一包则效用高，之后到达则立即用已有i个包解码，效用较低。",
+  "confidence": "high",
+  "notes": "content.groups corrected from the prior 'logic' to 'anatomy': the drawn structure is a continuous utility-vs-time sawtooth curve (base timeline) annotated with speech-bubble callouts, not a state machine or decision flowchart with nodes and labelled branches, so it does not meet the v3 definition of the logic group even though it explains a threshold decision.",
+  "venue": "NSDI24"
+}

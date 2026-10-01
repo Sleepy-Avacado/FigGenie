@@ -1,0 +1,220 @@
+{
+  "paper_id": "asplos25-091",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Orion",
+    "one_liner": "a fully-automated framework that compiles PyTorch neural networks into efficient fully homomorphic encryption (FHE) programs for private inference",
+    "domain": [
+      "cryptography",
+      "fully-homomorphic-encryption",
+      "deep-learning-compilers"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how the baby-step giant-step (BSGS) algorithm regroups a matrix's diagonals to cut the number of ciphertext rotations needed for a homomorphic matrix-vector product",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "matrix",
+        "kind": "cell",
+        "role": "the 6x6 matrix M whose generalized diagonals are extracted and multiplied",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "input vector",
+        "kind": "cell",
+        "role": "the length-6 vector multiplied against each rotated diagonal",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "n1 rotations",
+        "kind": "label",
+        "role": "number of baby-step rotation groups (3) the diagonals are split into",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "n2 rotations",
+        "kind": "label",
+        "role": "number of giant-step realignments (2) needed to combine the groups",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Rotate diags down by 0·n1",
+        "kind": "label",
+        "role": "baby-step rotation applied to the first diagonal group before multiplying",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Rotate diags down by 1·n1",
+        "kind": "label",
+        "role": "baby-step rotation applied to the second diagonal group before multiplying",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Rotate up by 0·n1",
+        "kind": "label",
+        "role": "giant-step rotation aligning the first group's partial sum with the final result",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Rotate up by 1·n1",
+        "kind": "label",
+        "role": "giant-step rotation aligning the second group's partial sum with the final result",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "result vector",
+        "kind": "cell",
+        "role": "the final summed matrix-vector product",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "matrix",
+        "to": "input vector",
+        "what": "each extracted, rotated diagonal is multiplied elementwise by the input vector",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Rotate diags down by 0·n1",
+        "to": "Rotate up by 0·n1",
+        "what": "the first group's n1 rotated-diagonal products are summed, then rotated up to align with the final result",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Rotate diags down by 1·n1",
+        "to": "Rotate up by 1·n1",
+        "what": "the second group's n1 rotated-diagonal products are summed, then rotated up by one giant step",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Rotate up by 0·n1",
+        "to": "result vector",
+        "what": "aligned partial sums from both groups are added into the final result vector",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Rotate up by 1·n1",
+        "to": "result vector",
+        "what": "aligned partial sums from both groups are added into the final result vector",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the concrete 6x6 matrix M's entries (a wrap-around 0-15 ramp), the n1=3/n2=2 grouping of n=6 total rotations, and the resulting output vector's first entry (55), matching both the diagonal method and BSGS",
+      "linked_by": "colour bands (green/yellow/blue) marking which diagonal belongs to which baby-step group, consistent between the matrix and the intermediate rotated-diagonal columns",
+      "result_cells": "the final single-column result vector on the right, with its first entry computed as 55 in both panels"
+    },
+    "key_idea": "Splitting an n x n matrix-vector product's n diagonals into n1 baby-step groups of n2 diagonals each cuts the needed ciphertext rotations from n down to about n1+n2 (here 3+2=5 vs 6), a saving that grows as O(sqrt(n)) instead of O(n) for larger matrices.",
+    "reading_order": "left to right: the matrix and input vector, split into two coloured baby-step rotation groups (rotate diags down by 0/1 times n1), each group's n1 elementwise products, then giant-step 'rotate up' realignment, finally summed into the single result vector matching the diagonal method's answer"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.08,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b9e0a5",
+        "used_for": "light green highlighting the first diagonal group (rotate diags down by 0·n1)"
+      },
+      {
+        "hex": "#fff4c3",
+        "used_for": "pale yellow highlighting the second diagonal group (rotate diags down by 1·n1)"
+      },
+      {
+        "hex": "#99ccff",
+        "used_for": "light blue highlighting a third diagonal/alignment column"
+      },
+      {
+        "hex": "#36393d",
+        "used_for": "dark charcoal fill of all Comic Sans text glyphs (matrix numbers and labels)"
+      },
+      {
+        "hex": "#c5c5c5",
+        "used_for": "light grey shading step used across the matrix's row bands"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin-medium (~0.6pt) grey/black cell borders",
+    "corners": "square",
+    "arrows": "a handful of thin black arrows, some curved, linking rotated diagonal groups to their summed and aligned results",
+    "font": "Comic Sans MS throughout, small (3.5-9.5pt), almost entirely bold",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green/yellow/blue shade each diagonal (or diagonal group) consistently between the matrix, its extracted column, and the partial-sum column, so the reader can trace one diagonal through the whole computation",
+    "line_style_means": "not used to distinguish relation kinds; thin solid lines/arrows connect each stage of the computation",
+    "state_means": "not applicable; both (a) and (b) are static worked computations rather than before/after states of one instance",
+    "marker_means": "no numbered markers; 'n', 'n1', 'n2' labels and the x/+/= operators mark the arithmetic structure of the computation",
+    "emphasis": "bracket labels 'n1 = 3 rotations' and 'n2 = 2 rotations' spanning groups of columns draw attention to exactly how many ciphertext rotations the BSGS regrouping needs, the paper's central efficiency claim",
+    "reusable_patterns": [
+      "colour-banded diagonals of a matrix extracted into separate multiply-and-sum columns, regrouped by a rotation-count bracket label, to make an asymptotic rotation-count argument visually countable"
+    ],
+    "weaknesses": [
+      "the figure was authored as two separate source files ((a) diagonal method, (b) BSGS) and the PDF-extracted single-figure SVG only preserved panel (b)'s content",
+      "extremely dense small Comic-Sans numerals in a 6x6 matrix require careful visual tracing to follow one diagonal end to end"
+    ]
+  },
+  "tags": [
+    "fully-homomorphic-encryption",
+    "ciphertext-rotation",
+    "matrix-vector-product",
+    "BSGS-algorithm",
+    "FHE-compiler",
+    "Orion"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 FHE Matrix-Vector Products"
+    ],
+    "evidence": [
+      "Figure 2a illustrates the diagonal method for a 6 × 6 matrix",
+      "BSGS decomposes a matrix-vector product into n1 groups of n2 diagonals",
+      "the number of ciphertext rotations is minimized when n1 = n2 = √n"
+    ]
+  },
+  "summary": "This figure visualizes how Orion's use of the baby-step giant-step (BSGS) algorithm cuts the ciphertext rotations needed for a homomorphic matrix-vector product. Panel (a) shows the baseline diagonal method on a 6x6 matrix: all six generalized diagonals are each rotated and multiplied against the input vector, needing n=6 ciphertext rotations before the six partial products are summed into the result. Panel (b) shows the same 6x6 matrix computed via BSGS with n1=3, n2=2: the six diagonals are split into two colour-coded baby-step groups of three, each group needs only its own n1=3 rotations (shared across the group) to compute a partial sum, and then just n2=2 giant-step 'rotate up' operations realign the two groups' partial sums before they are added into the same final result vector as (a). By trading n total rotations for roughly n1+n2 rotations, BSGS reduces the matrix-vector product's rotation complexity from O(n) to O(sqrt(n)).",
+  "summary_zh": "该图展示Orion中BSGS算法如何减少同态矩阵-向量乘法所需的密文旋转次数：(a)对角线法对6x6矩阵的6条对角线各做1次旋转（共6次）后求和；(b)BSGS将对角线分成n1=3、n2=2两组，每组仅需n1次基线旋转，再用n2次巨步旋转对齐后相加，得到相同结果，将旋转次数从O(n)降到O(√n)。",
+  "confidence": "medium",
+  "notes": "kept groups=['anatomy'] with worked_example=true per the prior labels rather than adding 'comparison', since (a) and (b) do not share one aligned template (a is a single row of 6 terms, b is two grouped rows of 3), which is what the v3 'comparison' plan requires. content.elements/relations describe panel (b) (BSGS), the figure's titular subject and the more structurally detailed of the two; panel (a) is covered in subject/summary only. The PDF-extracted single-figure SVG only contains panel (b)'s vector content, so panel (a) was read from the author's separate source file fig2a_diagonal-method.svg/png.",
+  "venue": "ASPLOS25"
+}

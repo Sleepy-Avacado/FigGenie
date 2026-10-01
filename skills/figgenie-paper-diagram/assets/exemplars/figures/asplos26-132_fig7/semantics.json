@@ -1,0 +1,183 @@
+{
+  "paper_id": "asplos26-132",
+  "fig": "7",
+  "system": {
+    "name": "DIP",
+    "one_liner": "a dynamic, modality-aware pipeline scheduling framework for large multimodal model (LMM) training",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "llm-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Computation graphs of microbatches",
+        "role": "input per-microbatch forward/backward computation graphs colored by modality and backbone",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MCTS",
+        "role": "Monte Carlo Tree Search used to explore the permutation space of segment orderings",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Pipeline segments",
+        "role": "reordered sequence of pipeline segments produced by the MCTS search",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "PP0 / PP1 / PP2",
+        "role": "pipeline-parallel rank lanes onto which interleaved forward/backward stages are packed",
+        "container": "Pipeline Stage Interleave grid",
+        "novel": false
+      },
+      {
+        "name": "Modality 1",
+        "role": "legend entry for computation belonging to the first data modality",
+        "container": "legend",
+        "novel": false
+      },
+      {
+        "name": "Modality 2",
+        "role": "legend entry for computation belonging to the second data modality",
+        "container": "legend",
+        "novel": false
+      },
+      {
+        "name": "Backbone Model",
+        "role": "legend entry for computation belonging to the shared backbone model",
+        "container": "legend",
+        "novel": false
+      },
+      {
+        "name": "Reserved but not used",
+        "role": "memory region allocated but idle before per-layer memory optimization",
+        "container": "Per-Layer Memory Opt. chart",
+        "novel": false
+      },
+      {
+        "name": "In use",
+        "role": "memory region actively holding activations after optimization",
+        "container": "Per-Layer Memory Opt. chart",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Computation graphs of microbatches",
+        "to": "MCTS",
+        "what": "candidate segment orderings",
+        "step": 1
+      },
+      {
+        "from": "MCTS",
+        "to": "Pipeline segments",
+        "what": "reordered pipeline segments",
+        "step": 1
+      },
+      {
+        "from": "Pipeline segments",
+        "to": "PP0 / PP1 / PP2",
+        "what": "interleaved forward/backward stages",
+        "step": 2
+      },
+      {
+        "from": "PP0 / PP1 / PP2",
+        "to": "Memory (Time) chart",
+        "what": "per-layer memory-saving strategy selection",
+        "step": 3
+      }
+    ],
+    "key_idea": "DIP's pipeline schedule searcher decomposes the intractable ILP scheduling problem into a three-phase heuristic loop: MCTS-based segment reordering, dual-queue greedy stage interleaving across pipeline ranks, and per-layer memory optimization that removes reserved-but-unused memory.",
+    "reading_order": "Top: per-microbatch computation graphs feed MCTS (①) to produce reordered pipeline segments; middle: segments are interleaved across pipeline ranks PP0-PP2 (②); bottom: two memory-over-time charts show the before/after effect of per-layer memory optimization (③), which removes the reserved-but-unused region."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.96,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b3ff66",
+        "used_for": "green cells representing Modality 1 computation"
+      },
+      {
+        "hex": "#66b2ff",
+        "used_for": "blue cells representing Backbone Model computation"
+      },
+      {
+        "hex": "#ffb366",
+        "used_for": "orange cells representing Modality 2 computation"
+      },
+      {
+        "hex": "#cc0000",
+        "used_for": "red data-dependency arrows and 'Reserved but not used' memory outline"
+      },
+      {
+        "hex": "#ffcccc",
+        "used_for": "pink fill of the reserved-but-unused memory region before optimization"
+      },
+      {
+        "hex": "#f6f6f6",
+        "used_for": "light gray background/borders of the microbatch computation-graph grid"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black cell borders, dashed boundaries around the computation-graph and memory-optimization groupings",
+    "font": "Calibri sans, 6.5-10pt, bold for phase labels",
+    "corners": "square",
+    "arrows": "orthogonal and curved, filled and open triangular heads, red for data-dependency links",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = Modality 1 computation, blue = Backbone Model computation, orange = Modality 2 computation, red = data dependencies between chunks and reserved-but-unused memory highlighting",
+    "line_style_means": "dashed = grouping boundary around the computation-graph legend and around the memory-optimization sub-figure; red curved arrows = data dependencies between forward/backward chunks",
+    "emphasis": "circled numbers ①-③ walk the reader through the searcher's three heuristic phases in order, and red shading isolates the wasted 'reserved but not used' memory the third phase removes",
+    "reusable_patterns": [
+      "tree-search icon (MCTS) representing a combinatorial search phase",
+      "before/after memory-over-time chart pair showing the effect of an optimization"
+    ],
+    "weaknesses": [
+      "the grid-based computation-graph and pipeline-interleave panels are visually dense with little explanatory text",
+      "legend is small and placed away from the grids it explains"
+    ]
+  },
+  "tags": [
+    "pipeline-parallelism",
+    "monte-carlo-tree-search",
+    "scheduling",
+    "memory-optimization",
+    "multimodal-training"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Approach Overview (p.6)"
+    ],
+    "evidence": [
+      "As shown in Fig. 7, our searcher iterates through a three-phase loop, applying tailored heuristics at each step.",
+      "we adopt a divide-and-conquer strategy that decomposes the complex search problem into a sequence of simpler",
+      "This phase selects memory-saving strategies (e.g., activation checkpointing and offloading) for all model layers"
+    ]
+  },
+  "summary": "This figure details the internal workflow of DIP's pipeline schedule searcher, which decomposes an intractable monolithic ILP scheduling problem into a three-phase heuristic loop. First, per-microbatch computation graphs (colored by Modality 1, Modality 2, and Backbone Model, with forward/backward chunks linked by red data-dependency arrows) are fed into a Monte Carlo Tree Search (MCTS) that reorders pipeline segments. Second, a dual-queue greedy algorithm interleaves the resulting segments' forward and backward stages across pipeline-parallel ranks PP0-PP2 to minimize bubbles. Third, per-layer memory optimization selects memory-saving strategies (e.g., activation checkpointing and offloading), shown as a before/after memory-over-time chart pair where a pink 'reserved but not used' region is eliminated in favor of memory that is actively 'in use'. Circled numbers ①-③ mark the three phases, and the whole loop is described as highly parallelizable across CPU threads.",
+  "summary_zh": "该图展示DIP流水线调度搜索器的内部工作流程：①用蒙特卡洛树搜索(MCTS)对按模态1、模态2、骨干模型着色的微批计算图进行分段重排；②贪心算法将分段的前向/反向阶段交织排布到PP0~PP2各流水线并行等级；③逐层内存优化消除'预留未用'的内存区域，图表对比优化前后内存占用随时间的变化。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

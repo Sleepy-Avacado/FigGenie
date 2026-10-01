@@ -1,0 +1,218 @@
+{
+  "paper_id": "asplos25-100",
+  "fig": "9",
+  "system": {
+    "name": "CENT",
+    "one_liner": "a CXL-enabled, GPU-free system for LLM inference that maps tensor-parallel transformer layers across CXL devices",
+    "domain": [
+      "ml-systems",
+      "hardware",
+      "memory-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Host",
+        "role": "issues decoder-block requests to CXL devices and coordinates broadcast/gather",
+        "container": "(a) Decoder block mapping",
+        "novel": false
+      },
+      {
+        "name": "CXL Switch",
+        "role": "connects host to CXL devices",
+        "container": "(a)/(b)",
+        "novel": false
+      },
+      {
+        "name": "CXL Device",
+        "role": "one of the devices each transformer block is spread across under tensor parallelism",
+        "container": "(a) Decoder block mapping",
+        "novel": false
+      },
+      {
+        "name": "Decoder 0, Decoder 1, Decoder 2",
+        "role": "sequential decoder blocks processed one at a time for a single prompt under TP",
+        "container": "(a) Decoder block mapping",
+        "novel": false
+      },
+      {
+        "name": "Add & Norm",
+        "role": "residual connection and normalization layer confined to a single (master) CXL device",
+        "container": "(b) Layer Mapping in Each Decoder Block",
+        "novel": true
+      },
+      {
+        "name": "FC Layer",
+        "role": "fully-connected layer distributed (broadcast/gather) across multiple CXL devices",
+        "container": "(b) Layer Mapping in Each Decoder Block",
+        "novel": true
+      },
+      {
+        "name": "Attention score",
+        "role": "attention computation confined to a single (master) CXL device to avoid expensive AllReduce",
+        "container": "(b) Layer Mapping in Each Decoder Block",
+        "novel": true
+      },
+      {
+        "name": "SiLU",
+        "role": "activation function confined to a single CXL device",
+        "container": "(b) Layer Mapping in Each Decoder Block",
+        "novel": true
+      },
+      {
+        "name": "CXL Switch (Broadcast)",
+        "role": "broadcasts 16KB data from host to multiple CXL devices",
+        "container": "(b) Layer Mapping in Each Decoder Block",
+        "novel": true
+      },
+      {
+        "name": "CXL Switch (Gather)",
+        "role": "gathers 16KB data from multiple CXL devices back to the host",
+        "container": "(b) Layer Mapping in Each Decoder Block",
+        "novel": true
+      },
+      {
+        "name": "D",
+        "role": "individual CXL device receiving broadcast data or sending gathered data",
+        "container": "CXL Switch (Broadcast)/(Gather)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Host",
+        "to": "CXL Switch",
+        "what": "decoder block dispatch",
+        "step": null
+      },
+      {
+        "from": "CXL Switch",
+        "to": "CXL Device",
+        "what": "transformer block workload (tensor-parallel)",
+        "step": null
+      },
+      {
+        "from": "Decoder 0",
+        "to": "Decoder 1",
+        "what": "sequential prompt processing over time",
+        "step": null
+      },
+      {
+        "from": "Decoder 1",
+        "to": "Decoder 2",
+        "what": "sequential prompt processing over time",
+        "step": null
+      },
+      {
+        "from": "Host",
+        "to": "CXL Switch (Broadcast)",
+        "what": "16KB data to broadcast to multiple devices",
+        "step": null
+      },
+      {
+        "from": "CXL Switch (Broadcast)",
+        "to": "D",
+        "what": "16KB broadcast data",
+        "step": null
+      },
+      {
+        "from": "D",
+        "to": "CXL Switch (Gather)",
+        "what": "16KB partial results",
+        "step": null
+      },
+      {
+        "from": "CXL Switch (Gather)",
+        "to": "Host",
+        "what": "gathered 16KB results",
+        "step": null
+      },
+      {
+        "from": "FC Layer",
+        "to": "Attention score",
+        "what": "projected query/key/value feeding attention on the master device",
+        "step": null
+      }
+    ],
+    "key_idea": "CENT implements tensor parallelism by spreading each transformer decoder block's fully-connected layers across all CXL devices via broadcast/gather over the CXL switch, while keeping the infrequent, communication-heavy residual/normalization and attention layers on a single master device to avoid expensive AllReduce overhead.",
+    "reading_order": "Left panel (a): decoder blocks are processed sequentially, one at a time, across all CXL devices for a single prompt; right panel (b): a zoom into one decoder block, color-coding which layers stay on a single device versus which are broadcast/gathered across multiple devices."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.43,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#70ad47",
+        "used_for": "FC Layer boxes mapped to multiple CXL devices (green, per legend)"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "Add & Norm / Attention score / SiLU boxes mapped to a single CXL device (blue, per legend)"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "CXL Switch and device D boxes (light blue)"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "Broadcast/Gather CXL Switch highlight boxes (orange)"
+      },
+      {
+        "hex": "#2e75b6",
+        "used_for": "accent fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.72pt median, dashed lines used",
+    "font": "Times New Roman serif, ~7pt, bold for panel labels",
+    "corners": "rounded",
+    "arrows": "51 arrowheads, straight lines",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = layer mapped to multiple CXL devices, blue = layer mapped to a single CXL device (per in-figure legend)",
+    "line_style_means": null,
+    "emphasis": "the green/blue color legend and the Broadcast/Gather CXL Switch callouts emphasize which layers require costly multi-device communication",
+    "reusable_patterns": [
+      "two-panel figure pairing a coarse timeline/mapping view with a detailed per-layer device-mapping diagram, using a color legend to encode placement"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "tensor-parallelism",
+    "cxl",
+    "model-parallelism",
+    "llm-inference",
+    "processing-in-memory",
+    "broadcast-gather"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Model Mapping (p.8)"
+    ],
+    "evidence": [
+      "CENT assigns each transformer decoder block across all CXL devices",
+      "attention layer is mapped to the master CXL device",
+      "fully connected layers are spread across CXL devices"
+    ]
+  },
+  "summary": "Figure 9 shows how CENT maps tensor parallelism (TP) across its CXL devices. Panel (a) shows the host dispatching decoder blocks through the CXL switch to all CXL devices, with Decoder 0, Decoder 1, and Decoder 2 processed sequentially over time for a single prompt. Panel (b) zooms into one decoder block: fully-connected layers (green) are spread across multiple CXL devices via broadcast and gather operations over the CXL switch (each moving 16KB), while Add & Norm, the attention-score computation, and SiLU (blue) are confined to a single master CXL device because distributing attention would require costly AllReduce communication. The figure uses a simple color legend to mark single-device versus multi-device layer placement.",
+  "summary_zh": "图9展示CENT的张量并行映射：(a) 主机通过CXL交换机将解码器块依次分发给所有CXL设备，单个提示下Decoder 0/1/2按时间顺序处理；(b) 放大单个解码器块，全连接层（绿色）通过广播/收集跨多设备分布，而Add & Norm、注意力分数和SiLU（蓝色）因AllReduce通信开销大而固定在单一主设备上。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

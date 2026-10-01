@@ -1,0 +1,191 @@
+{
+  "paper_id": "osdi26-030",
+  "fig": "tex2",
+  "system": {
+    "name": "Xkernel",
+    "one_liner": "a system that enables principled, in-situ performance tuning of any tunable constant directly on a deployed Linux kernel via Scoped Indirect Execution",
+    "domain": [
+      "os-kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Kernel Source Code",
+        "role": "annotated source input, marked with <line, token> locations of tunable constants",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Kernel Binary",
+        "role": "compiled kernel binary analyzed offline together with the source to build the scope table",
+        "container": "user space (top)",
+        "novel": false
+      },
+      {
+        "name": "Scope Table",
+        "role": "global table of tunable constants with columns ConstID, Val, Expression, CS, SS, Status, built by one-time offline static analysis",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Xk-stub",
+        "role": "generated stub header for a given ConstID, created via xk-gen",
+        "container": "User space",
+        "novel": true
+      },
+      {
+        "name": "Xk-tune",
+        "role": "user-authored tuning program combining the stub with a policy",
+        "container": "User space",
+        "novel": true
+      },
+      {
+        "name": "Kernel Binary",
+        "role": "running kernel binary in kernel space, containing the critical-span (CS)-marked code region to be tuned",
+        "container": "Kernel space",
+        "novel": false
+      },
+      {
+        "name": "Instructions (Policy & SetVal)",
+        "role": "synthesized indirection instructions that apply the policy and set the tuned value",
+        "container": "Kernel space",
+        "novel": true
+      },
+      {
+        "name": "XK-runtime",
+        "role": "runtime component that attaches the instructions and transitions the kernel from the original value to the new one safely",
+        "container": "Kernel space",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Kernel Source Code",
+        "to": "Scope Table",
+        "what": "offline static analysis of symbolic state expressions, critical span (CS), and safe span (SS)",
+        "step": null
+      },
+      {
+        "from": "Kernel Binary",
+        "to": "Scope Table",
+        "what": "offline processing",
+        "step": null
+      },
+      {
+        "from": "Xk-stub",
+        "to": "Xk-tune",
+        "what": "+Policy",
+        "step": null
+      },
+      {
+        "from": "Xk-tune",
+        "to": "Instructions (Policy & SetVal)",
+        "what": "$ xk-load Xk-tune.c",
+        "step": null
+      },
+      {
+        "from": "Scope Table",
+        "to": "Instructions (Policy & SetVal)",
+        "what": "synthesize indirections from CS/SS information",
+        "step": null
+      },
+      {
+        "from": "Kernel Binary",
+        "to": "Instructions (Policy & SetVal)",
+        "what": "Kprobe redirection",
+        "step": null
+      },
+      {
+        "from": "Instructions (Policy & SetVal)",
+        "to": "XK-runtime",
+        "what": "attach and safe transition to the new value",
+        "step": null
+      }
+    ],
+    "key_idea": "Xkernel performs one-time offline static analysis to derive a global Scope Table of tunable constants' critical and safe spans, then lets a user-space tuning program synthesize indirection instructions that XK-runtime attaches into the running kernel via Kprobe redirection.",
+    "reading_order": "Left to right and top to bottom: a user annotates kernel source, offline processing builds the Scope Table, then user-space steps (Xk-stub, Xk-tune) flow down across the user/kernel-space divide into synthesized instructions attached by XK-runtime."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.31,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0070c0",
+        "used_for": "blue outlines/text for the Scope Table border and CS-related synthesis flow"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill of the Kernel Binary boxes"
+      },
+      {
+        "hex": "#011893",
+        "used_for": "dark navy Kprobe-redirection double arrows and Instructions box accents"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill/background accents"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "light blue fill of Xk-stub and Xk-tune boxes"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "gray text/arrow for 'Offline Processing'"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.0pt, dashed/dotted band separators, solid box borders",
+    "font": "GillSansMT sans-serif, 14-20pt",
+    "corners": "mixed",
+    "arrows": "straight and curved, filled/open triangular heads, some double-headed",
+    "icons": "vector; simple person icon representing the user"
+  },
+  "encoding": {
+    "color_means": "yellow = kernel binary artifacts, blue = critical span (CS) and its synthesis flow, light blue = user-space tuning components (Xk-stub, Xk-tune)",
+    "line_style_means": "colored bands mark CS and SS boundaries both in the Scope Table and in the live Kernel Binary; a horizontal rule separates User space from Kernel space",
+    "emphasis": "matching colored CS/SS bands are visually traced with connecting lines from the offline Scope Table down into the live kernel-space binary, linking derived table entries to their in-kernel locations",
+    "reusable_patterns": [
+      "horizontal user-space/kernel-space split with command-line steps annotated directly on the flow arrows"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "kernel tuning",
+    "live patching",
+    "kprobe",
+    "runtime indirection",
+    "performance tunability",
+    "scoped indirect execution"
+  ],
+  "provenance": {
+    "sections": [
+      "Scoped Indirect Execution (SIE)",
+      "Overview"
+    ],
+    "evidence": [
+      "performs offline static analysis on kernel code to understand the symbolic state expression, critical span",
+      "maintains them in a global . The offline analysis is a one-time effort",
+      "offers a safe, efficient, and programmable interface for in-situ tuning"
+    ]
+  },
+  "summary": "This figure gives the system overview of Xkernel, which provides principled, in-situ performance tunability for OS kernels via a technique called Scoped Indirect Execution. A user annotates kernel source-code locations (<line, token>) that, together with the kernel binary, are offline-processed into a Scope Table listing each tunable constant's ID, value, expression, critical span (CS), safe span (SS), and status; this one-time offline analysis only needs updating when the kernel is redeployed. In user space, the user generates an Xk-stub via 'xk-gen', combines it with a policy to form Xk-tune, and loads it ('xk-load') into the system. The Scope Table's CS/SS entries are used to synthesize indirection instructions (Policy & SetVal) wired to the live kernel binary via Kprobe redirection, which XK-runtime then attaches and safely transitions into execution. The diagram is a flat, mixed-corner box diagram split by a horizontal user-space/kernel-space divider, using color-coded bands traced consistently between the table and the kernel binary, with command-line snippets annotated directly on the flow arrows.",
+  "summary_zh": "该图展示 Xkernel 系统概览：用户标注内核源码后，与内核二进制一起离线生成作用域表（含 ConstID、CS、SS 等列，一次性离线分析）；用户态通过 xk-gen/xk-stub 与策略组合成 Xk-tune 并加载进内核态，利用 Kprobe 重定向与作用域表合成间接指令，由 XK-runtime 挂载并安全切换生效。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

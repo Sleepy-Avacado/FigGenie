@@ -1,0 +1,181 @@
+{
+  "paper_id": "sosp25-035",
+  "fig": "1",
+  "system": {
+    "name": "Mantle",
+    "one_liner": "a hierarchical metadata management system for cloud object storage that replaces a single metadata service with a scalable sharded database (TafDB) plus a per-namespace index (IndexNode)",
+    "domain": [
+      "storage",
+      "cloud"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Data Warehouse",
+        "role": "example application sharing the COSS",
+        "container": "Apps",
+        "novel": false
+      },
+      {
+        "name": "AI Training",
+        "role": "example application sharing the COSS",
+        "container": "Apps",
+        "novel": false
+      },
+      {
+        "name": "Cloud SDK",
+        "role": "shared client SDK through which applications issue RESTful API calls",
+        "container": "Apps",
+        "novel": false
+      },
+      {
+        "name": "Object Storage Service",
+        "role": "the cloud-side COSS containing the proxy, metadata, and data services",
+        "container": "Cloud",
+        "novel": false
+      },
+      {
+        "name": "Proxy Layer",
+        "role": "stateless layer of proxy servers receiving every application request",
+        "container": "Object Storage Service",
+        "novel": false
+      },
+      {
+        "name": "Proxy 1",
+        "role": "one of n stateless proxy server instances",
+        "container": "Proxy Layer",
+        "novel": false
+      },
+      {
+        "name": "Proxy 2",
+        "role": "one of n stateless proxy server instances",
+        "container": "Proxy Layer",
+        "novel": false
+      },
+      {
+        "name": "Proxy 3",
+        "role": "one of n stateless proxy server instances",
+        "container": "Proxy Layer",
+        "novel": false
+      },
+      {
+        "name": "Proxy n",
+        "role": "the nth stateless proxy server instance",
+        "container": "Proxy Layer",
+        "novel": false
+      },
+      {
+        "name": "Metadata Service",
+        "role": "manages the object namespace, mapping object paths to physical data locations",
+        "container": "Object Storage Service",
+        "novel": false
+      },
+      {
+        "name": "Data Service",
+        "role": "maintains a pool of servers storing object data",
+        "container": "Object Storage Service",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Cloud SDK",
+        "to": "Proxy Layer",
+        "what": "RESTful API (HTTP GET/PUT)",
+        "step": null
+      },
+      {
+        "from": "Proxy Layer",
+        "to": "Metadata Service",
+        "what": "resolves the object path",
+        "step": null
+      },
+      {
+        "from": "Proxy Layer",
+        "to": "Data Service",
+        "what": "fetches/stores the object data",
+        "step": null
+      }
+    ],
+    "key_idea": "A typical cloud object storage service (COSS) exposes only a constrained RESTful API through a shared, stateless proxy layer, behind which a separate metadata service and data service are strictly isolated from applications.",
+    "reading_order": "Top-down: several applications share one Cloud SDK, crossing a RESTful-API boundary into a stateless Proxy Layer (Proxy 1..n), which talks to a separate Metadata Service and Data Service inside the Object Storage Service."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.98,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fdda60",
+        "used_for": "gold fill of the core COSS backend boxes (Proxy 1..n, Metadata Service, Data Service)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray background of the Object Storage Service and Proxy Layer container boxes"
+      },
+      {
+        "hex": "#97dac0",
+        "used_for": "teal fill of the Data Warehouse application box"
+      },
+      {
+        "hex": "#c3e6cb",
+        "used_for": "pale green fill of the AI Training application box"
+      },
+      {
+        "hex": "#bfd8e2",
+        "used_for": "pale blue fill of the '...' placeholder application box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.39pt) dark borders; a dashed horizontal rule marks the RESTful-API boundary",
+    "font": "Arial sans-serif, about 7-8pt",
+    "corners": "rounded",
+    "arrows": "thin double-headed arrows connecting the Proxy Layer to the Metadata/Data Service and crossing the API boundary",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gold = the three core COSS backend components (Proxy, Metadata Service, Data Service); light gray = the two structural container boxes (Object Storage Service, Proxy Layer); teal/green/blue = different example applications sharing the same COSS",
+    "line_style_means": "dashed horizontal rule marks the RESTful-API boundary between application code and the cloud service; double-headed solid arrows show synchronous request/response interaction",
+    "emphasis": "multiple differently-colored application boxes (Data Warehouse, AI Training, ...) all funnel through one 'Cloud SDK' into the same RESTful API, arguing that many applications share one constrained interface into the COSS",
+    "reusable_patterns": [
+      "vertically stacked API-boundary diagram: application layer above a dashed interface line, service layer below",
+      "a horizontally-repeated proxy pool (Proxy 1...Proxy n) inside its own labeled sub-box to depict stateless load-balanced replicas"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "cloud object storage",
+    "metadata management",
+    "proxy layer",
+    "RESTful API",
+    "namespace"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "a typical COSS consists of three key components: a proxy layer, a metadata service, and a data service",
+      "applications interact with COSSs through a restricted set of RESTful APIs",
+      "this proxy layer is stateless, which helps with load balancing"
+    ]
+  },
+  "summary": "Mantle is a hierarchical metadata management system for cloud object storage services (COSS) that replaces a monolithic metadata service with a scalable sharded database (TafDB) plus a per-namespace index (IndexNode). Figure 1 instead sets up the background: the architecture of a typical existing COSS. Multiple applications (Data Warehouse, AI Training, ...) sit above a shared Cloud SDK, crossing a dashed RESTful-API (HTTP GET/PUT) boundary into the cloud service. Inside the Object Storage Service, a stateless Proxy Layer of interchangeable proxies (Proxy 1...Proxy n) receives every request and talks bidirectionally to a separate Metadata Service, which resolves object paths, and a Data Service, which stores the object bytes. This three-component, proxy-fronted split is the baseline architecture that Mantle's own proxy layer continues to follow, even as Mantle changes what sits behind it.",
+  "summary_zh": "图1为典型云对象存储服务背景架构（非Mantle新设计）：应用经Cloud SDK跨RESTful API边界进入云端；无状态代理层分别与元数据服务、数据服务交互；Mantle代理层沿用此架构但改造后端实现。",
+  "confidence": "high",
+  "notes": "Figure 1 depicts a generic/typical COSS baseline (per the caption), not Mantle's own novel internals (TafDB, IndexNode), which the text introduces later for Figures 5-6; components are marked non-novel accordingly.",
+  "venue": "SOSP25"
+}

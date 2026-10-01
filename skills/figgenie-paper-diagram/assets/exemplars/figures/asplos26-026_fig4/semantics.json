@@ -1,0 +1,214 @@
+{
+  "paper_id": "asplos26-026",
+  "fig": "4",
+  "system": {
+    "name": "TLT",
+    "one_liner": "a system that accelerates reasoning RL training losslessly via adaptive speculative decoding",
+    "domain": [
+      "ml-systems",
+      "reinforcement learning",
+      "LLM training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Prompt (Question)",
+        "role": "input question fed to the target model for rollout",
+        "container": "Phase 1: Rollout",
+        "novel": false
+      },
+      {
+        "name": "Model",
+        "role": "trainable target model that decodes multiple candidate responses",
+        "container": "Phase 1: Rollout",
+        "novel": false
+      },
+      {
+        "name": "Model Responses",
+        "role": "generated candidate responses R1...Rn for the prompt",
+        "container": "Phase 1: Rollout",
+        "novel": false
+      },
+      {
+        "name": "Ref Model",
+        "role": "fixed reference model (initial target model at RL step 0) used to compute KL divergence",
+        "container": "Phase 2: Inference",
+        "novel": false
+      },
+      {
+        "name": "Model",
+        "role": "target model under training, reprocesses responses for logits",
+        "container": "Phase 2: Inference",
+        "novel": false
+      },
+      {
+        "name": "KL Divergence",
+        "role": "penalty computed between target and reference model logits to constrain updates",
+        "container": "Phase 2: Inference",
+        "novel": false
+      },
+      {
+        "name": "Reward Policy",
+        "role": "rule-based policy computing reward from response characteristics",
+        "container": "Phase 2: Inference",
+        "novel": false
+      },
+      {
+        "name": "Loss Func",
+        "role": "constructs the training loss from reward value and KL divergence",
+        "container": "Phase 3: Training",
+        "novel": false
+      },
+      {
+        "name": "Model",
+        "role": "target model whose weights are updated using the loss",
+        "container": "Phase 3: Training",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Prompt (Question)",
+        "to": "Model",
+        "what": "input prompt",
+        "step": 1
+      },
+      {
+        "from": "Model",
+        "to": "Model Responses",
+        "what": "decoded candidate responses R1...Rn",
+        "step": 1
+      },
+      {
+        "from": "Model Responses",
+        "to": "Ref Model",
+        "what": "responses re-processed for logits",
+        "step": 2
+      },
+      {
+        "from": "Model Responses",
+        "to": "Model",
+        "what": "responses re-processed for logits",
+        "step": 2
+      },
+      {
+        "from": "Ref Model",
+        "to": "KL Divergence",
+        "what": "reference logits",
+        "step": 2
+      },
+      {
+        "from": "Model",
+        "to": "KL Divergence",
+        "what": "target logits",
+        "step": 2
+      },
+      {
+        "from": "Model Responses",
+        "to": "Reward Policy",
+        "what": "responses scored for correctness",
+        "step": 2
+      },
+      {
+        "from": "KL Divergence",
+        "to": "Loss Func",
+        "what": "KL penalty",
+        "step": 3
+      },
+      {
+        "from": "Reward Policy",
+        "to": "Loss Func",
+        "what": "reward value",
+        "step": 3
+      },
+      {
+        "from": "Loss Func",
+        "to": "Model",
+        "what": "weight update",
+        "step": 3
+      }
+    ],
+    "key_idea": "GRPO training runs in three phases per step: the target model rolls out multiple candidate responses, both the target and a fixed reference model score those responses to compute a KL-constrained, rule-based reward, and the resulting loss updates the target model's weights.",
+    "reading_order": "Left to right across three labeled phases: Rollout, Inference, Training."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1081cc",
+        "used_for": "blue fill for Model / Ref Model boxes"
+      },
+      {
+        "hex": "#f8b62c",
+        "used_for": "orange fill for Model Responses / trainable-model boxes"
+      },
+      {
+        "hex": "#8ad27d",
+        "used_for": "green fill accents"
+      },
+      {
+        "hex": "#05aebb",
+        "used_for": "teal fill accents"
+      },
+      {
+        "hex": "#ff644a",
+        "used_for": "red/orange accent, likely on the KL divergence or update icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.35pt) dashed vertical separators between phases",
+    "font": "Helvetica Neue Medium/Bold sans, 4.5-6.5pt, heavily bold",
+    "corners": "mixed",
+    "arrows": "orthogonal and curved arrows (7 heads, 6 curved) linking phase boxes",
+    "icons": "fire icon marking trainable/updating models, dashed box grouping the response list"
+  },
+  "encoding": {
+    "color_means": "orange marks the trainable target model and its outputs, blue marks model boxes (target and reference), teal/green mark auxiliary computation boxes",
+    "line_style_means": "dashed vertical lines separate the three training phases (Rollout, Inference, Training)",
+    "emphasis": "fire icons visually flag which model instance is actively being trained/updated at each phase",
+    "reusable_patterns": [
+      "three-phase left-to-right RL training loop diagram (generate, score, update)"
+    ],
+    "weaknesses": [
+      "reusing the label 'Model' for three distinct boxes across phases relies on phase headers for disambiguation"
+    ]
+  },
+  "tags": [
+    "reinforcement learning",
+    "GRPO",
+    "LLM training",
+    "reward model",
+    "KL divergence",
+    "training pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "Figure 4 illustrates a single training step in GRPO, which comprises three main stages",
+      "the generated responses are processed by both the target model ... and a fixed reference model",
+      "a loss function is constructed using the reward value and KL divergence"
+    ]
+  },
+  "summary": "This background figure diagrams one GRPO training step in three phases. In the Rollout phase, the target model decodes multiple candidate responses (R1...Rn) for an input prompt. In the Inference phase, both the target model and a fixed reference model reprocess these responses to obtain logits that feed a KL divergence penalty, while a rule-based reward policy separately scores the responses for correctness. In the Training phase, a loss function combines the reward and KL divergence to update the target model's weights. The figure is a compact left-to-right pipeline diagram with dashed phase separators, blue model boxes, orange highlighting for the trainable model and its responses, and fire icons marking which model is being updated.",
+  "summary_zh": "该图展示GRPO强化学习训练单步流程，分三阶段：Rollout阶段目标模型生成多个候选回答；Inference阶段目标模型与参考模型计算KL散度，规则奖励策略评分；Training阶段损失函数结合奖励与KL散度更新目标模型权重。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

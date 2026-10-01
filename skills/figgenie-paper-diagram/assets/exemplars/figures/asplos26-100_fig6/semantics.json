@@ -1,0 +1,169 @@
+{
+  "paper_id": "asplos26-100",
+  "fig": "6",
+  "system": {
+    "name": "RTOSUnit",
+    "one_liner": "a configurable hardware acceleration unit that reduces context-switch latency and jitter in embedded real-time systems",
+    "domain": [
+      "embedded-systems",
+      "real-time-systems",
+      "hardware-acceleration"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "F",
+        "role": "fetch stage",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "D",
+        "role": "in-order decode stage; inserts custom instructions into the instruction queue (a)",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "I",
+        "role": "issue stage (out-of-order); provides resolved instruction arguments to the queue (b)",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "X",
+        "role": "execute stage (out-of-order)",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "W",
+        "role": "write-back stage (out-of-order)",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "C",
+        "role": "commit stage; signals the instruction queue once a custom instruction commits (d)",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "out-of-order",
+        "role": "marks the pipeline stages (I, X, W) that execute out-of-order and speculatively",
+        "container": "Pipeline",
+        "novel": false
+      },
+      {
+        "name": "Instruction queue",
+        "role": "buffers custom instructions in program order until their speculation status is resolved, then passes them to the RTOSUnit",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "RTOSUnit",
+        "role": "executes committed custom instructions with their resolved arguments",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "D",
+        "to": "Instruction queue",
+        "what": "insert custom instruction (a)",
+        "step": null
+      },
+      {
+        "from": "I",
+        "to": "Instruction queue",
+        "what": "provide instruction args, RS1/RS2 (b)",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "Instruction queue",
+        "what": "flush on misspeculation (c)",
+        "step": null
+      },
+      {
+        "from": "Instruction queue",
+        "to": "RTOSUnit",
+        "what": "args, passed once committed (e)",
+        "step": null
+      },
+      {
+        "from": "RTOSUnit",
+        "to": "C",
+        "what": "isCommitted? handshake (d)",
+        "step": null
+      }
+    ],
+    "key_idea": "NaxRiscv's out-of-order pipeline buffers RTOSUnit custom instructions in a small in-order queue from decode through commit, flushing on misspeculation, so only correctly-speculated, in-order instructions reach the RTOSUnit.",
+    "reading_order": "Left to right along the six pipeline stages (F,D,I,X,W,C, with I/X/W boxed as out-of-order), then down the lettered arrows (a)-(e) into the Instruction queue and RTOSUnit below."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.3,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#afd48b",
+        "used_for": "Instruction queue and RTOSUnit boxes, the components RTOSUnit integration adds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "relatively thick (~0.9pt) solid black borders on all boxes; a dashed rectangle outlines the out-of-order (I, X, W) stage group",
+    "font": "Liberation Sans, uniform ~7.5pt",
+    "corners": "square",
+    "arrows": "five thin arrows with small heads linking lettered points (a)-(e)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green fill marks the two boxes RTOSUnit integration adds (Instruction queue, RTOSUnit); pipeline stage boxes are left uncolored (white)",
+    "line_style_means": "a dashed rectangle groups the out-of-order pipeline stages (I, X, W); solid arrows carry the lettered (a)-(e) signals to and from the instruction queue and RTOSUnit",
+    "emphasis": "boxing exactly the out-of-order stages and color-highlighting only the two new components isolates precisely what NaxRiscv-specific integration RTOSUnit required",
+    "reusable_patterns": [
+      "small lettered queue inserted between a pipeline's decode/issue/commit stages and an external accelerator to preserve program order despite out-of-order execution"
+    ],
+    "weaknesses": [
+      "letters (a)-(e) are undecipherable without the accompanying paragraph",
+      "the queue's 2-entry sizing mentioned in the text is not indicated in the figure itself"
+    ]
+  },
+  "tags": [
+    "out-of-order-execution",
+    "instruction-queue",
+    "RISC-V",
+    "speculative-execution",
+    "RTOSUnit",
+    "NaxRiscv"
+  ],
+  "provenance": {
+    "sections": [
+      "5 RTOSUnit Integration (p.9)"
+    ],
+    "evidence": [
+      "we introduced a queue that buffers custom instructions",
+      "We preserve the program order by inserting the custom instructions into this queue",
+      "when the instruction reaches the commit stage (d), it is passed to the RTOSUnit"
+    ]
+  },
+  "summary": "This figure shows how RTOSUnit's custom instructions are integrated into NaxRiscv, a fully out-of-order, speculative RISC-V core. The six-stage pipeline (F, D, I, X, W, C) boxes I, X, and W as the out-of-order region. Because custom instructions must execute strictly in program order and non-speculatively, an Instruction queue buffers them: the in-order decode stage D inserts a custom instruction (a), the issue stage I later adds its resolved arguments (b), a misspeculated instruction causes the queue to be flushed (c), and once the instruction reaches the commit stage C (d) it is passed with its arguments (e) to the RTOSUnit for execution. This small in-order buffer lets NaxRiscv keep issuing and executing other instructions out of order without stalling the pipeline for the RTOSUnit's instructions to resolve.",
+  "summary_zh": "该图展示 RTOSUnit 自定义指令在乱序核 NaxRiscv 中的整合：译码阶段 D 将指令送入指令队列，发射阶段 I 补充参数，误预测则清空队列，提交阶段 C 确认后才把指令连同参数传给 RTOSUnit 执行。",
+  "confidence": "high",
+  "notes": "layout-proposal: pipeline-with-attached-device — a linear F-D-I-X-W-C pipeline (with an out-of-order stage group boxed) hands lettered signals down to an attached Instruction-queue-plus-RTOSUnit block below.",
+  "venue": "ASPLOS26"
+}

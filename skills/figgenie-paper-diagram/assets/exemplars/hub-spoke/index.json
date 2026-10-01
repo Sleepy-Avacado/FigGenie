@@ -1,0 +1,200 @@
+{
+  "template": "hub-spoke",
+  "n": 24,
+  "stars": 16,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-039_fig3",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Double-column (aspect 4.12), the widest clean hub-spoke: control subsystem, then a coloured heterogeneous topology, then a per-node zoom.",
+      "what_to_learn": "At double column a hub-spoke becomes three left-to-right zones (controller / topology / one-node detail) with the legend below.",
+      "dir": "../figures/asplos25-039_fig3"
+    },
+    {
+      "id": "asplos25-052_fig5",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A star exemplar of the shared-band variant: three identical vSSD/RL-agent columns (yellow outer box, monitor plus model) each exchange Actions/Reward with one Admission Control band below rather than radiating around a single hub.",
+      "what_to_learn": "When N identical agents all talk to one shared coordinator, it can sit below them as a horizontal band instead of beside them as a box; keep every agent column visually identical and mark its two channels (Actions up, Reward down) the same way in each.",
+      "dir": "../figures/asplos25-052_fig5"
+    },
+    {
+      "id": "asplos25-138_fig17",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "At exactly 29 components, the hub-spoke ceiling the template guide itself warns about, where a top telemetry band and VM Allocator hub feed a physically nested aisle/row/instance hierarchy that multi-tier could equally claim.",
+      "what_to_learn": "At this scale, reserve one accent colour (red) purely for the paper's new contribution, here the two highlighted Instance Configurator boxes and their routing path, so the one novel mechanism stays findable inside 600 shapes and 72 text boxes of otherwise uniform infrastructure.",
+      "dir": "../figures/asplos25-138_fig17"
+    },
+    {
+      "id": "asplos26-074_fig9",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "(a) a 4x4 fully connected chip mesh, (b) one chip enlarged - topology and node internals in one figure.",
+      "what_to_learn": "For mesh/topology figures, panel (a) is the graph and panel (b) is a dashed-connected zoom of a single node; the shared HBM bar spans the bottom of (b).",
+      "dir": "../figures/asplos26-074_fig9"
+    },
+    {
+      "id": "nsdi23-067_fig4",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "The switch is the hub with two deliberately asymmetric spokes, an NF-compute server handling headers and an RDMA-memory server handling payloads, each returning results the switch's rebuilder reassembles in order.",
+      "what_to_learn": "A hub's spokes need not be identical: when two offload targets do genuinely different jobs, still draw them as parallel boxes at the same level, and colour-code the shared unit that threads through both, four packet flows here, so the reader can follow one flow out to its spoke and back.",
+      "dir": "../figures/nsdi23-067_fig4"
+    },
+    {
+      "id": "nsdi23-083_fig3",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "The broker is one large box literally straddling two symmetric Cloud A / Cloud B backends below, at medium confidence, illustrating hub-spoke's coordinator-over-peers idea with dashed catalog-feed lines distinct from the solid job-spec arrow.",
+      "what_to_learn": "Use a lighter dashed line for background catalog/status traffic into the hub and a solid line for the actual job request. This exemplar's weakness: with only two named clouds and no ellipsis, it does not visually confirm the broker scales beyond a pair.",
+      "dir": "../figures/nsdi23-083_fig3"
+    },
+    {
+      "id": "nsdi24-087_fig2",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Smallest hub-spoke here (5 components): a global controller fanning dotted control lines over an application graph, with one node magnified.",
+      "what_to_learn": "Dotted curved lines are the right weight for 'the hub controls all of these'; magnify exactly one spoke to show what a controlled node contains.",
+      "dir": "../figures/nsdi24-087_fig2"
+    },
+    {
+      "id": "nsdi25-033_figtex7",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A numbered star exemplar: circled steps 0-7 trace one query from client through the Router hub's EDF queue and scheduler out to two colour-coded Worker spokes, with an inset heatmap explaining the offline profiler.",
+      "what_to_learn": "Run one continuous numbered path (0-7) from client through the hub's internal EDF queue, scheduler and dispatcher out to the workers and back, and let two colour-coded example queries (green, blue) walk the same numbered path to different spokes to show scheduling in action, not just structure.",
+      "dir": "../figures/nsdi25-033_figtex7"
+    },
+    {
+      "id": "nsdi26-082_fig2",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "One central PEFT-as-a-Service Interface bar is the hub for three peer subsystem boxes below it, and every arrow to and from the hub is labelled with the exact payload (PEFT model, requests, responses) it carries.",
+      "what_to_learn": "Draw the hub as a thin horizontal bar rather than a box when its whole job is mediating traffic, and label every bidirectional arrow with the noun it exchanges in each direction, not just an arrowhead; keep the layout tight since this exemplar's weakness is a dense, icon-packed square.",
+      "dir": "../figures/nsdi26-082_fig2"
+    },
+    {
+      "id": "osdi23-003_fig5",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Clients cloud fanning into a primary and two backups, with an inside legend for GET vs PUT/DEL and a small configuration table.",
+      "what_to_learn": "A replicated-store figure needs three things: a client source, one expanded server, and collapsed peers; the legend distinguishes operation classes by line style.",
+      "dir": "../figures/osdi23-003_fig5"
+    },
+    {
+      "id": "osdi23-008_fig2",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A high-ranked hub-spoke that closes into a loop: Cilantro Scheduler is the hub, Job 1/Job 2/... in the Shared Cluster are interchangeable spokes, and feedback/allocation arrows form a full cycle rather than one-way dispatch.",
+      "what_to_learn": "A hub can both dispatch to and learn from its spokes: draw the return arrow (Per-Job Feedback) the same weight as the dispatch arrow (Resource Allocations) and label each with the concrete payload it carries, not with a generic loop.",
+      "dir": "../figures/osdi23-008_fig2"
+    },
+    {
+      "id": "osdi24-015_fig5",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Controller hub wired to three peer servers each showing the same GPU/DRAM/SSD tier stack, with lettered placement markers.",
+      "what_to_learn": "Give every spoke an identical internal template and vary only its contents; letters (A, B) then annotate which spoke holds what.",
+      "dir": "../figures/osdi24-015_fig5"
+    },
+    {
+      "id": "osdi24-036_fig8",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Two-level global/local scheduler hierarchy with a right-hand legend separating migration control (orange solid) from other control (dashed).",
+      "what_to_learn": "One expanded instance beside two schematic ones communicates scale-out; the legend then only has to explain the one arrow class that matters.",
+      "dir": "../figures/osdi24-036_fig8"
+    },
+    {
+      "id": "osdi26-005_fig3",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A star exemplar that annotates each mechanism with its paper section number (section 5, 6.1, 6.3) on the diagram itself, with Frontend as hub fanning into GPU group 0 ... GPU group n spokes.",
+      "what_to_learn": "Tie each drawn mechanism to its paper section number right on the box, so the figure doubles as a reading index; but name what the ellipsis between group 0 and group n hides, since leaving it uncounted is this exemplar's own recorded weakness.",
+      "dir": "../figures/osdi26-005_fig3"
+    },
+    {
+      "id": "sosp23-016_fig4",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "The canonical scheduler-to-N-workers figure: one hub on the left, Worker 0 / Worker 1 / ... / Worker N-1 stacked on the right.",
+      "what_to_learn": "Draw the first two spokes in full, then an ellipsis row, then the last one labelled N-1; never draw more than three concrete replicas.",
+      "dir": "../figures/sosp23-016_fig4"
+    },
+    {
+      "id": "sosp25-064_fig5",
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A star example: a dashed allocator hub on top with two colour-coded resource pools, bold red Control Path arrows fanning down to Host 1 ... Host N spokes sharing one identical internal template.",
+      "what_to_learn": "Give the hub a dashed boundary and colour its internal resource pools by type (orange SSD, teal NIC), then draw only Host 1 and Host N with an ellipsis between, each an identical Instance-plus-Engine box, and put the fan-out arrows in one bold accent colour.",
+      "dir": "../figures/sosp25-064_fig5"
+    },
+    {
+      "id": "asplos25-111_fig2",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "Already flagged low-confidence: three pink AQUA-* control components sit around a stacked multi-server NVLink Domain, but the record's own note that the source text was truncated before explaining their roles limits how much this teaches.",
+      "what_to_learn": "Stack repeated resource-pool sheets to suggest the design generalizes across many servers, and single out one concrete instance (GPU 8, in dark magenta) inside the schematic pool; but do not leave any arrow's meaning to inference, as this exemplar does with its two unexplained dashed GPU-to-GPU links.",
+      "dir": "../figures/asplos25-111_fig2"
+    },
+    {
+      "id": "asplos26-008_fig3",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "Numbered client-to-scheduler-to-replicas walkthrough with an inside legend for allocated vs unallocated GPU icons.",
+      "what_to_learn": "When resource state is encoded by icon fill, the legend must define the icon, not the box; a right-hand brace can then annotate 'one kernel = 3 replicas'.",
+      "dir": "../figures/asplos26-008_fig3"
+    },
+    {
+      "id": "asplos26-019_fig4",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "Request Scheduler is drawn centrally as the hub with cache-hit/cache-miss queues fanning below it into a shared GPU worker pool, while a side Global Monitor closes a separate feedback loop into the same hub.",
+      "what_to_learn": "Route both the main dispatch path and a side monitoring loop through the same central hub, but budget more space around it than this exemplar does: its weakness is that many small labelled arrows crowd the scheduler and make the routing logic dense to trace.",
+      "dir": "../figures/asplos26-019_fig4"
+    },
+    {
+      "id": "asplos26-056_fig5",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "TreeVQA Controller is a dashed hub box holding stacked-card spokes C_i/C_k/C_j; a thin connector drops one spoke (C_j) down into a magnified detail panel showing its optimize/split decision loop.",
+      "what_to_learn": "Draw spokes as small stacked cards, a shorthand for identical parallel instances, inside a dashed hub boundary, then pick exactly one spoke and connect it with thin lines to a magnified panel below that spells out its internal decision logic with a Yes/No diamond.",
+      "dir": "../figures/asplos26-056_fig5"
+    },
+    {
+      "id": "nsdi26-004_fig1",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "The minimal N=2 case: an Edge PoP hub splits traffic exactly 50/50 into two identical Region spokes, each an identical Zone1/Stateful pair, with a bidirectional replication arrow standing in for the hub-spoke return path.",
+      "what_to_learn": "When there are genuinely only two spokes, skip the ellipsis and draw both in full, identically; a single yellow box can flag a special-case zone, but this exemplar's weakness is not legending what that highlight colour means.",
+      "dir": "../figures/nsdi26-004_fig1"
+    },
+    {
+      "id": "nsdi26-020_fig1",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "The AFC Server is the hub: a 2x3 grid packs six named functions into one box, flanked by a client access point on one side and two distinct NRA databases as spokes on the other.",
+      "what_to_learn": "When a hub's real content is a set of named functions rather than repeated workers, lay them out as a small labelled grid inside the hub box, but add a legend or colour convention separating request/response traffic from the database-feed arrows, since this exemplar leaves both unlabelled by anything but position.",
+      "dir": "../figures/nsdi26-020_fig1"
+    },
+    {
+      "id": "nsdi26-115_fig2",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "A numbered, dual-workflow hub-spoke where colour distinguishes download from distribution steps, though the record itself flags the Client-to-HyperEdge-Device shortcut arrow as breaking a clean hub-and-spoke shape.",
+      "what_to_learn": "Overlay two workflows on one architecture with a two-line colour legend (blue download, orange distribution) reusing the same three boxes for both; this exemplar's own weakness is a direct Client-Device link that bypasses the Tracker hub, and numbering that restarts per workflow.",
+      "dir": "../figures/nsdi26-115_fig2"
+    },
+    {
+      "id": "osdi23-018_fig4",
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "A textbook hub-spoke: Conveyor Core's shared database sits at the centre with circled steps 1-7 radiating out to Release Creator, Run Scheduler and Run Manager, plus two dashed pluggable-service groups as sub-spokes.",
+      "what_to_learn": "Number every arrow touching the hub in one continuous sequence (1-7) so a reader can replay one full request cycle through a database-centred hub, and group interchangeable plug-ins (Artifact Finders, Action Services) in a dashed box; this exemplar's own weakness is skipping a legend for its dashed-vs-solid convention.",
+      "dir": "../figures/osdi23-018_fig4"
+    }
+  ]
+}

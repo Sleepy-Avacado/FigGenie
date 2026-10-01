@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-028_fig5",
+  "paper_id": "nsdi26-028",
+  "fig": "5",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 5: Two-dimensional page tables for DMA",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.87,
+  "n_components": 9,
+  "n_flows": 2,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-028/nsdi26-028_fig5_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-028/nsdi26-028_fig5_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: two stacked address-space bars linked by dotted correspondence lines is a memory-mapping diagram, not a zoom; nothing here is drawn small then separately magnified.",
+      "what_to_learn": "For an address-translation figure, stack the two address spaces as parallel bars and connect corresponding regions with dotted diagonal lines plus a labelled fixed-offset arrow, rather than arrows implying data flow; avoid this exemplar's weakness of reusing the label Service VM for two different-scoped boxes."
+    }
+  ]
+}

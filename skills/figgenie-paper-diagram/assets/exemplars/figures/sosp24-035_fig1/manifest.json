@@ -1,0 +1,42 @@
+{
+  "id": "sosp24-035_fig1",
+  "paper_id": "sosp24-035",
+  "fig": "1",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 1. The architecture of a Transformer layer and how neurons are sparsely activated in FC1 and FC2 layers due to the ReLU function. The neurons that are activated are represented as green rows or columns encircled by red lines. The output vector from FC1 is then supplied to FC2 as its input vec",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.83,
+  "n_components": 10,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-035/src/fig1_bg-mlp.svg",
+    "preview.png": "lab/extracted/sosp24-035/src/fig1_bg-mlp.png",
+    "print.png": "lab/extracted/sosp24-035/sosp24-035_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A compact block stack on the left with two dashed callouts on the right expanding its two weight matrices.",
+      "what_to_learn": "Insets sit outside the overview and connect back with dashed leader lines from the exact sub-box they expand - never overlap the overview."
+    }
+  ]
+}

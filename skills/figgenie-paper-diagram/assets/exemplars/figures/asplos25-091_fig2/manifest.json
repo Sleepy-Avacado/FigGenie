@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-091_fig2",
+  "kind": "mechanism",
+  "paper_id": "asplos25-091",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Visualizing how the BSGS algorithm [32] reduces the number of ciphertext rotations in matrix-vector products.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "data-structure",
+  "subject": "how the baby-step giant-step (BSGS) algorithm regroups a matrix's diagonals to cut the number of ciphertext rotations needed for a homomorphic matrix-vector product",
+  "arrangement": "panels-column",
+  "panel_count": 2,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 2.08,
+  "n_elements": 9,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-091/src/fig2a_diagonal-method.svg",
+    "preview.png": "lab/extracted/asplos25-091/src/fig2a_diagonal-method.png",
+    "print.png": "lab/extracted/asplos25-091/asplos25-091_fig2_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Splitting an n x n matrix-vector product's n diagonals into n1 baby-step groups of n2 diagonals each cuts the needed ciphertext rotations from n down to about n1+n2 (here 3+2=5 vs 6), a saving that grows as O(sqrt(n)) instead of O(n) for larger matrices.",
+      "what_to_learn": "colour-banded diagonals of a matrix extracted into separate multiply-and-sum columns, regrouped by a rotation-count bracket label, to make an asymptotic rotation-count argument visually countable",
+      "note_source": "record"
+    }
+  ]
+}

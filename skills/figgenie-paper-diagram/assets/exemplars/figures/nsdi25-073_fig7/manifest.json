@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-073_fig7",
+  "paper_id": "nsdi25-073",
+  "fig": "7",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 7: Prism overview and its key designs are in purple.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.65,
+  "n_components": 20,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-073/nsdi25-073_fig7_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-073/nsdi25-073_fig7_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Reassigned from dataflow-dag by the note-writer: three dashed-bordered layers stacked with zero arrows anywhere; the only nod to a graph is a box labelled Computational Graph, never drawn as nodes and edges.",
+      "what_to_learn": "The transferable move is layered's: highlight only the paper's own novel boxes in one accent colour, here purple on exactly four of twenty components, against plain white boxes, so contribution versus reused building block reads instantly even with no arrows at all."
+    }
+  ]
+}

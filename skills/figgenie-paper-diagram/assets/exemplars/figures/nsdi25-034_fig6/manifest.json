@@ -1,0 +1,56 @@
+{
+  "id": "nsdi25-034_fig6",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-034",
+  "fig": "6",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 6: An example of handling hash collisions. The client gets the correct value by sending a correction request.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "component",
+  "subject": "how a client detects a hash-collision on a cached key and corrects it via a switch-bypassing round trip to the server",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.5,
+  "n_elements": 9,
+  "n_relations": 4,
+  "n_panels": 0,
+  "n_steps": 4,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-034/src/fig6_hashcollision.svg",
+    "preview.png": "lab/extracted/nsdi25-034/src/fig6_hashcollision.png",
+    "print.png": "lab/extracted/nsdi25-034/nsdi25-034_fig6_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "When a client detects that the returned key does not match the requested key (a hash collision), it sends a correction request that the switch forwards untouched, bypassing its cache logic, to the storage server, which returns the correct value in a 4-step round trip.",
+      "what_to_learn": "Three boxes, four numbered arrows alternating direction, message name in italic beside each number, one highlighted row in a key table hung off the source",
+      "note_source": "doc"
+    }
+  ]
+}

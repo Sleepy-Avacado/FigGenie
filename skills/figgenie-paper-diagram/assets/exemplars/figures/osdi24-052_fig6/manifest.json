@@ -1,0 +1,47 @@
+{
+  "id": "osdi24-052_fig6",
+  "paper_id": "osdi24-052",
+  "fig": "6",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 6: MonoNN overview. SIS: Schedule-independent subgraph. EWS: Element-wise subgraph. OCS: Output-only contracted subgraph.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.27,
+  "n_components": 11,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-052/osdi24-052_fig6_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-052/osdi24-052_fig6_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of six numbered self-contained panels read column by column, each a mini-diagram of one compiler stage, tied together by one shared node-colour legend and one running worked example.",
+      "what_to_learn": "When a pipeline has too many stages for one row, fold it into a numbered grid read column by column, and keep one running worked example visible in every cell; a legend placed only at the bottom is far from the panels that need it first, so place it near the top instead."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "Six panels reuse one green/orange/red op-node vocabulary, Element-wise, Compute-intensive, Reduction, defined once in a legend at the bottom, to show the same neural-network graph being formulated, rescheduled, tuned and finally fused into a Monolithic Kernel.",
+      "what_to_learn": "Carry one small set of node-colour meanings across all six panels, and run a single shared example, SIS1, SIS2, CI Op, through every stage so a reader tracks one case end to end. Repeat the legend near the top too, since it sits only at the bottom here, far from the first panels."
+    }
+  ]
+}

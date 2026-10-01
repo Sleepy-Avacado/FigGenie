@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-138_fig17",
+  "paper_id": "asplos25-138",
+  "fig": "17",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 17. TAPAS architecture overview.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "inkscape",
+  "aspect": 1.42,
+  "n_components": 29,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-138/src/fig17_tapas-arch.svg",
+    "preview.png": "lab/extracted/asplos25-138/src/fig17_tapas-arch.png",
+    "print.png": "lab/extracted/asplos25-138/asplos25-138_fig17_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "At exactly 29 components, the hub-spoke ceiling the template guide itself warns about, where a top telemetry band and VM Allocator hub feed a physically nested aisle/row/instance hierarchy that multi-tier could equally claim.",
+      "what_to_learn": "At this scale, reserve one accent colour (red) purely for the paper's new contribution, here the two highlighted Instance Configurator boxes and their routing path, so the one novel mechanism stays findable inside 600 shapes and 72 text boxes of otherwise uniform infrastructure."
+    }
+  ]
+}

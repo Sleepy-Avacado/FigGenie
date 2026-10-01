@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-154_fig9",
+  "paper_id": "asplos26-154",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Fig. 9. Overview of Nebula workflow. Nebula offloads the memory-intensive LoD search to the cloud while the client side executes the remaining operations. On the cloud side, we propose a temporal-aware LoD search that exploits the temporal similarity across frames to accelerate LoD tree traversal (S",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 2.72,
+  "n_components": 18,
+  "n_flows": 20,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-154/asplos26-154_fig9_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-154/asplos26-154_fig9_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The LoD trees are real branching graphs, colour-coded by reuse state per node, with a red cut line marking the frontier, and a separate small subgraph diagram showing the client's local update.",
+      "what_to_learn": "Draw a hierarchy that gets pruned as a tree with a red cut line across it marking the current frontier, colour each node by its reuse/cache state rather than its type, and put a 3-colour arrow legend at the top since this dense a figure otherwise relies entirely on it to separate three overlapping flows."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "osdi24-050_fig6",
+  "paper_id": "osdi24-050",
+  "fig": "6",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 6: DistServe Runtime System Architecture",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.65,
+  "n_components": 6,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-050/src/fig6_architecture.svg",
+    "preview.png": "lab/extracted/osdi24-050/src/fig6_architecture.png",
+    "print.png": "lab/extracted/osdi24-050/osdi24-050_fig6_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "The smallest complete pipeline in the corpus (6 components, 4 flows, high confidence, 0 weaknesses) at exactly single-column width.",
+      "what_to_learn": "A two-stage pipeline needs only a controller, two stage groups and one labelled hand-off arrow; stacked/offset boxes stand in for 'a pool of N identical instances' without drawing N of them."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated, the doc's own example of 'offset stacked boxes behind a single one': the Prefill Instance pool and Decoding Instance pool are each one shadow-stacked card, joined only by a labeled KV Cache Transfer arrow.",
+      "what_to_learn": "Draw a pool of homogeneous instances as one box with an offset shadow stack behind it rather than an ellipsis row, reserve that device for exactly the two pools the paper's contribution separates, and use one labeled transfer arrow (not a generic pipeline arrow) to name the specific handoff between them."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Prefill Instance and Decoding Instance stacks, each a pool of offset LLM Model/GPU/Parallel Runtime boxes, mirror left and right, joined by one labelled KV Cache Transfer arrow, with a shared Controller dispatching to both above.",
+      "what_to_learn": "Draw a pool of same-role instances as a small stack of offset boxes rather than one box, name the two mirrored pools by role (Prefill, Decoding) not by number, and put the one operation that crosses between them, KV Cache Transfer, on a single labelled arrow bridging the gap."
+    }
+  ]
+}

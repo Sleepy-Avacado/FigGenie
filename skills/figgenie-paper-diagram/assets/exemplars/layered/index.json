@@ -1,0 +1,280 @@
+{
+  "template": "layered",
+  "n": 34,
+  "stars": 26,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-012_fig2",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, medium-confidence layered exemplar of the rare bottom-up direction, stacking a Transformer block from Input Token through self-attention into a Mixture-of-Experts block whose router fans dashed arrows to every expert but bolds the taken path.",
+      "what_to_learn": "When the tiers are literally computation layers of one repeated block, read them bottom-up with input at the floor and output at the ceiling, show repetition with a few offset background rectangles rather than N boxes, and distinguish a router's considered-but-not-taken paths, dashed, from its actual path, bold solid, in one colour.",
+      "dir": "../figures/asplos25-012_fig2"
+    },
+    {
+      "id": "asplos25-028_fig2",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar with tier names in a right-hand gutter (Application, Kernel-space, I/O devices) across 4 dashed-divided bands, and white-vs-gray boxes distinguishing ZRAID's functional logic from its in-memory state, in 13 components.",
+      "what_to_learn": "Put tier labels in a slim right gutter instead of inside the band, use two flat fills, white for logic and gray for state, to separate function from data within one tier, and draw the repeated bottom-tier devices once in full detail then abbreviate the rest to a label only.",
+      "dir": "../figures/asplos25-028_fig2"
+    },
+    {
+      "id": "asplos25-074_fig7",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar spanning a cluster level above a node level, with each of three contributed modules marked by its own dashed, section-numbered box inside an otherwise standard Kubernetes layout, at nesting depth 3.",
+      "what_to_learn": "Use one dashed box per contribution, each carrying its own section number, scattered across whichever tier it actually belongs to, rather than one big accent region; keep a solid-versus-dotted line legend so control paths and data paths stay distinguishable across the whole cluster-to-hardware stack.",
+      "dir": "../figures/asplos25-074_fig7"
+    },
+    {
+      "id": "asplos25-097_fig1",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence three-layer stack where each band is boxed in its own accent colour and explicitly named, with the dashed dividers themselves labelled as named interfaces and a bottom legend defining solid-versus-dashed line meaning.",
+      "what_to_learn": "Name the dashed boundary line itself instead of leaving it a bare rule, give each of the 3-4 tiers its own accent colour tied to the tier's own name, and put a small solid/dashed legend below the figure when line style carries a data-versus-control meaning.",
+      "dir": "../figures/asplos25-097_fig1"
+    },
+    {
+      "id": "asplos26-013_fig10",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "One of only 3 double-column layered figures in the corpus; a shared DRAM bus at the top feeds parallel engines below, tagged A-I.",
+      "what_to_learn": "At double column a layered hardware figure becomes bus-on-top with engines hanging below; lettered callouts (A-I) index the prose instead of ordering a flow.",
+      "dir": "../figures/asplos26-013_fig10"
+    },
+    {
+      "id": "asplos26-139_fig7",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence two-tier layered exemplar, a purple DRAM band over a green FLASH band, with small coloured grid cells standing for individual sets, and explicit flush and extract-combine arrows crossing the boundary both ways.",
+      "what_to_learn": "Colour the two memory tiers, not just their contents, so DRAM versus flash is legible before reading labels, and represent a pool of same-role objects as a row of small identical boxes; the record flags thin curved feedback arrows as easy to miss, so make a feedback path as heavy as the path it answers.",
+      "dir": "../figures/asplos26-139_fig7"
+    },
+    {
+      "id": "nsdi23-035_fig3",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar with an explicit three-row colour legend inside the frame tying 14 components to three roles, feeding from operator and developer inputs through a planning tier into a jointly labelled hardware-plus-runtime tier.",
+      "what_to_learn": "When more than two colours carry role meaning, put a compact legend inside a free corner rather than relying on labels alone, and let one hardware box be jointly annotated by two different functional tiers, a long-term planner's output above and a short-term runtime's control below, to show both act on the same resource.",
+      "dir": "../figures/nsdi23-035_fig3"
+    },
+    {
+      "id": "nsdi23-047_fig4",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar of the mirrored-replica variant: identical Graph Store Server and Worker Machine boxes sit side by side at each bottom tier, cross-linked by explicit arrows, in 7 components and 6 flows.",
+      "what_to_learn": "When a tier is really N replicated nodes, draw exactly two identical side-by-side boxes with a crossing arrow between them to stand for the whole replicated set, and reuse the same internal layout one tier below so the eye maps server-to-worker pairs straight down the page.",
+      "dir": "../figures/nsdi23-047_fig4"
+    },
+    {
+      "id": "nsdi23-084_fig3",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Numbered layered stack where a dashed orange box marks exactly which sub-tree is the paper's contribution.",
+      "what_to_learn": "Wrap the contribution in a dashed accent-coloured box inside the stack, and use paired up/down arrows to show a config-down / telemetry-up interface in one place.",
+      "dir": "../figures/nsdi23-084_fig3"
+    },
+    {
+      "id": "nsdi23-085_fig8",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar with only 6 components and 3 flows: two redundant orange Coordinators cross-connect to two dashed Worker Node containers, each expanded into a scheduler-executor-store stack, over one shared durable store.",
+      "what_to_learn": "Draw redundant top-tier controllers with crossing arrows into every replica below to show any-to-any reachability without extra edges, give every role one flat colour so the internal stack reads at a glance, and let a single full-width bottom box stand for the one shared backing store beneath repeated node containers.",
+      "dir": "../figures/nsdi23-085_fig8"
+    },
+    {
+      "id": "nsdi24-072_fig9",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Tall single-column layered figure (aspect 0.78) with three tinted bands labelled in a right-hand gutter.",
+      "what_to_learn": "Band labels can live in a rotated right gutter instead of the left, freeing the left margin for the feedback arrow that closes the loop.",
+      "dir": "../figures/nsdi24-072_fig9"
+    },
+    {
+      "id": "nsdi25-054_fig2",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar of the parallel-backend variant: three colour-coded backend boxes sit side by side over one shared dashed core-state box, sandwiched between labelled Control-point and System-call arrows, across 13 components.",
+      "what_to_learn": "Split a middle tier into parallel same-size backend boxes, each its own colour, all resting on one shared dashed core box beneath them, and label the two interception arrows above and below that middle tier by name instead of leaving them bare, making the tier's two boundaries explicit.",
+      "dir": "../figures/nsdi25-054_fig2"
+    },
+    {
+      "id": "nsdi25-073_fig7",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Reassigned from dataflow-dag by the note-writer: three dashed-bordered layers stacked with zero arrows anywhere; the only nod to a graph is a box labelled Computational Graph, never drawn as nodes and edges.",
+      "what_to_learn": "The transferable move is layered's: highlight only the paper's own novel boxes in one accent colour, here purple on exactly four of twenty components, against plain white boxes, so contribution versus reused building block reads instantly even with no arrows at all.",
+      "dir": "../figures/nsdi25-073_fig7"
+    },
+    {
+      "id": "nsdi26-086_fig2",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar arranged as two side-by-side columns rather than pure horizontal bands, with an orange highlight isolating the shared narrow-waist controllers and circled numbers 1-5 tracing the critical scale-out path through both columns.",
+      "what_to_learn": "When two parallel software stacks share one critical sub-path, draw them as two columns and recolour only the shared boxes that carry the argument, then number the request path across both columns so the highlighted path reads as one continuous route rather than two separate stacks.",
+      "dir": "../figures/nsdi26-086_fig2"
+    },
+    {
+      "id": "nsdi26-090_fig4",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Nesting depth 3 with a dashed geographic boundary (Region A / Region B) and circled numbers on the request path.",
+      "what_to_learn": "A dashed labelled rule can express a deployment boundary (region, host, trust domain) inside an otherwise ordinary layered stack.",
+      "dir": "../figures/nsdi26-090_fig4"
+    },
+    {
+      "id": "osdi24-025_fig6",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Textbook three-tier stack in tikz: outer tier containers, inner module rows, and a dashed line naming a trust/network boundary.",
+      "what_to_learn": "Name tiers in the left margin, keep every module row the same height, and use a single dashed horizontal rule (labelled 'Internet') for the boundary that matters.",
+      "dir": "../figures/osdi24-025_fig6"
+    },
+    {
+      "id": "osdi26-030_figtex2",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar embedding a literal data-table object as one box and annotating command-line invocations on the flow arrows, split by one rule into a user-space band above and a kernel-space band below.",
+      "what_to_learn": "Draw a tier's artifact as a literal table, columns and all, rather than a plain box when the paper's contribution is the schema itself, and write command strings right on the arrow that triggers them; keep matching colour bands consistent between the table and the running-kernel bar they describe.",
+      "dir": "../figures/osdi26-030_figtex2"
+    },
+    {
+      "id": "osdi26-054_fig9",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Reassigned from replicated-grid by the note-writer: this is a three-band privilege-level stack (L2, L1, L0) with one numbered fault-and-fix path stepping down and back up; there is no set of repeated peer nodes and no ellipsis anywhere.",
+      "what_to_learn": "Treat this as a control-loop figure instead: stack the three privilege bands top to bottom, and let one circled 1-5 sequence travel down through the fault handlers and back up, rather than expecting any part of it to show replicated peers.",
+      "dir": "../figures/osdi26-054_fig9"
+    },
+    {
+      "id": "osdi26-060_fig8",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar in monochrome grayscale, using only shading depth, not colour, to distinguish the Master Node band from the nested Worker Node band, across 15 components at nesting depth 3.",
+      "what_to_learn": "When colour is not carrying meaning, differentiate nested tiers by shading depth alone, darker gray for the outer container and lighter for inner boxes, and place matched request/response queue icons flanking the control boxes they feed so the master-to-worker path stays readable in one grayscale palette.",
+      "dir": "../figures/osdi26-060_fig8"
+    },
+    {
+      "id": "osdi26-076_fig5",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar that annotates a numbered request path, steps 1-9, onto a vertical stack from user-space app boxes down to the DFS, with red hit/miss labels at the one decision point.",
+      "what_to_learn": "Overlay circled step numbers straight onto the tier-to-tier arrows of a vertical stack to narrate one concrete request, split a single decision into two coloured branch labels rather than separate diagrams, and use hatching to mark which address ranges are currently backed by a cache block.",
+      "dir": "../figures/osdi26-076_fig5"
+    },
+    {
+      "id": "sosp24-005_fig4",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence two-tier layered exemplar, a blue Server box over an orange Client box over a GPU row, where circled numbers 1-5 on the connecting arrows trace a profiling-optimization-schedule-feedback loop around an embedded lookup-table object.",
+      "what_to_learn": "Embed a small data object, such as a lookup table with one highlighted row, inside the tier that owns it rather than describing it in prose, and number the back-and-forth arrows between just two tiers in interaction order even when several arrows point the same direction, so the loop reads sequentially.",
+      "dir": "../figures/sosp24-005_fig4"
+    },
+    {
+      "id": "sosp24-011_fig8",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar split top-down into Offline and Online Phase bands, ending in a row of Executor boxes where one is picked out with a red dashed outline as the failure recovered from.",
+      "what_to_learn": "Separate offline planning from online execution as two stacked full-width bands joined by one labelled arrow, draw the bottom tier as a row of otherwise identical worker boxes, and mark the one instance that misbehaves with a red dashed outline instead of a caption.",
+      "dir": "../figures/sosp24-011_fig8"
+    },
+    {
+      "id": "sosp24-041_fig5",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Control-plane band on top, a homogeneous GPU row in the middle, one shared resource band at the bottom, split by a dashed rule.",
+      "what_to_learn": "The 'manager over devices over shared pool' sandwich: a dashed horizontal rule separates control plane from data plane and the shared pool is a full-width band.",
+      "dir": "../figures/sosp24-041_fig5"
+    },
+    {
+      "id": "sosp25-020_fig3",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Flattest layered figure in the set (nesting_depth 1) - three labelled bands, white/gray fills only, circled numbers 1-5 tracing one request.",
+      "what_to_learn": "Colour is optional: white boxes for the traced path and gray for background components, plus dashed band separators, already carry a full layered architecture.",
+      "dir": "../figures/sosp25-020_fig3"
+    },
+    {
+      "id": "sosp25-035_fig1",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence baseline layered exemplar with a named dashed API boundary separating an apps-side gutter label from a cloud-side gutter label, and a horizontally repeated Proxy 1...Proxy n sub-box standing for a stateless replica pool.",
+      "what_to_learn": "Label the two sides of a dashed interface line with a short margin tag rather than titling each box separately, and draw a replicated stateless pool as one small sub-box holding numbered instances plus an ellipsis rather than drawing every replica full size.",
+      "dir": "../figures/sosp25-035_fig1"
+    },
+    {
+      "id": "sosp25-060_fig5",
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar where one shared first-level allocator-evictor pair sits above two parallel colour-coded second-level allocator columns, the whole memory manager boxed in one dashed rounded container beneath a plain scheduler-to-workers request line.",
+      "what_to_learn": "Give a shared upper stage one neutral colour pair and let it feed two side-by-side lower columns that each keep their own colour for the rest of the figure, down to the small square page icons at the very bottom, so colour alone tracks which allocator produced which output.",
+      "dir": "../figures/sosp25-060_fig5"
+    },
+    {
+      "id": "asplos25-064_fig1",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "The tallest clean layered figure (aspect 0.67) with explicit 'Layer 1..4' headers, section references and an icon column.",
+      "what_to_learn": "Numbering the layers in their headers and citing sections (SS3.1-SS3.4) makes a very tall single-column stack navigable; each layer gets an icon on the left and its content on the right.",
+      "dir": "../figures/asplos25-064_fig1"
+    },
+    {
+      "id": "asplos26-088_fig12",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence layered exemplar of a stepwise zoom: 16 replicated Sorting Cores collapse into one expanded core, linked by a dashed containment line to a further-expanded, blue-highlighted unit below, across 2 panels and nesting depth 3.",
+      "what_to_learn": "Chain two successive zoom-ins top to bottom, engine to one core to one sub-unit, using dashed connector lines to mean containment rather than dataflow, and highlight only the final, most novel block in accent colour; the record's own weakness warns to label small symbols like a comparator explicitly instead of relying on convention.",
+      "dir": "../figures/asplos26-088_fig12"
+    },
+    {
+      "id": "nsdi23-027_fig5",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "Reassigned from flanked-core by the note-writer: three co-equal dashed bands (Applications, LinkLab Edge/Cloud Runtime, KubeEdge) stack bottom-up with zero arrows, pure vertical containment standing for 'runs on top of', not one core distinguished from its bands.",
+      "what_to_learn": "When a stack has no data flow to show, drop the arrows entirely and let vertical position alone mean 'runs on top of', colouring only the layer that is the paper's own contribution against reused third-party logos elsewhere; this is a layered stack, so do not force a middle tier into a flanked-core engine role.",
+      "dir": "../figures/nsdi23-027_fig5"
+    },
+    {
+      "id": "nsdi25-035_fig3",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: this is a plain top-down layered software stack (interfaces, compiler, runtime, OS/drivers) with zero drawn flows and a small mirrored remote-runtime box; there is no time axis, no lane gutter, nothing resembling a phase.",
+      "what_to_learn": "Treat this as a layered template figure instead: stack the five tiers top-down, each one depending only on the one below, and echo the same fill color on the small remote-runtime box to show it is a copy of the local runtime tier, not a different component.",
+      "dir": "../figures/nsdi25-035_fig3"
+    },
+    {
+      "id": "nsdi26-028_fig2",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: the dashed divider here separates userspace from kernel space, a privilege boundary, not a time axis; there are no phases, no Gantt blocks, only three numbered limitation callouts on an ordinary stack diagram.",
+      "what_to_learn": "Read this as a layered or host-device-style figure instead: stack userspace over kernel space across one dashed boundary the way a PCIe or OS boundary is drawn elsewhere, and overlay numbered red-italic callouts directly on the components a limitation applies to.",
+      "dir": "../figures/nsdi26-028_fig2"
+    },
+    {
+      "id": "nsdi26-069_fig3",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence, dense layered exemplar that partitions the whole architecture into three separately dashed-bordered quadrants rather than horizontal bands, colour-coding each quadrant's own role boxes across 15 components and 12 flows.",
+      "what_to_learn": "When a system's levels are conceptual rather than physically stacked, arrange them as separate dashed-bordered quadrants labelled by level name instead of forcing strict top-down bands, and show a before/after transition as two small boxes joined by one arrow inside its own quadrant.",
+      "dir": "../figures/nsdi26-069_fig3"
+    },
+    {
+      "id": "nsdi26-142_fig3",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence double-column layered exemplar, rare in this template, using 3 side-by-side panels of the identical VM-hypervisor-SmartNIC-disk stack to compare where the critical path sits, with a right-side legend for three arrow styles.",
+      "what_to_learn": "Repeat the exact same small vertical stack across 2-3 panels and vary only which layer is bypassed or duplicated, so the comparison is about position in the stack, not shape; put a shared arrow-style legend to the right when line style, not colour, distinguishes read/write, consistency and copy traffic.",
+      "dir": "../figures/nsdi26-142_fig3"
+    },
+    {
+      "id": "osdi26-079_fig2",
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence layered background exemplar at floor size, 8 components and 3 flows, stacking host, PCIe band, hardware package and network fabric tiers, with one labelled DMA arrow crossing the boundary.",
+      "what_to_learn": "For a hardware-background figure, draw the bus itself as a distinct shaded band between tiers rather than an arrow, and add only the one cross-boundary arrow the text actually needs instead of wiring every block to every other block.",
+      "dir": "../figures/osdi26-079_fig2"
+    }
+  ]
+}

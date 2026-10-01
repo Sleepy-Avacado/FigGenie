@@ -1,0 +1,63 @@
+{
+  "id": "nsdi25-044_fig9",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-044",
+  "fig": "9",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 9: Overview of ADR.",
+  "groups_in_record": [
+    "logic",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "mixed",
+  "subject": "how ADR updates value/frequency state from a traced variable and decides slow, fatal, or reset",
+  "arrangement": "panels-grid",
+  "panel_count": 3,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.78,
+  "n_elements": 24,
+  "n_relations": 16,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-044/nsdi25-044_fig9_p11_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-044/nsdi25-044_fig9_p11_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Numbers three pipeline stages that repeat one 'history feeds a state-checker with a red terminal outcome' template for value and for frequency, then merges both verdicts in the third stage.",
+      "what_to_learn": "Repeat one small template, a running history feeding a state-checker box with a red terminal outcome, once for the traced value and once for its frequency; number both ①② and combine their verdicts in a third numbered checker.",
+      "note_source": "agent"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Numbers three pipeline stages that repeat one 'history feeds a state-checker with a red terminal outcome' template for value and for frequency, then merges both verdicts in the third stage.",
+      "what_to_learn": "Repeat one small template, a running history feeding a state-checker box with a red terminal outcome, once for the traced value and once for its frequency; number both ①② and combine their verdicts in a third numbered checker.",
+      "note_source": "agent"
+    }
+  ]
+}

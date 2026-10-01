@@ -1,0 +1,179 @@
+{
+  "paper_id": "osdi26-054",
+  "fig": "7",
+  "system": {
+    "name": "JANUS",
+    "one_liner": "a cross-world, cooperative nested-virtualization hypervisor design that secures containers with efficient three-level address translation",
+    "domain": [
+      "virtualization",
+      "security",
+      "containers"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Guest root PGD",
+        "role": "L2 guest's top-level page table, constructed on demand with read-write EPT0→2 mappings",
+        "container": "L2 Kernel",
+        "novel": false
+      },
+      {
+        "name": "Guest PUD",
+        "role": "L2 guest's page upper directory",
+        "container": "L2 Kernel",
+        "novel": false
+      },
+      {
+        "name": "Guest PMD",
+        "role": "L2 guest's page middle directory",
+        "container": "L2 Kernel",
+        "novel": false
+      },
+      {
+        "name": "Guest PTE",
+        "role": "L2 guest's page table entries, mapping to the read-write L2 Page",
+        "container": "L2 Kernel",
+        "novel": false
+      },
+      {
+        "name": "Shadow Root",
+        "role": "a shadow PGD mirroring the real GPT_L2, pre-mapped read-only in EPT0→2 to block unauthorized modification",
+        "container": "CR3",
+        "novel": true
+      },
+      {
+        "name": "Switcher PUD",
+        "role": "shadow PUD level installed by L1 to reference the switcher's tables",
+        "container": "CR3",
+        "novel": true
+      },
+      {
+        "name": "Switcher PMD",
+        "role": "shadow PMD level of the switcher's page tables",
+        "container": "CR3",
+        "novel": true
+      },
+      {
+        "name": "Switcher PTE",
+        "role": "shadow PTE level, mapping to the read-only L1 Page",
+        "container": "CR3",
+        "novel": true
+      },
+      {
+        "name": "L2_Page",
+        "role": "the read-write page reachable through the guest's real page-table chain",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "L1_Page",
+        "role": "the read-only page reachable through the shadow root's page-table chain",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Guest root PGD",
+        "to": "Shadow Root",
+        "what": "update/sync: an L2 PGD-entry modification must be validated by L1 and synchronized to the shadow root before it takes effect",
+        "step": null
+      },
+      {
+        "from": "Shadow Root",
+        "to": "L1_Page",
+        "what": "EPT0→2 mapping always present, read-only, anchoring the switcher's tables",
+        "step": null
+      },
+      {
+        "from": "Guest PTE",
+        "to": "L2_Page",
+        "what": "EPT0→2 mapping constructed on demand, read-write",
+        "step": null
+      },
+      {
+        "from": "Switcher PTE",
+        "to": "L1_Page",
+        "what": "EPT0→2 mapping constructed on demand, read-only",
+        "step": null
+      }
+    ],
+    "key_idea": "JANUS mirrors the real L2 guest page global directory into a hardware-protected, read-only shadow root so a compromised L2 kernel cannot remap or overwrite the world-switcher, forwarding only L1-validated PGD updates to the hardware MMU.",
+    "reading_order": "Two aligned rows, left to right (root/PGD to PTE): L2 Kernel's guest chain on top, CR3-rooted shadow chain below, linked by vertical sync arrows per column."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.59,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#8faadc",
+        "used_for": "header cells of the guest (L2) page-table row"
+      },
+      {
+        "hex": "#2f5597",
+        "used_for": "header cells of the shadow (CR3) page-table row and the L1_Page box"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "fill for individual page-table-entry cells and the L2_Page box"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "row labels ('L2 Kernel', 'CR3') and connecting-line text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.61pt outlines, dashed horizontal divider between the L2-pages and L1-pages regions",
+    "font": "Times New Roman serif, 6.5-7.5pt",
+    "corners": "square",
+    "arrows": "thin orthogonal arrows with filled heads linking corresponding table levels",
+    "icons": "bitmap: small icons inside the table-entry cells"
+  },
+  "encoding": {
+    "color_means": "darker blue marks the root/anchor cell of each chain (Guest root PGD line, Shadow Root/CR3), lighter blue marks ordinary page-table-level cells",
+    "line_style_means": "a dashed horizontal rule separates the upper 'L2 pages' region from the lower 'L1 pages' region; solid vertical arrows mark update/sync and on-demand EPT mapping links",
+    "emphasis": "the mirrored top/bottom table structure with a dashed midline makes the guest-vs-shadow duplication, and which side is RW vs RO, immediately visible",
+    "reusable_patterns": [
+      "two mirrored multi-level table chains (real vs shadow) cross-linked column by column to show an integrity-shadowing mechanism"
+    ],
+    "weaknesses": [
+      "dense small-font page-table-entry icons are hard to distinguish at reduced size"
+    ]
+  },
+  "tags": [
+    "nested-virtualization",
+    "page-tables",
+    "integrity",
+    "shadow-paging",
+    "security"
+  ],
+  "provenance": {
+    "sections": [
+      "4 JANUS: Design and Implementation (p.9)"
+    ],
+    "evidence": [
+      "JANUS introduces a shadow-root mechanism that constructs a shadow page global directory (PGD) mirroring the real GPTL2",
+      "the corresponding shadow PGD entries are pre-mapped as read-only in EPT0→2",
+      "only modifications propagated to the L1-authorized shadow root are visible to the hardware MMU"
+    ]
+  },
+  "summary": "This figure explains JANUS's shadow-root integrity mechanism for its world switcher. It draws two parallel page-table chains from root to leaf (PGD/PUD/PMD/PTE): on top, the L2 Kernel's real guest page tables (Guest root PGD through Guest PTE), constructed on demand with read-write EPT0→2 mappings down to an L2 Page; on the bottom, a CR3-rooted Shadow Root and its Switcher PUD/PMD/PTE levels, pre-mapped read-only in EPT0→2 and always present, reaching a separate L1 Page. Vertical arrows tie each column together, showing that an L2 attempt to modify a PGD entry must go through an L1-validated hypercall that updates the shadow root before the change is visible to hardware, while lower-level PUD/PMD/PTE edits proceed without L1 involvement. A dashed line separates the read-write guest-page region from the read-only shadow-page region.",
+  "summary_zh": "图7展示JANUS影子根机制:上方为L2真实页表链(按需构建,读写),下方为CR3影子页表链(只读且始终存在),两链逐级对应连接,虚线分隔RW的L2页与RO的L1页,防止恶意L2篡改switcher。",
+  "confidence": "high",
+  "notes": "layout-proposal: mirrored page-table chains — two parallel guest/shadow page-table walks (root through PTE) aligned column by column with vertical sync/mapping arrows between corresponding levels; matrix is the closest named template for the row/column grid, but the figure's real point is the top/bottom mirroring and RW/RO contrast rather than an independent two-axis comparison.",
+  "venue": "OSDI26"
+}

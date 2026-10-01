@@ -1,0 +1,211 @@
+{
+  "paper_id": "nsdi23-047",
+  "fig": "7",
+  "system": {
+    "name": "BGL",
+    "one_liner": "a GPU-efficient GNN training system that optimizes graph data I/O and preprocessing",
+    "domain": [
+      "ml-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Subgraphs of Worker 0",
+        "role": "sampled subgraphs queued for worker 0's feature lookup",
+        "container": "Worker Machine",
+        "novel": false
+      },
+      {
+        "name": "Subgraphs of Worker 1",
+        "role": "sampled subgraphs queued for worker 1's feature lookup",
+        "container": "Worker Machine",
+        "novel": false
+      },
+      {
+        "name": "Subgraphs of Worker 2",
+        "role": "sampled subgraphs queued for worker 2's feature lookup",
+        "container": "Worker Machine",
+        "novel": false
+      },
+      {
+        "name": "Dispatching Thread",
+        "role": "dispatches each worker's subgraph feature queries into the shared cache query queue",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "Cache Query Queue",
+        "role": "buffers feature queries between dispatching threads and processing threads",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "Processing Thread",
+        "role": "processes cache queries, checking the GPU cache map and falling back to CPU cache or remote store on a miss",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "GPU Cache Map",
+        "role": "per-GPU hashmap from node ID to buffer-slot pointer in that GPU's cache buffer",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "GPU Cache Buffer",
+        "role": "stores cached node features in GPU memory; disjoint across GPUs and reachable from peers via NVLink P2P copy",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "CPU Cache Buffer",
+        "role": "second-level, larger cache of node features in CPU memory",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "CPU Cache Map",
+        "role": "hashmap for the CPU-level cache, using the same policy as the GPU cache",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "Remote Graph Store",
+        "role": "fetched over the network on a cache miss at both GPU and CPU levels",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Subgraphs of Worker 0",
+        "to": "Dispatching Thread 0",
+        "what": "subgraph feature request",
+        "step": 1
+      },
+      {
+        "from": "Dispatching Thread 0",
+        "to": "Cache Query Queue",
+        "what": "queued feature query",
+        "step": 2
+      },
+      {
+        "from": "Cache Query Queue",
+        "to": "Processing Thread 0",
+        "what": "dequeued query",
+        "step": 3
+      },
+      {
+        "from": "Processing Thread 2",
+        "to": "GPU 2 Cache Map",
+        "what": "cache lookup",
+        "step": 4
+      },
+      {
+        "from": "Processing Thread 2",
+        "to": "CPU Cache Buffer",
+        "what": "fallback lookup on GPU cache miss",
+        "step": 5
+      },
+      {
+        "from": "CPU Cache Buffer",
+        "to": "Remote Graph Store",
+        "what": "fetch over the network on CPU cache miss",
+        "step": 6
+      },
+      {
+        "from": "GPU 0 Cache Buffer",
+        "to": "GPU 1 Cache Buffer",
+        "what": "P2P feature copy via NVLink",
+        "step": null
+      }
+    ],
+    "key_idea": "BGL's feature cache engine uses per-GPU dispatch and processing threads around a shared query queue to look up cached node features first in GPU memory, then CPU memory, falling back to a remote graph store fetch only on a full cache miss.",
+    "reading_order": "top-down and left-to-right, following circled steps 1 through 6: subgraphs enter per-worker dispatching threads, funnel into a shared cache query queue, are handled by per-GPU processing threads that check GPU then CPU cache maps, escalating to the remote graph store on a miss, with GPU cache buffers also linked peer-to-peer via NVLink."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#82b366",
+        "used_for": "green stroke, matching the NVLink legend arrow and green-toned subgraph boxes"
+      },
+      {
+        "hex": "#9673a6",
+        "used_for": "purple stroke on processing-thread elements and PCIe legend arrow"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "gray Cache Query Queue bars and Network legend arrow"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue Cache Buffer box fill"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pink Cache Map box fill"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "orange Dispatching Thread box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines; colored double-headed arrows per the top-left legend (NVLink/PCIe/Network)",
+    "font": "Arial sans, 4-8pt",
+    "corners": "square",
+    "arrows": "colored double-headed arrows for link types, plus black single-headed arrows for data/lookup flow, annotated with circled step numbers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = subgraph boxes and NVLink connections, orange = dispatching threads, purple = processing threads and PCIe links, pink/salmon = cache map structures, light blue = cache buffer structures, gray bars = the shared cache query queue",
+    "line_style_means": "arrow color follows the top-left legend: green = NVLink, purple = PCIe, gray = Network; circled numbers mark the ordered cache-lookup workflow",
+    "emphasis": "the parallel three-column layout for workers 0/1/2 emphasizes per-GPU replication of the caching pipeline, while the outer Worker Machine box separates local caching from the external Remote Graph Store",
+    "reusable_patterns": [
+      "parallel replicated columns (one per worker/GPU) inside a single outer system boundary",
+      "tiered fallback lookup path (GPU cache -> CPU cache -> remote store) drawn top-to-bottom"
+    ],
+    "weaknesses": [
+      "many small boxes and thin connecting lines make the figure text-dense at normal size"
+    ]
+  },
+  "tags": [
+    "GNN-training",
+    "feature-cache",
+    "multi-GPU",
+    "NVLink",
+    "cache-hierarchy"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.7)"
+    ],
+    "evidence": [
+      "The detailed structure and cache workﬂow of our feature cache engine is shown in Figure 7",
+      "Cache map is a HashMap with node IDs as keys and the pointers to buffer slots in cache buffer as values",
+      "As shown in Figure 7, the workﬂow of the cache engine goes as follows"
+    ]
+  },
+  "summary": "This figure details the internal structure and workflow of BGL's two-level feature cache engine inside a Worker Machine. Three parallel columns represent GPU workers 0-2: each has a Dispatching Thread that pushes subgraph feature queries into a shared Cache Query Queue, from which per-GPU Processing Threads pull requests. Each processing thread first checks its GPU Cache Map/Buffer; on a miss it falls back to the CPU Cache Buffer/Map, and on a further miss it fetches from a Remote Graph Store over the network. GPU Cache Buffers are also connected peer-to-peer via NVLink for direct feature transfer between GPUs. A top-left legend distinguishes NVLink, PCIe, and Network links by arrow color, and circled numbers 1-6 mark the ordered steps of a cache lookup.",
+  "summary_zh": "该图展示BGL特征缓存引擎的内部结构：三个GPU工作进程的调度线程将查询汇入共享缓存查询队列，处理线程依次查GPU缓存、CPU缓存，未命中则通过网络访问远程图存储，GPU间还可通过NVLink直接传输特征。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

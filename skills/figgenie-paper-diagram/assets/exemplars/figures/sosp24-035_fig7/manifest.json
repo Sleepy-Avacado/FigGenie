@@ -1,0 +1,48 @@
+{
+  "id": "sosp24-035_fig7",
+  "paper_id": "sosp24-035",
+  "fig": "7",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 7. The architecture and inference workflow of Pow- erInfer.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.75,
+  "n_components": 12,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-035/src/fig7_arch.svg",
+    "preview.png": "lab/extracted/sosp24-035/src/fig7_arch.png",
+    "print.png": "lab/extracted/sosp24-035/sosp24-035_fig7_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Offline | Online split by a dashed vertical rule, with CPU and GPU sides, an icon legend on top and circled numbers 1-4.",
+      "what_to_learn": "One figure can carry two orthogonal splits (offline/online vertically, CPU/GPU horizontally) if each uses a different device: a dashed rule for one, lane labels for the other."
+    },
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar: the Offline box nests a Profiler and Solver box nesting two hot/cold neuron icon grids, and the Online box nests CPU and GPU Executor boxes each nesting their own dot-grid activation icon.",
+      "what_to_learn": "Carry the same small coloured-dot icon grid, hot versus cold neurons, from the outer profiling box down into each inner executor box so the reader traces one visual motif through every nesting level, and put the icon legend once at the top rather than per level."
+    }
+  ]
+}

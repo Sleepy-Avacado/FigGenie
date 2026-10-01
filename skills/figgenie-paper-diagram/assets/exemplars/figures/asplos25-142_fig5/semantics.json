@@ -1,0 +1,192 @@
+{
+  "paper_id": "asplos25-142",
+  "fig": "5",
+  "system": {
+    "name": "Teola",
+    "one_liner": "an orchestration framework that optimizes LLM-based applications using primitive operations as the basic execution unit",
+    "domain": [
+      "ml-systems",
+      "distributed"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Execution Engine Registry & Profile",
+        "role": "developers register execution engines and their latency profiles in the offline stage",
+        "container": "offline",
+        "novel": false
+      },
+      {
+        "name": "Optimization Strategies",
+        "role": "developers optionally specify optimization strategies for certain primitive operations",
+        "container": "offline",
+        "novel": true
+      },
+      {
+        "name": "Workflow Template",
+        "role": "developers supply a template outlining the app's components and execution sequence",
+        "container": "offline",
+        "novel": false
+      },
+      {
+        "name": "Frontend",
+        "role": "accepts a declarative query (question, docs, chunk size, synthesis mode, etc.)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Graph Optimizer",
+        "role": "builds a query-specific primitive-level dataflow graph and optimizes it into an execution plan (e-graph)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Runtime",
+        "role": "schedules and executes the optimized graph online",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Graph Scheduler",
+        "role": "schedules the primitive-level execution graph",
+        "container": "Runtime",
+        "novel": true
+      },
+      {
+        "name": "Engine Scheduler",
+        "role": "schedules primitive operations onto execution engine instances",
+        "container": "Runtime",
+        "novel": true
+      },
+      {
+        "name": "Backend Engines",
+        "role": "execution engine instances (e.g. GPU) that run primitive operations",
+        "container": "Runtime",
+        "novel": false
+      },
+      {
+        "name": "Primitive Operations",
+        "role": "basic units of execution scheduled and run by the runtime",
+        "container": "Runtime",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Execution Engine Registry & Profile",
+        "to": "Frontend",
+        "what": "registered execution engines and latency profiles configure the deployed app",
+        "step": 1
+      },
+      {
+        "from": "Workflow Template",
+        "to": "Frontend",
+        "what": "workflow template outlining app components and execution sequence",
+        "step": 1
+      },
+      {
+        "from": "Frontend",
+        "to": "Graph Optimizer",
+        "what": "query-specific data and workflow configuration",
+        "step": 2
+      },
+      {
+        "from": "Graph Optimizer",
+        "to": "Runtime",
+        "what": "optimized execution graph (e-graph) built from primitive nodes",
+        "step": 3
+      },
+      {
+        "from": "Runtime",
+        "to": "Frontend",
+        "what": "query result returned after execution",
+        "step": 4
+      }
+    ],
+    "key_idea": "Offline-registered engines, profiles and a workflow template let the online path compile each query into a primitive-level dataflow graph that is optimized into an e-graph before runtime scheduling and execution.",
+    "reading_order": "Top-down: the dashed offline configuration row first, then step 1-4 arrows through the Frontend, Graph Optimizer, and Runtime, with a feedback arrow back to the Frontend."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.07,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c5e0b4",
+        "used_for": "light green fill of the Frontend box"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow fill inside the Graph Optimizer's example diagrams"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "light peach fill of the Runtime box"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray dashed border of the offline configuration row"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "light blue fill inside the Graph Optimizer box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "clean medium-weight borders, dashed around the offline configuration row",
+    "font": "Helvetica sans-serif, roughly 9-12pt, almost no bold",
+    "corners": "rounded",
+    "arrows": "filled triangular-head arrows connecting the offline boxes, frontend, optimizer and runtime, plus a feedback arrow back to the frontend",
+    "icons": "colored dot icons for primitive operations and a GPU icon for the engine instance"
+  },
+  "encoding": {
+    "color_means": "green = Frontend (query intake), peach = Runtime (execution), blue/yellow sub-boxes inside Graph Optimizer distinguish different example optimization graphs, gray dashed = offline developer-configuration boxes",
+    "line_style_means": "dashed boxes mark the one-time offline configuration stage, contrasted with solid boxes for the per-query online stage",
+    "emphasis": "circled numbers 1-4 walk the reader through offline setup, query intake, graph optimization, and runtime execution, closing with a feedback arrow back to the frontend",
+    "reusable_patterns": [
+      "offline configuration stage feeding an online per-query pipeline",
+      "declarative query example (question/docs/chunksize/synthesis_mode) shown inline in the Frontend box"
+    ],
+    "weaknesses": [
+      "the three small colored graph diagrams inside Graph Optimizer are not individually labeled",
+      "the feedback arrow (4) back to Frontend is easy to miss among the forward arrows"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "orchestration",
+    "dataflow-graph",
+    "query-optimization",
+    "primitive-operations",
+    "rag"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design Overview (p.4)",
+      "3 Design Overview (p.5)"
+    ],
+    "evidence": [
+      "Teola is a novel orchestration framework to optimize the execution of LLM-based applications with primitive operations as the basic unit",
+      "developers register execution engines for an app, such as those for embedding models, LLMs, and database operations",
+      "users can customize the workflow (Figure 5), allowing for parameter tuning of components"
+    ]
+  },
+  "summary": "This figure gives a system overview of Teola, an orchestration framework that optimizes LLM-based applications using primitive operations as the basic execution unit. In the offline stage (1), developers register execution engines with their latency profiles, optionally set optimization strategies, and supply a workflow template describing the app's components and execution order. In the online stage, an incoming declarative query (e.g., question, docs, chunk size, synthesis mode) enters the Frontend (2), which the Graph Optimizer turns into a query-specific, primitive-level dataflow graph and optimizes into an execution plan (an e-graph) (3). The Runtime then schedules and executes that graph across Backend Engine instances via its Graph Scheduler and Engine Scheduler, returning results back to the Frontend (4). Colored boxes distinguish the one-time offline configuration from the per-query online pipeline, with small example graphs illustrating how optimization passes restructure the primitive nodes.",
+  "summary_zh": "该图展示 Teola 系统概览：离线①注册执行引擎、优化策略与工作流模板；在线查询进入 Frontend②，Graph Optimizer 构建并优化图元级数据流图③，Runtime 调度后端引擎执行，结果④返回前端。",
+  "confidence": "high",
+  "notes": "The paper's title names the system 'Ayo' but the abstract, this figure's caption, and all body text around it call it 'Teola'; the name used here follows the figure/caption/text.",
+  "venue": "ASPLOS25"
+}

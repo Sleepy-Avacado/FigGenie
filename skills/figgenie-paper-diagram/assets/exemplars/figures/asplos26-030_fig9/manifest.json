@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-030_fig9",
+  "kind": "mechanism",
+  "paper_id": "asplos26-030",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 9. An example syndrome measurement circuit with five ticks. Idlings are not all drawn explicitly.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "timeline",
+  "subject": "how a 5-tick syndrome-measurement circuit sequences Z-checks, X-checks, an idle tick, and a final ancilla measurement",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "callout",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.32,
+  "n_elements": 8,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 5,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-030/src/fig9_tickexample.svg",
+    "preview.png": "lab/extracted/asplos26-030/src/fig9_tickexample.png",
+    "print.png": "lab/extracted/asplos26-030/asplos26-030_fig9_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "AlphaSyndrome represents a syndrome-measurement schedule as a tick-divided circuit: each tick performs at most one Pauli check per qubit (Z-check via a plain CNOT, X-check via a Hadamard-CNOT-Hadamard sandwich) or leaves the ancilla explicitly idling, ending in a Z-basis measurement.",
+      "what_to_learn": "a standard quantum-circuit timeline with dashed vertical rules marking discrete scheduling ticks; a text callout with an arrow picking out one specific gate instance for discussion; reuse of a Hadamard-CNOT-Hadamard sandwich (established in an earlier figure) as a single compound 'X-check' unit",
+      "note_source": "record"
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "paper_id": "osdi25-031",
+  "fig": "11",
+  "kind": "mechanism",
+  "system": {
+    "name": "DecDEC",
+    "one_liner": "a CPU-augmented inference system for quantized LLMs that performs decoding with dynamic error compensation fetched from CPU memory",
+    "domain": [
+      "ml-systems",
+      "llm-inference",
+      "quantization"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how DecDEC's tuner searches n_tb then k_chunk per layer, step by step, to hit a 10% target slowdown on a 56-SM GPU",
+    "base": "table",
+    "elements": [
+      {
+        "name": "Phase 1. Determine n_tb (or n_tb^max)",
+        "kind": "box",
+        "role": "first stage: search for the single metaparameter capping thread blocks per layer",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Phase 2. Determine k_chunk",
+        "kind": "box",
+        "role": "second stage: fine-tune each layer's shared-memory chunk size given the chosen n_tb^max",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Coarse-grained k_chunk Search",
+        "kind": "box",
+        "role": "for one candidate n_tb^max, finds how many uniform k_chunk increments fit under the target slowdown",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Fine-grained k_chunk Search",
+        "kind": "box",
+        "role": "refines k_chunk per layer individually once the best n_tb^max is chosen",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Result",
+        "kind": "box",
+        "role": "final tuned n_tb and k_chunk values per linear-layer type",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "QKV proj",
+        "kind": "row",
+        "role": "the QKV projection layer's k_chunk and latency track through the search steps",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Output proj",
+        "kind": "row",
+        "role": "the output projection layer's k_chunk/latency track",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Gate/Up proj",
+        "kind": "row",
+        "role": "the gate/up projection layer's k_chunk/latency track",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Down proj",
+        "kind": "row",
+        "role": "the down projection layer's k_chunk/latency track",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Sum",
+        "kind": "row",
+        "role": "total latency across all four layers at each step, compared against the target slowdown to accept or reject that step",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Step",
+        "kind": "label",
+        "role": "column header indexing successive k_chunk increments, from Step 0 (baseline) upward",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Phase 1. Determine n_tb (or n_tb^max)",
+        "to": "Coarse-grained k_chunk Search",
+        "what": "each candidate n_tb^max is evaluated by its own coarse-grained search",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Coarse-grained k_chunk Search",
+        "to": "Phase 2. Determine k_chunk",
+        "what": "the n_tb^max with the most valid steps is passed on",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Phase 2. Determine k_chunk",
+        "to": "Fine-grained k_chunk Search",
+        "what": "runs the fine-grained search for the chosen n_tb^max",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Fine-grained k_chunk Search",
+        "to": "Result",
+        "what": "produces the final per-layer n_tb and k_chunk values",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Sum",
+        "to": "Step",
+        "what": "the running total is checked against the target slowdown at every step to decide whether to accept it",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Phase 1 & 2 overview",
+        "axis": "time",
+        "differs": "runs a coarse-grained k_chunk search for every candidate n_tb^max (1..28) and picks the one allowing the most steps, then hands it to a fine-grained k_chunk search",
+        "verdict": null
+      },
+      {
+        "label": "(b) Coarse-grained k_chunk search (n_tb^max = 24)",
+        "axis": "time",
+        "differs": "increments k_chunk by a uniform amount for all four layers together at each step, until the summed latency exceeds the target slowdown at Step 20",
+        "verdict": "19 valid steps"
+      },
+      {
+        "label": "(c) Fine-grained k_chunk search (n_tb^max = 24)",
+        "axis": "time",
+        "differs": "at each step increments k_chunk for as many individual layers as possible, prioritizing the smallest latency increase (numbered ①②③④)",
+        "verdict": "final per-layer k_chunk values"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "per-layer k_chunk and latency numbers at each search step, for both the coarse-grained (uniform, Step 0-20) and fine-grained (per-layer, Step 0-11) k_chunk search",
+      "linked_by": "position, the same four layer rows (QKV/Output/Gate-Up/Down proj) recur in every step column, with circled numbers marking which layer is incremented first in the fine-grained search",
+      "result_cells": "a checkmark/cross above each step marks whether that step's summed latency stays within the target slowdown, and the final 'Result' panel lists the chosen n_tb and k_chunk per layer"
+    },
+    "key_idea": "A coarse, uniform-across-layers k_chunk search first picks the best n_tb^max by counting how many steps fit under the target slowdown, then a fine-grained per-layer search refines k_chunk further.",
+    "reading_order": "(a) top: overview of the two search phases across n_tb^max candidates; (b) bottom-left: the coarse search table; (c) bottom-right: the zoomed-in fine-grained table"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "badge",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": true,
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.15,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of most table cells and boxes"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "medium-dark gray fill of the 'Phase 1'/'Phase 2'/'Result' header bars and the 'Baseline' step-0 column"
+      },
+      {
+        "hex": "#afabab",
+        "used_for": "gray fill of the unselected 'Coarse-grained k_chunk Search' candidate boxes in (a)"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "gold highlight marking the cells being incremented at the current step in the fine-grained search table (c)"
+      },
+      {
+        "hex": "#f8d88f",
+        "used_for": "pale gold, a lighter variant of the same increment highlight"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "light gray shading, e.g. alternating row/column bands"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt black table borders, with gray rules separating header bands",
+    "corners": "mixed",
+    "arrows": "many thin straight black lines forming the table grids and a few arrows chaining Phase 1 to Phase 2 to Result, plus dashed zoom-callout lines from Step 19 in (b) into (c)",
+    "font": "Calibri sans (CambriaMath for subscripted variable names like n_tb, k_chunk), 4.5-11.5pt, bold for headers",
+    "icons": "13 small check-mark / cross-mark glyphs marking valid vs over-target steps"
+  },
+  "encoding": {
+    "color_means": "gray header bars label 'Phase 1' / 'Phase 2' / 'Result'; gold/amber highlights the specific cell(s) incremented at the current step in the fine-grained search",
+    "line_style_means": "solid black grid lines rule every table; dashed lines zoom-callout from the coarse table's Step 19 into the fine-grained table (c)",
+    "state_means": "each step column is a frame of the same per-layer table, so a layer's state (its current k_chunk and latency) is read by column position, not by colour",
+    "marker_means": "checkmarks/crosses mark whether a step's total latency is still within the target slowdown; circled numbers ①②③④ order which layer is incremented first within a fine-grained step",
+    "emphasis": "the gold highlight and circled order-numbers single out exactly which layer's k_chunk changes at each individual fine-grained step, versus the coarse table where all four change together",
+    "reusable_patterns": [
+      "a per-layer table replayed step by step with a running Sum row and a checkmark/cross verdict against a fixed target, zoomed from a coarse uniform version into a fine per-layer version"
+    ],
+    "weaknesses": [
+      "extremely dense (335 text runs across a double-column figure) with many small ~4.5pt numbers, making the coarse-to-fine zoom relationship hard to trace precisely"
+    ]
+  },
+  "tags": [
+    "parameter-tuning",
+    "auto-tuning",
+    "quantization",
+    "GEMV",
+    "DecDEC",
+    "worked-example"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 DecDEC Design (p.8)"
+    ],
+    "evidence": [
+      "Phase 1 determines the ntb values, and Phase 2 determines the kchunk values",
+      "the GPU has 56 SMs, so values up to 28 are tested",
+      "the tuner increments kchunk for as many layers as possible, prioritizing those with smaller increases"
+    ]
+  },
+  "summary": "DecDEC augments quantized LLM decoding with dynamic error compensation fetched from CPU memory, and must tune two per-layer parameters (n_tb, k_chunk) to hit a target slowdown. This figure works through DecDEC's tuner for a 56-SM GPU with a 10% target slowdown. Phase 1 runs a coarse-grained k_chunk search for every candidate n_tb^max from 1 to 28 and keeps the one allowing the most valid steps; panel (b) shows this search for n_tb^max=24, incrementing all four projection layers' k_chunk together until Step 20's summed latency finally exceeds the target (a cross replaces the checkmarks that mark Steps 0-19 as valid). Phase 2 then runs a fine-grained search on that winner: panel (c) zooms into the same n_tb^max=24 case and, at each step, increments as many individual layers as it can, in the order (circled ①②③④) of smallest latency cost, yielding the final per-layer k_chunk values shown in the Result table.",
+  "summary_zh": "该图展示DecDEC在56个SM、目标降速10%下的调优：阶段一对每个候选n_tb^max做粗粒度k_chunk搜索取步数最多者；阶段二对其做细粒度搜索，按延迟增量用序号①②③④递增各层k_chunk，得到最终结果。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

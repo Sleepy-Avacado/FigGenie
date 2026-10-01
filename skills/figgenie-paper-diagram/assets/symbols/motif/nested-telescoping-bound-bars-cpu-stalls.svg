@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 218.893 68.233" width="218.893pt" height="68.233pt" data-symbol="nested-telescoping-bound-bars-cpu-stalls" data-kind="motif" data-size-pt="218.893x68.233">
+  <title>nested-telescoping-bound-bars-cpu-stalls</title>
+  <desc>stack of left-aligned horizontal bars of decreasing length, each nested inside the wider bar above it, showing successive tighter bounds on a quantity (CPU cycles); two extra boxes fill the remaining width at the widest tier, and a narrow side box marks an early boundary | source: asplos25-118_fig10 (asplos25-118_fig10_p9_vector.svg) | candidate wave4:nested-telescoping-bound-bars-cpu-stalls | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="nested-telescoping-bound-bars-cpu-stalls" transform="scale(1) translate(-13.3530,5.1070)"><defs>
+<clipPath id="asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_1">
+<path transform="matrix(1,0,0,-1,-314.955,710.1457)" d="M314.955 627.1035H560.99819V710.1457H314.955Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_2">
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M0 0H455V197H0Z"/>
+</clipPath>
+<clipPath id="asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_3">
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M0 0H455V197H0Z"/>
+</clipPath>
+<clipPath id="asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_4">
+<path transform="matrix(1,0,0,-1,-18.251984,671.68569)" d="M0-11.401H18.594V1.14017H0Z"/>
+</clipPath>
+</defs>
+<g clip-path="url(#asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_1)">
+<g clip-path="url(#asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_2)">
+<g clip-path="url(#asplos25-118-fig10-nested-telescoping-bound-bars-cpu-stalls-clip_3)">
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M40 131.2975H453V150.2975H40Z" fill="#999999"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-1159-479.2975H-746V-460.2975H-1159Z"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-464.9935" x="-1008.115 -998.52499 -989.97097 -981.93496 -978.30899 -968.71896 -960.1649 -950.3089 -946.4169 -937.34487 -930.59689 -921.52487 -913.74087 -905.95687">RETIRED.STALLS</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M1 55.29754H40.02734V150.29755H1Z" fill="#f1f1f1"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-1198-479.2975H-1158.973V-384.2975H-1198Z"/>
+<text xml:space="preserve" transform="matrix(0 .4484406 -.4484406 -0 -163.43341 560.87136)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-435.1895" x="-1209.335 -1199.745 -1191.191 -1183.155 -1179.529 -1169.9391 -1161.3851 -1151.5292">RETIRED.</tspan></text>
+<text xml:space="preserve" transform="matrix(0 .4484406 -.4484406 -0 -163.43341 560.87136)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-418.7975" x="-1205.835 -1195.7269 -1186.6549 -1176.5469 -1168.7628 -1160.2089">CYCLES</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M40 112.2975H334V131.2975H40Z" fill="#203ed7" fill-opacity=".2"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-1159-460.2975H-865V-441.2975H-1159Z"/>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-445.9935" x="-1077.737 -1068.1471 -1057.5071 -1047.399 -1037.291 -1027.435 -1020.43508 -1009.79507 -999.6871 -992.6871 -984.9031 -974.26309 -965.19107 -955.335">BOUND_ON_LOADS</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M334 52.336H396V131.29755H334Z" fill="#6ec5d4"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-865-460.2975H-803V-381.336H-865Z"/>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-432.4048" x="-859.151 -849.561 -838.92098 -828.813 -818.705">BOUND</tspan></text>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-416.0128" x="-851.374 -844.374 -833.734 -823.62606">_ON_</tspan></text>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-399.6208" x="-861.482 -852.41 -844.37399 -833.73397 -824.1439 -815.5899">STORES</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M40 92.79754H285V111.79754H40Z" fill="#7c8dec"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-1159-440.7975H-914V-421.7975H-1159Z"/>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-426.4935" x="-1097.96 -1088.888 -1082.1399 -1073.0679 -1065.2838 -1057.4998 -1048.4277 -1041.4277 -1033.6437 -1025.8596 -1016.0036 -1009.0036 -996.8096 -993.1836 -984.1116">STALLS_L1D_MISS</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M40 74.04754H233V93.04754H40Z" fill="#f47869"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-1159-422.0475H-966V-403.0475H-1159Z"/>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-407.7435" x="-1119.032 -1109.96 -1103.2119 -1094.1399 -1086.3558 -1078.5718 -1069.4998 -1062.4998 -1054.7157 -1046.9317 -1039.9317 -1027.7377 -1024.1117 -1015.0397">STALLS_L2_MISS</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M40 55.29754H186V74.29754H40Z"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-1159-403.2975H-1013V-384.2975H-1159Z"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-388.9935" x="-1142.532 -1133.46 -1126.7119 -1117.6399 -1109.8558 -1102.0718 -1092.9998 -1085.9998 -1078.2157 -1070.4317 -1063.4317 -1051.2377 -1047.6117 -1038.5397">STALLS_L3_MISS</tspan></text>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M-1198-497.336H-746V-478.336H-1198Z"/>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-483.032" x="-999.349 -989.241 -980.169 -970.06106 -962.27706 -953.723">CYCLES</tspan></text>
+<path transform="matrix(.4484406,0,0,-.4484406,21.00299,78.48871)" d="M396 52.336H453V131.29755H396Z" fill="#f1f1f1"/>
+<path transform="matrix(.4484406,0,0,.4484406,558.6833,226.02567)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#7f7f7f" d="M-803-460.2975H-746V-381.336H-803Z"/>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-432.4048" x="-799.651 -790.061 -779.42098 -769.313 -759.205">BOUND</tspan></text>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-416.0128" x="-791.874 -784.874 -774.234 -764.12606">_ON_</tspan></text>
+<text xml:space="preserve" transform="matrix(.4484406 0 0 .4484406 558.6833 226.02567)" font-size="14" font-family="HelveticaNeue, Helvetica, Arial, sans-serif"><tspan y="-399.6208" x="-798.482 -788.374 -777.734 -768.144 -759.58999">CORES</tspan></text>
+</g>
+</g>
+</g>
+</g>
+</svg>

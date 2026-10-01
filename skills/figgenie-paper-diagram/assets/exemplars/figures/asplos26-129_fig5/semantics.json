@@ -1,0 +1,253 @@
+{
+  "paper_id": "asplos26-129",
+  "fig": "5",
+  "system": {
+    "name": "SpeContext",
+    "one_liner": "an algorithm-system co-design that uses a distilled LM's retrieval head to speculatively prefetch sparse KV cache for long-context LLM reasoning",
+    "domain": [
+      "ml-systems",
+      "llm-inference",
+      "memory-management"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Input_id",
+        "role": "token id input to the Distilled LM",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Embedding",
+        "role": "embeds input tokens for the DLM",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Query",
+        "role": "query projection of the DLM's single decoder layer",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Key",
+        "role": "key projection of the DLM's single decoder layer",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Value",
+        "role": "value projection, pruned since only attention weights are needed for retrieval",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Attention Weights",
+        "role": "retained output used to identify globally important tokens",
+        "container": "Distilled LM Architecture",
+        "novel": true
+      },
+      {
+        "name": "FFN",
+        "role": "feed-forward block of the DLM, pruned away as redundant for retrieval",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Output / Logits / Output_id",
+        "role": "DLM output head, pruned away as redundant for retrieval",
+        "container": "Distilled LM Architecture",
+        "novel": false
+      },
+      {
+        "name": "Head-Level Top-K",
+        "role": "selects important tokens independently per attention head",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Batch-Level Top-K",
+        "role": "selects a single set of important tokens shared across all heads (coarser baseline)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Retrieval Head",
+        "role": "the pruned DLM component producing per-head attention weights for token selection",
+        "container": "Support panels (b)-(e)",
+        "novel": true
+      },
+      {
+        "name": "LLM",
+        "role": "the original LLM whose KV cache is sparsified using the retrieval head's selection",
+        "container": "Support panels (b)-(e)",
+        "novel": false
+      },
+      {
+        "name": "Head-level KV Cache",
+        "role": "original LLM's per-head KV cache from which selected entries are gathered",
+        "container": "Support panels (b)-(e)",
+        "novel": false
+      },
+      {
+        "name": "Gather",
+        "role": "maps selected token indices from the retrieval head onto the LLM's KV cache via torch.gather",
+        "container": "Support panels (b)-(e)",
+        "novel": true
+      },
+      {
+        "name": "Group-level Element-wise Max",
+        "role": "aggregates per-head attention weights within a KV group for GQA/MQA support",
+        "container": "Support panels (c)-(d)",
+        "novel": true
+      },
+      {
+        "name": "Projection",
+        "role": "maps the selected latent cache to a higher-dimensional space for MLA support",
+        "container": "Support panel (e)",
+        "novel": false
+      },
+      {
+        "name": "Head-level c Cache",
+        "role": "MLA's low-dimensional latent KV cache subjected to selection and dimension expansion",
+        "container": "Support panel (e)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input_id",
+        "to": "Embedding",
+        "what": "token embedding",
+        "step": null
+      },
+      {
+        "from": "Embedding",
+        "to": "Query/Key/Value",
+        "what": "hidden state projection",
+        "step": null
+      },
+      {
+        "from": "Query/Key/Value",
+        "to": "Attention Weights",
+        "what": "attention weight computation (Value/FFN/Output pruned)",
+        "step": null
+      },
+      {
+        "from": "Attention Weights",
+        "to": "Head-Level Top-K",
+        "what": "per-head important-token selection",
+        "step": null
+      },
+      {
+        "from": "Retrieval Head",
+        "to": "Gather",
+        "what": "selected token indices / top-K attention weights",
+        "step": null
+      },
+      {
+        "from": "Gather",
+        "to": "LLM",
+        "what": "selected KV pairs loaded into LLM attention",
+        "step": null
+      },
+      {
+        "from": "Group-level Element-wise Max",
+        "to": "Group-level Top-K",
+        "what": "grouped attention weights for GQA/MQA",
+        "step": null
+      }
+    ],
+    "key_idea": "A pruned distilled LM (keeping only embedding and QK projections) produces per-head attention weights that are top-K selected and gathered into the original LLM's KV cache, with the same gather mechanism adapted to MHA, GQA, MQA, and MLA by grouping heads or projecting the latent cache appropriately.",
+    "reading_order": "Panel (a) on the left shows the pruned Distilled LM architecture and bar charts comparing head-level vs batch-level retrieval; panels (b)-(e) to the right show the retrieval-head-to-LLM gather mechanism instantiated for MHA, GQA, MQA, and MLA respectively."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 5,
+    "column": "double",
+    "aspect": 2.37,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ef7576",
+        "used_for": "salmon/red highlighting of selected (top-K) heads or KV entries in the small grids"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "gray fill for pruned/inactive DLM components and generic KV-cache boxes"
+      },
+      {
+        "hex": "#dbefda",
+        "used_for": "light green background behind the 'Pruned' watermark and kept-component region"
+      },
+      {
+        "hex": "#3a8237",
+        "used_for": "green outline/text for the diagonal 'Pruned' label and Attention Weights box"
+      },
+      {
+        "hex": "#afabab",
+        "used_for": "gray fill for the Retrieval Head and LLM container boxes in panels (b)-(e)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red 'Gather' arrows connecting retrieval head selections to the LLM KV cache"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin black strokes, dashed boundaries around the Distilled LM Architecture box and each support panel",
+    "font": "Arial/Calibri-Italic sans, 3.5-9pt, light bold use",
+    "corners": "mixed",
+    "arrows": "orthogonal, filled triangular heads, red for gather/select arrows",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green diagonal watermark = pruned DLM components, gray = retained architecture boxes (Retrieval Head, LLM, KV cache), salmon/red = selected top-K heads or KV entries after retrieval",
+    "line_style_means": "dashed = grouping boundary around the Distilled LM Architecture and each of panels (b)-(e); solid red arrows = gather/select data paths",
+    "emphasis": "the green 'Pruned' diagonal watermark visually strikes through the removed DLM components, while red highlighting marks which heads/entries survive top-K selection across the four attention-mechanism variants",
+    "reusable_patterns": [
+      "small-multiple panels reusing the same retrieval-head-to-LLM gather diagram across attention-mechanism variants (MHA/GQA/MQA/MLA)",
+      "bar-chart pair comparing two selection granularities (head-level vs batch-level) as K varies"
+    ],
+    "weaknesses": [
+      "very high shape density (1314 shapes) makes individual head/cache cells hard to distinguish at reduced size",
+      "no shared legend across the five sub-panels despite reused color coding"
+    ]
+  },
+  "tags": [
+    "llm-inference",
+    "attention-mechanisms",
+    "kv-cache",
+    "sparse-attention",
+    "gqa",
+    "mqa",
+    "mla",
+    "retrieval-head"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Lightweight Retrieval Head Design (p.6)",
+      "4 Lightweight Retrieval Head Design (p.7)"
+    ],
+    "evidence": [
+      "We design the lightweight retrieval head by pruning redundancy and adopt the head-level attention weights for selection",
+      "the head-level retrieval exhibits a higher similarity of the important tokens and higher hit rate",
+      "GQA divides the query heads into groups, where all heads in the group share the same KV cache"
+    ]
+  },
+  "summary": "This five-panel figure details SpeContext's lightweight retrieval head design and its adaptation to different attention mechanisms. Panel (a) shows the pruned Distilled LM Architecture: after embedding and Query/Key projection produce attention weights, the Value projection, FFN, and output head are pruned away (marked by a green diagonal 'Pruned' watermark) since only attention weights are needed; two bar charts compare head-level versus batch-level top-K retrieval, showing head-level retrieval achieves higher attention-weight accumulation and hit rate as K grows. Panels (b)-(e) each show the same retrieval-head-to-LLM gather mechanism instantiated for Multi-Head Attention, Grouped-Query Attention, Multi-Query Attention, and Multi-Head Latent Attention respectively, using element-wise max aggregation for grouped heads (GQA/MQA) and a projection step for MLA's latent cache. Colors distinguish pruned (green-watermarked gray) versus retained (salmon-highlighted) components, with red arrows marking the gather operation.",
+  "summary_zh": "该图展示SpeContext轻量检索头设计：(a) 蒸馏模型仅保留嵌入和QK投影计算注意力权重，其余部分(Value、FFN、输出头)被剪除（绿色对角'Pruned'水印标注），柱状图比较头级与批级Top-K检索效果；(b)~(e) 分别展示该检索-聚集机制适配MHA、GQA、MQA、MLA四种注意力机制的实现方式。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

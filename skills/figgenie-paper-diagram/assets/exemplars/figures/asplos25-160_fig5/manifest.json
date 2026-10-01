@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-160_fig5",
+  "paper_id": "asplos25-160",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. (a, b) High-level Gigaflow architecture: the input flow (𝐹) traverses the vSwitch userspace pipeline to produce an unrolled traversal, which is then partitioned into sub-traversals and stored as LTM rules in Gigaflow caches. (c) Example Gigaflow processing with two traversals partitioned a",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 3.3,
+  "n_components": 8,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-160/asplos25-160_fig5_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-160/asplos25-160_fig5_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "An architecture pipeline, a symbol-definition notation key, and a colour-coded worked example sit side by side as three unlike kinds with no visible borders between them, a violation of the clear-gutter rule the template requires.",
+      "what_to_learn": "Leave an explicit 8-12pt gutter (or a thin frame) between an architecture panel, a notation key, and a worked example even when they logically belong together, since merging three conceptually different sub-panels with no visible border, a listed weakness here, makes the figure read as one crowded panel instead of three legible ones."
+    }
+  ]
+}

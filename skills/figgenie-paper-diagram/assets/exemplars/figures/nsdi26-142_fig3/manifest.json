@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-142_fig3",
+  "paper_id": "nsdi26-142",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 3: The protocol overview of Pyrocumulus.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 3.74,
+  "n_components": 10,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-142/nsdi26-142_fig3_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-142/nsdi26-142_fig3_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence double-column layered exemplar, rare in this template, using 3 side-by-side panels of the identical VM-hypervisor-SmartNIC-disk stack to compare where the critical path sits, with a right-side legend for three arrow styles.",
+      "what_to_learn": "Repeat the exact same small vertical stack across 2-3 panels and vary only which layer is bypassed or duplicated, so the comparison is about position in the stack, not shape; put a shared arrow-style legend to the right when line style, not colour, distinguishes read/write, consistency and copy traffic."
+    },
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Panels (a) and (b) repeat an identical VM/Host-Software/SmartNIC/Disk stack to contrast two data paths, then (c) duplicates that same stack across source and destination hosts linked by one dotted copy arrow, under one shared legend.",
+      "what_to_learn": "Reuse two copies of the same vertical stack side by side to depict a migration protocol (source host, destination host) rather than inventing new geometry, and put one legend to the right covering every line style (solid double-headed, red dashed, black dotted) used across all panels."
+    }
+  ]
+}

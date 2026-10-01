@@ -1,0 +1,173 @@
+{
+  "paper_id": "nsdi26-104",
+  "fig": "13",
+  "system": {
+    "name": "ZooRoute",
+    "one_liner": "a cloud network reliability system that provisions candidate paths and proactively reroutes via an overlay when failures occur",
+    "domain": [
+      "networking",
+      "cloud"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "CPU",
+        "role": "issues path-table updates to the programmable ASIC",
+        "container": "(a) PCIe",
+        "novel": false
+      },
+      {
+        "name": "Hash Table",
+        "role": "on-chip table storing {dstIP+index, srcPort} key-value pairs updated over PCIe",
+        "container": "(a) PCIe",
+        "novel": false
+      },
+      {
+        "name": "Programmable ASIC",
+        "role": "hardware whose Hash Table is updated by the CPU over PCIe, limited by PCIe bandwidth",
+        "container": "(a) PCIe",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "sends negotiation packets carrying PKT markers to update path state in-network",
+        "container": "(b) packets",
+        "novel": true
+      },
+      {
+        "name": "Hash Table",
+        "role": "stores the relatively static mapping from destination IP to a register address",
+        "container": "(b) packets",
+        "novel": true
+      },
+      {
+        "name": "Register",
+        "role": "stores frequently changing source-port status, read/written at line rate during packet processing",
+        "container": "(b) packets",
+        "novel": true
+      },
+      {
+        "name": "Programmable ASIC",
+        "role": "Tofino ASIC that extracts header fields from update packets, rewrites the matching entry, and recirculates the packet for the next update",
+        "container": "(b) packets",
+        "novel": true
+      },
+      {
+        "name": "Endflag",
+        "role": "marker on the last update packet in a batch that stops the recirculation loop",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "CPU",
+        "to": "Hash Table",
+        "what": "path-table update pushed over PCIe (naive design, panel a)",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "Programmable ASIC",
+        "what": "negotiation packet carrying a PKT marker (panel b)",
+        "step": 1
+      },
+      {
+        "from": "Hash Table",
+        "to": "Register",
+        "what": "register address (addr_j) used to update the matching source-port entry (panel b)",
+        "step": 2
+      },
+      {
+        "from": "Programmable ASIC",
+        "to": "Hash Table",
+        "what": "recirculated (loopback) packet handling the next batched update, until Endflag (panel b)",
+        "step": 3
+      }
+    ],
+    "key_idea": "ZooRoute replaces PCIe-pushed path-table updates, which are bandwidth-limited, with an in-network mechanism where negotiation packets update a hash table and per-port registers directly on the Tofino ASIC, batching updates per packet via recirculation.",
+    "reading_order": "Top panel (a) shows the naive CPU-over-PCIe update; bottom panel (b) shows ZooRoute's packet-driven update, read left to right following circled steps 1-3."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.66,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bf9000",
+        "used_for": "thick gold line marking an update delivered by packet (panel b's in-network path and recirculation loop)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill of the CPU icon and Programmable ASIC boundary boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "cream highlight fill on the register/hash entry currently being written (addr_j, srcPort_j)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red Endflag marker square"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray thick PCIe transfer arrow in panel (a)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.26pt median) borders; dashed rectangle outlines the Programmable ASIC boundary in each panel",
+    "font": "Helvetica/Times mixed sans and serif, 3.5-6pt",
+    "corners": "mixed",
+    "arrows": "block/chevron-style arrowheads for the PCIe and lookup flows, plus one looping recirculation arrow for step 3",
+    "icons": "vector icons for the CPU chips and a packet/Endflag stack icon"
+  },
+  "encoding": {
+    "color_means": "gold thick line = an update delivered by packet (panel b), gray thick arrow = PCIe transfer (panel a), red = Endflag marker on the last packet in a batch, cream highlight = the register/hash entry being written",
+    "line_style_means": "dashed boundary marks the Programmable ASIC/Tofino boundary in each panel; thick colored lines show the update-delivery path while thin black arrows show internal field lookups",
+    "emphasis": "the stacked (a)/(b) comparison and the circled 1-3 steps in panel (b) foreground ZooRoute's in-network update path against the PCIe baseline in panel (a)",
+    "reusable_patterns": [
+      "(a)/(b) baseline-vs-proposed two-panel comparison",
+      "numbered recirculation loop batching multiple updates into one packet"
+    ],
+    "weaknesses": [
+      "the extracted crop for this figure also includes an unrelated register bit-layout diagram that appears to belong to the adjacent Figure 12",
+      "panel (a) has no numbered steps, making the a/b comparison asymmetric"
+    ]
+  },
+  "tags": [
+    "network-reliability",
+    "in-network-computing",
+    "programmable-switch",
+    "path-table-update",
+    "tofino",
+    "packet-recirculation"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Path Recording (p.9)"
+    ],
+    "evidence": [
+      "relying on the CPU to push updates via PCIe (Fig. 13(a)), but PCIe bandwidth limits update concurrency",
+      "ZooRoute instead uses an in-network update mechanism",
+      "repeating until an EndFlag is reached"
+    ]
+  },
+  "summary": "This figure compares two ways ZooRoute's programmable ASIC receives path-table updates. In (a), a naive baseline, the CPU pushes {dstIP+index, srcPort} key-value updates into an on-chip Hash Table over PCIe, whose bandwidth limits update concurrency. In (b), ZooRoute's design, the CPU instead sends negotiation packets carrying PKT markers into the Programmable ASIC/Tofino (step 1); the ASIC looks up the destination IP in a Hash Table to get a register address and updates the corresponding source-port entry in a Register array (step 2); it then invalidates the processed header and recirculates the packet to handle the next batched update, repeating until an Endflag is reached (step 3). A small legend marks the packet-delivered-update line style and the Endflag marker.",
+  "summary_zh": "对比两种更新ZooRoute路径表的方式：(a) CPU经PCIe直接写哈希表，带宽受限；(b) 改用协商数据包，按①②③查表更新寄存器源端口，循环注入报文处理下一条更新，直到Endflag。",
+  "confidence": "high",
+  "notes": "The extracted crop for this figure also contains a 'log2(Np) bit' register-encoding table on the far left (Null/00010/00001 rows) that is not mentioned in the Fig. 13 text and whose position suggests it actually belongs to the adjacent Figure 12 (its bbox spans the same page row); it is excluded from components/flows above.",
+  "venue": "NSDI26"
+}

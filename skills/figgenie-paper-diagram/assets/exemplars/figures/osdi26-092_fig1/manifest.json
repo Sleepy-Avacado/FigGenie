@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-092_fig1",
+  "paper_id": "osdi26-092",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: GOODKIT Architecture. The gray boxes correspond to existing Hypervisor and VMM layers. The white boxes cor- respond to new VMM subcomponents introduced by GOOD- KIT. The yellow boxes denote the observer’s context. In this example, we use a single observer, whose purpose is to intro- spect ",
+  "corpus_template": "layered",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.27,
+  "n_components": 13,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-092/osdi26-092_fig1_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-092/osdi26-092_fig1_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Doc-cited exemplar of the two-small-hubs variant: GKBuilder and GKProbe sit as paired hubs inside the VMM band, mediating a Target/Observer pair above the Hypervisor's EPT pill band, plus a lettered key and numbered path.",
+      "what_to_learn": "Colour-code new components differently from the existing infrastructure they sit inside (white boxes on a grey VMM here) and give the bottom hardware band its own row of small pills; the weakness is that overlaying a lettered key and a numbered step sequence on one figure slows parsing, so pick one scheme per diagram."
+    }
+  ]
+}

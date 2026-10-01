@@ -1,0 +1,299 @@
+{
+  "paper_id": "osdi24-020",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "Flock",
+    "one_liner": "a framework for deploying on-demand distributed trust across serverless functions using a NAT-independent relay for secure networking",
+    "domain": [
+      "serverless",
+      "security",
+      "networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "the two-phase TLS handshake protocol Flock's Relay uses to connect two serverless instances without exposing them to each other directly",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "s1",
+        "kind": "lane",
+        "role": "left serverless instance's lifeline, initiates the protocol as a serverless-to-relay connection",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Relay",
+        "kind": "lane",
+        "role": "middle party run by the application provider that relays and authenticates both serverless instances",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "s2",
+        "kind": "lane",
+        "role": "right serverless instance's lifeline, the peer s1 wants to establish a direct secure connection with",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Invoke",
+        "kind": "label",
+        "role": "each instance's initial invocation carrying its PartyID and RelayTarget (IP, Port)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "mTLS Handshake",
+        "kind": "label",
+        "role": "mutual-TLS handshake each instance performs with the Relay to authenticate itself (S2R phase), then repeated end-to-end for S2S",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Destination",
+        "kind": "label",
+        "role": "tells the Relay which other PartyID this instance wants to connect to",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Assign",
+        "kind": "label",
+        "role": "Relay assigns one instance the TLS Server role and the other the TLS Client role",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Downgrade TLS to TCP",
+        "kind": "label",
+        "role": "each instance downgrades its authenticated TLS session to a bare TCP socket the Relay can forward",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "SSL_SHUTDOWN",
+        "kind": "label",
+        "role": "signals the TLS layer is being torn down while keeping the underlying authorized socket",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Establish: s1-s2 Forwarding",
+        "kind": "label",
+        "role": "Relay begins forwarding raw bytes between the two downgraded sockets",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "TLS Connection Request",
+        "kind": "label",
+        "role": "the assigned TLS Client (s2) opens a new TLS connection over the forwarded socket",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Secure connection",
+        "kind": "label",
+        "role": "the resulting end-to-end TLS session directly authenticated between s1 and s2 (S2S phase)",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "s1",
+        "to": "Relay",
+        "what": "mTLS Handshake and Destination declaration (S2R)",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "s2",
+        "to": "Relay",
+        "what": "mTLS Handshake and Destination declaration (S2R)",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Relay",
+        "to": "s1",
+        "what": "Assign TLS Server role",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Relay",
+        "to": "s2",
+        "what": "Assign TLS Client role",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "s1",
+        "to": "Relay",
+        "what": "Downgrade TLS to TCP, then SSL_SHUTDOWN",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "s2",
+        "to": "Relay",
+        "what": "Downgrade TLS to TCP, then SSL_SHUTDOWN",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "s2",
+        "to": "s1",
+        "what": "TLS Connection Request forwarded through the Relay",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "s1",
+        "to": "s2",
+        "what": "resulting mTLS Handshake forms the final Secure connection (S2S)",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "Invoke",
+        "at": "s1 & s2",
+        "what": "each instance invokes with its PartyID and RelayTarget (IP, Port)",
+        "carries": "PartyID, RelayTarget"
+      },
+      {
+        "marker": "mTLS Handshake",
+        "at": "s1/s2 -> Relay",
+        "what": "each instance authenticates to the Relay over mutual TLS (S2R)",
+        "carries": "TLS certificates"
+      },
+      {
+        "marker": "Destination",
+        "at": "s1/s2 -> Relay",
+        "what": "each instance tells the Relay which other PartyID it wants to reach",
+        "carries": "target PartyID"
+      },
+      {
+        "marker": "Assign",
+        "at": "Relay",
+        "what": "Relay assigns s1 the TLS Server role and s2 the TLS Client role",
+        "carries": "role assignment"
+      },
+      {
+        "marker": "Downgrade TLS to TCP / SSL_SHUTDOWN",
+        "at": "s1/s2 -> Relay",
+        "what": "each instance downgrades its authenticated TLS session to bare TCP, keeping the authorized socket",
+        "carries": "authorized TCP socket"
+      },
+      {
+        "marker": "Establish: s1-s2 Forwarding",
+        "at": "Relay",
+        "what": "Relay begins forwarding raw bytes between the two downgraded sockets",
+        "carries": "forwarded bytes"
+      },
+      {
+        "marker": "TLS Connection Request",
+        "at": "s2 -> s1 (via Relay)",
+        "what": "the assigned TLS Client opens a new TLS connection over the forwarded socket",
+        "carries": "TLS ClientHello"
+      },
+      {
+        "marker": "mTLS Handshake / Secure connection",
+        "at": "s1 <-> s2",
+        "what": "the resulting end-to-end mTLS handshake gives both instances a direct Secure connection (S2S)",
+        "carries": "session keys"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Flock's Relay authenticates each serverless instance separately (teal S2R) before downgrading and re-forwarding their sockets so the instances complete a direct mTLS handshake (green S2S) end-to-end.",
+    "reading_order": "top-down along the two outer lifelines (s1 left, s2 right) through the central Relay column, teal S2R steps first, green S2S steps last"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.46,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#12738d",
+        "used_for": "teal, marks the serverless-to-relay (S2R) messages, arrows and lock icons"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "green, marks the serverless-to-serverless (S2S) messages and the final secure-connection handshake"
+      },
+      {
+        "hex": "#d2edf6",
+        "used_for": "pale cyan fill behind the S2R-phase icons (e.g. the Relay box, load/key icons)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.7pt solid strokes on lifelines and message arrows",
+    "corners": "mixed",
+    "arrows": "many small triangular arrowheads (19) on the horizontal message lines between lifelines, mostly straight with a few curved returns",
+    "font": "serif Times New Roman, sizes from tiny 2.5pt annotations up to 12pt headers, almost no bold",
+    "icons": "23 small bitmap icons: person/client icons, padlock icons at the security-relevant steps, and key (PK/SK) icons"
+  },
+  "encoding": {
+    "color_means": "teal = serverless-to-relay (S2R) messages/icons; green = serverless-to-serverless (S2S) messages; the two client columns (s1, s2) mirror each other around the central Relay lifeline",
+    "line_style_means": "solid horizontal arrows carry each protocol message between lifelines; colour, not line style, distinguishes the S2R and S2S message groups",
+    "state_means": "the two protocol phases (S2R vs S2S) are told apart by teal vs green colouring of otherwise identically-shaped messages and icons",
+    "marker_means": "padlock icons mark the security-critical steps (handshake, shutdown, secure connection); there are no sequential numerals, so order is read top-down from the message labels themselves",
+    "emphasis": "the mirrored, symmetric layout of s1 and s2 around the Relay emphasizes that both instances follow the identical protocol, while colour singles out which phase each step belongs to",
+    "reusable_patterns": [
+      "three-lifeline sequence diagram with a central relay, coloured by protocol phase and marked with small padlock icons at each security step"
+    ],
+    "weaknesses": [
+      "very small (2.5pt) annotation text and 23 overlapping icons make the diagram dense and hard to read at print size"
+    ]
+  },
+  "tags": [
+    "TLS",
+    "mTLS",
+    "serverless-networking",
+    "relay-protocol",
+    "Flock",
+    "NAT-traversal"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Flock's System Design (p.6)",
+      "§3 Flock's System Design (p.7)"
+    ],
+    "evidence": [
+      "the Flock Relay needs to facilitate end-to-end TLS establishment between two",
+      "the relay verifies the serverless instance and provides it with an authentication token",
+      "each initiate an independent TLS connection with the relay"
+    ]
+  },
+  "summary": "Flock deploys on-demand distributed trust for serverless functions using a NAT-independent relay so two serverless instances can talk securely without a direct connection. This sequence diagram walks through the Flock Relay's two-phase per-invocation protocol between client s1, the central Relay, and client s2. In the teal serverless-to-relay (S2R) phase, both instances invoke with a PartyID and RelayTarget, mutually-TLS-handshake with the Relay, and declare their Destination; the Relay assigns one instance the TLS Server role and the other TLS Client. Both then downgrade their authenticated TLS session to plain TCP and SSL_SHUTDOWN, letting the Relay establish direct s1-s2 forwarding over the already-authorized sockets. In the green serverless-to-serverless (S2S) phase, the assigned client sends a TLS Connection Request over that forwarded socket, and the resulting mTLS handshake gives s1 and s2 a genuine end-to-end secure connection the Relay can no longer read.",
+  "summary_zh": "该图按序列图展示Flock中继的两阶段协议：青色S2R阶段s1、s2与Relay做mTLS后降级为TCP，由Relay转发；绿色S2S阶段双方完成端到端mTLS握手，实现中继不可见的安全直连。",
+  "confidence": "high",
+  "notes": "style.palette taken from the measured PDF-extracted-SVG attributes (no separate source-SVG histogram was provided); the colours match the caption's own teal=S2R / green=S2S key. A higher-resolution re-render showed no circled or plain-number step markers, only labelled message arrows, so layout.step_markers was set to 'labelled-arrows'.",
+  "venue": "OSDI24"
+}

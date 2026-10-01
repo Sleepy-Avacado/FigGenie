@@ -1,0 +1,285 @@
+{
+  "paper_id": "asplos25-034",
+  "fig": "8",
+  "system": {
+    "name": "MetaSapiens",
+    "one_liner": "a point-based neural rendering system delivering real-time, human-visual-quality rendering on mobile devices via pruning and foveated rendering",
+    "domain": [
+      "computer-graphics",
+      "hardware-accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Fov Filter",
+        "role": "filters out points not needed for a tile's target quality level during Projection (FR augmentation)",
+        "container": "Projection",
+        "novel": true
+      },
+      {
+        "name": "Intersect Test",
+        "role": "tests point/tile intersection feeding the Fov Filter's comparator logic",
+        "container": "Fov Filter",
+        "novel": true
+      },
+      {
+        "name": "Projection, Culling & Conversion",
+        "role": "baseline stage computing point projection, culling, and format conversion",
+        "container": "Projection",
+        "novel": false
+      },
+      {
+        "name": "Line Buf.",
+        "role": "line buffer staging data between Projection/Sorting and Sorting/Rasterization",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Duplication Unit",
+        "role": "baseline unit duplicating points across overlapping tiles",
+        "container": "Sorting",
+        "novel": false
+      },
+      {
+        "name": "Tile Merge Unit",
+        "role": "merges tiles with few intersections to balance workload across tiles (workload-imbalance augmentation)",
+        "container": "Sorting",
+        "novel": true
+      },
+      {
+        "name": "Tile-Point Accumulator",
+        "role": "accumulates per-tile intersection counts inside the Tile Merge Unit",
+        "container": "Tile Merge Unit",
+        "novel": true
+      },
+      {
+        "name": "Tile ID Reassignment",
+        "role": "compares accumulated counts against threshold beta and assigns merged-tile IDs",
+        "container": "Tile Merge Unit",
+        "novel": true
+      },
+      {
+        "name": "Double Buffer",
+        "role": "baseline double buffer staging tiles into the sorting unit",
+        "container": "Sorting",
+        "novel": false
+      },
+      {
+        "name": "Hierarchical Sorting Unit",
+        "role": "baseline unit that sorts Gaussian points within tiles",
+        "container": "Sorting",
+        "novel": false
+      },
+      {
+        "name": "Volume Rendering Core",
+        "role": "rasterization core that blends Gaussian samples into pixel colors, augmented to support foveated blending",
+        "container": "Rasterization",
+        "novel": false
+      },
+      {
+        "name": "Gau. Sample",
+        "role": "baseline unit reading a Gaussian sample for rasterization",
+        "container": "Volume Rendering Core",
+        "novel": false
+      },
+      {
+        "name": "α-Comp.",
+        "role": "baseline alpha-compositing unit",
+        "container": "Volume Rendering Core",
+        "novel": false
+      },
+      {
+        "name": "T-Comp.",
+        "role": "baseline transmittance-compositing unit",
+        "container": "Volume Rendering Core",
+        "novel": false
+      },
+      {
+        "name": "RGB Accum.",
+        "role": "baseline RGB color accumulation unit",
+        "container": "Volume Rendering Core",
+        "novel": false
+      },
+      {
+        "name": "Blend",
+        "role": "interpolates colors rendered at two quality levels for a pixel (FR augmentation)",
+        "container": "Volume Rendering Core",
+        "novel": true
+      },
+      {
+        "name": "DRAM",
+        "role": "shared memory accessed by all three pipeline stages",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Projection, Culling & Conversion",
+        "to": "Line Buf.",
+        "what": "projected/culled points",
+        "step": null
+      },
+      {
+        "from": "Fov Filter",
+        "to": "Line Buf.",
+        "what": "filtered points passing the quality-bound test",
+        "step": null
+      },
+      {
+        "from": "Line Buf.",
+        "to": "Duplication Unit",
+        "what": "buffered points",
+        "step": null
+      },
+      {
+        "from": "Duplication Unit",
+        "to": "Tile Merge Unit",
+        "what": "duplicated per-tile points",
+        "step": null
+      },
+      {
+        "from": "Tile Merge Unit",
+        "to": "Double Buffer",
+        "what": "merged tiles",
+        "step": null
+      },
+      {
+        "from": "Double Buffer",
+        "to": "Hierarchical Sorting Unit",
+        "what": "buffered tiles",
+        "step": null
+      },
+      {
+        "from": "Hierarchical Sorting Unit",
+        "to": "Line Buf.",
+        "what": "sorted points",
+        "step": null
+      },
+      {
+        "from": "Line Buf.",
+        "to": "Volume Rendering Core",
+        "what": "sorted points for rasterization",
+        "step": null
+      },
+      {
+        "from": "Gau. Sample",
+        "to": "α-Comp.",
+        "what": "sampled Gaussian",
+        "step": null
+      },
+      {
+        "from": "α-Comp.",
+        "to": "T-Comp.",
+        "what": "alpha-composited value",
+        "step": null
+      },
+      {
+        "from": "T-Comp.",
+        "to": "RGB Accum.",
+        "what": "transmittance-composited value",
+        "step": null
+      },
+      {
+        "from": "RGB Accum.",
+        "to": "Blend",
+        "what": "accumulated color at a quality level",
+        "step": null
+      },
+      {
+        "from": "Projection",
+        "to": "DRAM",
+        "what": "memory accesses",
+        "step": null
+      },
+      {
+        "from": "Sorting",
+        "to": "DRAM",
+        "what": "memory accesses",
+        "step": null
+      },
+      {
+        "from": "Rasterization",
+        "to": "DRAM",
+        "what": "memory accesses",
+        "step": null
+      }
+    ],
+    "key_idea": "MetaSapiens augments GSCore's baseline three-stage PBNR pipeline with a Fov Filter and a Blend unit (yellow) to support foveated rendering, and a Tile Merge Unit (blue) to fix workload imbalance across tiles.",
+    "reading_order": "Left to right through the three labeled stages (Projection, Sorting, Rasterization), each connected via line buffers, with a shared DRAM bus running along the bottom."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.92,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bfbfff",
+        "used_for": "light blue/lavender fill for the Tile Merge Unit (workload-imbalance augmentation) and buffer grid cells"
+      },
+      {
+        "hex": "#ffd489",
+        "used_for": "orange/gold fill for FR augmentations: Fov Filter, the Volume Rendering Core region, and the Blend unit"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill for baseline GSCore pipeline components"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on all boxes and connectors",
+    "font": "HelveticaNeue sans-serif, 5-9pt, medium weight for stage headers and unit titles",
+    "corners": "mixed",
+    "arrows": "solid black orthogonal arrows for the pipelined data path, double-headed arrows marking stage boundaries and DRAM access",
+    "icons": "small logic-style glyphs (comparators, multiplexers, adders/counters) inside the Fov Filter and Tile Merge Unit"
+  },
+  "encoding": {
+    "color_means": "yellow/orange = hardware augmentations added to support Foveated Rendering (Fov Filter, Blend), blue/lavender = hardware augmentations added to address workload imbalance (Tile Merge Unit), white/uncolored = baseline GSCore pipeline components",
+    "line_style_means": "solid black arrows show the point/tile data path through Projection, Sorting, and Rasterization; double arrows mark stage boundaries and the shared DRAM bus",
+    "emphasis": "color-coding isolates exactly which hardware blocks are the paper's contribution against an otherwise uncolored GSCore baseline pipeline",
+    "reusable_patterns": [
+      "three-stage hardware pipeline with a shared memory bus underneath",
+      "color-coding baseline vs. two distinct categories of augmentation"
+    ],
+    "weaknesses": [
+      "dense internal logic (comparators, counters, muxes) inside Fov Filter and Tile Merge Unit is small and text-heavy",
+      "no in-figure legend explicitly mapping yellow/blue to FR vs. workload-imbalance, relying on the caption"
+    ]
+  },
+  "tags": [
+    "neural-rendering",
+    "gaussian-splatting",
+    "hardware-accelerator",
+    "foveated-rendering",
+    "load-balancing",
+    "pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Hardware Support (p.8)"
+    ],
+    "evidence": [
+      "Fig. 8 shows the pipelined architecture, with the colored components denoting our augmentations.",
+      "The augmentations are colored in yellow in Fig. 8.",
+      "The corresponding hardware components are blue-colored in Fig. 8."
+    ]
+  },
+  "summary": "This figure shows the hardware architecture of MetaSapiens's point-based neural rendering (PBNR) accelerator, built on the three-stage GSCore pipeline (Projection, Sorting, Rasterization) connected through line buffers and a shared DRAM bus. Baseline GSCore components are left uncolored (white): Projection/Culling/Conversion, Duplication Unit, Double Buffer, Hierarchical Sorting Unit, and the Gau. Sample/alpha-Comp./T-Comp./RGB Accum. chain in the Volume Rendering Core. MetaSapiens adds two categories of augmentation, distinguished by color: yellow components (a Fov Filter in Projection and a Blend unit in Rasterization) support foveated rendering by filtering points against a per-tile quality bound and interpolating colors across quality levels; a blue component (the Tile Merge Unit in Sorting, containing a Tile-Point Accumulator and Tile ID Reassignment logic) merges low-intersection tiles to reduce pipeline stalls from workload imbalance. The figure is laid out as a left-to-right hardware pipeline with stage headers and a DRAM bus spanning the bottom.",
+  "summary_zh": "该图展示 MetaSapiens 基于 GSCore 三级流水线（投影、排序、光栅化）的硬件架构：黄色部件（Fov Filter、Blend）为支持中心凹渲染新增，蓝色部件（Tile Merge Unit）用于缓解瓦片工作负载不均衡，白色为原有 GSCore 基线组件。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

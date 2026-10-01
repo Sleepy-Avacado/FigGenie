@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-133_fig1",
+  "paper_id": "nsdi26-133",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: A common service mesh architecture.",
+  "corpus_template": "other",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.48,
+  "n_components": 13,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-133/nsdi26-133_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-133/nsdi26-133_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "The bottom half draws two Node boxes as identical Ingress-gateway/Pod, Virtual-switch, NIC stacks, linked by orange inter-node and yellow intra-node paths labelled Path 1 and Path 2, the double-column full-stack variant.",
+      "what_to_learn": "Stack each mirrored side as gateway/pod over virtual switch over NIC, and colour the two kinds of crossing path differently, orange for inter-node, yellow for intra-node, so a reader sees at a glance which path a request re-traverses the network stack; keep the busy per-pod annotations and legend from crowding the main stack shape."
+    }
+  ]
+}

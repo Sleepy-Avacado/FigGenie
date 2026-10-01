@@ -1,0 +1,300 @@
+{
+  "paper_id": "osdi25-031",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "DecDEC",
+    "one_liner": "a systems approach to low-bit LLM quantization that speeds up GPU inference with an approximate channel-selection step",
+    "domain": [
+      "LLM-inference",
+      "quantization",
+      "GPU-systems"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how DecDEC approximates global top-K channel selection using per-chunk bucket-based sampling of activation elements",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "X",
+        "kind": "label",
+        "role": "the input activation vector being partitioned into chunks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "d_in (= 4096)",
+        "kind": "label",
+        "role": "total dimensionality of the input activation vector spanning all four chunks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Chunk 0",
+        "kind": "box",
+        "role": "first 1024-dimensional contiguous slice of the input vector, colour-coded red",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Chunk 1",
+        "kind": "box",
+        "role": "second 1024-dimensional chunk, colour-coded orange",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Chunk 2",
+        "kind": "box",
+        "role": "third 1024-dimensional chunk, colour-coded yellow",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Chunk 3",
+        "kind": "box",
+        "role": "fourth 1024-dimensional chunk, colour-coded green; zoomed into panel (b)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Bucket-based Approximate Top-K",
+        "kind": "box",
+        "role": "per-chunk local top-k_chunk selection block, one instance per chunk, colour-matched to its chunk",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "sc_indices",
+        "kind": "label",
+        "role": "row label for the concatenated output array of locally selected indices",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "k_chunk (= 32)",
+        "kind": "label",
+        "role": "number of elements locally selected from each chunk",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "k (= 128)",
+        "kind": "label",
+        "role": "total number of elements selected across all four chunks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bucket 0",
+        "kind": "slot",
+        "role": "first magnitude bucket, holding the largest-magnitude elements, range [b0^k, infinity)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bucket 1",
+        "kind": "slot",
+        "role": "second magnitude bucket, range [b1^k, b2^k)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bucket 8",
+        "kind": "slot",
+        "role": "eighth magnitude bucket, range [b8^k, b9^k)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bucket 9",
+        "kind": "slot",
+        "role": "boundary bucket where the running count exceeds the remaining k_chunk slots, forcing random selection",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Bucket 31",
+        "kind": "slot",
+        "role": "last, widest magnitude bucket, range [0, b30^k)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "30",
+        "kind": "label",
+        "role": "worked count of elements gathered from buckets 0 through 8 before the fill step",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Chunk 0",
+        "to": "Bucket-based Approximate Top-K",
+        "what": "each chunk's 1024 elements feed its own local top-k_chunk selection block",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Bucket-based Approximate Top-K",
+        "to": "sc_indices",
+        "what": "the k_chunk locally selected indices from each chunk are concatenated into the final sc_indices array",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Chunk 3",
+        "to": "Bucket 0",
+        "what": "zoom callout expanding one chunk's top-K block into its per-bucket scatter/gather/fill process",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "Bucket 0",
+        "to": "30",
+        "what": "elements are gathered starting from bucket 0 until the running total reaches k_chunk",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Bucket 9",
+        "to": "30",
+        "what": "when bucket 9's count would exceed the remaining slots, the remainder is filled by random selection",
+        "kind": "data",
+        "step": "3"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "buckets",
+        "what": "the 1024 elements in a chunk are scattered into buckets based on their magnitudes",
+        "carries": "chunk elements (activation values)"
+      },
+      {
+        "marker": "2",
+        "at": "Bucket 0",
+        "what": "elements are gathered starting from bucket 0 until the total reaches k_chunk",
+        "carries": "bucket contents up to the k_chunk count"
+      },
+      {
+        "marker": "3",
+        "at": "Bucket 9",
+        "what": "if a bucket's element count exceeds the remaining spots for k_chunk, random selection fills the remainder",
+        "carries": "randomly selected elements from the boundary bucket"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "DecDEC approximates global top-K selection by splitting the input into independent chunks and, within each chunk, scattering elements into magnitude buckets, then gathering from low buckets and randomly filling any boundary bucket.",
+    "reading_order": "Left to right across the four coloured chunks and top-K blocks in (a) to sc_indices, then via the dashed zoom callout into (b)'s numbered scatter, gather, and fill steps."
+  },
+  "layout": {
+    "arrangement": "inset",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "callout",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": true,
+    "panels": 2,
+    "column": "double",
+    "aspect": 2.94,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "fill of Chunk 0 and its Bucket-based Top-K block"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "fill of Chunk 1 and its Bucket-based Top-K block"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "fill of Chunk 2 and its Bucket-based Top-K block"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "fill of Chunk 3 and its Bucket-based Top-K block"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "dark-grey text and bracket lines for d_in, 1024, k, and k_chunk labels"
+      },
+      {
+        "hex": "#252525",
+        "used_for": "darkest greyscale fill on the most-populated bucket/gather-bar cells"
+      },
+      {
+        "hex": "#949494",
+        "used_for": "mid-grey fill on moderately populated bucket/gather-bar cells"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light-grey fill on sparsely populated bucket cells"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of near-empty bucket boxes such as Bucket 0"
+      }
+    ],
+    "background": "white, with a pale mint-green panel background behind the zoomed inset (b)",
+    "fill": "flat",
+    "stroke": "thin strokes (median ~0.6pt) with dashed outlines on sparsely filled bucket boxes and the zoom-callout brackets",
+    "corners": "mixed",
+    "arrows": "thin black arrows and curved lines tracing the scatter/gather flow and the zoom callout",
+    "font": "sans (Calibri, Cambria Math for subscripted variables), bold for chunk and box headers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "colour identifies which of the four chunks (and its matching top-K block) an element belongs to; greyscale shading of bucket and gather-bar cells encodes how many elements each bucket holds",
+    "line_style_means": "dashed lines form the zoom callout from chunk 3 to its expanded view in (b) and outline sparsely filled bucket slots; solid arrows trace the scatter/gather data flow",
+    "state_means": "not applicable - the figure shows one process rather than alternative or before/after states",
+    "marker_means": "the three circled numbers label the order of the scatter, gather, and fill sub-steps inside the zoomed bucket view",
+    "emphasis": "the dashed zoom-callout brackets and pale-green panel isolate and enlarge the single chunk's bucket process that the text walks through",
+    "reusable_patterns": [
+      "a coloured array split feeding identical per-chunk processing blocks, with one block zoomed into a numbered step-by-step inset"
+    ],
+    "weaknesses": [
+      "bucket boundaries are shown only as symbolic subscripts (b0^k, b1^k, ...) without numeric values, so the exact bucketing rule must be read from the text",
+      "ellipses hide most of the 32 buckets, so only 5 are individually labelled"
+    ]
+  },
+  "tags": [
+    "LLM-quantization",
+    "Top-K-selection",
+    "GPU-kernel",
+    "approximate-algorithm",
+    "bucket-sort",
+    "DecDEC"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 DecDEC Design"
+    ],
+    "evidence": [
+      "DecDEC employs an approximate Top-K method that is fast and GPU-friendly while maintaining precision.",
+      "DecDEC partitions the input into four contiguous 1024-dimensional chunks and performs a local Top-kchunk selection",
+      "the 1024 elements in a chunk are scattered into buckets based on their magnitudes"
+    ]
+  },
+  "summary": "Figure 8 shows the fast approximate Top-K operation DecDEC uses for channel selection during low-bit LLM quantization, avoiding an expensive exact global Top-K. Panel (a) partitions the 4096-dimensional input activation vector X into four independent 1024-dimensional chunks (Chunk 0-3, colour-coded red/orange/yellow/green); each chunk runs its own Bucket-based Approximate Top-K block to locally select k_chunk = 32 elements per chunk, and the four local results are concatenated into the 128-element sc_indices array, trading a small approximation error for avoiding global synchronization across chunks. Panel (b) zooms into one chunk's bucket-based selection: elements are first scattered into 32 magnitude buckets (step 1), then gathered starting from bucket 0 until the k_chunk quota is reached (step 2), and finally, when a boundary bucket such as bucket 9 would overflow the remaining quota, the leftover slots are filled by random selection from that bucket (step 3).",
+  "summary_zh": "图8展示DecDEC为通道选择设计的快速近似Top-K：(a)将4096维向量分成4个1024维块，各块本地选32个元素后拼接成128维索引；(b)放大展示单块内按数值分桶、从0号桶收集、若超额则随机补足的三步过程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

@@ -1,0 +1,64 @@
+{
+  "id": "asplos26-047_fig7",
+  "kind": "mechanism",
+  "paper_id": "asplos26-047",
+  "fig": "7",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 7. (a) Circuit diagram showing two shared-control Toffoli gates, where 𝜌(𝑘) 𝑖 denotes the 𝑘-th qubit of state 𝜌𝑖. Both Toffoli gates utilize the optimal decomposition from [2]’s Fig. 7a. (b) Commutation rules enabling backward propagation of CNOTs and single-qubit gates from the sec- ond Toff",
+  "groups_in_record": [
+    "anatomy",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "timeline",
+  "subject": "how two shared-control Toffoli gates are decomposed, reordered via commutation rules, and parallelized into Fanout gates",
+  "arrangement": "panels-grid",
+  "panel_count": 3,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.97,
+  "n_elements": 9,
+  "n_relations": 4,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-047/src/fig7_parallel_toffoli.svg",
+    "preview.png": "lab/extracted/asplos26-047/src/fig7_parallel_toffoli.png",
+    "print.png": "lab/extracted/asplos26-047/asplos26-047_fig7_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Two Toffoli gates sharing one control qubit would normally run sequentially; decomposing each into T-gates and then using commutation rules to push matching-control CNOTs together turns them into parallel Fanout gates, cutting circuit depth without changing the T-depth.",
+      "what_to_learn": "consistent two-colour shading tracking which of two originally-sequential operations a gate belongs to, carried across multiple panels of a derivation; a small 'rule' panel of equivalent circuit fragments used to justify a reordering applied in a following panel; a numbered step axis over a quantum circuit to make parallel execution explicit",
+      "note_source": "record"
+    },
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Two Toffoli gates sharing one control qubit would normally run sequentially; decomposing each into T-gates and then using commutation rules to push matching-control CNOTs together turns them into parallel Fanout gates, cutting circuit depth without changing the T-depth.",
+      "what_to_learn": "consistent two-colour shading tracking which of two originally-sequential operations a gate belongs to, carried across multiple panels of a derivation; a small 'rule' panel of equivalent circuit fragments used to justify a reordering applied in a following panel; a numbered step axis over a quantum circuit to make parallel execution explicit",
+      "note_source": "record"
+    }
+  ]
+}

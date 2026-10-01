@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-106_fig2",
+  "paper_id": "nsdi24-106",
+  "fig": "2",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 2: The system architecture of Habitus.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.71,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-106/nsdi24-106_fig2_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-106/nsdi24-106_fig2_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Sparse, icon-only figure (9 components, no fill colors): a thin dashed Client box sits opposite a heavier Edge box holding all three intelligence modules, split by a plain dashed-vs-solid legend for control versus content data.",
+      "what_to_learn": "Make the size imbalance do the argument for you: draw the thin client as a small box with only two items while every piece of intelligence piles into the edge/host box, and use icon line art with a single dashed-vs-solid legend instead of color when the point is thin-vs-capable, not many flow types."
+    }
+  ]
+}

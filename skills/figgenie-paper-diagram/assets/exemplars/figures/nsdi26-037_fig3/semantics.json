@@ -1,0 +1,293 @@
+{
+  "paper_id": "nsdi26-037",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "NETNOMOS",
+    "one_liner": "makes logic a first-class citizen in generative ML for networking by learning first-order-logic constraints from network data",
+    "domain": [
+      "networking",
+      "generative-ML",
+      "formal-constraints"
+    ],
+    "abstraction": "learning-algorithm"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how NETNOMOS's branch-and-bound search finds minimal hitting sets over clauses' evidence sets, learning, deduping, and pruning",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Evidence Sets for 6 clauses on 5 examples",
+        "kind": "label",
+        "role": "worked-example table giving the concrete evidence set (example indices) each clause c0-c5 satisfies",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H:=∅, M:={0,1,2,3,4}, Rank(C,M)=[c0,c5,c2,c4,c1,c3]",
+        "kind": "node",
+        "role": "root search state before any clause is chosen, with clauses ranked by cover",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Learned {c0}",
+        "kind": "node",
+        "role": "terminal node where branching on c0 alone hits every example, yielding a minimal hitting set",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "H:={c5}, M:={1,2}, Rank(C,M)=[c2,c4]",
+        "kind": "node",
+        "role": "intermediate state after branching on c5, with two examples still uncovered",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Learned {c5,c2}",
+        "kind": "node",
+        "role": "terminal node where a further branch on c2 empties M, yielding a second minimal hitting set",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "H:={c5,c4}, M:={1}, Rank(C,M)=[c2]",
+        "kind": "node",
+        "role": "intermediate state after branching on c4 instead of c2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Non-minimal {c5,c4,c2}",
+        "kind": "node",
+        "role": "terminal node that empties M but is a superset of an already-learned set, so it is discarded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H:={c2}, M:={0,3,4}, Rank(C,M)=[c5,c1,c3,c4]",
+        "kind": "node",
+        "role": "alternate top-level branch after choosing c2 first instead of c0/c5",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Dedupe {c2,c5}",
+        "kind": "node",
+        "role": "terminal node that reaches the same set as {c5,c2} via a different branch order and is deduplicated",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "H:={c2,c1}, M:={0,3,4}, Rank(C,M)=[c5,c3,c4]",
+        "kind": "node",
+        "role": "further branch on c1 whose remaining children are pruned",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bounding: s - |H| < |M|/ψ",
+        "kind": "label",
+        "role": "the optimistic-bound inequality that prunes the c5/c3/c4 subtree without expanding it",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "H:=∅, M:={0,1,2,3,4}, Rank(C,M)=[c0,c5,c2,c4,c1,c3]",
+        "to": "Learned {c0}",
+        "what": "branch on pivot c0",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "H:=∅, M:={0,1,2,3,4}, Rank(C,M)=[c0,c5,c2,c4,c1,c3]",
+        "to": "H:={c5}, M:={1,2}, Rank(C,M)=[c2,c4]",
+        "what": "branch on pivot c5",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "H:=∅, M:={0,1,2,3,4}, Rank(C,M)=[c0,c5,c2,c4,c1,c3]",
+        "to": "H:={c2}, M:={0,3,4}, Rank(C,M)=[c5,c1,c3,c4]",
+        "what": "branch on pivot c2",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "H:={c5}, M:={1,2}, Rank(C,M)=[c2,c4]",
+        "to": "Learned {c5,c2}",
+        "what": "branch on c2",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "H:={c5}, M:={1,2}, Rank(C,M)=[c2,c4]",
+        "to": "H:={c5,c4}, M:={1}, Rank(C,M)=[c2]",
+        "what": "branch on c4",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "H:={c5,c4}, M:={1}, Rank(C,M)=[c2]",
+        "to": "Non-minimal {c5,c4,c2}",
+        "what": "branch on c2",
+        "kind": "control",
+        "step": "4"
+      },
+      {
+        "from": "H:={c2}, M:={0,3,4}, Rank(C,M)=[c5,c1,c3,c4]",
+        "to": "Dedupe {c2,c5}",
+        "what": "branch on c5",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "H:={c2}, M:={0,3,4}, Rank(C,M)=[c5,c1,c3,c4]",
+        "to": "H:={c2,c1}, M:={0,3,4}, Rank(C,M)=[c5,c3,c4]",
+        "what": "branch on c1",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "H:={c2,c1}, M:={0,3,4}, Rank(C,M)=[c5,c3,c4]",
+        "to": "Bounding: s - |H| < |M|/ψ",
+        "what": "candidate branches c5, c3, c4 are all pruned by the bound",
+        "kind": "control",
+        "step": "5"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "root node",
+        "what": "clauses are ranked by cover to choose the first pivot",
+        "carries": "Rank(C,M) = [c0,c5,c2,c4,c1,c3]"
+      },
+      {
+        "marker": "2",
+        "at": "branch on c0",
+        "what": "branching on the highest-cover clause c0 hits every example immediately, so {c0} is learned as a minimal hitting set",
+        "carries": "H={c0}, M=∅"
+      },
+      {
+        "marker": "3",
+        "at": "branch on c5 then c2",
+        "what": "a different pivot choice (c5) leaves M={1,2}; branching further on c2 empties M, learning a second minimal hitting set",
+        "carries": "H={c5,c2}, M=∅"
+      },
+      {
+        "marker": "4",
+        "at": "branch on c5, c4, then c2",
+        "what": "continuing to branch on c4 then c2 from the c5 node also empties M, but the result is a superset of an already-learned set, so it is discarded",
+        "carries": "H={c5,c4,c2}, M=∅"
+      },
+      {
+        "marker": "5",
+        "at": "branch on c2, c1, then c5/c3/c4",
+        "what": "the optimistic bound ψ=max cover(c) shows no descendant of this branch can beat what is already found, so the remaining subtree is pruned",
+        "carries": "s-|H| < |M|/ψ"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "concrete H/M set values and Rank(C,M) clause orderings written directly in every tree node, plus the Evidence Sets table (Ec0-Ec5) giving each clause's covered example indices",
+      "linked_by": "position: each value is written inside the search-tree node it belongs to, and the evidence-set table sits in its own corner box",
+      "result_cells": "terminal nodes are labelled directly beneath the box with their outcome (Learned {...}, Dedupe {...}, or Non-minimal {...})"
+    },
+    "key_idea": "NETNOMOS finds every minimal hitting set by ranking clauses by cover and branching on the top pivot at each node, learning a hitting set whenever the uncovered-example set empties, deduping sets reached twice, discarding non-minimal supersets, and pruning subtrees an optimistic bound proves cannot improve on what is already found.",
+    "reading_order": "top-down and left-to-right through the tree: the root's ranked clause list (1), the leftmost c0 branch that learns {c0} immediately (2), the c5 branch that learns {c5,c2} after one more split (3), a further c4/c2 split yielding a discarded non-minimal set (4), and the rightmost c2/c1 branch pruned by the bounding inequality (5); the evidence-set table in the top-right corner supplies the concrete values every Rank/M computation uses"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.87,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the plain (non-terminal) search-tree node boxes"
+      },
+      {
+        "hex": "#cce5ff",
+        "used_for": "light-blue fill of the terminal boxes marking a hitting set that was Learned or Deduped"
+      },
+      {
+        "hex": "#ffcc99",
+        "used_for": "pale-orange fill of the horizontal bar marking the branches pruned by the Bounding rule"
+      },
+      {
+        "hex": "#ff8000",
+        "used_for": "orange text/arrow for the 'Branching' callout and the 'Bounding' inequality label"
+      },
+      {
+        "hex": "#330000",
+        "used_for": "dark maroon fill of the five circled step-number badges"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black tree edges and box outlines; one curved dashed orange arrow",
+    "corners": "mixed",
+    "arrows": "thin solid black lines connecting parent to child tree nodes, each labelled by the clause pivoted on; one dashed orange arrow annotating 'Branching'",
+    "font": "serif (Times New Roman), ~7-8pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "white marks an ordinary intermediate search node; light blue marks a terminal node where a minimal hitting set was learned or a duplicate deduped; pale orange marks the branches eliminated by the bounding rule; orange text calls out the two named mechanics, Branching and Bounding",
+    "line_style_means": "solid black edges are ordinary branch-and-bound tree edges, each labelled by the clause branched on; the one dashed orange arrow is an explanatory callout rather than a tree edge",
+    "state_means": "not applicable in the FSM sense; the tree's own nodes already show every H/M state reached, so 'before/after' is simply parent vs child node",
+    "marker_means": "five dark circled numbers 1-5 order the worked trace through the tree: ranking, first learned set, second learned set, a discarded non-minimal set, and the bounding prune",
+    "emphasis": "light-blue fill picks out exactly the nodes that matter to the algorithm's output (learned or deduped hitting sets) against a tree of otherwise-white intermediate states",
+    "reusable_patterns": [
+      "a branch-and-bound search tree with concrete H/M/Rank values written directly in each node, terminal outcomes colour-coded, and circled numbers walking a reader through one representative root-to-leaf trace",
+      "a small worked evidence-set table in the corner supplying the concrete data every node's computation refers back to"
+    ],
+    "weaknesses": [
+      "much of the tree's right side is elided with '...' marks, so the reader must extrapolate the Dedupe and Bounding outcomes for branches not fully drawn"
+    ]
+  },
+  "tags": [
+    "NETNOMOS",
+    "branch-and-bound",
+    "minimal-hitting-set",
+    "FOL-constraints",
+    "rule-learning",
+    "search-tree"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Extracting Knowledge from Network Data"
+    ],
+    "evidence": [
+      "In Fig. 3, six clauses c0–c5 and five examples (0–4) yield six sets E0–E5.",
+      "For example, c0 is chosen first, producing H = c0 which hits all examples",
+      "branching on c5 yields M = {1,2}, and further branching on c2 produces another hitting set"
+    ]
+  },
+  "summary": "This figure walks through NETNOMOS's branch-and-bound search for minimal hitting sets over six clauses (c0-c5) and five examples, using the concrete evidence sets shown in the top-right table (e.g. Ec0={0,1,2,3,4}, Ec1={3}). At the root (1), clauses are ranked by cover to choose a pivot. Branching on the top clause c0 (2) immediately covers every example, learning {c0} as a minimal hitting set. A different branch on c5, then c2 (3), also empties the uncovered set M and learns a second set, {c5,c2}. Continuing that branch through c4 then c2 (4) reaches a superset of an existing set, so it is discarded as non-minimal. On the tree's other side, after branching on c2 and c1, an optimistic bound psi shows no further split can improve on what is already found, so the remaining branches (c5, c3, c4) are pruned (5).",
+  "summary_zh": "该图走读NETNOMOS分支定界法在6子句5样例中找最小命中集：①排序子句；②分支c0命中全部学得{c0}；③分支c5、c2学得{c5,c2}；④再分支得非最小集被丢弃；⑤乐观上界剪枝剩余分支。",
+  "confidence": "high",
+  "notes": "worked_example corrected from the prior label's False to True: every tree node writes out concrete H/M/Rank set values and the figure includes a worked evidence-set table (Ec0-Ec5); removing those concrete values would leave the tree empty, which is exactly the marker's test.",
+  "venue": "NSDI26"
+}

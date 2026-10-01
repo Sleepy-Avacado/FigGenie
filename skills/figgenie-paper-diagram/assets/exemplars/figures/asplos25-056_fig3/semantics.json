@@ -1,0 +1,180 @@
+{
+  "paper_id": "asplos25-056",
+  "fig": "3",
+  "system": {
+    "name": "pulse",
+    "one_liner": "a distributed pointer-traversal framework for rack-scale disaggregated memory that accelerates linked-data-structure traversals near memory",
+    "domain": [
+      "distributed-systems",
+      "hardware-accelerators",
+      "networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Applications",
+        "role": "application code that uses data structures via the library",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Data Structure Library using PULSE Iterators",
+        "role": "library where developers express pointer traversals through pulse's iterator interface",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Dispatch Engine",
+        "role": "translates iterator code into pulse ISA instructions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CPU Node",
+        "role": "host node issuing translated traversal requests over the network",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Network",
+        "role": "programmable-switch interconnect routing requests between CPU nodes and memory nodes, enabling distributed continuation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Memory Node",
+        "role": "disaggregated memory node containing a pulse accelerator",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "PULSE Accelerator",
+        "role": "accelerator at each memory node that executes pulse ISA instructions and performs distributed continuation across node boundaries",
+        "container": "Memory Node",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Applications",
+        "to": "Data Structure Library using PULSE Iterators",
+        "what": "calls into the data-structure library",
+        "step": null
+      },
+      {
+        "from": "Data Structure Library using PULSE Iterators",
+        "to": "Dispatch Engine",
+        "what": "iterator code to translate",
+        "step": null
+      },
+      {
+        "from": "Dispatch Engine",
+        "to": "CPU Node",
+        "what": "translated PULSE ISA instructions",
+        "step": null
+      },
+      {
+        "from": "CPU Node",
+        "to": "Network",
+        "what": "code with computation limit",
+        "step": null
+      },
+      {
+        "from": "Network",
+        "to": "Memory Node",
+        "what": "routed traversal requests",
+        "step": null
+      },
+      {
+        "from": "Memory Node",
+        "to": "Memory Node",
+        "what": "distributed continuation of a traversal crossing node boundaries",
+        "step": null
+      }
+    ],
+    "key_idea": "Developers express pointer traversals via pulse's iterator interface, which the dispatch engine compiles to a pulse ISA executed by in-network accelerators at each disaggregated memory node.",
+    "reading_order": "Left to right: application and library code on CPU nodes are translated by the dispatch engine, sent across the network to accelerators embedded at each memory node."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 5.73,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#003776",
+        "used_for": "dark-navy fill of the Dispatch Engine box with bold white text"
+      },
+      {
+        "hex": "#bfffbf",
+        "used_for": "pale-green fill of the CPU Node boxes and the PULSE Accelerator box"
+      },
+      {
+        "hex": "#bfffff",
+        "used_for": "pale-cyan fill of the Data Structure Library using PULSE Iterators box"
+      },
+      {
+        "hex": "#ffe8c8",
+        "used_for": "pale-peach fill of the Memory Node boxes"
+      },
+      {
+        "hex": "#ffdab9",
+        "used_for": "pale-tan accent fill within the Memory Node boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.4pt; dotted rule under the 'Code w/ computation limit' annotation and thin node-group borders",
+    "corners": "square",
+    "arrows": "thin orthogonal and a few curved arrows with open/filled heads connecting stages left to right",
+    "font": "ArialMT / Helvetica Neue sans-serif, 4.5-16pt, larger bold text for Dispatch Engine and PULSE Accelerator labels",
+    "icons": "vector document icon for Applications, a mesh/switch icon for Network, small memory-chip icons inside the Memory Node boxes"
+  },
+  "encoding": {
+    "color_means": "navy marks the dispatch/translation stage; green marks CPU-side nodes and the accelerator; peach marks memory nodes; cyan marks the iterator library",
+    "line_style_means": "a dotted line under 'Code w/ computation limit' marks the boundary of what a CPU node sends into the network; ellipses indicate repetition of CPU/Memory nodes",
+    "emphasis": "section references (§3, §4.1, §4.2, §5) placed next to each component tie the diagram directly to where each part is explained in the text",
+    "reusable_patterns": [
+      "thin end-to-end pipeline strip from a developer-facing library down to an in-network accelerator",
+      "section-number callouts co-located with each architectural stage"
+    ],
+    "weaknesses": [
+      "very wide aspect ratio compresses each stage into a small area",
+      "repetition of CPU Node / Memory Node is shown only via ellipsis rather than an explicit count"
+    ]
+  },
+  "tags": [
+    "disaggregated-memory",
+    "pointer-traversal",
+    "near-memory-computing",
+    "in-network-computing",
+    "accelerator",
+    "distributed-systems"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Motivation and pulse Overview (p.4)"
+    ],
+    "evidence": [
+      "pulse innovates on three key design elements (Fig. 3).",
+      "The iterator code provided by the data structure developer is translated into pulse's instruction set architecture",
+      "pulse supports scalable distributed pointer traversals by leveraging programmable network switches"
+    ]
+  },
+  "summary": "pulse is a distributed pointer-traversal framework for rack-scale disaggregated memory. This figure gives an end-to-end overview of its three key design elements. On the left, application code sits atop a data-structure library that exposes pulse's iterator interface, letting developers port linked-data-structure traversals with minimal effort; a dispatch engine then translates that iterator code into pulse's instruction set architecture (ISA), running on CPU nodes. The translated code, bounded by a computation limit, crosses a network built from programmable switches, which route requests to the appropriate memory node. Each memory node embeds a PULSE Accelerator that executes the ISA instructions using disaggregated logic and memory pipelines, and, when a traversal's target address is not local, hands the request back to the switch for distributed continuation to the correct memory node. Section-number callouts (§3, §4.1, §4.2, §5) tie each stage to where it is detailed in the text.",
+  "summary_zh": "该图展示pulse总览：应用经PULSE迭代器数据结构库表达指针遍历，调度引擎翻译为PULSE ISA指令，经可编程交换机网络路由到各内存节点；节点上的加速器执行指令并支持跨节点分布式延续遍历。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

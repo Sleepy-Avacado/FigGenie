@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-085_fig2",
+  "paper_id": "osdi26-085",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: Two solutions employed in services of RedNote.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.4,
+  "n_components": 7,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-085/osdi26-085_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-085/osdi26-085_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star, sparse-text exemplar of identical internal geometry across (a)/(b): the same stacked-card graph-index drawing convention and blue/red/gray search-path colour code repeat in both panels so only the storage tier differs.",
+      "what_to_learn": "When comparing two prior designs, redraw the same graph-index glyph and the same colour code (blue = visited path, red = top-k result, gray = unvisited) in each panel, changing only the storage medium each graph sits on."
+    }
+  ]
+}

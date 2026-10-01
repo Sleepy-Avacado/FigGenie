@@ -1,0 +1,207 @@
+{
+  "paper_id": "nsdi23-067",
+  "fig": "4",
+  "system": {
+    "name": "RIBOSOME",
+    "one_liner": "a system that offloads stateful per-packet processing from Tbps programmable switches to server memory over RDMA",
+    "domain": [
+      "networking",
+      "programmable-switches",
+      "rdma"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "programmable switch",
+        "role": "the RIBOSOME switch that splits, stores, and later rebuilds packets around external compute/memory",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "splitter",
+        "role": "separates each incoming packet's header from its payload",
+        "container": "programmable switch",
+        "novel": true
+      },
+      {
+        "name": "header storage",
+        "role": "buffers headers so the switch can later reassemble packets in the intended order",
+        "container": "programmable switch",
+        "novel": true
+      },
+      {
+        "name": "rebuilder",
+        "role": "reconstructs outgoing packets from stored headers and the data returned by external systems",
+        "container": "programmable switch",
+        "novel": true
+      },
+      {
+        "name": "multi-core NF server",
+        "role": "runs the network function (here, a per-flow packet scheduler) on extracted headers across multiple cores",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "core 1",
+        "role": "NF core processing flows A and B, forwarded on port 1",
+        "container": "multi-core NF server",
+        "novel": false
+      },
+      {
+        "name": "core 2",
+        "role": "NF core processing flows C and D, forwarded on port 2",
+        "container": "multi-core NF server",
+        "novel": false
+      },
+      {
+        "name": "RDMA server",
+        "role": "buffers payload data reachable via RDMA while headers are processed elsewhere",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "QP1",
+        "role": "RDMA queue pair used for payload belonging to flows on this connection",
+        "container": "RDMA server",
+        "novel": false
+      },
+      {
+        "name": "QP2",
+        "role": "a second active RDMA queue pair on the same RDMA server",
+        "container": "RDMA server",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "incoming traffic",
+        "to": "splitter",
+        "what": "8 packets from four ports belonging to flows A, B, C, and D",
+        "step": null
+      },
+      {
+        "from": "splitter",
+        "to": "multi-core NF server",
+        "what": "extracted packet headers (dashed orange arrow)",
+        "step": null
+      },
+      {
+        "from": "splitter",
+        "to": "header storage",
+        "what": "original headers retained for later reconstruction",
+        "step": null
+      },
+      {
+        "from": "header storage",
+        "to": "RDMA server",
+        "what": "RDMA read of the buffered payload for the flow (dashed orange arrow)",
+        "step": null
+      },
+      {
+        "from": "multi-core NF server",
+        "to": "rebuilder",
+        "what": "processed header/scheduling decision returned to the switch (solid green arrow)",
+        "step": null
+      },
+      {
+        "from": "RDMA server",
+        "to": "rebuilder",
+        "what": "payload data returned to the switch (solid green arrow)",
+        "step": null
+      },
+      {
+        "from": "header storage",
+        "to": "rebuilder",
+        "what": "stored header combined with the returned data",
+        "step": null
+      },
+      {
+        "from": "rebuilder",
+        "to": "outgoing traffic",
+        "what": "reconstructed packets on port 1 (A,B) and port 2 (C,D)",
+        "step": null
+      }
+    ],
+    "key_idea": "RIBOSOME implements per-flow packet schedulers by splitting headers to a multi-core NF server and payloads to RDMA-addressable server memory, then rebuilding ordered packets in the switch from both.",
+    "reading_order": "Left to right along the switch's splitter-storage-rebuilder pipeline, with dashed arrows dropping down to the NF and RDMA servers and solid arrows returning back up."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.05,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ed7d31",
+        "used_for": "dashed orange arrows carrying data from the switch to external entities (headers to NF cores, reads to the RDMA server)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for flow B packet squares"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "gray fill for flow A packet squares (text calls these 'black' squares)"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "pale blue fill for flow C packet squares"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale green fill for flow D packet squares and the solid arrows returning data to the switch"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines (~0.45pt) on boxes",
+    "font": "sans-serif (Calibri), 7-8pt",
+    "corners": "mixed",
+    "arrows": "dashed orange arrows for switch-to-external traffic, solid green arrows for external-to-switch traffic",
+    "icons": "small NIC icons for the multi-core NF server and the RDMA server"
+  },
+  "encoding": {
+    "color_means": "gray/yellow/blue/green small squares distinguish the four packet flows A, B, C, D",
+    "line_style_means": "dashed orange = switch-to-external (headers to NF cores, RDMA reads to the RDMA server); solid green = external-to-switch (processed headers and fetched payload returning for reconstruction)",
+    "emphasis": "color-coded packets threading through splitter/header-storage/rebuilder plus two external servers shows how RIBOSOME reorders per-flow traffic (A,B on port 1; C,D on port 2) using off-switch compute and memory",
+    "reusable_patterns": [
+      "split header/payload processing with external offload and later reassembly",
+      "per-flow mapping to compute cores and RDMA queue pairs shown with color-coded packets"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "programmable-switch",
+    "packet-scheduling",
+    "rdma",
+    "stateful-processing",
+    "offload",
+    "reordering"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Supporting Advanced Network Functions (p.10)"
+    ],
+    "evidence": [
+      "the RIBOSOME switch receives 8 packets from four ports belonging to four flows",
+      "flows called A (black squares), B (yellow squares), C (blue squares), and D (green squares)",
+      "We use dashed orange (green solid) arrows to denote packets moving from the switch to external entities"
+    ]
+  },
+  "summary": "Figure 4 illustrates how RIBOSOME supports per-flow packet schedulers such as Reframer using a concrete example. The programmable switch's splitter separates each incoming packet's header from its payload; headers are sent to a multi-core NF server (dashed orange arrows) while header storage retains ordering information and issues RDMA reads to an RDMA server holding the payloads. In the example, four flows A, B, C, and D arrive on four ports; A and B are mapped to core 1 of the NF server and leave on port 1, while C and D are mapped to core 2 and leave on port 2. Both servers return their results to the switch's rebuilder over solid green arrows, which reconstructs and reorders the packets (AABB, CCDD) before they exit. The figure uses color-coded packet squares and dashed-versus-solid arrows to distinguish outbound from inbound traffic.",
+  "summary_zh": "图4展示RIBOSOME如何支持逐流调度：交换机将包头与载荷分离，包头送至多核NF服务器处理，载荷经RDMA读写存于RDMA服务器；两者结果回传后由rebuilder按流（A、B到端口1，C、D到端口2）重组转发。",
+  "confidence": "high",
+  "notes": "layout-proposal: switch-pipeline-with-two-offload-peers — a three-stage in-switch pipeline (splitter, header storage, rebuilder) hands off to two side-by-side external systems (multi-core NF server, RDMA server) via paired outbound/inbound arrows, rather than a radial hub-spoke.",
+  "venue": "NSDI23"
+}

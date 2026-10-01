@@ -1,0 +1,118 @@
+{
+  "paper_id": "asplos26-127",
+  "fig": "12",
+  "system": {
+    "name": "CREATE hardware platform",
+    "one_liner": "a 22nm ASIC implementation of the CREATE accelerator combining systolic PE arrays, distributed LDOs, and anomaly detection units",
+    "domain": [
+      "hardware-architecture",
+      "embodied-ai",
+      "energy-efficiency"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Distributed LDO",
+        "role": "low-dropout regulators distributed among the PE arrays to enable localized dynamic voltage scaling",
+        "container": "Post-PnR layout (a)",
+        "novel": true
+      },
+      {
+        "name": "SRAM Buffer",
+        "role": "on-chip SRAM region (142x512KB, 71MB total) buffering weights and activations",
+        "container": "Post-PnR layout (a)",
+        "novel": false
+      },
+      {
+        "name": "PE Array",
+        "role": "128x128 systolic processing-element array with 8-bit multiplier and 24-bit accumulator per PE, augmented with anomaly detection units",
+        "container": "Post-PnR layout (a)",
+        "novel": true
+      },
+      {
+        "name": "LDO",
+        "role": "detailed post-PnR layout of a single LDO instance",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Blocks",
+        "role": "area and power breakdown table listing LDO, AD Unit, PE Array, SRAM and Total",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [],
+    "key_idea": "the full CREATE accelerator, built in a 22nm PDK, interleaves distributed LDOs and anomaly-detection units among systolic PE arrays and SRAM buffers at negligible area/power overhead, achieving a 90ns/50mV transient response when scaling voltage in 10mV steps between 0.6V and 0.9V",
+    "reading_order": "top-left (a) full post-PnR chip layout with Distributed LDO, SRAM Buffer and PE Array regions labelled, zoomed via callout to (b) an individual LDO layout, then (c) the area/power breakdown table, and (d)/(e) voltage-scaling waveforms at full and zoomed timescales at the bottom"
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 5,
+    "column": "single",
+    "aspect": 1.53,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f18f60",
+        "used_for": "highlighted callout box around the Distributed LDO region in the full chip layout"
+      },
+      {
+        "hex": "#f5b091",
+        "used_for": "border/highlight on the zoomed-in LDO layout panel (b)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt strokes, dashed callout line connecting panel (a) to panel (b)",
+    "font": "Arial / Arial-Bold sans-serif, 3.5-6pt",
+    "corners": "square",
+    "arrows": "few thin arrows/leader lines connecting the chip photo to its zoomed LDO detail",
+    "icons": "bitmap, photographic/rendered post-PnR chip layout images occupying most of the figure area"
+  },
+  "encoding": {
+    "color_means": null,
+    "line_style_means": "dashed leader line links the full-chip layout (a) to the zoomed LDO layout (b)",
+    "emphasis": "an orange highlight box on the full chip layout calls out where the small LDO detail in panel (b) is located",
+    "reusable_patterns": [
+      "post-PnR chip micrograph paired with a zoomed circuit-block layout, an area/power breakdown table, and measured waveform panels"
+    ],
+    "weaknesses": [
+      "five distinct panel types (photo, zoom, table, two waveform plots) packed into one single-column figure reduces legibility of individual axis labels"
+    ]
+  },
+  "tags": [
+    "hardware-layout",
+    "asic",
+    "ldo",
+    "voltage-scaling",
+    "systolic-array",
+    "22nm"
+  ],
+  "provenance": {
+    "sections": [
+      "6 Experiments (p.9)",
+      "6 Experiments (p.10)"
+    ],
+    "evidence": [
+      "synthesized with a commercial 22 nm PDK at a nominal 0.9 V supply voltage",
+      "can dynamically scale the PE array voltage from 0.6 V to 0.9 V in 10 mV steps",
+      "achieves 99.8% peak current efficiency and a 90 ns/50 mV transient response time"
+    ]
+  },
+  "summary": "Figure 12 documents the physical hardware platform built to evaluate CREATE end-to-end. Panel (a) is the post-place-and-route layout of the full accelerator (21.5mm x 15.0mm), with Distributed LDO, SRAM Buffer and PE Array regions labelled; panel (b) zooms into a single LDO instance's layout (216um x 196um). Panel (c) is an area and power breakdown table across LDO, AD (anomaly detection) Unit, PE Array, SRAM and Total blocks, showing the LDO and AD Unit add only 0.08-0.14% area/power overhead. Panels (d) and (e) show example voltage-scaling waveforms at full scale (multiple discrete voltage steps over milliseconds) and zoomed in on one transition (a smooth ramp over microseconds), illustrating the LDO's fast 90ns/50mV transient response. Together the panels ground CREATE's algorithmic contributions in a synthesized 22nm silicon implementation.",
+  "summary_zh": "该图展示CREATE硬件平台的物理实现：(a) 完整加速器的后端布局（含分布式LDO、SRAM缓冲区、PE阵列区域标注）；(b) 单个LDO的详细版图；(c) 各模块面积/功耗明细表；(d)(e) 电压调节波形示例（整体时间尺度与瞬态放大），体现LDO和异常检测单元的极低开销及快速响应。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

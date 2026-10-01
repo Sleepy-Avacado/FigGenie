@@ -1,0 +1,54 @@
+{
+  "id": "asplos26-074_fig9",
+  "paper_id": "asplos26-074",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Fig. 9. The overall architecture of HNLPU system. (a) System-level architecture of HNLPU, featuring a logical 4×4 row-column fully-connected fabric to interconnect its 16 modules. (b) Architecture of a single compute module, comprising the core die and HBM.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "pdfresizer",
+  "aspect": 1.45,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-074/src/fig9_arch.svg",
+    "preview.png": "lab/extracted/asplos26-074/src/fig9_arch.png",
+    "print.png": "lab/extracted/asplos26-074/asplos26-074_fig9_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "(a) a 4x4 fully connected chip mesh, (b) one chip enlarged - topology and node internals in one figure.",
+      "what_to_learn": "For mesh/topology figures, panel (a) is the graph and panel (b) is a dashed-connected zoom of a single node; the shared HBM bar spans the bottom of (b)."
+    },
+    {
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "A 4x4 chip-mesh topology overview (a) is joined by a dashed leader to a zoomed single-chip block diagram (b), the overview-with-inset-inside-composite pattern, with the zoom revealing the Control Unit/HN Array/VEX/Buffer stack over shared HBM.",
+      "what_to_learn": "Zoom a dashed leader from one node in a repeated mesh topology into a single expanded block diagram rather than drawing every node's internals, and spell out abbreviated module names in full (this figure's 'Inter. Engine' is ambiguous without the caption, a listed weakness) so the inset stands on its own."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-18 canonical floorplan: Control Unit sits in a top corner, HN Array fills the compute middle, and one HBM bar spans the full width below, paired with a 4x4 fully-connected chip-mesh overview.",
+      "what_to_learn": "Place control in a top corner, compute in the middle, and let one memory bar span the full width along the bottom edge exactly as the rule prescribes, then pair the single-chip floorplan with a system-level mesh panel joined by one dashed zoom leader rather than expanding all sixteen chips."
+    }
+  ]
+}

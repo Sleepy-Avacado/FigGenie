@@ -1,0 +1,331 @@
+{
+  "paper_id": "asplos26-154",
+  "fig": "9",
+  "system": {
+    "name": "Nebula",
+    "one_liner": "a coherent acceleration framework for large-scale 3D Gaussian splatting collaborative rendering between cloud and VR client",
+    "domain": [
+      "computer-graphics",
+      "vr",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Gaussians",
+        "role": "the full set of scene Gaussians available for LoD search",
+        "container": "Cloud",
+        "novel": false
+      },
+      {
+        "name": "Fully-Streaming LoD Tree Traversal",
+        "role": "GPU-parallel full LoD tree traversal used for the initial frame",
+        "container": "Cloud",
+        "novel": true
+      },
+      {
+        "name": "Cut Result",
+        "role": "the appropriate-LoD set of Gaussians found for the current frame",
+        "container": "Cloud",
+        "novel": false
+      },
+      {
+        "name": "Temporal-Aware LoD Search",
+        "role": "reuses the previous frame's cut result to accelerate LoD search on subsequent frames",
+        "container": "Cloud",
+        "novel": true
+      },
+      {
+        "name": "Management Table",
+        "role": "tracks, per Gaussian, the reuse window since it was last in a cut result on the client",
+        "container": "Cloud",
+        "novel": true
+      },
+      {
+        "name": "ΔCut Result",
+        "role": "the Gaussians in the new cut that are not yet on the client",
+        "container": "Cloud",
+        "novel": true
+      },
+      {
+        "name": "Compression",
+        "role": "compresses the delta Gaussians before sending them to the client",
+        "container": "Cloud",
+        "novel": true
+      },
+      {
+        "name": "Decompression",
+        "role": "decompresses the delta Gaussians received from the cloud",
+        "container": "Client",
+        "novel": true
+      },
+      {
+        "name": "Local Subgraph Update",
+        "role": "merges the decompressed delta into the client's local Gaussian structure",
+        "container": "Client",
+        "novel": true
+      },
+      {
+        "name": "Current Rendering Queue",
+        "role": "the up-to-date set of Gaussians ready to be rendered",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Projection",
+        "role": "projects queued Gaussians for rendering",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Sorting",
+        "role": "sorts projected Gaussians for tile rendering",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "α-Check",
+        "role": "checks accumulated opacity, shared by both eyes before the pipelines diverge",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Color Blending",
+        "role": "blends the final pixel color for the left eye's view",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Left Eye",
+        "role": "final rendered left-eye image",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Stereo Reproj.",
+        "role": "reprojects the shared alpha-check result to reconstruct the right eye's view without redoing full rendering",
+        "container": "Client",
+        "novel": true
+      },
+      {
+        "name": "Merging & Filtering",
+        "role": "merges and filters the reprojected result for the right eye",
+        "container": "Client",
+        "novel": true
+      },
+      {
+        "name": "Right Eye",
+        "role": "final rendered right-eye image, produced by reusing most of the left eye's computation",
+        "container": "Client",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Gaussians",
+        "to": "Fully-Streaming LoD Tree Traversal",
+        "what": "initial full LoD tree traversal (orange path)",
+        "step": null
+      },
+      {
+        "from": "Fully-Streaming LoD Tree Traversal",
+        "to": "Cut Result",
+        "what": "appropriate-LoD cut of Gaussians for the initial frame",
+        "step": null
+      },
+      {
+        "from": "Gaussians",
+        "to": "Temporal-Aware LoD Search",
+        "what": "subsequent-frame LoD search (green path)",
+        "step": null
+      },
+      {
+        "from": "Cut Result",
+        "to": "Temporal-Aware LoD Search",
+        "what": "previous frame's cut reused for temporal coherence",
+        "step": null
+      },
+      {
+        "from": "Cut Result",
+        "to": "Management Table",
+        "what": "initial frame's cut result",
+        "step": null
+      },
+      {
+        "from": "Temporal-Aware LoD Search",
+        "to": "Management Table",
+        "what": "subsequent frame's cut result",
+        "step": null
+      },
+      {
+        "from": "Management Table",
+        "to": "ΔCut Result",
+        "what": "newly encountered Gaussians not yet on the client",
+        "step": null
+      },
+      {
+        "from": "ΔCut Result",
+        "to": "Compression",
+        "what": "delta Gaussians to transmit",
+        "step": null
+      },
+      {
+        "from": "Compression",
+        "to": "Decompression",
+        "what": "compressed delta Gaussians sent across the cloud/client boundary",
+        "step": null
+      },
+      {
+        "from": "Decompression",
+        "to": "Local Subgraph Update",
+        "what": "decompressed delta Gaussians",
+        "step": null
+      },
+      {
+        "from": "Local Subgraph Update",
+        "to": "Current Rendering Queue",
+        "what": "updated set of Gaussians",
+        "step": null
+      },
+      {
+        "from": "Current Rendering Queue",
+        "to": "Projection",
+        "what": "Gaussians queued for rendering",
+        "step": null
+      },
+      {
+        "from": "Projection",
+        "to": "Sorting",
+        "what": "projected Gaussians",
+        "step": null
+      },
+      {
+        "from": "Sorting",
+        "to": "α-Check",
+        "what": "sorted Gaussians",
+        "step": null
+      },
+      {
+        "from": "α-Check",
+        "to": "Color Blending",
+        "what": "alpha-checked contribution for the left eye",
+        "step": null
+      },
+      {
+        "from": "Color Blending",
+        "to": "Left Eye",
+        "what": "final blended left-eye color",
+        "step": null
+      },
+      {
+        "from": "α-Check",
+        "to": "Stereo Reproj.",
+        "what": "shared intermediate result reused for the right eye",
+        "step": null
+      },
+      {
+        "from": "Stereo Reproj.",
+        "to": "Merging & Filtering",
+        "what": "reprojected right-eye samples",
+        "step": null
+      },
+      {
+        "from": "Merging & Filtering",
+        "to": "Color Blending",
+        "what": "merged and filtered contribution for the right eye",
+        "step": null
+      },
+      {
+        "from": "Color Blending",
+        "to": "Right Eye",
+        "what": "final blended right-eye color",
+        "step": null
+      }
+    ],
+    "key_idea": "Nebula offloads memory-intensive LoD search to the cloud, which streams only newly needed compressed Gaussians to the client; the client renders both eyes together, reprojecting one eye's result to avoid redundant work.",
+    "reading_order": "Left to right and top-down within each dashed region: Cloud's LoD search feeds the Management Table and Compression, crossing into Client's Decompression, queue, then the two-eye pipeline."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.72,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bfbfff",
+        "used_for": "Gaussian circles and blue-tagged table/queue entries"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "text labels and box outlines"
+      },
+      {
+        "hex": "#41b000",
+        "used_for": "'LoD Search for Subsequent Frames' arrows and the temporal-aware search's reused tree groups"
+      },
+      {
+        "hex": "#a5a5a5",
+        "used_for": "'Remaining Rendering Operations at the Client' arrows and neutral pipeline boxes (Sorting, α-Check, Projection)"
+      },
+      {
+        "hex": "#e67c35",
+        "used_for": "'LoD Search for Initial Frame' arrows and the Compression/Decompression boxes"
+      }
+    ],
+    "background": "white, with pale tinted dashed-region panels separating Cloud (Sec. 4.2/4.3) from Client (Sec. 4.3/4.4) sub-stages",
+    "fill": "hatch",
+    "stroke": "~0.6pt strokes (2 widths); dashed borders outline each Cloud/Client sub-region",
+    "font": "Helvetica Neue / PingFang SC sans, 5-7pt, almost no bold",
+    "corners": "rounded",
+    "arrows": "mostly straight, color-coded arrows with a few curved connectors (e.g. the cloud-to-client compression link), triangular heads",
+    "icons": "bitmap: a small camera icon over the Gaussians, and two photographic Left Eye / Right Eye preview images at the client output"
+  },
+  "encoding": {
+    "color_means": "orange = initial-frame LoD search steps (and the Compression/Decompression boxes); green = subsequent-frame LoD search and cloud-to-client transfer steps; gray = remaining client-side rendering operations; light blue = Gaussians",
+    "line_style_means": "dashed region borders group pipeline stages by paper section (Sec. 4.2/4.3/4.4) and by Cloud vs. Client location; a dotted arrow marks the local subgraph update step",
+    "emphasis": "a 3-color arrow legend at the top lets the reader trace which parts of the pipeline are new contributions (temporal-aware LoD search, delta compression, stereo reprojection) versus standard rendering steps",
+    "reusable_patterns": [
+      "cloud/client split workflow with a color-coded arrow legend",
+      "two mirrored per-eye rendering columns joined by a cross-link showing shared computation"
+    ],
+    "weaknesses": [
+      "the caption text provided is truncated mid-sentence",
+      "dense mix of icons, a table, two trees and two rendering columns in one figure relies heavily on the legend"
+    ]
+  },
+  "tags": [
+    "3d-gaussian-splatting",
+    "vr-rendering",
+    "cloud-offloading",
+    "lod-search",
+    "stereo-rendering",
+    "compression"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Framework (p.5)",
+      "4 Framework (p.7)"
+    ],
+    "evidence": [
+      "Fig. 9 shows the overall workflow of our pipeline.",
+      "Nebula offloads the memory-intensive LoD search to the cloud while the client side executes the remaining operations",
+      "Our system in the cloud maintains a management table that tracks the set of Gaussians currently stored on the client"
+    ]
+  },
+  "summary": "This figure gives an end-to-end overview of Nebula's workflow, split into a Cloud side and a Client side by a vertical divider, with a top legend distinguishing three arrow types: initial-frame LoD search (orange), subsequent-frame LoD search (green), and remaining client rendering (gray). On the cloud, Gaussians undergo a full streaming LoD tree traversal for the first frame or a temporal-aware LoD search that reuses the previous cut for later frames; a management table tracks which Gaussians the client already has, so only the delta (ΔCut Result) is compressed and sent. The client decompresses this delta, updates its local subgraph, and queues Gaussians for rendering through Projection, Sorting, and an α-Check; the result is blended for the Left Eye while also being reprojected and merged to cheaply produce the Right Eye's view, avoiding duplicate rendering work.",
+  "summary_zh": "该图展示 Nebula 云端与客户端的完整工作流：云端执行 LoD 搜索，仅压缩传输新增的 Gaussian；客户端解压并更新渲染队列，渲染左眼后通过重投影与合并复用计算得到右眼画面。",
+  "confidence": "high",
+  "notes": "The caption text provided in the context file is truncated mid-sentence ('...to accelerate LoD tree traversal (S'); the remainder was not available.",
+  "venue": "ASPLOS26"
+}

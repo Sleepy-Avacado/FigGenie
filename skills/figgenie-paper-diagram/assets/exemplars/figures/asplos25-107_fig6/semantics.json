@@ -1,0 +1,251 @@
+{
+  "paper_id": "asplos25-107",
+  "fig": "6",
+  "system": {
+    "name": "CIPHERMATCH",
+    "one_liner": "an algorithm-hardware codesign that accelerates homomorphic-encryption-based exact string matching using memory-efficient data packing and in-flash processing",
+    "domain": [
+      "security",
+      "storage",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Client Machine",
+        "role": "issues the query, packs and encrypts it, and receives the result",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Query",
+        "role": "user's search query to be matched securely",
+        "container": "Client Machine",
+        "novel": false
+      },
+      {
+        "name": "Data Packing & Encryption",
+        "role": "packs and homomorphically encrypts the query using CIPHERMATCH's optimized scheme",
+        "container": "Client Machine",
+        "novel": true
+      },
+      {
+        "name": "Result",
+        "role": "decrypted match result returned to the client",
+        "container": "Client Machine",
+        "novel": false
+      },
+      {
+        "name": "Server Machine",
+        "role": "hosts the encrypted database and executes the secure search",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "server host processor",
+        "container": "Server Machine",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "server main memory",
+        "container": "Server Machine",
+        "novel": false
+      },
+      {
+        "name": "Storage (SSD)",
+        "role": "stores the encrypted database and executes in-flash string matching",
+        "container": "Server Machine",
+        "novel": true
+      },
+      {
+        "name": "SSD Controller",
+        "role": "coordinates data transposition and index generation for CIPHERMATCH operations",
+        "container": "Storage (SSD)",
+        "novel": true
+      },
+      {
+        "name": "Internal DRAM",
+        "role": "buffers written/read data inside the SSD",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "Data Transposition Unit",
+        "role": "software-based unit converting data between horizontal and vertical layouts for bit-serial processing",
+        "container": "SSD Controller",
+        "novel": true
+      },
+      {
+        "name": "Index Generation Unit",
+        "role": "compares the homomorphic addition result with the encrypted match polynomial to generate the matched index",
+        "container": "SSD Controller",
+        "novel": true
+      },
+      {
+        "name": "NAND Flash Memory (Encrypted Data)",
+        "role": "stores the encrypted, transposed database across flash chips and performs bit-serial addition for matching",
+        "container": "Storage (SSD)",
+        "novel": true
+      },
+      {
+        "name": "Flash Chip",
+        "role": "individual NAND flash chip executing the bop_add bit-serial addition command",
+        "container": "NAND Flash Memory (Encrypted Data)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client Machine",
+        "to": "Data Packing & Encryption",
+        "what": "query",
+        "step": 1
+      },
+      {
+        "from": "Data Packing & Encryption",
+        "to": "Server Machine",
+        "what": "ciphertext",
+        "step": 2
+      },
+      {
+        "from": "Server Machine",
+        "to": "Storage (SSD)",
+        "what": "ciphertext routed via CPU/DRAM",
+        "step": 3
+      },
+      {
+        "from": "Storage (SSD)",
+        "to": "NAND Flash Memory (Encrypted Data)",
+        "what": "encrypted database search using bop_add",
+        "step": 4
+      },
+      {
+        "from": "NAND Flash Memory (Encrypted Data)",
+        "to": "SSD Controller",
+        "what": "homomorphic addition result",
+        "step": 5
+      },
+      {
+        "from": "SSD Controller",
+        "to": "Client Machine",
+        "what": "generated index / result",
+        "step": 6
+      },
+      {
+        "from": "SSD Controller",
+        "to": "Internal DRAM",
+        "what": "encrypted data buffered on write",
+        "step": null
+      },
+      {
+        "from": "Internal DRAM",
+        "to": "Data Transposition Unit",
+        "what": "data transposed to vertical layout before flash write",
+        "step": null
+      },
+      {
+        "from": "Data Transposition Unit",
+        "to": "NAND Flash Memory (Encrypted Data)",
+        "what": "vertically-laid-out data written to flash chips",
+        "step": null
+      },
+      {
+        "from": "NAND Flash Memory (Encrypted Data)",
+        "to": "Index Generation Unit",
+        "what": "bit-serial addition result compared to the encrypted match polynomial",
+        "step": null
+      }
+    ],
+    "key_idea": "CIPHERMATCH keeps an encrypted, specially packed database inside SSD flash chips and performs the entire homomorphic string-matching search in-flash via a new bop_add bit-serial addition command, a software data-transposition unit, and an index generation unit inside the SSD controller, avoiding costly data movement and homomorphic multiplication/rotation.",
+    "reading_order": "Left to right, following six numbered steps: the client packs and encrypts a query, sends ciphertext to the server, which routes it into the SSD where NAND flash chips execute bop_add over the encrypted, transposed database, and the SSD controller generates the matched index returned to the client; an inset shows the bop_add pseudocode."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.71,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d8f3dc",
+        "used_for": "Client Machine panel background"
+      },
+      {
+        "hex": "#fff3b0",
+        "used_for": "Server Machine panel background"
+      },
+      {
+        "hex": "#efcfe3",
+        "used_for": "Storage (SSD) box"
+      },
+      {
+        "hex": "#b7e4c7",
+        "used_for": "NAND Flash Memory box"
+      },
+      {
+        "hex": "#caf0f8",
+        "used_for": "Internal DRAM / SSD Controller sub-unit boxes"
+      },
+      {
+        "hex": "#ebd9fc",
+        "used_for": "Data Transposition Unit / Index Generation Unit boxes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "\"(Encrypted Data)\" highlight text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.75pt median, dashed lines connect the pseudocode inset to the flow",
+    "font": "Cambria/Cambria Math serif, 3-9pt",
+    "corners": "rounded",
+    "arrows": "10 arrowheads, straight/orthogonal lines",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = client-side components, yellow/tan = server host components, pink = the SSD storage box, cyan/purple = SSD-controller sub-units (DRAM buffer, transposition, index generation)",
+    "line_style_means": null,
+    "emphasis": "the red \"(Encrypted Data)\" label on NAND Flash Memory and the six circled step numbers emphasize that matching runs entirely on encrypted data inside the SSD",
+    "reusable_patterns": [
+      "client-server-storage system diagram with a numbered end-to-end data flow and an inset pseudocode box for the key new hardware command"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "homomorphic-encryption",
+    "string-matching",
+    "in-flash-processing",
+    "ssd",
+    "near-storage-computing",
+    "secure-computation"
+  ],
+  "provenance": {
+    "sections": [
+      "4 CIPHERMATCH: Design (p.10)",
+      "4 CIPHERMATCH: Design (p.11)"
+    ],
+    "evidence": [
+      "Figure 6 shows a system-level overview of CIPHERMATCH.",
+      "CIPHERMATCH follows a six-step procedure to perform secure string matching",
+      "introduce a new command, bop_add (bulk operation add)"
+    ]
+  },
+  "summary": "CIPHERMATCH accelerates homomorphic-encryption-based exact string matching by moving the search into the SSD itself. Figure 6 gives a system-level, six-step overview: a Client Machine packs and encrypts a Query, sends the ciphertext to a Server Machine (CPU, DRAM), which routes it into Storage (an SSD). Inside the SSD, an SSD Controller buffers writes in Internal DRAM, uses a software Data Transposition Unit to lay data out vertically, and writes it to NAND Flash Memory holding the Encrypted Data; flash chips execute bit-serial addition via the new bop_add command, and an Index Generation Unit compares the result against the encrypted match polynomial to produce the matched index/result sent back to the client. An inset shows the bop_add pseudocode looping over 32 bit positions.",
+  "summary_zh": "图6展示CIPHERMATCH系统级总览：客户端对查询打包加密后发送密文至服务器，服务器经CPU/DRAM将其路由至SSD；SSD控制器将数据缓存于内部DRAM、经数据转置单元转为纵向布局后写入NAND闪存中的加密数据，闪存芯片通过新指令bop_add执行按位加法，索引生成单元比对结果生成匹配索引并返回客户端，图中还给出bop_add伪代码。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

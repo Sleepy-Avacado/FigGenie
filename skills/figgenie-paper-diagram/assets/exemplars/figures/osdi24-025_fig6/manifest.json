@@ -1,0 +1,54 @@
+{
+  "id": "osdi24-025_fig6",
+  "paper_id": "osdi24-025",
+  "fig": "6",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 6: Parrot system overview.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.65,
+  "n_components": 13,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-025/src/fig6_systemarch.svg",
+    "preview.png": "lab/extracted/osdi24-025/src/fig6_systemarch.png",
+    "print.png": "lab/extracted/osdi24-025/osdi24-025_fig6_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Textbook three-tier stack in tikz: outer tier containers, inner module rows, and a dashed line naming a trust/network boundary.",
+      "what_to_learn": "Name tiers in the left margin, keep every module row the same height, and use a single dashed horizontal rule (labelled 'Internet') for the boundary that matters."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar also cited as the layered template's own gutter exemplar: the LLM Service nests a Manager box that nests four analysis sub-modules, and the LLM Engine nests two modules behind a stacked-instance icon.",
+      "what_to_learn": "Put the tier name in a left gutter even while nesting sub-boxes inside it, and mark a box that stands for many running copies with a stacked-rectangle offset icon behind it rather than drawing every instance, keeping that as the one extra property at that nesting level."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Replication confined to exactly one tier, as the template recommends: only the bottom-most Parrot LLM Engine box carries a stacked-shadow icon for multiple backend instances, while the four layers above it stay singular.",
+      "what_to_learn": "Keep replication confined to exactly one tier of a layered stack, here the bottom engine, by giving only that box a stacked-shadow icon; leave every tier above it as a single box so the figure still reads as one layered system, not N whole systems."
+    }
+  ]
+}

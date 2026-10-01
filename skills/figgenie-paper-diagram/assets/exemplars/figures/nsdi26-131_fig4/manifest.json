@@ -1,0 +1,56 @@
+{
+  "id": "nsdi26-131_fig4",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-131",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: The symbolic simulation of the example network.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "topology",
+  "subject": "one symbolic-simulation run computing each router's route and flagging two contract violations (c1, c2) on an example network",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.63,
+  "n_elements": 21,
+  "n_relations": 11,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "inkscape",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-131/src/fig4_symbolic_sim.svg",
+    "preview.png": "lab/extracted/nsdi26-131/src/fig4_symbolic_sim.png",
+    "print.png": "lab/extracted/nsdi26-131/nsdi26-131_fig4_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Running the symbolic simulation on the example network surfaces exactly two contract violations, c1 at C and c2 at F, and shows how forcing them changes which route each router finally selects.",
+      "what_to_learn": "a small labelled network graph with each node's candidate paths listed beside it, selected paths underlined, and a violation-driven subset coloured red and cross-referenced to a definitions table below",
+      "note_source": "record"
+    }
+  ]
+}

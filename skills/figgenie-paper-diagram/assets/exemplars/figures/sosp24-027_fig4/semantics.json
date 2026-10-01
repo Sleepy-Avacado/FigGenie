@@ -1,0 +1,152 @@
+{
+  "paper_id": "sosp24-027",
+  "fig": "4",
+  "system": {
+    "name": "SWARM-KV",
+    "one_liner": "a low-latency, strongly consistent, highly available disaggregated key-value store built on SWARM replication",
+    "domain": [
+      "storage",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Index",
+        "role": "tracks locations (memory nodes and addresses) of a key's replicas",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SWARM-KV Client",
+        "role": "client library that directly accesses replicated key-value pairs using SWARM reads/writes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SWARM-Replicated Value",
+        "role": "the set of replicas forming one key's Safe-Guess max register, spread across memory nodes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Memory Node",
+        "role": "a disaggregated memory node holding one replica",
+        "container": "SWARM-Replicated Value",
+        "novel": false
+      },
+      {
+        "name": "Max Register",
+        "role": "per-replica max register implemented via In-n-Out",
+        "container": "Memory Node",
+        "novel": true
+      },
+      {
+        "name": "InO",
+        "role": "In-n-Out primitive providing conditional atomic update/retrieval of large buffers in one roundtrip",
+        "container": "Max Register",
+        "novel": true
+      },
+      {
+        "name": "Timestamp Locks",
+        "role": "locking mechanism supporting the replicated value's consistency",
+        "container": "SWARM-Replicated Value",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "SWARM-KV Client",
+        "to": "Index",
+        "what": "get/set of key locations",
+        "step": null
+      },
+      {
+        "from": "SWARM-KV Client",
+        "to": "Memory Node",
+        "what": "single-roundtrip SWARM reads and writes (R/W)",
+        "step": null
+      }
+    ],
+    "key_idea": "A client caches a key's replica locations from an index and then talks directly, in a single roundtrip, to a set of disaggregated memory nodes whose In-n-Out-based max registers together form one strongly consistent, wait-free replicated value.",
+    "reading_order": "right to left: Index box at top-right feeding the SWARM-KV Client below it, which connects left to the dashed SWARM-Replicated Value group containing multiple Memory Nodes."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.86,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#eeeeee",
+        "used_for": "Memory Node boxes"
+      },
+      {
+        "hex": "#ffe599",
+        "used_for": "In-n-Out (InO) register box"
+      },
+      {
+        "hex": "#00ff00",
+        "used_for": "Max Register highlight/outline"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "box borders and dark text accents"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "Timestamp Locks / background panel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.76pt gray dashed strokes grouping boxes, square corners",
+    "font": "Times-like serif (TimesLTPro)",
+    "corners": "square",
+    "arrows": "thin dashed and solid arrows labeled get/set and R/W",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray = replicated memory node boxes, yellow = the In-n-Out register implementation, green outline = the max-register abstraction spanning nodes",
+    "line_style_means": "dashed box groups the distributed Memory Nodes as one logical SWARM-Replicated Value; a dashed line links the Max Registers to show they form a single register",
+    "emphasis": "dashed grouping box around distributed Memory Nodes visually unifies them into a single logical replicated value despite being physically spread out",
+    "reusable_patterns": [
+      "control-plane index box paired with a data-plane group of replicated storage nodes"
+    ],
+    "weaknesses": [
+      "serif font is unusual for a systems diagram and text is small (9-10pt), reducing legibility"
+    ]
+  },
+  "tags": [
+    "disaggregated-memory",
+    "replication",
+    "key-value-store",
+    "linearizability",
+    "wait-free"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Swarm-Kv (p.7)"
+    ],
+    "evidence": [
+      "Figure 4 shows SWARM-KV's architecture.",
+      "SWARM-KV's clients directly access key-value pairs replicated over a set of memory nodes using SWARM.",
+      "An index tracks the locations of keys' replicas"
+    ]
+  },
+  "summary": "SWARM-KV is a disaggregated key-value store built on SWARM, a wait-free replication scheme offering single-roundtrip reads/writes and linearizability. Figure 4 shows the architecture for a single key. A client library uses an Index (mapping keys to locations) to find and cache the memory nodes and addresses of a key's replicas; on first access this lookup is cached so subsequent operations skip it. The client then reads and writes the replicas directly, each implemented as a Max Register via the In-n-Out (InO) primitive on a Memory Node, supported by timestamp locks. A dashed box groups the distributed Memory Nodes as one logical SWARM-Replicated Value, and a dashed connector between the Max Registers emphasizes that, despite being spread across different memory nodes, they jointly implement one register.",
+  "summary_zh": "图4展示SWARM-KV单个键的架构：客户端先通过索引（Index）获取并缓存键的副本位置，随后直接以单次往返对分布在不同内存节点上的Max Register（基于In-n-Out实现，配合时间戳锁）进行读写，虚线框将这些节点归并为一个逻辑上的复制值。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

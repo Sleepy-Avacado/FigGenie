@@ -1,0 +1,170 @@
+{
+  "paper_id": "sosp24-005",
+  "fig": "4",
+  "system": {
+    "name": "Perseus",
+    "one_liner": "a training system that schedules GPU energy consumption across time to remove energy bloat without slowing training",
+    "domain": [
+      "energy-efficiency",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Perseus Server",
+        "role": "cluster-wide singleton that characterizes the time-energy frontier and caches schedules",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Frontier Characterization",
+        "role": "computes the time-energy tradeoff frontier of an iteration",
+        "container": "Perseus Server",
+        "novel": true
+      },
+      {
+        "name": "Energy Schedule Lookup Table",
+        "role": "caches energy schedules for fast lookup, keyed by target time",
+        "container": "Perseus Server",
+        "novel": true
+      },
+      {
+        "name": "Perseus Client",
+        "role": "framework-integrated, accelerator-specific client that realizes energy schedules",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Asynchronous Frequency Controller",
+        "role": "sets the GPU's frequency during runtime to realize a schedule",
+        "container": "Perseus Client",
+        "novel": true
+      },
+      {
+        "name": "Online Time/Energy Profiler",
+        "role": "profiles pipeline computations online during training",
+        "container": "Perseus Client",
+        "novel": true
+      },
+      {
+        "name": "Distributed Training Framework",
+        "role": "underlying training framework the client integrates with",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "hardware executing training and reporting profiling/straggler information",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "GPU",
+        "to": "Perseus Server",
+        "what": "profile information",
+        "step": 1
+      },
+      {
+        "from": "Frontier Characterization",
+        "to": "Energy Schedule Lookup Table",
+        "what": "optimization producing cached schedules",
+        "step": 2
+      },
+      {
+        "from": "Perseus Server",
+        "to": "Perseus Client",
+        "what": "energy schedule for Tmin",
+        "step": 3
+      },
+      {
+        "from": "GPU",
+        "to": "Perseus Server",
+        "what": "straggler notification",
+        "step": 4
+      },
+      {
+        "from": "Perseus Server",
+        "to": "Perseus Client",
+        "what": "energy schedule for Topt",
+        "step": 5
+      }
+    ],
+    "key_idea": "A cluster-wide Perseus Server pre-characterizes the time-energy frontier and caches schedules that a per-job Perseus Client fetches and enforces on GPUs via frequency control, adapting to stragglers.",
+    "reading_order": "top-down: Perseus Server at top with its frontier chart and lookup table, numbered arrows down to Perseus Client, then down to the distributed training framework and GPUs at the bottom."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.79,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#6d9cf5",
+        "used_for": "Perseus Server container"
+      },
+      {
+        "hex": "#6fd19f",
+        "used_for": "Perseus Client container"
+      },
+      {
+        "hex": "#ffca68",
+        "used_for": "highlighted optimal schedule row in the lookup table"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "GPU boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.77pt black stroke, rounded corners on containers",
+    "font": "HelveticaNeue sans, bold for headers",
+    "corners": "rounded",
+    "arrows": "solid black arrows with filled triangular heads, circled numbers labeling steps",
+    "icons": "small line-chart icon depicting the energy-vs-time frontier"
+  },
+  "encoding": {
+    "color_means": "blue = server-side components, green = client-side components, orange = highlighted optimal schedule row",
+    "line_style_means": null,
+    "emphasis": "circled step numbers 1-5 trace the profiling -> optimization -> schedule-delivery -> straggler-feedback loop between server and client",
+    "reusable_patterns": [
+      "numbered workflow arrows overlaid on a two-tier server/client architecture"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "energy-efficiency",
+    "distributed-training",
+    "gpu-frequency-scaling",
+    "scheduling",
+    "llm-training"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Perseus Overview (p.5)"
+    ],
+    "evidence": [
+      "Perseus's architecture is shown in Figure 4.",
+      "The server is a cluster-wide singleton.",
+      "The client profiles pipeline computations online during training and realizes energy schedules"
+    ]
+  },
+  "summary": "Perseus reduces energy bloat in large model training by scheduling GPU energy consumption over time without hurting throughput. Figure 4 shows its architecture and workflow as two components connected by a numbered five-step loop. The Perseus Server, a cluster-wide singleton, performs frontier characterization to compute the time-energy tradeoff of a training iteration and caches the resulting schedules in a lookup table (from minimum time Tmin to optimal Topt). The Perseus Client, integrated with the training framework, contains an asynchronous frequency controller and an online time/energy profiler; it requests and applies a schedule from the server, reports profiling information and straggler notifications back, and sets GPU frequencies accordingly. The diagram uses a rounded two-box layout (blue server, green client) with GPUs below the client and circled numbers 1-5 tracing the interaction order.",
+  "summary_zh": "图4展示Perseus架构：蓝色Perseus服务器进行时间-能耗前沿刻画并缓存调度表，绿色Perseus客户端通过异步频率控制器在GPU上执行调度；带圈数字1-5标注了信息上报、优化、调度下发与掉队通知的交互流程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

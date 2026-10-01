@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-032_fig1",
+  "paper_id": "nsdi26-032",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: The architecture and hardware testbed of a switched CXL memory pool. (c) shows the architecture of a CXL switch. VL=Virtual Lane. vPPB=Virtual PCI-to-PCI Bridge.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.81,
+  "n_components": 11,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-032/src/fig1_hw-overall-v2.svg",
+    "preview.png": "lab/extracted/nsdi26-032/src/fig1_hw-overall-v2.png",
+    "print.png": "lab/extracted/nsdi26-032/nsdi26-032_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence three-panel exemplar spanning abstraction to reality: panel (a) floorplans host, switch and memory chassis through named upstream and downstream ports, panel (b) photographs the real testbed, and panel (c) exposes the switch's crossbar fabric.",
+      "what_to_learn": "Ground an abstract port-to-port floorplan with a photo of the real evaluated testbed so readers trust the abstraction, then zoom into the one internal datapath that matters, virtual lane to crossbar, in a third panel; do not rely on greyscale alone to separate roles as this figure's recorded weakness does."
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "paper_id": "sosp24-007",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "Apparate",
+    "one_liner": "a system that automatically applies and manages early exits in ML models to ease the throughput-latency tension in inference serving",
+    "domain": [
+      "ml-systems",
+      "model-serving",
+      "inference-optimization"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a batch of 16 samples shrinks as some exit early at each layer's ramp instead of continuing",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Batch size 16",
+        "kind": "label",
+        "role": "names the total number of input samples entering Layer_1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Original model",
+        "kind": "label",
+        "role": "dashed-box title naming the unmodified chain of 12 layers being augmented with exit ramps",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Layer_1",
+        "kind": "box",
+        "role": "first layer of the original model; all 16 samples pass through it",
+        "container": "Original model",
+        "highlighted": false
+      },
+      {
+        "name": "Layer_2",
+        "kind": "box",
+        "role": "second layer; only the 15 samples that did not exit at Ramp_1 reach it",
+        "container": "Original model",
+        "highlighted": false
+      },
+      {
+        "name": "Layer_3",
+        "kind": "box",
+        "role": "third layer; only the 13 samples that did not exit at Ramp_2 reach it",
+        "container": "Original model",
+        "highlighted": false
+      },
+      {
+        "name": "Layer_12",
+        "kind": "box",
+        "role": "final layer of the original model; only samples that never exited early reach it",
+        "container": "Original model",
+        "highlighted": false
+      },
+      {
+        "name": "Ramp_1",
+        "kind": "box",
+        "role": "exit classifier attached to Layer_1's output; lets confident samples exit here",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Ramp_2",
+        "kind": "box",
+        "role": "exit classifier attached to Layer_2's output",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Ramp_3",
+        "kind": "box",
+        "role": "exit classifier attached to Layer_3's output",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Ramp_12",
+        "kind": "box",
+        "role": "exit classifier attached to the final layer; catches all remaining samples",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "15 samples",
+        "kind": "label",
+        "role": "count of samples continuing to Layer_2 after 1 exited at Ramp_1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "13 samples",
+        "kind": "label",
+        "role": "count of samples continuing to Layer_3 after 2 exited at Ramp_2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "11 samples continue",
+        "kind": "label",
+        "role": "count of samples continuing past Layer_3 after 2 exited at Ramp_3",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "1 sample exits",
+        "kind": "label",
+        "role": "number of samples that exit at Ramp_1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "2 samples exit",
+        "kind": "label",
+        "role": "number of samples that exit at Ramp_2 (and, separately, at Ramp_3)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Remaining samples exit",
+        "kind": "label",
+        "role": "every sample still in the batch by Layer_12 must exit at the final ramp",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Layer_1",
+        "to": "Ramp_1",
+        "what": "Layer_1's output values are fed to its exit ramp",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Ramp_1",
+        "to": "1 sample exits",
+        "what": "the ramp's confidence decision lets 1 of the 16 samples exit here",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Layer_1",
+        "to": "Layer_2",
+        "what": "the 15 samples that did not exit continue to the next layer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Layer_2",
+        "to": "Ramp_2",
+        "what": "Layer_2's output values are fed to its exit ramp",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Ramp_2",
+        "to": "2 samples exit",
+        "what": "2 of the remaining 15 samples exit here",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Layer_2",
+        "to": "Layer_3",
+        "what": "the 13 samples that did not exit continue to the next layer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Layer_3",
+        "to": "Ramp_3",
+        "what": "Layer_3's output values are fed to its exit ramp",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Ramp_3",
+        "to": "2 samples exit",
+        "what": "2 more of the remaining 13 samples exit here",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Layer_3",
+        "to": "Layer_12",
+        "what": "the 11 remaining samples continue through the omitted middle layers to the final layer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Layer_12",
+        "to": "Ramp_12",
+        "what": "the final layer's output is fed to the last ramp",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Ramp_12",
+        "to": "Remaining samples exit",
+        "what": "every sample still in the batch must exit at the final ramp",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Augmenting each layer of a DNN with a lightweight exit ramp lets easy inputs leave the model as soon as a ramp is confident, so a batch's effective size shrinks layer by layer instead of every input running the full network.",
+    "reading_order": "left to right along the top row of Layers inside the dashed 'Original model' box, dropping down to each Layer's Ramp box and then to its exit-count label, before continuing right to the next Layer with whatever samples remain"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.28,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffbf",
+        "used_for": "pale-yellow fill of the four drawn Layer boxes (Layer_1, Layer_2, Layer_3, Layer_12)"
+      },
+      {
+        "hex": "#bfffbf",
+        "used_for": "pale-green fill of the four drawn Ramp boxes (Ramp_1, Ramp_2, Ramp_3, Ramp_12)"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "gray stroke and text of the dashed 'Original model' box and its title, setting the unmodified-model boundary apart from the rest of the figure"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~1.07pt median) black outlines on boxes and arrows; a gray dashed rectangle rings the 'Original model' layer chain",
+    "corners": "square",
+    "arrows": "thin black arrows with solid heads linking each Layer to the next and each Layer down to its Ramp and exit-count label",
+    "font": "Verdana sans, uniform small size",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale yellow marks the original model's Layer boxes; pale green marks the added Ramp (exit-classifier) boxes; gray marks the dashed 'Original model' boundary that is not itself part of Apparate's contribution",
+    "line_style_means": "solid black arrows carry samples/values between layers and down to ramps; the dashed gray box is a grouping boundary, not a data path",
+    "state_means": "not a before/after; the same batch is instead shown shrinking through several snapshots (batch size 16, then 15, 13, 11, then the eventual remainder) as it moves rightward through the layer chain",
+    "marker_means": "the Layer_i/Ramp_i subscripts (1, 2, 3, ..., 12) order the chain left to right; there are no separate circled step markers",
+    "emphasis": "an ellipsis between Layer_3/Ramp_3 and Layer_12/Ramp_12 compresses the repetitive middle of a 12-layer chain so the eye focuses on the shrinking-batch pattern rather than every layer",
+    "reusable_patterns": [
+      "a component chain where each stage also drops down to a second box, with the running count of items still 'in flight' written on the arrows between stages"
+    ],
+    "weaknesses": [
+      "the exact exit counts for layers 4 through 11 are never shown, only implied by '...' and 'Remaining samples exit'",
+      "Ramp_2 and Ramp_3 share the identical label '2 samples exit', which could read as one repeated value rather than two separate counts"
+    ]
+  },
+  "tags": [
+    "early-exit",
+    "ml-inference",
+    "dnn-serving",
+    "latency-throughput-tradeoff",
+    "Apparate"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background And Motivation (p.3)"
+    ],
+    "evidence": [
+      "Early exits enable termination of inputs at intermediate layers, lowering both compute and latency.",
+      "certain ‘easy’ inputs may not require the full predictive power of a model",
+      "results for such inputs may be predictable from the values at intermediate layers"
+    ]
+  },
+  "summary": "Figure 3 shows the mechanism behind Apparate's early exits (EEs) using one concrete example batch. A batch of 16 samples enters Layer_1 of the dashed-boxed 'Original model'; each layer's output also feeds a green Ramp box that predicts a result and lets confident samples exit immediately rather than run the rest of the network. In this example, 1 sample exits at Ramp_1 (15 continue to Layer_2), 2 more exit at Ramp_2 (13 continue to Layer_3), 2 more exit at Ramp_3 (11 continue), and, after the omitted middle layers, whatever samples remain must exit at the final Ramp_12. Because each ramp only needs to compare its predicted result's entropy against a threshold, the batch's effective size shrinks layer by layer, cutting both compute and latency for the samples that exit early.",
+  "summary_zh": "该图示Apparate早退出机制：16样本进Layer_1，每层输出接Ramp判断是否退出；Ramp_1退1个(15续)，Ramp_2退2个(13续)，Ramp_3再退2个(11续)，中间省略，剩余样本在Ramp_12全部退出。",
+  "confidence": "high",
+  "notes": "worked_example kept False per the schema's own caveat that values written beside arrows/boxes (here, the sample counts flowing between layers) are annotations, not the worked-example marker.",
+  "venue": "SOSP24"
+}

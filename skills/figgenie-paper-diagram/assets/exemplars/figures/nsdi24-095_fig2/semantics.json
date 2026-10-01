@@ -1,0 +1,253 @@
+{
+  "paper_id": "nsdi24-095",
+  "fig": "2",
+  "system": {
+    "name": "BoS",
+    "one_liner": "an in-network data plane that runs NN-driven (binary RNN + escalation to a transformer) traffic analysis at line-speed",
+    "domain": [
+      "networking",
+      "ml-systems",
+      "security"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "flow packets",
+        "role": "input packet stream for a flow",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "sliding window",
+        "role": "selects fixed-length packet segments from the flow to feed the RNN",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "length seq",
+        "role": "sequence of packet-length features",
+        "container": "Binary RNN",
+        "novel": false
+      },
+      {
+        "name": "IPD seq",
+        "role": "sequence of inter-packet-delay features",
+        "container": "Binary RNN",
+        "novel": false
+      },
+      {
+        "name": "Embedding",
+        "role": "full-precision layer embedding length/IPD sequences",
+        "container": "Binary RNN",
+        "novel": true
+      },
+      {
+        "name": "STE",
+        "role": "Straight-Through Estimator binarization applied after each full-precision layer",
+        "container": "Binary RNN",
+        "novel": true
+      },
+      {
+        "name": "FC",
+        "role": "fully-connected layer combining the two embeddings",
+        "container": "Binary RNN",
+        "novel": true
+      },
+      {
+        "name": "GRU",
+        "role": "recurrent cell performing per-time-step sequence analysis",
+        "container": "Binary RNN",
+        "novel": true
+      },
+      {
+        "name": "Memory",
+        "role": "stores/recurrently feeds back the GRU hidden state across time steps",
+        "container": "Binary RNN",
+        "novel": true
+      },
+      {
+        "name": "FC + Softmax",
+        "role": "output layer producing the classification result",
+        "container": "Binary RNN",
+        "novel": true
+      },
+      {
+        "name": "Aggregation",
+        "role": "combines intermediate results into the final result with confidence",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "flow packets",
+        "to": "sliding window",
+        "what": "raw packets grouped into fixed-length segments",
+        "step": null
+      },
+      {
+        "from": "sliding window",
+        "to": "length seq",
+        "what": "packet length feature sequence",
+        "step": null
+      },
+      {
+        "from": "sliding window",
+        "to": "IPD seq",
+        "what": "inter-packet-delay feature sequence",
+        "step": null
+      },
+      {
+        "from": "length seq",
+        "to": "Embedding",
+        "what": "raw feature values",
+        "step": null
+      },
+      {
+        "from": "IPD seq",
+        "to": "Embedding",
+        "what": "raw feature values",
+        "step": null
+      },
+      {
+        "from": "Embedding",
+        "to": "FC",
+        "what": "embedded vectors",
+        "step": null
+      },
+      {
+        "from": "FC",
+        "to": "GRU",
+        "what": "embedding vector ev",
+        "step": null
+      },
+      {
+        "from": "Memory",
+        "to": "GRU",
+        "what": "previous hidden state",
+        "step": null
+      },
+      {
+        "from": "GRU",
+        "to": "Memory",
+        "what": "updated hidden state",
+        "step": null
+      },
+      {
+        "from": "GRU",
+        "to": "FC + Softmax",
+        "what": "final hidden state",
+        "step": null
+      },
+      {
+        "from": "FC + Softmax",
+        "to": "Aggregation",
+        "what": "intermediate results (probability vector)",
+        "step": null
+      },
+      {
+        "from": "Aggregation",
+        "to": null,
+        "what": "final result with confidence",
+        "step": null
+      }
+    ],
+    "key_idea": "The binary RNN embeds packet length/IPD sequences and processes them through a GRU whose every full-precision layer is followed by a binarizing STE step, enabling data-plane-friendly RNN inference.",
+    "reading_order": "Left to right: flow packets and sliding window feed into the Binary RNN box (top-down internally: length/IPD seq to Embedding to FC to GRU/Memory to FC+Softmax), then out to Aggregation."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.48,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#6c8ebf",
+        "used_for": "blue length seq / IPD seq input boxes"
+      },
+      {
+        "hex": "#dcadf4",
+        "used_for": "purple intermediate-result squares"
+      },
+      {
+        "hex": "#582351",
+        "used_for": "dark purple accent/dots in intermediate-results panel"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "green full-precision layer boxes (Embedding, GRU, FC+Softmax)"
+      },
+      {
+        "hex": "#82b366",
+        "used_for": "green box outline accents"
+      },
+      {
+        "hex": "#f0f0f0",
+        "used_for": "gray FC and Binary RNN container background"
+      },
+      {
+        "hex": "#f4cccd",
+        "used_for": "pink STE band fills"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "yellow/gold Memory box and dashed feedback loop"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "light yellow Memory box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "no stroke reported on shapes; boxes appear outlined by fill color",
+    "font": "Gill Sans MT sans-serif, 7.5-10pt",
+    "corners": "square",
+    "arrows": "orthogonal and one curved dashed feedback arrow, filled triangular heads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = full-precision layer, pink = STE binarization step, blue = input feature sequences, purple = intermediate probability results, yellow/gold = recurrent memory state",
+    "line_style_means": "dashed curved arrow denotes the recurrent hidden-state feedback loop between GRU and Memory; solid arrows denote feed-forward data flow",
+    "emphasis": "an explicit legend (STE = Straight-Through Estimator, full-precision layer) draws attention to which layers are binarized, the paper's key contribution",
+    "reusable_patterns": [
+      "boxed subsystem diagram with an inline legend explaining a color/label convention",
+      "explicit feedback loop drawn as a curved dashed arrow into a labeled memory box"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "binarized RNN",
+    "GRU",
+    "sliding window",
+    "traffic classification",
+    "programmable switch",
+    "in-network ML"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Data Plane Friendly RNN Architecture (p.5)"
+    ],
+    "evidence": [
+      "the binary RNN model in BoS consists of three building blocks: feature embedding, RNN cell and output layer",
+      "we set all activation functions in the feature embedding and the RNN cell to Straight-Through Estimator",
+      "STE performs a sign function in forward propagation, which makes all neural network activations +1 or -1"
+    ]
+  },
+  "summary": "This figure details BoS's data-plane-friendly binary RNN, a subsystem of the larger architecture. Flow packets pass through a sliding window into two embedding branches for packet length and inter-packet-delay sequences, which are fused by a fully-connected layer and fed into a GRU cell that recurrently updates a hidden-state Memory block across time steps. Every full-precision layer (Embedding, GRU, FC+Softmax) is paired with a Straight-Through Estimator (STE) binarization step shown as a pink band beneath it, so activations are constrained to +1/-1 for hardware-friendly deployment. The final FC+Softmax output layer produces intermediate results that feed into an external Aggregation stage. The figure is a single boxed diagram with a small inline legend distinguishing full-precision layers from STE steps, drawn with flat colored boxes and one dashed curved feedback arrow for the recurrent memory loop.",
+  "summary_zh": "该图展示 BoS 的二值化 RNN 子系统：滑动窗口提取的包长与包间隔序列经嵌入和全连接层融合后送入 GRU，GRU 与记忆模块循环更新隐藏状态；每个全精度层后都跟一个 STE 二值化步骤，最终经 Softmax 输出中间结果供聚合使用。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

@@ -1,0 +1,262 @@
+{
+  "paper_id": "sosp23-030",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "Ditto",
+    "one_liner": "the first caching system built for disaggregated memory, using a client-centric framework and adaptive caching to keep hit rates high as resources change",
+    "domain": [
+      "caching",
+      "disaggregated-memory",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how adaptive caching picks an eviction victim from expert candidates and updates expert weights after a cache-miss regret signal",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Eviction Process",
+        "kind": "label",
+        "role": "dashed-boundary title for the left phase: proposing candidates, picking a victim, logging it",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Adaptive Process",
+        "kind": "label",
+        "role": "dashed-boundary title for the right phase: detecting a miss and updating expert weights",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "LRU List (Expert 1)",
+        "kind": "row",
+        "role": "first caching expert's own data structure, used to propose an eviction candidate",
+        "container": "Eviction Process",
+        "highlighted": false
+      },
+      {
+        "name": "LFU Heap (Expert 2)",
+        "kind": "row",
+        "role": "second caching expert's own data structure, used to propose an eviction candidate",
+        "container": "Eviction Process",
+        "highlighted": false
+      },
+      {
+        "name": "Candidates",
+        "kind": "box",
+        "role": "dashed sub-region holding each expert's proposed eviction candidate before a victim is chosen",
+        "container": "Eviction Process",
+        "highlighted": false
+      },
+      {
+        "name": "Eviction Victim",
+        "kind": "box",
+        "role": "the single candidate chosen, weighted by expert performance, to actually be evicted",
+        "container": "Eviction Process",
+        "highlighted": true
+      },
+      {
+        "name": "Eviction Hist.",
+        "kind": "row",
+        "role": "fixed-size FIFO queue recording each evicted object's ID and which expert(s) proposed it",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Miss Key",
+        "kind": "box",
+        "role": "the ID of an object that was requested but missed in the cache, looked up against the eviction history",
+        "container": "Adaptive Process",
+        "highlighted": true
+      },
+      {
+        "name": "Weights",
+        "kind": "row",
+        "role": "per-expert weight table (w_LRU, w_LFU) biasing victim selection and updated by miss regret",
+        "container": "Adaptive Process",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "LRU List (Expert 1)",
+        "to": "Candidates",
+        "what": "Expert 1 proposes an eviction candidate from its own LRU list",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "LFU Heap (Expert 2)",
+        "to": "Candidates",
+        "what": "Expert 2 proposes an eviction candidate from its own LFU heap",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Candidates",
+        "to": "Eviction Victim",
+        "what": "one candidate is chosen opportunistically to become the eviction victim",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Weights",
+        "to": "Eviction Victim",
+        "what": "current per-expert weights bias which candidate is picked as the victim",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "Eviction Victim",
+        "to": "Eviction Hist.",
+        "what": "the evicted object's ID and choosing expert(s) are inserted into the fixed-size FIFO eviction history",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "Eviction Hist.",
+        "to": "Miss Key",
+        "what": "a missed object's key is looked up in the eviction history to detect a regret",
+        "kind": "data",
+        "step": "4"
+      },
+      {
+        "from": "Miss Key",
+        "to": "Weights",
+        "what": "the weight(s) of the expert(s) that evicted the missed object are decreased",
+        "kind": "control",
+        "step": "5"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "LRU List (Expert 1) / LFU Heap (Expert 2)",
+        "what": "each expert proposes an eviction candidate from its own caching data structure",
+        "carries": "a candidate object ID per expert"
+      },
+      {
+        "marker": "2",
+        "at": "Eviction Victim",
+        "what": "a victim is chosen opportunistically among the candidates, weighted by each expert's current performance weight",
+        "carries": "the chosen victim object"
+      },
+      {
+        "marker": "3",
+        "at": "Eviction Hist.",
+        "what": "the victim's object ID and the expert(s) that proposed it are inserted into the fixed-size FIFO eviction history",
+        "carries": "evicted object ID plus proposing expert(s)"
+      },
+      {
+        "marker": "4",
+        "at": "Miss Key",
+        "what": "on a cache miss, the missed object's key is looked up in the eviction history",
+        "carries": "missed object ID"
+      },
+      {
+        "marker": "5",
+        "at": "Weights",
+        "what": "if the missed key is found in the eviction history (a regret), the weight(s) of the expert(s) that evicted it are decreased",
+        "carries": "updated expert weight(s)"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Multiple caching experts propose eviction candidates; a weight-biased choice picks the victim and logs it, and a later miss on a logged object is a regret that lowers the responsible expert's weight.",
+    "reading_order": "left to right and back: step 1 from the two expert data structures into Candidates, 2 into Eviction Victim (biased by Weights), 3 into Eviction Hist., 4 across to Miss Key, 5 back up into Weights"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.68,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light-gray fill of the plain array/queue cells: LRU List, LFU Heap, Eviction Hist., and the Weights (w_LRU/w_LFU) cells"
+      },
+      {
+        "hex": "#faeadc",
+        "used_for": "pale-peach fill of the two candidate boxes inside the 'Candidates' region, one proposed by each expert"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "gold/amber fill of the 'Eviction Victim' box, the single candidate chosen for eviction"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pale-pink fill of the 'Miss Key' box"
+      },
+      {
+        "hex": "#b85450",
+        "used_for": "dark-red dashed border accent on the 'Miss Key' box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.53pt) black outlines on boxes and arrows; dashed black rounded-rectangle boundaries group the Eviction Process, Adaptive Process and Candidates regions; a dashed dark-red border rings the Miss Key box",
+    "corners": "mixed",
+    "arrows": "thin black arrows with solid heads; circled numbers 1-5 sit directly on the arrows/junctions marking each step",
+    "font": "Arial sans, bold for the two process titles",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray marks the two experts' own data structures, the eviction-history queue and the weight cells; peach marks a not-yet-chosen candidate; gold singles out the one chosen eviction victim; pink marks the missed object's key",
+    "line_style_means": "solid black arrows carry data/control along the walkthrough; dashed black rounded rectangles only group related boxes into named regions (Eviction Process, Adaptive Process, Candidates) rather than encoding a message type; the Miss Key box alone gets a dashed red border for emphasis",
+    "state_means": "not applicable; the figure is one static structure, not a before/after comparison",
+    "marker_means": "circled numbers 1-5 give the fixed order of the eviction-then-adapt algorithm: propose candidates, pick a weighted victim, log it, look up a miss, and adjust weights",
+    "emphasis": "the gold Eviction Victim and pink Miss Key boxes are the only saturated colours in an otherwise gray figure, drawing the eye to the two decision points the text discusses in detail",
+    "reusable_patterns": [
+      "two side-by-side dashed-boundary phases connected by a circled-number path, with each phase's key decision box picked out in a saturated colour",
+      "a feedback arrow (Weights back into the victim-selection point) drawn as part of an existing numbered step rather than as its own separate arrow"
+    ],
+    "weaknesses": [
+      "the Weights-to-Eviction-Victim feedback line is not itself separately numbered, so a reader could miss that step 2 depends on it",
+      "the two circled '1' labels (one per expert) could be misread as two different steps rather than one parallel step"
+    ]
+  },
+  "tags": [
+    "adaptive-caching",
+    "multi-armed-bandit",
+    "eviction-policy",
+    "cache-replacement",
+    "disaggregated-memory",
+    "Ditto"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 The Ditto Design (p.7)"
+    ],
+    "evidence": [
+      "each expert proposes an eviction candidate according to their own caching data structures",
+      "Eviction victims are then decided opportunistically according to the weights of the experts",
+      "the weights of experts deciding to evict the object are decreased"
+    ]
+  },
+  "summary": "Figure 8 walks through Ditto's multi-armed-bandit adaptive caching mechanism on a monolithic server, in five numbered steps. In the Eviction Process (left), two caching experts, an LRU List and an LFU Heap, each propose an eviction candidate from their own data structure (1); the current per-expert Weights bias which candidate becomes the actual Eviction Victim (2); that victim's object ID and proposing expert(s) are logged into a fixed-size FIFO Eviction Hist. queue (3). In the Adaptive Process (right), a later cache miss's key is looked up in the eviction history (4); if found there, a regret is registered and the weight of whichever expert (w_LRU or w_LFU) evicted that object is decreased (5), so the better-performing caching policy gradually gains more influence over future victim choices.",
+  "summary_zh": "该图分5步走读Ditto自适应缓存(MAB)：①LRU/LFU两专家各提候选；②按权重选出Eviction Victim；③记入Eviction Hist.队列；④未命中时查该历史(Miss Key)；⑤命中则降低对应专家权重。",
+  "confidence": "high",
+  "notes": "style.corners overridden from the measured 'square' to 'mixed': the outer Eviction/Adaptive Process and Candidates boundaries are clearly rounded dashed rectangles in the source image even though the small list/queue cells are square.",
+  "venue": "SOSP23"
+}

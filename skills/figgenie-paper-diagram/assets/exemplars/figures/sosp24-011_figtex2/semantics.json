@@ -1,0 +1,276 @@
+{
+  "paper_id": "sosp24-011",
+  "fig": "tex2",
+  "kind": "mechanism",
+  "system": {
+    "name": "ReCycle",
+    "one_liner": "a system for resilient DNN training that reroutes microbatches to data-parallel peers and adapts the pipeline schedule to tolerate worker failures without spare servers",
+    "domain": [
+      "distributed-training",
+      "fault-tolerance",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how Adaptive Pipelining reroutes worker W1_2's micro-batches to peer workers W0_2 and W2_2 when W1_2 fails",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "Pipeline Stages (0-3)",
+        "kind": "icon",
+        "role": "legend colour key mapping each pipeline stage to a colour (orange=0, blue=1, green=2, purple=3), used to colour every worker icon by its stage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Data Parallel Pipelines (0-2)",
+        "kind": "icon",
+        "role": "legend colour key mapping each data-parallel pipeline row to a colour (blue=0, gray=1, yellow=2), used for that row's inter-worker arrows",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Fault-Free",
+        "kind": "label",
+        "role": "legend example of a normal single-arrow handoff between two workers",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Adapting to fault",
+        "kind": "label",
+        "role": "legend example showing a failed worker (X) with its input rerouted via a curved arrow to a different worker",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "4-Way Pipeline Parallelism",
+        "kind": "label",
+        "role": "horizontal axis title over the main grid (columns are pipeline stages 0-3)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3-Way Data Parallelism",
+        "kind": "label",
+        "role": "vertical axis title beside the main grid (rows are data-parallel pipelines 0-2)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W_1_1",
+        "kind": "cell",
+        "role": "the predecessor worker whose output would normally go to W_1_2, now split between W_0_2 and W_2_2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W_1_2",
+        "kind": "cell",
+        "role": "the single failed worker (stage 2, pipeline 1), drawn with a red X",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "W_0_2",
+        "kind": "cell",
+        "role": "healthy peer worker (stage 2, pipeline 0) that absorbs part of the failed worker's rerouted input",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "W_2_2",
+        "kind": "cell",
+        "role": "healthy peer worker (stage 2, pipeline 2) that absorbs the other part of the failed worker's rerouted input",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "W_1_3",
+        "kind": "cell",
+        "role": "the successor worker that receives the rerouted outputs from both W_0_2 and W_2_2 instead of from the failed W_1_2",
+        "container": "Data Parallel Peers",
+        "highlighted": true
+      },
+      {
+        "name": "Data Parallel Peers",
+        "kind": "label",
+        "role": "dashed purple box grouping the three stage-3 workers (W0_3, W1_3, W2_3), which hold identical stage-3 parameters",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W_x_y",
+        "kind": "label",
+        "role": "notation key defining the worker-naming convention (stage y of data-parallel pipeline x)",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "W_1_1",
+        "to": "W_1_2",
+        "what": "the normal (fault-free) path is broken: W_1_2 has failed and cannot receive this output",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "W_1_1",
+        "to": "W_0_2",
+        "what": "W_1_1's micro-batches are rerouted to healthy peer W_0_2, which processes them alongside its own regular load",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_1_1",
+        "to": "W_2_2",
+        "what": "the remaining micro-batches from W_1_1 are rerouted to healthy peer W_2_2",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_0_2",
+        "to": "W_1_3",
+        "what": "the output computed on W_1_1's behalf is sent back to W_1_3, the original recipient of W_1_2's output",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_2_2",
+        "to": "W_1_3",
+        "what": "the other rerouted output is likewise sent to W_1_3",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_0_2",
+        "to": "W_0_3",
+        "what": "W_0_2 still forwards its own regular pipeline output to W_0_3 as usual",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_2_2",
+        "to": "W_2_3",
+        "what": "W_2_2 still forwards its own regular pipeline output to W_2_3 as usual",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "one concrete failure instance: worker W_1_2 (stage 2 of data-parallel pipeline 1) fails; its predecessor W_1_1's micro-batches are split across peers W_0_2 and W_2_2, whose extra output is sent to W_1_3",
+      "linked_by": "colour (per-stage icon colour, per-pipeline arrow colour) and the W_x_y subscript notation, plus curved black arrows explicitly tracing the reroute",
+      "result_cells": "not a computed table; the specific set of named workers involved in the reroute (W_1_1, W_0_2, W_2_2, W_1_3) is itself the worked example"
+    },
+    "key_idea": "Because data-parallel peer workers at the same pipeline stage hold identical parameters, a failed worker's incoming micro-batches can be split across its healthy peers, which forward the extra output to the failed worker's original downstream successor.",
+    "reading_order": "legend first (stage colours, pipeline colours, fault-free vs adapting arrow patterns), then the main grid left to right along each data-parallel row, following the two curved black arrows that fork around the red-X'd W_1_2 into W_0_2 and W_2_2 and back together into W_1_3"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "badge",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.52,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e97132",
+        "used_for": "pipeline-stage-0 icon outline and legend swatch"
+      },
+      {
+        "hex": "#0f9ed5",
+        "used_for": "pipeline-stage-1 icon outline and legend swatch"
+      },
+      {
+        "hex": "#4ea72e",
+        "used_for": "pipeline-stage-2 icon outline and legend swatch"
+      },
+      {
+        "hex": "#a02b93",
+        "used_for": "pipeline-stage-3 icon outline, legend swatch, and the 'Data Parallel Peers' dashed-box border and title text"
+      },
+      {
+        "hex": "#4372c4",
+        "used_for": "fill of the 'Data Parallel Pipeline 0' cylinder icon and its row's inter-stage arrows"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "fill of the 'Data Parallel Pipeline 2' cylinder icon and its row's inter-stage arrows"
+      },
+      {
+        "hex": "#aeaeae",
+        "used_for": "fill of the 'Data Parallel Pipeline 1' cylinder icon"
+      },
+      {
+        "hex": "#ff7e79",
+        "used_for": "salmon fill of the red-outlined (#ff0000) X badge marking a failed worker"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin coloured outlines on the line-art GPU icons (one colour per pipeline stage); a dashed magenta rectangle rings the 'Data Parallel Peers' group; a dotted vertical rule separates the legend from the main diagram",
+    "corners": "mixed",
+    "arrows": "thin arrows coloured by data-parallel row (blue/black/gold) for normal handoffs; black curved arrows fork around the failed worker to its two healthy peers and merge again into its original successor",
+    "font": "AvenirNext sans, large uniform size",
+    "icons": "vector dual-fan GPU icons, colour-outlined by pipeline stage; cylinder/database icons colour-filled by data-parallel pipeline; a red X badge overlaid on a failed worker's icon"
+  },
+  "encoding": {
+    "color_means": "each pipeline stage (0-3) has its own icon-outline colour (orange/cyan/green/magenta), shared by the legend swatches; each data-parallel pipeline (0-2) has its own arrow/cylinder colour (blue/gray/gold); red marks a failed worker",
+    "line_style_means": "solid arrows only; colour, not dash, distinguishes a pipeline row's normal arrows from the black curved reroute arrows; dashed lines are reserved for the grouping box and the legend divider",
+    "state_means": "a failed worker is told apart by a red X badge over its (still stage-coloured) icon; its healthy peers are visually identical to any other active worker of the same stage",
+    "marker_means": "no numbered markers; the red X is the only symbolic marker, and the small 'Fault-Free' vs 'Adapting to fault' legend pair explains what a curved black arrow around an X means before the reader reaches the main diagram",
+    "emphasis": "the fork-then-merge shape of the two black curved arrows around the red-X'd W_1_2 visually isolates the one mechanism the figure exists to explain, against an otherwise uniform grid of same-coloured icons",
+    "reusable_patterns": [
+      "a small 'before/after' legend pair (Fault-Free vs Adapting to fault) taught once, then reused unlabelled in the main diagram",
+      "a two-dimensional worker grid coloured on two independent axes (stage colour by column, pipeline colour by row-arrow) so a single failed cell's reroute stands out against both colour schemes"
+    ],
+    "weaknesses": [
+      "the paper text names the final recipient of the rerouted output as 'W_2_3' in one passage, which appears to be a typo for 'W_1_3' since the figure clearly draws both curved arrows converging on W_1_3, not W_2_3",
+      "the legend's 'Adapting to fault' mini-example uses generic unlabelled icons, so a reader must map it onto the specific W_1_2 case in the main diagram unaided"
+    ]
+  },
+  "tags": [
+    "fault-tolerance",
+    "pipeline-parallelism",
+    "data-parallelism",
+    "adaptive-pipelining",
+    "micro-batch-rerouting",
+    "ReCycle"
+  ],
+  "provenance": {
+    "sections": [
+      "§Adaptive Pipelining: Working Around Failures",
+      "§Adaptive Pipelines: Managing Failures and Rerouting Micro Batches"
+    ],
+    "evidence": [
+      "originally intended for \\(W_1 2\\), are dynamically re-routed to workers \\(W_0 2\\) and \\(W_2 2\\)",
+      "workers \\(W_0\\_2\\), \\(W_1\\_2\\), and \\(W_2\\_2\\) are peers that hold identical parameters for stage 2",
+      "Adaptive Pipelining will redirect its input to workers \\(W_0\\_2\\) and \\(W_2\\_2\\)"
+    ]
+  },
+  "summary": "This figure gives one concrete worked example of ReCycle's Adaptive Pipelining: three data-parallel, 4-stage pipelines (12 workers W_x_y, coloured by stage 0-3 and by pipeline 0-2), in which worker W_1_2 has failed (red X). A legend first teaches the Fault-Free vs Adapting-to-fault arrow pattern before the main grid uses it: W_1_1's micro-batches, which would normally go straight to W_1_2, instead fork along two black curved arrows to W_1_2's healthy data-parallel peers, W_0_2 and W_2_2, which hold identical stage-2 parameters. Each peer processes the extra micro-batch alongside its own regular load, then forwards its own output onward as usual while sending the extra output back to W_1_3, the failed worker's original downstream successor. All other workers keep operating exactly as in the fault-free schedule.",
+  "summary_zh": "该图示ReCycle自适应流水线例子：3×4的12个worker中，W_1_2失效(红叉)；前驱W_1_1的微批次经黑色箭头分流给W_0_2和W_2_2，二者常规输出照发，额外输出汇入原下游W_1_3。",
+  "confidence": "high",
+  "notes": "worked_example corrected from the prior False to True: the specific named workers involved (W_1_2 failing, W_0_2/W_2_2 absorbing, W_1_3 receiving) are one concrete instance of the general mechanism and are themselves the content. layout.legend set to 'inside' as the closest available enum value; the legend actually sits to the left of the main diagram behind a dotted divider, which is not literally 'inside/below/right/per-panel'. layout.column set to 'double' as an estimate since the measured index left this field blank and the figure's rendered width (879pt) is far wider than this corpus's typical single-column figures.",
+  "venue": "SOSP24"
+}

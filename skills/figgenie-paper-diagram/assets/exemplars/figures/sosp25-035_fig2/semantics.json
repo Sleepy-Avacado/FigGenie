@@ -1,0 +1,179 @@
+{
+  "paper_id": "sosp25-035",
+  "fig": "2",
+  "system": {
+    "name": "Mantle",
+    "one_liner": "a hierarchical metadata service for cloud object storage that separates lightweight directory access metadata from a scalable backing database",
+    "domain": [
+      "storage",
+      "cloud",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Hierarchical Namespace",
+        "role": "example namespace tree mixing directory metadata and object metadata used to explain the DBtable schema",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Meta-ops Execution Order",
+        "role": "walks through the numbered RPCs a proxy issues to resolve a path and run a distributed transaction",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Proxy 1",
+        "role": "randomly selected proxy server that receives the client's PUT request and drives path resolution",
+        "container": "Meta-ops Execution Order",
+        "novel": false
+      },
+      {
+        "name": "node1",
+        "role": "shard holding the root directory's child entries A and B",
+        "container": "Database Cluster",
+        "novel": false
+      },
+      {
+        "name": "node2",
+        "role": "shard holding directory A's child entries C and D",
+        "container": "Database Cluster",
+        "novel": false
+      },
+      {
+        "name": "node3",
+        "role": "shard holding directory C's entries; updated with directory E's attribute during the mkdir transaction",
+        "container": "Database Cluster",
+        "novel": false
+      },
+      {
+        "name": "node4",
+        "role": "shard where the newly created directory G is inserted during the mkdir transaction",
+        "container": "Database Cluster",
+        "novel": false
+      },
+      {
+        "name": "Database Cluster",
+        "role": "sharded database holding the metadata table, partitioned by parent directory id to preserve locality",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Proxy 1",
+        "to": "node1",
+        "what": "path-resolution RPC checking the root directory",
+        "step": 1
+      },
+      {
+        "from": "Proxy 1",
+        "to": "node2",
+        "what": "path-resolution RPC checking directory A",
+        "step": 2
+      },
+      {
+        "from": "Proxy 1",
+        "to": "node3",
+        "what": "path-resolution RPC checking directory C",
+        "step": 3
+      },
+      {
+        "from": "Proxy 1",
+        "to": "node3",
+        "what": "distributed transaction updating parent directory E's metadata",
+        "step": "4a"
+      },
+      {
+        "from": "Proxy 1",
+        "to": "node4",
+        "what": "distributed transaction inserting the new directory G",
+        "step": "4b"
+      }
+    ],
+    "key_idea": "A hierarchical namespace can be mapped onto a sharded database table keyed by parent-directory id, but modifying it needs multi-round RPCs and cross-shard transactions.",
+    "reading_order": "Top-left namespace tree, then top-right proxy-to-shard RPC steps for a PUT request, then down to the four sharded tables showing the resulting rows."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.59,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c9c9c9",
+        "used_for": "gray fill for table header rows (pid/name/id) in the Database Cluster panel"
+      },
+      {
+        "hex": "#d9f2d0",
+        "used_for": "light green fill marking object rows/circles (e.g. D, F) among directory entries"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red annotation labels and dashed brackets: primary key, shard key, updated attr, inserted dir"
+      },
+      {
+        "hex": "#fdda60",
+        "used_for": "yellow fill highlighting the active Proxy 1 box"
+      },
+      {
+        "hex": "#2e7d32",
+        "used_for": "dark green for the bold PUT(...) request arrow/text and the object-circle outlines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark strokes (~0.34pt) on boxes, red dashed strokes for annotation brackets",
+    "font": "Helvetica sans-serif, 5.5-6.5pt, mostly regular with sparse bold",
+    "corners": "mixed",
+    "arrows": "dashed curved arrows with small triangular heads for RPC steps, solid lines for tree edges and table brackets",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = object metadata (circles and highlighted table rows), gray = table header rows, yellow = the currently active proxy, red = annotation callouts",
+    "line_style_means": "dashed curved arrows = RPC calls from the proxy to shards; dashed red brackets = annotation callouts; solid lines = tree parent-child edges",
+    "emphasis": "the yellow-highlighted Proxy 1 box and the red annotation callouts on the sharded tables draw the eye to the multi-RPC path resolution and the exact rows a distributed mkdir transaction touches",
+    "reusable_patterns": [
+      "namespace tree paired side-by-side with its physical sharded-table encoding",
+      "numbered RPC fan-out from a proxy to multiple shards"
+    ],
+    "weaknesses": [
+      "three dense sub-panels (tree, RPC flow, tables) are packed into one figure, requiring the reader to manually match letters like C/D/E/G across all three to follow the example"
+    ]
+  },
+  "tags": [
+    "metadata",
+    "object-storage",
+    "sharding",
+    "distributed-transactions",
+    "hierarchical-namespace",
+    "cloud-storage"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 shows the architecture of a DBtable-based hierarchical metadata service of the COSSs of Baidu",
+      "steps 4a and 4b together form a distributed transaction initi- ated by the proxy",
+      "A randomly selected proxy server then processes this request by recursively traversing the path from the root"
+    ]
+  },
+  "summary": "Figure 2 illustrates the DBtable-based hierarchical metadata service used by Baidu's cloud object storage system, the baseline design that motivates Mantle. The top-left panel shows an example namespace tree mixing directory metadata (white boxes) and object metadata (green circles). The top-right panel, 'Meta-ops Execution Order', shows a proxy resolving a PUT request to create directory '/A/C/E/G/' by issuing numbered RPCs (1-3) to successive database shards (node1-node3), then completing the mkdir with a two-part distributed transaction (4a, 4b) spanning node3 and node4. The bottom panel renders the same namespace as four sharded tables (node1-node4) keyed by parent-directory id, name, and id, with red annotations marking the primary key, the shard key, and the rows touched by the update and insertion.",
+  "summary_zh": "图2展示百度COSS基于DBtable的分层元数据服务基线架构：左上为命名空间树；右上按编号RPC演示代理解析路径，并跨node3、node4完成mkdir分布式事务；下方为按父目录ID分片的四张表，红色标注主键、分片键及被更新插入的行。",
+  "confidence": "high",
+  "notes": "layout-proposal: three-panel explainer — a namespace tree, a numbered proxy request-flow diagram, and four sharded database tables shown as three bordered panels (two on top, one spanning below) rather than a single named template.",
+  "venue": "SOSP25"
+}

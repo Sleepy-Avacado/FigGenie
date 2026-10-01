@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-034_fig1",
+  "kind": "mechanism",
+  "paper_id": "asplos25-034",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Fig. 1. Illustration of PBNR, which parameterizes the scene with a set of points, each associated with a 3D Gaussian distribution that gives rise to an ellipsoid. The ellipsoids are projected to ellipses on the image plane, where the ellipses are sorted (per tile, e.g., 2 × 2 pixels). The color of a",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "scene",
+  "subject": "how a scene's 3D Gaussian ellipsoids are projected onto an image-plane tile as ellipses, sorted by depth, and combined to shade one pixel",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "callout",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.14,
+  "n_elements": 14,
+  "n_relations": 6,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": true,
+  "tool": "omnigraffle",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-034/src/fig1_pbnr.svg",
+    "preview.png": "lab/extracted/asplos25-034/src/fig1_pbnr.png",
+    "print.png": "lab/extracted/asplos25-034/asplos25-034_fig1_p2_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "The general point-based neural rendering pipeline reduces to three per-tile steps: project each scene ellipsoid to an image-plane ellipse, sort the intersecting ellipses by depth, and blend their colours front-to-back to shade the pixel.",
+      "what_to_learn": "matching upper-case 3D objects to lower-case 2D projections via colour and a projection line, with a magnified tile inset showing pixel-level detail",
+      "note_source": "record"
+    }
+  ]
+}

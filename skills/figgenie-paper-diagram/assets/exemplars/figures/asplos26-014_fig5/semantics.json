@@ -1,0 +1,190 @@
+{
+  "paper_id": "asplos26-014",
+  "fig": "5",
+  "system": {
+    "name": "SuperOffload",
+    "one_liner": "a Superchip-centric offloading system that jointly optimizes data placement, computation, and tensor migration between Hopper GPU and Grace CPU for LLM training",
+    "domain": [
+      "ml-systems",
+      "distributed training",
+      "hardware/systems co-design"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "SA-DFG",
+        "role": "Superchip-aware dataflow graph example showing per-op GPU/CPU cost and tensor sizes (Step, Cast, FWD, BWD nodes)",
+        "container": "SuperOffload",
+        "novel": true
+      },
+      {
+        "name": "Grace CPU",
+        "role": "CPU side of the Superchip hosting optimizer state and offloaded computation",
+        "container": "SuperOffload",
+        "novel": false
+      },
+      {
+        "name": "Hopper GPU",
+        "role": "GPU side of the Superchip performing forward/backward compute",
+        "container": "SuperOffload",
+        "novel": false
+      },
+      {
+        "name": "NVLINK-C2C (900GB/s)",
+        "role": "high-bandwidth interconnect between Grace CPU and Hopper GPU that SuperOffload fully utilizes",
+        "container": "SuperOffload",
+        "novel": false
+      },
+      {
+        "name": "Speculation-then-Validation (§4.4)",
+        "role": "runs a speculative optimizer step, validates it, and rolls back on failure",
+        "container": "Grace CPU",
+        "novel": true
+      },
+      {
+        "name": "GraceAdam (§4.6)",
+        "role": "optimized Adam optimizer implementation for Grace CPU",
+        "container": "Grace CPU",
+        "novel": true
+      },
+      {
+        "name": "Weight-Stationary or Flow Offloading (§4.2)",
+        "role": "adaptive policy choosing whether weights stay resident or flow between GPU and CPU",
+        "container": "SuperOffload",
+        "novel": true
+      },
+      {
+        "name": "Bucketization Repartitioning (§4.3)",
+        "role": "adjusts bucketization and fine-grained repartitioning of optimizer state to balance workload",
+        "container": "SuperOffload",
+        "novel": true
+      },
+      {
+        "name": "Superchip-Aware Casting (§4.5)",
+        "role": "casts/moves tensors in a way aware of Superchip compute/communication costs",
+        "container": "Hopper GPU",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "SA-DFG Step",
+        "to": "Cast",
+        "what": "4M tensor",
+        "step": null
+      },
+      {
+        "from": "Cast",
+        "to": "FWD",
+        "what": "2M tensor (P16/A16)",
+        "step": null
+      },
+      {
+        "from": "Cast",
+        "to": "BWD",
+        "what": "2M tensor (G16/A16)",
+        "step": null
+      },
+      {
+        "from": "Grace CPU",
+        "to": "Hopper GPU",
+        "what": "tensor migration over NVLink-C2C",
+        "step": null
+      },
+      {
+        "from": "Weight-Stationary or Flow Offloading (§4.2)",
+        "to": "Bucketization Repartitioning (§4.3)",
+        "what": "offload decisions balancing resources",
+        "step": null
+      },
+      {
+        "from": "Bucketization Repartitioning (§4.3)",
+        "to": "Superchip-Aware Casting (§4.5)",
+        "what": "repartitioned optimizer state",
+        "step": null
+      }
+    ],
+    "key_idea": "SuperOffload treats the tightly-coupled Hopper GPU + Grace CPU Superchip as a single Superchip-aware dataflow graph and applies a bundle of techniques (adaptive offloading, bucketization repartitioning, Superchip-aware casting, speculative optimizer execution, GraceAdam) to fully exploit the 900GB/s NVLink-C2C link.",
+    "reading_order": "Top: SA-DFG mini example showing per-op cost annotations; then left-to-right across the two Superchip halves (Grace CPU techniques on the left, Hopper GPU techniques on the right) joined by the NVLink-C2C column in the middle."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.37,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "dark red accents and arrows highlighting GPU-side compute cost in the SA-DFG example"
+      },
+      {
+        "hex": "#548900",
+        "used_for": "green fill for the Grace CPU / Hopper GPU section headers"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "gray fills for node/box outlines"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray box fills"
+      },
+      {
+        "hex": "#f8e6d6",
+        "used_for": "cream fill accents on minor boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "medium (~0.5pt) solid strokes, black frame around the whole figure",
+    "font": "serif-leaning mixed CambriaMath/Aptos-BoldItalic, 3-10.5pt, mostly non-bold",
+    "corners": "mixed",
+    "arrows": "22 arrowheads on straight connecting lines linking sub-diagram nodes and technique boxes",
+    "icons": "small check-mark and rollback icons in the Post Validation box"
+  },
+  "encoding": {
+    "color_means": "green headers separate the Grace CPU and Hopper GPU halves; red highlights compute-cost annotations in the SA-DFG example",
+    "line_style_means": null,
+    "emphasis": "the two-column CPU/GPU split with a highlighted central NVLink-C2C bar visually argues that SuperOffload's contribution is balancing both sides of the Superchip",
+    "reusable_patterns": [
+      "host-device split diagram with a labeled high-bandwidth interconnect in the middle and per-side optimization boxes"
+    ],
+    "weaknesses": [
+      "mixes a small technical SA-DFG diagram with system-overview boxes in one dense panel, increasing text density"
+    ]
+  },
+  "tags": [
+    "LLM training",
+    "offloading",
+    "Superchip",
+    "GPU-CPU co-design",
+    "NVLink",
+    "optimizer offload"
+  ],
+  "provenance": {
+    "sections": [
+      "4 SuperOffload Design and Implementation (p.4)"
+    ],
+    "evidence": [
+      "SuperOffload, a system specifically designed for training LLMs on Superchips by judiciously optimizing data placement",
+      "adaptive weight-stationary and weight-flow policy to exploit heterogeneous compute efficiencies of Hopper GPU and Grace CPU",
+      "it adjusts the bucketization strategy and leverages fine-grained repartitioning to balance the workload"
+    ]
+  },
+  "summary": "This figure gives the system overview of SuperOffload, an offloading system for training LLMs on NVIDIA GH200-style Superchips that pair a Hopper GPU with a Grace CPU over a 900GB/s NVLink-C2C link. At the top, a small Superchip-aware dataflow graph (SA-DFG) example shows how each tensor operator's cost differs depending on whether it runs on GPU or CPU (Step, Cast, FWD, BWD nodes with data-size and cost labels). The main body is split into a Grace CPU column and a Hopper GPU column joined by the NVLink-C2C bar, annotating SuperOffload's five techniques: weight-stationary/flow offloading, bucketization repartitioning, Superchip-aware casting, speculation-then-validation optimizer stepping, and the GraceAdam optimizer. The figure is a dense, boxed architecture diagram with green section headers, red cost-highlighting accents, and small icons for validation/rollback.",
+  "summary_zh": "该图展示SuperOffload系统概览：顶部SA-DFG示例标注各算子在GPU/CPU上的开销；主体按Grace CPU与Hopper GPU两栏布局，中间为NVLink-C2C互联，标注自适应卸载、分桶再分区、芯片感知类型转换、推测验证优化器步骤与GraceAdam等技术。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

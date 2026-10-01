@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-021_fig6",
+  "paper_id": "asplos26-021",
+  "fig": "6",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 6. Motivating architectures.",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.4,
+  "n_components": 7,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-021/src/fig6a_Motivation-Digital-PUM.svg",
+    "preview.png": "lab/extracted/asplos26-021/src/fig6a_Motivation-Digital-PUM.png",
+    "print.png": "lab/extracted/asplos26-021/asplos26-021_fig6_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Three same-scale baseline architectures (Digital PUM, Analog PUM, Naive Hybrid PUM) reuse one crossbar-array icon throughout so structural differences, an off-chip CPU link versus stacked on-chip controllers, are directly comparable panel to panel.",
+      "what_to_learn": "Reuse the identical crossbar-array icon at the same visual scale across every alternative-design panel so the eye compares structure, not icon style, and letter the panels (a)(b)(c) with short claim titles naming each design; pair the figure with the performance numbers it motivates, since the panels alone (a listed weakness) omit that data."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-16 pick: three miniature floorplans (digital PUM, analog PUM, naive hybrid) reuse one crossbar-array icon and an orange-versus-blue palette to compare baseline chip layouts side by side.",
+      "what_to_learn": "Reuse the same building-block icon and a two-color code across side-by-side variant panels so structural differences read without a legend, elide repeated array rows with a vertical ellipsis instead of drawing every tile, and route the one off-chip link as a distinct colored connector outside the array."
+    }
+  ]
+}

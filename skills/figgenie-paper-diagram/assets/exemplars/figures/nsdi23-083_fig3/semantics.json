@@ -1,0 +1,204 @@
+{
+  "paper_id": "nsdi23-083",
+  "fig": "3",
+  "system": {
+    "name": "SkyPilot",
+    "one_liner": "an intercloud broker that lets users run jobs across multiple cloud providers through a unified interface",
+    "domain": [
+      "cloud-computing",
+      "resource-management",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Job specification (e.g., DAG)",
+        "role": "user-provided task graph submitted to the broker",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "User preferences (e.g., minimize cost, latency, ...)",
+        "role": "user-specified optimization objectives and constraints",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Intercloud Broker",
+        "role": "central broker coordinating job placement and provisioning across clouds",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Service Catalog",
+        "role": "catalog of available cloud services, prices, and APIs across providers",
+        "container": "Intercloud Broker",
+        "novel": true
+      },
+      {
+        "name": "Tracker",
+        "role": "tracks state and availability of resources and services across clouds",
+        "container": "Intercloud Broker",
+        "novel": true
+      },
+      {
+        "name": "Optimizer",
+        "role": "selects a cloud/resource plan given the job spec and user preferences",
+        "container": "Intercloud Broker",
+        "novel": true
+      },
+      {
+        "name": "Provisioner",
+        "role": "provisions the chosen resources on the target cloud",
+        "container": "Intercloud Broker",
+        "novel": true
+      },
+      {
+        "name": "Executor",
+        "role": "executes the job on the provisioned resources",
+        "container": "Intercloud Broker",
+        "novel": true
+      },
+      {
+        "name": "Service publisher",
+        "role": "publishes a cloud's available services, APIs, and prices to the broker",
+        "container": "Cloud A",
+        "novel": false
+      },
+      {
+        "name": "Compatibility Set",
+        "role": "set of compatible resources/services available on that cloud",
+        "container": "Cloud A",
+        "novel": false
+      },
+      {
+        "name": "Cloud A",
+        "role": "one backend cloud provider the broker can provision on",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cloud B",
+        "role": "another backend cloud provider the broker can provision on",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Job specification (e.g., DAG)",
+        "to": "Optimizer",
+        "what": "the user's task graph to be scheduled",
+        "step": null
+      },
+      {
+        "from": "User preferences (e.g., minimize cost, latency, ...)",
+        "to": "Optimizer",
+        "what": "optimization objectives and constraints",
+        "step": null
+      },
+      {
+        "from": "Service publisher",
+        "to": "Service Catalog",
+        "what": "APIs, prices, and other service information from the cloud",
+        "step": null
+      },
+      {
+        "from": "Optimizer",
+        "to": "Provisioner",
+        "what": "a selected placement plan",
+        "step": null
+      },
+      {
+        "from": "Provisioner",
+        "to": "Executor",
+        "what": "provisioned resources ready to run the job",
+        "step": null
+      },
+      {
+        "from": "Provisioner",
+        "to": "Service publisher",
+        "what": "provisioning requests sent to a cloud's compatible resources",
+        "step": null
+      }
+    ],
+    "key_idea": "A single broker collects prices and API compatibility from many clouds into a catalog, then optimizes, provisions, and executes a user's job on whichever cloud fits their cost and latency preferences.",
+    "reading_order": "Top to bottom: job specification and user preferences enter the Optimizer inside the Intercloud Broker box, which sits above two symmetric Cloud A / Cloud B backends it provisions into."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.61,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#44546a",
+        "used_for": "dark slate blue for the Intercloud Broker outer box border/heading"
+      },
+      {
+        "hex": "#cfe3f3",
+        "used_for": "pale blue fill for the Service Catalog/Tracker and Optimizer/Provisioner/Executor inner boxes"
+      },
+      {
+        "hex": "#0c5395",
+        "used_for": "medium blue fill for the Compatibility Set boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "gray fill for the Cloud A / Cloud B containers and Service publisher boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders (~0.38pt), dashed outlines for the Cloud A/Cloud B containers",
+    "font": "sans-serif (Helvetica), 6-10pt",
+    "corners": "mixed",
+    "arrows": "thin solid and dashed lines connecting the broker's components to each cloud's Service publisher, plus a plain arrow from the job-spec/user-preferences icon into the Optimizer",
+    "icons": "a person icon for the job specification/user preferences input, small icons on the Service publisher boxes"
+  },
+  "encoding": {
+    "color_means": "darker blue marks the broker's own internal components (Service Catalog, Tracker, Optimizer, Provisioner, Executor); a distinct blue marks the per-cloud Compatibility Set boxes",
+    "line_style_means": "dashed lines connect the broker to each cloud's Service publisher, suggesting a looser information exchange (prices, APIs) than the plain arrow carrying the job spec into the Optimizer",
+    "emphasis": "the broker is drawn as one large box literally labelled Intercloud Broker straddling two symmetric Cloud A / Cloud B boxes below it, asserting that a single broker design generalizes across multiple, interchangeable cloud backends",
+    "reusable_patterns": [
+      "central coordinator box stacked above N symmetric backend boxes",
+      "paired sub-components inside the coordinator (catalog/tracker vs optimizer/provisioner/executor) shown as two adjacent stacks"
+    ],
+    "weaknesses": [
+      "only two clouds are drawn, so it is not obvious from the figure alone whether the broker scales beyond two without reading the text"
+    ]
+  },
+  "tags": [
+    "cloud-computing",
+    "intercloud",
+    "resource-broker",
+    "provisioning",
+    "multi-cloud",
+    "scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Intercloud Broker (p.6)"
+    ],
+    "evidence": [
+      "we propose an intercloud broker architecture consisting of the following components",
+      "Figure 3: Architecture of the intercloud broker."
+    ]
+  },
+  "summary": "Figure 3 shows SkyPilot's intercloud broker architecture. A job specification (e.g., a DAG) and user preferences (e.g., minimize cost or latency) feed into the broker's Optimizer, which works alongside a Service Catalog and Tracker that record prices, APIs, and availability gathered from every backend cloud, and a Provisioner and Executor that carry out the chosen plan. Below the broker, two example backend clouds, Cloud A and Cloud B, each expose a Service publisher and a Compatibility Set describing the resources and services they offer; dashed connections carry this catalog information up to the broker, while the broker's Provisioner reaches back down to provision resources. The figure draws the broker as a single box stacked above symmetric per-cloud boxes, emphasizing that one broker design coordinates interchangeable cloud backends.",
+  "summary_zh": "图3展示SkyPilot跨云代理架构：作业规格与用户偏好输入Optimizer，配合Catalog/Tracker与Provisioner/Executor；Cloud A、B的Service publisher经虚线提供API、价格信息。",
+  "confidence": "medium",
+  "notes": "layout-proposal: broker-over-backends — a single coordinator box (catalog/tracker plus optimizer/provisioner/executor) stacked above two symmetric, interchangeable cloud-backend panels, generalizing to N clouds rather than a radial hub with spokes arranged around it.",
+  "venue": "NSDI23"
+}

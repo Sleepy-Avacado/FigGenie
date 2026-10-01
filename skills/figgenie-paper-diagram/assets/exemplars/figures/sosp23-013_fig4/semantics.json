@@ -1,0 +1,181 @@
+{
+  "paper_id": "sosp23-013",
+  "fig": "4",
+  "system": {
+    "name": "Oobleck",
+    "one_liner": "a system for resilient distributed training of large models using heterogeneous pipeline templates",
+    "domain": [
+      "ml-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Node Specification",
+        "role": "shows how many nodes each of the three pipeline templates (A, B, C) is assigned, given N=13 nodes, model memory requirements, and fault tolerance threshold f",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU-Stage Mapping",
+        "role": "shows how each template's GPUs are mapped to pipeline stages (S1, S2, ...) of the Model",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Model",
+        "role": "the model whose layers are partitioned into stages for each template",
+        "container": "GPU-Stage Mapping",
+        "novel": false
+      },
+      {
+        "name": "Templates",
+        "role": "the three heterogeneous pipeline templates (A, B, C) considered for instantiation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "13 Nodes",
+        "role": "the total available nodes to be covered by pipeline instances",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Global Batch",
+        "role": "the total batch size (26) to be split across instantiated pipelines",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Fault Tolerance Threshold",
+        "role": "the threshold f=3 that the instantiation plan must satisfy",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Plan 1",
+        "role": "one feasible pipeline instantiation plan combining templates A, B, C with specific instance counts and minibatch sizes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Best Plan",
+        "role": "the selected plan output after evaluating candidate plans",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Node Specification",
+        "to": "GPU-Stage Mapping",
+        "what": "template node counts mapped to GPU-stage layouts",
+        "step": null
+      },
+      {
+        "from": "Templates",
+        "to": "Plan 1",
+        "what": "instance counts (x1, x2) and minibatch sizes per template",
+        "step": null
+      },
+      {
+        "from": "13 Nodes",
+        "to": "Plan 1",
+        "what": "node budget constraint",
+        "step": null
+      },
+      {
+        "from": "Global Batch",
+        "to": "Plan 1",
+        "what": "batch size constraint (26)",
+        "step": null
+      },
+      {
+        "from": "Fault Tolerance Threshold",
+        "to": "Plan 1",
+        "what": "threshold constraint (f=3)",
+        "step": null
+      },
+      {
+        "from": "Plan 1",
+        "to": "Best Plan",
+        "what": "selection among feasible plans",
+        "step": null
+      }
+    ],
+    "key_idea": "Oobleck first generates a small set of heterogeneous pipeline templates by mapping GPUs to model stages at different node counts, then enumerates feasible combinations of template instances that cover all available nodes and satisfy the fault-tolerance and batch-size constraints to pick a best plan.",
+    "reading_order": "Left panel (a) read left to right: node specification (templates A/B/C sized 2/3/4 nodes) into GPU-stage mapping showing each template's stage layout. Right panel (b) read left to right: given inputs (templates, 13 nodes, global batch 26, fault tolerance 3), Plan 1 assigns instance counts and minibatches per template, arriving at the Best Plan."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "double",
+    "aspect": 3.68,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#424242",
+        "used_for": "dark gray fill for template C's node squares"
+      },
+      {
+        "hex": "#929292",
+        "used_for": "medium gray fill for template B's node squares"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light gray fill for template A's node squares"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt black borders, thin dashed vertical separators marking GPU-stage boundaries",
+    "font": "HelveticaNeue sans, 6-8pt",
+    "corners": "mixed",
+    "arrows": "black connecting lines between the node-count grid, GPU-stage boxes, and plan table",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "grayscale shading (light/medium/dark) distinguishes the three pipeline templates A, B, C consistently across both sub-panels, from node-count squares to plan instance counts",
+    "line_style_means": "dashed vertical lines within the node squares mark GPU-to-stage partition boundaries",
+    "emphasis": "the same A/B/C grayscale coding carried from panel (a)'s template generation into panel (b)'s plan table visually ties template design to plan instantiation",
+    "reusable_patterns": [
+      "consistent color/shading key for a fixed set of template options reused across two connected sub-panels",
+      "grid-of-squares glyph representing node counts per template"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "distributed-training",
+    "fault-tolerance",
+    "pipeline-parallelism",
+    "resource-allocation",
+    "heterogeneous-pipelines",
+    "planning-algorithm"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Oobleck Planning Algorithm (p.5)",
+      "4 Oobleck Planning Algorithm (p.7)"
+    ],
+    "evidence": [
+      "three heterogeneous pipeline templates with 2, 3, and 4 nodes have been chosen",
+      "13 nodes can be represented as the plan 1 in Figure 4b",
+      "we enumerate all feasible pipeline sets for currently available nodes and pick one"
+    ]
+  },
+  "summary": "This two-panel figure shows Oobleck's planning algorithm overview. Panel (a), 'Generating pipeline templates', shows a Node Specification for three heterogeneous pipeline templates A, B, C sized 2, 3, and 4 nodes respectively (given N=13 total nodes, model memory requirements, and fault tolerance threshold f), and a GPU-Stage Mapping showing how each template partitions the Model into stages S1-S4 with dashed lines marking stage boundaries. Panel (b), 'Pipeline instantiation', shows how, given the three templates, 13 nodes, a global batch of 26, and fault tolerance threshold 3, a candidate Plan 1 assigns instance counts (A x1, B x1, C x2) and minibatch sizes per template, summing to 4 pipelines covering all 13 nodes and a total batch of 26, arriving at a Best Plan. Consistent light/medium/dark grayscale shading identifies each template across both panels.",
+  "summary_zh": "该图分两部分展示Oobleck规划算法：(a)节点规格生成三种异构流水线模板A/B/C(分别用2、3、4节点)及其GPU-阶段映射；(b)在13节点、全局批量26、容错阈值3约束下，方案1为各模板分配实例数与小批量大小，最终得到最佳方案。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP23"
+}

@@ -1,0 +1,139 @@
+{
+  "paper_id": "asplos26-142",
+  "fig": "4",
+  "system": {
+    "name": "iSwitch",
+    "one_liner": "a hybrid trapped-ion architecture that uses bare qubits for single-qubit gates and QEC-encoded logical qubits for two-qubit gates",
+    "domain": [
+      "quantum-computing",
+      "architecture"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "1D Trap",
+        "role": "short one-dimensional ion trap segment; the basic connectivity unit of the QCCD grid",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "4-way Junction",
+        "role": "connects four 1D traps in a 2D grid and lets ions be shuttled between them",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Ion Qubit",
+        "role": "a physical ion held in a trap, numbered 1-4 in the example",
+        "container": "1D Trap",
+        "novel": false
+      },
+      {
+        "name": "Vacant Spot",
+        "role": "an empty trap position an ion can shuttle into",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Ion Qubit 1",
+        "to": "Ion Qubit 3",
+        "what": "ion shuttle/swap through the junction grid",
+        "step": null
+      },
+      {
+        "from": "Ion Qubit 2",
+        "to": "Ion Qubit 4",
+        "what": "ion shuttle/swap through the junction grid",
+        "step": null
+      },
+      {
+        "from": "Ion Qubit 3",
+        "to": "Ion Qubit 1",
+        "what": "collective shuttling that brings ions 1 and 3 into the same trap for a 2Q gate",
+        "step": null
+      }
+    ],
+    "key_idea": "The QCCD architecture connects 1D ion traps through 4-way junctions so ions can be shuttled and collectively swapped, letting two ions be brought into one trap to perform a two-qubit CNOT gate.",
+    "reading_order": "panel (a) top-left shows the overall collective swap of ion pairs (1,3) and (2,4); panels (b)-(e), boxed at top-right, break that swap into individual shuttle steps; panel (f), bottom-left, shows the resulting CNOT gates once ions share a trap."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "letters",
+    "panels": 6,
+    "column": "single",
+    "aspect": 1.02,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e1d5e7",
+        "used_for": "1D Trap fill (purple/lavender)"
+      },
+      {
+        "hex": "#ffee82",
+        "used_for": "4-way Junction fill (yellow)"
+      },
+      {
+        "hex": "#ff8000",
+        "used_for": "ion shuttle/swap arrows"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "2Q Gate (CNOT) dotted marker"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "empty grid cell background"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black outlines on grid squares, dashed black box grouping panels (b)-(e)",
+    "font": "sans, ~8-10pt",
+    "corners": "square",
+    "arrows": "curved orange arrows with filled heads for shuttling paths",
+    "icons": "vector: open/filled circles for ion qubits, dotted circle for vacant spots, dotted red oval for CNOT gate location"
+  },
+  "encoding": {
+    "color_means": "purple/lavender = 1D trap, yellow = 4-way junction, orange = ion shuttle/swap arrows, red dotted oval = location where a 2Q CNOT gate is applied",
+    "line_style_means": "dashed black box groups panels (b)-(e) as the detailed step-by-step breakdown of the collective swap shown in panel (a)",
+    "emphasis": "curved orange arrows trace the exact shuttle path of each ion through the junction grid, and dotted red ovals mark exactly where the resulting CNOT gates occur",
+    "reusable_patterns": [
+      "small multiples (grid of near-identical sub-diagrams) showing successive steps of a physical process",
+      "an inset dashed box that zooms into the steps behind a single panel of the main figure"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "QCCD",
+    "ion-shuttling",
+    "trapped-ion",
+    "two-qubit-gate",
+    "background-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "Background (p.4)"
+    ],
+    "evidence": [
+      "the quantum charge-coupled device (QCCD) architecture connects short 1D traps across a two-dimensional (2D) grid via junctions",
+      "how the ion shuttling can collectively swap two pairs of ions (1,3) and (2,4)",
+      "a 2Q gate (CNOT) can be performed"
+    ]
+  },
+  "summary": "This figure illustrates the QCCD (quantum charge-coupled device) architecture that iSwitch builds on, not iSwitch's own contribution. Panel (a) shows a 2D grid of 1D ion traps connected by 4-way junctions, with orange arrows tracing a collective shuttle that swaps ion pairs (1,3) and (2,4). Panels (b)-(e), grouped in a dashed box, break this collective swap into four individual shuttle steps between traps and junctions. Panel (f) shows the outcome: once shuttled ions share a trap, a two-qubit CNOT gate (marked by a red dotted oval) can be executed on them. A legend at the bottom defines the trap, junction, ion qubit, vacant spot, shuttle-arrow, and CNOT-gate symbols used throughout.",
+  "summary_zh": "该图展示 QCCD 背景架构：一维离子阱通过四向结点连成二维网格，(a)展示离子对(1,3)与(2,4)的整体交换，(b)-(e)拆解为逐步搬运过程，(f)展示搬运后在同一阱内执行CNOT双比特门。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

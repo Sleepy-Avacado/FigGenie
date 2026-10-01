@@ -1,0 +1,205 @@
+{
+  "paper_id": "asplos26-060",
+  "fig": "7",
+  "system": {
+    "name": "HILOS",
+    "one_liner": "a near-storage-processing framework that boosts offline LLM inference throughput by offloading attention to SmartSSD accelerators",
+    "domain": [
+      "storage",
+      "ml-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Host",
+        "role": "issues attention requests and Q vectors, receives the final attention result",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NSP Device (e.g., SmartSSD)",
+        "role": "near-storage processing device housing the SSD, DRAM and attention accelerator",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SSD",
+        "role": "storage media inside the near-storage device",
+        "container": "NSP Device",
+        "novel": false
+      },
+      {
+        "name": "Internal PCI Switch",
+        "role": "internal interconnect linking SSD, DRAM and the accelerator inside the device",
+        "container": "NSP Device",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "near-storage DRAM buffer for K, Q, QK^T and attention scores",
+        "container": "NSP Device",
+        "novel": false
+      },
+      {
+        "name": "Query-Key Product Unit",
+        "role": "computes QK^T using an in-place local block transpose to avoid a global Key-matrix transpose",
+        "container": "NSP Device",
+        "novel": true
+      },
+      {
+        "name": "Softmax Statistics Aggregation Unit",
+        "role": "first pass of the two-pass softmax: streams input blocks through a max-reduction tree and adder tree to compute local max and partial sum",
+        "container": "NSP Device",
+        "novel": true
+      },
+      {
+        "name": "Softmax Normalization Unit",
+        "role": "second pass of the two-pass softmax: performs element-wise exponential and division using the global max/sum to produce the attention score",
+        "container": "NSP Device",
+        "novel": true
+      },
+      {
+        "name": "Score-Value Product Unit",
+        "role": "computes the attention score times Value product to produce the attention result",
+        "container": "NSP Device",
+        "novel": true
+      },
+      {
+        "name": "Q-Buf / K-Buf / K^T-Buf",
+        "role": "on-chip buffers holding the query block, the loaded key block, and its locally transposed version",
+        "container": "Query-Key Product Unit",
+        "novel": true
+      },
+      {
+        "name": "V-Buf",
+        "role": "on-chip buffer holding the value block for the score-value product",
+        "container": "Score-Value Product Unit",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Host",
+        "to": "NSP Device (e.g., SmartSSD)",
+        "what": "Q, K and control commands via the internal PCI switch",
+        "step": null
+      },
+      {
+        "from": "Query-Key Product Unit",
+        "to": "Softmax Statistics Aggregation Unit",
+        "what": "QK^T scores",
+        "step": 1
+      },
+      {
+        "from": "Softmax Statistics Aggregation Unit",
+        "to": "Softmax Normalization Unit",
+        "what": "global max/sum statistics",
+        "step": 2
+      },
+      {
+        "from": "Softmax Normalization Unit",
+        "to": "Score-Value Product Unit",
+        "what": "normalized attention scores (Attn. Score)",
+        "step": 3
+      },
+      {
+        "from": "Score-Value Product Unit",
+        "to": "Host",
+        "what": "attention result",
+        "step": 4
+      },
+      {
+        "from": "K-Buf",
+        "to": "K^T-Buf",
+        "what": "locally transposed 128x128 Key block",
+        "step": null
+      }
+    ],
+    "key_idea": "A temporal, block-based (e.g. 128-token) attention accelerator inside a SmartSSD pipelines four concurrent hardware units -- query-key product with in-place local transpose, a two-pass streaming softmax split into statistics-aggregation and normalization units, and a score-value product -- to keep on-chip memory small for long sequences.",
+    "reading_order": "Panel (a) at top shows the overall block-pipelined dataflow across the four hardware units inside the NSP device; panels (b)-(e) below zoom into each unit's internal buffer/MAC datapath in turn."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 5,
+    "column": "single",
+    "aspect": 1.11,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#221815",
+        "used_for": "near-black fill for the unit header bars (Query-Key Product Unit, Softmax units, Score-Value Product Unit)"
+      },
+      {
+        "hex": "#f7f8f8",
+        "used_for": "light gray fill for internal buffer and datapath boxes"
+      },
+      {
+        "hex": "#dcedf9",
+        "used_for": "light blue fill marking the Host/system-level region in panel (a)"
+      },
+      {
+        "hex": "#e4c9b6",
+        "used_for": "tan accent fill on a highlighted internal block"
+      },
+      {
+        "hex": "#eee0c0",
+        "used_for": "pale yellow accent fill on a highlighted internal block"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark outlines (~0.82pt median) on all boxes, square corners throughout",
+    "font": "sans (Tahoma), 2.5-7.5pt, bold for unit-name headers",
+    "corners": "square",
+    "arrows": "dense black orthogonal arrows with filled triangular heads tracing block-streamed datapaths",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "near-black header bars name each of the four hardware units; light gray fills mark on-chip buffers and internal datapath boxes; light blue marks the host/system-level context in panel (a)",
+    "line_style_means": "solid black arrows trace the block-streamed dataflow between and within units; dashed panel boundaries separate the five sub-figures (a)-(e)",
+    "emphasis": "panel (a) lays the four units out as a concurrent pipeline processing fixed-size token blocks, while panels (b)-(e) each zoom into one unit's internal buffer/MAC datapath",
+    "reusable_patterns": [
+      "block-pipelined temporal architecture with several concurrent hardware units",
+      "in-place local transpose using two on-chip buffers instead of a global matrix transpose",
+      "two-pass (max-then-normalize) streaming softmax split across two hardware units"
+    ],
+    "weaknesses": [
+      "five densely packed sub-panels with very small text are hard to read without zooming",
+      "abbreviated buffer names (Q-Buf, K-Buf, K^T-Buf) require cross-referencing the body text"
+    ]
+  },
+  "tags": [
+    "near-storage-processing",
+    "attention-accelerator",
+    "llm-inference",
+    "kv-cache",
+    "offloading",
+    "streaming-softmax",
+    "hardware-accelerator"
+  ],
+  "provenance": {
+    "sections": [
+      "4 HILOS Design (p.6-7)"
+    ],
+    "evidence": [
+      "four hardware units form a concurrent pipeline to process each block in accordance with data dependencies",
+      "The two-pass softmax is conducted via two units: softmax statistics aggregation unit",
+      "our design integrates an efficient in-place transposition module"
+    ]
+  },
+  "summary": "HILOS is a near-storage-processing framework that boosts offline LLM inference throughput by offloading memory-intensive attention computation onto SmartSSD accelerators. This figure details the dataflow and microarchitecture of that attention accelerator across five panels. Panel (a) shows the overall block-pipelined dataflow inside the NSP device: a Query-Key Product Unit, a Softmax Statistics Aggregation Unit, a Softmax Normalization Unit and a Score-Value Product Unit form a concurrent pipeline over the SSD/DRAM/PCI-switch fabric, processing fixed-size token blocks (e.g. 128 tokens) to bound on-chip memory. Panels (b) and (c) zoom into the two-pass streaming softmax: the statistics-aggregation unit computes a local max and partial sum via reduction/adder trees with a streaming update, and the normalization unit applies exponentiation and division using the resulting global max/sum. Panels (d) and (e) zoom into the query-key product unit's in-place local block-transpose datapath (Q-Buf/K-Buf/K^T-Buf) and the score-value product unit's MAC datapath, respectively.",
+  "summary_zh": "该图展示HILOS近存储注意力加速器的数据流与微架构：(a) 查询-键乘法单元、两遍流式Softmax的统计聚合与归一化单元、分数-值乘法单元构成分块并发流水线；(b)(c)详细展示两遍Softmax的最大值/求和与指数除法；(d)(e)展示原地局部转置与分数-值乘法的缓冲/乘加数据通路。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

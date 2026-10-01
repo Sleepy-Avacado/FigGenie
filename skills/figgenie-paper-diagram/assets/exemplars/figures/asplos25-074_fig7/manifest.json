@@ -1,0 +1,47 @@
+{
+  "id": "asplos25-074_fig7",
+  "paper_id": "asplos25-074",
+  "fig": "7",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 7. Design overview of EXIST. The solid lines are control paths and the dotted lines are data paths.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.83,
+  "n_components": 16,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-074/asplos25-074_fig7_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-074/asplos25-074_fig7_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar spanning a cluster level above a node level, with each of three contributed modules marked by its own dashed, section-numbered box inside an otherwise standard Kubernetes layout, at nesting depth 3.",
+      "what_to_learn": "Use one dashed box per contribution, each carrying its own section number, scattered across whichever tier it actually belongs to, rather than one big accent region; keep a solid-versus-dotted line legend so control paths and data paths stay distinguishable across the whole cluster-to-hardware stack."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar at depth 3: three separate dashed contribution boxes, Coverage Optimizer, Tracing Controller, Memory Allocator, each nest their own two sub-modules inside an outer cluster-to-node container, across 16 components.",
+      "what_to_learn": "Nest each contribution two levels deep inside its own dashed accent box carrying its section number, rather than flattening everything to one depth; keep the same dashed-border-plus-number treatment at every nesting point so a reader recognizes a paper's own module regardless of depth."
+    }
+  ]
+}

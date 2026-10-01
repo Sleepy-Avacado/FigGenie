@@ -1,0 +1,255 @@
+{
+  "paper_id": "sosp25-013",
+  "fig": "5",
+  "system": {
+    "name": "KTransformers",
+    "one_liner": "a high-performance inference engine for heterogeneous CPU/GPU execution of large Mixture-of-Experts models, extending HuggingFace Transformers",
+    "domain": [
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "User Interface",
+        "role": "top band exposing KTransformers to end users",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "HuggingFace Transformers",
+        "role": "the standard interface KTransformers extends, requiring no end-user code changes",
+        "container": "User Interface",
+        "novel": false
+      },
+      {
+        "name": "MoE Models",
+        "role": "left sidebar of example Mixture-of-Experts models KTransformers can run",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DeepSeek",
+        "role": "example supported MoE model",
+        "container": "MoE Models",
+        "novel": false
+      },
+      {
+        "name": "Qwen",
+        "role": "example supported MoE model",
+        "container": "MoE Models",
+        "novel": false
+      },
+      {
+        "name": "Llama",
+        "role": "example supported MoE model",
+        "container": "MoE Models",
+        "novel": false
+      },
+      {
+        "name": "Mixtral",
+        "role": "example supported MoE model",
+        "container": "MoE Models",
+        "novel": false
+      },
+      {
+        "name": "Kimi",
+        "role": "example supported MoE model",
+        "container": "MoE Models",
+        "novel": false
+      },
+      {
+        "name": "KTransformers",
+        "role": "the central engine injecting optimized modules to replace default PyTorch modules",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Module Injection",
+        "role": "optimization category: flexible injection of optimized implementations tailored for specific hardware",
+        "container": "KTransformers",
+        "novel": true
+      },
+      {
+        "name": "Kernel Replacement",
+        "role": "optimization category: swapping default PyTorch GEMM kernels for optimized kernels",
+        "container": "KTransformers",
+        "novel": true
+      },
+      {
+        "name": "Overhead Reduction",
+        "role": "optimization category: reducing runtime overhead, e.g. via a custom fused-MoE module and async task scheduling",
+        "container": "KTransformers",
+        "novel": true
+      },
+      {
+        "name": "Advanced Operators",
+        "role": "right sidebar of pluggable optimized operator kernels",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Fused-MoE Module",
+        "role": "custom fused-MoE module replacing PyTorch's default MoE module",
+        "container": "Advanced Operators",
+        "novel": true
+      },
+      {
+        "name": "AMX Kernel",
+        "role": "AMX-specialized kernel exploiting modern CPU instructions",
+        "container": "Advanced Operators",
+        "novel": true
+      },
+      {
+        "name": "AVX-512 Kernel",
+        "role": "AVX-512-optimized kernel replacing default PyTorch GEMM kernels",
+        "container": "Advanced Operators",
+        "novel": true
+      },
+      {
+        "name": "FlashInfer Module",
+        "role": "efficient FlashInfer-based attention module injected on the GPU side",
+        "container": "Advanced Operators",
+        "novel": true
+      },
+      {
+        "name": "Marlin Kernel",
+        "role": "efficient weight-quantization kernel optionally supported on the GPU side",
+        "container": "Advanced Operators",
+        "novel": true
+      },
+      {
+        "name": "Heterogeneous Hardware",
+        "role": "bottom band of the CPU/GPU hardware KTransformers targets",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Intel Xeon CPUs",
+        "role": "example CPU hardware target",
+        "container": "Heterogeneous Hardware",
+        "novel": false
+      },
+      {
+        "name": "Nvidia A100",
+        "role": "example GPU hardware target",
+        "container": "Heterogeneous Hardware",
+        "novel": false
+      },
+      {
+        "name": "Nvidia RTX 4080",
+        "role": "example GPU hardware target",
+        "container": "Heterogeneous Hardware",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "MoE Models",
+        "to": "KTransformers",
+        "what": "a chosen MoE model definition",
+        "step": null
+      },
+      {
+        "from": "Advanced Operators",
+        "to": "Kernel Replacement",
+        "what": "an optimized kernel/module implementation to inject",
+        "step": null
+      },
+      {
+        "from": "Heterogeneous Hardware",
+        "to": "KTransformers",
+        "what": "CPU/GPU compute resources",
+        "step": null
+      },
+      {
+        "from": "KTransformers",
+        "to": "User Interface",
+        "what": "served through the unmodified HuggingFace Transformers interface",
+        "step": null
+      }
+    ],
+    "key_idea": "KTransformers sits as a drop-in engine beneath the standard HuggingFace Transformers interface, injecting hardware-specific optimized modules (fused-MoE, AMX/AVX-512, FlashInfer, Marlin kernels) to replace default PyTorch modules across heterogeneous CPU/GPU hardware, for any supported MoE model, with no user-facing API changes.",
+    "reading_order": "Center-out: a generic module-injection/kernel-replacement graph inside the purple KTransformers box, flanked left by pluggable MoE Models and right by Advanced Operators, sandwiched between the User Interface band above and Heterogeneous Hardware band below."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ededed",
+        "used_for": "light-gray background of the MoE Models and Advanced Operators sidebars"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light tan background of the User Interface and Heterogeneous Hardware bands"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple title text and borders of the KTransformers box and its three optimization sub-boxes"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "light blue fill of a highlighted node in the before/after computation-graph icon"
+      },
+      {
+        "hex": "#f8cbad",
+        "used_for": "light peach fill of another highlighted node in the before/after computation-graph icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium (~1.2pt) solid dark borders on all boxes and bands, no dashing",
+    "font": "Calibri sans-serif, about 6.5pt body text, bold and larger (~11pt) for band and system titles",
+    "corners": "mixed: rounded pill-shaped boxes for model/kernel/hardware items, square bands for the four surrounding panels",
+    "arrows": "thick white block/chevron arrows connecting the four flanking panels to the central KTransformers box, plus one small right-arrow inside the box showing the before/after graph transformation",
+    "icons": "vector, small computation-graph (nodes/edges) icon showing a generic module graph transformed into one with three highlighted nodes"
+  },
+  "encoding": {
+    "color_means": "purple = the KTransformers system itself (title, borders, injected-optimization box outlines); light gray = swappable upstream/downstream option lists (MoE Models, Advanced Operators); light tan = the interface and hardware boundary bands; colored graph nodes = specific modules replaced/optimized inside the generic computation graph",
+    "line_style_means": null,
+    "emphasis": "large white block arrows on all four sides funnel every external resource (models, operators, hardware, interface) into or out of the single purple KTransformers box, making it the unmistakable center of the architecture",
+    "reusable_patterns": [
+      "central engine box flanked by two option-list sidebars and sandwiched between an interface band and a hardware band",
+      "before/after generic computation-graph icon to depict a module-injection/kernel-replacement transformation"
+    ],
+    "weaknesses": [
+      "the mapping between the three colored nodes in the after-graph and the three named optimization boxes (Module Injection, Kernel Replacement, Overhead Reduction) is implied only by adjacency and color, not labeled explicitly"
+    ]
+  },
+  "tags": [
+    "MoE",
+    "LLM inference",
+    "CPU-GPU heterogeneous",
+    "kernel injection",
+    "HuggingFace",
+    "AMX"
+  ],
+  "provenance": {
+    "sections": [
+      "3 KTransformers System (p.5)"
+    ],
+    "evidence": [
+      "KTransformers extends a standard HuggingFace Transformers implementation",
+      "allowing a flexible injection of optimized implementations tailored for specific hardware to replace default PyTorch modules",
+      "KTransformers retains full compatibility with the widely-used HuggingFace interface, requiring no end-user changes"
+    ]
+  },
+  "summary": "KTransformers is a high-performance inference engine for heterogeneous CPU/GPU execution of large Mixture-of-Experts (MoE) models such as DeepSeek, extending standard HuggingFace Transformers so end users need no code changes. Figure 5 draws it as a purple core box sandwiched between a tan 'User Interface' band on top (HuggingFace Transformers) and a tan 'Heterogeneous Hardware' band below (Intel Xeon CPUs, Nvidia A100/RTX 4080 GPUs), connected by large white block arrows. Gray sidebars flank the core: 'MoE Models' on the left (DeepSeek, Qwen, Llama, Mixtral, Kimi) feed in, and 'Advanced Operators' on the right (Fused-MoE Module, AMX/AVX-512 kernels, FlashInfer Module, Marlin Kernel) feed into a 'Kernel Replacement' box. Inside the core, a small before/after computation-graph icon with three labeled boxes (Module Injection, Kernel Replacement, Overhead Reduction) depicts swapping default PyTorch modules for optimized ones.",
+  "summary_zh": "图5示KTransformers：核心接User Interface与Heterogeneous Hardware；两侧MoE Models与Advanced Operators横向输入；核心内示模块注入、内核替换与开销削减三项优化。",
+  "confidence": "high",
+  "notes": "layout-proposal: flanked-core - a central engine box (KTransformers) is sandwiched between a top interface band and bottom hardware band linked by large block arrows, while two side sidebars of swappable model/operator options feed horizontally into the same core, forming a plus-shaped composition.",
+  "venue": "SOSP25"
+}

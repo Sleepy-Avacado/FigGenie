@@ -1,0 +1,206 @@
+{
+  "paper_id": "sosp25-001",
+  "fig": "11",
+  "kind": "mechanism",
+  "system": {
+    "name": "DCP",
+    "one_liner": "a dynamic context-parallel training framework that partitions attention data and computation into fine-grained blocks flexibly mapped to devices",
+    "domain": [
+      "distributed-training",
+      "long-context-LLM",
+      "context-parallelism"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how attention blocks for a masked sequence are assigned to two devices under current methods versus DCP's balanced placement",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Q",
+        "kind": "slot",
+        "role": "query block for one of 8 positions in the masked sequence (Q_1^1 ... Q_8^1), heading the left side of each staircase row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "cell",
+        "role": "pairwise query-key computation block inside the attention triangle (C_1^1 ... C_24^1); some are omitted where the shared-question mask zeroes out attention",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "KV",
+        "kind": "slot",
+        "role": "key-value block along the base of the staircase, one per sequence position (KV_1^1 ... KV_8^1)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "O",
+        "kind": "slot",
+        "role": "output block for one query row, drawn as a separate column at the far right (O_1^1 ... O_8^1)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Device 0",
+        "kind": "lane",
+        "role": "first device; receives an assigned subset of Q/KV/O data blocks and C computation blocks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Device 1",
+        "kind": "lane",
+        "role": "second device; receives the remaining subset of data and computation blocks",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Q",
+        "to": "C",
+        "what": "each query block's row of computation blocks consumes it",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "KV",
+        "to": "C",
+        "what": "each key-value block's column of computation blocks consumes it",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "O",
+        "what": "a row's computation blocks combine into that row's output block",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Q",
+        "to": "Device 0",
+        "what": "a placement strategy assigns each Q/KV/O block, and the C blocks it touches, to one of the two devices",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "Device 1",
+        "what": "computation blocks are likewise assigned to a device; current methods leave devices unevenly loaded while DCP balances them",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Placement of current methods",
+        "axis": "alternatives",
+        "differs": "template: Device 0 receives the outer query/KV/output positions (1,2,7,8) and only 10 computation blocks, Device 1 receives the inner positions (3-6) and 14 computation blocks",
+        "verdict": "imbalanced"
+      },
+      {
+        "label": "A possible placement under DCP",
+        "axis": "alternatives",
+        "differs": "each device instead receives a mixed set of 4 query/KV/output triples drawn from across the sequence (e.g. device 0: positions 1,5,2,8), giving both devices exactly 12 computation blocks",
+        "verdict": "balanced"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "which specific Q/KV/O/C block indices (1-8 for Q/KV/O, 1-24 for C) are assigned to Device 0 vs Device 1 under each placement",
+      "linked_by": "position, grouped spatially into two stacked rows per device, plus shared orange/blue colour coding by block type",
+      "result_cells": "the two block-list rows per device let the reader count and compare per-device totals directly"
+    },
+    "key_idea": "Current methods assign attention blocks to devices by contiguous position, leaving devices with very different numbers of computation blocks; DCP instead reassigns blocks across the whole masked sequence so every device ends up with the same number of computation blocks.",
+    "reading_order": "left to right through the staircase legend first, then top-to-bottom through the two current-method device rows, then the two DCP device rows below"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.99,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe6cc",
+        "used_for": "light peach fill of Q/KV/O (query, key-value, output) data blocks"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "gold-orange dashed border outlining each Q/KV/O block"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue fill of C (pairwise computation) blocks"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "steel-blue dashed border outlining each C block"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed borders, orange on Q/KV/O blocks and blue on C blocks",
+    "corners": "rounded",
+    "arrows": "none; blocks are laid out by adjacency, not connected by drawn lines",
+    "font": "italic serif math typesetting for the subscripted block labels; sans-serif for panel captions ('Device 0', 'Placement of current methods', ...)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange marks query (Q), key-value (KV), and output (O) data blocks; blue marks the pairwise C computation blocks derived from them",
+    "line_style_means": null,
+    "state_means": "the two placement panels are told apart purely by which block labels are grouped into each device's two rows; no highlighting marks the reassigned blocks directly",
+    "marker_means": null,
+    "emphasis": "the masked-out blank cells in the staircase and the very different Device-0/Device-1 C-block counts under current methods make the load imbalance visually obvious before DCP's balanced counts are shown",
+    "reusable_patterns": [
+      "a staircase/triangular block grid as a shared legend for a masked-attention example, redrawn as flat per-device block lists under two competing placement policies"
+    ],
+    "weaknesses": [
+      "no arrows or colour highlighting mark exactly which block moved between the current-method and DCP placements, so the reader must compare the two per-device block lists by hand"
+    ]
+  },
+  "tags": [
+    "context-parallelism",
+    "attention-masking",
+    "load-balancing",
+    "block-partitioning",
+    "DCP"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Dynamic Context Parallelism"
+    ],
+    "evidence": [
+      "Fig. 11 shows the blocks generated for a sequence with shared question mask",
+      "are computations that are masked out",
+      "Load balancing in DCP is achieved by assigning data/computation blocks that represent similar total data size"
+    ]
+  },
+  "summary": "Figure 11 illustrates how DCP's fine-grained blockwise partitioning improves on current placement methods for a masked attention sequence. The left legend shows the block structure for one shared-question-masked sequence: query blocks Q1-Q8 and key-value blocks KV1-KV8 generate 24 pairwise computation blocks C1-C24 arranged in a staircase, with three gaps where the mask zeroes out computation, plus one output block O per query row. On the right, 'Placement of current methods' assigns the outer query positions (1,2,7,8) to Device 0 (10 computation blocks) and the inner positions (3-6) to Device 1 (14 computation blocks), an uneven split. 'A possible placement under DCP' instead groups mixed query/KV/output triples from across the sequence onto each device, giving both devices exactly 12 computation blocks and balancing memory and compute.",
+  "summary_zh": "该图展示DCP的细粒度分块：左侧为带掩码序列的Q/KV/C/O分块楼梯图；右上现有方法按连续位置分配导致两设备计算块数不均(10 vs 14)；右下DCP按混合位置重新分配，使两设备各得12个计算块，负载均衡。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

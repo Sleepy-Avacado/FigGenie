@@ -1,0 +1,181 @@
+{
+  "paper_id": "asplos25-157",
+  "fig": "7",
+  "system": {
+    "name": "CMSwitch",
+    "one_liner": "a compiler that optimizes resource allocation for computing-in-memory accelerators with dynamic compute/memory mode switching",
+    "domain": [
+      "hardware-accelerators",
+      "compiler"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "CIM architecture",
+        "role": "hardware description input specifying target architecture parameters",
+        "container": "INPUT",
+        "novel": false
+      },
+      {
+        "name": "Neural network",
+        "role": "DNN application to be compiled, described as a workload",
+        "container": "INPUT",
+        "novel": false
+      },
+      {
+        "name": "Dual-mode abstraction (DEHA)",
+        "role": "converts CIM architecture parameters into a hardware abstraction that captures compute-memory mode switching",
+        "container": "Preprocess",
+        "novel": true
+      },
+      {
+        "name": "ONNX",
+        "role": "converts the neural network into a computation graph",
+        "container": "Preprocess",
+        "novel": false
+      },
+      {
+        "name": "Dual-mode-aware compilation optimization (DACO)",
+        "role": "core optimization stage that segments the network and allocates dual-mode resources",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Dual-mode-aware Network segment",
+        "role": "partitions the computation graph into segments using dynamic programming, accounting for mode-switch overhead",
+        "container": "Dual-mode-aware compilation optimization (DACO)",
+        "novel": true
+      },
+      {
+        "name": "Dual-mode allocation",
+        "role": "allocates dual-mode resources per segment via a mixed-integer-programming model and solver",
+        "container": "Dual-mode-aware compilation optimization (DACO)",
+        "novel": true
+      },
+      {
+        "name": "Code generation",
+        "role": "emits code for each segment using dual-mode-operator (DMO) meta-operators such as CM.switch(...)",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "CIM architecture",
+        "to": "Dual-mode abstraction (DEHA)",
+        "what": "target architecture parameters",
+        "step": 1
+      },
+      {
+        "from": "Neural network",
+        "to": "ONNX",
+        "what": "workload",
+        "step": 1
+      },
+      {
+        "from": "Dual-mode abstraction (DEHA)",
+        "to": "Dual-mode-aware Network segment",
+        "what": "hardware abstraction",
+        "step": 2
+      },
+      {
+        "from": "ONNX",
+        "to": "Dual-mode-aware Network segment",
+        "what": "computation graph",
+        "step": 2
+      },
+      {
+        "from": "Dual-mode-aware Network segment",
+        "to": "Dual-mode allocation",
+        "what": "network segments",
+        "step": 3
+      },
+      {
+        "from": "Dual-mode allocation",
+        "to": "Code generation",
+        "what": "segments with dual-mode allocation",
+        "step": 4
+      }
+    ],
+    "key_idea": "CMSwitch compiles a neural network onto dual-mode CIM hardware by first abstracting hardware and converting the network to a computation graph, then jointly segmenting the network and allocating dual-mode resources, and finally generating code with dual-mode-operator meta-operators.",
+    "reading_order": "Left-to-right: two INPUT boxes (CIM architecture, Neural network) feed a Preprocess stage, which feeds the dashed DACO optimization box (segmentation then allocation), which feeds Code generation on the right (OUTPUT)."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 5.57,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e0b1cb",
+        "used_for": "Dual-mode abstraction (DEHA) box fill"
+      },
+      {
+        "hex": "#a3cef1",
+        "used_for": "ONNX / network-segment box fill"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "dynamic-programming sub-box fill"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "MIP model / allocation sub-box fill"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "Code generation box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray borders, dashed outline around the DACO optimization group",
+    "font": "Nimbus Sans / Arial, 3.5-8pt",
+    "corners": "rounded",
+    "arrows": "thin orthogonal arrows with filled heads",
+    "icons": "small ONNX logo icon"
+  },
+  "encoding": {
+    "color_means": "pink = hardware-abstraction stage, blue = network-graph/segmentation stage, yellow = code-generation output",
+    "line_style_means": "dashed box groups the two-step dual-mode-aware compilation optimization (DACO) as the paper's core contribution",
+    "emphasis": "a wide horizontal pipeline places the highlighted DACO box (segmentation + allocation) between plain input/preprocess boxes on the left and generated code on the right",
+    "reusable_patterns": [
+      "horizontal compiler pipeline with a dashed, highlighted core-optimization sub-box"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "compiler",
+    "computing-in-memory",
+    "dual-mode scheduling",
+    "mixed-integer programming",
+    "dynamic programming",
+    "code generation"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Dual-Mode-Oriented Compilation Stack (p.5)"
+    ],
+    "evidence": [
+      "Figure 7 illustrates the workflow of CMSwitch, which takes user-defined hardware parameters and neural network applications as inputs",
+      "CMSwitch develops a divide-and-conquer two-step policy",
+      "CMSwitch first decides network segmentation... and then optimizes the dual-mode resource allocation and scheduling"
+    ]
+  },
+  "summary": "This wide, single-row figure gives the end-to-end compilation workflow of CMSwitch. On the left, two INPUT boxes, CIM architecture and Neural network, feed a Preprocess stage: the architecture is turned into a hardware abstraction by Dual-mode abstraction (DEHA), while the network is lowered to a computation graph via ONNX. Both outputs feed the dashed Dual-mode-aware compilation optimization (DACO) box, CMSwitch's core contribution, which first performs Dual-mode-aware Network segment using dynamic programming (accounting for per-segment latency and mode-switch overhead) and then Dual-mode allocation using a mixed-integer-programming model and solver. The resulting Segments with dual-mode allocation are passed to Code generation, which emits per-segment code using dual-mode-operator (DMO) meta-operators such as CM.switch(...), shown as the OUTPUT on the far right.",
+  "summary_zh": "该图展示 CMSwitch 的编译流程：CIM 架构与神经网络分别经双模抽象（DEHA）和 ONNX 预处理后，进入双模感知编译优化（DACO）阶段完成网络分段与资源分配，最终生成带 CM.switch 元算子的代码。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

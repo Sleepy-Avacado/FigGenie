@@ -1,0 +1,249 @@
+{
+  "paper_id": "sosp23-011",
+  "fig": "3",
+  "system": {
+    "name": "PVM",
+    "one_liner": "a high-performance guest hypervisor for KVM that hosts secure containers without requiring hardware nested-virtualization support",
+    "domain": [
+      "virtualization",
+      "cloud",
+      "security"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "L2 (non-root mode ring3)",
+        "role": "L2 guest user space",
+        "container": "(a) SPT-on-EPT panel",
+        "novel": false
+      },
+      {
+        "name": "L2 (non-root mode ring0)",
+        "role": "L2 guest kernel, handles page faults via its PF Handler and owns GPT2",
+        "container": "(a) SPT-on-EPT panel",
+        "novel": false
+      },
+      {
+        "name": "PF Handler",
+        "role": "L2 kernel's page-fault handler",
+        "container": "L2 (non-root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "GPT2",
+        "role": "L2's guest page table, made read-only to L2 so updates trap for shadow-table synchronization",
+        "container": "L2 (non-root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "L1 (non-root mode ring3)",
+        "role": "L1 guest hypervisor user space",
+        "container": "(a) SPT-on-EPT panel",
+        "novel": false
+      },
+      {
+        "name": "L1 (non-root mode ring0)",
+        "role": "L1 guest hypervisor kernel, maintains the shadow page table for L2",
+        "container": "(a) SPT-on-EPT panel",
+        "novel": false
+      },
+      {
+        "name": "KVM PF Handler",
+        "role": "L1's handler that injects faults into L2 and builds shadow mappings",
+        "container": "L1 (non-root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "SPT12",
+        "role": "shadow page table mapping L2 guest virtual addresses directly to L1 physical addresses",
+        "container": "L1 (non-root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "VMCS12",
+        "role": "VM control structure for the L1-L2 transition",
+        "container": "L1 (non-root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "L0 (root mode ring0)",
+        "role": "host hypervisor dispatching between VMCS01 and VMCS02 and maintaining EPT/CR3",
+        "container": "(a) SPT-on-EPT panel",
+        "novel": false
+      },
+      {
+        "name": "VMCS01",
+        "role": "VM control structure L0 uses to run L1",
+        "container": "L0 (root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "VMCS02",
+        "role": "VM control structure L0 uses to run L2",
+        "container": "L0 (root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "CR3",
+        "role": "page-table base register switched on world switches",
+        "container": "L0 (root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "EPT",
+        "role": "extended page table mapping guest physical to host physical addresses",
+        "container": "L0 (root mode ring0)",
+        "novel": false
+      },
+      {
+        "name": "EPT_violation Handler",
+        "role": "L1's handler for EPT violations in the EPT-on-EPT approach",
+        "container": "(b) EPT-on-EPT panel",
+        "novel": false
+      },
+      {
+        "name": "EPT12",
+        "role": "L1-maintained EPT-format table mapping L2's guest-physical addresses to L1 physical addresses, read-only",
+        "container": "(b) EPT-on-EPT panel",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "L2 (non-root mode ring0)",
+        "to": "L0 (root mode ring0)",
+        "what": "L2 page fault / VM Exit",
+        "step": 1
+      },
+      {
+        "from": "L0 (root mode ring0)",
+        "to": "VMCS01",
+        "what": "inject page fault",
+        "step": 2
+      },
+      {
+        "from": "L0 (root mode ring0)",
+        "to": "L1 (non-root mode ring0)",
+        "what": "VM Entry, resume L1",
+        "step": 3
+      },
+      {
+        "from": "L1 (non-root mode ring0)",
+        "to": "VMCS12",
+        "what": "inject page fault to L2",
+        "step": 4
+      },
+      {
+        "from": "L2 (non-root mode ring0)",
+        "to": "L0 (root mode ring0)",
+        "what": "trap back to L0 to resume L2",
+        "step": 5
+      },
+      {
+        "from": "L0 (root mode ring0)",
+        "to": "VMCS02",
+        "what": "update VMCS02",
+        "step": 6
+      },
+      {
+        "from": "L0 (root mode ring0)",
+        "to": "L2 (non-root mode ring0)",
+        "what": "VM Entry, resume L2",
+        "step": 7
+      },
+      {
+        "from": "L2 (non-root mode ring0)",
+        "to": "GPT2",
+        "what": "update page table entries",
+        "step": 8
+      },
+      {
+        "from": "L2 (non-root mode ring0)",
+        "to": "L2 (non-root mode ring3)",
+        "what": "return to user",
+        "step": 9
+      },
+      {
+        "from": "L0 (root mode ring0)",
+        "to": "L1 (non-root mode ring0)",
+        "what": "exposes EPT capabilities to L1",
+        "step": null
+      }
+    ],
+    "key_idea": "Panel (a) SPT-on-EPT has L1 maintain a software shadow page table synchronized with L2's page table via trapped page faults; panel (b) EPT-on-EPT instead lets L1 maintain its own EPT-format table so hardware two-dimensional paging can be nested; both require multiple trap-and-resume steps across L0/L1/L2.",
+    "reading_order": "Left panel (a) SPT-on-EPT first, top-down through L2, L1, L0 following circled steps 1-9; then the same privilege-level structure in the right panel (b) EPT-on-EPT."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 4,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 2,
+    "column": "double",
+    "aspect": 2.61,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9d9",
+        "used_for": "gray fill on the majority of privilege-level and control-structure boxes"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "light blue fill highlighting CR3/EPT registers"
+      },
+      {
+        "hex": "#843c0c",
+        "used_for": "brown/hatched accent marking read-only structures (GPT2 (RO), EPT12 (RO))"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed outlines on shadow/read-only structures (SPT12, EPT12), solid on VMCS/CR3 boxes",
+    "font": "Times New Roman / Linux Libertine serif, 5.5-8pt",
+    "corners": "mixed",
+    "arrows": "many straight arrows with solid heads carrying circled step numbers",
+    "icons": "vector -- small table/grid icons for CR3 and EPT structures"
+  },
+  "encoding": {
+    "color_means": "gray fills the privilege-level boxes and control structures common to both approaches; light blue highlights CR3/EPT registers; brown/hatched fill marks the read-only guest/shadow page table (GPT2 (RO), EPT12 (RO))",
+    "line_style_means": "dashed outlines group the read-only shadow/EPT structures (SPT12, EPT12) separately from the solid VMCS/CR3 boxes",
+    "emphasis": "identical L2/L1/L0 scaffolding in both panels lets the circled step sequences visually demonstrate that EPT-on-EPT and SPT-on-EPT both require long chains of trap-and-resume steps across privilege levels",
+    "reusable_patterns": [
+      "side-by-side (a)/(b) comparison of two mechanisms sharing an identical privilege-level scaffold, disambiguated by circled step sequences"
+    ],
+    "weaknesses": [
+      "very high step-marker density (32 circled numbers total) across two dense panels makes the two mechanisms hard to visually compare at a glance"
+    ]
+  },
+  "tags": [
+    "nested-virtualization",
+    "shadow-page-tables",
+    "ept",
+    "kvm",
+    "memory-virtualization",
+    "world-switch"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)",
+      "2 Background and Motivation (p.5)"
+    ],
+    "evidence": [
+      "As illustrated in Figure 3(a), L2 manages its guest page table, GPT2",
+      "a page fault from L2 can trigger two phases of page table updates",
+      "As illustrated in Figure 3 (b), L2 has its own GPT2, which maps GVAL2 to GPAL2"
+    ]
+  },
+  "summary": "This two-panel figure compares SPT-on-EPT (a) and EPT-on-EPT (b), the two existing approaches to 2-level nested memory virtualization. Both panels share the same L2/L1/L0 privilege-level scaffold. In (a), L2's guest page table GPT2 is made read-only so its updates trap; L1's KVM PF Handler combines GPT1 and GPT2 into a shadow page table SPT12, and a page fault is traced through nine circled steps as it bounces between L2, L0 (via VMCS01/VMCS02), and L1 (via VMCS12) before GPT2 is finally updated and control returns to the L2 user. In (b), L1 instead maintains its own EPT-format table (EPT12, read-only) and handles EPT violations directly, letting L0 use hardware two-dimensional paging. Both panels are dense, gray flat-filled box diagrams with circled step numbers (32 in total) tracing the expensive world-switch chains that motivate PVM's alternative design.",
+  "summary_zh": "该图并排比较两种两级嵌套内存虚拟化方案：(a) SPT-on-EPT 中 L1 通过陷入合并影子页表；(b) EPT-on-EPT 中 L1 维护只读 EPT 供硬件两维分页使用，两者均需在 L2/L1/L0 间经历多步跳转。",
+  "confidence": "medium",
+  "notes": "Context text for panel (b) EPT-on-EPT is truncated right after it begins, so panel (b)'s components and flows are inferred mostly from labels visible in the compact preview image rather than from prose, unlike panel (a) which the text walks through step by step.",
+  "venue": "SOSP23"
+}

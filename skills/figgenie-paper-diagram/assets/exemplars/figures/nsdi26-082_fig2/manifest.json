@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-082_fig2",
+  "paper_id": "nsdi26-082",
+  "fig": "2",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 2: An overview of FlexLLM.",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "ghostscript",
+  "aspect": 1.06,
+  "n_components": 14,
+  "n_flows": 10,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-082/src/fig2_overview4.svg",
+    "preview.png": "lab/extracted/nsdi26-082/src/fig2_overview4.png",
+    "print.png": "lab/extracted/nsdi26-082/nsdi26-082_fig2_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "One central PEFT-as-a-Service Interface bar is the hub for three peer subsystem boxes below it, and every arrow to and from the hub is labelled with the exact payload (PEFT model, requests, responses) it carries.",
+      "what_to_learn": "Draw the hub as a thin horizontal bar rather than a box when its whole job is mediating traffic, and label every bidirectional arrow with the noun it exchanges in each direction, not just an arrowhead; keep the layout tight since this exemplar's weakness is a dense, icon-packed square."
+    }
+  ]
+}

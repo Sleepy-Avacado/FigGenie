@@ -1,0 +1,54 @@
+{
+  "id": "nsdi24-087_fig2",
+  "paper_id": "nsdi24-087",
+  "fig": "2",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 2: Autothrottle features bi-level resource management: The application-level learning-based controller (Tower), ob- serving end-to-end latencies and workloads, periodically sets performance targets, expressed as CPU throttle ratios, for per- service heuristic controllers (Captains) to meet.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.05,
+  "n_components": 5,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-087/src/fig2_arch.svg",
+    "preview.png": "lab/extracted/nsdi24-087/src/fig2_arch.png",
+    "print.png": "lab/extracted/nsdi24-087/nsdi24-087_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Smallest hub-spoke here (5 components): a global controller fanning dotted control lines over an application graph, with one node magnified.",
+      "what_to_learn": "Dotted curved lines are the right weight for 'the hub controls all of these'; magnify exactly one spoke to show what a controlled node contains."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "Also a hub-spoke exemplar elsewhere: the Tower fans dotted control lines to a small Application DAG, and one node's relationship is pulled out into a magnified Captain panel on the right via a curved leader.",
+      "what_to_learn": "When only one instance among many needs explaining, do not draw every instance's internals: pick one, connect it with a curved funnel line to a same-colour detail panel, and let the untouched instances stay as small schematic icons in the background DAG."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The Application graph is a genuine small DAG (a Gateway node branching into several server nodes that converge again), not a chain, drawn as a compact icon distinct from the hub-spoke control fan-out above it.",
+      "what_to_learn": "Draw the small application-level DAG as plain blue nodes with simple branching edges, kept visually separate from the dotted control lines that fan out from the Tower above it, so the reader does not confuse the data-flow graph with the control-relationship fan-out."
+    }
+  ]
+}

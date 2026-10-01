@@ -1,0 +1,199 @@
+{
+  "paper_id": "nsdi23-077",
+  "fig": "6",
+  "system": {
+    "name": "SRNIC",
+    "one_liner": "a scalable hardware architecture for RDMA NICs that separates fast and slow paths for outbound and inbound traffic",
+    "domain": [
+      "networking",
+      "rdma",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Data Buffer",
+        "role": "holds WQE data waiting to be posted to a send queue",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "SQ1",
+        "role": "send queue that received a new WQE and rang the doorbell",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "SQ2",
+        "role": "another send queue",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "SQ3",
+        "role": "another send queue",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "SQ4",
+        "role": "another send queue",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "Event Mux",
+        "role": "handles doorbell, credit-update, and dequeue events and updates scheduling state in QPC",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "QPC",
+        "role": "per-QP scheduling state (active, credit, ready) kept without caching full WQEs",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Schedule Policy",
+        "role": "decides which active, credited SQ to enqueue for scheduling",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Schedule Queue",
+        "role": "queue of QPs selected to be scheduled next",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Congestion Control",
+        "role": "supplies credit updates to Event Mux for window/rate adjustment",
+        "container": "RNIC",
+        "novel": false
+      },
+      {
+        "name": "Scheduler",
+        "role": "the cache-free SQ scheduler grouping Event Mux, QPC, Schedule Policy, and Schedule Queue",
+        "container": "DMA Engine",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Data Buffer",
+        "to": "SQ1",
+        "what": "WQE (work queue element)",
+        "step": null
+      },
+      {
+        "from": "SQ1",
+        "to": "Event Mux",
+        "what": "doorbell notifying new WQEs",
+        "step": null
+      },
+      {
+        "from": "Congestion Control",
+        "to": "Event Mux",
+        "what": "credit update for window/rate adjustment",
+        "step": null
+      },
+      {
+        "from": "Event Mux",
+        "to": "QPC",
+        "what": "updated scheduling state (active, credit, ready)",
+        "step": null
+      },
+      {
+        "from": "QPC",
+        "to": "Schedule Policy",
+        "what": "per-QP scheduling state used to pick the next QP",
+        "step": null
+      },
+      {
+        "from": "Schedule Policy",
+        "to": "Schedule Queue",
+        "what": "enqueue of a scheduled QP",
+        "step": null
+      },
+      {
+        "from": "Schedule Queue",
+        "to": "Event Mux",
+        "what": "dequeue event indicating an SQ is scheduled",
+        "step": null
+      }
+    ],
+    "key_idea": "A single Event Mux aggregates doorbell, credit, and dequeue events to keep small per-QP scheduling state in QPC, letting the scheduler pick among tens of thousands of QPs without caching WQEs.",
+    "reading_order": "Top to bottom: WQEs move from the host's Data Buffer into SQ1, whose doorbell, plus Congestion Control's credit signal, drive Event Mux and the QPC/Schedule Policy/Schedule Queue loop below."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.34,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0070c0",
+        "used_for": "blue arrows and the Event Mux box border for the scheduling-event flow (doorbell, credit, dequeue, enqueue)"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "gray fill for the Data Buffer and SQ boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill for the QPC and Schedule Queue backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines (~0.5pt) on boxes",
+    "font": "sans-serif (Calibri), 5-10.5pt",
+    "corners": "square",
+    "arrows": "blue arrows labelled doorbell / credit / dequeue / enqueue connecting Event Mux to the SQs, Congestion Control, and Schedule Queue",
+    "icons": "stacked-block icons representing WQEs inside each SQ"
+  },
+  "encoding": {
+    "color_means": "blue arrows and labels mark the scheduling-event signals (doorbell, credit, dequeue, enqueue) flowing into and out of Event Mux; gray fills mark passive storage (SQs, QPC, Schedule Queue)",
+    "line_style_means": "all arrows are solid; direction alone (into vs out of Event Mux) distinguishes event types",
+    "emphasis": "Event Mux sits at the visual center with arrows converging from SQ1's doorbell, Congestion Control's credit signal, and the Schedule Queue's dequeue signal, showing it as the single point that updates per-QP scheduling state in QPC without caching WQEs",
+    "reusable_patterns": [
+      "central event-multiplexer box aggregating multiple event sources into shared per-entity state",
+      "host/device split showing an internal RNIC subsystem in detail"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "rdma",
+    "nic-scheduling",
+    "send-queue",
+    "cache-free",
+    "hardware-offload",
+    "congestion-control"
+  ],
+  "provenance": {
+    "sections": [
+      "4 SRNIC Design (p.7)"
+    ],
+    "evidence": [
+      "a cache-free SQ scheduler that can do fast scheduling among tens of thousands QPs",
+      "The EMUX module handles all scheduling related events",
+      "an active state indicating the SQ has WQEs; a credit value indicating"
+    ]
+  },
+  "summary": "Figure 6 details SRNIC's cache-free SQ scheduler, a subsystem of the RNIC's transport layer. On the host, a Data Buffer feeds work queue elements (WQEs) into send queues SQ1 through SQ4; when SQ1 receives new WQEs it rings a doorbell to the RNIC's Event Mux (EMUX). EMUX also receives credit updates from Congestion Control and dequeue events from the Schedule Queue, and on any of these events it updates each queue pair's scheduling state (active, credit, ready) stored in QPC without caching the actual WQEs. A Schedule Policy consults QPC to pick queue pairs that are both active and credited, enqueuing them into the Schedule Queue, which in turn feeds back into EMUX. The whole scheduler subsystem is drawn nested inside the RNIC's DMA Engine, below the host's send queues.",
+  "summary_zh": "图6展示SRNIC无缓存SQ调度器：SQ门铃、credit更新、调度队列dequeue事件汇入Event Mux，更新QPC中每QP的active/credit/ready状态；Schedule Policy据此选出可调度QP。",
+  "confidence": "medium",
+  "notes": null,
+  "venue": "NSDI23"
+}

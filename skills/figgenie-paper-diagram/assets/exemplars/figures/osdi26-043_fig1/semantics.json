@@ -1,0 +1,189 @@
+{
+  "paper_id": "osdi26-043",
+  "fig": "1",
+  "system": {
+    "name": "WEAVE",
+    "one_liner": "a cross-cluster scheduler that co-executes multiple RL post-training jobs to fill each other's rollout/train dependency bubbles",
+    "domain": [
+      "reinforcement-learning",
+      "cluster-scheduling"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Rollout Pool",
+        "role": "resource pool used for a job's rollout phase",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Training Pool",
+        "role": "resource pool used for a job's train phase",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rollout-A",
+        "role": "Job A's rollout phase (labelled 1); the Training Pool sits idle while this runs alone",
+        "container": "Naive Disaggregation",
+        "novel": false
+      },
+      {
+        "name": "Train-A",
+        "role": "Job A's train phase (labelled 2), starting only after Sync-A; the Rollout Pool sits idle meanwhile",
+        "container": "Naive Disaggregation",
+        "novel": false
+      },
+      {
+        "name": "Sync-A",
+        "role": "synchronization point handing Job A from its finished rollout phase to its train phase",
+        "container": "Naive Disaggregation",
+        "novel": false
+      },
+      {
+        "name": "Dependency Bubbles",
+        "role": "annotation flagging the idle spans forced by the strict rollout/train phase dependency",
+        "container": "Naive Disaggregation",
+        "novel": false
+      },
+      {
+        "name": "Solo iteration time (T_solo)",
+        "role": "measured duration of one full solo rollout+train iteration under naive disaggregation",
+        "container": "Naive Disaggregation",
+        "novel": false
+      },
+      {
+        "name": "Rollout-A",
+        "role": "Job A's rollout phase, interleaved with Job B's train phase in the co-execution group",
+        "container": "Disaggregation & Co-Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Train-A",
+        "role": "Job A's train phase, interleaved with Job B's rollout phase",
+        "container": "Disaggregation & Co-Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Rollout-B",
+        "role": "Job B's rollout phase, filling the Rollout Pool while Job A trains",
+        "container": "Disaggregation & Co-Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Train-B",
+        "role": "Job B's train phase, filling the Training Pool while Job A rolls out",
+        "container": "Disaggregation & Co-Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Sync-B",
+        "role": "synchronization point handing Job B between its rollout and train phases",
+        "container": "Disaggregation & Co-Scheduling",
+        "novel": true
+      },
+      {
+        "name": "A meta-iteration of Co-execution Group {A, B}",
+        "role": "measured duration of one interleaved scheduling cycle covering both jobs' phases",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Rollout-A",
+        "to": "Train-A",
+        "what": "Sync-A handoff once Job A's rollout finishes",
+        "step": null
+      },
+      {
+        "from": "Rollout-A",
+        "to": "Train-A",
+        "what": "Sync-A handoff (co-scheduled run)",
+        "step": null
+      },
+      {
+        "from": "Rollout-B",
+        "to": "Train-B",
+        "what": "Sync-B handoff (co-scheduled run)",
+        "step": null
+      }
+    ],
+    "key_idea": "Naive disaggregation strictly alternates a job's rollout and train phases, leaving one pool idle (a dependency bubble) whenever the other is busy; WEAVE interleaves two jobs so one's train phase fills the pool the other leaves idle during rollout.",
+    "reading_order": "Top timeline (Naive Disaggregation) shows Job A's rollout then train phase with idle bubbles; bottom timeline (Co-Scheduling) interleaves Job A and B's phases across the two pools."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.93,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#404040",
+        "used_for": "dark gray general text, lane labels and box borders"
+      },
+      {
+        "hex": "#2f5597",
+        "used_for": "medium blue hatch fill of Job A's Rollout-A / Train-A boxes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red 'Dependency Bubbles' annotation text and the dashed highlight around idle spans"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.37pt; dashed boxes for Sync-B / idle highlights, solid square borders elsewhere",
+    "font": "Calibri sans-serif, 5-6.5pt, italic for Job B's Rollout-B/Train-B labels, lightly bold section titles",
+    "corners": "square",
+    "arrows": "mostly straight lines with a few filled heads and one curved connector for sync handoffs",
+    "icons": "bitmap; small brace/bracket icons marking the T_solo and meta-iteration time spans, plus an oval highlight around the dependency bubbles"
+  },
+  "encoding": {
+    "color_means": "blue hatch fill marks Job A's phases; red marks the dependency-bubble annotation and its highlight",
+    "line_style_means": "italic text distinguishes Job B's phases from Job A's upright-text phases; dashed boxes mark Sync-B and idle-bubble highlights versus solid boxes for normal phases",
+    "emphasis": "the two timelines are drawn to the same time scale so the shortened, gap-free bottom timeline visually argues that co-scheduling removes the top timeline's idle dependency bubbles",
+    "reusable_patterns": [
+      "two-lane Gantt/resource-timeline comparing a naive schedule against an interleaved one, with a bracketed measurement (T_solo vs meta-iteration) under each"
+    ],
+    "weaknesses": [
+      "dense mix of circled numbers, italics, dashed boxes and color coding on a small time axis requires careful reading to decode"
+    ]
+  },
+  "tags": [
+    "reinforcement-learning",
+    "disaggregated-training",
+    "co-scheduling",
+    "gpu-scheduling",
+    "dependency-bubbles",
+    "rlhf"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "1 Introduction (p.3)",
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "the training cluster to idle during rollout, and vice versa (Figure 1-top), wasting both pools",
+      "WEAVE groups multiple jobs into a co-execution group and tightly weaves their rollout and training phases",
+      "the dependency bubbles inherent to one job can be filled by another job's active phase"
+    ]
+  },
+  "summary": "This figure compares existing disaggregated RL post-training scheduling (top) with WEAVE's co-scheduling paradigm (bottom) using two time-aligned Gantt-style timelines over a Rollout Pool and a Training Pool. In naive disaggregation, Job A's rollout phase runs alone, then hands off via Sync-A to its train phase, leaving the other pool idle each time; these idle spans are annotated as dependency bubbles, and the whole cycle is measured as the solo iteration time (T_solo). In WEAVE's co-scheduling, a meta-iteration of a co-execution group {A, B} interleaves Job A's phases with Job B's Rollout-B/Train-B phases (shown in italics with their own Sync-B handoffs), so that Job B's train phase fills the pool left idle by Job A's rollout, and vice versa, eliminating the bubbles without violating either job's phase dependencies.",
+  "summary_zh": "该图对比朴素解耦调度（上）与 WEAVE 协同调度（下）：前者任务 A 的 Rollout/Train 阶段顺序执行，另一池随之空闲形成依赖气泡；后者在同一元迭代中交织任务 A、B 的阶段，互相填补空闲，消除气泡。",
+  "confidence": "high",
+  "notes": "layout-proposal: dual-Gantt-timeline — two stacked resource-utilization timelines (Rollout Pool / Training Pool lanes over time) comparing a naive schedule against WEAVE's interleaved co-schedule; none of the seven named templates represent a time-axis scheduling chart, so 'other' is used.",
+  "venue": "OSDI26"
+}

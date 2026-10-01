@@ -1,0 +1,211 @@
+{
+  "paper_id": "sosp25-029",
+  "fig": "2",
+  "system": {
+    "name": "Radical",
+    "one_liner": "a system that lets strongly consistent applications run near users by performing all coordination in a single linearizable LVI request overlapped with speculative execution",
+    "domain": [
+      "distributed systems",
+      "storage",
+      "edge computing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Near-User Location",
+        "role": "an edge site (repeated twice, symmetric) running application logic close to users",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Radical",
+        "role": "the near-user runtime library and function-execution environment",
+        "container": "Near-User Location",
+        "novel": true
+      },
+      {
+        "name": "Function Execution",
+        "role": "executes the application function speculatively alongside the read/write-set-finding function",
+        "container": "Radical",
+        "novel": true
+      },
+      {
+        "name": "f_rw",
+        "role": "function executed first to find the request's read/write set, sent as part of the LVI request",
+        "container": "Function Execution",
+        "novel": true
+      },
+      {
+        "name": "f",
+        "role": "the application function speculatively executed while the LVI request is in flight",
+        "container": "Function Execution",
+        "novel": true
+      },
+      {
+        "name": "Storage Library",
+        "role": "Radical's library through which the speculatively executing function f communicates with the local cache",
+        "container": "Radical",
+        "novel": true
+      },
+      {
+        "name": "Radical Runtime",
+        "role": "coordinates local execution and the LVI Request/Followup exchange with the near-storage location",
+        "container": "Radical",
+        "novel": true
+      },
+      {
+        "name": "Cache",
+        "role": "local key/value/version cache backing speculative execution",
+        "container": "Near-User Location",
+        "novel": true
+      },
+      {
+        "name": "Near-Storage Location",
+        "role": "the central site hosting the shared LVI Server and Primary Storage",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LVI Server",
+        "role": "server handling LVI Requests and Followups from all near-user locations",
+        "container": "Near-Storage Location",
+        "novel": true
+      },
+      {
+        "name": "LVI Handler",
+        "role": "handles incoming LVI Requests against Primary Storage",
+        "container": "LVI Server",
+        "novel": true
+      },
+      {
+        "name": "Followup Handler",
+        "role": "handles Followup messages, resolving write intents, invoking Backup Functions on timeout",
+        "container": "LVI Server",
+        "novel": true
+      },
+      {
+        "name": "Primary Storage",
+        "role": "durable storage at the near-storage location holding write intents, data, and backup functions",
+        "container": "Near-Storage Location",
+        "novel": true
+      },
+      {
+        "name": "Write Intents",
+        "role": "table (Execution ID, Status) tracking in-flight LVI requests",
+        "container": "Primary Storage",
+        "novel": true
+      },
+      {
+        "name": "Data",
+        "role": "table (Key, Value, Version) of stored data",
+        "container": "Primary Storage",
+        "novel": true
+      },
+      {
+        "name": "Backup Functions",
+        "role": "fallback functions the Followup Handler can invoke, apparently on a timeout, to resolve an unfinished write intent",
+        "container": "Primary Storage",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Radical Runtime",
+        "to": "LVI Handler",
+        "what": "LVI Request carrying the read/write set found by f_rw",
+        "step": null
+      },
+      {
+        "from": "Radical Runtime",
+        "to": "Followup Handler",
+        "what": "Followup",
+        "step": null
+      },
+      {
+        "from": "f",
+        "to": "Storage Library",
+        "what": "speculative execution of f communicates with the cache",
+        "step": null
+      },
+      {
+        "from": "Storage Library",
+        "to": "Cache",
+        "what": "cache reads/writes during speculative execution",
+        "step": null
+      },
+      {
+        "from": "LVI Handler",
+        "to": "Primary Storage",
+        "what": "reads/writes write intents and data",
+        "step": null
+      },
+      {
+        "from": "Followup Handler",
+        "to": "Backup Functions",
+        "what": "invokes a backup function, apparently on timeout, to complete an unresolved write intent",
+        "step": null
+      }
+    ],
+    "key_idea": "Each near-user Radical runtime speculatively executes a function against a local cache while sending only the precomputed read/write set to a single near-storage LVI server, which linearizes the request with locks, validation, and write intents, hiding the near-storage round trip behind the speculative execution.",
+    "reading_order": "Left to right: a Near-User Location's Radical runtime executes f_rw and speculatively runs f against its Cache via the Storage Library, sending an LVI Request/Followup to the central Near-Storage Location's LVI Server, mirrored by a second Near-User Location on the right."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 4,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.51,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [],
+    "background": "white",
+    "fill": "none",
+    "stroke": "thin (~0.73pt) uniform black outlines, no dashing",
+    "font": "serif (Linux Libertine / LibertineMath), about 4.5-8.5pt, italic for function symbols (f, f_rw)",
+    "corners": "rounded",
+    "arrows": "thin black single- and double-headed arrows, orthogonal and diagonal, no special styling",
+    "icons": "vector, small person/user silhouette icons flanking each Near-User Location, and a small clock/stopwatch icon near the Followup-Handler-to-Backup-Functions arrow suggesting a timeout trigger"
+  },
+  "encoding": {
+    "color_means": null,
+    "line_style_means": null,
+    "emphasis": "the strict left-right mirror symmetry between the two Near-User Location panels, both funneling into the single central Near-Storage Location, visually argues that the LVI protocol scales to many symmetric near-user sites coordinating through one shared near-storage server",
+    "reusable_patterns": [
+      "central server location flanked symmetrically by repeated identical peer-location panels",
+      "a small clock icon on an arrow to denote a timeout-triggered fallback path"
+    ],
+    "weaknesses": [
+      "with no color or line-style coding at all, the many similarly-drawn double-headed arrows between handlers and storage tables are hard to tell apart without carefully tracing each one"
+    ]
+  },
+  "tags": [
+    "strong consistency",
+    "edge computing",
+    "linearizability",
+    "speculative execution",
+    "latency"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.3)"
+    ],
+    "evidence": [
+      "Radical's runtime begins by executing frw to find the read/write set",
+      "speculatively executing the f, which communicates with the cache through Radical's storage library",
+      "Radical's architecture is illustrated in Figure 2, which depicts near-user and near storage locations"
+    ]
+  },
+  "summary": "Radical lets strongly consistent applications run close to users (in nearby datacenters, edge points of presence, or on-premises) by performing all necessary coordination in one linearizable LVI request, hiding its latency behind speculative execution. Figure 2 draws this as a hub-and-spoke architecture: a central 'Near-Storage Location' hosting an LVI Server (with an LVI Handler and Followup Handler over a Primary Storage of Write Intents, Data, and Backup Functions) is flanked symmetrically by two 'Near-User Location' instances, each running Radical (Function Execution of f_rw and f, a Storage Library, and a Radical Runtime) over a local Cache. Per the caption, the runtime first executes f_rw to compute the read/write set, sends it to the LVI Server as part of the LVI request, and speculatively executes f against the cache via the storage library; a clock icon marks a timeout-triggered backup-function path at the LVI Server.",
+  "summary_zh": "图2示Radical：中央近存储位置的LVI服务器接主存储(写意图、数据、备份函数)，两侧对称分布近用户位置，各运行Radical并访问本地缓存；运行时先算读写集随请求发出，再推测执行并访问缓存。",
+  "confidence": "medium",
+  "notes": "layout-proposal: mirrored-hub - a central hub (the near-storage LVI Server) is flanked symmetrically by two identical peer nodes (near-user Radical instances) in a straight line rather than a radial star; caption text is truncated ('The LVI request i...') so the Write Intents/Backup Functions/timeout details are read from the image.",
+  "venue": "SOSP25"
+}

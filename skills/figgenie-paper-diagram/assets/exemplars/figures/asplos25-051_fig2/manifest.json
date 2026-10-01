@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-051_fig2",
+  "paper_id": "asplos25-051",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Data path for memory traffic in EDM vs. in existing Ethernet fabrics for memory disaggregation.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.69,
+  "n_components": 10,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-051/src/fig2_arch2.svg",
+    "preview.png": "lab/extracted/asplos25-051/src/fig2_arch2.png",
+    "print.png": "lab/extracted/asplos25-051/asplos25-051_fig2_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Three coloured path overlays over a repeated protocol-stack lane, with the legend below spelling out each path.",
+      "what_to_learn": "Overlay alternative paths in different colours on one shared substrate rather than drawing the substrate twice; the legend below then reads as a path list."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Reassigned from flanked-core by the note-writer: three matched four-layer stacks (Compute Node, Switch, Memory Node) sit side by side, with the paper's Central Scheduler contribution accent-filled on the switch axis between two mirrored sides, not a core flanked by bands.",
+      "what_to_learn": "Align identical protocol-stack layers across parallel columns so a reader compares row by row, and put the paper's actual contribution (the scheduler) on the shared axis between the two mirrored sides, accent-filled, rather than folding it into a bottom hardware band."
+    }
+  ]
+}

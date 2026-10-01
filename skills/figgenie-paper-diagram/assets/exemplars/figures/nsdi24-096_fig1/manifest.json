@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-096_fig1",
+  "paper_id": "nsdi24-096",
+  "fig": "1",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Fig. 1: Overview of resource management in datacenters.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.79,
+  "n_components": 14,
+  "n_flows": 4,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-096/nsdi24-096_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-096/nsdi24-096_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Medium-confidence context figure: a red-outlined Granular Task Scheduler core sits below three Application boxes and beside a stacked Spark/MapReduce Scheduler side column, both feeding a Rack-Server-and-Worker-Pool hardware band at the bottom.",
+      "what_to_learn": "Outline the paper's own contribution in a single accent colour against a gray-and-white field of existing infrastructure, and stack the interchangeable pre-existing schedulers as a plain side column beside it; the weakness here is a uniform tiny font across many labels, so give the emphasized box more visual weight, not just an outline."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi24-022_fig7",
+  "paper_id": "osdi24-022",
+  "fig": "7",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 7: High-level overview of snapshotting with Sabre.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 2.34,
+  "n_components": 9,
+  "n_flows": 10,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-022/osdi24-022_fig7_p10_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-022/osdi24-022_fig7_p10_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Named in the reference as the three-lettered-mini-pipelines exemplar: (A) compression, (B) single-chunk prefetch, and (C) scattered prefetch each reuse the identical guest-memory-bar and file icons so the reader compares how each restores memory.",
+      "what_to_learn": "Give each lettered mini-pipeline its own identical anchor icon (the segmented guest-memory bar) so a reader can diff panels purely by which cells fill or how arrows route into it; box the hardware-stage names as real components rather than plain arrow labels, since leaving them as labels, a listed weakness, blurs component from operation."
+    }
+  ]
+}

@@ -1,0 +1,379 @@
+{
+  "paper_id": "sosp25-063",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "AutoMan",
+    "one_liner": "A workflow that combines automatic code generation with refinement-based formal verification to build correct, performant distributed systems.",
+    "domain": [
+      "distributed systems",
+      "formal verification",
+      "code generation"
+    ],
+    "abstraction": "verification toolchain"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a low-level execution trace's states map onto a high-level state machine's states under refinement",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "H0",
+        "kind": "state",
+        "role": "first state of the high-level (abstract) state machine H",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H1",
+        "kind": "state",
+        "role": "high-level state reached after H0; the target of two low-level states' refinement mapping",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H2",
+        "kind": "state",
+        "role": "high-level state with no low-level state mapped directly onto it",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H3",
+        "kind": "state",
+        "role": "high-level state reached after H2; the target of three low-level states' refinement mapping",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H4",
+        "kind": "state",
+        "role": "final shown state of the high-level state machine H",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L0",
+        "kind": "state",
+        "role": "first state of the low-level (concrete) state machine L",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L1",
+        "kind": "state",
+        "role": "low-level state that refines H1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L2",
+        "kind": "state",
+        "role": "low-level state that also refines H1, making L1-to-L2 a stutter step",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L3",
+        "kind": "state",
+        "role": "low-level state that refines H3",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L4",
+        "kind": "state",
+        "role": "low-level state that also refines H3, making L3-to-L4 a stutter step",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L5",
+        "kind": "state",
+        "role": "low-level state that also refines H3, making L4-to-L5 a stutter step",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L6",
+        "kind": "state",
+        "role": "low-level state that refines H4",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "H0",
+        "to": "H1",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "H1",
+        "to": "H2",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "H2",
+        "to": "H3",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "H3",
+        "to": "H4",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L0",
+        "to": "L1",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L1",
+        "to": "L2",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L2",
+        "to": "L3",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L3",
+        "to": "L4",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L4",
+        "to": "L5",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L5",
+        "to": "L6",
+        "what": "Transition",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "L0",
+        "to": "H0",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "L1",
+        "to": "H1",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "L2",
+        "to": "H1",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "L3",
+        "to": "H3",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "L4",
+        "to": "H3",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "L5",
+        "to": "H3",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "L6",
+        "to": "H4",
+        "what": "Refines",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "H0",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "L0",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6"
+      ],
+      "transitions": [
+        {
+          "from": "H0",
+          "to": "H1",
+          "guard": null
+        },
+        {
+          "from": "H1",
+          "to": "H2",
+          "guard": null
+        },
+        {
+          "from": "H2",
+          "to": "H3",
+          "guard": null
+        },
+        {
+          "from": "H3",
+          "to": "H4",
+          "guard": null
+        },
+        {
+          "from": "L0",
+          "to": "L1",
+          "guard": null
+        },
+        {
+          "from": "L1",
+          "to": "L2",
+          "guard": null
+        },
+        {
+          "from": "L2",
+          "to": "L3",
+          "guard": null
+        },
+        {
+          "from": "L3",
+          "to": "L4",
+          "guard": null
+        },
+        {
+          "from": "L4",
+          "to": "L5",
+          "guard": null
+        },
+        {
+          "from": "L5",
+          "to": "L6",
+          "guard": null
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "A low-level state sequence L0..L6 and a high-level sequence H0..H4 run in parallel, with dashed arrows showing each L state's corresponding H state under refinement.",
+    "reading_order": "Left to right along the top H-chain, then left to right along the bottom L-chain, tracing dashed arrows up to see refinement targets."
+  },
+  "layout": {
+    "arrangement": "stacked-timeline",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 5.13,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#262626",
+        "used_for": "all solid/dashed strokes, arrowheads, and text (state subscripts, 'Refines'/'Transition' labels)"
+      },
+      {
+        "hex": "#d8d8d8",
+        "used_for": "fill of the low-level L-chain state nodes"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "fill of the high-level H-chain state nodes"
+      }
+    ],
+    "background": "#ffffff",
+    "fill": "flat",
+    "stroke": "~1pt dark grey; solid for same-level Transition edges, dashed for cross-level Refines mapping edges",
+    "font": "Times New Roman serif, bold italic for state labels (H_i / L_i), regular for edge-type legend text",
+    "corners": "rounded",
+    "arrows": "thin solid arrowheads on same-level transitions; thin dashed arrowheads on cross-level refinement mappings",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "shade distinguishes abstraction level only: light grey (#f2f2f2) = high-level H states, darker grey (#d8d8d8) = low-level L states; the figure is otherwise monochrome",
+    "line_style_means": "solid horizontal arrows are same-level Transition edges; dashed diagonal/vertical arrows are Refines mapping edges from an L state up to its corresponding H state",
+    "state_means": "abstraction level is told apart by row (top = H, bottom = L) and by the slightly different grey fill, not by shape",
+    "marker_means": "subscript indices (0-6 for L, 0-4 for H) give the temporal order within each chain; no circled numbers or check marks are used",
+    "emphasis": "the uneven fan-in of dashed arrows into H1 (two sources) and H3 (three sources) visually emphasizes that several L transitions can collapse into zero or several H transitions",
+    "reusable_patterns": [
+      "two parallel horizontal state chains at different abstraction levels linked by dashed many-to-one refinement arrows"
+    ],
+    "weaknesses": [
+      "no legend states the zero/one/several correspondence rule directly; it must be inferred by counting how many dashed arrows converge on each high-level state"
+    ]
+  },
+  "tags": [
+    "formal-verification",
+    "refinement",
+    "state-machine",
+    "distributed-systems",
+    "AutoMan"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Design Overview"
+    ],
+    "evidence": [
+      "a low-level state machine L refines a high-level state machine H",
+      "each of L's behaviors, a sequence of state transitions, corresponds to an equivalent behavior of H",
+      "Each transition in L (e.g., 𝐿0 →𝐿1) may correspond to zero, one, or several transitions in H."
+    ]
+  },
+  "summary": "This monochrome diagram formalizes AutoMan's refinement-based verification approach with two parallel state-machine chains. A high-level chain H0 through H4 runs along the top and a finer-grained low-level chain L0 through L6 runs along the bottom, each connected left to right by solid Transition arrows. Dashed Refines arrows point upward from each L state to its corresponding H state: L0 to H0 and L6 to H4 each map one-to-one, L1 and L2 both map to H1 (so the L1-to-L2 transition corresponds to zero H transitions), and L3, L4, and L5 all map to H3 (so L2-to-L3 corresponds to several H transitions at once while L3-to-L4 and L4-to-L5 correspond to none). The figure visually grounds the paper's claim that low-level behavior can stutter or jump relative to the abstract specification it refines.",
+  "summary_zh": "图中两条平行状态链展示 AutoMan 的精化验证：上层 H0-H4，下层 L0-L6，虚线箭头标出每个低层状态对应的高层状态。有的一对一，有的多个低层状态映射到同一高层状态（对应零次高层迁移），有的一次跳过多个高层迁移。",
+  "confidence": "high",
+  "notes": "Kept prior 'logic' grouping and 'state-machine' base. No source-SVG colour histogram was provided for this figure, so the palette is taken from the measured index's top-3 fills (all grey, gray_frac 0.83). The exact fan-in pattern (L1,L2 to H1; L3,L4,L5 to H3; H2 with no direct mapping) was read off the rendered source SVG geometry, which the context text does not spell out numerically but which matches the caption's zero/one/several claim.",
+  "venue": "SOSP25"
+}

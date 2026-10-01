@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-046_fig14",
+  "paper_id": "asplos25-046",
+  "fig": "14",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 14. Three CoachVMs in a server showing the guar- anteed and oversubscribed CPU and memory.",
+  "corpus_template": "matrix",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.86,
+  "n_components": 6,
+  "n_flows": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-046/src/fig14_hybrid_vm.svg",
+    "preview.png": "lab/extracted/asplos25-046/src/fig14_hybrid_vm.png",
+    "print.png": "lab/extracted/asplos25-046/asplos25-046_fig14_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Pure cell-grid figure (6 components, 0 flows) with the legend inside above the grid and a highlighted cell in the summary table.",
+      "what_to_learn": "A matrix can have zero arrows: cells carry the state, the legend above defines cell colours, and one highlighted cell carries the point."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Reassigned from mirrored-pair by the note-writer: three side-by-side CVM boxes (CVM1, CVM2, CVM3) roll up into one Server table below, a three-member replicated-grid aggregation, not two peers mirrored around a shared middle.",
+      "what_to_learn": "The transferable move is replicated-grid's: draw the same guaranteed-versus-oversubscribed split bar on every member, call out just one member's split in detail, then roll all members into one aggregate table below with the shared, scarce resource highlighted in its own colour, yellow for the oversubscribed pool here."
+    }
+  ]
+}

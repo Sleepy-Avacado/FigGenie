@@ -1,0 +1,175 @@
+{
+  "paper_id": "nsdi25-047",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "SWARM",
+    "one_liner": "a network failure mitigation ranking system that estimates the distribution of mitigation outcomes (throughput/FCT percentiles) across sampled traffic and routing scenarios",
+    "domain": [
+      "networking",
+      "traffic-engineering",
+      "failure-mitigation"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how SWARM pools each sampled scenario's 99th-percentile FCT into one composite distribution capturing estimation uncertainty",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Scenario 1",
+        "kind": "icon",
+        "role": "one CDF-like curve of FCT for one traffic/routing sample, contributing its 99th-percentile point",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Scenario 2",
+        "kind": "icon",
+        "role": "a second CDF-like curve contributing its 99th-percentile point",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Scenario 3",
+        "kind": "icon",
+        "role": "a third CDF-like curve contributing its 99th-percentile point",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "99p",
+        "kind": "label",
+        "role": "marks the 99th-percentile point sampled from each scenario's FCT distribution",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "99p FCT",
+        "kind": "label",
+        "role": "x-axis of the bottom composite plot, the distribution built from the three sampled 99p points",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Prob",
+        "kind": "label",
+        "role": "shared y-axis label (probability) on all four plots",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Scenario 1",
+        "to": "99p FCT",
+        "what": "Scenario 1's sampled 99p point becomes one point of the composite distribution",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Scenario 2",
+        "to": "99p FCT",
+        "what": "Scenario 2's sampled 99p point becomes one point of the composite distribution",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Scenario 3",
+        "to": "99p FCT",
+        "what": "Scenario 3's sampled 99p point becomes one point of the composite distribution",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "SWARM samples many traffic/routing scenarios, extracts each one's 99th-percentile FCT, and pools these individual 99p values into a single composite distribution whose spread captures the estimate's uncertainty.",
+    "reading_order": "each of the three scenario CDF plots across the top contributes its 99p point via a dashed arrow down into the single composite distribution plot at the bottom"
+  },
+  "layout": {
+    "arrangement": "other",
+    "panel_count": 4,
+    "frame_template": "free",
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.88,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e06666",
+        "used_for": "red-pink fill of the sampled 99p marker dots on the scenario curves"
+      },
+      {
+        "hex": "#674ea7",
+        "used_for": "purple dashed sampling arrows and stroke of the composite-distribution curve/markers"
+      },
+      {
+        "hex": "#cc0000",
+        "used_for": "darker red '99p' labels and stroke accents on the scenario curves"
+      },
+      {
+        "hex": "#ea9999",
+        "used_for": "pale pink stroke accent, minor"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.8pt curve strokes; dashed for the sampling arrows, solid for the axes and CDF curves",
+    "corners": "square",
+    "arrows": "dashed purple curved arrows running from each scenario's 99p point down into the composite plot",
+    "font": "mixed serif (Times New Roman) and sans (Quicksand), ~4.5-6.5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red/pink marks each scenario's sampled 99p point on its CDF-like curve; purple marks the dashed sampling arrows and the composite curve they feed",
+    "line_style_means": "dashed arrows show the sampling/aggregation relationship; solid curves are the probability distributions themselves",
+    "state_means": "not applicable; this is a data-flow/aggregation diagram, not a before/after or alternatives comparison",
+    "marker_means": "no numbered markers; the shared label '99p' on each scenario and on the composite plot names the specific percentile being tracked",
+    "emphasis": "converging all three dashed arrows onto the single composite curve below argues visually that the composite distribution's spread comes directly from across-scenario variation in the 99p point",
+    "reusable_patterns": [
+      "several small same-shaped input curves feeding, via dashed sampling arrows, into one larger derived output curve below"
+    ],
+    "weaknesses": [
+      "the three scenario plots carry no actual scale or values, so the figure is schematic rather than quantitative, and the reading order (Scenario 1 rightmost, Scenario 3 leftmost) runs against the usual left-to-right convention"
+    ]
+  },
+  "tags": [
+    "network-failure-mitigation",
+    "tail-latency",
+    "flow-completion-time",
+    "uncertainty-estimation",
+    "sampling"
+  ],
+  "provenance": {
+    "sections": [
+      "3 SWARM Design (p.6)"
+    ],
+    "evidence": [
+      "The CLPEstimator then internally generates N different routing samples",
+      "The variance of this distribution captures the uncertainty in our estimates",
+      "of the percentiles of throughput and FCT across the traffic and routing samples"
+    ]
+  },
+  "summary": "Figure 5 illustrates how SWARM turns many sampled scenarios into one uncertainty-aware estimate. SWARM samples K demand matrices and has its CLPEstimator generate N routing samples for each, so every one of the resulting N×K traffic-and-routing samples has its own flow-completion-time (FCT) distribution, shown schematically as Scenario 1, 2 and 3's probability-vs-FCT curves. From each scenario curve, the 99th-percentile (99p) point is sampled out, indicated by a dashed purple arrow, and all three 99p values are pooled into a single composite distribution plotted at the bottom (probability vs. 99p FCT). The spread of this composite curve is what captures the uncertainty in SWARM's percentile estimate, which the paper notes can be reduced by increasing the number of samples. The figure is schematic: curve shapes, not real data, stand in for the general sampling-to-composite-distribution procedure.",
+  "summary_zh": "该图展示SWARM如何将多个采样场景汇聚成一个不确定性估计：三个场景各自的FCT概率分布曲线上取出99分位点(99p)，通过虚线箭头汇入底部的组合分布(99p FCT)，该组合曲线的离散程度即反映了估计的不确定性。",
+  "confidence": "medium",
+  "notes": "prior base 'none' corrected to 'graph' since the figure is composed of probability-distribution curve plots, not a node-link structure. The raw index records panels:1 (single), so layout.panels stays 1 even though four plot boxes are visually distinguishable; layout.panel_count (4) and arrangement 'other' capture that visual fan-in structure instead.",
+  "venue": "NSDI25"
+}

@@ -1,0 +1,260 @@
+{
+  "paper_id": "nsdi24-023",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "GRACE",
+    "one_liner": "a loss-resilient real-time video system built on a neural video codec jointly trained under packet losses",
+    "domain": [
+      "video",
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how GRACE's reversible random packetization maps tensor elements to packets so a lost packet only zeroes its mapped elements",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Original frame",
+        "kind": "icon",
+        "role": "the raw input video frame before encoding, shown with a filmstrip/play icon",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NN Encoder",
+        "kind": "box",
+        "role": "neural encoder that produces the coded tensor from the original frame",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Coded tensor",
+        "kind": "node",
+        "role": "the encoder's output tensor, shown as a numbered 3x3 grid of example elements",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Random partitioning",
+        "kind": "label",
+        "role": "names the reversible pseudo-random mapping that assigns each tensor element to one of the packets",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Sub-tensors",
+        "kind": "node",
+        "role": "the tensor elements grouped into three stacks by which packet they were mapped to",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Packets",
+        "kind": "node",
+        "role": "each sub-tensor entropy-coded into one colour-coded network packet for transmission",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Lost a packet",
+        "kind": "node",
+        "role": "one transmitted packet dropped in the network, shown crossed out",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Merging",
+        "kind": "label",
+        "role": "names the step that reassembles received sub-tensors back into a coded tensor, filling missing elements with zero",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Decoded frame",
+        "kind": "icon",
+        "role": "the NN decoder's reconstructed output frame",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NN Decoder",
+        "kind": "box",
+        "role": "neural decoder that reconstructs the frame from the partially-zeroed coded tensor",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Original frame",
+        "to": "NN Encoder",
+        "what": "raw frame fed into the encoder",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "NN Encoder",
+        "to": "Coded tensor",
+        "what": "encoder produces the coded tensor",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Coded tensor",
+        "to": "Sub-tensors",
+        "what": "random partitioning maps tensor elements into sub-tensors",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Sub-tensors",
+        "to": "Packets",
+        "what": "each sub-tensor is entropy-coded into one packet",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Packets",
+        "to": "Lost a packet",
+        "what": "packets cross the network; one is dropped",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Lost a packet",
+        "to": "Coded tensor",
+        "what": "merging reassembles surviving sub-tensors, zeroing the lost packet's mapped elements",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Coded tensor",
+        "to": "NN Decoder",
+        "what": "partially-zeroed coded tensor decoded",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "NN Decoder",
+        "to": "Decoded frame",
+        "what": "decoder reconstructs the output frame",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "before loss (encoder/sender side)",
+        "axis": "time",
+        "differs": "the coded tensor is split into three intact colour-coded sub-tensors and sent as three intact packets",
+        "verdict": null
+      },
+      {
+        "label": "after loss (decoder/receiver side)",
+        "axis": "time",
+        "differs": "one packet is lost (crossed out); merging sets its mapped tensor elements to zero when rebuilding the coded tensor",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "A reversible pseudo-random mapping lets GRACE convert real packet loss into the same effect as the random element-zeroing used during training, so the encoder and decoder are jointly loss-aware.",
+    "reading_order": "left to right then down and up: frame into the NN Encoder and coded tensor, through partitioning to the lost packet, then up through merging and the NN Decoder to the decoded frame."
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.95,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "darkest-shaded tensor cell / packet / sub-tensor square (one specific packet's colour), plus NN Encoder/Decoder box accents"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "medium-shaded tensor cell / packet / sub-tensor square (second packet's colour)"
+      },
+      {
+        "hex": "#97d2ff",
+        "used_for": "lightest-shaded tensor cell / packet / sub-tensor square (third packet's colour)"
+      },
+      {
+        "hex": "#7c7c7c",
+        "used_for": "drop-shadow strip behind the stacked tensor/sub-tensor/packet icons, giving a layered paper-stack effect"
+      },
+      {
+        "hex": "#c9c9c9",
+        "used_for": "lighter secondary shadow accent behind stacked icons"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "fill of the zeroed tensor cells and the lost/crossed-out packet square after loss"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.35pt) black cell and box outlines",
+    "corners": "mixed",
+    "arrows": "thin solid black arrows with solid heads tracing the encode/partition/transmit/merge/decode pipeline; dashed grey arrows loosely linking the shared 'Coded tensor' and 'Sub-tensors' captions to both their instances",
+    "font": "Calibri/Arial sans, small (~6.5pt)",
+    "icons": "raster filmstrip/play icons for the original and decoded frames; a cloud icon for the network; an X mark on the lost packet"
+  },
+  "encoding": {
+    "color_means": "the three shades of blue identify which packet/sub-tensor a tensor element was mapped to; white marks a tensor element zeroed because its packet was lost",
+    "line_style_means": "solid black arrows show the encode/partition/transmit/merge/decode pipeline; dashed grey arrows connect the shared 'Coded tensor' and 'Sub-tensors' captions to their pre- and post-loss instances",
+    "state_means": "before vs after loss is told apart by an explicit crossed-out packet icon and by the affected cells turning white/zero in the reconstructed tensor",
+    "marker_means": "the digits 1-9 are tensor-element position IDs, not step markers; 0 marks an element zeroed by a lost packet; the X marks the lost packet itself",
+    "emphasis": "placing the crossed-out packet and the resulting white/zero cells in the same grid positions as their intact left-side counterparts makes the localized effect of one lost packet immediately visible",
+    "reusable_patterns": [
+      "a numbered grid tensor split into colour-coded sub-tensors/packets, mirrored before and after a single simulated loss, with the affected cells shown blank"
+    ],
+    "weaknesses": [
+      "the cloud/network icon carries no text label",
+      "the shared 'Coded tensor' and 'Sub-tensors' captions apply to two separate grids without an explicit (a)/(b) marker distinguishing sender from receiver side"
+    ]
+  },
+  "tags": [
+    "neural-video-codec",
+    "packetization",
+    "loss-resilience",
+    "reversible-mapping",
+    "packet-loss",
+    "GRACE"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Training GRACE's neural video codec (p.7)"
+    ],
+    "evidence": [
+      "GRACE employs reversible randomized packetization as shown in Figure 5.",
+      "an x% packet loss rate has the effect of randomly zeroing x% of the values in the encoder's output tensor",
+      "GRACE's reversible randomized packetization. The tensor elements mapped to a lost packet will be set to zeros."
+    ]
+  },
+  "summary": "Figure 5 explains GRACE's reversible randomized packetization, the mechanism that lets the system simulate packet loss consistently between training and deployment. On the left, the sender's NN Encoder produces a coded tensor from the original frame; a numbered 3x3 grid stands in for this tensor's elements. Random partitioning applies a reversible pseudo-random mapping that scatters the numbered elements across three colour-coded sub-tensors, each entropy-coded into one packet for transmission. On the right, one packet is lost in transit (crossed out); because the mapping is reversible, the decoder knows exactly which tensor positions that packet held and zeroes only those elements (shown as blank cells) while merging the surviving sub-tensors back into a coded tensor for the NN Decoder to reconstruct the decoded frame. The worked 1-9 numbering lets the reader trace precisely which values survive and which become zero.",
+  "summary_zh": "图5展示GRACE的可逆随机分包机制：编码张量按随机映射拆分为三个彩色子张量并打包发送；一个包丢失后，解码端依据同一映射仅将对应位置清零，再合并重建张量用于解码。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

@@ -1,0 +1,282 @@
+{
+  "paper_id": "nsdi25-067",
+  "fig": "7",
+  "system": {
+    "name": "MegaStation",
+    "one_liner": "a single-node supercomputer that treats massive MIMO baseband processing as instructions dynamically scheduled over a composable GPU pool",
+    "domain": [
+      "wireless-baseband",
+      "gpu-scheduling",
+      "real-time-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "RUs (1...n)",
+        "role": "radio units supplying frame sequences of IQ samples as input",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instruction Unit",
+        "role": "translates incoming frame data into per-GPU instruction queues",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU1",
+        "role": "instruction queue destined for a specific GPU",
+        "container": "Instruction Unit",
+        "novel": false
+      },
+      {
+        "name": "GPU2",
+        "role": "instruction queue destined for a specific GPU",
+        "container": "Instruction Unit",
+        "novel": false
+      },
+      {
+        "name": "GPUn",
+        "role": "instruction queue destined for a specific GPU",
+        "container": "Instruction Unit",
+        "novel": false
+      },
+      {
+        "name": "Pipeline Schedulers",
+        "role": "dispatch queued instructions to available GPU executors based on committed status",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPUs (1...n)",
+        "role": "pool of composable GPU executors that run dispatched instructions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "exe",
+        "role": "an executor slot within a GPU; shaded when currently occupied by an instruction",
+        "container": "GPUs (1...n)",
+        "novel": true
+      },
+      {
+        "name": "The Scoreboarding",
+        "role": "centralized bookkeeper tracking instruction execution status and GPU resource occupancy",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Instructions",
+        "role": "record of issued instructions tracked by the scoreboarding",
+        "container": "The Scoreboarding",
+        "novel": true
+      },
+      {
+        "name": "Executors",
+        "role": "record of executor occupancy tracked by the scoreboarding",
+        "container": "The Scoreboarding",
+        "novel": true
+      },
+      {
+        "name": "Frame i",
+        "role": "one radio frame of IQ samples selected for instruction generation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instruction Stream",
+        "role": "ordered list of per-symbol processing instructions generated for a frame",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "<Frame i, Symbol 0, PilotFFT>",
+        "role": "example instruction: pilot-symbol FFT for channel estimation",
+        "container": "Instruction Stream",
+        "novel": false
+      },
+      {
+        "name": "<Frame i, Symbol 0, ZF>",
+        "role": "example instruction: zero-forcing beamforming using the pilot's channel estimate",
+        "container": "Instruction Stream",
+        "novel": false
+      },
+      {
+        "name": "<Frame i, Symbol j, FFT>",
+        "role": "example instruction: FFT of an uplink/downlink data symbol",
+        "container": "Instruction Stream",
+        "novel": false
+      },
+      {
+        "name": "<Frame i, Symbol j, EqDemodul>",
+        "role": "example instruction: equalization and demodulation depending on the FFT and beamforming outputs",
+        "container": "Instruction Stream",
+        "novel": false
+      },
+      {
+        "name": "<Frame i, Symbol j, Decode>",
+        "role": "example instruction: channel decoding following equalization/demodulation",
+        "container": "Instruction Stream",
+        "novel": false
+      },
+      {
+        "name": "L:exe",
+        "role": "a node in the per-frame instruction dependency DAG, annotated with its estimated execution latency",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "OpcodeInfoTable",
+        "role": "stores each opcode's resource vector and average execution latency, one table per GPU type",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "InstStatusTable",
+        "role": "tracks each instruction's issue, execution, and commit timestamps",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPUStatTable",
+        "role": "tracks, per GPU, which executors are planned, their estimated lifetime, and completion flags",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "RUs (1...n)",
+        "to": "Instruction Unit",
+        "what": "frame sequences (IQ samples) from the radio units",
+        "step": null
+      },
+      {
+        "from": "Instruction Unit",
+        "to": "Pipeline Schedulers",
+        "what": "generated instructions queued per GPU",
+        "step": null
+      },
+      {
+        "from": "Pipeline Schedulers",
+        "to": "GPUs (1...n)",
+        "what": "dispatched instructions issued to ready executors",
+        "step": null
+      },
+      {
+        "from": "Instruction Unit",
+        "to": "The Scoreboarding",
+        "what": "instruction bookkeeping (bidirectional query/update)",
+        "step": null
+      },
+      {
+        "from": "GPUs (1...n)",
+        "to": "The Scoreboarding",
+        "what": "executor occupancy bookkeeping (bidirectional query/update)",
+        "step": null
+      },
+      {
+        "from": "Frame i",
+        "to": "Instruction Stream",
+        "what": "selected frame decoded into an ordered instruction list",
+        "step": null
+      },
+      {
+        "from": "Instruction Stream",
+        "to": "L:exe",
+        "what": "per-instruction read-after-write dependency edges forming the DAG",
+        "step": null
+      }
+    ],
+    "key_idea": "MegaStation treats baseband processing as instructions: an Instruction Unit turns radio frames into a per-symbol dependency DAG, a scoreboard tracks per-opcode and per-GPU state, and schedulers dispatch ready instructions onto composable GPUs.",
+    "reading_order": "Panel (a) left-to-right (RUs into Instruction Unit, Schedulers, GPUs, Scoreboarding below); then (b) and (c) zoom into instruction-to-DAG translation and the scoreboard's tables."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "double",
+    "aspect": 6.08,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b34400",
+        "used_for": "burnt-orange curved lines tracing instruction dependencies onto DAG nodes in panel (b)"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "medium-gray fill/text for shaded 'exe' executor slots and italic subsystem labels in panel (a)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "light-gray background shading of the panel (a) system boundary"
+      },
+      {
+        "hex": "#dadada",
+        "used_for": "secondary light-gray shading distinguishing nested boxes in panel (a)"
+      },
+      {
+        "hex": "#b1001c",
+        "used_for": "dark-red italic labels bracketing table column groups in panel (c) (GPU k, Planed Executors, Est. Lifetime, Completion Flags)"
+      },
+      {
+        "hex": "#515556",
+        "used_for": "dark-gray tag background behind each DAG node's 'L:exe' latency label in panel (b)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on boxes and tables; orange strokes on the dependency-tracing curves in panel (b)",
+    "font": "HelveticaNeue sans-serif, roughly 4-5.5pt, italic for group/annotation labels",
+    "corners": "mixed",
+    "arrows": "thin black arrows for control/data flow and double-headed arrows for scoreboard query/update links; curved orange arrows linking instruction-stream entries to DAG nodes",
+    "icons": "stacked-card icons for frame stacks and instruction/executor records; hexagonal 'exe' icons for GPU executor slots; a trapezoid Instruction Unit and ellipse Pipeline Schedulers"
+  },
+  "encoding": {
+    "color_means": "gray shading marks system/subsystem boundaries and busy executor slots; burnt-orange lines trace per-instruction data dependencies onto the DAG; dark-red italic text labels the bracketed table column groups in panel (c)",
+    "line_style_means": "solid black arrows show control/data flow between architecture components and scoreboard query/update links; curved orange lines link instruction-stream entries to their DAG dependency nodes",
+    "emphasis": "labels each subsystem (Instruction Unit, Pipeline Schedulers, Scoreboarding) directly on the architecture diagram, then progressively zooms into how the Instruction Unit builds a dependency DAG (b) and exactly which fields the Scoreboarding tracks (c)",
+    "reusable_patterns": [
+      "overview diagram paired with zoomed-in detail panels for its two key subsystems",
+      "table-schema diagrams with bracketed column groups labeled in a second color"
+    ],
+    "weaknesses": [
+      "DAG node labels ('L:exe') are too generic to distinguish individual instructions without the source text",
+      "three panels pack architecture, process, and schema content at a very small, dense size"
+    ]
+  },
+  "tags": [
+    "gpu-scheduling",
+    "baseband-processing",
+    "instruction-scheduling",
+    "dependency-graph",
+    "resource-accounting",
+    "massive-mimo"
+  ],
+  "provenance": {
+    "sections": [
+      "4 MegaStation: Design and Implementation (p.8)",
+      "4 MegaStation: Design and Implementation (p.9)",
+      "4 MegaStation: Design and Implementation (p.10)"
+    ],
+    "evidence": [
+      "MegaStation comprises four components (Figure 7-a)",
+      "As shown in Figure 7-b, we first decode the frame structure, parse each pilot/uplink/downlink symbol",
+      "we introduce two tables. One is the OpcodeInfoTable"
+    ]
+  },
+  "summary": "Figure 7 combines an overview of MegaStation's architecture (a) with two detail panels (b, c). In (a), Radio Units feed frame sequences into an Instruction Unit that queues per-GPU instructions, Pipeline Schedulers dispatch them onto a pool of composable GPU executors ('exe' slots, shaded when busy), and a Scoreboarding component tracks both instruction and executor state below. Panel (b) shows how a selected frame's pilot/uplink/downlink symbols are decoded into an Instruction Stream (e.g. PilotFFT, ZF, FFT, EqDemodul, Decode), whose read-after-write dependencies are traced with orange curves into a DAG of latency-annotated nodes. Panel (c) details the three tables the Scoreboarding maintains: an OpcodeInfoTable of per-opcode latency/resource vectors, an InstStatusTable of issue/exec/commit timestamps, and a GPUStatTable of planned executors, estimated lifetime, and completion flags per GPU.",
+  "summary_zh": "该图(a)展示MegaStation架构:射频单元经指令单元与流水线调度器分发到GPU执行器池,记分板跟踪状态;(b)将帧符号译为指令流并构建依赖DAG;(c)列出记分板维护的三张状态表。",
+  "confidence": "high",
+  "notes": "layout-proposal: overview-plus-details triptych - a system architecture diagram (a) followed by two independent detail panels ((b) a translation/DAG process, (c) three scoreboard table schemas) arranged left-to-right; two-panel is the closest named template but undercounts the panels and mixes diagram/table content.",
+  "venue": "NSDI25"
+}

@@ -1,0 +1,266 @@
+{
+  "paper_id": "asplos26-091",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Abacus",
+    "one_liner": "a framework that refines type-states to model hardware-software concurrency and statically prevents device drivers from violating hardware protocols",
+    "domain": [
+      "operating-systems",
+      "programming-languages",
+      "embedded-systems"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how CPU writes to RESET, DATA and CONFIG plus hardware queue events drive UART states between Idle, Busy and QueueFull",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Reset",
+        "kind": "box",
+        "role": "write-only register; writing any value immediately empties the transmit queue and returns to Idle from any state",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Config",
+        "kind": "box",
+        "role": "read-write register holding the BAUD rate; must only be accessed while the device is Idle",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "QueueReady",
+        "kind": "state",
+        "role": "superstate covering normal CPU/HW operation, refined into Idle and Busy substates",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Idle",
+        "kind": "state",
+        "role": "substate of QueueReady where the transmit queue is empty and CONFIG may legally be accessed",
+        "container": "QueueReady",
+        "highlighted": false
+      },
+      {
+        "name": "Busy",
+        "kind": "state",
+        "role": "substate of QueueReady where at least one byte is queued or being transmitted",
+        "container": "QueueReady",
+        "highlighted": false
+      },
+      {
+        "name": "QueueFull",
+        "kind": "state",
+        "role": "state entered when the transmit queue reaches capacity and can accept no more data",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "STATUS::FULL",
+        "kind": "label",
+        "role": "hardware-evaluated flag checked after a byte is enqueued, branching to Busy (0) or QueueFull (1)",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "(any state)",
+        "to": "Idle",
+        "what": "write to RESET may happen from any state and forces the device back to Idle, emptying the queue",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Idle",
+        "to": "Idle",
+        "what": "access CONFIG is only legal while Idle and does not change state",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "QueueReady",
+        "to": "STATUS::FULL",
+        "what": "write to DATA (from Idle or Busy) adds a byte to the transmit queue",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "STATUS::FULL",
+        "to": "Busy",
+        "what": "STATUS::FULL = 0: the queue accepted the byte and is not yet full",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "STATUS::FULL",
+        "to": "QueueFull",
+        "what": "STATUS::FULL = 1: the queue is now full",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "QueueFull",
+        "to": "Busy",
+        "what": "byte transmitted: hardware drains one byte, leaving the queue non-full",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Busy",
+        "to": "Idle",
+        "what": "last byte transmitted: the queue is now empty",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Idle",
+        "Busy",
+        "QueueFull"
+      ],
+      "transitions": [
+        {
+          "from": "any state",
+          "to": "Idle",
+          "guard": "CPU write to RESET"
+        },
+        {
+          "from": "Idle",
+          "to": "Idle",
+          "guard": "CPU access to CONFIG (legal only while Idle)"
+        },
+        {
+          "from": "QueueReady (Idle or Busy)",
+          "to": "Busy",
+          "guard": "CPU write to DATA, then HW reports STATUS::FULL = 0"
+        },
+        {
+          "from": "QueueReady (Idle or Busy)",
+          "to": "QueueFull",
+          "guard": "CPU write to DATA, then HW reports STATUS::FULL = 1"
+        },
+        {
+          "from": "QueueFull",
+          "to": "Busy",
+          "guard": "HW event: byte transmitted"
+        },
+        {
+          "from": "Busy",
+          "to": "Idle",
+          "guard": "HW event: last byte transmitted"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "after a DATA write, does STATUS read FULL?",
+          "branches": [
+            "0: goes to/stays in Busy",
+            "1: goes to QueueFull"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "A CPU-triggered write to DATA is checked by hardware against STATUS::FULL to decide whether the queue moves to Busy or QueueFull; RESET forces Idle from anywhere, and CONFIG may only be touched while Idle.",
+    "reading_order": "Top panel for register bit-fields, then bottom: enter at Idle, follow solid CPU arrows up through the STATUS::FULL diamond, and dashed HW arrows back down through QueueFull to Idle."
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.1,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0000ff",
+        "used_for": "solid CPU-triggered transition arrows and the 'CPU' legend text"
+      },
+      {
+        "hex": "#800080",
+        "used_for": "dashed hardware-triggered transition arrows, the STATUS::FULL diamond, and the 'HW' legend text"
+      },
+      {
+        "hex": "#f2ffff",
+        "used_for": "pale cyan background of panel (a), the register specifications"
+      },
+      {
+        "hex": "#f4e3d7",
+        "used_for": "pale peach background of panel (b), the state-machine model"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "fill of the small CPU/HW legend box inside panel (b)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid rounded-corner borders for main states, dotted rounded borders for nested substates",
+    "font": "serif (Linux Libertine / Times Italic) for prose and italic transition labels; monospace/small-caps for register and state identifiers",
+    "corners": "rounded",
+    "arrows": "solid arrows for CPU-triggered transitions, dashed arrows for hardware-triggered transitions, with a diamond decision node for the STATUS::FULL branch",
+    "icons": "a diamond decision shape and a double-chevron 'from any' merge symbol; no pictorial icons"
+  },
+  "encoding": {
+    "color_means": "blue = a CPU-initiated action (register write/access); purple/magenta = a hardware-initiated event or the resulting HW-determined branch; the two panels' pale background tints just separate the register spec from the state model",
+    "line_style_means": "solid arrows are CPU-triggered transitions; dashed arrows are hardware-triggered transitions or hardware status events",
+    "state_means": "states are rounded solid-border boxes (QueueReady, QueueFull); substates are dotted-border boxes nested inside their superstate (Idle, Busy inside QueueReady)",
+    "marker_means": "0/1 on the diamond's two exits are the two possible values of the STATUS::FULL hardware flag, not step numbers",
+    "emphasis": "colour alone (not position) tells the reader whether a transition is something the driver does or something the hardware does on its own, the paper's central concurrency concern",
+    "reusable_patterns": [
+      "a two-colour solid/dashed arrow convention distinguishing software-triggered from hardware-triggered transitions",
+      "a nested dotted substate box inside a solid superstate box to show refinement without adding a new top-level state",
+      "a small legend box inside the diagram itself explaining the arrow-colour convention"
+    ],
+    "weaknesses": [
+      "panel (a)'s register bit-fields and panel (b)'s state machine are not explicitly linked by arrows or shared numbering, so the reader must match register names (RESET, CONFIG, DATA) to transitions by name only",
+      "the decision diamond's 0/1 labels require reading the STATUS register semantics from the surrounding text"
+    ]
+  },
+  "tags": [
+    "type-states",
+    "device-driver-correctness",
+    "uart",
+    "state-machine",
+    "hardware-software-concurrency",
+    "rust",
+    "register-interface"
+  ],
+  "provenance": {
+    "sections": [
+      "6 The Abacus Framework (p.6-7)"
+    ],
+    "evidence": [
+      "we add the Reset capability proposed earlier to cancel active transactions",
+      "We also add a configuration register for the baud rate (transmission speed)",
+      "we update the model to add Idle and Busy substates to the QueueReady state"
+    ]
+  },
+  "summary": "Figure 2 extends the UART running example from Figure 1 with two manufacturer registers and the resulting developer state model. Panel (a) documents Reset, a write-only register that empties the transmit queue and returns to Idle from any state, and Config, a read-write baud-rate register that must only be touched while the device is Idle. Panel (b) shows the type-state model integrating both: QueueReady is refined into Idle and Busy substates so the Config restriction can be expressed, while a write to Data is followed by a hardware-evaluated STATUS::FULL check that branches to Busy or to a separate QueueFull state. Solid blue arrows mark CPU-triggered transitions (write to Reset, Data, or access Config); dashed purple arrows mark hardware-triggered transitions (STATUS::FULL becoming set, a byte transmitted, or the last byte transmitted), visually separating driver actions from hardware's own concurrent behaviour.",
+  "summary_zh": "图2扩展UART示例：Reset写入即清空队列回Idle；Config仅Idle时可访问。状态机把QueueReady分为Idle/Busy，写DATA后按队列是否已满转Busy或QueueFull，蓝实线为CPU触发，紫虚线为硬件触发。",
+  "confidence": "high",
+  "notes": "Kept the state named 'QueueFull' as literally drawn; the paper text notes it is renamed to 'QueueMaybeFull' only in a later figure (2b in a subsequent revision discussed on p.7), so it is not relabelled here.",
+  "venue": "ASPLOS26"
+}

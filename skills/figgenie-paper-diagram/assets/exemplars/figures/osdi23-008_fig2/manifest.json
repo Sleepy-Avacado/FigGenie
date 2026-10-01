@@ -1,0 +1,59 @@
+{
+  "id": "osdi23-008_fig2",
+  "paper_id": "osdi23-008",
+  "fig": "2",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 2: Cilantro overview. Cilantro uses continuous feedback to dynamically learn each job’s resource-to-performance mappings. An uncertainty-aware resource allocation policy, instantiated for the user’s objective, uses these mappings to determine allocations.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.09,
+  "n_components": 11,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-008/osdi23-008_fig2_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-008/osdi23-008_fig2_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A high-ranked hub-spoke that closes into a loop: Cilantro Scheduler is the hub, Job 1/Job 2/... in the Shared Cluster are interchangeable spokes, and feedback/allocation arrows form a full cycle rather than one-way dispatch.",
+      "what_to_learn": "A hub can both dispatch to and learn from its spokes: draw the return arrow (Per-Job Feedback) the same weight as the dispatch arrow (Resource Allocations) and label each with the concrete payload it carries, not with a generic loop."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar at depth 3: a dashed Cilantro Scheduler box nests an Online Learners box that itself nests two Performance Model boxes, alongside a Policy box nesting one highlighted objective, in 11 components.",
+      "what_to_learn": "Nest per-item boxes, one Performance Model per job, inside the shared learner container that produced them, and pick out the single configurable piece with its own inner accent-filled box one level deeper than its parent."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A clean two-box loop between Shared Cluster and the Cilantro Scheduler, where both arrows are labelled with what they carry (Per-Job Feedback up, Resource Allocations down) rather than left as bare lines.",
+      "what_to_learn": "Label both halves of a loop with what they carry, not just the fact of a return path: 'Per-Job Feedback' going one way and 'Resource Allocations' the other, so a two-box optimizer-beside-the-spine loop reads correctly without needing numbers."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "A minimal replicated-grid element inside a feedback-loop figure: two Job hexagons plus trailing ellipsis dots sit in the Shared Cluster, each with its own Online Learner performance model feeding one shared Policy above.",
+      "what_to_learn": "When replication is secondary to a feedback loop, keep it light: two named instances (Job 1, Job 2) plus trailing ellipsis dots is enough to imply the pool, while the closed loop between cluster feedback and the policy stays the visual main event."
+    }
+  ]
+}

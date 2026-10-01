@@ -1,0 +1,208 @@
+{
+  "paper_id": "nsdi25-073",
+  "fig": "5",
+  "system": {
+    "name": "Prism",
+    "one_liner": "a GPU-disaggregated serving system for deep learning recommendation models that splits inference into CPU-intensive and GPU-efficient subgraphs across disaggregated nodes",
+    "domain": [
+      "gpu-disaggregation",
+      "networking",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "① Existing software stack",
+        "role": "baseline: the full software stack and combined CPU/GPU/NPU hardware co-located on one server, no disaggregation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "② Graph-level disaggregation",
+        "role": "splits above the framework: Models/Framework stay local while API/Driver/Hardware move to a Remote Server, linked by RDMA between the two framework instances",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "③ API-level disaggregation",
+        "role": "splits at the device API: a local API (rCUDA) Client forwards calls over RDMA to a remote API (rCUDA) Server that owns the Driver and Hardware layers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "④ Hardware-level disaggregation",
+        "role": "keeps the entire software stack local and moves only the GPU/NPU hardware to a Remote Server over a PCIe/CXL Switch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Models",
+        "role": "application-layer model code, present on the Local (or single) Server in every panel",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "TensorFlow/PyTorch",
+        "role": "ML framework layer; in Graph-level disaggregation it also runs on the Remote Server and talks to the local instance over RDMA",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Device SDK (CUDA)",
+        "role": "vendor device API layer; relocated to the Remote Server in Graph-level disaggregation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Device Runtime",
+        "role": "runtime layer beneath the device SDK, shown only in the API-level disaggregation stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "API (rCUDA) Client",
+        "role": "intercepts device API calls locally and forwards them to the remote API server",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "API (rCUDA) Server",
+        "role": "receives forwarded API calls and executes them against the local Driver/Hardware",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Device Driver",
+        "role": "vendor kernel-mode driver layer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PCIe Driver",
+        "role": "low-level PCIe bus driver layer beneath the device driver",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "host processor hardware; stays on the Local Server in every disaggregated configuration shown",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU/NPU",
+        "role": "accelerator hardware; combined with the CPU in the non-disaggregated baseline, and the only layer relocated in Hardware-level disaggregation",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "TensorFlow/PyTorch",
+        "to": "TensorFlow/PyTorch",
+        "what": "RDMA link between the local and remote framework instances (Graph-level disaggregation)",
+        "step": null
+      },
+      {
+        "from": "API (rCUDA) Client",
+        "to": "API (rCUDA) Server",
+        "what": "device API calls forwarded over RDMA (API-level disaggregation)",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "GPU/NPU",
+        "what": "PCIe/CXL Switch link to the remote accelerator (Hardware-level disaggregation)",
+        "step": null
+      },
+      {
+        "from": "PCIe Driver",
+        "to": "GPU/NPU",
+        "what": "local PCIe link between driver and hardware in the non-disaggregated layers",
+        "step": null
+      }
+    ],
+    "key_idea": "GPU disaggregation can cut the stack at different layers (framework, device API/rCUDA, or raw hardware over PCIe/CXL), each moving a different boundary between what stays local and what runs remotely.",
+    "reading_order": "Each of the four labeled panels top-to-bottom as a layered stack split into Local/Remote Server columns, comparing where the network link (RDMA or PCIe/CXL) cuts the stack."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.51,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "blue fill of the Models (Application layer) boxes in all four panels"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "green fill of the TensorFlow/PyTorch (Framework layer) boxes in all four panels"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "orange fill of the Device SDK (CUDA) (API layer) boxes in all four panels"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "yellow fill of the Device Driver / PCIe Driver (Driver layer) boxes in all four panels"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pink fill of the Device Runtime and API (rCUDA) Client/Server boxes unique to API-level disaggregation"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on layer boxes; heavy dashed lines separate the four panels and, within each, the Local/Remote Server columns",
+    "font": "sans-serif, small size, bold for the four circled-number panel titles",
+    "corners": "square",
+    "arrows": "double-headed dashed/solid arrows for PCIe links; diagonal double-headed arrows labeled RDMA or PCIe/CXL Switch for cross-server links",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "consistent color-by-layer coding (blue = Application/Models, green = Framework, orange = API/Device SDK, yellow = Driver, pink = rCUDA runtime/client/server) lets the same stack be compared across all four panels",
+    "line_style_means": "heavy dashed lines partition the four comparison panels and the Local/Remote Server columns; double-headed arrows mark the physical/network link (PCIe, RDMA, or PCIe/CXL Switch) at whichever layer is disaggregated",
+    "emphasis": "keeps the layer stack and its colors identical across all four panels so only the position of the Local/Remote Server split and its link type change, isolating exactly what each disaggregation level relocates",
+    "reusable_patterns": [
+      "identical layered-stack diagram repeated across a 2x2 comparison grid with one variable (the disaggregation boundary) highlighted",
+      "Local Server / Remote Server column split reused across panels"
+    ],
+    "weaknesses": [
+      "panel ① has no Local/Remote split, breaking the two-column pattern used by the other three panels",
+      "no explicit legend maps the fill colors to layer names beyond the row labels in panel ①"
+    ]
+  },
+  "tags": [
+    "gpu-disaggregation",
+    "rdma",
+    "pcie",
+    "cxl",
+    "rcuda",
+    "software-stack"
+  ],
+  "provenance": {
+    "sections": [
+      "A Primer on DLRM (p.5)"
+    ],
+    "evidence": [
+      "Figure 5: GPU disaggregation at different levels."
+    ]
+  },
+  "summary": "This background figure surveys four ways to physically disaggregate GPUs from a server's CPU, reusing the same layered software-stack diagram (Application/Models, Framework/TensorFlow-PyTorch, API/Device SDK, Driver, Hardware) split into Local/Remote Server columns. Panel 1 shows the existing, non-disaggregated stack with every layer and a combined CPU/GPU/NPU on one server. Panel 2, graph-level disaggregation, keeps Models and the framework local while the framework's remote counterpart, API, driver, and hardware sit on a remote server, linked by RDMA between the two framework instances. Panel 3, API-level disaggregation, keeps everything down to an API (rCUDA) Client local and forwards calls over RDMA to a remote API (rCUDA) Server owning the driver and hardware. Panel 4, hardware-level disaggregation, keeps the whole software stack local and moves only the GPU/NPU across a PCIe/CXL switch. Consistent per-layer colors make the relocated boundary easy to compare across panels.",
+  "summary_zh": "该图对比四种GPU资源分离方式,均用同一软件栈分层图(应用/框架/API/驱动/硬件,分本地/远程服务器)呈现:①不分离;②框架层间用RDMA互联;③API(rCUDA)客户端/服务端转发调用;④仅GPU经PCIe/CXL交换机远程化。",
+  "confidence": "low",
+  "notes": "No body paragraph references this figure in the provided context (only the caption); the record is built from the caption and the figure's own labels, so component roles beyond the visible text are inferred from general knowledge of these disaggregation techniques (RDMA, rCUDA, PCIe/CXL) rather than paper-specific claims.",
+  "venue": "NSDI25"
+}

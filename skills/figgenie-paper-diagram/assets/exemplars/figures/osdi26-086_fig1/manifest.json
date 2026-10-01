@@ -1,0 +1,55 @@
+{
+  "id": "osdi26-086_fig1",
+  "kind": "mechanism",
+  "paper_id": "osdi26-086",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: Three steps to realize vector codes—from coding structure design to coefﬁcient search and coding algorithm.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "flowchart",
+  "subject": "the three-stage design process that turns coding parameters into a working vector-code encoding/decoding algorithm",
+  "arrangement": "frames-row",
+  "panel_count": 3,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 4.72,
+  "n_elements": 11,
+  "n_relations": 10,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": true,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-086/osdi26-086_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-086/osdi26-086_fig1_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "A six-box process/artifact chain reuses one grey template for each intermediate artifact, changing only a single bold red word (unknown to valid), each elaborated by a dashed worked-equation callout below.",
+      "what_to_learn": "Alternate process and artifact boxes in one row, reuse the same artifact template each time and change one bold coloured word to mark progress, and hang a dashed worked-equation callout under each artifact — but never legend the colour code.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "paper_id": "asplos26-113",
+  "fig": "8",
+  "system": {
+    "name": "PropHunt",
+    "one_liner": "an automated tool that iteratively optimizes quantum syndrome measurement (SM) circuits by finding and resolving error ambiguities",
+    "domain": [
+      "quantum-computing",
+      "error-correction",
+      "circuit-optimization"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "SM Circuit",
+        "role": "the syndrome measurement circuit under optimization, from which a circuit-level decoding graph is produced",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "5.1) Ambiguous Decoding Subgraph Finding",
+        "role": "expands random subgraphs of the decoding graph until an ambiguous error is found",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "5.2) Min-Weight Logical Error Solving via MaxSAT",
+        "role": "finds the min-weight logical error in each ambiguous subgraph using a MaxSAT formulation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "5.3) Candidate Circuit Change Enumeration",
+        "role": "enumerates candidate SM subcircuit modifications for each identified logical error",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "5.4) Pruning Candidates via Ambiguity Checking",
+        "role": "checks each candidate change and prunes those that fail to remove the ambiguity",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "5.5) Applying Changes to Resolve Ambiguity",
+        "role": "applies the selected candidate change (minimum depth if multiple remain) to the SM circuit",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "SM Circuit",
+        "to": "5.1) Ambiguous Decoding Subgraph Finding",
+        "what": "circuit-level decoding graph",
+        "step": 1
+      },
+      {
+        "from": "5.1) Ambiguous Decoding Subgraph Finding",
+        "to": "5.2) Min-Weight Logical Error Solving via MaxSAT",
+        "what": "ambiguous subgraphs",
+        "step": 2
+      },
+      {
+        "from": "5.2) Min-Weight Logical Error Solving via MaxSAT",
+        "to": "5.3) Candidate Circuit Change Enumeration",
+        "what": "min-weight logical errors",
+        "step": 3
+      },
+      {
+        "from": "5.3) Candidate Circuit Change Enumeration",
+        "to": "5.4) Pruning Candidates via Ambiguity Checking",
+        "what": "candidate circuit changes",
+        "step": 4
+      },
+      {
+        "from": "5.4) Pruning Candidates via Ambiguity Checking",
+        "to": "5.5) Applying Changes to Resolve Ambiguity",
+        "what": "surviving (valid) candidate changes",
+        "step": 5
+      },
+      {
+        "from": "5.5) Applying Changes to Resolve Ambiguity",
+        "to": "SM Circuit",
+        "what": "modified SM circuit, for the next optimization iteration",
+        "step": 6
+      }
+    ],
+    "key_idea": "PropHunt loops through finding ambiguous decoding subgraphs, solving for their min-weight logical errors via MaxSAT, and enumerating/pruning/applying circuit changes that remove the ambiguity, repeating until the SM circuit is fully optimized",
+    "reading_order": "left to right across the five numbered stage panels starting from the SM Circuit, then following the loop-back arrow at the bottom from stage 5.5 back to the SM Circuit"
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "double",
+    "aspect": 1.77,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f2f2f2",
+        "used_for": "panel background shading"
+      },
+      {
+        "hex": "#3fa9f5",
+        "used_for": "highlighted ambiguous subgraphs and identified logical errors (blue)"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "secondary panel/box shading"
+      },
+      {
+        "hex": "#fcee21",
+        "used_for": "candidate circuit modifications under consideration (yellow)"
+      },
+      {
+        "hex": "#7ac943",
+        "used_for": "accepted/valid candidate changes (green checkmark)"
+      },
+      {
+        "hex": "#ff1d25",
+        "used_for": "rejected/invalid candidate changes (red cross)"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.6pt strokes with dashed circuit/loop connectors",
+    "font": "PT Serif for panel titles, Monaco monospace for graph/circuit notation",
+    "corners": "rounded",
+    "arrows": "orthogonal and curved arrows, including a large loop-back arrow returning from the last panel to the SM Circuit",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = ambiguous subgraphs / identified logical errors, yellow = candidate circuit changes, green = accepted changes, red = rejected changes",
+    "line_style_means": null,
+    "emphasis": "green checkmarks and red crosses next to each candidate change make PropHunt's automatic accept/reject decisions immediately visible, and the closed loop shape emphasizes the iterative nature of the optimization",
+    "reusable_patterns": [
+      "five-stage circular optimization loop over a graph representation, each stage a boxed sub-diagram connected by arrows that loop back to the start"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "quantum-error-correction",
+    "circuit-optimization",
+    "maxsat",
+    "syndrome-measurement",
+    "iterative-optimization"
+  ],
+  "provenance": {
+    "sections": [
+      "5 PropHunt (p.6)"
+    ],
+    "evidence": [
+      "First, a circuit-level decoding graph is produced from the SM circuit",
+      "random subgraphs are expanded until L' ∉ rowsp(H') indicating the presence of ambiguous errors",
+      "SM subcircuits corresponding to each logical error are modified to change the error propagation"
+    ]
+  },
+  "summary": "PropHunt is an automated tool for optimizing quantum syndrome measurement (SM) circuits by directly modeling how errors propagate through them. Figure 8 gives an overview of its iterative optimization loop as five connected panels. Starting from the SM Circuit, PropHunt (5.1) finds ambiguous decoding subgraphs by expanding random subgraphs until an ambiguous error is detected, (5.2) solves for the min-weight logical error in each subgraph using a MaxSAT formulation, (5.3) enumerates candidate circuit changes for each error, (5.4) prunes candidates that fail an ambiguity check, and (5.5) applies the selected change (minimum depth if several remain) back to the SM circuit, closing the loop for the next iteration. Each panel is a boxed sub-diagram of dot-and-line circuit/graph drawings, colored blue for ambiguous elements, yellow for candidates, and green/red checkmarks/crosses for accept/reject decisions, with a large arrow visually closing the loop back to the starting circuit.",
+  "summary_zh": "该图展示 PropHunt 自动优化电路的迭代循环：从SM电路出发，依次经过(5.1)寻找模糊译码子图、(5.2)用MaxSAT求解最小权重逻辑错误、(5.3)枚举候选电路改动、(5.4)通过模糊性检查剪枝候选、(5.5)应用改动消除模糊，并循环回到SM电路，蓝色标记模糊子图，黄色为候选改动，绿/红勾叉表示接受/拒绝。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

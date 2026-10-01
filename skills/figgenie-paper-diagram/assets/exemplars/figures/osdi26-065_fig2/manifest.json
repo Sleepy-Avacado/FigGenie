@@ -1,0 +1,42 @@
+{
+  "id": "osdi26-065_fig2",
+  "paper_id": "osdi26-065",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: The high-level concepts of Quota Marketplace",
+  "corpus_template": "matrix",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "google-slides",
+  "aspect": 1.23,
+  "n_components": 15,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-065/src/fig2_GQM_System_v2_3.svg",
+    "preview.png": "lab/extracted/osdi26-065/src/fig2_GQM_System_v2_3.png",
+    "print.png": "lab/extracted/osdi26-065/osdi26-065_fig2_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "N repeated identical columns (pool 1 / pool 2 / pool N) feeding one shared horizontal band, nesting depth 3.",
+      "what_to_learn": "Column-per-instance over a full-width shared band is the layout for 'per-X mechanics feeding one global step'; the dashed band border marks where they merge."
+    }
+  ]
+}

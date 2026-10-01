@@ -1,0 +1,56 @@
+{
+  "id": "nsdi26-030_fig8",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-030",
+  "fig": "8",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 8: EROICA’s performance degradation detection.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": true,
+  "base": "flowchart",
+  "subject": "how EROICA detects the training-iteration boundary and then watches for performance degradation using a sliding D/O event window",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.16,
+  "n_elements": 11,
+  "n_relations": 11,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-030/src/fig8_automation.svg",
+    "preview.png": "lab/extracted/nsdi26-030/src/fig8_automation.png",
+    "print.png": "lab/extracted/nsdi26-030/nsdi26-030_fig8_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "A monitoring-loop flowchart where each stage box shows its own literal example buffer (coloured D/O event tiles) feeding a yes/no gate that self-loops until enough events accumulate.",
+      "what_to_learn": "Put a real buffer of coloured event tiles inside each box, and loop its gate diamond back into that box on 'no' but forward to the next box on 'yes' — but three stacked diamonds stay dense to trace.",
+      "note_source": "agent"
+    }
+  ]
+}

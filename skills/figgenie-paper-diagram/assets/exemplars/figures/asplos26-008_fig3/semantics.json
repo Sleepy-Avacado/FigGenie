@@ -1,0 +1,209 @@
+{
+  "paper_id": "asplos26-008",
+  "fig": "3",
+  "system": {
+    "name": "NotebookOS",
+    "one_liner": "a GPU-efficient replicated notebook platform that allocates GPUs only during active cell execution using Raft-synchronized kernel replicas",
+    "domain": [
+      "ml-systems",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "External Clients",
+        "role": "notebook clients (Jupyter Notebook, Golang/JS/Python clients) submitting code for execution",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Jupyter Server",
+        "role": "receives client requests and forwards them via a Provisioner",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Provisioner",
+        "role": "customized Kernel Provisioner integrating NotebookOS with Jupyter",
+        "container": "Jupyter Server",
+        "novel": true
+      },
+      {
+        "name": "Global Scheduler",
+        "role": "identifies candidate GPU servers, forwards/launches replicas, and migrates them under load",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Local Scheduler",
+        "role": "per-server scheduler managing kernel replicas on that GPU server",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Standby Kernel Replica",
+        "role": "non-executing replica that stays synchronized via Raft and can take over",
+        "container": "Local Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Executor Kernel Replica",
+        "role": "the replica actively executing code and dynamically bound to GPUs",
+        "container": "Local Scheduler",
+        "novel": true
+      },
+      {
+        "name": "AST",
+        "role": "abstract syntax tree representation of executed code used for state synchronization",
+        "container": "Executor Kernel Replica",
+        "novel": true
+      },
+      {
+        "name": "GPUs",
+        "role": "GPU devices dynamically bound to the executor replica during active execution",
+        "container": "Executor Kernel Replica",
+        "novel": true
+      },
+      {
+        "name": "Distributed Data Store",
+        "role": "checkpoints large objects/GPU state outside the Raft log (AWS S3, HDFS, or Redis)",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "External Clients",
+        "to": "Jupyter Server",
+        "what": "run cell / submit code for execution",
+        "step": 1
+      },
+      {
+        "from": "Jupyter Server",
+        "to": "Global Scheduler",
+        "what": "forward messages",
+        "step": 2
+      },
+      {
+        "from": "Global Scheduler",
+        "to": "Local Scheduler",
+        "what": "launch/migrate replicas, forward messages",
+        "step": 3
+      },
+      {
+        "from": "Local Scheduler",
+        "to": "Executor Kernel Replica",
+        "what": "dynamically bind GPUs",
+        "step": 6
+      },
+      {
+        "from": "Executor Kernel Replica",
+        "to": "Standby Kernel Replica",
+        "what": "synchronize kernel state (Raft-replicated)",
+        "step": 5
+      },
+      {
+        "from": "Executor Kernel Replica",
+        "to": "Distributed Data Store",
+        "what": "checkpoint large objects / GPU state",
+        "step": 7
+      }
+    ],
+    "key_idea": "NotebookOS routes each client request through a Global Scheduler to Local Schedulers on GPU servers, where one kernel replica executes with dynamically bound GPUs while standby replicas stay synchronized via Raft, and large state is offloaded to a distributed data store instead of the Raft log.",
+    "reading_order": "Left to right, numbered steps 1-7: External Clients through Jupyter Server/Provisioner (1), to Global Scheduler (2-3), out to three Local Scheduler groups each with Standby/Executor replicas (4-6), and up to the Distributed Data Store (7) with the Executor's dynamic GPU binding and 1-kernel-composed-of-3-replicas bracket on the right."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.08,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a680b8",
+        "used_for": "purple fill of the Distributed Data Store box and Provisioner accents"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of unallocated-GPU icons (per legend)"
+      },
+      {
+        "hex": "#4e4e4e",
+        "used_for": "dark gray fill of allocated-GPU icons and Standby Kernel Replica boxes"
+      },
+      {
+        "hex": "#ea6b66",
+        "used_for": "red/coral fill of the Global Scheduler box"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light gray background fill for grouping boxes"
+      },
+      {
+        "hex": "#f6d2a2",
+        "used_for": "tan fill accent for Executor Kernel Replica box"
+      },
+      {
+        "hex": "#67ab9f",
+        "used_for": "teal fill accent for client icons"
+      },
+      {
+        "hex": "#6ad7e5",
+        "used_for": "cyan fill accent for client icons"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on most boxes, one thin red border accent",
+    "font": "Franklin Gothic Demi sans, 4.5-12.5pt",
+    "corners": "mixed",
+    "arrows": "orthogonal black arrows carrying circled step numbers 1-7",
+    "icons": "vector icons for Jupyter/Golang/JS/Python client logos and GPU chip icons (allocated vs. unallocated per legend)"
+  },
+  "encoding": {
+    "color_means": "gray GPU icon = unallocated GPU, dark gray GPU icon = allocated GPU (per legend); red = Global Scheduler as the central control point; purple = Distributed Data Store for large-object checkpointing",
+    "line_style_means": "not distinguished beyond arrow direction; circled numbers order the request/execution/synchronization/checkpoint flow",
+    "emphasis": "circled numbered steps trace the full path from client request to dynamic GPU binding and Raft-based replica synchronization, foregrounding the system's novel scheduling and replication path",
+    "reusable_patterns": [
+      "numbered request-path walkthrough over a client-scheduler-replica architecture",
+      "in-figure legend distinguishing allocated vs. unallocated resource icons",
+      "repeated Local Scheduler groups shown in parallel to imply horizontal scaling"
+    ],
+    "weaknesses": [
+      "high shape/text density (551 shapes) at single-column width makes fine details like the legend hard to read"
+    ]
+  },
+  "tags": [
+    "notebook",
+    "GPU-scheduling",
+    "Raft",
+    "replication",
+    "distributed-kernel",
+    "resource-oversubscription"
+  ],
+  "provenance": {
+    "sections": [
+      "3 NotebookOS Design (p.5-8)"
+    ],
+    "evidence": [
+      "NotebookOS consists of five core components",
+      "NotebookOS clients interface with NotebookOS by sending notebook operations via HTTP or WebSocket messages",
+      "it appends a pointer to the log while storing the actual data in the Distributed Data Store (see Step 7 in Figure 3)"
+    ]
+  },
+  "summary": "This figure gives the architecture overview of NotebookOS. External Clients (Jupyter, Golang, JS, Python) submit run-cell requests to the Jupyter Server's Provisioner (step 1), which forwards them to a Global Scheduler (step 2) that launches or migrates kernel replicas across GPU servers via per-server Local Schedulers (step 3). Each Local Scheduler manages a Distributed Kernel composed of one Executor Kernel Replica, which dynamically binds GPUs only during active execution (step 6) and represents code as an AST, and two Standby Kernel Replicas that stay synchronized with it via Raft (step 5). Large objects and GPU state are checkpointed asynchronously to an external Distributed Data Store (S3/HDFS/Redis, step 7) rather than the Raft log itself. Drawn as a dense, numbered hub-and-spoke diagram with a legend distinguishing allocated versus unallocated GPU icons, the figure walks the reader through NotebookOS's full request-to-execution-to-replication path.",
+  "summary_zh": "该图展示 NotebookOS 的整体架构：外部客户端请求经 Jupyter Server/Provisioner 转发给 Global Scheduler，再分发到各 GPU 服务器上的 Local Scheduler；每个分布式内核由一个动态绑定 GPU 的 Executor 副本和多个通过 Raft 同步的 Standby 副本组成，大对象/GPU 状态异步 checkpoint 到分布式数据存储，图中以编号步骤 1-7 串联整个流程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

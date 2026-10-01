@@ -1,0 +1,159 @@
+{
+  "paper_id": "nsdi24-087",
+  "fig": "2",
+  "system": {
+    "name": "Autothrottle",
+    "one_liner": "a practical bi-level resource management system for SLO-targeted microservices",
+    "domain": [
+      "microservices",
+      "resource-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Tower",
+        "role": "application-level learning-based controller that observes end-to-end latency/workload and sets performance targets",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Captain",
+        "role": "per-service heuristic controller that meets the performance target set by the Tower",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CPU scheduler",
+        "role": "enforces the throttle/quota decided by its Captain and reports CPU usage back",
+        "container": "Captain",
+        "novel": false
+      },
+      {
+        "name": "Application",
+        "role": "the microservice application graph the Tower and Captains manage",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Gateway",
+        "role": "entry point into the microservice application graph",
+        "container": "Application",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application",
+        "to": "Tower",
+        "what": "RPS, latency",
+        "step": null
+      },
+      {
+        "from": "Tower",
+        "to": "Captain",
+        "what": "performance target (CPU throttle ratio)",
+        "step": null
+      },
+      {
+        "from": "Captain",
+        "to": "Tower",
+        "what": "CPU allocation",
+        "step": null
+      },
+      {
+        "from": "Captain",
+        "to": "CPU scheduler",
+        "what": "quota",
+        "step": null
+      },
+      {
+        "from": "CPU scheduler",
+        "to": "Captain",
+        "what": "throttle, usage",
+        "step": null
+      },
+      {
+        "from": "Gateway",
+        "to": "Application",
+        "what": "requests entering the service graph",
+        "step": null
+      }
+    ],
+    "key_idea": "Autothrottle decouples application-wide SLO feedback from per-service resource control: a single learning-based Tower observes end-to-end latency and workload to periodically set CPU throttle-ratio performance targets, and per-service Captains locally translate those targets into CPU scheduler quotas.",
+    "reading_order": "the microservice Application graph at the bottom feeds RPS/latency up to the Tower at top-left, which sets performance targets for a zoomed-in Captain at top-right, which in turn manages its local CPU scheduler."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.05,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#93c47d",
+        "used_for": "Tower box fill (green)"
+      },
+      {
+        "hex": "#4c72b0",
+        "used_for": "microservice/server node icons and Captain accents (blue)"
+      },
+      {
+        "hex": "#adbfdb",
+        "used_for": "zoomed Captain inset background (light blue)"
+      },
+      {
+        "hex": "#545454",
+        "used_for": "dark gray text and box outlines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark gray outlines, rounded Captain inset border",
+    "font": "Arial sans, small (6pt)",
+    "corners": "rounded",
+    "arrows": "curved dotted lines fanning out from Tower to multiple services, labeled solid/dashed arrows between Captain and its CPU scheduler",
+    "icons": "vector server/microservice node icons forming a DAG, gateway icon, clock/timer icon on Tower, gear-like icon suggested for CPU scheduler"
+  },
+  "encoding": {
+    "color_means": "green = the single application-wide Tower controller; blue = per-service microservice nodes and their Captains, one of which is shown zoomed-in for detail",
+    "line_style_means": "dotted curved lines represent the many Tower-to-Captain control relationships fanning out across all services, while the zoomed inset shows one such relationship in detail",
+    "emphasis": "the zoomed-in Captain inset next to the compact Application DAG highlights the bi-level split between one global controller and many local controllers",
+    "reusable_patterns": [
+      "hub controller fanning out dotted control lines to per-node local controllers, with one node shown magnified for detail"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "microservices",
+    "resource-management",
+    "slo",
+    "cpu-throttling",
+    "bi-level-control",
+    "hub-spoke"
+  ],
+  "provenance": {
+    "sections": [
+      "3 The Autothrottle Framework (p.5)"
+    ],
+    "evidence": [
+      "Figure 2 depicts the architecture of Autothrottle.",
+      "the application-wide controller issues lower throttle targets to guide local controllers",
+      "per-service controllers as Captains (§3.2), and the application-wide controller as the Tower"
+    ]
+  },
+  "summary": "Autothrottle manages CPU resources for SLO-targeted microservices with a bi-level design. Figure 2 shows a green 'Tower (§3.3)' box at top-left receiving RPS and latency signals from the microservice 'Application' graph below it, which is entered through a 'Gateway' icon and drawn as a small DAG of blue server nodes. The Tower fans dotted lines out to per-service controllers and periodically sends each a performance target, expressed as a CPU throttle ratio; one of these, labeled 'Captain (§3.2)', is shown zoomed in on the right, receiving the CPU-allocation/performance-target exchange with the Tower and, inside its own box, managing a 'CPU scheduler' via throttle, usage and quota signals. This layout captures the paper's core idea of decoupling application-level SLO feedback (handled once by the Tower) from service-level resource control (handled independently and locally by each Captain).",
+  "summary_zh": "该图展示Autothrottle的双层架构：应用级Tower控制器观测端到端时延与请求量，向各服务的本地Captain控制器下发CPU节流比例目标，Captain再通过配额指令管理其CPU调度器，图右放大展示单个Captain细节。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

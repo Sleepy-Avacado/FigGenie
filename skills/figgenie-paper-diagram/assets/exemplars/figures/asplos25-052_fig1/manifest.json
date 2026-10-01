@@ -1,0 +1,47 @@
+{
+  "id": "asplos25-052_fig1",
+  "paper_id": "asplos25-052",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. SSD virtualization that supports software-isolated and hardware-isolated approaches.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.0,
+  "n_components": 9,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-052/asplos25-052_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-052/asplos25-052_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star exemplar showing panel (b) built from labelled brackets over shared channel boxes rather than a redrawn schematic: yellow fill flags the hardware-isolated vSSDs against the software-isolated pair for a direct utilization-vs-isolation contrast.",
+      "what_to_learn": "Label the two conditions with brackets above the shared boxes (Software-isolated / Hardware-isolated) instead of duplicating structure, but do add a legend line for the highlight colour: this exemplar's own weakness is leaving that yellow-vs-plain fill unexplained."
+    },
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Panel (a) sets up the shared vSSD/channel vocabulary, then panel (b) applies the actual contrast: labelled brackets and yellow fill separate hardware-isolated vSSDs (dedicated channels) from software-isolated ones (shared channels).",
+      "what_to_learn": "When only one of two panels carries the actual contrast, use labelled brackets plus a single highlight colour on the winning option inside that panel; but add a legend for the highlight color, since dropping it (as this figure does) leaves the meaning of the yellow fill unstated."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "sosp25-061_fig7",
+  "paper_id": "sosp25-061",
+  "fig": "7",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 7: DiffKV architecture.",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "google-slides",
+  "aspect": 1.88,
+  "n_components": 13,
+  "n_flows": 2,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-061/src/fig7_CompactKV-arch-v2.svg",
+    "preview.png": "lab/extracted/sosp25-061/src/fig7_CompactKV-arch-v2.png",
+    "print.png": "lab/extracted/sosp25-061/sosp25-061_fig7_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Worker-0 and Worker-N drawn in full with a centred ellipsis, each expanded to nesting depth 4.",
+      "what_to_learn": "Two full replicas with an ellipsis between them beats three partial ones; index them 0 and N so the reader infers the range."
+    }
+  ]
+}

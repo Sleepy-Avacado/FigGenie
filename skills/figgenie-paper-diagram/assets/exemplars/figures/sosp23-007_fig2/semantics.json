@@ -1,0 +1,213 @@
+{
+  "paper_id": "sosp23-007",
+  "fig": "2",
+  "system": {
+    "name": "Mira",
+    "one_liner": "a system that profiles program behavior to automatically configure caching and code for far-memory execution",
+    "domain": [
+      "far-memory",
+      "memory-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Local Node",
+        "role": "the local machine hosting the application and local Mira runtime",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Local DRAM Cache",
+        "role": "local cache split into sections managing different objects/data",
+        "container": "Local Node",
+        "novel": true
+      },
+      {
+        "name": "section 1 (fully assoc)",
+        "role": "a fully-associative cache section within the local DRAM cache",
+        "container": "Local DRAM Cache",
+        "novel": true
+      },
+      {
+        "name": "section 2 (set assoc)",
+        "role": "a set-associative cache section within the local DRAM cache",
+        "container": "Local DRAM Cache",
+        "novel": true
+      },
+      {
+        "name": "Default Swap Section",
+        "role": "universal swap section holding all heap objects and static data before profiling-driven specialization",
+        "container": "Local DRAM Cache",
+        "novel": true
+      },
+      {
+        "name": "Application Processes",
+        "role": "the unmodified user program(s) running on the local node",
+        "container": "Local Node",
+        "novel": false
+      },
+      {
+        "name": "Network Stacks",
+        "role": "local runtime networking component moving data to/from far memory",
+        "container": "Local Node",
+        "novel": true
+      },
+      {
+        "name": "2-side",
+        "role": "two-sided network transfer mode",
+        "container": "Network Stacks",
+        "novel": true
+      },
+      {
+        "name": "1-side",
+        "role": "one-sided network transfer mode",
+        "container": "Network Stacks",
+        "novel": true
+      },
+      {
+        "name": "swap sys",
+        "role": "traditional page-swap mechanism used as a fallback path",
+        "container": "Local Node",
+        "novel": false
+      },
+      {
+        "name": "Alloc",
+        "role": "local allocator component for cache sections",
+        "container": "Local Node",
+        "novel": true
+      },
+      {
+        "name": "Far-Memory Node",
+        "role": "the remote machine providing far memory and offloaded functions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Offloaded Functions",
+        "role": "compiled code offloaded to run on the far-memory node",
+        "container": "Far-Memory Node",
+        "novel": true
+      },
+      {
+        "name": "Mira Runtime (remote)",
+        "role": "far-memory-side runtime handling offloaded network and allocation calls",
+        "container": "Far-Memory Node",
+        "novel": true
+      },
+      {
+        "name": "Network",
+        "role": "remote runtime's networking component",
+        "container": "Mira Runtime (remote)",
+        "novel": true
+      },
+      {
+        "name": "Allocator",
+        "role": "remote runtime's allocator component",
+        "container": "Mira Runtime (remote)",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application Processes",
+        "to": "Local DRAM Cache",
+        "what": "memory accesses",
+        "step": null
+      },
+      {
+        "from": "Local DRAM Cache",
+        "to": "Far-Memory Node",
+        "what": "swapped/offloaded data over the network/interconnect",
+        "step": null
+      },
+      {
+        "from": "Network Stacks",
+        "to": "Mira Runtime (remote)",
+        "what": "offloaded network and allocation calls",
+        "step": null
+      }
+    ],
+    "key_idea": "Mira's runtime splits into a local-node runtime, which manages a multi-section DRAM cache, application processes, and local network/swap/alloc stacks, and a far-memory-node runtime that executes offloaded network and allocator functions, connected over a network/interconnect.",
+    "reading_order": "Top-down: Local Node's DRAM cache and application processes first, then its local network/swap/alloc stack, across the interconnect to the Far-Memory Node's offloaded runtime at the bottom."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.62,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffbfbf",
+        "used_for": "light pink fill on swap-related boxes (Default Swap Section, swap sys) highlighting the legacy swap path"
+      },
+      {
+        "hex": "#ffff7f",
+        "used_for": "yellow highlight on a cache section box"
+      },
+      {
+        "hex": "#ff7f7f",
+        "used_for": "red/salmon accent on application or offloaded-function boxes"
+      },
+      {
+        "hex": "#ffefeb",
+        "used_for": "very light peach background fill of the Local Node panel"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "light gray borders/background for the Local Node and Far-Memory Node containers"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed strokes, square corners",
+    "font": "HelveticaNeue sans-serif, 4.5-7pt, heavily bold (bold fraction 0.67) for section headers",
+    "corners": "square",
+    "arrows": "thin, mostly curved connector lines with few visible arrowheads",
+    "icons": "vector, small grid glyphs depicting cache associativity in section 1/section 2"
+  },
+  "encoding": {
+    "color_means": "red/pink tones mark swap and legacy-path components (Default Swap Section, swap sys); yellow highlights a cache section; grays outline the two execution locations (Local Node, Far-Memory Node)",
+    "line_style_means": null,
+    "emphasis": "the host-device split (Local Node vs. Far-Memory Node linked by a labeled network/interconnect arrow) foregrounds Mira's local/remote runtime split for offloading far-memory operations",
+    "reusable_patterns": [
+      "host-device split with mirrored local/remote runtime boxes connected by a single labeled network arrow"
+    ],
+    "weaknesses": [
+      "cache section boxes (section 1/section 2) are small and rely on similar-looking mini grid icons that are hard to distinguish"
+    ]
+  },
+  "tags": [
+    "far-memory",
+    "caching",
+    "runtime",
+    "program-analysis",
+    "memory-tiering"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Related Works (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 shows the run-time architecture of Mira.",
+      "Mira takes an unmodified program as input and generates 1) a cache configuration",
+      "configures the local cache as a universal swap section and places all heap objects and static data in it"
+    ]
+  },
+  "summary": "This figure shows Mira's run-time architecture, split into a Local Node and a Far-Memory Node connected by a network/interconnect. The Local Node contains a Local DRAM Cache with multiple sections (a fully-associative section, a set-associative section, and a Default Swap Section that initially holds all heap objects and static data), the unmodified Application Processes, and a local Mira runtime with Network Stacks (2-sided/1-sided transfer) and Alloc components alongside a traditional swap-sys fallback. The Far-Memory Node hosts Offloaded Functions and a remote Mira runtime with its own Network and Allocator components. The layout is a compact, tall single-column host-device diagram with square-cornered, dashed, flat-filled boxes in salmon/pink/yellow tones and bold sans-serif labels, distinguishing this runtime-only view from the paper's separate whole-system Figure 1.",
+  "summary_zh": "该图展示 Mira 运行时架构：本地节点包含分区的 DRAM 缓存、应用进程及本地网络/交换/分配栈，通过网络互联与远端节点上的 Mira 远程运行时（网络与分配器）连接，实现向远端内存的卸载执行。",
+  "confidence": "medium",
+  "notes": "The caption is only two words ('Mira Runtime.') and the supplied paragraph describes Mira's overall profiling/compilation flow more than this specific runtime figure's internal wiring, so some box-to-box flows and color usage are inferred from the image layout rather than explicit prose.",
+  "venue": "SOSP23"
+}

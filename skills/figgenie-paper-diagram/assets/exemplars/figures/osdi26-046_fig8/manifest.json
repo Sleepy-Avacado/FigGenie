@@ -1,0 +1,48 @@
+{
+  "id": "osdi26-046_fig8",
+  "paper_id": "osdi26-046",
+  "fig": "8",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 8: Trajectory-Level Rollout and Reward Overview.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 4.1,
+  "n_components": 4,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-046/src/fig8_traj-level-rollout.svg",
+    "preview.png": "lab/extracted/osdi26-046/src/fig8_traj-level-rollout.png",
+    "print.png": "lab/extracted/osdi26-046/osdi26-046_fig8_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: this is a 4-component control-loop diagram, EnvManager cycling Reset/Action with a self-loop arrow among Reward Worker, LLM Proxy, and Inference Worker; nothing sits along a time axis and there are no lanes.",
+      "what_to_learn": "Read this as a small control-loop or hub figure instead: a self-loop arrow on EnvManager marks its per-instance reset, and the stacked-rectangle icon reused on every box signals many parallel trajectory instances without needing a time axis or lane grid at all."
+    },
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Reassigned from multi-tier by the note-writer: four same-level worker boxes in one row, each marked with a stacked-card icon for many parallel instances; there is no tier stack or network boundary, so this is pipeline/replicated-grid, not multi-tier.",
+      "what_to_learn": "Reuse one small stacked-rectangle icon on every box in a row to say 'this runs as many parallel instances' without redrawing each copy, and give a self-looping component (here EnvManager's Reset) its own tight loop-back arrow rather than routing it across the whole diagram."
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "paper_id": "nsdi26-120",
+  "fig": "7",
+  "system": {
+    "name": "REAL",
+    "one_liner": "a network emulator that runs unmodified containerized routers and controls their execution to converge control-plane behavior at simulator-like cost",
+    "domain": [
+      "networking",
+      "network-emulation",
+      "fault-tolerance"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "R1",
+        "role": "a neighbor router sending messages to R2",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "R3",
+        "role": "another neighbor router sending messages to R2",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "R2",
+        "role": "the router being snapshotted, taken offline, and restored",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Shim",
+        "role": "intercepts each neighbor's write() calls and R2's recv()/ppoll() calls without modifying router images",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Simulated Data Plane",
+        "role": "records, buffers and replays route messages sent to R2 to preserve its observable state across snapshot/restore",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Message Log",
+        "role": "ordered log of every route message sent to R2 while R2 is online (e.g. L=6, L=5, ..., L=1)",
+        "container": "Simulated Data Plane",
+        "novel": true
+      },
+      {
+        "name": "Buffered Messages",
+        "role": "messages accumulated while R2 is offline, to be delivered once R2 restarts (e.g. B=4, B=3, ..., B=1)",
+        "container": "Simulated Data Plane",
+        "novel": true
+      },
+      {
+        "name": "recv()",
+        "role": "intercepted receive call used by SimDP or R2's shim to accept incoming messages",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "write()",
+        "role": "intercepted write call used by neighbors, or by SimDP during replay, to send a message",
+        "container": "Shim",
+        "novel": true
+      },
+      {
+        "name": "ppoll()",
+        "role": "intercepted poll call that filters out unordered POLLIN events during replay so R2's internal events happen in the exact original order",
+        "container": "Shim",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "R1",
+        "to": "Simulated Data Plane",
+        "what": "(a) R1's write() is intercepted and received by SimDP via recv()",
+        "step": null
+      },
+      {
+        "from": "Simulated Data Plane",
+        "to": "Message Log",
+        "what": "(a) message appended to the ordered message log while R2 is online",
+        "step": null
+      },
+      {
+        "from": "Message Log",
+        "to": "R2",
+        "what": "(a) message popped from the log and relayed via write()/recv() to R2",
+        "step": null
+      },
+      {
+        "from": "R1",
+        "to": "Simulated Data Plane",
+        "what": "(b) neighbors keep sending and SimDP keeps accepting messages even while R2 is offline",
+        "step": null
+      },
+      {
+        "from": "Simulated Data Plane",
+        "to": "Buffered Messages",
+        "what": "(b) messages are appended to a buffer instead of delivered, so neighbors do not detect R2 is offline",
+        "step": null
+      },
+      {
+        "from": "Message Log",
+        "to": "Simulated Data Plane",
+        "what": "(c) recorded messages are popped and flushed from the message log for replay",
+        "step": null
+      },
+      {
+        "from": "Simulated Data Plane",
+        "to": "Shim",
+        "what": "(c) SimDP replays each recorded message via write()",
+        "step": null
+      },
+      {
+        "from": "Shim",
+        "to": "R2",
+        "what": "(c) ppoll() filters out unordered POLLIN events so recv() delivers replayed messages to R2 in original order",
+        "step": null
+      },
+      {
+        "from": "R2",
+        "to": "Shim",
+        "what": "(c) R2's own messages produced during replay are dropped rather than forwarded to neighbors",
+        "step": null
+      }
+    ],
+    "key_idea": "SimDP preserves a router's state across a stop/restart cycle: it records every received message in order, buffers new arrivals while offline, then replays the recorded log to the restarted router in original order, dropping replay-time messages.",
+    "reading_order": "Top to bottom through three labeled sub-figures (a), (b), (c), each read left to right through its own circled steps: recording while online, buffering while offline, then replaying to restore."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.02,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#231f20",
+        "used_for": "box borders and body text throughout"
+      },
+      {
+        "hex": "#d15c5c",
+        "used_for": "salmon/red fill of the Simulated Data Plane boxes; red 'Drop' and 'Filter out unordered POLLIN event' callouts in panel (c)"
+      },
+      {
+        "hex": "#d9dadb",
+        "used_for": "light-gray fill of the Shim boxes"
+      },
+      {
+        "hex": "#eaebec",
+        "used_for": "near-white fill of neutral operation boxes (write(), ppoll())"
+      },
+      {
+        "hex": "#b9d5ef",
+        "used_for": "pale-blue circles for the router icons (R1, R2, R3)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid borders, no dashed lines",
+    "font": "serif (Nimbus Roman), 9pt, italic for sub-panel captions (a)(b)(c)",
+    "corners": "mixed",
+    "arrows": "thin solid arrows with small filled heads; circled numbers order each panel's steps",
+    "icons": "vector circular router icons (R1, R2, R3) and small stacked message-slot icons for the Message Log / Buffered Messages"
+  },
+  "encoding": {
+    "color_means": "salmon marks the Simulated Data Plane; gray marks the Shim; a highlighted operation box marks whichever system call is the focus of that panel's step (recv() in (a)/(b), write() in (c))",
+    "line_style_means": "no dashed/solid distinction; solid arrows and circled numbers order the record/buffer/replay steps within each of the three panels",
+    "emphasis": "three parallel mini-diagrams sharing the same visual template (R1/R3 to Shim to SimDP to R2) make it easy to compare what changes between the online, offline and replay states, mainly where messages are appended (log vs. buffer) and which operation is highlighted",
+    "reusable_patterns": [
+      "repeated before/after mini-diagram template varying only the highlighted operation and buffer target",
+      "message log/buffer shown as an explicit ordered stack of labeled slots"
+    ],
+    "weaknesses": [
+      "each of the three sub-panels reuses the numbers 1 through 5 or 6, so steps are only locally ordered, not globally",
+      "the highlighted recv()/write() box color was not among the sampled top palette hexes and is described qualitatively"
+    ]
+  },
+  "tags": [
+    "network-emulation",
+    "snapshot-restore",
+    "message-replay",
+    "shim-layer",
+    "control-plane",
+    "BGP",
+    "fault-tolerance"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Detailed Design of REAL (p.8-9)"
+    ],
+    "evidence": [
+      "SimDP records every route message sent to each router, and keeps them in order.",
+      "SimDP keeps the connections to all neighbors of R2, echoing the KEEPALIVE messages, and buffers the messages sent to R2",
+      "intercepted ppoll() would filter out all unordered POLLIN events"
+    ]
+  },
+  "summary": "REAL restarts routers instead of using costly disk-based snapshots, but must hide this from neighbors and restore exact state. Figure 7 shows how its Simulated Data Plane (SimDP) achieves this in three stacked scenarios. (a) While R2 is online, SimDP intercepts R1 and R3's writes via a Shim, receives them itself, and appends every message to an ordered Message Log before relaying it on to R2. (b) When R2 goes offline, SimDP keeps neighbors' connections alive and keeps accepting their messages, but appends them to a separate Buffered Messages queue instead of delivering them, so neighbors never detect R2 is down. (c) To restore R2, SimDP pops and replays the recorded Message Log to R2 in original order, while the Shim's intercepted ppoll() filters out unordered POLLIN events and drops any messages R2 emits during replay, so R2's internal state converges to exactly where it was before going offline.",
+  "summary_zh": "该图分三部分展示REAL的模拟数据平面如何记录回放消息以恢复路由器：(a)在线时按序记入消息日志再转发；(b)离线时消息计入缓冲队列而不投递；(c)恢复时按原顺序回放日志，过滤乱序事件。",
+  "confidence": "high",
+  "notes": "layout-proposal: state-triptych — three stacked sub-diagrams (a)/(b)/(c) show the same SimDP/Shim/router mechanism in three temporal states (online, offline, restoring) rather than a single pipeline, layered stack, or comparison; none of the seven named templates fit this repeated-scenario arrangement well. The exact highlight color used for the active recv()/write() box in each panel was not among the top sampled palette hexes.",
+  "venue": "NSDI26"
+}

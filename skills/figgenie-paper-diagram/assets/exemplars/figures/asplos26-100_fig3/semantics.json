@@ -1,0 +1,219 @@
+{
+  "paper_id": "asplos26-100",
+  "fig": "3",
+  "system": {
+    "name": "RTOSUnit",
+    "one_liner": "a configurable hardware acceleration unit that reduces context-switch latency and jitter in embedded real-time systems",
+    "domain": [
+      "embedded-systems",
+      "real-time-systems",
+      "hardware-acceleration"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "RTOSUnit",
+        "role": "hardware acceleration unit for context storing/loading and scheduling, accelerated via custom instructions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "HW Scheduler",
+        "role": "hardware-maintained ready/delay list scheduler (detailed in Figure 5)",
+        "container": "RTOSUnit",
+        "novel": true
+      },
+      {
+        "name": "Store FSM",
+        "role": "asynchronously stores the previous task's context to memory in the background after an interrupt (b)",
+        "container": "RTOSUnit",
+        "novel": true
+      },
+      {
+        "name": "Restore FSM",
+        "role": "loads a new task's context from memory into the register file and CSRs (f)",
+        "container": "RTOSUnit",
+        "novel": true
+      },
+      {
+        "name": "RISC-V Processor",
+        "role": "generic host processor into which the RTOSUnit is integrated",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Pipeline",
+        "role": "the host processor's instruction pipeline; entered via ISR on interrupt",
+        "container": "RISC-V Processor",
+        "novel": false
+      },
+      {
+        "name": "Memory Interface Arbitration",
+        "role": "arbitrates the single memory port between the processor and the RTOSUnit (g)",
+        "container": "RISC-V Processor",
+        "novel": true
+      },
+      {
+        "name": "Regfile",
+        "role": "register file region holding the duplicated application/ISR banks",
+        "container": "RISC-V Processor",
+        "novel": false
+      },
+      {
+        "name": "RF1 (APP)",
+        "role": "application register bank, connected to both the core and the RTOSUnit",
+        "container": "Regfile",
+        "novel": true
+      },
+      {
+        "name": "RF2 (ISR)",
+        "role": "duplicated interrupt-service-routine register bank, connected only to the core (d)",
+        "container": "Regfile",
+        "novel": true
+      },
+      {
+        "name": "CSRs",
+        "role": "mstatus, mepc, mcause control/status registers; not replicated since they need not be freed for the scheduler (c)",
+        "container": "RISC-V Processor",
+        "novel": false
+      },
+      {
+        "name": "Memory",
+        "role": "main memory storing saved task contexts",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Pipeline",
+        "to": "HW Scheduler",
+        "what": "ISR entry and custom/mret instruction signaling",
+        "step": null
+      },
+      {
+        "from": "Store FSM",
+        "to": "Regfile",
+        "what": "asynchronous background write of the previous task's context (Write RF)",
+        "step": null
+      },
+      {
+        "from": "Regfile",
+        "to": "Restore FSM",
+        "what": "register-file write trace read for restore",
+        "step": null
+      },
+      {
+        "from": "Restore FSM",
+        "to": "Regfile",
+        "what": "restored context written back to the register file (Write RF)",
+        "step": null
+      },
+      {
+        "from": "RTOSUnit",
+        "to": "CSRs",
+        "what": "read/write access to mstatus, mepc, mcause",
+        "step": null
+      },
+      {
+        "from": "RF1 (APP)",
+        "to": "RF2 (ISR)",
+        "what": "bank switch between application and ISR register files",
+        "step": null
+      },
+      {
+        "from": "RTOSUnit",
+        "to": "Memory Interface Arbitration",
+        "what": "arbitrated access to the shared memory port",
+        "step": null
+      },
+      {
+        "from": "Memory Interface Arbitration",
+        "to": "Memory",
+        "what": "saved/restored task context data",
+        "step": null
+      }
+    ],
+    "key_idea": "RTOSUnit plugs into a RISC-V core as dedicated hardware (a scheduler plus store/restore FSMs) that duplicates the register file and arbitrates memory access, so context storing, loading, and scheduling can be offloaded from software to hardware via custom instructions.",
+    "reading_order": "Left RTOSUnit block (scheduler, store/restore FSMs) first, then follow the lettered interface arrows right into the RISC-V processor's pipeline, duplicated register banks, and CSRs."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.3,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "components RTOSUnit adds (per the caption: added components are shown in green)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "existing processor structures that require modification (per the caption: required processor changes in yellow), e.g. RF1/RF2"
+      },
+      {
+        "hex": "#0000ff",
+        "used_for": "blue accent arrows and small markers around the register-file boxes"
+      },
+      {
+        "hex": "#a50040",
+        "used_for": "a maroon accent highlighting one specific lettered interface signal"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "uniform ~0.5pt solid borders on all boxes; the RISC-V Processor outer region is a lighter gray rounded rectangle",
+    "font": "Liberation Sans, 5-8pt, larger for the RTOSUnit/RISC-V Processor region titles",
+    "corners": "square",
+    "arrows": "many short orthogonal arrows (about 20 arrowheads over 15 lines) linking lettered interface points",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green fill marks components RTOSUnit adds; yellow fill marks existing processor structures that require modification; blue/maroon accents pick out specific lettered interface signals",
+    "line_style_means": "all connections are solid lines; letters (a)-(g) beside each arrow key it to the mechanism described in the implementation text",
+    "emphasis": "green-vs-yellow coloring immediately separates what RTOSUnit itself contributes from what must change in the host processor, while lettered call-outs tie each wire to a specific subsection of the text",
+    "reusable_patterns": [
+      "accelerator device box wired into several distinct subsystems (pipeline, register file, CSRs, memory arbiter) of a generic host processor",
+      "letter-keyed interface signals cross-referenced from the running prose"
+    ],
+    "weaknesses": [
+      "dense lettering (a-g) requires cross-referencing multiple paragraphs to fully decode",
+      "the caption text is cut off ('Bl') suggesting explanatory text is missing from the excerpt"
+    ]
+  },
+  "tags": [
+    "real-time-systems",
+    "context-switch",
+    "hardware-acceleration",
+    "RISC-V",
+    "register-file",
+    "FreeRTOS"
+  ],
+  "provenance": {
+    "sections": [
+      "4 RTOSUnit Implementation (p.5)",
+      "5 RTOSUnit Integration (p.8)"
+    ],
+    "evidence": [
+      "Figure 3 outlines the architecture and interface required to support the full RTOSUnit feature set.",
+      "we add an alternate register file bank to the processor",
+      "the register file must be replicated and multiplexed (cf. Figure 3 (d))"
+    ]
+  },
+  "summary": "This figure gives the proposed architecture overview of RTOSUnit, a configurable hardware unit that accelerates FreeRTOS context switching and scheduling on RISC-V cores. On the left, the RTOSUnit region holds a HW Scheduler (detailed in Figure 5) plus a Store FSM and Restore FSM that asynchronously save and load task context. On the right, a generic RISC-V Processor region shows the pipeline, a duplicated register file (RF1/APP and RF2/ISR banks joined by a sparse MUX for bank switching), and the CSRs (mstatus, mepc, mcause) the unit accesses; a Memory Interface Arbitration block shares the single memory port between processor and unit. Per the caption, green marks components RTOSUnit adds and yellow marks required processor changes, while lettered call-outs (a)-(g) key each wire to the mechanism it implements.",
+  "summary_zh": "该图为 RTOSUnit 的整体架构：左侧 RTOSUnit 含硬件调度器与存取上下文的 FSM，右侧 RISC-V 处理器展示流水线、复制的寄存器堆 RF1/RF2 与 CSR，字母标注对应实现细节，绿色为新增、黄色为处理器改动。",
+  "confidence": "high",
+  "notes": "layout-proposal: annotated-device-to-host-taps — the RTOSUnit device is wired by lettered call-outs (a)-(g) into several distinct substructures (pipeline, dual-bank regfile, CSRs, memory arbiter) of a generic host RISC-V processor region.",
+  "venue": "ASPLOS26"
+}

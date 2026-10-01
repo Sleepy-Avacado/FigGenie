@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-081_fig4",
+  "paper_id": "nsdi25-081",
+  "fig": "4",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 4: P4 programming abstraction for RTC architectures",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.38,
+  "n_components": 15,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-081/nsdi25-081_fig4_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-081/nsdi25-081_fig4_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "A single frame ties one packet's hardware pipeline to annotated P4 source code, a Cores diagram, and a Memory hierarchy via labelled C1, C2, Cb arrows, mixing code, diagram, and memory layout under one architecture.",
+      "what_to_learn": "Link annotated source-code lines to the specific execution units running them with small labelled arrows (C1, C2, Cb), and share one Memory box with explicit R, W, R&W arrows across foreground and background cores; strengthen the loose visual link this figure leaves between its top pipeline row and bottom detail row."
+    }
+  ]
+}

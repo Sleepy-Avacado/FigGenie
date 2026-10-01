@@ -1,0 +1,244 @@
+{
+  "paper_id": "nsdi24-029",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "Parcae",
+    "one_liner": "a proactive, liveput-optimized DNN training system for preemptible spot instances",
+    "domain": [
+      "ml-systems",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how intra-stage, inter-stage, and pipeline migration each reassign a 3x4 grid of instances after 2 preemptions",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "1 2 3 4",
+        "kind": "row",
+        "role": "blue stage-index labels heading each pipeline's row (which of the 4 pipeline-parallel stages)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "a b c d",
+        "kind": "row",
+        "role": "pipeline 1's four instances, one per stage; 'a' is preempted",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "e f g h",
+        "kind": "row",
+        "role": "pipeline 2's four instances, one per stage; 'f' is preempted",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "i j k l",
+        "kind": "row",
+        "role": "pipeline 3's four instances, unaffected by the preemption",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "D = 3  P = 4",
+        "kind": "label",
+        "role": "before-migration configuration: 3 pipelines of pipeline-parallel degree 4",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "a, f → ×",
+        "kind": "label",
+        "role": "migration-rule box line stating that a and f are the preempted instances",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "c, d → ∅",
+        "kind": "label",
+        "role": "migration-rule box line stating c and d become idle once their pipeline cannot be completed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "m_intra: f → b",
+        "kind": "label",
+        "role": "migration-rule box line naming the intra-stage substitution: b (same stage as f) takes over f's role",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "c d",
+        "kind": "slot",
+        "role": "orphaned instances shown hatched inside a dashed box, now idle and available for future use",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "D = 2  P = 4",
+        "kind": "label",
+        "role": "after-migration configuration: 2 complete pipelines remain, still pipeline-parallel degree 4",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "b",
+        "to": "f",
+        "what": "intra-stage migration substitutes b for the preempted f, since both hold the same stage-2 shard",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "a, f → ×",
+        "to": "c, d → ∅",
+        "what": "losing a and moving b away leaves pipeline 1's c and d without a usable pipeline, so they become idle",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Intra-stage Migration",
+        "axis": "alternatives",
+        "differs": "preempts a and f; b (same stage as f) is moved to fill f's gap, leaving c,d idle; result D=2, P=4",
+        "verdict": null
+      },
+      {
+        "label": "(b) Inter-stage Migration",
+        "axis": "alternatives",
+        "differs": "preempts b and f (both stage-2 instances); e (a stage-1 instance) is reassigned to stage 2, leaving g,h idle; result D=2, P=4",
+        "verdict": null
+      },
+      {
+        "label": "(c) Pipeline Migration",
+        "axis": "alternatives",
+        "differs": "preempts b and c (pipeline 1's stage-2 and stage-3 instances); all 10 surviving instances are reshuffled into 2 pipelines at a new pipeline-parallel degree P=5, leaving none idle",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the specific instance letters (a-l), stage-index numbers (1-4), the D/P configuration counts before and after, and each panel's migration-rule box (preempted → ×, orphaned → ∅, migration mapping)",
+      "linked_by": "colour (green lettered instances vs blue numbered stage slots) and shared grid position across the before/after states, plus explicit migration-rule text boxes",
+      "result_cells": "the after-migration grid, its D=/P= configuration line, and the dashed hatched box of any newly idle instances"
+    },
+    "key_idea": "Parcae recovers from preemptions with three migration strategies over the same instance grid: swap in a same-stage peer (intra-stage), reassign a spare instance to a different stage (inter-stage), or reshuffle every surviving instance into a new pipeline layout.",
+    "reading_order": "left to right within each dashed panel: the before-migration grid with preempted instances crossed out, into the purple migration-rule box, to the after-migration grid and its new D/P configuration and any idle instances."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "strike",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 5.5,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#70ad47",
+        "used_for": "front-face fill of the green lettered instance cubes"
+      },
+      {
+        "hex": "#5a8b39",
+        "used_for": "side/shadow face of the green instance cubes (3D bevel)"
+      },
+      {
+        "hex": "#8cbd6b",
+        "used_for": "top face of the green instance cubes (3D bevel)"
+      },
+      {
+        "hex": "#2f5597",
+        "used_for": "front face of the darkest (stage-1) blue index cube"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "front face of the stage-2/3 blue index cubes"
+      },
+      {
+        "hex": "#8faadc",
+        "used_for": "front face of a lighter blue index cube in the 1-4 gradient"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "front face of the lightest (stage-4) blue index cube"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "the red X mark crossing out each preempted instance"
+      },
+      {
+        "hex": "#a199f3",
+        "used_for": "fill of the pentagon-shaped migration-rule box in each panel"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "small accent/highlight inside the migration-rule box"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "dark green / dark blue outlines matching each cube's fill; thin black arrows; dashed black panel borders; dashed green border around the idle-instance holding box",
+    "corners": "rounded",
+    "arrows": "thin black solid arrows tracing which surviving instance is re-routed to which stage slot; the rule box itself uses → for a same-stage swap versus ⇒ for a cross-stage or whole-pipeline reassignment",
+    "font": "CambriaMath for the mathematical notation (m_intra, D=, P=), Calibri/Calibri-Bold for panel titles and instance letters",
+    "icons": "3D-shaded cube glyphs (blue cubes for stage index, green cubes for instance letters), a pentagon 'rule' box shape, a dashed hatched box for idle instances"
+  },
+  "encoding": {
+    "color_means": "blue cubes are stage-index positions (shaded darker to lighter left to right); green cubes are the actual instance letters filling those positions; purple marks the migration-rule box; red marks a preempted instance",
+    "line_style_means": "solid black arrows trace which surviving instance is re-routed to which stage slot; the rule box's own notation distinguishes a plain → (same-stage swap) from a ⇒ (cross-stage or whole-pipeline reassignment)",
+    "state_means": "before vs after migration is told apart by the D=/P= configuration line under each grid and by which instances are struck out (before) versus shown solid or hatched-idle (after)",
+    "marker_means": "a red X crosses out a preempted instance; a green dashed hatched box marks instances left idle after migration; no numbered path markers are used",
+    "emphasis": "repeating the identical before/rule-box/after template in all three dashed panels, changing only which instances are struck out and how the rule box remaps them, isolates exactly what each migration strategy does differently",
+    "reusable_patterns": [
+      "a grid of stage x replica cubes with preempted members crossed out, fed through a labelled rule box, producing an after-grid plus a dashed hatched box of any newly idle members"
+    ],
+    "weaknesses": [
+      "the meaning of the single arrow → versus the double arrow ⇒ in the rule box is not explained by a legend and must be inferred by comparing panels",
+      "reused letters (a-l) and digits (1-4) across all three panels mean elements can only be told apart by which panel and position they appear in"
+    ]
+  },
+  "tags": [
+    "preemptible-instances",
+    "live-migration",
+    "pipeline-parallelism",
+    "fault-tolerance",
+    "DNN-training",
+    "Parcae"
+  ],
+  "provenance": {
+    "sections": [
+      "§6 Live Migration (p.7)"
+    ],
+    "evidence": [
+      "Parcae uses three migration strategies (Figure 6) to handle preemptions: intra-stage, inter-stage, and pipeline migration.",
+      "when instances a and f are preempted, Parcae can replace f by moving b to the second pipeline",
+      "Illustrations of different migration strategies over a 3×4 parallel configuration facing 2 preempted instances."
+    ]
+  },
+  "summary": "Figure 6 compares Parcae's three migration strategies for recovering from preempted training instances, applying each to the same 3-pipeline, 4-stage (D=3, P=4) starting grid. In (a) Intra-stage Migration, instances a and f are preempted; Parcae moves b, which holds the same stage-2 shard as f, into f's slot, completing one pipeline while c and d fall idle. In (b) Inter-stage Migration, b and f are preempted instead; since no same-stage peer is free, e is reassigned from stage 1 to stage 2, again completing one pipeline and idling g and h. In (c) Pipeline Migration, b and c are preempted; rather than filling a single gap, Parcae reshuffles all ten surviving instances into two fresh pipelines with a deeper pipeline-parallel degree (P=5), leaving nothing idle. Each panel's purple rule box states which instances are lost, which become idle, and the migration mapping used.",
+  "summary_zh": "图6在同一3x4网格上对比Parcae的三种迁移策略：级内迁移用同阶段实例b替补被抢占的f；级间迁移让e跨阶段补位；流水线迁移则重排全部存活实例，得到P=5的新配置且无空闲。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

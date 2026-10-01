@@ -1,0 +1,64 @@
+{
+  "id": "asplos26-021_fig1",
+  "kind": "mechanism",
+  "paper_id": "asplos26-021",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Matrix–vector multiply with analog PUM.",
+  "groups_in_record": [
+    "walkthrough",
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "component",
+  "subject": "how an analog PUM crossbar performs a 2x2 matrix by 2x1 vector multiply via conductances, row voltages, and column currents",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.7,
+  "n_elements": 8,
+  "n_relations": 4,
+  "n_panels": 2,
+  "n_steps": 4,
+  "n_values": 3,
+  "nesting_depth": 0,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-021/src/fig1_AnalogPUM.svg",
+    "preview.png": "lab/extracted/asplos26-021/src/fig1_AnalogPUM.png",
+    "print.png": "lab/extracted/asplos26-021/asplos26-021_fig1_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "An analog crossbar reproduces a matrix-vector multiply physically: matrix values become programmed conductances, input-vector values become row voltages, Ohm's law multiplies them at each junction, and Kirchhoff's current law accumulates the products down each column into the result.",
+      "what_to_learn": "a plain arithmetic panel paired with a physically-realized circuit panel computing the same worked example; consistent per-value colour coding carried from a circuit diagram into the arithmetic equations that verify it; circled step numbers overlaid on a crossbar to narrate program -> multiply -> accumulate -> result",
+      "note_source": "record"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "An analog crossbar reproduces a matrix-vector multiply physically: matrix values become programmed conductances, input-vector values become row voltages, Ohm's law multiplies them at each junction, and Kirchhoff's current law accumulates the products down each column into the result.",
+      "what_to_learn": "a plain arithmetic panel paired with a physically-realized circuit panel computing the same worked example; consistent per-value colour coding carried from a circuit diagram into the arithmetic equations that verify it; circled step numbers overlaid on a crossbar to narrate program -> multiply -> accumulate -> result",
+      "note_source": "record"
+    }
+  ]
+}

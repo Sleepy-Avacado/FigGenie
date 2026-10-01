@@ -1,0 +1,137 @@
+{
+  "paper_id": "asplos26-008",
+  "fig": "1",
+  "system": {
+    "name": "Jupyter Notebook (background)",
+    "one_liner": "the conventional client-server Jupyter Notebook architecture that NotebookOS builds on and reworks for GPU efficiency",
+    "domain": [
+      "ml-systems",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Client Jupyter Notebook",
+        "role": "user-facing notebook client maintaining a persistent user session",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Jupyter Server",
+        "role": "server that communicates with the client and manages notebook execution",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Notebook File",
+        "role": "the notebook document (code, text, outputs) associated with the session",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Jupyter Kernel",
+        "role": "process (with reserved GPU(s)) that executes submitted code and returns results",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client Jupyter Notebook",
+        "to": "Jupyter Server",
+        "what": "HTTP & WebSockets messages over the persistent user session",
+        "step": null
+      },
+      {
+        "from": "Jupyter Server",
+        "to": "Notebook File",
+        "what": "notebook document read/write",
+        "step": null
+      },
+      {
+        "from": "Jupyter Server",
+        "to": "Jupyter Kernel",
+        "what": "code execution requests/results via ZeroMQ (0MQ)",
+        "step": null
+      }
+    ],
+    "key_idea": "Standard Jupyter reserves GPU-equipped kernels for the entire lifetime of a persistent client-server notebook session, even though the client mostly sits idle between cell executions.",
+    "reading_order": "Left to right: Client icon and label, bidirectional HTTP/WebSocket arrow to the Jupyter Server (drawn as a server stack), then arrows out to the Notebook File and to the Jupyter Kernel with its reserved GPU(s)."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.31,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#333333",
+        "used_for": "dark gray fill/stroke of the client computer icon"
+      },
+      {
+        "hex": "#384a63",
+        "used_for": "navy blue fill of the Jupyter Server stack icon"
+      },
+      {
+        "hex": "#48756d",
+        "used_for": "teal fill accent (server/kernel related icon)"
+      },
+      {
+        "hex": "#ffb570",
+        "used_for": "orange fill highlighting the GPU icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium black strokes (median ~1.9pt), rounded corners on icon shapes",
+    "font": "Franklin Gothic Demi sans, 6-11.5pt",
+    "corners": "rounded",
+    "arrows": "bold double-headed arrows labeled with the protocol (HTTP & WebSockets, 0MQ)",
+    "icons": "vector icons for a desktop computer, a server rack, a notebook/code document, and a GPU chip"
+  },
+  "encoding": {
+    "color_means": "distinct flat colors differentiate the client (dark gray), server (navy), and kernel/GPU (teal/orange) icons; no continuous color scale",
+    "line_style_means": "bold double-headed arrows denote bidirectional communication protocols between components",
+    "emphasis": "the wide, sparse horizontal layout foregrounds the three-hop client-server-kernel chain and explicitly labels the reserved GPU(s) on the kernel to set up the paper's utilization problem",
+    "reusable_patterns": [
+      "simple icon-based client-server-worker chain with protocol-labeled arrows"
+    ],
+    "weaknesses": [
+      "no internal detail of the Jupyter Server or Kernel is shown; it is a background/motivation figure rather than the paper's own architecture"
+    ]
+  },
+  "tags": [
+    "Jupyter",
+    "notebook",
+    "client-server",
+    "GPU-reservation",
+    "background",
+    "interactive-computing"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.2-3)"
+    ],
+    "evidence": [
+      "the code is sent to a separate process, called a kernel, which resides either on the user's local computer or on a remote server",
+      "See Figure 1 for an illustration",
+      "GPU resources for the entire lifetime of the notebook session (Figure 1)"
+    ]
+  },
+  "summary": "This figure illustrates the standard client-server architecture of Jupyter Notebook that motivates NotebookOS. A Client Jupyter Notebook (desktop icon) communicates with a Jupyter Server over a persistent user session using HTTP and WebSockets. The Jupyter Server manages the associated Notebook File and forwards code for execution to a Jupyter Kernel over ZeroMQ (0MQ); the kernel is drawn holding reserved GPU(s), highlighted in orange. The figure is a wide, sparse, icon-based diagram (client computer, server stack, document, GPU chip) with bold labeled arrows, used purely as background to set up the paper's observation that GPUs are reserved for the kernel's entire session lifetime even though usage is intermittent.",
+  "summary_zh": "该图展示传统 Jupyter Notebook 的客户端-服务器架构：客户端通过 HTTP/WebSocket 与 Jupyter Server 保持持久会话，Server 管理笔记本文件并通过 ZeroMQ 与占用 GPU 的 Jupyter Kernel 通信，用于说明 GPU 在整个会话期间被长期预留的背景问题。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

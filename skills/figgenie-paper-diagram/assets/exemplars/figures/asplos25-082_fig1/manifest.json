@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-082_fig1",
+  "paper_id": "asplos25-082",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. An illustration of the model states, including model parameters (a) and optimizer states (b), across three ranks in distributed training. The training utilizes the hybrid parallel strategy of ZeRO-2 DP + EP, configured with the parallel de- gree of DP = 3 and EP = 3. The non-expert parts a",
+  "corpus_template": "matrix",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.0,
+  "n_components": 8,
+  "n_flows": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-082/src/fig1a_DPEP_Rank3_a.svg",
+    "preview.png": "lab/extracted/asplos25-082/src/fig1a_DPEP_Rank3_a.png",
+    "print.png": "lab/extracted/asplos25-082/asplos25-082_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar cited in the template's variant list: a rank-by-rank grid with zero flows where green cells mark layers replicated across three ranks and orange cells mark the part unique to each rank.",
+      "what_to_learn": "When the point is which state is shared and which is per-instance, drop arrows entirely and let identical fill colour across a row say replicated while a distinct colour per row says unique per instance, repeating the same row layout in a second panel for a related kind of state."
+    }
+  ]
+}

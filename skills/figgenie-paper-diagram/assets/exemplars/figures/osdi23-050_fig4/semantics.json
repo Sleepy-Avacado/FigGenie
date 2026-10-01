@@ -1,0 +1,199 @@
+{
+  "paper_id": "osdi23-050",
+  "fig": "4",
+  "system": {
+    "name": "Cocktailer",
+    "one_liner": "a DNN compiler that co-optimizes control flow and data flow of DNN programs in a single scheduling space for accelerators",
+    "domain": [
+      "ml-systems",
+      "compilers",
+      "accelerators"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "loop",
+        "role": "loop control flow, scheduled on the CPU separately from data-flow operators",
+        "container": "(a) existing DNN frameworks",
+        "novel": false
+      },
+      {
+        "name": "MatMul",
+        "role": "data-flow operator (matrix multiply)",
+        "container": "(a) existing DNN frameworks",
+        "novel": false
+      },
+      {
+        "name": "Add",
+        "role": "data-flow operator (elementwise add)",
+        "container": "(a) existing DNN frameworks",
+        "novel": false
+      },
+      {
+        "name": "Relu",
+        "role": "data-flow operator (ReLU activation)",
+        "container": "(a) existing DNN frameworks",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "executes the loop control flow",
+        "container": "(a) existing DNN frameworks",
+        "novel": false
+      },
+      {
+        "name": "accelerator",
+        "role": "executes the MatMul/Add/Relu kernels launched separately from the CPU's loop",
+        "container": "(a) existing DNN frameworks",
+        "novel": false
+      },
+      {
+        "name": "uOperator",
+        "role": "a data-flow operator composed of independent, homogeneous uTasks",
+        "container": "(b) COCKTAILER",
+        "novel": true
+      },
+      {
+        "name": "uTask",
+        "role": "smallest scheduling unit; a homogeneous sub-task of a uOperator or a loop",
+        "container": "uOperator",
+        "novel": true
+      },
+      {
+        "name": "uProgram",
+        "role": "unified representation containing multiple independent uTasks, including Loop-uTasks, scheduled together",
+        "container": "(b) COCKTAILER",
+        "novel": true
+      },
+      {
+        "name": "Loop-uTask",
+        "role": "a uTask representing both the control-flow and data-flow logic of one compute unit",
+        "container": "uProgram",
+        "novel": true
+      },
+      {
+        "name": "L0",
+        "role": "core/thread-level parallel processing unit, the finest level of the hardware abstraction",
+        "container": "L1-Unit",
+        "novel": false
+      },
+      {
+        "name": "L1-Unit",
+        "role": "SM/thread-block-level parallel processing unit",
+        "container": "L2-Unit",
+        "novel": false
+      },
+      {
+        "name": "L2-Unit",
+        "role": "GPU device/kernel-level unit, the top of the 3-level hardware abstraction",
+        "container": "accelerator's abstraction",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "loop",
+        "to": "CPU",
+        "what": "control flow",
+        "step": null
+      },
+      {
+        "from": "MatMul",
+        "to": "accelerator",
+        "what": "schedule (kernel launch)",
+        "step": null
+      },
+      {
+        "from": "uOperator",
+        "to": "uProgram",
+        "what": "schedule (uTasks mapped into Loop-uTasks)",
+        "step": null
+      },
+      {
+        "from": "uProgram",
+        "to": "L2-Unit",
+        "what": "map (Loop-uTasks mapped onto L1-Units)",
+        "step": null
+      }
+    ],
+    "key_idea": "Existing DNN frameworks schedule loop control flow on the CPU separately from data-flow operator kernels on the accelerator; COCKTAILER instead unifies both into homogeneous uTasks scheduled together as a uProgram directly onto the accelerator's multi-level parallel hardware.",
+    "reading_order": "Two side-by-side panels read top to bottom: (a) existing frameworks split the loop (CPU) from operator kernels (accelerator); (b) COCKTAILER merges them into a uProgram mapped onto L0/L1/L2 hardware units."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.58,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#9dc3e6",
+        "used_for": "MatMul boxes and uTask blue squares"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "Relu boxes and uTask yellow squares"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "Add box and neutral CPU/accelerator borders"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "the CPU's Loop box, highlighting isolated control flow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.5pt) solid borders, mixed square and rounded corners for stage shapes",
+    "font": "Times New Roman serif, 6-9pt",
+    "corners": "mixed",
+    "arrows": "thin arrows with solid heads connecting stages top-down",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = MatMul, yellow = Relu, gray = Add and other neutral elements, red = loop control flow highlighted as separate from data flow in (a)",
+    "line_style_means": null,
+    "emphasis": "side-by-side panels contrast the red Loop box sitting outside the accelerator in (a) against uniform Loop-uTasks fused inside the uProgram mapped onto the 3-level hardware in (b)",
+    "reusable_patterns": [
+      "before/after two-panel comparison of a baseline scheduling approach versus the paper's unified approach",
+      "small colored squares as shorthand for homogeneous fine-grained tasks"
+    ],
+    "weaknesses": [
+      "the multi-level hardware abstraction (L0/L1/L2) in panel (b) requires effort to map back to (a)'s simpler CPU/accelerator split"
+    ]
+  },
+  "tags": [
+    "deep-learning-compiler",
+    "control-flow",
+    "data-flow",
+    "gpu-scheduling",
+    "co-optimization",
+    "dynamic-control-flow"
+  ],
+  "provenance": {
+    "sections": [
+      "3 COCKTAILER Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 4 shows the overview of COCKTAILER",
+      "L0 is the core (thread); L1 is the SM (thread block); L2 is the GPU device (kernel).",
+      "each loop-uTask is mapped to a L1-Unit for execution"
+    ]
+  },
+  "summary": "This figure contrasts how DNN programs with control flow are executed by existing frameworks versus by COCKTAILER. In panel (a), typical frameworks such as JAX schedule the loop's control flow on the CPU while separately launching MatMul, Add, and Relu kernels on the accelerator, incurring coordination overhead between the two sides. In panel (b), COCKTAILER represents the same program as a uProgram made of homogeneous uTasks, including Loop-uTasks that carry both control-flow and data-flow logic for one compute unit; these are scheduled directly onto the accelerator's three-level hardware abstraction (L0 core, L1 SM/thread-block, L2 GPU device). The two panels share the same operator color coding (blue MatMul, yellow Relu, gray Add) so the reader can see exactly which pieces move from a CPU-side loop into accelerator-resident Loop-uTasks.",
+  "summary_zh": "该图对比传统DNN框架与COCKTAILER的执行方式：(a)现有框架将循环控制流放在CPU、算子核放在加速器上分别调度；(b)COCKTAILER将二者统一为同构uTask，组成uProgram映射到加速器三级硬件抽象执行。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

@@ -1,0 +1,221 @@
+{
+  "paper_id": "nsdi26-104",
+  "fig": "6",
+  "system": {
+    "name": "ZooRoute",
+    "one_liner": "a cloud network reliability system that reroutes traffic around failures by varying the VXLAN outer source port to steer ECMP hashing onto pre-probed candidate paths",
+    "domain": [
+      "networking",
+      "cloud"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Outer MAC/IP/UDP Header",
+        "role": "outer transport header added by the VTEP for VXLAN encapsulation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VXLAN Header",
+        "role": "VXLAN tunnel header identifying the tenant's virtual network",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Inner MAC/IP Header",
+        "role": "original tenant packet header preserved inside the tunnel",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Payload",
+        "role": "original tenant packet payload",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "srcIP",
+        "role": "outer source IP, part of the 5-tuple the underlay ECMP-hashes on",
+        "container": "Outer 5-tuple",
+        "novel": false
+      },
+      {
+        "name": "srcPort",
+        "role": "outer source port; undefined by the VXLAN standard and freely rewritten by ZooRoute to steer ECMP path selection",
+        "container": "Outer 5-tuple",
+        "novel": true
+      },
+      {
+        "name": "dstIP",
+        "role": "outer destination IP, set to the destination VM's host",
+        "container": "Outer 5-tuple",
+        "novel": false
+      },
+      {
+        "name": "dstPort",
+        "role": "outer destination port, fixed to 4789 per the VXLAN standard",
+        "container": "Outer 5-tuple",
+        "novel": false
+      },
+      {
+        "name": "protocol",
+        "role": "outer transport protocol field of the 5-tuple",
+        "container": "Outer 5-tuple",
+        "novel": false
+      },
+      {
+        "name": "Tenant application",
+        "role": "source of the original packet before VTEP encapsulation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Overlay",
+        "role": "CSP-owned layer where ZooRoute rewrites the outer source port",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ZooRoute",
+        "role": "modifies the outer source port at the VTEP to trigger path switching, transparent to tenants",
+        "container": "Overlay",
+        "novel": true
+      },
+      {
+        "name": "Physical network",
+        "role": "underlay that performs ECMP hashing on the outer 5-tuple, oblivious to inner headers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Src",
+        "role": "source endpoint of the probed candidate paths",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Dst",
+        "role": "destination endpoint of the probed candidate paths",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Candidate paths via srcPort probing",
+        "role": "labels the set of alternate paths ZooRoute proactively probes, each mapped to a source port",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Tenant application",
+        "to": "Overlay",
+        "what": "original packet exiting the VM",
+        "step": null
+      },
+      {
+        "from": "Overlay",
+        "to": "Physical network",
+        "what": "VXLAN-encapsulated packet carrying a ZooRoute-chosen outer source port",
+        "step": null
+      },
+      {
+        "from": "Src",
+        "to": "Dst",
+        "what": "candidate path via srcPort:17 (fails, marked with a red X)",
+        "step": null
+      },
+      {
+        "from": "Src",
+        "to": "Dst",
+        "what": "backup path via srcPort:24 (succeeds after probing)",
+        "step": null
+      }
+    ],
+    "key_idea": "ZooRoute reroutes traffic around failures by rewriting only the otherwise-undefined outer source port of the VXLAN header at the overlay VTEP, which changes ECMP hashing in the underlay and switches traffic onto a different, pre-probed candidate path.",
+    "reading_order": "Top: packet header zoomed into its outer 5-tuple. Bottom-left: Tenant application through Overlay (ZooRoute) to Physical network. Bottom-right: Src-to-Dst mesh contrasting a failed path with a working backup."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.43,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e7e6e6",
+        "used_for": "light gray fill of most header-field boxes and the Tenant application/Physical network bands"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "dark gold highlight on the srcPort field, the ZooRoute box, and the candidate-paths banner"
+      },
+      {
+        "hex": "#d9bc66",
+        "used_for": "lighter gold shading of the Overlay band"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "orange failed path (srcPort:17) and its crossed-out label"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "green working backup path (srcPort:24) and its label"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "very thin (~0.19pt) solid borders; dashed rounded boxes group each column of mesh nodes",
+    "font": "Helvetica/Calibri sans-serif, 5-7pt",
+    "corners": "mixed",
+    "arrows": "thin straight mesh connector lines with two thick curved path highlights, minimal arrowheads",
+    "icons": "vector icons for the tenant application (monitor), overlay (cloud), physical network (server rack), and a small packet-capsule icon showing header growth"
+  },
+  "encoding": {
+    "color_means": "gold/tan = the mutable outer source port field and ZooRoute itself; orange = a failed candidate path (crossed out); green = the working backup path chosen after probing",
+    "line_style_means": "thin diagonal lines zoom the Outer header into its 5-tuple; thick colored curves trace two example end-to-end paths through the mesh; dashed rounded boxes group mesh nodes by column",
+    "emphasis": "the red X on the orange srcPort:17 path versus the unbroken green srcPort:24 path is the figure's punchline: changing only the outer source port reroutes traffic around a failure",
+    "reusable_patterns": [
+      "packet header anatomy zoomed into its mutable field",
+      "small layer stack showing where a mechanism sits between tenant and physical layers",
+      "abstract multi-path mesh with a highlighted failed path and backup path"
+    ],
+    "weaknesses": [
+      "combines three different diagram idioms (header bytes, layer stack, path mesh) in one figure without a dividing frame or shared legend"
+    ]
+  },
+  "tags": [
+    "failure-recovery",
+    "vxlan",
+    "ecmp-hashing",
+    "path-diversity",
+    "candidate-path-probing",
+    "overlay-network"
+  ],
+  "provenance": {
+    "sections": [
+      "3 ZooRoute Overview (p.6)"
+    ],
+    "evidence": [
+      "the VTEP encapsulates it with a VXLAN outer header",
+      "enabling path switching induced by variations in the outer source port",
+      "ZooRoute allows the source VTEP to proactively probe candidate paths (each mapped to a source port)"
+    ]
+  },
+  "summary": "This figure conveys ZooRoute's key idea: rerouting traffic by rewriting one field of the packet's outer header. At top, a packet is broken into Outer MAC/IP/UDP Header, VXLAN Header, Inner MAC/IP Header, and Payload, then zoomed into the outer 5-tuple (srcIP, srcPort, dstIP, dstPort, protocol), highlighting srcPort as the field ZooRoute controls. At bottom-left, a Tenant application's packet passes through the Overlay layer, where ZooRoute rewrites the outer source port, before reaching the Physical network, which performs ECMP hashing only on this outer 5-tuple. At bottom-right, an abstract Src-to-Dst mesh shows two example paths keyed by source port: srcPort:17 fails partway (red X), so traffic switches to the pre-probed, working srcPort:24 backup path -- illustrating ZooRoute's candidate-path probing and deterministic recovery.",
+  "summary_zh": "ZooRoute思路：改写VXLAN外层srcPort实现路径切换。顶部为外层五元组，突出srcPort；左下为租户应用经Overlay(ZooRoute改写)到物理网络；右下网状图对比失败路径(17)与备份路径(24)。",
+  "confidence": "high",
+  "notes": "layout-proposal: header-anatomy + layer-stack + path-mesh -- combines a packet-header field breakdown, a Tenant/Overlay/Physical-network layer stack, and a Src-to-Dst multi-path mesh in one figure; no single named template covers all three parts.",
+  "venue": "NSDI26"
+}

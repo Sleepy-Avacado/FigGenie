@@ -1,0 +1,225 @@
+{
+  "paper_id": "asplos26-030",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "AlphaSyndrome",
+    "one_liner": "an automated synthesis framework using Monte Carlo Tree Search to schedule syndrome-measurement circuits that shape error propagation for general commuting-stabilizer QEC codes",
+    "domain": [
+      "quantum-error-correction",
+      "quantum-computing"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a 5-tick syndrome-measurement circuit sequences Z-checks, X-checks, an idle tick, and a final ancilla measurement",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "ticks",
+        "kind": "label",
+        "role": "names each of the 5 discrete time steps the circuit is divided into",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ancilla |0>",
+        "kind": "lane",
+        "role": "the single ancilla qubit wire, initialized to |0>, that performs every Pauli check",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "data",
+        "kind": "lane",
+        "role": "the bundled data-qubit wires (four qubits) being checked",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CNOT",
+        "kind": "node",
+        "role": "a two-qubit gate performing one Pauli check between the ancilla and one data qubit",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H",
+        "kind": "node",
+        "role": "a Hadamard gate; paired before and after a CNOT turns it into an X-type check",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "I",
+        "kind": "node",
+        "role": "an explicit idling gate marking a tick where the ancilla performs no check",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "M_Z",
+        "kind": "node",
+        "role": "the final Z-basis measurement on the ancilla that reads out the syndrome result",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Idling",
+        "kind": "label",
+        "role": "an arrow callout naming the one idling gate the paper specifically discusses (tick 4)",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "ancilla |0>",
+        "to": "CNOT",
+        "what": "the ancilla participates in a Pauli check during ticks 1, 2, 3, and 5",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "CNOT",
+        "to": "data",
+        "what": "each tick's check couples the ancilla to exactly one data qubit",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "H",
+        "to": "CNOT",
+        "what": "a Hadamard before and after the same CNOT turns a Z-type check into an X-type check (ticks 3 and 5)",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "ancilla |0>",
+        "to": "I",
+        "what": "the ancilla idles during tick 4 instead of performing a check",
+        "kind": "control",
+        "step": "4"
+      },
+      {
+        "from": "ancilla |0>",
+        "to": "M_Z",
+        "what": "after all five ticks the ancilla is measured in the Z basis to read out the syndrome",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "ancilla-data1",
+        "what": "a Pauli-Z check (CNOT, data qubit 1 as control, ancilla as target) between the ancilla and the first data qubit",
+        "carries": "Z-check between ancilla and data qubit 1"
+      },
+      {
+        "marker": "2",
+        "at": "ancilla-data4",
+        "what": "a Pauli-Z check between the ancilla and the fourth (bottom) data qubit",
+        "carries": "Z-check between ancilla and data qubit 4"
+      },
+      {
+        "marker": "3",
+        "at": "ancilla-data2",
+        "what": "a Pauli-X check (Hadamard, CNOT with ancilla as control, Hadamard) between the ancilla and the second data qubit",
+        "carries": "X-check between ancilla and data qubit 2"
+      },
+      {
+        "marker": "4",
+        "at": "ancilla",
+        "what": "the ancilla idles (explicit I gate) while no check is performed",
+        "carries": "no operation (idling)"
+      },
+      {
+        "marker": "5",
+        "at": "ancilla-data3",
+        "what": "a Pauli-X check between the ancilla and the third data qubit, followed by a Z-basis measurement (M_Z) on the ancilla",
+        "carries": "X-check between ancilla and data qubit 3, then measurement"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "AlphaSyndrome represents a syndrome-measurement schedule as a tick-divided circuit: each tick performs at most one Pauli check per qubit (Z-check via a plain CNOT, X-check via a Hadamard-CNOT-Hadamard sandwich) or leaves the ancilla explicitly idling, ending in a Z-basis measurement.",
+    "reading_order": "left to right across five dashed tick columns on the ancilla wire, following which data qubit each tick's CNOT connects to below; the callout arrow points out the one explicitly drawn idling gate at tick 4"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.32,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the H/I/M_Z gate boxes, opaque so they sit cleanly over the wire lines beneath"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "uniform black strokes for wires, gate-box outlines, CNOT dot/target symbols, and dashed tick-divider lines",
+    "corners": "mixed",
+    "arrows": "one thin curved arrow pointing from the 'Idling' caption to the tick-4 I gate; no arrowheads on the wires themselves",
+    "font": "serif (Times New Roman), 8pt",
+    "icons": "standard quantum-circuit glyphs only: filled dot (control), oplus (CNOT target), boxed H/I/M_Z (single-qubit gates/measurement)"
+  },
+  "encoding": {
+    "color_means": "not used; the figure is monochrome black-on-white",
+    "line_style_means": "dashed vertical lines divide the circuit into its five ticks; solid lines are qubit wires and gate connections",
+    "state_means": "not applicable; the figure shows one instance of the circuit, not multiple states or alternatives",
+    "marker_means": "plain numerals 1-5 label the ticks in time order; H/I/M_Z boxes and dot/oplus symbols name each gate type",
+    "emphasis": "a single arrow-and-caption ('Idling') singles out the tick-4 ancilla idle gate for discussion, even though the caption notes not every idling gate is drawn",
+    "reusable_patterns": [
+      "a standard quantum-circuit timeline with dashed vertical rules marking discrete scheduling ticks",
+      "a text callout with an arrow picking out one specific gate instance for discussion",
+      "reuse of a Hadamard-CNOT-Hadamard sandwich (established in an earlier figure) as a single compound 'X-check' unit"
+    ],
+    "weaknesses": [
+      "per the caption, idling gates are 'not all drawn explicitly', so the reader cannot tell from the figure alone exactly which qubits idle on which ticks besides the one called out",
+      "the four data qubits are bundled under one brace, so matching a tick's CNOT to a specific data-qubit position requires carefully counting wire position"
+    ]
+  },
+  "tags": [
+    "quantum-error-correction",
+    "syndrome-measurement",
+    "circuit-scheduling",
+    "tick",
+    "idling",
+    "AlphaSyndrome"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Data-Driven Scheduling with MCTS"
+    ],
+    "evidence": [
+      "An example syndrome measurement circuit with five ticks. Idlings are not all drawn explicitly.",
+      "The example in Figure 9 shows a five-tick syndrome measurement circuit, with different qubits idling on different ticks.",
+      "Notice that on the fourth tick, the ancilla qubit is idling."
+    ]
+  },
+  "summary": "This figure shows AlphaSyndrome's tick-based representation of a syndrome-measurement schedule as a concrete example circuit. The single ancilla qubit, initialized to |0>, runs through five dashed-divided ticks: tick 1 and tick 2 each perform a plain-CNOT Pauli-Z check against one data qubit; tick 3 performs a Hadamard-CNOT-Hadamard Pauli-X check against a different data qubit; tick 4 leaves the ancilla explicitly idling (marked 'I' and called out by an arrow, since the paper notes idling gates are not all drawn); and tick 5 performs one more X-check before the ancilla is measured in the Z basis (M_Z) to read out the syndrome. The figure demonstrates how AlphaSyndrome's scheduler assigns each Pauli check to a tick such that no qubit is used twice in the same tick.",
+  "summary_zh": "该图示AlphaSyndrome按tick调度的电路示例：辅助比特经5个tick，第1、2个tick各做一次Z校验，第3个tick做X校验，第4个tick显式闲置(箭头标出)，第5个tick再做X校验后测量读出结果。",
+  "confidence": "high",
+  "notes": "Remapped base from prior 'circuit' (not in the mechanism base enum) to 'timeline', since the figure's defining structure is a tick-divided time axis on the ancilla wire. Kept groups=[walkthrough] from prior: unlike a plain circuit diagram, the ticks here are explicitly numbered (1-5) along the wire, which does satisfy the walkthrough test.",
+  "venue": "ASPLOS26"
+}

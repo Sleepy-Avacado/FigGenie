@@ -1,0 +1,162 @@
+{
+  "paper_id": "nsdi26-028",
+  "fig": "5",
+  "system": {
+    "name": "ZOC",
+    "one_liner": "ZOC's I/O Link mechanism that uses two-dimensional page tables to give the service VM direct DMA access to host and VM memory",
+    "domain": [
+      "virtualization",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Service VM (as virtual SmartNIC)",
+        "container": null,
+        "role": "guest whose GPA space is used to construct a two-dimensional mapping of host physical memory",
+        "novel": true
+      },
+      {
+        "name": "data-plane I/O address space",
+        "container": "Service VM (as virtual SmartNIC)",
+        "role": "the userspace data plane's view of I/O-accessible address space",
+        "novel": true
+      },
+      {
+        "name": "L1 Page Tables",
+        "container": "Service VM (as virtual SmartNIC)",
+        "role": "guest page tables mapping the service VM's GPA-accessible HPA space into the userspace data plane",
+        "novel": true
+      },
+      {
+        "name": "hole",
+        "container": "L1 Page Tables",
+        "role": "reserved gap in the GPA space left for the service VM's own memory, excluded from the offset-mapped HPA range",
+        "novel": true
+      },
+      {
+        "name": "Host OS",
+        "container": "L1 Page Tables",
+        "role": "physical memory region belonging to the host OS",
+        "novel": false
+      },
+      {
+        "name": "Service VM",
+        "container": "L1 Page Tables",
+        "role": "physical memory region belonging to the service VM itself",
+        "novel": false
+      },
+      {
+        "name": "User VMs",
+        "container": "L1 Page Tables",
+        "role": "physical memory regions belonging to user VMs",
+        "novel": false
+      },
+      {
+        "name": "Host",
+        "container": null,
+        "role": "the physical host's memory view containing the L0 page tables",
+        "novel": false
+      },
+      {
+        "name": "L0 Page Tables (e.g., EPT)",
+        "container": "Host",
+        "role": "hardware-assisted page tables (e.g., Intel EPT) mapping host physical address space into the service VM's GPA space at a fixed offset",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Host",
+        "to": "Service VM (as virtual SmartNIC)",
+        "what": "host physical address space mapped via L0 page tables at a fixed GPA offset",
+        "step": null
+      },
+      {
+        "from": "Service VM (as virtual SmartNIC)",
+        "to": "data-plane I/O address space",
+        "what": "GPA-accessible HPA space mapped via L1 page tables",
+        "step": null
+      }
+    ],
+    "key_idea": "ZOC's I/O Link uses hardware EPT-style L0 page tables to map the host's entire physical address space into the service VM's guest-physical space at a fixed offset, then re-maps it via L1 page tables for the userspace data plane.",
+    "reading_order": "Bottom-up: the Host's L0 page tables and physical regions, mapped diagonally with a fixed offset into the Service VM's L1 page tables and data-plane address space above."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.87,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "fill of the Host OS and User VMs region boxes"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "fill of the Service VM region boxes and the data-plane I/O address space box"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "fill/background of the L1/L0 Page Table bands"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "outer box borders/backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.76pt) strokes with dashed outer box boundaries and dotted diagonal mapping lines",
+    "font": "Arial-like sans, 3-7pt, italic for annotations (Fixed offset, hole)",
+    "corners": "square",
+    "arrows": "mostly thin straight lines (6) with a single arrowhead; dotted diagonals show address correspondence rather than data flow",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "tan = Host OS / User VMs physical memory regions, pale blue = the Service VM's own memory region and its GPA-space boxes, pale yellow = the page-table bands themselves",
+    "line_style_means": "dotted diagonal lines trace how a physical address region in the Host's L0 page tables maps to the corresponding region in the Service VM's L1 page tables/GPA space; 'Fixed offset' and 'hole' annotate the reserved offset and gap",
+    "emphasis": "aligning the Host and Service VM address-space bars vertically, with dotted lines and a 'Fixed offset' callout, pinpoints exactly how the two-dimensional mapping translates one address space into the other",
+    "reusable_patterns": [
+      "two stacked address-space bars connected by dotted correspondence lines to explain a memory-mapping scheme"
+    ],
+    "weaknesses": [
+      "reusing the label 'Service VM' for both the outer virtual-SmartNIC box and an inner memory-region box could confuse readers",
+      "the 'hole' concept is only briefly annotated, without a full caption explaining why it exists"
+    ]
+  },
+  "tags": [
+    "DMA",
+    "page-tables",
+    "memory-mapping",
+    "EPT",
+    "virtual-SmartNIC",
+    "address-translation"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design (p.7)"
+    ],
+    "evidence": [
+      "the I/O Link takes advantage of hardware-assisted L0 page tables, such as Intel EPT",
+      "to map the entire host physical address (HPA) space into the service VM's guest physical address (GPA) space",
+      "This mapping is performed with a fixed, reserved GPA offset (e.g., 1 TB)"
+    ]
+  },
+  "summary": "Figure 5 zooms into ZOC's two-dimensional page-table mechanism for DMA inside the I/O Link. It stacks two memory views: the Host's physical memory (bottom), organized by hardware L0 page tables (e.g., Intel EPT) into regions for Host OS, Service VM, and User VMs; and the Service VM's guest-physical memory (top), whose L1 page tables re-expose the same regions to the userspace data-plane I/O address space. A fixed, reserved GPA offset (annotated in red) and a deliberate 'hole' let the service VM address any host physical address X simply by adding the offset, while dotted diagonal lines trace how each host region lands in the guest's address space. The figure uses flat tan/blue/yellow boxes with dashed and dotted lines rather than arrows to emphasize address correspondence over data flow.",
+  "summary_zh": "该图展示ZOC二维页表DMA映射：主机L0页表按固定偏移将Host OS、Service VM、User VMs映射进Service VM的GPA空间，再经L1页表暴露给用户态数据面，虚线标出偏移与hole。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

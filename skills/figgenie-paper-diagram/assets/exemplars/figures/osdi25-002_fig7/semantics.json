@@ -1,0 +1,188 @@
+{
+  "paper_id": "osdi25-002",
+  "fig": "7",
+  "system": {
+    "name": "Tintin",
+    "one_liner": "a unified hardware-performance-profiling infrastructure that quantifies uncertainty in performance counters and uses it for scheduling",
+    "domain": [
+      "observability",
+      "scheduling",
+      "os-kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Applications",
+        "role": "user-space programs whose requests trigger profiling via the API",
+        "container": "User",
+        "novel": false
+      },
+      {
+        "name": "API",
+        "role": "interface applications use to issue profiling requests to the Manager",
+        "container": "Manager",
+        "novel": true
+      },
+      {
+        "name": "Manager",
+        "role": "exposes the API, holds contexts and events/profiling-scope configuration, and returns HPC data with uncertainty to applications",
+        "container": "Kernel",
+        "novel": true
+      },
+      {
+        "name": "Contexts",
+        "role": "stores per-request profiling context",
+        "container": "Manager",
+        "novel": true
+      },
+      {
+        "name": "Events of interest",
+        "role": "configuration of which hardware events to profile",
+        "container": "Manager",
+        "novel": true
+      },
+      {
+        "name": "Profiling scopes",
+        "role": "configuration of the code/time scope to profile",
+        "container": "Manager",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "sets a scheduling policy meant to minimize measurement uncertainty, using the uncertainty delta reported by the Monitor",
+        "container": "Kernel",
+        "novel": true
+      },
+      {
+        "name": "Monitor",
+        "role": "tracks event counts and characterizes their uncertainty at runtime from the microarchitectural event source",
+        "container": "Kernel",
+        "novel": true
+      },
+      {
+        "name": "uArch Event Source",
+        "role": "hardware performance-counter source read by the Monitor",
+        "container": "Monitor",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Applications",
+        "to": "Manager",
+        "what": "request",
+        "step": null
+      },
+      {
+        "from": "Manager",
+        "to": "Applications",
+        "what": "HPC data + uncertainty",
+        "step": null
+      },
+      {
+        "from": "Manager",
+        "to": "Scheduler",
+        "what": "scheduling policy",
+        "step": null
+      },
+      {
+        "from": "Manager",
+        "to": "Monitor",
+        "what": "event counts and profiling scopes to track",
+        "step": null
+      },
+      {
+        "from": "Monitor",
+        "to": "Scheduler",
+        "what": "Uncertainty Delta",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Monitor",
+        "what": "Sched. Decision",
+        "step": null
+      },
+      {
+        "from": "uArch Event Source",
+        "to": "Monitor",
+        "what": "raw hardware event counts",
+        "step": null
+      }
+    ],
+    "key_idea": "Tintin factors hardware-performance profiling into three kernel components: a Manager that exposes contexts/events/scopes to applications, a Monitor that tracks event counts and their uncertainty from microarchitectural sources, and a Scheduler that uses that uncertainty to pick scheduling policies that minimize it.",
+    "reading_order": "Top-down: Applications issuing a request across the User/Kernel boundary into the Manager, then down into the Scheduler and Monitor exchanging uncertainty and scheduling decisions."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.52,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#81a0ad",
+        "used_for": "fill of the Manager box"
+      },
+      {
+        "hex": "#dddad9",
+        "used_for": "fill of the Scheduler box"
+      },
+      {
+        "hex": "#c5d8b4",
+        "used_for": "fill of the Monitor box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.9pt gray, dashed border around the illustrative Applications/use-case cloud",
+    "font": "HelveticaNeue-Light/Helvetica-Light sans, 3.5-8pt",
+    "corners": "mixed",
+    "arrows": "thin bidirectional arrows linking User/Kernel and the three modules, one curved",
+    "icons": "one small vector icon, likely on the Scheduler box"
+  },
+  "encoding": {
+    "color_means": "blue-gray = Manager, light gray = Scheduler, light green = Monitor, one color per kernel module",
+    "line_style_means": "dashed outline sets off the illustrative Applications/use-case cloud from the solid-bordered architecture boxes; solid arrows carry data/control between User, Manager, Scheduler, and Monitor",
+    "emphasis": "uncertainty, the paper's core contribution, is threaded explicitly through the arrow labels (HPC data + uncertainty, Uncertainty Delta, Minimizing Uncertainty) connecting all three modules",
+    "reusable_patterns": [
+      "User/Kernel boundary with a small set of interacting kernel modules below it",
+      "example-use-case cloud attached to the client-facing box to motivate the API"
+    ],
+    "weaknesses": [
+      "the excerpted paragraph is cut off right after naming only the Monitor component, so the Manager and Scheduler roles are read from the figure's own labels rather than confirmed by body text"
+    ]
+  },
+  "tags": [
+    "hardware-performance-counters",
+    "profiling",
+    "uncertainty-quantification",
+    "scheduling",
+    "observability",
+    "os-kernel"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Tintin Design Overview (p.7)"
+    ],
+    "evidence": [
+      "Figure 7 depicts the structure of Tintin, which consists of three internal modular components",
+      "Tintin-Monitor (§5) measures HPC data and characterizes errors simultaneously at runtime"
+    ]
+  },
+  "summary": "This figure gives Tintin's design overview: a hardware-performance-profiling infrastructure split into three kernel-resident modules below a User/Kernel boundary. Applications issue a request across that boundary to the Manager, which holds per-request Contexts plus configured Events of interest and Profiling scopes, and returns HPC data together with its uncertainty. Internally, the Manager hands scheduling policy to the Scheduler and event/profiling configuration to the Monitor. The Monitor reads raw counts from a uArch Event Source, tracks event counts, and computes an uncertainty value; it reports an Uncertainty Delta to the Scheduler, which returns a scheduling decision aimed at minimizing that uncertainty. A dashed cloud beside Applications lists example uses - anomaly detection, resource orchestration, energy analysis, workload optimization, debugging - motivating why applications would consume uncertainty-aware profiling data.",
+  "summary_zh": "该图展示Tintin设计概览：Manager管理配置并返回带不确定性的性能数据；Scheduler与Monitor交换不确定性增量与调度决策以降低不确定性。",
+  "confidence": "medium",
+  "notes": "Body paragraph is truncated right after naming Tintin-Monitor, so the Manager and Scheduler roles are read from the figure's own labels rather than confirmed by text. layout-proposal: two-tier boundary with an interacting module triangle — a User/Kernel horizontal split contains three peer modules (Manager, Scheduler, Monitor) exchanging data bidirectionally rather than stacking as sequential layers.",
+  "venue": "OSDI25"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-104_fig13",
+  "paper_id": "nsdi26-104",
+  "fig": "13",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 13: Path table updates delivered via (a) PCIe or (b) packets.",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.66,
+  "n_components": 8,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "circled-numbers",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-104/nsdi26-104_fig13_p9_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-104/nsdi26-104_fig13_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Stacked (a) naive PCIe-update / (b) packet-driven ZooRoute panels share the same Programmable ASIC anchor box and hash table, with a right-side legend for the gold delivered-by-packet line and only (b) carrying circled steps.",
+      "what_to_learn": "Stack a simple baseline over the richer mechanism, keeping the outer ASIC boundary identical in both; but number both panels' steps, not just one, since numbering only the proposed half (as here) makes the comparison feel lopsided, and crop tightly so no neighbouring figure bleeds in."
+    }
+  ]
+}

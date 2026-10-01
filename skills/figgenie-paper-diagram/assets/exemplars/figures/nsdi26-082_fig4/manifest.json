@@ -1,0 +1,56 @@
+{
+  "id": "nsdi26-082_fig4",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-082",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: Illustration of FlexLLM’s different dependent parallelization strategies with the LoRA example. Each green (or gray) box indicates a compute (or parallelization) operator, and each edge between operators represents a parallel tensor, and the parallelization states of the tensor’s dimension",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "how four candidate parallelization graphs combine two linear-layer tensor-parallel states via different communication collectives",
+  "arrangement": "panels-row",
+  "panel_count": 4,
+  "frame_template": "aligned",
+  "delta_marking": "callout",
+  "direction": "bottom-up",
+  "column": "double",
+  "aspect": 2.64,
+  "n_elements": 13,
+  "n_relations": 8,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "above",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "ghostscript",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-082/src/fig4_parallelization2.svg",
+    "preview.png": "lab/extracted/nsdi26-082/src/fig4_parallelization2.png",
+    "print.png": "lab/extracted/nsdi26-082/nsdi26-082_fig4_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Base model plus LoRA drawn once with '?' placeholders to pose the search, then four numbered single-layer templates get recombined pairwise into the full candidate graphs being compared.",
+      "what_to_learn": "Give each small reusable unit a number badge once (① Linear with its tensor-state tags on every edge), then build every candidate by stacking two numbered units and swapping only the one connecting communication operator between them.",
+      "note_source": "agent"
+    }
+  ]
+}

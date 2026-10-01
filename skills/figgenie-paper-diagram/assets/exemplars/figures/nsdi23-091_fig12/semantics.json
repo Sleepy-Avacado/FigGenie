@@ -1,0 +1,163 @@
+{
+  "paper_id": "nsdi23-091",
+  "fig": "12",
+  "system": {
+    "name": "SlimWiFi",
+    "one_liner": "an ultra-low-power IoT radio architecture enabled by asymmetric communication",
+    "domain": [
+      "wireless",
+      "iot",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "DAC",
+        "role": "high-resolution digital-to-analog converter supporting complex modulation",
+        "container": "Traditional active transmitter",
+        "novel": false
+      },
+      {
+        "name": "XO",
+        "role": "crystal oscillator reference for the carrier generator",
+        "container": "Traditional active transmitter",
+        "novel": false
+      },
+      {
+        "name": "PLL+VCO",
+        "role": "phase-locked loop and voltage-controlled oscillator generating a stable carrier frequency",
+        "container": "Traditional active transmitter",
+        "novel": false
+      },
+      {
+        "name": "Mixer",
+        "role": "mixes the baseband signal with the carrier",
+        "container": "Traditional active transmitter",
+        "novel": false
+      },
+      {
+        "name": "PA",
+        "role": "high-power power amplifier boosting transmit power",
+        "container": "Traditional active transmitter",
+        "novel": false
+      },
+      {
+        "name": "OOK Modulation",
+        "role": "on-off-keying modulation applied via an RF switch, replacing the DAC",
+        "container": "SlimWiFi active transmitter",
+        "novel": true
+      },
+      {
+        "name": "Open-loop oscillator",
+        "role": "simple oscillator replacing the closed-loop PLL+VCO, needing only low-accuracy carrier frequency",
+        "container": "SlimWiFi active transmitter",
+        "novel": true
+      },
+      {
+        "name": "-20 dBm PA",
+        "role": "low-power amplifier optimized for constant-amplitude OOK signals at -20 dBm output",
+        "container": "SlimWiFi active transmitter",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DAC",
+        "to": "Mixer",
+        "what": "baseband modulated signal",
+        "step": null
+      },
+      {
+        "from": "XO",
+        "to": "PLL+VCO",
+        "what": "reference frequency",
+        "step": null
+      },
+      {
+        "from": "PLL+VCO",
+        "to": "Mixer",
+        "what": "carrier signal",
+        "step": null
+      },
+      {
+        "from": "Mixer",
+        "to": "PA",
+        "what": "upconverted signal to amplify",
+        "step": null
+      },
+      {
+        "from": "Open-loop oscillator",
+        "to": "OOK Modulation",
+        "what": "carrier signal gated on/off for OOK",
+        "step": null
+      },
+      {
+        "from": "OOK Modulation",
+        "to": "-20 dBm PA",
+        "what": "OOK-modulated signal to amplify",
+        "step": null
+      }
+    ],
+    "key_idea": "Because SlimWiFi only needs low transmit power, low-accuracy carrier frequency, and simple on-off keying, it strips the power-hungry DAC and closed-loop PLL+VCO that a traditional active transmitter requires.",
+    "reading_order": "Left panel (a) then right panel (b), each read left to right along its own signal chain from oscillator/DAC components to the power amplifier."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.92,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [],
+    "background": "white",
+    "fill": "none",
+    "stroke": "thin black lines forming schematic symbols",
+    "font": "mixed sans/serif (ArialMT, NimbusRomNo9L), 7-9pt",
+    "corners": "square",
+    "arrows": "thin black lines connecting schematic symbols, mostly without arrowheads",
+    "icons": "vector circuit-schematic symbols (amplifier triangle, mixer circle-cross, antenna, switch)"
+  },
+  "encoding": {
+    "color_means": "no color coding is used; the figure is a monochrome circuit schematic, and the two designs are distinguished only by the (a)/(b) panel labels and which symbols are present",
+    "line_style_means": "a plain switch symbol in panel (b) stands in for the DAC/mixer chain in panel (a), showing component removal rather than a differently styled line",
+    "emphasis": "panel (b) is visibly simpler than panel (a), containing fewer schematic blocks, to emphasize SlimWiFi's power-saving component reduction",
+    "reusable_patterns": [
+      "side-by-side before/after circuit-schematic comparison to argue for a simplified hardware design"
+    ],
+    "weaknesses": [
+      "no numeric power values are annotated directly on the schematic, so the power savings claimed in the text are not visible from the figure alone"
+    ]
+  },
+  "tags": [
+    "iot",
+    "wireless-radio",
+    "low-power",
+    "transmitter",
+    "circuit-schematic",
+    "ook-modulation"
+  ],
+  "provenance": {
+    "sections": [
+      "4 SlimWiFi ULP Radio Hardware Design (p.8-9)"
+    ],
+    "evidence": [
+      "the IoT radio architecture invariantly comprises 3 key components (Fig. 12a): a high power PA",
+      "replaces the closed-loop PLL+VCO with a simple open-loop oscillator",
+      "removes the DAC and uses an RF switch for OOK modulation"
+    ]
+  },
+  "summary": "Figure 12 contrasts two transmitter hardware designs as circuit schematics. Panel (a) shows a traditional active transmitter: a DAC and a crystal-oscillator-referenced PLL+VCO carrier generator feed a Mixer, whose output drives a high-power PA before the antenna. Panel (b) shows the SlimWiFi active transmitter proposed by the paper, which removes the DAC and mixer in favor of directly gating a simple Open-loop oscillator with an RF switch to produce an OOK-modulated signal, which then drives a much lower-power (-20 dBm) PA. The comparison visually argues that SlimWiFi's asymmetric-communication design, needing only low transmit power, low-accuracy carrier frequency, and simple on-off keying, lets it strip out the power-hungry DAC and closed-loop frequency synthesis that traditional IoT radios require. Both panels are drawn as plain black-and-white circuit schematics with no color coding.",
+  "summary_zh": "图12对比两种发射机：(a)传统方案含DAC、锁相环与Mixer驱动高功率PA；(b)SlimWiFi省去DAC和Mixer，用开环振荡器加RF开关产生OOK信号驱动低功率PA，体现硬件精简。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

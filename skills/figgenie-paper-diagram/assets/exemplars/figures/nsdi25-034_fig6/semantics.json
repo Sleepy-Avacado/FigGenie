@@ -1,0 +1,234 @@
+{
+  "paper_id": "nsdi25-034",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "OrbitCache",
+    "one_liner": "an in-network key-value cache on programmable switches that serves hot items directly from the data plane",
+    "domain": [
+      "networking",
+      "key-value-stores",
+      "programmable-switches"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one protocol exchange",
+    "subject": "how a client detects a hash-collision on a cached key and corrects it via a switch-bypassing round trip to the server",
+    "base": "component",
+    "elements": [
+      {
+        "name": "pkt.seq = 1 / pkt.key = AAAA",
+        "kind": "label",
+        "role": "annotates the wrong cache packet the client originally received (key AAAA instead of the requested DDDD)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Client",
+        "kind": "box",
+        "role": "issuer of requests; keeps a Requested Key list to detect wrong cached values",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Requested Key",
+        "kind": "row",
+        "role": "header of the client's pending-request list, indexed by pkt.seq",
+        "container": "Client",
+        "highlighted": true
+      },
+      {
+        "name": "BBBB",
+        "kind": "cell",
+        "role": "a pending requested key unrelated to this example",
+        "container": "Client",
+        "highlighted": false
+      },
+      {
+        "name": "DDDD",
+        "kind": "cell",
+        "role": "the requested key at pkt.seq=1 whose cached reply came back wrong",
+        "container": "Client",
+        "highlighted": true
+      },
+      {
+        "name": "CCCC",
+        "kind": "cell",
+        "role": "another pending requested key unrelated to this example",
+        "container": "Client",
+        "highlighted": false
+      },
+      {
+        "name": "Switch",
+        "kind": "box",
+        "role": "in-network cache that bypasses its cache logic once it detects a correction request",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Cache logic Bypassed",
+        "kind": "label",
+        "role": "marks that the switch forwards the correction request without applying cache logic",
+        "container": "Switch",
+        "highlighted": true
+      },
+      {
+        "name": "Server",
+        "kind": "actor",
+        "role": "storage server that holds the authoritative value and answers the correction request",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Client",
+        "to": "Switch",
+        "what": "Correction Request (CRN-REQ)",
+        "kind": "timeline-message",
+        "step": "1"
+      },
+      {
+        "from": "Switch",
+        "to": "Server",
+        "what": "CRN-REQ forwarded with cache logic bypassed",
+        "kind": "timeline-message",
+        "step": "2"
+      },
+      {
+        "from": "Server",
+        "to": "Switch",
+        "what": "Read Reply (R-REP) carrying the correct value",
+        "kind": "timeline-message",
+        "step": "3"
+      },
+      {
+        "from": "Switch",
+        "to": "Client",
+        "what": "R-REP forwarded back to the client",
+        "kind": "timeline-message",
+        "step": "4"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Client to Switch",
+        "what": "client sends a Correction Request (CRN-REQ) after detecting the wrong cached value",
+        "carries": "CRN-REQ, identified by pkt.seq=1"
+      },
+      {
+        "marker": "2",
+        "at": "Switch to Server",
+        "what": "switch bypasses its cache logic and forwards the correction request unchanged",
+        "carries": "CRN-REQ"
+      },
+      {
+        "marker": "3",
+        "at": "Server to Switch",
+        "what": "storage server returns the correct value as a read reply",
+        "carries": "R-REP for key DDDD"
+      },
+      {
+        "marker": "4",
+        "at": "Switch to Client",
+        "what": "switch forwards the read reply back to the client, which removes the key from its list",
+        "carries": "R-REP"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "the concrete keys BBBB/DDDD/CCCC in the client's list and the mismatched AAAA in the original cache packet",
+      "linked_by": "position (pkt.seq indexes the list row) and colour (the colliding DDDD row is highlighted)",
+      "result_cells": "the corrected value for key DDDD arrives via the R-REP message in step 3/4, not shown as a separate result cell"
+    },
+    "key_idea": "When a client detects that the returned key does not match the requested key (a hash collision), it sends a correction request that the switch forwards untouched, bypassing its cache logic, to the storage server, which returns the correct value in a 4-step round trip.",
+    "reading_order": "left to right along the numbered arrows: Client (1) to Switch, (2) to Server, then back (3) Server to Switch, (4) Switch to Client"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.5,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff9797",
+        "used_for": "pink/salmon highlight on the DDDD row, the requested key whose reply collided"
+      },
+      {
+        "hex": "#2f5597",
+        "used_for": "dark blue fill of the 'Requested Key' column header"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "light blue fill of the Switch box, labelled 'Cache logic Bypassed'"
+      },
+      {
+        "hex": "#a8a4ce",
+        "used_for": "light purple minor accent fill"
+      },
+      {
+        "hex": "#c8b6e2",
+        "used_for": "lighter purple minor accent fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.4pt) black outlines on boxes and the key-list table",
+    "corners": "mixed",
+    "arrows": "solid black arrows with curved routing, numbered 1-4 alongside italic message-name labels",
+    "font": "sans-serif, ~7-7.5pt",
+    "icons": "a cylinder icon for the Server"
+  },
+  "encoding": {
+    "color_means": "dark blue = the 'Requested Key' list header; pink/salmon = the one key (DDDD) whose cached reply just collided; light blue = the switch, marked 'Cache logic Bypassed' while handling the correction",
+    "line_style_means": "solid arrows for all four request/reply messages; no dashed lines are used",
+    "state_means": "not applicable; this is a single walkthrough instant rather than a before/after comparison",
+    "marker_means": "plain numerals 1-4 alongside the arrows trace the correction round trip in order",
+    "emphasis": "the salmon-highlighted DDDD row and the italic pkt.seq/pkt.key annotation call out exactly which cached entry was wrong and why",
+    "reusable_patterns": [
+      "a client/switch/server topology with a small annotated key-value table hung off the client, walked by numbered request/reply arrows"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "in-network-caching",
+    "hash-collision",
+    "key-value-store",
+    "programmable-switch",
+    "walkthrough"
+  ],
+  "provenance": {
+    "sections": [
+      "3 OrbitCache Design (p.8)"
+    ],
+    "evidence": [
+      "the client sends a correction request to the server",
+      "The switch bypasses the cache logic, and forwards the packet to the server",
+      "The client finally gets the correct value for the key DDDD"
+    ]
+  },
+  "summary": "Figure 6 of OrbitCache walks through how a hash collision in its in-network key-value cache gets corrected. The client's Requested Key list (indexed by pkt.seq) shows it expected DDDD but the reply carried AAAA (annotated top-left as 'From Cache Packet'), so the client marks that pending entry, highlighted in salmon, and in step 1 sends a Correction Request (CRN-REQ) to the switch. In step 2 the switch, now with its cache logic bypassed, forwards CRN-REQ unchanged to the storage server. The server answers with a Read Reply (R-REP) carrying the correct value (step 3), which the switch relays back to the client (step 4), which then removes the key from its list. The four numbered arrows trace this exact correction round trip end to end.",
+  "summary_zh": "该图演示OrbitCache处理哈希冲突：客户端发现应答的AAAA与请求的DDDD不符（粉色高亮），发送CRN-REQ给交换机(1)，交换机绕过缓存逻辑转发给服务器(2)，服务器返回正确的R-REP(3)，交换机转发回客户端(4)。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

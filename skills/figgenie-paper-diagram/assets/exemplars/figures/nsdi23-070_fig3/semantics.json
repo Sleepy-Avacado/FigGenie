@@ -1,0 +1,277 @@
+{
+  "paper_id": "nsdi23-070",
+  "fig": "3",
+  "system": {
+    "name": "Valinor-h",
+    "one_liner": "an eBPF-based measurement framework with a kernel data plane and a userspace control plane communicating via lock-free ring buffers",
+    "domain": [
+      "networking",
+      "measurement",
+      "ebpf"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Network Application",
+        "role": "generates traffic that flows down the kernel stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Network Socket",
+        "role": "socket layer the application writes to",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "TCP/IP",
+        "role": "transport/IP processing layer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Queuing disciplines",
+        "role": "qdisc layer where the Valinor-H data-plane program attaches",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Valinor-H Data-plane",
+        "role": "eBPF program executed at the tc qdisc on every sk_buff to measure traffic",
+        "container": "Queuing disciplines",
+        "novel": true
+      },
+      {
+        "name": "Netdev",
+        "role": "network device layer below queuing disciplines",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NIC",
+        "role": "hardware that transmits packets to the network",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Packets to the network",
+        "role": "final output of the kernel-stack pipeline",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Compiler, verifier and libbpf",
+        "role": "loads and verifies the eBPF data-plane program into the kernel",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Valinor-H Control-plane",
+        "role": "userspace component that manages the data plane and consumes measurement data",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Linux Virtual File System",
+        "role": "exposes the per-CPU eBPF ring buffers to userspace",
+        "container": "Valinor-H Control-plane",
+        "novel": false
+      },
+      {
+        "name": "Per-CPU buffers",
+        "role": "lock-free ring buffers carrying measurement records from the data plane",
+        "container": "Linux Virtual File System",
+        "novel": true
+      },
+      {
+        "name": "Shared control data",
+        "role": "in-kernel state written by the data plane and read by the control plane",
+        "container": "Linux Virtual File System",
+        "novel": true
+      },
+      {
+        "name": "Write handle",
+        "role": "handle the data plane uses to write into shared control data",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Read handle",
+        "role": "handle the control plane uses to read shared control data",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Poller Threads",
+        "role": "userspace threads polling the ring buffers for new records",
+        "container": "Valinor-H Control-plane",
+        "novel": true
+      },
+      {
+        "name": "Redis Backend",
+        "role": "storage backend the poller threads write measurement results into",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Flow filters",
+        "role": "control-plane processing applied to polled records",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Timestamper",
+        "role": "control-plane processing applied to polled records",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Stat Analytics",
+        "role": "control-plane processing and analytics applied to polled records",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Network Application",
+        "to": "Network Socket",
+        "what": "application data",
+        "step": null
+      },
+      {
+        "from": "Network Socket",
+        "to": "TCP/IP",
+        "what": "sk_buff",
+        "step": null
+      },
+      {
+        "from": "TCP/IP",
+        "to": "Queuing disciplines",
+        "what": "sk_buff",
+        "step": null
+      },
+      {
+        "from": "Queuing disciplines",
+        "to": "Netdev",
+        "what": "sk_buff after Valinor-H Data-plane measurement",
+        "step": null
+      },
+      {
+        "from": "Netdev",
+        "to": "NIC",
+        "what": "sk_buff",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "Packets to the network",
+        "what": "transmitted packets",
+        "step": null
+      },
+      {
+        "from": "Compiler, verifier and libbpf",
+        "to": "Valinor-H Data-plane",
+        "what": "compiled and verified eBPF program loaded into the kernel",
+        "step": null
+      },
+      {
+        "from": "Valinor-H Data-plane",
+        "to": "Shared control data",
+        "what": "measurement records written via the Write handle",
+        "step": null
+      },
+      {
+        "from": "Shared control data",
+        "to": "Poller Threads",
+        "what": "measurement records read via the Read handle from the per-CPU ring buffers",
+        "step": null
+      },
+      {
+        "from": "Poller Threads",
+        "to": "Redis Backend",
+        "what": "processed measurement data (flow filters, timestamps, stats)",
+        "step": null
+      }
+    ],
+    "key_idea": "A kernel eBPF program hooked at the tc qdisc measures every sk_buff and hands records to a userspace control plane through lock-free per-CPU ring buffers for filtering, timestamping, and storage.",
+    "reading_order": "Left column top-to-bottom follows the kernel stack from Network Application to the NIC; the right side shows the userspace control plane reading the data plane's output via Write/Read handles."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.09,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "pale peach fill for the Poller Threads dashed box"
+      },
+      {
+        "hex": "#afabab",
+        "used_for": "gray fill for the Linux Virtual File System and generic boxes"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "light blue fill for the Write/Read handle and Redis Backend boxes"
+      },
+      {
+        "hex": "#203864",
+        "used_for": "dark navy text for the Valinor-H Data-plane and Control-plane headings"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray borders on boxes (~0.17-0.5pt), dashed border around Poller Threads",
+    "font": "serif (Linux Libertine, Cambria), 3.5-7pt",
+    "corners": "mixed",
+    "arrows": "thin arrows with gear/exchange icons depicting the Write and Read handles into the shared per-CPU ring buffers",
+    "icons": "ring-buffer icons for Per-CPU buffers, a gear/exchange icon for Shared control data, small icons for Flow filters/Timestamper/Stat Analytics, a document icon for sk_buff, a code-block icon for the Valinor_data struct"
+  },
+  "encoding": {
+    "color_means": "navy text highlights the two Valinor-H components (Data-plane, Control-plane) against the plain black kernel-stack labels; light fills distinguish the VFS/ring-buffer boxes from the poller/backend boxes",
+    "line_style_means": "a Write handle arrow and a Read handle arrow show the one-directional, lock-free hand-off through the shared per-CPU ring buffers between data plane and control plane",
+    "emphasis": "the Valinor-H Data-plane and Valinor-H Control-plane labels sit at the two ends of the Write/Read handle arrows, drawing attention to the control/data split that is the paper's contribution",
+    "reusable_patterns": [
+      "kernel data-plane hooked into an existing OS stack (tc qdisc) paired with a userspace control plane reading a shared ring buffer",
+      "struct/code snippet embedded in the figure to document the wire format of measurement records"
+    ],
+    "weaknesses": [
+      "the left kernel-stack column and right control-plane region are not connected by an explicit arrow showing exactly where in the stack the data-plane hook sits, beyond its inline position next to Queuing disciplines"
+    ]
+  },
+  "tags": [
+    "ebpf",
+    "traffic-measurement",
+    "control-plane",
+    "data-plane",
+    "ring-buffer",
+    "linux-kernel"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Valinor measurement framework (p.6)"
+    ],
+    "evidence": [
+      "Valinor-h consists of a data plane and a control plane, communicating via lock-free ring buffers",
+      "follows a strict set of C-like instructions that are executed at the tc qdisc",
+      "Figure 3 presents the design of our eBPF framework"
+    ]
+  },
+  "summary": "Figure 3 shows the architecture of Valinor-h, the paper's eBPF-based measurement framework, split into a kernel data plane and a userspace control plane. On the left, the ordinary Linux stack (Network Application, Network Socket, TCP/IP, Queuing disciplines, Netdev, NIC) carries an sk_buff down to the wire; the Valinor-H Data-plane is an eBPF program attached at the tc qdisc that inspects every sk_buff. On the right, a Compiler, verifier and libbpf toolchain loads this program and manages the Valinor-H Control-plane, which reads measurement records the data plane writes (Write handle) into per-CPU, lock-free ring buffers exposed through the Linux Virtual File System, via a Read handle. Poller Threads drain these buffers, apply flow filters, timestamping, and stat analytics, and push the resulting records into a Redis Backend for storage.",
+  "summary_zh": "图3展示Valinor-h架构：内核在tc qdisc挂载eBPF数据面处理每个sk_buff，通过Write/Read handle与用户态控制面共享无锁环形缓冲区；轮询线程读取后过滤、打时间戳、统计，写入Redis。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

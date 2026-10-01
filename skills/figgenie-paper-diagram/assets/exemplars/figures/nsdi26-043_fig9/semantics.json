@@ -1,0 +1,243 @@
+{
+  "paper_id": "nsdi26-043",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "Lemonshark",
+    "one_liner": "an asynchronous DAG-BFT protocol that achieves early finality for sharded transactions",
+    "domain": [
+      "distributed-systems",
+      "BFT-consensus",
+      "sharding"
+    ],
+    "abstraction": "consensus-protocol"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one protocol exchange",
+    "subject": "how speculating a dependency's result lets a transaction be submitted and committed sooner than waiting for it",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Round",
+        "kind": "label",
+        "role": "column header indexing protocol rounds r through r+5",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 1",
+        "kind": "lane",
+        "role": "the node that happens to be the committing leader in rounds r+1, r+3, and r+5",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 2",
+        "kind": "lane",
+        "role": "node holding the baseline dependent pair, t_a and t_b",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 3",
+        "kind": "lane",
+        "role": "node holding the speculative dependent pair, t_x and t_y",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 4",
+        "kind": "lane",
+        "role": "a node with no transaction placed in this example",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t_a",
+        "kind": "cell",
+        "role": "baseline transaction submitted at round r, committed next round",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t_b",
+        "kind": "cell",
+        "role": "transaction dependent on t_a; submitted only at round r+3, after t_a's commitment is known",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t_x",
+        "kind": "cell",
+        "role": "speculative-path transaction submitted at round r",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "t_y",
+        "kind": "cell",
+        "role": "transaction dependent on t_x; submitted immediately at round r+1 alongside a speculated result for t_x, instead of waiting",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "crown at Node 1, r+1",
+        "kind": "icon",
+        "role": "leader block that commits t_a",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "crown at Node 1, r+3",
+        "kind": "icon",
+        "role": "leader block that commits both t_x and t_y together",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "crown at Node 1, r+5",
+        "kind": "icon",
+        "role": "leader block that commits t_b",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "t_a",
+        "to": "crown at Node 1, r+1",
+        "what": "t_a is committed by the round r+1 leader",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "crown at Node 1, r+1",
+        "to": "t_b",
+        "what": "t_b, dependent on t_a, is only submitted once t_a's commitment is known (implied by the round gap, not a drawn arrow)",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "t_b",
+        "to": "crown at Node 1, r+5",
+        "what": "t_b is committed by the round r+5 leader",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "t_x",
+        "to": "t_y",
+        "what": "t_y is dependent on t_x but is submitted immediately using a speculated result for t_x (implied dependency, not a drawn arrow)",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "t_x",
+        "to": "crown at Node 1, r+3",
+        "what": "t_x is committed by the round r+3 leader",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "t_y",
+        "to": "crown at Node 1, r+3",
+        "what": "t_y is committed together with t_x by the same round r+3 leader",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "two concrete dependent-transaction pairs (t_a/t_b and t_x/t_y) placed at specific rounds, and the three leader rounds (r+1, r+3, r+5) that commit them",
+      "linked_by": "position in the node x round grid and a distinct colour per transaction",
+      "result_cells": "the crown icons mark each pair's committing round, letting total latency be read off directly as column distance from submission to commitment"
+    },
+    "key_idea": "Rather than waiting for a prior transaction's real commitment, a dependent transaction can be submitted immediately alongside a speculated result, letting both be committed together rounds sooner than the wait-then-submit baseline.",
+    "reading_order": "left to right by round; the baseline pair (t_a at r, committed at r+1, then t_b submitted only at r+3 and committed at r+5) contrasts with the pair above it (t_x at r and its dependent t_y submitted immediately at r+1, both committed together at r+3)"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.65,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f8cecc",
+        "used_for": "pale-red/pink fill of t_a's cell"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale-blue fill of t_x's cell"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "pale-green fill of t_y's cell"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale-orange/tan fill of t_b's cell"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black grid-cell borders, tinted to match each cell's fill",
+    "corners": "square",
+    "arrows": "thin black arrows with solid heads from a transaction's submission cell to the crowned leader round that commits it",
+    "font": "small sans-serif labels for round headers, node labels, and transaction names",
+    "icons": "gold/yellow crown icons marking the three leader rounds (r+1, r+3, r+5)"
+  },
+  "encoding": {
+    "color_means": "each transaction gets its own colour (pink t_a, blue t_x, green t_y, tan t_b) purely as an identity tag, not a shared category",
+    "line_style_means": "solid black arrows point from a transaction's submission cell to the crowned leader round that commits it; no dashed or alternate styles are used",
+    "state_means": "not applicable; a single static snapshot placing both example transaction pairs on the same round axis rather than a before/after or alternatives figure",
+    "marker_means": "a gold crown icon marks which node's block in a round is the committing leader; no numbered markers are used",
+    "emphasis": "the two-round gap between t_a's commit (r+1) and t_b's late submission (r+3) reads visually longer than the one-round gap between t_x (r) and t_y's immediate submission (r+1), making the speculative pair's shorter path to its shared r+3 commit stand out",
+    "reusable_patterns": [
+      "two parallel example chains overlaid on one node-by-round grid, each transaction coloured differently and arrowed up to the crowned leader round that commits it, so total latency can be read off as column distance"
+    ],
+    "weaknesses": [
+      "every transaction gets a different colour rather than colour marking the baseline-vs-speculative contrast directly, so the reader must infer which pair is the fast path from round positions and the caption rather than from an explicit visual cue"
+    ]
+  },
+  "tags": [
+    "Lemonshark",
+    "speculation",
+    "dependent-transactions",
+    "pipelining",
+    "DAG-BFT",
+    "latency-reduction"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Lemonshark"
+    ],
+    "evidence": [
+      "Orthogonal to our main insight in §5, we observe that clients with dependent transactions",
+      "typically face multiplicative latency penalties.",
+      "into the DAG sooner (Fig. 9)."
+    ]
+  },
+  "summary": "This figure sketches Lemonshark's speculative pipelining for dependent transactions on a node-by-round grid. In the baseline pair, t_a is submitted on Node 2 at round r and committed by the leader at round r+1; only once that commitment is known is its dependent transaction t_b submitted, at round r+3, and committed later still at round r+5. In the speculative pair, t_x is submitted on Node 3 at round r, but its dependent t_y is submitted immediately at round r+1, alongside a speculated result for t_x rather than waiting for t_x's real commitment; both are then committed together by the round r+3 leader (gold crown icons). Overlaying the two chains on the same round axis makes the saved rounds visible directly: the speculative pair reaches commitment at r+3, two rounds before the baseline pair's r+5.",
+  "summary_zh": "该图用节点x轮次网格展示Lemonshark推测流水线：t_a在r轮提交、r+1轮确认后，t_b才于r+3轮提交、r+5轮确认；而t_x提交后，t_y无需等待即于r+1轮携推测结果提交，二者r+3轮一起确认，比基线快两轮。",
+  "confidence": "high",
+  "notes": "content.groups/base/worked_example kept per the prior label (anatomy primary, timeline base, worked example true). The exact drawn arrows connect each transaction to its own committing crown; the causal-history link from t_a's commitment to t_b's later submission, and the t_x-to-t_y speculative dependency itself, are inferred from the caption/paragraph rather than a separately drawn arrow, and are marked as such in content.relations.",
+  "venue": "NSDI26"
+}

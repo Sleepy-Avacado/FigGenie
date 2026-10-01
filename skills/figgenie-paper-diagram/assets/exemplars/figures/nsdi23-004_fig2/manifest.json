@@ -1,0 +1,42 @@
+{
+  "id": "nsdi23-004_fig2",
+  "paper_id": "nsdi23-004",
+  "fig": "2",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 2: Overview of the mRPC workflow from the perspective of the users (and their applications) as well as infrastructure operators.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 2.97,
+  "n_components": 15,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-004/src/fig2_overview.svg",
+    "preview.png": "lab/extracted/nsdi23-004/src/fig2_overview.png",
+    "print.png": "lab/extracted/nsdi23-004/nsdi23-004_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Reassigned from control-loop by the note-writer: three side-by-side lifecycle columns (Initialization, Runtime, Management) numbered 1-7 with no return arrow or cycle anywhere; this is a phase-lanes lifecycle figure, not control-loop.",
+      "what_to_learn": "Number steps continuously across adjacent lifecycle columns (1-3 in column one, 4-6 in column two, 7 in column three) instead of restarting the count per column, so the reader can tell setup, runtime, and management apart while still reading one global sequence."
+    }
+  ]
+}

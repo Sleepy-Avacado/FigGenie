@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-053_fig1",
+  "paper_id": "nsdi26-053",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: A traditional static DCN vs. an RDCN.",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 2.88,
+  "n_components": 3,
+  "n_flows": 4,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-053/nsdi26-053_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-053/nsdi26-053_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Baseline tree (a) and OCS-mediated topology (b) share one legend and icon set that also covers a bonus (c) panel detailing the OCS's own time-varying state, extending the shared-legend rule past the contrastive pair.",
+      "what_to_learn": "Put a single legend of small coloured icons above all panels so it covers both the contrasted (a)/(b) topologies and a third detail panel; keep the icons visually distinct, since this figure's weakness is several similar small icons that need close reading."
+    },
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Named in the reference as the three-data-centre-networks exemplar with one legend row: (a) static tree, (b) reconfigurable OCS graph, and (c) the OCS's own time-varying state share one cyan/gray/gold icon set spanning all three panels.",
+      "what_to_learn": "Put one legend row above all three panels rather than repeating it per panel, and let a third panel depart from the first two's topology style to show internal behavior over time, as long as it reuses the same colour vocabulary; keep legend icons visually distinct, since similar small icons here need close reading."
+    }
+  ]
+}

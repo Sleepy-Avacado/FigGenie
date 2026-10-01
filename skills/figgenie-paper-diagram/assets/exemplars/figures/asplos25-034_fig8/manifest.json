@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-034_fig8",
+  "paper_id": "asplos25-034",
+  "fig": "8",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Fig. 8. The overall architecture design. The the basic pipeline is similar to that of GSCore [39], a recent PBNR accelerator. We augment the baseline to support FR (yellow-colored) and to address the workload imbalance issue in PBNR/FR (blue-colored).",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 2.92,
+  "n_components": 17,
+  "n_flows": 15,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-034/src/fig8_arch.svg",
+    "preview.png": "lab/extracted/asplos25-034/src/fig8_arch.png",
+    "print.png": "lab/extracted/asplos25-034/asplos25-034_fig8_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: a single three-stage pipeline (Projection, Sorting, Rasterization) over a shared DRAM bus, where two accent colours mark added units against an uncoloured baseline, pipeline emphasis coding, not a two-halves comparison.",
+      "what_to_learn": "When the contribution is scattered across one pipeline rather than isolated in a second panel, mark each added unit with its own accent colour (here yellow for foveation, blue for load-balancing) against an otherwise uncoloured baseline pipeline, and add an in-figure legend rather than relying on the caption to map colour to purpose."
+    }
+  ]
+}

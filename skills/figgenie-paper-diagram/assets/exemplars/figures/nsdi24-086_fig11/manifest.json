@@ -1,0 +1,56 @@
+{
+  "id": "nsdi24-086_fig11",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-086",
+  "fig": "11",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 11: Diagram of Front-End model and NN-defined modulator with NN-PD module.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how an NN-PD module and a fine-tuning loop are added to compensate for the RF front-end's fixed nonlinearity",
+  "arrangement": "frames-column",
+  "panel_count": 2,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.84,
+  "n_elements": 9,
+  "n_relations": 7,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-086/src/fig11_FEModel_NNPD.svg",
+    "preview.png": "lab/extracted/nsdi24-086/src/fig11_FEModel_NNPD.png",
+    "print.png": "lab/extracted/nsdi24-086/nsdi24-086_fig11_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "Inserting a fine-tuned NN-PD module between the modulator and a fixed FE model lets the pipeline learn a pre-distorted signal that cancels the front-end's modeled nonlinearity.",
+      "what_to_learn": "baseline block chain stacked above an augmented block chain with a colour-coded feedback loop added",
+      "note_source": "record"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-139_fig7",
+  "paper_id": "asplos26-139",
+  "fig": "7",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 7. The overview of Nemo.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "wps",
+  "aspect": 1.18,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-139/src/fig7_design.svg",
+    "preview.png": "lab/extracted/asplos26-139/src/fig7_design.png",
+    "print.png": "lab/extracted/asplos26-139/asplos26-139_fig7_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence two-tier layered exemplar, a purple DRAM band over a green FLASH band, with small coloured grid cells standing for individual sets, and explicit flush and extract-combine arrows crossing the boundary both ways.",
+      "what_to_learn": "Colour the two memory tiers, not just their contents, so DRAM versus flash is legible before reading labels, and represent a pool of same-role objects as a row of small identical boxes; the record flags thin curved feedback arrows as easy to miss, so make a feedback path as heavy as the path it answers."
+    }
+  ]
+}

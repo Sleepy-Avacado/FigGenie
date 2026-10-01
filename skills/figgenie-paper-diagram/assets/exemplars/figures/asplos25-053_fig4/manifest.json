@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-053_fig4",
+  "kind": "mechanism",
+  "paper_id": "asplos25-053",
+  "fig": "4",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 4. Example of a join between two 3-arity relations Bar (inner) and Foo (outer).",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "table",
+  "subject": "how a GPU thread strides through the outer relation Foo and probes a hash-indexed sorted array built over the inner relation Bar to produce per-thread join results",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.55,
+  "n_elements": 11,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-053/src/fig4_join_layout.svg",
+    "preview.png": "lab/extracted/asplos25-053/src/fig4_join_layout.png",
+    "print.png": "lab/extracted/asplos25-053/asplos25-053_fig4_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "GPUlog parallelizes a join by having each GPU thread stride through the outer relation and probe a shared hash-indexed sorted array (HISA) built from the inner relation, so many threads can look up matches concurrently instead of scanning.",
+      "what_to_learn": "a worked numeric join example split into dashed-bordered regions (outer relation, hash index, inner relation, results) connected by many-to-one probing arrows",
+      "note_source": "record"
+    }
+  ]
+}

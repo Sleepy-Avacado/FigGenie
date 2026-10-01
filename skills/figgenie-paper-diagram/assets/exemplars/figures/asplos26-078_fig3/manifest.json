@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-078_fig3",
+  "paper_id": "asplos26-078",
+  "fig": "3",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 3. Camp framework overview. DRAM-only profiling exposes PMU signals that predict per-component slowdowns (§4). For bandwidth-bound workloads, a additional CXL run enables interleaving prediction (§5). Both models feed practical use cases: colocation scheduling and Best-shot interleaving (§6).",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.64,
+  "n_components": 13,
+  "n_flows": 14,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-078/asplos26-078_fig3_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-078/asplos26-078_fig3_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: 'Profiling / Models / Use Cases' are pipeline stage headers, not time phases, and the three parallel branches inside Models are computation lanes converging on a Slowdown score; no time axis appears anywhere.",
+      "what_to_learn": "Read this as a pipeline with parallel converging branches instead: three same-shaped signal-to-slowdown conversions run side by side under a dashed group box, then merge into one combined score; label the arrows themselves next time, since this figure leaves them unlabeled and relying on box-name adjacency."
+    }
+  ]
+}

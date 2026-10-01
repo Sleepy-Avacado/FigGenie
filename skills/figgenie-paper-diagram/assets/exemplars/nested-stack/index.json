@@ -1,0 +1,240 @@
+{
+  "template": "nested-stack",
+  "n": 29,
+  "stars": 21,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-012_fig2",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Medium-confidence nested-stack exemplar reading bottom-up: an outer Transformer box nests the Mixture-of-Experts feed-forward block, which itself nests a Router and its expert FFN boxes, three levels deep, with a stacked background implying repetition.",
+      "what_to_learn": "Nest a sparse sub-block, router plus experts, one level inside the standard block it replaces so the substitution is visible as containment, and show which inner sibling was actually chosen with a bold solid arrow while untaken siblings keep only a dashed candidate arrow.",
+      "dir": "../figures/asplos25-012_fig2"
+    },
+    {
+      "id": "asplos25-052_fig5",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar combining containment with replication: three identical vSSD columns each nest an RL Agent box nesting a Monitor and Model, funnelling into a shared Admission Control box nesting a dashed manager.",
+      "what_to_learn": "Repeat the identical three-level column, agent over monitor-and-model, exactly N times for N replicated learners, and mark a box that is a logical tracking structure rather than a physical component with a dashed border, one level inside the shared infrastructure box it belongs to.",
+      "dir": "../figures/asplos25-052_fig5"
+    },
+    {
+      "id": "asplos25-074_fig7",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar at depth 3: three separate dashed contribution boxes, Coverage Optimizer, Tracing Controller, Memory Allocator, each nest their own two sub-modules inside an outer cluster-to-node container, across 16 components.",
+      "what_to_learn": "Nest each contribution two levels deep inside its own dashed accent box carrying its section number, rather than flattening everything to one depth; keep the same dashed-border-plus-number treatment at every nesting point so a reader recognizes a paper's own module regardless of depth.",
+      "dir": "../figures/asplos25-074_fig7"
+    },
+    {
+      "id": "asplos25-080_fig1",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar: each Sender and Receiver dashed box nests a Processor Core box that nests Program Code and a Local Apic, seven numbered steps threading through all three nesting levels on both sides.",
+      "what_to_learn": "Mirror the identical three-level containment, host box over processor core over program code and local APIC, on both communicating parties, and number the steps once across the whole nested structure so the sequence reads correctly despite duplicate box labels on each side.",
+      "dir": "../figures/asplos25-080_fig1"
+    },
+    {
+      "id": "asplos25-146_fig3",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar at depth 3: a dashed Solver box contains two title-bar stages, and the inner Parallelism Planner itself contains a further Sequence Bucketing and Parallelism Solving pair, in just 7 components.",
+      "what_to_learn": "Make the outermost container a dashed logical grouping rather than a drawn system boundary, and change only the fill tint between nesting levels, dark-blue title bar to light-blue body, instead of also changing border style, keeping three levels of depth visually calm.",
+      "dir": "../figures/asplos25-146_fig3"
+    },
+    {
+      "id": "asplos26-088_fig12",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Three containment levels drawn top-to-bottom (Sorting Engine -> Sorting Core -> MSU+) with the focal unit highlighted in blue.",
+      "what_to_learn": "Draw each level once, connect levels with dashed leaders, and reserve the accent fill for the innermost novel unit.",
+      "dir": "../figures/asplos26-088_fig12"
+    },
+    {
+      "id": "nsdi23-047_fig4",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar of the mirrored-replica variant: two identical Worker Machine boxes each contain a CPU region nesting one Feature Cache Engine and GPU regions each nesting one Worker box, to depth 3.",
+      "what_to_learn": "Repeat the identical three-level containment, machine over CPU-or-GPU over its inner engine or worker, in two side-by-side mirrored boxes rather than describing the replication in text, and keep one consistent fill per role across both copies so the eye reads them as the same structure twice.",
+      "dir": "../figures/nsdi23-047_fig4"
+    },
+    {
+      "id": "nsdi23-085_fig8",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar with only 6 components: two dashed Worker Node boxes each contain a Scheduler, Executors and a Shared Memory Object Store stacked inside, reached by crossing arrows from two redundant Coordinators above.",
+      "what_to_learn": "Keep a replicated container's internal stack, scheduler over executors over object store, identical in both copies, and reserve one flat colour per role so containment reads correctly without a legend; let the outer dashed border, not colour, be the property that marks one node.",
+      "dir": "../figures/nsdi23-085_fig8"
+    },
+    {
+      "id": "nsdi25-054_fig2",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar at depth 3: a dashed Granule box wraps a sandbox box around the application code, while below it a dashed Granny core box nests three named state structures beneath three colour-coded backends.",
+      "what_to_learn": "Use a dashed wrapper box to show an isolation boundary around the code it contains, and let a second dashed box one tier down hold the shared internal state that every parallel sibling box above it depends on, keeping padding consistent at both nesting points.",
+      "dir": "../figures/nsdi25-054_fig2"
+    },
+    {
+      "id": "nsdi26-109_fig3",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar spanning a host-device split: the CN side nests its API box inside a runtime box, while the MN side nests a ring buffer and an MWTable, tied together by 5 numbered steps.",
+      "what_to_learn": "Nest a paper's own small contribution box one level inside its host's generic runtime box rather than drawing it as a sibling, and represent an internal data structure like a free list literally as a ring with Head and Tail pointers instead of a plain rectangle.",
+      "dir": "../figures/nsdi26-109_fig3"
+    },
+    {
+      "id": "osdi23-008_fig2",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar at depth 3: a dashed Cilantro Scheduler box nests an Online Learners box that itself nests two Performance Model boxes, alongside a Policy box nesting one highlighted objective, in 11 components.",
+      "what_to_learn": "Nest per-item boxes, one Performance Model per job, inside the shared learner container that produced them, and pick out the single configurable piece with its own inner accent-filled box one level deeper than its parent.",
+      "dir": "../figures/osdi23-008_fig2"
+    },
+    {
+      "id": "osdi24-025_fig6",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar also cited as the layered template's own gutter exemplar: the LLM Service nests a Manager box that nests four analysis sub-modules, and the LLM Engine nests two modules behind a stacked-instance icon.",
+      "what_to_learn": "Put the tier name in a left gutter even while nesting sub-boxes inside it, and mark a box that stands for many running copies with a stacked-rectangle offset icon behind it rather than drawing every instance, keeping that as the one extra property at that nesting level.",
+      "dir": "../figures/osdi24-025_fig6"
+    },
+    {
+      "id": "osdi24-034_fig6",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar where a dashed host-side Application Buffers box nests a GPU HBM box that nests its MR descriptor, mirrored by the NIC's own nested Flow Table to MS List to MR Table chain.",
+      "what_to_learn": "Carry one indirection chain, table entry to resource, as boxes nested or linked one inside the next rather than a flat row, and put a boxed legend decoding dashed-versus-solid line meaning directly in the frame when both a management path and a data path are drawn.",
+      "dir": "../figures/osdi24-034_fig6"
+    },
+    {
+      "id": "osdi24-041_fig3",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar reaching real depth inside one of two dashed panels: LLM Replicas nests a stacked GPU icon nesting Cross-adapter Batching, nesting a Base Model box, nesting two Adapter boxes, four levels deep.",
+      "what_to_learn": "When one side of a two-panel figure is actually a deep hierarchy, let it nest, GPU pool over batching over base model over per-request adapters, while the other panel stays shallow; use one accent colour only for the cross-cutting controller that ties both panels together.",
+      "dir": "../figures/osdi24-041_fig3"
+    },
+    {
+      "id": "osdi25-016_fig8",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Deepest clean nesting in the corpus (nesting_depth 4): global memory over computing units over buffers over per-warp regions.",
+      "what_to_learn": "Four levels only stay readable if each level changes exactly one visual property (fill tint, border dash, padding) and text shrinks by at most one step per level.",
+      "dir": "../figures/osdi25-016_fig8"
+    },
+    {
+      "id": "osdi26-060_fig8",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar in monochrome grayscale where the Worker Node box nests a Coroutine Runtime box that itself nests the Batch Oriented Inference Engine and Scheduler side by side, to depth 3, across 15 components.",
+      "what_to_learn": "When colour is not available to mark nesting, use shading depth alone, each level of containment one shade darker or lighter than its parent, and keep the innermost pair of boxes the same size so the reader reads them as siblings at the same depth.",
+      "dir": "../figures/osdi26-060_fig8"
+    },
+    {
+      "id": "sosp23-013_fig3",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar where the gray Oobleck box nests an Execution Engine box nesting a Pipeline Instantiator and Batch Distributor pair, while the Node Cluster nests repeated Agent groups, one picked out in red dashed.",
+      "what_to_learn": "Nest a sub-engine's own two named components one level inside it rather than listing them beside it, and mark the one instance under discussion, a failing node, by swapping only its border to a red dashed line while every other repeated group keeps a plain solid border.",
+      "dir": "../figures/sosp23-013_fig3"
+    },
+    {
+      "id": "sosp24-011_fig8",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar where the Planner box nests its own Failure Normalization and Adaptive Schedule Generation steps, and each Executor box in the Training Cluster row nests a small parallelism icon grid, to depth 3.",
+      "what_to_learn": "Give every repeated leaf box, here each Executor, the same small inner icon grid so per-worker internal state reads identically across the row, and reserve the one exception, a red dashed outline on the failed Executor, for exactly the box that differs.",
+      "dir": "../figures/sosp24-011_fig8"
+    },
+    {
+      "id": "sosp25-015_fig2",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "GPU hardware containment (HBM/L2 -> GPC -> TPC -> SM) with a magnified SM panel to the right; 11 components, 0 flows.",
+      "what_to_learn": "A containment figure needs no arrows at all; repeat the innermost box in a grid to convey count, and magnify one instance for its contents. Note: the print.png carries the paper title line from PDF extraction; preview.png is clean.",
+      "dir": "../figures/sosp25-015_fig2"
+    },
+    {
+      "id": "sosp25-035_fig1",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar with only 11 components: the Object Storage Service box nests a Proxy Layer box nesting a horizontally repeated Proxy 1 through Proxy n row, three levels of containment for one stateless pool.",
+      "what_to_learn": "Wrap a replicated pool in its own labelled sub-box one level inside the service that owns it, rather than drawing the instances loose in the parent box, so containment alone tells the reader the pool is one interchangeable unit, not several separate services.",
+      "dir": "../figures/sosp25-035_fig1"
+    },
+    {
+      "id": "sosp25-064_fig5",
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar: the dashed Pod-Wide Allocator box nests a Logical SSD Pool and a Logical NIC Pool, each nesting Free, Allocated and Failed sub-boxes, in just 7 components and depth 3.",
+      "what_to_learn": "Split a shared allocator into side-by-side same-shape sub-pools, each nesting the identical three-state vocabulary, free, allocated, failed, so the two resource types stay visually parallel, and reserve one bold colour for the control-path arrows leaving the whole nested block.",
+      "dir": "../figures/sosp25-064_fig5"
+    },
+    {
+      "id": "asplos25-039_fig3",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar where the Coordinator box nests a Profiler, a Placement Planner and a Scheduler stacked inside it, while a separate Compute Node panel nests three alternating Queue and Layer boxes, across 18 components.",
+      "what_to_learn": "Stack a coordinator's internal stages inside its own labelled box in top-to-bottom order even when the rest of the figure runs left to right, and keep a node's repeated queue-then-layer pairs the same size and colour so the pattern itself shows the pipeline running inside one node.",
+      "dir": "../figures/asplos25-039_fig3"
+    },
+    {
+      "id": "asplos25-043_fig5",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "Four stacked drill-down panels (a)-(d) taking the reader from host address space to a single processing engine, tallest aspect here (0.51).",
+      "what_to_learn": "When four levels will not nest visually, stack them as lettered panels down the column and let each panel's caption name its level; add a control-vs-data legend at the level where signals first matter.",
+      "dir": "../figures/asplos25-043_fig5"
+    },
+    {
+      "id": "asplos25-051_fig1",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "Star, high-confidence nested-stack exemplar: each Compute Node and Memory Node box nests a NIC box that itself nests a three-level protocol stack, MAC and PHY, mirrored on both sides of a V.S. comparison.",
+      "what_to_learn": "Draw a protocol stack as boxes literally inside the NIC box that owns it, one level per layer, and repeat the identical nest on both compute and memory nodes so a labelled dashed bracket can span just the layers that are the paper's actual focus.",
+      "dir": "../figures/asplos25-051_fig1"
+    },
+    {
+      "id": "asplos25-096_figtex5",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar on its left half: an outer frame nests Generator, Leakage Model and Executor regions that each nest a Test Case or trace box, four levels deep, at 14 components and 10 flows.",
+      "what_to_learn": "Nest a shared Test Case object one level inside the Generator region that produced it so both consumers can be drawn pulling from the same box; the record's weakness warns that leaving two halves adjacent without a connecting arrow can hide how they relate, so add one even when space is tight.",
+      "dir": "../figures/asplos25-096_figtex5"
+    },
+    {
+      "id": "asplos25-107_fig6",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar reaching four levels: Server Machine nests Storage, which nests the SSD Controller and NAND Flash Memory, which themselves nest Internal DRAM plus three named units and a grid of Flash Chips.",
+      "what_to_learn": "Let a physical enclosure nest its real sub-components exactly as they are physically contained, machine over storage over controller over unit, and reserve a distinct accent colour for the one innermost box, encrypted data, that is the paper's actual security claim.",
+      "dir": "../figures/asplos25-107_fig6"
+    },
+    {
+      "id": "nsdi23-068_fig1",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar across a five-zone swimlane: the DChannel client box nests a Packet steerer and a Reordering buffer, and the mirrored DChannel proxy box nests the identical pair, tied by two colour-coded channel arrows.",
+      "what_to_learn": "Nest the same two named sub-modules inside both a client and its mirrored server box so the symmetry is legible from shape alone, then colour-code the parallel channel arrows between them; the weakness here notes those channel colours need a legend, so add one even for two lines.",
+      "dir": "../figures/nsdi23-068_fig1"
+    },
+    {
+      "id": "osdi24-009_fig6",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: this is a nested-containment deployment diagram, AWS containing continent containing region, not a coordinator with fanning spokes; the record itself calls it a nested containment diagram.",
+      "what_to_learn": "The transferable move is nested-stack's, not hub-spoke's: colour each containment level a different dashed hue (orange AWS, gray continent, green region) so the geographic scope reads at a glance, then attach the small node-type boxes (Clients, Brokers, Servers) with plain bidirectional arrows inside the innermost box.",
+      "dir": "../figures/osdi24-009_fig6"
+    },
+    {
+      "id": "sosp24-035_fig7",
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar: the Offline box nests a Profiler and Solver box nesting two hot/cold neuron icon grids, and the Online box nests CPU and GPU Executor boxes each nesting their own dot-grid activation icon.",
+      "what_to_learn": "Carry the same small coloured-dot icon grid, hot versus cold neurons, from the outer profiling box down into each inner executor box so the reader traces one visual motif through every nesting level, and put the icon legend once at the top rather than per level.",
+      "dir": "../figures/sosp24-035_fig7"
+    }
+  ]
+}

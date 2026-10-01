@@ -1,0 +1,165 @@
+{
+  "paper_id": "asplos25-146",
+  "fig": "3",
+  "system": {
+    "name": "FlexSP",
+    "one_liner": "a heterogeneity-adaptive sequence parallelism system that solves per-step optimal parallelism plans for LLM training on sequences of varying length",
+    "domain": [
+      "distributed-training",
+      "llm-training",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Solver",
+        "role": "computes the optimal heterogeneous parallelism plan for a batch of varying-length sequences; contains the Sequence Blaster and Parallelism Planner",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Sequence Blaster (§4.2)",
+        "role": "chunks sequences into micro-batches so each micro-batch is not too large to accommodate",
+        "container": "Solver",
+        "novel": true
+      },
+      {
+        "name": "Micro-batch Chunking",
+        "role": "the chunking operation performed by the Sequence Blaster",
+        "container": "Sequence Blaster (§4.2)",
+        "novel": true
+      },
+      {
+        "name": "Parallelism Planner (§4.1)",
+        "role": "solves the optimal parallelism plan for each micro-batch to minimize its execution time",
+        "container": "Solver",
+        "novel": true
+      },
+      {
+        "name": "Sequence Bucketing",
+        "role": "groups sequences into buckets prior to solving",
+        "container": "Parallelism Planner (§4.1)",
+        "novel": true
+      },
+      {
+        "name": "Parallelism Solving",
+        "role": "solves for the optimal combination of parallelism strategies per bucket, formulated as a linear-programming optimization",
+        "container": "Parallelism Planner (§4.1)",
+        "novel": true
+      },
+      {
+        "name": "Executor",
+        "role": "carries out the training of one iteration following the solver's optimal plan",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Varied Length Input Data",
+        "to": "Sequence Blaster (§4.2)",
+        "what": "varied-length input data prefetched for the next iteration",
+        "step": null
+      },
+      {
+        "from": "Sequence Blaster (§4.2)",
+        "to": "Parallelism Planner (§4.1)",
+        "what": "Chunked Micro-batches",
+        "step": null
+      },
+      {
+        "from": "Sequence Bucketing",
+        "to": "Parallelism Solving",
+        "what": "Sequence Buckets",
+        "step": null
+      },
+      {
+        "from": "Parallelism Planner (§4.1)",
+        "to": "Executor",
+        "what": "Optimal Plan, executed for the current iteration",
+        "step": null
+      }
+    ],
+    "key_idea": "FlexSP's Solver chunks a batch of varying-length sequences into micro-batches, buckets and solves an optimal heterogeneous parallelism plan, which the Executor then runs for the current training iteration while the solver prefetches the next.",
+    "reading_order": "left-to-right through the Solver's Sequence Blaster then Parallelism Planner (top-down bucketing to solving), then down to the Executor consuming the resulting optimal plan"
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.2,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#767171",
+        "used_for": "gray dashed 'Solver' boundary stroke and italic annotation text (Multi-processing, Prefetching of Next Iteration, Execution of Current Iteration)"
+      },
+      {
+        "hex": "#8faadc",
+        "used_for": "light blue/periwinkle fill of the Sequence Blaster / Parallelism Planner bodies and the Executor box"
+      },
+      {
+        "hex": "#0f76b2",
+        "used_for": "darker blue fill of the bold title bars 'Sequence Blaster (§4.2)' and 'Parallelism Planner (§4.1)'"
+      },
+      {
+        "hex": "#d65b47",
+        "used_for": "red-orange bar in the stacked sequence-card icons, representing one sequence length"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "gold/yellow bar in the stacked sequence-card icons, representing another sequence length"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark navy strokes on solid boxes, dashed gray stroke outlining the Solver region",
+    "font": "Segoe UI sans, bold white text on component title bars, italic for annotation labels",
+    "corners": "rounded",
+    "arrows": "solid black arrows connecting the pipeline stages",
+    "icons": "vector - small stacked cards with colored horizontal bars representing sequences of different lengths (blue/red/yellow) for the chunked micro-batches and optimal plan"
+  },
+  "encoding": {
+    "color_means": "dark blue = component title bars, light blue/periwinkle = component body and Executor fill, gray dashed = the Solver's boundary and annotation text, bar colors in the sequence-card icons distinguish different sequence lengths",
+    "line_style_means": "dashed gray boundary demarcates the Solver as a logical grouping distinct from the solid-bordered Executor box",
+    "emphasis": "italic gray annotations ('Prefetching of Next Iteration', 'Execution of Current Iteration', 'Multi-processing') tell the reader the Solver overlaps in time with the Executor, computing the next plan while the current one runs",
+    "reusable_patterns": [
+      "nested two-stage solver pipeline (chunk then plan) feeding a separate execution stage",
+      "small card icons with colored bars as a compact visual encoding of variable-length sequences"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "sequence-parallelism",
+    "llm-training",
+    "distributed-training",
+    "load-balancing",
+    "linear-programming",
+    "heterogeneous-workloads"
+  ],
+  "provenance": {
+    "sections": [
+      "4 FlexSP (p.5)"
+    ],
+    "evidence": [
+      "Fig. 3 outlines the system overview of FlexSP, which consists of the solver and the executor.",
+      "the sequence blaster chunks the sequences into micro-batches, ensuring that each micro-batch will not be too large",
+      "the parallelism planner is responsible for solving the optimal plan for each micro-batch to minimize its execution time"
+    ]
+  },
+  "summary": "Figure 3 is FlexSP's system overview, showing its two main parts: the Solver (dashed box) and the Executor. Varied-length input data enters the Solver's Sequence Blaster (§4.2), which performs Micro-batch Chunking so batches aren't too large, producing Chunked Micro-batches (visualized as small cards of colored bars of differing lengths). These pass to the Parallelism Planner (§4.1), which first does Sequence Bucketing, then Parallelism Solving to compute the optimal combination of parallelism strategies, formulated as a linear program. The resulting Optimal Plan flows down to the Executor, which runs the current training iteration, while italic annotations note the Solver simultaneously prefetches and plans the next iteration in parallel with the Executor's current-iteration run. Dark-blue title bars and light-blue bodies distinguish the two solver components from the plain blue Executor box.",
+  "summary_zh": "图3展示FlexSP:变长输入经求解器的Sequence Blaster切分微批次,再由Parallelism Planner分桶并求解并行方案,最优方案交给Executor执行当前迭代,求解器同时预取规划下一迭代。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

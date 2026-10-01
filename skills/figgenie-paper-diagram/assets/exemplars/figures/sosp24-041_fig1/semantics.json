@@ -1,0 +1,188 @@
+{
+  "paper_id": "sosp24-041",
+  "fig": "1",
+  "system": {
+    "name": "LoongServe",
+    "one_liner": "an LLM serving system using elastic sequence parallelism to adapt parallelism degree to variable-length requests and phases",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "tokens",
+        "role": "input sequence of tokens with a hidden-size embedding",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Permutation",
+        "role": "reorders and splits the input sequence into segments before dispatch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instance 1",
+        "role": "processes one segment of the permuted sequence",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instance 2",
+        "role": "processes one segment of the permuted sequence",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instance 3",
+        "role": "processes one segment of the permuted sequence",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Projection",
+        "role": "computes local query and key-value tensors for a segment",
+        "container": "Instance",
+        "novel": false
+      },
+      {
+        "name": "Attention",
+        "role": "computes attention using local query and key-value tensors, exchanging kv with the neighbor instance across rounds",
+        "container": "Instance",
+        "novel": false
+      },
+      {
+        "name": "Local Layers",
+        "role": "remaining per-instance computation after attention",
+        "container": "Instance",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "tokens",
+        "to": "Permutation",
+        "what": "hidden-size token embeddings",
+        "step": null
+      },
+      {
+        "from": "Permutation",
+        "to": "Instance 1",
+        "what": "segment of permuted tokens (e1, e4)",
+        "step": null
+      },
+      {
+        "from": "Permutation",
+        "to": "Instance 2",
+        "what": "segment of permuted tokens (e2, e5)",
+        "step": null
+      },
+      {
+        "from": "Permutation",
+        "to": "Instance 3",
+        "what": "segment of permuted tokens (e3, e6)",
+        "step": null
+      },
+      {
+        "from": "Projection",
+        "to": "Attention",
+        "what": "local query (q_i) and key-value (kv_i) tensors",
+        "step": null
+      },
+      {
+        "from": "Attention",
+        "to": "Attention",
+        "what": "key-value tensors (kv_j) sent to the neighbor instance (instance (i+1)%n)",
+        "step": null
+      },
+      {
+        "from": "Attention",
+        "to": "Local Layers",
+        "what": "attention output",
+        "step": null
+      }
+    ],
+    "key_idea": "sequence parallelism (extended from Striped Attention) splits a sequence across instances that compute locally except at the attention layer, where key-value tensors are rotated between neighboring instances over multiple rounds.",
+    "reading_order": "left to right: tokens permuted once at initialization, then through repeated transformer layers (Projection, Attention, Local Layers) across three parallel instance lanes stacked vertically."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.33,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#76d6ff",
+        "used_for": "permutation/query (q) related boxes and arrows"
+      },
+      {
+        "hex": "#73fb79",
+        "used_for": "attention boxes and key-value (kv) arrows in one color channel"
+      },
+      {
+        "hex": "#ff7e79",
+        "used_for": "kv arrows in the other color channel"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "projection boxes"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "local layers boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray/colored borders, dashed vertical separators between instance lanes",
+    "font": "Arial-like sans, 5-7pt, bold for section labels (Initialization, Transformer Layer, Instance N)",
+    "corners": "rounded",
+    "arrows": "curved and straight colored arrows with filled heads, color-coded per tensor type",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "distinct colors mark different tensor/data paths: q (blue-ish), kv exchange (red/green), projection (light green), local layers (yellow)",
+    "line_style_means": "dashed vertical lines separate the three parallel instance lanes and the initialization/transformer-layer phases",
+    "emphasis": "colored, curved cross-instance arrows highlight the neighbor-to-neighbor key-value tensor exchange at the attention layer",
+    "reusable_patterns": [
+      "swimlanes per parallel instance with a repeated per-layer pipeline and cross-lane exchange arrows"
+    ],
+    "weaknesses": [
+      "many similar colors for query/key-value arrows may be hard to distinguish without the legend text"
+    ]
+  },
+  "tags": [
+    "sequence-parallelism",
+    "attention",
+    "LLM-serving",
+    "prefill",
+    "background"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "Figure 1 illustrates its basic idea.",
+      "each instance simultaneously (1) com- putes the attention with its local query",
+      "sends the key-value tensors (kv_j) to its neighbor instance"
+    ]
+  },
+  "summary": "This background figure illustrates sequence parallelism (an extension of Striped Attention) as used in the prefill phase, which LoongServe's elastic sequence parallelism builds on. The input token sequence is permuted once and split into segments dispatched to three parallel instances. Within each repeated transformer layer, every instance computes a local Projection to get query and key-value tensors, then at the Attention step it both computes attention locally and exchanges key-value tensors with its neighboring instance in a ring pattern over multiple rounds, before passing output to Local Layers. The diagram uses three horizontal instance lanes separated by dashed lines, colorful flat-filled boxes for each stage, and color-coded curved arrows to show the cross-instance key-value exchange, contrasting the one-time initialization/permutation step on the left with the repeated per-layer computation on the right.",
+  "summary_zh": "该图展示前填充阶段的序列并行（源自Striped Attention）：输入序列经一次置换后被拆分给三个并行实例；每层中各实例先做本地投影得到query/kv，再在注意力层与相邻实例交换kv张量并计算注意力，最后进入本地层。图中以三条实例泳道和彩色箭头表示跨实例kv交换。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

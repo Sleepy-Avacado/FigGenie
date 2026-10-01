@@ -1,0 +1,56 @@
+{
+  "id": "sosp24-007_fig3",
+  "kind": "mechanism",
+  "paper_id": "sosp24-007",
+  "fig": "3",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 3. Early exits enable termination of inputs at intermediate layers, lowering both compute and latency.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how a batch of 16 samples shrinks as some exit early at each layer's ramp instead of continuing",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.28,
+  "n_elements": 16,
+  "n_relations": 11,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "omnigraffle",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-007/src/fig3_early_exit.svg",
+    "preview.png": "lab/extracted/sosp24-007/src/fig3_early_exit.png",
+    "print.png": "lab/extracted/sosp24-007/sosp24-007_fig3_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "Augmenting each layer of a DNN with a lightweight exit ramp lets easy inputs leave the model as soon as a ramp is confident, so a batch's effective size shrinks layer by layer instead of every input running the full network.",
+      "what_to_learn": "Running counts written on the arrows between repeated stages; an ellipsis to compress the middle; a dashed box naming the pre-existing part",
+      "note_source": "doc"
+    }
+  ]
+}

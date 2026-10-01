@@ -1,0 +1,189 @@
+{
+  "paper_id": "asplos26-019",
+  "fig": "1",
+  "system": {
+    "name": "MoDM",
+    "one_liner": "a caching-based serving system for diffusion models that mixes small and large models to balance latency and image quality",
+    "domain": [
+      "ml-systems",
+      "serving/inference",
+      "generative AI"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Large Model",
+        "role": "generates high image quality with long latency",
+        "container": "Baseline",
+        "novel": false
+      },
+      {
+        "name": "Small Model",
+        "role": "generates low image quality with short latency",
+        "container": "Baseline",
+        "novel": false
+      },
+      {
+        "name": "Latent Feat Cache",
+        "role": "caches latent intermediate features, model-specific",
+        "container": "Prior Work (Nirvana)",
+        "novel": false
+      },
+      {
+        "name": "Large Model",
+        "role": "used on both cache hit and cache miss, with fewer denoising steps on cache hit for limited latency benefit",
+        "container": "Prior Work (Nirvana)",
+        "novel": false
+      },
+      {
+        "name": "Image Cache",
+        "role": "caches final generated images, reusable across model families",
+        "container": "MoDM (This Work)",
+        "novel": true
+      },
+      {
+        "name": "Large Model",
+        "role": "handles cache-miss requests with full inference for high quality",
+        "container": "MoDM (This Work)",
+        "novel": false
+      },
+      {
+        "name": "Small Model",
+        "role": "handles cache-hit requests, refining a cached image with fewer denoising steps for high quality and short latency",
+        "container": "MoDM (This Work)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Prompt",
+        "to": "Large Model",
+        "what": "text prompt",
+        "step": null
+      },
+      {
+        "from": "Prompt",
+        "to": "Small Model",
+        "what": "text prompt",
+        "step": null
+      },
+      {
+        "from": "Prompt",
+        "to": "Latent Feat Cache",
+        "what": "cache check",
+        "step": null
+      },
+      {
+        "from": "Latent Feat Cache",
+        "to": "Large Model",
+        "what": "cache-miss path: T denoising steps",
+        "step": null
+      },
+      {
+        "from": "Latent Feat Cache",
+        "to": "Large Model",
+        "what": "cache-hit path: <T denoising steps",
+        "step": null
+      },
+      {
+        "from": "Prompt",
+        "to": "Image Cache",
+        "what": "cache check",
+        "step": null
+      },
+      {
+        "from": "Image Cache",
+        "to": "Large Model",
+        "what": "cache-miss path: full inference",
+        "step": null
+      },
+      {
+        "from": "Image Cache",
+        "to": "Small Model",
+        "what": "cache-hit path: <T denoising steps from retrieved image",
+        "step": null
+      }
+    ],
+    "key_idea": "By caching final images instead of model-specific latents, MoDM can serve cache-hit requests with a small model at full quality and short latency, unlike prior latent-caching work which still needs the large model even on cache hits.",
+    "reading_order": "Top to bottom through three stacked rows: Baseline, Prior Work (Nirvana), MoDM (This Work), each read left to right from Prompt to Image."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.34,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a6cee3",
+        "used_for": "light blue fill for Large Model boxes"
+      },
+      {
+        "hex": "#b2df8a",
+        "used_for": "green fill for Small Model boxes"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for the MoDM (This Work) row background"
+      },
+      {
+        "hex": "#fdbf6f",
+        "used_for": "orange accent, likely used on cache-related elements"
+      },
+      {
+        "hex": "#ffffb2",
+        "used_for": "pale yellow fill for the image cache cylinder"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium (~1.3pt) strokes, dashed row separators",
+    "font": "Arial/ArialMT sans, 6-7pt, mostly non-bold with colored quality/latency labels",
+    "corners": "rounded",
+    "arrows": "orthogonal arrows with filled heads (15) connecting prompt/cache/model/image stages",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = Large Model, green = Small Model; red/green text callouts label each path's image quality and latency trade-off",
+    "line_style_means": "dashed horizontal separators divide the three comparison rows",
+    "emphasis": "the bottom MoDM row is set on a shaded gray background to visually set it apart as the paper's contribution",
+    "reusable_patterns": [
+      "three-row before/prior-work/ours comparison diagram sharing the same prompt-to-image layout"
+    ],
+    "weaknesses": [
+      "quality/latency labels rely on colored text (red/green) which may not be distinguishable if desaturated"
+    ]
+  },
+  "tags": [
+    "diffusion models",
+    "caching",
+    "image generation serving",
+    "latency-quality trade-off",
+    "mixture of models"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.1)"
+    ],
+    "evidence": [
+      "Fig. 1 shows the design overview of MoDM that balances between high image quality and short latency",
+      "we propose to cache final generated images in the past, in contrast to caching latent intermediate images in prior work",
+      "MoDM retrieves the image, applies controlled noise, and refines it using a smaller model"
+    ]
+  },
+  "summary": "This figure introduces MoDM by contrasting it with two alternatives in three stacked rows. The Baseline row shows the basic latency/quality trade-off: a large model gives high quality but long latency, a small model gives low quality but short latency. The Prior Work (Nirvana) row shows latent-feature caching, where cache hits still route through the large model, only shortening the number of denoising steps and giving limited latency benefit. The MoDM row shows the paper's approach: an image cache stores final generated images; cache misses go to the large model for full-quality inference, while cache hits go to a small model that refines the retrieved cached image in fewer denoising steps, achieving high quality at short latency. The diagram uses flat rounded boxes, blue/green model color-coding, and colored text callouts for quality and latency.",
+  "summary_zh": "该图通过三行对比引出MoDM：基线展示大模型高质量高延迟、小模型低质量低延迟的权衡；先前工作Nirvana的隐特征缓存在命中时仍需大模型，收益有限；MoDM缓存最终图像，缓存命中时用小模型精炼，兼顾高质量与短延迟。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

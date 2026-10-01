@@ -1,0 +1,56 @@
+{
+  "id": "osdi25-013_fig2",
+  "kind": "mechanism",
+  "paper_id": "osdi25-013",
+  "fig": "2",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 2: Receiver’s view of events in Figure 1 in time-steps.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "table",
+  "subject": "how 4 receiver replicas' message lists and cumulative-acknowledgment counters evolve over 5 time-steps as 8 messages arrive",
+  "arrangement": "panels-grid",
+  "panel_count": 5,
+  "frame_template": "identical",
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.17,
+  "n_elements": 5,
+  "n_relations": 2,
+  "n_panels": 5,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "quartz",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-013/src/fig2a_cack1.svg",
+    "preview.png": "lab/extracted/osdi25-013/src/fig2a_cack1.png",
+    "print.png": "lab/extracted/osdi25-013/osdi25-013_fig2_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "A receiver's cumulative acknowledgment only advances when messages arrive contiguously from m1 onward, so replicas with the same total message count can still report different ack values.",
+      "what_to_learn": "The same small table replayed per time-step with a derived summary column recomputed each frame",
+      "note_source": "doc"
+    }
+  ]
+}

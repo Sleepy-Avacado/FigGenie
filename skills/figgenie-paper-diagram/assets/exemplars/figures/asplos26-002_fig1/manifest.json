@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-002_fig1",
+  "paper_id": "asplos26-002",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Overview of video DiT training. (a) The main input is the video, which is compressed by a VAE (omitted here). The timestamp is used as conditioning, and the text prompt is used as the Key-Value input in the cross-attention module. (b) Interleaved spatial-temporal attention blocks. (c) 3D f",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.94,
+  "n_components": 12,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-002/asplos26-002_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-002/asplos26-002_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (b) and (c) repeat an identical four-stage Cross-Attention/Attention/Cross-Attention/Attention stack, swapping only Spatial+Temporal for Full+Full attention, while panel (a) shows the same DiT Block repeated N times around them.",
+      "what_to_learn": "Keep every box in the exact same position across the compared panels and change only the swapped-in stage's label and colour (here Spatial+Temporal versus Full attention); give the two swapped stages more distinct colours than a shared light-blue fill, since this figure's near-identical palette makes the difference easy to miss."
+    }
+  ]
+}

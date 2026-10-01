@@ -1,0 +1,136 @@
+{
+  "template": "baseline-vs-ours",
+  "n": 16,
+  "stars": 9,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-052_fig1",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Panel (a) sets up the shared vSSD/channel vocabulary, then panel (b) applies the actual contrast: labelled brackets and yellow fill separate hardware-isolated vSSDs (dedicated channels) from software-isolated ones (shared channels).",
+      "what_to_learn": "When only one of two panels carries the actual contrast, use labelled brackets plus a single highlight colour on the winning option inside that panel; but add a legend for the highlight color, since dropping it (as this figure does) leaves the meaning of the yellow fill unstated.",
+      "dir": "../figures/asplos25-052_fig1"
+    },
+    {
+      "id": "asplos25-055_fig1",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Repeats the identical IF/ID/ROB/FU/MEM/Commit OoO processor block in both panels; a pickaxe icon on the newly embedded contract-check box is the one added element that turns the four-machine baseline into (b)'s two-machine-plus-shadow-logic design.",
+      "what_to_learn": "Reuse the exact processor-block icon across both panels and add a small pictogram (a pickaxe) only on the box that changes, rather than redrawing the whole unit; pair dashed and dotted line styles to distinguish the ISA-level and microarchitecture-level check paths, and add a legend for the icons since none is given here.",
+      "dir": "../figures/asplos25-055_fig1"
+    },
+    {
+      "id": "nsdi23-004_fig1",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Explicitly cross-referenced in the reference guide as a two-panel-filed baseline-vs-ours exemplar: identical Client/App/Kernel/NIC skeleton in both halves, with an in-figure legend and the M/U circles along each trace counting 12 steps versus 4.",
+      "what_to_learn": "Keep the client/app/kernel/NIC stack identical and in the same position in both panels, then let small repeated icons (the M/U marshal circles) along a bottom trace let the reader literally count the efficiency win; note the weakness that placing the legend far above the trace it explains hurts lookup.",
+      "dir": "../figures/nsdi23-004_fig1"
+    },
+    {
+      "id": "nsdi26-053_fig1",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Baseline tree (a) and OCS-mediated topology (b) share one legend and icon set that also covers a bonus (c) panel detailing the OCS's own time-varying state, extending the shared-legend rule past the contrastive pair.",
+      "what_to_learn": "Put a single legend of small coloured icons above all panels so it covers both the contrasted (a)/(b) topologies and a third detail panel; keep the icons visually distinct, since this figure's weakness is several similar small icons that need close reading.",
+      "dir": "../figures/nsdi26-053_fig1"
+    },
+    {
+      "id": "nsdi26-143_fig1",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Explicitly cited in the reference as the matrix-filed baseline-vs-ours exemplar: two small prior topologies stacked left, the larger 3-island Octopus design right, no arrows needed to make the contrast.",
+      "what_to_learn": "Stack the baseline variants smaller on one side and draw the proposed design larger on the other; use two named link colors (brown for intra-island, navy for inter-island) labelled directly on the drawing instead of a separate legend.",
+      "dir": "../figures/nsdi26-143_fig1"
+    },
+    {
+      "id": "osdi23-003_fig4",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Textbook two-panel pair: identical Sender/RNIC/receiver skeleton in both halves, a red X on the failing 384B write in (a) versus the working multi-packet buffer in (b); explicitly listed as a two-panel-filed exemplar.",
+      "what_to_learn": "Keep sender icons, RNIC box, and the receive-buffer/CQ layout in the same position in both panels; mark the single failure point with a red X in the baseline panel, and let the working buffer geometry in the ours panel be the only visual difference.",
+      "dir": "../figures/osdi23-003_fig4"
+    },
+    {
+      "id": "osdi23-050_fig4",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Mirrors the loop/schedule/hardware skeleton in both panels; red fill marks only the CPU-bound Loop box in (a), the one thing (b) fixes by folding it into uniform uTasks on the L0/L1/L2 grid.",
+      "what_to_learn": "Repeat the loop-plus-kernels skeleton in both panels, but colour only the anchor box that changes (the separate CPU Loop) so the eye finds the fix immediately; add a small legend mapping the multi-level L0/L1/L2 hardware boxes back to the simple CPU/accelerator split in (a), a step this figure skips.",
+      "dir": "../figures/osdi23-050_fig4"
+    },
+    {
+      "id": "osdi25-016_fig1",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: this is a before/after comparison (Prior Profiler Arts vs KPerfIR) with an Enables arrow fanning to three example tools, not a timeline; nothing sits on a time axis and no lanes or phases appear.",
+      "what_to_learn": "Read this as a hub-with-fan-out figure instead: put the shared IR at the visual center with 'Semantic' and 'Metrics' callouts, contrast it against the disconnected prior-art pipeline on the left, and fan one Enables arrow out to three dashed example-tool boxes on the right rather than forcing any of it onto a time axis.",
+      "dir": "../figures/osdi25-016_fig1"
+    },
+    {
+      "id": "sosp23-011_fig3",
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Identical L2/L1/L0 privilege-level scaffold repeats in both (a) SPT-on-EPT and (b) EPT-on-EPT panels, with matching circled-number sequences in both halves (not just one) tracing each design's trap-and-resume chain.",
+      "what_to_learn": "Repeat the same privilege-level scaffold (L2/L1/L0) in identical positions in both panels and number the steps in both halves symmetrically, not just one; but cap step markers well below 32 total, since this figure's density makes the two mechanisms hard to compare at a glance.",
+      "dir": "../figures/sosp23-011_fig3"
+    },
+    {
+      "id": "asplos25-051_fig1",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Uses the literal V.S. rule for wide halves: a compact one-line baseline stacked over a wider two-node Ethernet Fabric design, with the paper's contribution named in orange text and bracketed rather than boxed.",
+      "what_to_learn": "When one half is much simpler than the other, stack them top-to-bottom with a horizontal V.S. rule instead of forcing equal-width side-by-side panels, and name the paper's scope with a coloured label plus dashed bracket rather than a boxed outline.",
+      "dir": "../figures/asplos25-051_fig1"
+    },
+    {
+      "id": "asplos25-110_fig1",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "(a) baseline cluster / (b) proposed cluster with identical bottom anchor box (Shared LLC) so the delta is structural.",
+      "what_to_learn": "Keep one component identical and in the same place in both panels; it becomes the fixed point the reader measures the change against.",
+      "dir": "../figures/asplos25-110_fig1"
+    },
+    {
+      "id": "asplos26-139_fig11",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Two states of one hotness-tracking bitmap sit side by side, named by claim ('Retain Hotness' vs 'Cooling Down!') in red and blue rather than lettered panels, showing the before/after rule without a formal (a)/(b) frame.",
+      "what_to_learn": "Name the two halves of a before/after pair with a short claim phrase in colour ('Retain Hotness' / 'Cooling Down!') instead of neutral (a)/(b) letters when the labels themselves carry the mechanism's meaning; but note the weakness here: near-identical bitmap grids in both states can be told apart only by arrow colour.",
+      "dir": "../figures/asplos26-139_fig11"
+    },
+    {
+      "id": "nsdi23-029_fig3",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Two identical antenna-to-decode pipelines stacked (a) BigStation / (b) Hydra, with the entire contribution shown as a single dashed box grouping ZF/Equal/Demod in (b) to remove one crossbar shuffle.",
+      "what_to_learn": "Stack the baseline and proposed pipelines with identical per-antenna rows and crossbar shuffles, then mark the one structural change with a single dashed grouping box rather than redrawing the whole stage; label the saved shuffle count explicitly, since this figure leaves the win unquantified.",
+      "dir": "../figures/nsdi23-029_fig3"
+    },
+    {
+      "id": "nsdi23-091_fig12",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "A monochrome circuit-schematic pair where the same left-to-right signal chain (oscillator, PA, antenna) appears in both panels, and the entire argument is made by (b) visibly containing fewer blocks than (a).",
+      "what_to_learn": "When the contribution is component removal rather than a single marked difference, just draw the simplified signal chain with visibly fewer blocks in the same left-to-right order as the baseline; add the power numbers on the schematic itself, since this figure leaves the savings claim only in the caption.",
+      "dir": "../figures/nsdi23-091_fig12"
+    },
+    {
+      "id": "nsdi26-104_fig13",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Stacked (a) naive PCIe-update / (b) packet-driven ZooRoute panels share the same Programmable ASIC anchor box and hash table, with a right-side legend for the gold delivered-by-packet line and only (b) carrying circled steps.",
+      "what_to_learn": "Stack a simple baseline over the richer mechanism, keeping the outer ASIC boundary identical in both; but number both panels' steps, not just one, since numbering only the proposed half (as here) makes the comparison feel lopsided, and crop tightly so no neighbouring figure bleeds in.",
+      "dir": "../figures/nsdi26-104_fig13"
+    },
+    {
+      "id": "nsdi26-118_fig1",
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Panel (a) uses a literal red X on Sirius's placement versus a green check on SmartSwitch's, and panel (b) contrasts Sirius's multi-hop topology against the SmartSwitch's layered stack, all in one dense 32-component double-column figure.",
+      "what_to_learn": "Use a literal red X for a rejected placement and a green check for the accepted one to make a physical-fit argument at a glance; if a second panel packs two different diagrams together, split them into their own lettered sub-panels rather than one shared label, since merging them (as here) hides the second diagram.",
+      "dir": "../figures/nsdi26-118_fig1"
+    }
+  ]
+}

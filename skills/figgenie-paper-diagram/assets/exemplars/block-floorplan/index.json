@@ -1,0 +1,192 @@
+{
+  "template": "block-floorplan",
+  "n": 23,
+  "stars": 6,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-110_fig2",
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "The reference doc's own canonical block-floorplan example: two SIMT cores sit beside a disaggregated Gemmini systolic array, with a right-side legend naming exactly three traffic colors (main-memory, shared-memory, DMA) across 31 components.",
+      "what_to_learn": "Cap the traffic-color legend at three classes exactly, put it in a free column on the right, and use dashed module outlines for hardware blocks that only exist in some evaluation configurations; expect this density (277 shapes) to require careful, uncluttered grouping into named regions (Tensor Core, Shared Memory, Gemmini).",
+      "dir": "../figures/asplos25-110_fig2"
+    },
+    {
+      "id": "asplos26-029_fig9",
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "Medium-confidence pick with 14 components: off-chip DRAM and a network-on-chip feed a stack of M2XFP Core tiles, and a dashed leader zooms one core's Compute Engine into its dot-product datapath.",
+      "what_to_learn": "Tag only the truly novel sub-blocks in accent blue inside an otherwise grey conventional systolic pipeline, but skip this figure's weak repetition cue, a bare partial outline behind the core box, and draw a visible ellipsis or times-N label instead.",
+      "dir": "../figures/asplos26-029_fig9"
+    },
+    {
+      "id": "asplos26-100_fig3",
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "The doc's own example of a device wired in by lettered taps: green RTOSUnit plugs into the RISC-V pipeline, register file, CSRs, and memory arbiter, each tap keyed to the text by a letter.",
+      "what_to_learn": "Color the block you contribute green against yellow existing structures, then run a lettered tap (a)-(g) into every distinct point of the host pipeline it touches, cross-referencing each letter to a paragraph rather than crowding the figure with inline explanations of every wire.",
+      "dir": "../figures/asplos26-100_fig3"
+    },
+    {
+      "id": "nsdi26-142_fig4",
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "Medium-confidence pick showing numbering and legend together: one LM Controller box mediates all NVMe traffic, and four colour-coded, numbered datapaths, ordinary access, double write, migration send and receive, share an inside legend.",
+      "what_to_learn": "When several distinct request types share one hardware block, give each its own number and colour and keep a compact legend inside a free corner near that block rather than redrawing it per path; keep the FPGA boundary as a dotted outline with the true off-chip resource drawn outside it.",
+      "dir": "../figures/nsdi26-142_fig4"
+    },
+    {
+      "id": "osdi24-046_fig2",
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "Named exemplar in the template reference itself: a control plane sits above a parser and match-action pipeline inside one switch boundary, with a single match-action unit exploded at larger scale beside the pipeline it repeats.",
+      "what_to_learn": "Draw the recurring block once at full size with its internals exploded, ALUs, tables, register arrays, next to the compact pipeline where it appears twice, then add arrowheads and a legend for its two colour shades; this figure's own recorded weakness is undirected lines and an unexplained second shade.",
+      "dir": "../figures/osdi24-046_fig2"
+    },
+    {
+      "id": "sosp25-015_fig2",
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "The reference doc's own containment example: a GPC grid of TPC/SM boxes has zero arrows, HBM/L2 memory sits at the left edge, and a dashed leader zooms one SM into its Warp Scheduler and cores.",
+      "what_to_learn": "Trust adjacency alone when the point is containment: no arrows are needed between a GPC's nested TPC/SM boxes, only consistent color per hardware type and position (memory at the edge, compute in the middle); zoom one representative unit into a dashed-leader callout instead of labeling every internal detail in place.",
+      "dir": "../figures/sosp25-015_fig2"
+    },
+    {
+      "id": "asplos25-100_fig5",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A PIM/CXL device floorplan: 16 identical PIM Ctrl/GDDR6-PIM compute-memory pairs sit in a row (the ×N rule this section borrows from replicated-grid) with an inside legend naming three traffic classes crossing the chip.",
+      "what_to_learn": "When one chip repeats the same compute-plus-memory pair many times, draw it once with a ×N label rather than a full grid, and legend the traffic classes crossing the chip (inter-device, intra-device, control) so the reader can tell a peer-to-peer hop from a local one.",
+      "dir": "../figures/asplos25-100_fig5"
+    },
+    {
+      "id": "asplos25-148_fig5",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A grid-as-floorplan variant: identical vertex-PU and edge-PU cells tile a 3D block like a systolic array, with the CPU/Controller drawn off to the side as the control block rather than inside the compute grid.",
+      "what_to_learn": "Treat a homogeneous processing-unit array (vertex/edge PUs here) like a systolic array for floorplan purposes: tile it as one repeated grid, keep the controller as a separate small block feeding it from outside, and use fan-out/fan-in arrows only where the broadcast and convergecast genuinely cross the grid boundary.",
+      "dir": "../figures/asplos25-148_fig5"
+    },
+    {
+      "id": "asplos25-157_fig2",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "Three lettered panels (a)-(c) walk the hardware hierarchy from a whole CIM core grid, to one array's control/buffer periphery, to the memory-circuit detail inside that array, dashed lines linking each level to the next.",
+      "what_to_learn": "Zoom a hardware hierarchy across separate lettered panels (a), (b), (c) rather than one figure with nested insets when each level needs its own full periphery (control, buffer, function unit) drawn out, and connect consecutive panels with a single dashed line rather than repeating labels.",
+      "dir": "../figures/asplos25-157_fig2"
+    },
+    {
+      "id": "asplos26-006_fig2",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A spatial PE-mesh floorplan: PEs are addressed by grid coordinates (PE[0,0], PE[1,0]), each row fed by its own FSM orchestrator, and a msg arrow between rows shows one instruction issue changing at runtime.",
+      "what_to_learn": "Address processing elements by literal grid coordinates (PE[row,col]) so position doubles as a label, and when a mechanism is really about timing, annotate it directly on the mesh with a small '+N cycles' tag and a cross-row message arrow instead of adding a separate timeline.",
+      "dir": "../figures/asplos26-006_fig2"
+    },
+    {
+      "id": "asplos26-013_fig10",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "Canonical floorplan: a full-width DRAM bus feeds parallel engines below, a pink FC Detection Engine occupies its own vertical band between tracking and mapping engines, and letters A-I key every block to the text.",
+      "what_to_learn": "Draw one shared bus as a full-width bar at the top of the chip boundary, place a distinct control engine in its own vertical band between the two functional engines it coordinates, and letter every block (A-I) to key it to the prose instead of writing long labels in place.",
+      "dir": "../figures/asplos26-013_fig10"
+    },
+    {
+      "id": "asplos26-021_fig6",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-16 pick: three miniature floorplans (digital PUM, analog PUM, naive hybrid) reuse one crossbar-array icon and an orange-versus-blue palette to compare baseline chip layouts side by side.",
+      "what_to_learn": "Reuse the same building-block icon and a two-color code across side-by-side variant panels so structural differences read without a legend, elide repeated array rows with a vertical ellipsis instead of drawing every tile, and route the one off-chip link as a distinct colored connector outside the array.",
+      "dir": "../figures/asplos26-021_fig6"
+    },
+    {
+      "id": "asplos26-074_fig9",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-18 canonical floorplan: Control Unit sits in a top corner, HN Array fills the compute middle, and one HBM bar spans the full width below, paired with a 4x4 fully-connected chip-mesh overview.",
+      "what_to_learn": "Place control in a top corner, compute in the middle, and let one memory bar span the full width along the bottom edge exactly as the rule prescribes, then pair the single-chip floorplan with a system-level mesh panel joined by one dashed zoom leader rather than expanding all sixteen chips.",
+      "dir": "../figures/asplos26-074_fig9"
+    },
+    {
+      "id": "nsdi23-046_fig6",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-25 microarchitecture floorplan: a blue on-chip storage block sits above the orange scheduler and load-balancer cluster, with a worked 1-1-1-0 eligibility mask drawn directly on the FEO block instead of only in prose.",
+      "what_to_learn": "Annotate a worked example value, like an eligibility bitmask, directly on the block that consumes it rather than leaving it only in prose, and colour the storage box and scheduler sub-blocks by role; draw an explicit line from the mask digits to the queue slots they filter, which this figure leaves implicit.",
+      "dir": "../figures/nsdi23-046_fig6"
+    },
+    {
+      "id": "nsdi23-067_fig4",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-19 pick: the boxed programmable switch is the chip, with the multi-core NF server and RDMA server drawn outside it, and four color-coded packets trace the header and payload split across ten components.",
+      "what_to_learn": "Draw the switch's boundary as the chip and place the two external servers physically outside it, then give each flow its own packet colour rather than one arrow style so a reader can trace a single packet through splitter, storage and rebuilder; reserve dashed for outbound and solid for the return path.",
+      "dir": "../figures/nsdi23-067_fig4"
+    },
+    {
+      "id": "nsdi26-032_fig1",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence three-panel exemplar spanning abstraction to reality: panel (a) floorplans host, switch and memory chassis through named upstream and downstream ports, panel (b) photographs the real testbed, and panel (c) exposes the switch's crossbar fabric.",
+      "what_to_learn": "Ground an abstract port-to-port floorplan with a photo of the real evaluated testbed so readers trust the abstraction, then zoom into the one internal datapath that matters, virtual lane to crossbar, in a third panel; do not rely on greyscale alone to separate roles as this figure's recorded weakness does.",
+      "dir": "../figures/nsdi26-032_fig1"
+    },
+    {
+      "id": "nsdi26-133_fig4",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence exemplar of the numbering exception: fourteen components nest inside two physical SmartNIC zones, and circled steps 1-5 appear only because the figure traces one packet's route through the hardware.",
+      "what_to_learn": "Only number stages inside a floorplan when one concrete request is being followed start to finish, here a single packet through matching, decryption, scaling and metadata embedding, and ground the abstraction with a worked example, one named service and pod, instead of describing the mechanism purely in prose.",
+      "dir": "../figures/nsdi26-133_fig4"
+    },
+    {
+      "id": "osdi23-040_fig6",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-22 pick for the times-N rule: sixteen identical RX pipe-manager boxes are elided to two with a vertical ellipsis between them, and bulk data runs in its own FIFO lane beside the metadata path.",
+      "what_to_learn": "Draw only the first and last of a large identical bank, two of sixteen pipe managers, linked by a vertical ellipsis instead of drawing every copy, and give bulk data its own narrow FIFO lane beside the control path; this figure blurs MMIO control arrows with dataflow arrows, so mark control inputs distinctly.",
+      "dir": "../figures/osdi23-040_fig6"
+    },
+    {
+      "id": "osdi23-050_fig4",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence pick where the floorplan payload sits only in panel (b): coloured uTasks map onto a nested L0-core, L1-SM and L2-device hardware hierarchy, contrasted against panel (a)'s plain CPU-driven loop and accelerator kernels.",
+      "what_to_learn": "When a hardware hierarchy is the point, draw it as boxes nested three levels deep with small coloured squares standing for identical tasks mapped onto each level, and pair it with a simpler baseline panel using the same colour key so a reader can trace exactly which piece moved onto the accelerator.",
+      "dir": "../figures/osdi23-050_fig4"
+    },
+    {
+      "id": "osdi24-034_fig6",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A NIC floorplan reading: the chip boundary holds TX/RX merge units in the middle with per-flow tables (MS List, Flow Table) at the edge, while host-side GPU HBM sits outside as off-chip memory.",
+      "what_to_learn": "Draw the NIC's own boundary and put its splitting/merging compute in the middle, per-flow lookup tables at the edge, and the host's off-chip memory (GPU HBM) clearly outside that boundary; keep the boxed dashed-vs-solid legend so a floorplan reader still knows which lines are control.",
+      "dir": "../figures/osdi24-034_fig6"
+    },
+    {
+      "id": "osdi26-006_fig7",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence two-panel pick where panel (b) floorplans the real hardware: physical DIMM and CXL channels sit below a dashed guest-OS boundary, grouped by curly brace into per-channel nodes and coarser socket-level nodes above it.",
+      "what_to_learn": "Use a dashed boundary line to separate physical hardware channels from the virtualized abstraction built on top, and group repeated identical channels into a higher-level node with a curly brace rather than nested boxes; read the dense abbreviation legend first, since it gates both panels and is this figure's own weakness.",
+      "dir": "../figures/osdi26-006_fig7"
+    },
+    {
+      "id": "osdi26-059_fig5",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-30 pick that colours by block type exactly as the rule prescribes: green marks the novel CPU proxy, orange the FIFOs, blue the interconnect channel, and grey the unmodified GPU, mirrored across two nodes.",
+      "what_to_learn": "Assign one colour per hardware role, control, buffer, interconnect, compute, and keep existing hardware in neutral grey while the paper's new component gets the accent colour; mirror the two-node layout around the shared RDMA link so the symmetry shows the protocol is peer-to-peer, and spell out terse arrow labels like this figure's imm and Write.",
+      "dir": "../figures/osdi26-059_fig5"
+    },
+    {
+      "id": "osdi26-079_fig2",
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A minimal floorplan nested in a background stack figure: the BlueField-3 boundary places DPA compute next to its own NIC DRAM and a separate off-path ARM control core, with one DMA arrow crossing PCIe above.",
+      "what_to_learn": "Even a small background/context figure can carry a mini floorplan: place a chip's compute (DPA) directly beside the memory it actually touches (NIC DRAM), keep the separate off-path control core (ARM) at arm's length, and mark the one crossing that matters, direct host DMA, with a single labeled arrow.",
+      "dir": "../figures/osdi26-079_fig2"
+    }
+  ]
+}

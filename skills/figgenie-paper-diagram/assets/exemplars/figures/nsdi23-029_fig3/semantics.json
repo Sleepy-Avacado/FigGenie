@@ -1,0 +1,168 @@
+{
+  "paper_id": "nsdi23-029",
+  "fig": "3",
+  "system": {
+    "name": "Hydra",
+    "one_liner": "a distributed massive MIMO uplink baseband-processing architecture that reduces cross-server data shuffles versus BigStation by co-locating ZF, equalization, and demodulation",
+    "domain": [
+      "wireless-networks",
+      "signal-processing",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "RU antennas",
+        "role": "source of per-antenna IQ samples feeding the pipeline (time-domain in BigStation, frequency-domain in Hydra)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FFT",
+        "role": "per-antenna stage that runs before the first cross-server data shuffle",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ZF",
+        "role": "zero-forcing equalization stage run on commodity servers after antennas are shuffled to subcarrier-parallel layout",
+        "container": "Functions running on commodity servers",
+        "novel": false
+      },
+      {
+        "name": "Equal & Demod",
+        "role": "combined equalization and demodulation stage in BigStation, reached and left via a separate data shuffle",
+        "container": "Functions running on commodity servers",
+        "novel": false
+      },
+      {
+        "name": "Equal",
+        "role": "equalization stage in Hydra, grouped with ZF and Demod inside one dashed box with no intervening shuffle",
+        "container": "Functions running on commodity servers",
+        "novel": true
+      },
+      {
+        "name": "Demod",
+        "role": "demodulation stage in Hydra, grouped with ZF and Equal so no shuffle separates them",
+        "container": "Functions running on commodity servers",
+        "novel": true
+      },
+      {
+        "name": "Decode",
+        "role": "LDPC decoding stage, the final pipeline step in both architectures",
+        "container": "Functions running on commodity servers",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "RU antennas",
+        "to": "FFT",
+        "what": "per-antenna IQ samples",
+        "step": null
+      },
+      {
+        "from": "FFT",
+        "to": "ZF",
+        "what": "all-to-all shuffled data moving from antenna-parallel to subcarrier-parallel layout",
+        "step": null
+      },
+      {
+        "from": "ZF",
+        "to": "Equal & Demod",
+        "what": "shuffled data (BigStation architecture only)",
+        "step": null
+      },
+      {
+        "from": "Equal",
+        "to": "Demod",
+        "what": "data passed within the same dashed group with no shuffle (Hydra architecture only)",
+        "step": null
+      },
+      {
+        "from": "Equal & Demod",
+        "to": "Decode",
+        "what": "shuffled data (BigStation)",
+        "step": null
+      },
+      {
+        "from": "Demod",
+        "to": "Decode",
+        "what": "shuffled data (Hydra)",
+        "step": null
+      }
+    ],
+    "key_idea": "Hydra cuts the number of network data shuffles versus BigStation by co-locating ZF, equalization, and demodulation on the same commodity server, shuffling only before and after that combined stage.",
+    "reading_order": "Top panel (a) BigStation and bottom panel (b) Hydra each read left to right: antennas through FFT into ZF, Equal/Demod, and Decode via crossing shuffle lines."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.1,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "fill of all pipeline-stage boxes (FFT, ZF, Equal & Demod, Decode)"
+      },
+      {
+        "hex": "#000000",
+        "used_for": "text labels, box outlines, dashed grouping box, and shuffle arrows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black rules (~0.6pt) solid on stage boxes, dashed for the Hydra grouping box and panel divider",
+    "font": "Arial-like sans (with some Linux Libertine text), roughly 5.5-6.5pt labels, not bold",
+    "corners": "mixed",
+    "arrows": "straight black lines with arrowheads crossing in an all-to-all crossbar pattern between successive pipeline stages",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": null,
+    "line_style_means": "solid lines trace the per-antenna to per-subcarrier data path through FFT/ZF/Equal/Demod/Decode; the dashed rectangle in the Hydra panel groups ZF, Equal, and Demod as co-located with no intervening shuffle",
+    "emphasis": "the dashed box around ZF/Equal/Demod in the Hydra panel is the sole visual marker distinguishing it from BigStation's fully-shuffled pipeline",
+    "reusable_patterns": [
+      "side-by-side (a)/(b) prior-work-vs-new-design architecture comparison",
+      "crossbar of crossing lines depicting an all-to-all data shuffle between pipeline stages"
+    ],
+    "weaknesses": [
+      "the key difference relies on noticing one dashed box rather than an explicit callout",
+      "no labels quantifying how many shuffles are saved"
+    ]
+  },
+  "tags": [
+    "massive-mimo",
+    "baseband-processing",
+    "distributed-systems",
+    "wireless",
+    "data-shuffle",
+    "pipeline-comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and motivation (p.5)"
+    ],
+    "evidence": [
+      "Unlike BigStation, Hydra shuffles data only after the subcarrier-parallel stage.",
+      "BigStation's design (Figure 3) has two limitations:",
+      "BigStation is the state-of-the-art design for virtualized distributed massive MIMO baseband processing."
+    ]
+  },
+  "summary": "This figure compares two distributed massive MIMO uplink baseband-processing pipelines: BigStation, the prior state-of-the-art design, and Hydra, the architecture used in this work. Both pipelines run per-antenna IQ samples through FFT, zero-forcing (ZF) equalization, equalization-and-demodulation, and LDPC decoding stages on commodity servers, with crossing lines depicting the all-to-all data shuffle needed between antenna-parallel and subcarrier-parallel stages. In BigStation (a), FFT takes time-domain samples and each of ZF, Equal & Demod, and Decode is separated by its own shuffle. In Hydra (b), FFT takes frequency-domain samples, and a dashed box groups ZF, Equal, and Demod so they run without an intervening shuffle, leaving only one shuffle before this group and one before Decode. The figure is plain black-and-white boxes and crossing arrows with no color coding; only labels and the dashed grouping box distinguish the two designs.",
+  "summary_zh": "该图对比两种分布式大规模MIMO上行基带处理架构：BigStation与Hydra。二者均经FFT、ZF均衡、解调、LDPC译码等阶段，箭头交叉表示数据洗牌；Hydra用虚线框将ZF、均衡、解调归入同一商用服务器，减少了洗牌次数。",
+  "confidence": "medium",
+  "notes": "System name 'Hydra' is inferred from the caption's contrast with the prior state-of-the-art BigStation; the supplied paragraph is truncated right after introducing BigStation's limitations, so no further text on Hydra's rationale is available beyond the caption.",
+  "venue": "NSDI23"
+}

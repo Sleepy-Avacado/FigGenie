@@ -1,0 +1,156 @@
+{
+  "paper_id": "asplos26-008",
+  "fig": "tex6",
+  "system": {
+    "name": "NotebookOS",
+    "one_liner": "a GPU-efficient replicated notebook platform that allocates GPUs only during active cell execution using Raft-synchronized kernel replicas",
+    "domain": [
+      "ml-systems",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Executor Kernel Replica",
+        "role": "receives an execute_request, converts the submitted code to an AST, executes it, and commits updated state",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPUs",
+        "role": "GPU devices associated with the executor replica during active cell execution",
+        "container": "Executor Kernel Replica",
+        "novel": true
+      },
+      {
+        "name": "Raft Log",
+        "role": "distributed log that replicates the AST and updated global state to all replicas via Raft SMR",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Standby Replica",
+        "role": "a non-executing replica that applies the replicated AST and updates its replica-local global state",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": null,
+        "to": "Executor Kernel Replica",
+        "what": "an execute_request",
+        "step": 1
+      },
+      {
+        "from": "Executor Kernel Replica",
+        "to": "Executor Kernel Replica",
+        "what": "convert code to AST",
+        "step": 2
+      },
+      {
+        "from": "Executor Kernel Replica",
+        "to": "Executor Kernel Replica",
+        "what": "execute code",
+        "step": 3
+      },
+      {
+        "from": "Executor Kernel Replica",
+        "to": "Raft Log",
+        "what": "commit updated global state & AST to the Raft Log",
+        "step": 4
+      },
+      {
+        "from": "Raft Log",
+        "to": "Standby Replica",
+        "what": "replicate AST & updated global state",
+        "step": 5
+      }
+    ],
+    "key_idea": "NotebookOS uses Python AST-based code analysis to identify runtime state that must be kept consistent, then replicates the AST and updated global state to standby kernel replicas through the Raft SMR log.",
+    "reading_order": "Left to right, numbered steps 1-5: an execute_request arrives at the Executor Kernel Replica (with GPUs), which is expanded in a callout on the right showing steps 2 (code to AST), 3 (execute code) and 4 (commit to Raft Log); the Raft Log then fans out via step 5 to two Standby Replica boxes at bottom-left."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.03,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a680b8",
+        "used_for": "purple fill of the Executor Kernel Replica box"
+      },
+      {
+        "hex": "#f8dfa4",
+        "used_for": "tan/orange fill of the Standby Replica boxes"
+      },
+      {
+        "hex": "#00bef2",
+        "used_for": "cyan fill accent on the code icon"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "gray fill/stroke accents"
+      },
+      {
+        "hex": "#ffb570",
+        "used_for": "orange fill accent on an icon"
+      },
+      {
+        "hex": "#5a4836",
+        "used_for": "brown fill of the Raft Log icon (log/wood texture)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium black strokes (median ~2.9pt), rounded corners, one dashed-outline callout box",
+    "font": "Franklin Gothic Demi sans for labels, Courier New monospace for the execute_request code term",
+    "corners": "rounded",
+    "arrows": "bold black arrows connecting numbered steps",
+    "icons": "vector icons for a code snippet, an AST tree, a log/wood-log stack, and binary-data documents"
+  },
+  "encoding": {
+    "color_means": "purple = the active Executor Kernel Replica, tan/orange = passive Standby Replicas, cyan = code icon accent",
+    "line_style_means": "a dashed-border callout box separates the zoomed-in AST conversion/execution/commit detail from the main replica-to-log-to-standby flow",
+    "emphasis": "circled numbered steps and a zoomed callout emphasize the AST-based code-to-log-to-replica synchronization path as the mechanism of interest",
+    "reusable_patterns": [
+      "numbered pipeline with a zoomed callout detailing an intermediate step",
+      "icon-illustrated log-based replication fan-out to multiple standby nodes"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "Raft",
+    "state-synchronization",
+    "AST",
+    "replication",
+    "notebook",
+    "distributed-kernel"
+  ],
+  "provenance": {
+    "sections": [
+      "Kernel State Replication"
+    ],
+    "evidence": [
+      "kernels leverages Python AST-based code analysis to identify runtime state that needs to be replicated",
+      "the executor replica proposes the AST and any relevant state to the Raft log in Step 4",
+      "Upon commitment of the newly appended log entry in Step 5, the AST is applied by the standby replicas"
+    ]
+  },
+  "summary": "This figure gives an overview of NotebookOS's Raft-based state synchronization protocol for its Distributed Kernel. The kernel uses Python AST-based code analysis to identify runtime state (including native C/C++ state referenced in the kernel namespace) that must be replicated. An Executor Kernel Replica (holding GPUs) receives an execute_request (step 1); a callout details how it converts the submitted code to an AST (step 2), executes the code (step 3), and proposes the AST and updated global state to the Raft Log (step 4). The Raft consensus protocol then replicates this log entry to the standby replicas (step 5), which apply the AST and update their replica-local global state accordingly. The figure uses a warm purple/tan icon-illustrated style with a dashed callout box zooming into the AST-conversion detail, numbered steps, and log/tree/document icons to depict how code execution results are captured and fanned out to standby kernel replicas for consistency.",
+  "summary_zh": "该图展示 NotebookOS 基于 Raft 的状态同步协议：Executor 副本收到 execute_request 后将代码转为 AST 并执行，再将更新的全局状态和 AST 提交到 Raft 日志，日志随后复制给两个 Standby 副本并在其上应用状态更新。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

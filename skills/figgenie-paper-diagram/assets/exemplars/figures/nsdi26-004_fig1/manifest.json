@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-004_fig1",
+  "paper_id": "nsdi26-004",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: Legacy architecture (pre-UFA).",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 2.06,
+  "n_components": 6,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-004/src/fig1_legacy_arch_new2.svg",
+    "preview.png": "lab/extracted/nsdi26-004/src/fig1_legacy_arch_new2.png",
+    "print.png": "lab/extracted/nsdi26-004/nsdi26-004_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "The minimal N=2 case: an Edge PoP hub splits traffic exactly 50/50 into two identical Region spokes, each an identical Zone1/Stateful pair, with a bidirectional replication arrow standing in for the hub-spoke return path.",
+      "what_to_learn": "When there are genuinely only two spokes, skip the ellipsis and draw both in full, identically; a single yellow box can flag a special-case zone, but this exemplar's weakness is not legending what that highlight colour means."
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "paper_id": "asplos25-110",
+  "fig": "2",
+  "system": {
+    "name": "Virgo",
+    "one_liner": "a GPU microarchitecture that disaggregates matrix units from SIMT cores to the cluster level for scalable, energy-efficient GEMM execution",
+    "domain": [
+      "gpu-architecture",
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Vortex SIMT Core",
+        "role": "core-coupled baseline SIMT core with detailed pipeline, used to model Tightly-Coupled Tensor Core configurations",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Tensor Core",
+        "role": "core-coupled matrix unit, an optionally instantiated module used for baseline comparisons (dashed box)",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "DPU",
+        "role": "dot-product unit inside the Tensor Core",
+        "container": "Tensor Core",
+        "novel": false
+      },
+      {
+        "name": "ALU",
+        "role": "arithmetic logic unit in the core pipeline",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "FPU",
+        "role": "floating point unit in the core pipeline",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Fetch & Scheduler",
+        "role": "fetches and schedules warp instructions",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Load/Store Unit",
+        "role": "issues memory load/store instructions",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "In Flight",
+        "role": "tracks in-flight load/store requests",
+        "container": "Load/Store Unit",
+        "novel": false
+      },
+      {
+        "name": "Register File",
+        "role": "holds operand data privatized per warp; exchanges data with the core-coupled Tensor Core",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "L1 Inst. Cache",
+        "role": "per-core instruction cache",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Coalescer",
+        "role": "custom unit that merges scalar SIMT memory accesses into wider L1-line-sized requests",
+        "container": "Vortex SIMT Core",
+        "novel": true
+      },
+      {
+        "name": "L1 Data Cache",
+        "role": "per-core data cache",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Lane",
+        "role": "SIMT execution lane of the simplified Vortex core",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "L1 I-Cache",
+        "role": "per-core instruction cache in the simplified core",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "L1 D-Cache",
+        "role": "per-core data cache in the simplified core",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "RF",
+        "role": "register file (abbreviated) for the simplified core",
+        "container": "Vortex SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Interconnect",
+        "role": "cluster-local shared-memory interconnect handling concurrent accesses from cores and the matrix unit",
+        "container": "Virgo Cluster",
+        "novel": true
+      },
+      {
+        "name": "Shared Memory",
+        "role": "software-managed scratchpad divided into banks, shared across cores and the matrix unit",
+        "container": "Virgo Cluster",
+        "novel": false
+      },
+      {
+        "name": "Bank 0",
+        "role": "one bank of the shared memory",
+        "container": "Shared Memory",
+        "novel": false
+      },
+      {
+        "name": "Bank 1",
+        "role": "one bank of the shared memory",
+        "container": "Shared Memory",
+        "novel": false
+      },
+      {
+        "name": "Bank 2",
+        "role": "one bank of the shared memory",
+        "container": "Shared Memory",
+        "novel": false
+      },
+      {
+        "name": "Bank 3",
+        "role": "one bank of the shared memory",
+        "container": "Shared Memory",
+        "novel": false
+      },
+      {
+        "name": "DMA",
+        "role": "dedicated DMA engine for efficient matrix data movement, also able to draw from the accumulator memory",
+        "container": "Virgo Cluster",
+        "novel": true
+      },
+      {
+        "name": "Synchronizer",
+        "role": "implements the synchronization mechanism across the cores and the matrix unit",
+        "container": "Virgo Cluster",
+        "novel": true
+      },
+      {
+        "name": "Gemmini",
+        "role": "systolic-array-based matrix unit IP disaggregated from the SIMT cores into a separate cluster-level unit",
+        "container": "Virgo Cluster",
+        "novel": true
+      },
+      {
+        "name": "Accum. Memory",
+        "role": "dedicated SRAM storing accumulator matrix data, decoupled from the register file",
+        "container": "Gemmini",
+        "novel": true
+      },
+      {
+        "name": "Scratchpad",
+        "role": "systolic array's local scratchpad memory",
+        "container": "Gemmini",
+        "novel": false
+      },
+      {
+        "name": "Systolic Array",
+        "role": "array of processing elements performing matrix multiply-add computation",
+        "container": "Gemmini",
+        "novel": false
+      },
+      {
+        "name": "Coarse-Grain FSM",
+        "role": "coarse-grain finite state machine controlling the systolic array",
+        "container": "Gemmini",
+        "novel": false
+      },
+      {
+        "name": "L2 Cache",
+        "role": "cache shared between DRAM and the cluster's cores/DMA",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "global memory",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "DRAM",
+        "to": "L2 Cache",
+        "what": "main memory traffic",
+        "step": null
+      },
+      {
+        "from": "L2 Cache",
+        "to": "L1 Data Cache",
+        "what": "main memory traffic reaching the core's L1 caches",
+        "step": null
+      },
+      {
+        "from": "L2 Cache",
+        "to": "DMA",
+        "what": "main memory traffic feeding the DMA engine",
+        "step": null
+      },
+      {
+        "from": "DMA",
+        "to": "Shared Memory",
+        "what": "DMA traffic between global and shared memory",
+        "step": null
+      },
+      {
+        "from": "DMA",
+        "to": "Accum. Memory",
+        "what": "DMA draws data from the matrix unit's accumulator memory",
+        "step": null
+      },
+      {
+        "from": "Interconnect",
+        "to": "Shared Memory",
+        "what": "shared memory traffic distributed across banks",
+        "step": null
+      },
+      {
+        "from": "Coalescer",
+        "to": "Interconnect",
+        "what": "shared memory traffic from a core's coalesced load/store accesses",
+        "step": null
+      },
+      {
+        "from": "Register File",
+        "to": "Tensor Core",
+        "what": "core-coupled Tensor Core exchanges operands with the register file",
+        "step": null
+      }
+    ],
+    "key_idea": "Virgo couples Vortex SIMT cores to a disaggregated Gemmini matrix unit via an interconnect to banked shared memory, plus a dedicated DMA and synchronizer, with color-coded main-memory, shared-memory, and DMA traffic paths.",
+    "reading_order": "left-to-right, top-to-bottom: the two SIMT core variants at left, DRAM/L2 memory hierarchy at top-right, then the cluster interconnect, shared memory, DMA and Gemmini unit below"
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.3,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#231f20",
+        "used_for": "near-black box outlines and body text throughout"
+      },
+      {
+        "hex": "#fdb514",
+        "used_for": "orange fill of the shared-memory Bank boxes and the 'Shared Memory Traffic' legend/arrows"
+      },
+      {
+        "hex": "#3b7fa2",
+        "used_for": "medium blue fill of the L1/L2 cache boxes and the 'Main Memory Traffic' legend/arrows"
+      },
+      {
+        "hex": "#ee3060",
+        "used_for": "magenta fill of the Systolic Array's processing-element squares"
+      },
+      {
+        "hex": "#f17c66",
+        "used_for": "salmon fill of the DMA box and the 'DMA Traffic' legend/arrows"
+      },
+      {
+        "hex": "#0ca598",
+        "used_for": "teal fill of the DPU boxes inside a Tensor Core"
+      },
+      {
+        "hex": "#78c2c4",
+        "used_for": "light teal fill of the Coalescer's L0/L1/L2/L3 sub-boxes"
+      },
+      {
+        "hex": "#b9d2b6",
+        "used_for": "light green background of the dashed, optionally-instantiated Tensor Core panel"
+      },
+      {
+        "hex": "#ffe8bb",
+        "used_for": "light peach background of the Shared Memory panel"
+      },
+      {
+        "hex": "#dc9fb4",
+        "used_for": "light pink background of the Gemmini panel"
+      },
+      {
+        "hex": "#46545f",
+        "used_for": "dark slate fill of the DRAM box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.36pt) black strokes, square corners; dashed strokes mark optionally-instantiated modules such as the core-coupled Tensor Core",
+    "font": "Helvetica sans, small (3.5-6.5pt), no bold",
+    "corners": "square",
+    "arrows": "thin curved lines color-coded by traffic type (blue = main memory, orange = shared memory, salmon = DMA)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = main memory traffic (DRAM/L2/L1 path), orange = shared memory traffic (interconnect/banks), salmon = DMA traffic; teal = DPUs inside a Tensor Core, magenta = systolic-array processing elements, colored panel backgrounds distinguish Tensor Core, Shared Memory and Gemmini regions",
+    "line_style_means": "dashed boxes/lines mark optionally instantiated modules used only for certain evaluation configurations (e.g., the core-coupled Tensor Core); solid lines are always-present connections",
+    "emphasis": "an explicit right-side legend maps three traffic colors so the reader can trace main-memory, shared-memory, and DMA data paths across the whole cluster at a glance",
+    "reusable_patterns": [
+      "whole-system architecture diagram with a color-coded traffic-type legend",
+      "dashed modules layered onto the same diagram to denote optional/comparison configurations"
+    ],
+    "weaknesses": [
+      "very dense (277 shapes, 57 text boxes) with many repeated small blocks (Lane, DPU, In Flight, Bank) that require careful tracing"
+    ]
+  },
+  "tags": [
+    "gpu-architecture",
+    "matrix-unit",
+    "disaggregation",
+    "shared-memory-interconnect",
+    "dma",
+    "systolic-array",
+    "gemmini",
+    "vortex"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Virgo Microarchitecture (p.4)",
+      "3.2.2 Accumulator Memory (p.6)",
+      "3.2.3 Memory coalescer (p.6)",
+      "3.2.4 Efficient Data Movement with DMA (p.6)"
+    ],
+    "evidence": [
+      "Virgo aims to improve scalability and energy efficiency by disaggregating the dedicated matrix unit from the core",
+      "we implemented a custom memory coalescing unit as shown in Figure 2.",
+      "the same DMA is capable of drawing from the matrix unit's accumulator memory as well"
+    ]
+  },
+  "summary": "Figure 2 is a detailed whole-system view of Virgo's cluster microarchitecture, built on the open-source Vortex SIMT core and a Gemmini-based matrix unit. Two Vortex SIMT Core variants are shown: a detailed core with ALU/FPU, fetch/scheduler, load/store unit, register file and L1 caches (used for core-coupled Tensor Core baselines), and a simplified Lane-based core; both include an optional dashed 'Tensor Core' with DPUs, since dashed modules denote configurations instantiated only for evaluation. The Virgo Cluster couples these cores through an Interconnect to a banked Shared Memory, a dedicated DMA engine, a Synchronizer, and the disaggregated Gemmini matrix unit (Accum. Memory, Systolic Array, Scratchpad, Coarse-Grain FSM), all backed by an L2 Cache and DRAM. A right-side legend color-codes three traffic types: blue main-memory traffic, orange shared-memory traffic, and salmon DMA traffic.",
+  "summary_zh": "图2展示Virgo集群微架构:两种Vortex SIMT核心(含可选虚线Tensor Core)经互连接到共享内存、DMA、同步器与Gemmini矩阵单元(累加器内存、脉动阵列);右侧图例用颜色区分主存、共享内存与DMA三种流量路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

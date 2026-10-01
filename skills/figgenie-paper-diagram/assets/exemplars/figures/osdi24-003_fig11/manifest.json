@@ -1,0 +1,55 @@
+{
+  "id": "osdi24-003_fig11",
+  "kind": "mechanism",
+  "paper_id": "osdi24-003",
+  "fig": "11",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 11: An illustrative case of Path across layers.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how a Prioritize/Abort decision from one timing inconsistency is applied consistently across middleware, kernel and network schedulers",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.33,
+  "n_elements": 15,
+  "n_relations": 10,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "omnigraffle",
+  "confidence": "low",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-003/osdi24-003_fig11_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-003/osdi24-003_fig11_p9_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "One inconsistency verdict, computed once at a Handler node, is re-stamped with the same two accent colours and Prioritize/Abort labels at three completely different scheduler layers below.",
+      "what_to_learn": "Compute the verdict once at the top and re-draw its two accent colours plus Prioritize/Abort text at every layer below, even as each layer's queue icon changes shape — but reused bare letters force reading by position, not name.",
+      "note_source": "agent"
+    }
+  ]
+}

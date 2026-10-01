@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-021_fig4",
+  "paper_id": "osdi23-021",
+  "fig": "4",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 4: Overview of Hydro architecture and workflow.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 0.93,
+  "n_components": 25,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-021/osdi23-021_fig4_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-021/osdi23-021_fig4_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, 25-component exemplar: inside the purple Hydro Coordinator band, a Cluster Scheduler core sits flanked left by two allocator boxes and right by an Elastic Executor, a flanked-core micro-pattern nested inside a layered whole.",
+      "what_to_learn": "A flanked-core sandwich can appear at any scale: repeat the same left-core-right composition inside one band of a larger layered figure, colour that band and its neighbour differently, and orange-highlight the technique sub-boxes inside each; the weakness here is the central box's role is legible only from position, so add one line to it."
+    }
+  ]
+}

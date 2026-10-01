@@ -1,0 +1,216 @@
+{
+  "template": "composite-figure",
+  "n": 26,
+  "stars": 20,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-100_fig9",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Panel (a)'s coarse per-decoder timeline sits beside panel (b)'s detailed per-layer device map, sharing one blue-single-device/green-multi-device legend so the reader sees which decoder runs when and which of its layers pay the broadcast/gather cost.",
+      "what_to_learn": "Pair a coarse timeline/mapping overview with one detailed per-layer zoom, and carry a single two-colour legend (single-device vs multi-device placement) across both panels so the coarse view and the fine view never need separate keys.",
+      "dir": "../figures/asplos25-100_fig9"
+    },
+    {
+      "id": "asplos25-114_fig5",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: three diagram kinds, a tile/tensor layout, a circuit-style instruction-issue diagram, and a buffer-by-iteration timeline grid, explain one design from three angles rather than repeating one drawing under different designs; this is composite-figure, not n-panel-comparison.",
+      "what_to_learn": "When three panels each use a different diagram type (a data-layout grid, a circuit diagram, a scheduling timeline) to explain complementary aspects of one system, file the figure as composite-figure with a dominant panel, not n-panel-comparison, which needs one shared drawing style repeated across the panels.",
+      "dir": "../figures/asplos25-114_fig5"
+    },
+    {
+      "id": "asplos25-157_fig2",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three panels zoom successively from the whole CIM core (a) into one CIM array (b) into its memory-circuit detail (c), each joined by dashed leaders exactly as the overview-with-inset-inside-composite rule prescribes.",
+      "what_to_learn": "Chain dashed zoom leaders panel to panel (core to array to cell) rather than drawing every level from scratch, and keep the same green-buffer/gray-blue-control/light-blue-array colour roles at every zoom level so a reader always knows which block is which even after three levels of nesting.",
+      "dir": "../figures/asplos25-157_fig2"
+    },
+    {
+      "id": "asplos25-160_fig5",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "An architecture pipeline, a symbol-definition notation key, and a colour-coded worked example sit side by side as three unlike kinds with no visible borders between them, a violation of the clear-gutter rule the template requires.",
+      "what_to_learn": "Leave an explicit 8-12pt gutter (or a thin frame) between an architecture panel, a notation key, and a worked example even when they logically belong together, since merging three conceptually different sub-panels with no visible border, a listed weakness here, makes the figure read as one crowded panel instead of three legible ones.",
+      "dir": "../figures/asplos25-160_fig5"
+    },
+    {
+      "id": "asplos25-168_fig11",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three unlike panel kinds sit together, a hash-mapping diagram (a), a rendered 3D voxel illustration (b), and a sad-face/happy-face pros-cons box pair, all sharing the yellow-cell storage-icon vocabulary from the technical panels.",
+      "what_to_learn": "Pair a technical diagram with a small icon-based pros/cons box (a sad face for the limited baseline, a happy face for the improved design) placed right beside it, reusing the same cell-shading vocabulary so the emotional icon reads as a direct verdict on the adjacent architecture rather than a separate aside.",
+      "dir": "../figures/asplos25-168_fig11"
+    },
+    {
+      "id": "asplos25-177_fig1",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Panel (a)'s software row/column access diagram and panel (b)'s DRAM-bank-plus-PIM hardware grid are two unlike kinds, software beside a hardware data structure, joined only by the shared insight that ADE/IDE mirrors OLTP/OLAP access.",
+      "what_to_learn": "Use matching colour underlines (green for the specific row or column each side accesses) across a software panel and a hardware grid panel to make an analogy visible without arrows connecting them; add at least one numbered pointer between the panels, since this purely motivational figure otherwise relies on the reader inferring the connection.",
+      "dir": "../figures/asplos25-177_fig1"
+    },
+    {
+      "id": "asplos26-013_fig13",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Before (a) and after (b) Gantt-style GPE timelines share an identical per-lane skeleton to show reduced idle gray time, while panel (c) mixes in the scheduler/workload-table/alpha-buffer hardware that implements the rebalancing.",
+      "what_to_learn": "Pair an identical-skeleton before/after timeline (same GPE lanes, same block width) with a separate hardware block-diagram panel that implements the fix, mixing a timeline kind with an architecture kind under one figure; keep font size well above this figure's illegible 2-3.5pt, a listed weakness.",
+      "dir": "../figures/asplos26-013_fig13"
+    },
+    {
+      "id": "asplos26-026_fig5",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Token-sequence diagrams for vanilla (a) and speculative (b) decoding sit beside a roofline throughput plot (c), a genuine mix of diagram and chart kinds tied together by one shared token-colour legend.",
+      "what_to_learn": "Put a measurement plot (here a roofline chart) beside the mechanism diagrams it justifies, and reuse the diagrams' own colour legend (prompt/drafted/accepted/rejected tokens) as the one legend for the whole figure so the plot and the diagrams read as one argument, not two attachments.",
+      "dir": "../figures/asplos26-026_fig5"
+    },
+    {
+      "id": "asplos26-060_fig7",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: panel (a) is one overall dataflow of four hardware units, and (b)-(e) each zoom into one unit's datapath, an overview-plus-details composite, not two contrasted designs, so it belongs under composite-figure.",
+      "what_to_learn": "Put the full pipeline as a labelled overview panel at the top, then stack detail zooms of each unit below it using consistent header-bar naming; keep the lettered panels (a)-(e) in reading order so the overview always comes first.",
+      "dir": "../figures/asplos26-060_fig7"
+    },
+    {
+      "id": "asplos26-088_fig12",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "A stepwise zoom runs from the 16-core Sorting Engine list into one Core's layout, then into the MSU+'s dual-buffer filter-and-mux detail, joined by dashed lines, with the final, most-novel block highlighted in light blue.",
+      "what_to_learn": "Chain dashed zoom connectors through two levels (engine to core to sub-unit) and reserve one accent colour (light blue) for only the deepest, most novel block so the eye knows exactly which of several nested boxes is the actual contribution; label every symbol explicitly, since this figure's unlabelled '>' comparator relies on visual convention alone.",
+      "dir": "../figures/asplos26-088_fig12"
+    },
+    {
+      "id": "asplos26-129_fig2",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: three unlike panels, an annotated existing pipeline, a small two-model insight comparison, and a contribution roadmap, form a problem/insight/contributions composite, not one thing drawn twice under two designs.",
+      "what_to_learn": "Chain unlike panels left to right in the order the text argues them: problem, then insight, then contributions, and reuse one colour (here green) across panels to mark everything that is the paper's own idea, from the insight box to the C1-C3 contribution list.",
+      "dir": "../figures/asplos26-129_fig2"
+    },
+    {
+      "id": "nsdi24-036_fig1",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three unlike panels share one figure: an edge-cloud topology (a), two structurally identical but reorder-conflicting five-module NF chains stacked to expose the conflict (b), and a four-pipeline gateway ASIC (c) with 17 flows total.",
+      "what_to_learn": "Stack two structurally parallel chains directly above each other so a swapped module position jumps out without annotation; but unify panel styles with one shared palette, since packing an edge topology, chain diagrams and an ASIC block diagram with no common visual language is this figure's own listed weakness.",
+      "dir": "../figures/nsdi24-036_fig1"
+    },
+    {
+      "id": "nsdi25-081_fig4",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "A single frame ties one packet's hardware pipeline to annotated P4 source code, a Cores diagram, and a Memory hierarchy via labelled C1, C2, Cb arrows, mixing code, diagram, and memory layout under one architecture.",
+      "what_to_learn": "Link annotated source-code lines to the specific execution units running them with small labelled arrows (C1, C2, Cb), and share one Memory box with explicit R, W, R&W arrows across foreground and background cores; strengthen the loose visual link this figure leaves between its top pipeline row and bottom detail row.",
+      "dir": "../figures/nsdi25-081_fig4"
+    },
+    {
+      "id": "nsdi26-104_fig6",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three diagram idioms, a zoomed packet-header byte table, a tenant/overlay/physical layer stack, and an abstract path mesh, share one gold/orange/green colour thread (the mutable outer source port) but no dividing frame or legend groups them.",
+      "what_to_learn": "Even when three unlike diagram idioms (byte table, layer stack, path mesh) share one colour thread across a mechanism, still give each panel its own frame or gutter and one shared legend, since this figure's absence of both, a listed weakness, makes the three parts read as unrelated at first glance.",
+      "dir": "../figures/nsdi26-104_fig6"
+    },
+    {
+      "id": "nsdi26-140_fig8",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Circled steps 1-8 walk a generic Traffic Manager pipeline (a), its cell-memory layout (b), then Themis's own hierarchical-bitmap scheduler with dual SRAM and HBM controllers (c), a zoom from generic module to the paper's extension.",
+      "what_to_learn": "Place the generic subsystem (a) and its generic memory layout (b) beside the paper's own scheduler (c) in one palette so the reader sees how little new logic Themis adds, and keep one inside legend (red data path, green dashed control path) for all three panels; avoid this figure's dense 4-5pt text.",
+      "dir": "../figures/nsdi26-140_fig8"
+    },
+    {
+      "id": "osdi23-008_fig12",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Named in the reference as the architecture-beside-two-result-plots exemplar: the dominant microservice graph sits beside a raw P99 scatter and its smoothed average, using two unrelated colour codes, role at left, method identity at right.",
+      "what_to_learn": "Give the dominant architecture panel over half the figure's area and let the two result plots (raw and smoothed) sit as clearly smaller subordinate panels; keep separate colour codes for structural role versus method identity fully apart, since sharing one figure without a divider (a listed weakness) risks a reader reading the wrong key.",
+      "dir": "../figures/osdi23-008_fig12"
+    },
+    {
+      "id": "osdi26-051_fig2",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "JBOF (a) and SSD-controller (b) architecture overviews sit beside a numbered 1-7 NVMe I/O-path zoom (c), a dense, 25-component, three-panel teardown of the traditional baseline system Espresso is built to replace.",
+      "what_to_learn": "Number every hop of one request, ring doorbell, fetch, parse and slice, address translation, DMA, flash command, directly on its connecting arrows to turn a static three-panel architecture into a traceable walkthrough; watch the density, 135 text labels and 310 shapes across three panels, a listed weakness.",
+      "dir": "../figures/osdi26-051_fig2"
+    },
+    {
+      "id": "osdi26-061_fig2",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Panel (a)'s legend (orange control-header, green data-payload, blue network traffic) traces flows through one concrete 2-CPU, 8-GPU server, while panel (b) switches vocabulary entirely to TX, RX, Pacer engine threads and per-connection queue pairs.",
+      "what_to_learn": "Draw a layered software stack directly above the physical server hardware it runs on so flows can be colour-coded end to end (orange control, green data, blue network), and repeat that legend in the internal threading panel too, since this figure leaves it unstated there, a listed weakness.",
+      "dir": "../figures/osdi26-061_fig2"
+    },
+    {
+      "id": "osdi26-098_fig2",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Kept after review although the note-writer judged the fit loose: one ungrouped panel of background small multiples, a generic Transformer block plus two quantization schemes plus two execution strategies, no lettered sub-panels, no dominant architecture view, explaining prior concepts, not the paper's own system.",
+      "what_to_learn": "Reserve composite-figure for a dominant architecture plus lettered unlike-kind detail panels; a flat, unlettered sequence of small background-concept diagrams like this one (Transformer block, then quantization, then execution strategy) is closer to small multiples and needs no single anchor panel, only consistent bit-width labels and dashed cross-reference arrows tying each stage to the next.",
+      "dir": "../figures/osdi26-098_fig2"
+    },
+    {
+      "id": "sosp25-035_fig2",
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Named in the reference as the namespace-tree/request-flow/sharded-tables exemplar: the tree and RPC diagram sit above four database tables, with matching green object-metadata highlights and red annotation callouts linking letters like C/D/E/G across all three parts.",
+      "what_to_learn": "Let a small worked example's node/id labels (C, D, E, G) recur identically across the tree, the RPC-flow diagram, and the resulting database rows so a reader can trace one concrete write through every representation; but keep the cross-references few, since needing to match letters across three dense sub-panels, a listed weakness, adds real effort.",
+      "dir": "../figures/sosp25-035_fig2"
+    },
+    {
+      "id": "asplos25-094_fig2",
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Reassigned from block-floorplan by the note-writer: this is a neural-network block diagram (one MoE Block's internals) paired with a stacked timeline of repeated block invocations across prefill and decoding; nothing is hardware, and there is no chip or bus.",
+      "what_to_learn": "Read this as a phase-lanes or replicated-grid figure instead: expand one MoE Block fully on the left, then tile the same block repeatedly along a timeline on the right, one wide invocation for the whole prefill prompt and one narrow invocation per decoded token.",
+      "dir": "../figures/asplos25-094_fig2"
+    },
+    {
+      "id": "asplos26-074_fig9",
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "A 4x4 chip-mesh topology overview (a) is joined by a dashed leader to a zoomed single-chip block diagram (b), the overview-with-inset-inside-composite pattern, with the zoom revealing the Control Unit/HN Array/VEX/Buffer stack over shared HBM.",
+      "what_to_learn": "Zoom a dashed leader from one node in a repeated mesh topology into a single expanded block diagram rather than drawing every node's internals, and spell out abbreviated module names in full (this figure's 'Inter. Engine' is ambiguous without the caption, a listed weakness) so the inset stands on its own.",
+      "dir": "../figures/asplos26-074_fig9"
+    },
+    {
+      "id": "asplos26-127_fig12",
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Reassigned from matrix by the note-writer: this is a hardware evaluation composite of five unlike panels, chip photo, zoomed photo, an area/power table, two waveform plots, not comparable cells, so it fits composite-figure or overview-with-inset better than matrix.",
+      "what_to_learn": "When bundling a chip photo, a zoomed detail, a results table and measured waveforms into one figure, treat it as an overview-plus-detail composite rather than forcing a matrix grid; the record's own weakness warns that packing five different panel types into one single-column figure makes every axis label too small to read.",
+      "dir": "../figures/asplos26-127_fig12"
+    },
+    {
+      "id": "nsdi25-030_fig1",
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Two framed chassis photos (24-bay front, 12-port back) sit beside a fully labelled internal diagram of one switch fanning into two identical 12-SSD pipelines, at nesting depth 5, the deepest figure in this set.",
+      "what_to_learn": "Frame a chassis photo with a thin border so it reads as one panel, not decoration, and reserve the fullest label depth (nesting depth 5 here) for the paper's own dual-pipeline internal view; avoid this figure's own weakness of collapsing 24 SSDs to bare ellipses with only a few labelled.",
+      "dir": "../figures/nsdi25-030_fig1"
+    },
+    {
+      "id": "nsdi25-067_fig7",
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Panel (a)'s labeled architecture (Instruction Unit, Pipeline Schedulers, Scoreboarding over a GPU pool) is followed by two independent zooms, an instruction-to-DAG translation and a three-table scoreboard schema, the archetypal overview-plus-unlike-details split.",
+      "what_to_learn": "Let one architecture panel own the palette (gray boundaries, busy-slot shading) and name every subsystem directly on it, then let each detail panel use its own visual language, a dependency DAG with curved orange edges, a table with bracketed column groups in dark-red italics; keep font size well above this figure's dense, small-print floor.",
+      "dir": "../figures/nsdi25-067_fig7"
+    },
+    {
+      "id": "nsdi26-090_fig1",
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "An abstract agent-loop diagram (a), a concrete annotated text trace (b), and a stacked latency bar chart (c) are three genuinely unlike kinds under one figure, exactly the box-plus-workflow-plus-plot mix this template is built for.",
+      "what_to_learn": "Let the dominant architecture panel set the organizing idea (the dashed Region A/B boundary) that the unlike trace and chart panels beside it echo, and give each differently-styled panel a light divider or frame, since running three visual languages together with none, as here, blurs where one panel ends and the next begins.",
+      "dir": "../figures/nsdi26-090_fig1"
+    }
+  ]
+}

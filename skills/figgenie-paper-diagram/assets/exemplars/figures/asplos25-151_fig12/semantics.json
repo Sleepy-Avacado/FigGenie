@@ -1,0 +1,248 @@
+{
+  "paper_id": "asplos25-151",
+  "fig": "12",
+  "kind": "mechanism",
+  "system": {
+    "name": "Fat-Tree QRAM",
+    "one_liner": "a quantum random access memory architecture that pipelines O(log N) queries in O(log N) time using O(N) qubits",
+    "domain": [
+      "quantum-computing",
+      "quantum-memory"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "the gate-level schedule of address-loading, memory-access, and unloading operations for three pipelined Fat-Tree QRAM queries",
+    "base": "table",
+    "elements": [
+      {
+        "name": "L (load)",
+        "kind": "label",
+        "role": "loads one address qubit's (or the bus's) routing information into a tree level before descending further",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S (store)",
+        "kind": "label",
+        "role": "stores/commits an address qubit's rotation at a router of that level",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "R (rotate)",
+        "kind": "label",
+        "role": "applies the controlled rotation that steers the query along one address qubit at that level",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T (two-qubit gate)",
+        "kind": "label",
+        "role": "a two-qubit gate that propagates the query state one tree level deeper toward memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S-I",
+        "kind": "label",
+        "role": "local swap of even-indexed routers between adjacent QRAM sizes, run once per pipeline interval",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S-II",
+        "kind": "label",
+        "role": "local swap of odd-indexed routers between adjacent QRAM sizes, run once per pipeline interval",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CG",
+        "kind": "cell",
+        "role": "the controlled gate at the tree's deepest level where the query actually reads the memory cell",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "primed operations (L', S', R', T')",
+        "kind": "label",
+        "role": "mirror of the unprimed operations, undoing the routing as the query and its result ascend back out of the tree",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "level band",
+        "kind": "row",
+        "role": "a colour-coded row band (green/orange/pink) matching one level of the QRAM tree at left",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "QRAM tree",
+        "kind": "icon",
+        "role": "the small reference diagram keying each colour to a level of the fat-tree QRAM being scheduled",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "L (load)",
+        "to": "R (rotate)",
+        "what": "a loaded address qubit is rotated at the same level in a later cycle",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "R (rotate)",
+        "to": "T (two-qubit gate)",
+        "what": "the rotated qubit drives a two-qubit gate that propagates the query one level deeper",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "T (two-qubit gate)",
+        "to": "CG",
+        "what": "successive levels' gates carry the query down to the controlled gate at the memory cell",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "CG",
+        "to": "primed operations (L', S', R', T')",
+        "what": "after the memory access, the same levels are retraced outward via mirrored primed operations",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "S-I",
+        "to": "S-II",
+        "what": "even- and odd-indexed local swaps alternate every pipeline interval to shift each query along the tree",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "QRAM tree",
+        "to": "level band",
+        "what": "the tree's dashed tiers are keyed by colour to the grid's row bands",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the operation mnemonics filling each grid cell (L1, S1, R2, T2, S-I, RB, TB, CG, and their primed mirrors)",
+      "linked_by": "position (column = pipeline cycle, row = tree level) and colour (green/orange/pink band per level)",
+      "result_cells": "no numeric result; CG marks the single cell where the memory access itself occurs"
+    },
+    "key_idea": "One Fat-Tree QRAM query's address-routing gates (load, rotate, two-qubit gate, alternating SWAP-I/SWAP-II) are scheduled cycle by cycle down to a single controlled-gate memory access and back, and three such queries are staggered to pipeline the whole tree.",
+    "reading_order": "left to right across pipeline cycles through the unprimed load/store/rotate/gate labels down to the CG cell at centre, then back out through the mirrored primed labels; the small tree at far left keys each row band to a QRAM level, and the bars below repeat the pattern staggered for three queries"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.9,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f4cccc",
+        "used_for": "pale pink/red fill of the deepest (memory-adjacent) tier's grid cells and the tree's palest leaf nodes"
+      },
+      {
+        "hex": "#fce5cd",
+        "used_for": "pale orange fill of the middle tier's grid cells and tree nodes"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "pale green fill of the top (bus) tier's grid cells and tree nodes"
+      },
+      {
+        "hex": "#b6d7a8",
+        "used_for": "mid-green fill of the tree's single root node"
+      },
+      {
+        "hex": "#f9cb9c",
+        "used_for": "mid-orange fill of the tree's two second-level nodes"
+      },
+      {
+        "hex": "#ea9999",
+        "used_for": "mid-red fill of the tree's four third-level nodes"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "light grey fill of one shade of swap-boundary separator column"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "medium grey fill of the other swap-boundary separator / trapezoid connector"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.3pt) grey grid lines with darker grey cell borders; dashed grey rules mark tree-level boundaries",
+    "corners": "square",
+    "arrows": "none; the schedule's order is conveyed by column position and connecting trapezoid shading, not arrowheads",
+    "font": "small (~5.5pt) bold sans-serif (Arial) labels throughout",
+    "icons": "none beyond the small line-and-circle QRAM tree reference diagram"
+  },
+  "encoding": {
+    "color_means": "green/orange/pink band the grid cells and tree nodes by QRAM tree level, from the bus root down to the memory cells",
+    "line_style_means": "solid lines separate cells and pipeline cycles; dashed horizontal rules mark boundaries between QRAM tree levels, matching the dashed lines drawn across the reference tree",
+    "state_means": "primed vs unprimed operation labels (e.g. T3 vs T'3) distinguish the query's inward descent from its mirrored outward ascent through the same tree levels",
+    "marker_means": "each cell's letter code names an elementary operation (L=load, S=store, R=rotate, T=two-qubit gate, S-I/S-II=the two local-swap types, CG=the controlled gate at the memory cell); the trailing digit or B names which address qubit or the bus is acted on",
+    "emphasis": "grey vertical swap-cycle bands recur at regular intervals, breaking the schedule into repeating pipeline intervals; the three staggered bars beneath the grid make the pipelining across three queries explicit",
+    "reusable_patterns": [
+      "a coloured grid keyed to a small reference tree diagram, one colour per hierarchy level",
+      "trapezoidal shading linking a wide detailed table to narrow staggered summary bars repeating the same pattern over time",
+      "primed vs unprimed labels marking an outward mirror of an inward operation sequence"
+    ],
+    "weaknesses": [
+      "the CG operation is not defined in the quoted text, only inferred from its position at the tree's deepest level",
+      "very small (5.5pt) dense cell labels make the exact schedule hard to read without the appendix instruction-set reference"
+    ]
+  },
+  "tags": [
+    "QRAM",
+    "quantum-memory",
+    "pipelining",
+    "reservation-table",
+    "fat-tree",
+    "gate-schedule"
+  ],
+  "provenance": {
+    "sections": [
+      "§4.3.1 Pipelining Details",
+      "Appendix A.2 Proof of FIFO Scheduling Optimality"
+    ],
+    "evidence": [
+      "A step-by-step pipelining diagram for three capacity-8 queries using the instruction set defined in Sec. A.1.",
+      "A detailed breakdown with elementary operations appears in Appendix Fig. 12.",
+      "Alternating SWAP-I and SWAP-II enables seamless query movement across QRAM sizes"
+    ]
+  },
+  "summary": "This appendix figure gives the gate-level schedule behind Fat-Tree QRAM's pipelined query procedure, whose overview appears in Fig. 6 and Algorithm 1. A small reference tree at left keys three colour bands (green, orange, pink) to the QRAM's bus and two internal address levels. The main grid lays pipeline cycles out as columns and, cycle by cycle, names the elementary gate applied at each level: load (L), store (S), rotate (R), and two-qubit (T) operations on address qubits 1-3 or the bus (B), separated by alternating SWAP-I/SWAP-II local-swap cycles. Labels descend from the outer levels to a single controlled gate (CG) at the memory cell, then retrace the same path outward as mirrored, primed operations. The three narrow bars beneath repeat this coloured pattern staggered in time, showing how three capacity-8 queries share the pipeline concurrently.",
+  "summary_zh": "该图给出Fat-Tree QRAM流水线查询的门级调度：参考树按颜色标出总线与两层地址层级，网格按周期排列加载/存储/旋转/两比特门及SWAP-I/II交替，抵达CG门后镜像返回；下方三条错位色带示三条查询流水线重叠。",
+  "confidence": "medium",
+  "notes": "The quoted paragraph describes Fig. 6 (the pipelining overview) in detail but only names Fig. 12 as its 'detailed breakdown'; the exact meaning of the CG cell and some primed-label semantics are inferred from the figure and caption rather than stated outright. Kept prior groups=[anatomy] and base=table (a single integrated schedule table, not repeated discrete frames, so not classified as evolution).",
+  "venue": "ASPLOS25"
+}

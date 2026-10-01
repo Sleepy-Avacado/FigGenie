@@ -1,0 +1,263 @@
+{
+  "paper_id": "nsdi25-030",
+  "fig": "1",
+  "system": {
+    "name": "Fungible FS1600 EBOF (background)",
+    "one_liner": "a commodity Ethernet-attached Bunch Of Flash (EBOF) storage chassis whose deployment and internal switch/pipeline/SSD architecture the paper's elastic block storage system is built over",
+    "domain": [
+      "storage",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Cluster setup",
+        "role": "the evaluation testbed rack, annotated with Composer Nodes, FS1600, Ethernet Switch, and Compute Nodes labels",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Composer Nodes",
+        "role": "redundant dedicated servers holding the management plane: configuring the EBOF and its NVMe drives, and providing a remote control panel for users",
+        "container": "Cluster setup",
+        "novel": false
+      },
+      {
+        "name": "Compute Nodes",
+        "role": null,
+        "container": "Cluster setup",
+        "novel": false
+      },
+      {
+        "name": "FS1600 front pannel",
+        "role": "photo of the chassis front, showing the 24 NVMe drive bays",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FS1600 back pannel",
+        "role": "photo of the chassis back, showing the 12x100GbE port cabling",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Internal Ethernet Switch",
+        "role": "has 12 ports for external connectivity and delivers network traffic to the two pipelines based on the storage targets",
+        "container": "FS1600 Internal Architecture",
+        "novel": false
+      },
+      {
+        "name": "I/O Processing Pipeline1",
+        "role": "one of two parallel pipelines that incoming packets undergo a sequence of processing stages along",
+        "container": "FS1600 Internal Architecture",
+        "novel": false
+      },
+      {
+        "name": "I/O Processing Pipeline2",
+        "role": "the second parallel pipeline, identical in structure to Pipeline1",
+        "container": "FS1600 Internal Architecture",
+        "novel": false
+      },
+      {
+        "name": "NVMe-oF Cores (1...n)",
+        "role": null,
+        "container": "I/O Processing Pipeline1",
+        "novel": false
+      },
+      {
+        "name": "I/O Accelerators (1...n)",
+        "role": "performs compression, encryption, and erasure coding on pipeline I/O data",
+        "container": "I/O Processing Pipeline1",
+        "novel": false
+      },
+      {
+        "name": "Comp.",
+        "role": "compression",
+        "container": "I/O Accelerators (1...n)",
+        "novel": false
+      },
+      {
+        "name": "Encrypt.",
+        "role": "encryption",
+        "container": "I/O Accelerators (1...n)",
+        "novel": false
+      },
+      {
+        "name": "Erasure Coding",
+        "role": null,
+        "container": "I/O Accelerators (1...n)",
+        "novel": false
+      },
+      {
+        "name": "I/O Orchestration",
+        "role": "coordinates traffic and per-SSD queueing for the pipeline's NVMe SSDs",
+        "container": "I/O Processing Pipeline1",
+        "novel": false
+      },
+      {
+        "name": "Traffic Manager",
+        "role": null,
+        "container": "I/O Orchestration",
+        "novel": false
+      },
+      {
+        "name": "Per-SSD",
+        "role": "per-SSD submission and completion queue pair",
+        "container": "I/O Orchestration",
+        "novel": false
+      },
+      {
+        "name": "SubQ",
+        "role": "submission queue",
+        "container": "Per-SSD",
+        "novel": false
+      },
+      {
+        "name": "CmpQ",
+        "role": "completion queue",
+        "container": "Per-SSD",
+        "novel": false
+      },
+      {
+        "name": "NVMe SSD1-12",
+        "role": "physical NVMe SSDs served by I/O Processing Pipeline1",
+        "container": "FS1600 Internal Architecture",
+        "novel": false
+      },
+      {
+        "name": "NVMe SSD13-24",
+        "role": "physical NVMe SSDs served by I/O Processing Pipeline2",
+        "container": "FS1600 Internal Architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Internal Ethernet Switch",
+        "to": "I/O Processing Pipeline1",
+        "what": "network traffic to storage targets served by Pipeline1 (Port1)",
+        "step": null
+      },
+      {
+        "from": "Internal Ethernet Switch",
+        "to": "I/O Processing Pipeline2",
+        "what": "network traffic to storage targets served by Pipeline2 (Port12)",
+        "step": null
+      },
+      {
+        "from": "NVMe-oF Cores (1...n)",
+        "to": "I/O Accelerators (1...n)",
+        "what": "bidirectional I/O request/response path (repeated identically in Pipeline2)",
+        "step": null
+      },
+      {
+        "from": "I/O Accelerators (1...n)",
+        "to": "I/O Orchestration",
+        "what": "bidirectional I/O request/response path (repeated identically in Pipeline2)",
+        "step": null
+      },
+      {
+        "from": "I/O Orchestration",
+        "to": "NVMe SSD1-12",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "I/O Orchestration",
+        "to": "NVMe SSD13-24",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "The FS1600 EBOF chassis exposes 12 100GbE ports and 24 NVMe drives through an internal Ethernet switch that fans out to two identical I/O processing pipelines, each serving 12 SSDs.",
+    "reading_order": "Left to right across four sub-panels: (a) cluster-setup labels, (b)/(c) chassis front/back photos, then (d) the internal pipeline diagram read left-to-right from the switch to the SSDs."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 5,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 4,
+    "column": "double",
+    "aspect": 3.19,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of most panel (d) boxes (NVMe-oF Cores, I/O Accelerators, I/O Orchestration, Per-SSD, SSD labels)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of the outer FS1600 chassis frame and internal sub-boxes (Comp., Encrypt., Erasure Coding, Traffic Manager)"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "darker-gray minor accent fill"
+      },
+      {
+        "hex": "#fffb00",
+        "used_for": "bright-yellow annotation text/brackets/arrows in panel (a)'s cluster-setup callouts"
+      },
+      {
+        "hex": "#003776",
+        "used_for": "dark-blue stroke of the Internal Ethernet Switch's fabric connector lines"
+      },
+      {
+        "hex": "#b34400",
+        "used_for": "burnt-orange stroke of the connector lines from I/O Orchestration to the NVMe SSDs"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.59pt, solid throughout (no dashed lines); segmented dark-blue lines from the switch, burnt-orange lines to the SSDs",
+    "corners": "mixed",
+    "arrows": "many short arrows with filled triangular heads, several bidirectional, between adjacent pipeline stages",
+    "font": "Helvetica Neue / Bold, about 3.5-6pt",
+    "icons": "bitmap photos for the FS1600 front/back panels; small circle-and-arrow glyphs depicting the NVMe-oF Cores' internal dataflow"
+  },
+  "encoding": {
+    "color_means": "gray = the physical FS1600 chassis and its internal functional boxes; dark blue = the internal switch's fabric connections; burnt orange = per-pipeline links to the NVMe SSDs; yellow = annotation callouts in the cluster-setup panel",
+    "line_style_means": null,
+    "emphasis": "gives its most detailed treatment to panel (d), fully labelling one I/O processing pipeline's accelerator/orchestration internals and repeating the identical box structure for Pipeline2 to show the design is duplicated per port group",
+    "reusable_patterns": [
+      "deployment figure combining hardware photos with one detailed internal-architecture diagram",
+      "two identical parallel pipelines fanning out from a shared switch to two disjoint sets of numbered SSDs"
+    ],
+    "weaknesses": [
+      "panel (a)'s own cluster-setup diagram/photo did not render in this PDF extraction, leaving only yellow annotation labels and brackets pointing at blank space",
+      "24 individual NVMe SSDs are abbreviated with ellipses, so only a few are explicitly labelled"
+    ]
+  },
+  "tags": [
+    "EBOF",
+    "NVMe-oF",
+    "disaggregated-storage",
+    "erasure-coding",
+    "block-storage",
+    "hardware-deployment",
+    "storage-pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Understanding EBOF (p.3)",
+      "2 Understanding EBOF (p.4)"
+    ],
+    "evidence": [
+      "Figure 1-d presents the FS1600's internal architecture, consisting of an integrated Ethernet switch, two I/O processing pipelines",
+      "the internal switch has 12 ports for external connectivity and delivers network traffic to two pipelines",
+      "several redundant dedicated servers (called composer nodes in Figure 1-a) to hold the management plane"
+    ]
+  },
+  "summary": "This background figure (§2, Understanding EBOF) documents the Fungible FS1600, the commodity EBOF chassis the paper's elastic block storage system is built over. Panel (a) labels a cluster setup with Composer Nodes and Compute Nodes around an FS1600 and its Ethernet Switch, though the panel's own diagram did not render in this extraction, leaving only yellow annotation callouts. Panels (b) and (c) are photos of the chassis's front panel (24 NVMe drive bays) and back panel (12 100GbE port cabling). Panel (d) details the internal architecture: an Internal Ethernet Switch with 12 ports fans network traffic out to two identical I/O Processing Pipelines, each chaining NVMe-oF Cores, I/O Accelerators (compression, encryption, erasure coding), and I/O Orchestration (a Traffic Manager plus per-SSD submission/completion queues) before reaching 12 NVMe SSDs per pipeline.",
+  "summary_zh": "该图展示Fungible FS1600 EBOF硬件：(a)机柜标注（图未渲染），(b)(c)为前后面板照片，(d)展示内部架构——交换机将流量分发给两条并行I/O流水线，各接12块NVMe SSD。",
+  "confidence": "medium",
+  "notes": "Panel (a)'s own cluster-setup image did not render in this PDF-extracted SVG (only yellow annotation text/brackets are present over blank space); and the given text is truncated exactly where it would explain the pipeline stages' internals ('packets undergo a sequence of processing stages along the pipeline:'), so several component roles in panel (d) are read from figure labels only. layout-proposal: photo-plus-pipeline-grid — a 2x2 grid mixing a (largely missing) cluster-setup diagram with two hardware photos and one internal two-lane pipeline architecture diagram (switch to NVMe-oF Cores to I/O Accelerators to I/O Orchestration to SSDs).",
+  "venue": "NSDI25"
+}

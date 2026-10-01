@@ -1,0 +1,176 @@
+{
+  "paper_id": "nsdi24-072",
+  "fig": "9",
+  "system": {
+    "name": "CASSINI",
+    "one_liner": "a network-aware job scheduler for ML clusters that computes time-shifts for jobs sharing network links",
+    "domain": [
+      "networking",
+      "ml-systems",
+      "scheduling"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Themis arbiter",
+        "role": "computes finish-time fairness, selects winning bids and proposes N placement candidates",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cassini module (Algorithm 2)",
+        "role": "selects the best placement candidate and computes unique time-shifts for jobs sharing the network",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Construct Affinity graphs",
+        "role": "builds an affinity graph Gc for each placement candidate",
+        "container": "Cassini module (Algorithm 2)",
+        "novel": true
+      },
+      {
+        "name": "Solve optimization formulation (Table 1)",
+        "role": "solves the optimization to obtain compatibility scores for links in Gc",
+        "container": "Cassini module (Algorithm 2)",
+        "novel": true
+      },
+      {
+        "name": "Select top placement candidate",
+        "role": "picks the top placement candidate based on its compatibility metric",
+        "container": "Cassini module (Algorithm 2)",
+        "novel": true
+      },
+      {
+        "name": "Compute unique time-shifts (Algorithm 1)",
+        "role": "computes time-shifts for jobs that share the network under the chosen placement",
+        "container": "Cassini module (Algorithm 2)",
+        "novel": true
+      },
+      {
+        "name": "Themis Agent",
+        "role": "applies the received time-shifts at the start of the epoch on each server",
+        "container": "GPU Cluster",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Themis arbiter",
+        "to": "Cassini module (Algorithm 2)",
+        "what": "Placement candidates (Candidates)",
+        "step": 1
+      },
+      {
+        "from": "Construct Affinity graphs",
+        "to": "Solve optimization formulation (Table 1)",
+        "what": "Affinity graph (Gc)",
+        "step": 2
+      },
+      {
+        "from": "Solve optimization formulation (Table 1)",
+        "to": "Select top placement candidate",
+        "what": "Compatibility score (score_l)",
+        "step": null
+      },
+      {
+        "from": "Select top placement candidate",
+        "to": "Compute unique time-shifts (Algorithm 1)",
+        "what": "G_top_placement",
+        "step": null
+      },
+      {
+        "from": "Compute unique time-shifts (Algorithm 1)",
+        "to": "Themis Agent",
+        "what": "Final job placement and time-shifts ({t_j}, top_placement)",
+        "step": null
+      },
+      {
+        "from": "Themis Agent",
+        "to": "Themis arbiter",
+        "what": "Performance metrics",
+        "step": null
+      }
+    ],
+    "key_idea": "CASSINI slots in between Themis's arbiter and its per-server agents: it takes the arbiter's multiple placement candidates, builds affinity graphs and solves an optimization to score link compatibility, then computes network-aware time-shifts that the existing Themis agents apply, closing the loop with performance metrics fed back to the arbiter.",
+    "reading_order": "top-down: Themis arbiter proposes placement candidates, the Cassini module processes them through affinity-graph construction, optimization and candidate selection to compute time-shifts, then the GPU cluster's Themis agents apply them, with performance metrics looping back to the top."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.78,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "Themis arbiter box background (peach)"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Cassini module box background (light green)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "GPU Cluster / Themis Agent box background (light yellow)"
+      },
+      {
+        "hex": "#00b0f0",
+        "used_for": "highlighted icons/lines inside the Cassini module"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "neutral gray accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines, rounded boxes",
+    "font": "Calibri sans, small (3-7.5pt), italic for Themis-Italic-style labels",
+    "corners": "rounded",
+    "arrows": "black solid arrows between the three horizontal layers, plus curved arrows within the Cassini module and a dashed feedback line for performance metrics",
+    "icons": "small bitmap icons for optimization/graph steps, GPU server icons for the cluster, network switch icons connecting servers"
+  },
+  "encoding": {
+    "color_means": "peach = pre-existing Themis arbiter, green = CASSINI's newly added module, yellow = the underlying GPU cluster running unmodified Themis agents",
+    "line_style_means": "dashed feedback line on the left carries performance metrics back from the cluster to the arbiter",
+    "emphasis": "the green Cassini box sits visually between the unmodified peach and yellow Themis components, emphasizing that CASSINI is inserted into the existing scheduler with minimal disruption",
+    "reusable_patterns": [
+      "a new module inserted between an existing planner and its existing execution agents, color-coded by which parts are novel"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "network-aware-scheduling",
+    "ml-cluster",
+    "job-placement",
+    "time-shifting",
+    "scheduler-augmentation",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Augmenting ML Schedulers with CASSINI (p.8)"
+    ],
+    "evidence": [
+      "Figure 9 shows how CASSINI augments Themis.",
+      "CASSINI modifies Themis's arbiter to return a set of potential placement candidates",
+      "CASSINI transfers the time-shifts to Themis's agent running on servers"
+    ]
+  },
+  "summary": "CASSINI is a network-aware job scheduler that augments existing ML schedulers like Themis rather than replacing them. Figure 9 shows this augmentation as a three-layer, top-down architecture. At the top, a peach-colored 'Themis arbiter' box computes finish-time fairness, selects winning bids and now proposes N placement candidates instead of one. These flow into a green 'Cassini module (Algorithm 2)' box in the middle, which constructs affinity graphs for each candidate, solves an optimization (Table 1) to score link compatibility, selects the top placement, and computes unique time-shifts (Algorithm 1) for jobs sharing network links. The result, final job placements and time-shifts, flows down into a yellow 'GPU Cluster' box where per-server Themis Agents apply them; performance metrics are fed back up to the arbiter via a dashed line on the left. The color-coded, layered layout makes clear which parts are CASSINI's contribution versus Themis's original components.",
+  "summary_zh": "该图展示CASSINI如何增强Themis调度器：顶部Themis仲裁器提出多个候选放置方案，中部绿色Cassini模块构建亲和图并求解优化得到时间偏移，底部GPU集群的Themis代理应用结果，并将性能指标反馈回仲裁器。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

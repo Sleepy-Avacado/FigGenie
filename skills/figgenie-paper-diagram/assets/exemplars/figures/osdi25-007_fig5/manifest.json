@@ -1,0 +1,41 @@
+{
+  "id": "osdi25-007_fig5",
+  "paper_id": "osdi25-007",
+  "fig": "5",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 5: Overview of the EMT framework, compared with vanilla Linux and analogized to VFS.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.9,
+  "n_components": 16,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-007/osdi25-007_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi25-007/osdi25-007_fig5_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar of a three-column analogy: two baseline systems and the proposed one share four row labels in a left gutter, with a dashed box standing for a structural absence, not a component.",
+      "what_to_learn": "Put the row categories once in a left-hand gutter shared by every column, use a dashed empty box to mean no interface exists here rather than omitting the cell, and recolour only the one column that is the paper's contribution to argue its analogy to an accepted precedent."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "nsdi23-065_fig2",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-065",
+  "fig": "2",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 2: Logical processes spread across machines. Each logical process is comprised of proclets that include a heap (shown as a circle) and threads (shown as squiggles). Proclets rapidly migrate to other machines in response to resource pressure.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how one proclet migrates from Machine 0 to Machine 1 while other proclets in the same logical process stay put",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "dashed-ghost",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.65,
+  "n_elements": 7,
+  "n_relations": 1,
+  "n_panels": 1,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-065/nsdi23-065_fig2_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-065/nsdi23-065_fig2_p4_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "Because a proclet already bundles its own heap and threads as a self-contained partition, migrating it between machines is just relocating that unit, not a special operation.",
+      "what_to_learn": "Before and after in one frame: dashed ghost at the old slot, curved arrow, red operation label",
+      "note_source": "doc"
+    }
+  ]
+}

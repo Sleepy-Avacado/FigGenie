@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-127_fig1",
+  "paper_id": "osdi26-127",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: The overview of Drs.NAS framework for the DRS architecture search, consisting of four sequential phases.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.15,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-127/osdi26-127_fig1_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-127/osdi26-127_fig1_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A star exemplar: blue Vertex boxes V1 to VD form the labelled DAG search space, then curved edges in Search Space Relaxation connect them before Discretize turns the graph back into purple Layer boxes.",
+      "what_to_learn": "Carry the same small coloured-square operator code through every stage, layer boxes to superproxy bars to DAG vertex boxes, so identity survives four transformations without a fresh legend each time; add a real legend regardless, since none decodes what the squares mean here."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-101_fig1",
+  "paper_id": "asplos25-101",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1: (a) LLM structure. (b) LLM inference with serial de- coding. (c) Parallel decoding process with batching. (d) Parallel decoding process with speculative decoding.",
+  "corpus_template": "other",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.2,
+  "n_components": 10,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 4,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-101/src/fig1_model_arch3.svg",
+    "preview.png": "lab/extracted/asplos25-101/src/fig1_model_arch3.png",
+    "print.png": "lab/extracted/asplos25-101/asplos25-101_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Only panel (a) of this 4-panel figure is the relevant instance: a Decoding stack zooms via a dashed line into its four-kernel breakdown, while panels (b)-(d) are unrelated serial/batch/speculative timelines.",
+      "what_to_learn": "A background/definitions figure can carry a small inset inside just one of several panels: zoom the repeated-block stack (Decoder 1...N) into its four internal kernel stages with a single dashed line, and leave the timeline panels beside it in a separate, unconnected visual grammar."
+    },
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated 4-panel figure where concurrency is the claim: panels (b)-(d) reuse the same Decoding-box drawing but stack one, two, or two-per-request token rows through it to contrast serial, batched, and speculative decoding.",
+      "what_to_learn": "To contrast concurrency strategies, redraw the identical pipeline box two or three times and vary only how many token rows run through it in parallel, letting the row count itself, not new geometry, carry the difference between serial, batched, and speculative execution."
+    },
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (b) serial, (c) batched-parallel, and (d) speculative-parallel decoding reuse the same Decoding-block-plus-token-square vocabulary to isolate what changes, while panel (a) above supplies the architecture the tokens flow through.",
+      "what_to_learn": "Keep the comparison panels (here serial vs batched vs speculative decoding) at one shared scale and icon set even when an unlike architecture panel sits above them; but size and align comparison panels consistently, since this figure's four differently sized sub-panels are flagged as visually busy."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-090_fig7",
+  "paper_id": "osdi26-090",
+  "fig": "7",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 7: Lock-reduced parallelism for dirty page registration.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.29,
+  "n_components": 9,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-090/osdi26-090_fig7_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-090/osdi26-090_fig7_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: a straight three-stage left-to-right pipeline (its own corpus label) with a user/kernel divider and four colour-coded thread tokens, no magnified callout or dashed zoom anywhere in the figure.",
+      "what_to_learn": "The transferable move is pipeline's: assign each parallel worker (t1-t4) one consistent colour and trace a single one of them (t4, dashed outline) through every stage as the worked example, converging all four at the end into one aggregated operation instead of four separate ones."
+    }
+  ]
+}

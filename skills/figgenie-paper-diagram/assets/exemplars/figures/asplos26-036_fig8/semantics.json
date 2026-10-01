@@ -1,0 +1,160 @@
+{
+  "paper_id": "asplos26-036",
+  "fig": "8",
+  "system": {
+    "name": "MuxWise",
+    "one_liner": "an LLM serving framework using intra-GPU prefill-decode multiplexing to meet SLOs at high goodput",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Contention-tolerant estimator",
+        "role": "provides worst-case latency estimates by combining a solo-run predictor with a contention guard, built from offline profiling",
+        "container": "MuxWise",
+        "novel": true
+      },
+      {
+        "name": "Solo-run predictor",
+        "role": "predicts a request's latency executing alone",
+        "container": "Contention-tolerant estimator",
+        "novel": true
+      },
+      {
+        "name": "Contention guard",
+        "role": "adjusts the latency estimate to account for contention from concurrently multiplexed prefill/decode work",
+        "container": "Contention-tolerant estimator",
+        "novel": true
+      },
+      {
+        "name": "One-time offline profiling",
+        "role": "offline profiling run per LLM/hardware pair that supplies data to the predictor and contention guard",
+        "container": "MuxWise",
+        "novel": false
+      },
+      {
+        "name": "SLO-aware dispatcher",
+        "role": "uses estimator latency to schedule prefill layers and decode iterations, producing a multiplexing plan (SM/block partition)",
+        "container": "MuxWise",
+        "novel": true
+      },
+      {
+        "name": "Bubble-less multiplex engine",
+        "role": "executes prefill layers (PLs) and decode (D) concurrently on the GPU without pipeline bubbles, per the dispatcher's plan",
+        "container": "MuxWise",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "One-time offline profiling",
+        "to": "Contention-tolerant estimator",
+        "what": "offline-profiled latency/contention data",
+        "step": null
+      },
+      {
+        "from": "Contention-tolerant estimator",
+        "to": "SLO-aware dispatcher",
+        "what": "latency estimate",
+        "step": null
+      },
+      {
+        "from": "SLO-aware dispatcher",
+        "to": "Bubble-less multiplex engine",
+        "what": "multiplexing plan (P: X SMs/Y Blocks, D: Z SMs)",
+        "step": null
+      },
+      {
+        "from": "Bubble-less multiplex engine",
+        "to": "Contention-tolerant estimator",
+        "what": "runtime execution feedback updating the contention guard",
+        "step": null
+      }
+    ],
+    "key_idea": "MuxWise combines an offline-profiled, contention-tolerant latency estimator with an SLO-aware dispatcher that computes an SM/block multiplexing plan, driving a bubble-less engine that runs layer-wise prefill and decode concurrently on the same GPU.",
+    "reading_order": "Clockwise from top: offline profiling feeds the contention-tolerant estimator, which sends a latency estimate down to the SLO-aware dispatcher; the dispatcher's plan drives the bubble-less multiplex engine, which updates the estimator's contention guard at runtime."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.61,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c5e5e5",
+        "used_for": "light cyan panel fill for the 'Contention-tolerant estimator' box and 'PLs' blocks"
+      },
+      {
+        "hex": "#fbf6ea",
+        "used_for": "cream fill for the 'Solo-run predictor'/'Contention guard' boxes and the dispatcher's plan box"
+      },
+      {
+        "hex": "#a6b7de",
+        "used_for": "light blue-purple fill for the 'D' (decode) execution blocks"
+      },
+      {
+        "hex": "#b1001c",
+        "used_for": "red for 'Request' arrows, dashed 'Sync' markers, and bold action labels (Latency, Update, Plan, Compute)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill for the 'One-time offline profiling' box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark outlines (~0.62pt median) on boxes, dashed red vertical lines marking sync points in the timeline mini-diagram",
+    "font": "sans (HelveticaNeue), 5-15pt, bold for the 'MuxWise' title and subsystem section headers (§3.2-§3.4)",
+    "corners": "mixed",
+    "arrows": "thin black/red arrows labeled Latency, Update, Plan connecting the three subsystem boxes",
+    "icons": "small vector timeline icons of stacked PLs/D blocks depicting concurrent execution"
+  },
+  "encoding": {
+    "color_means": "cyan groups the estimator subsystem; cream marks its two predictor sub-components and the dispatcher's plan; light blue-purple marks decode (D) execution blocks; red highlights control/data-flow arrows and key action labels",
+    "line_style_means": "dashed red vertical lines mark synchronization points between concurrently executing prefill layers (PLs) and decode (D) micro-batches in the engine's mini timeline; solid arrows carry latency/plan/update signals between subsystems",
+    "emphasis": "bold red action labels (Latency, Update, Plan, Compute) on the connecting arrows spell out MuxWise's closed control loop between estimator, dispatcher and engine",
+    "reusable_patterns": [
+      "three cooperating subsystem boxes connected by labeled control-flow arrows in a triangular layout",
+      "small inline legend explaining timeline notation (partition / inflight batch / sync)"
+    ],
+    "weaknesses": [
+      "dense abbreviations (PLs, D, P, X/Y/Z) require the caption/body text to decode",
+      "the timeline mini-diagram inside the multiplex-engine panel is very small"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "prefill-decode-multiplexing",
+    "gpu-scheduling",
+    "slo-aware-scheduling",
+    "intra-gpu-multiplexing"
+  ],
+  "provenance": {
+    "sections": [
+      "3 MuxWise's Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 8 shows the overview of MuxWise that comprises (1) a bubble-less multiplex engine",
+      "the estimator provides worst-case latency estimates by combining a solo-run latency predictor",
+      "the SLO-aware dispatcher leverages the engine and estimator to schedule prefill layers"
+    ]
+  },
+  "summary": "MuxWise is an LLM serving framework that adopts intra-GPU prefill-decode (PD) multiplexing to meet per-request SLOs while maximizing goodput. This figure gives MuxWise's architecture overview as three cooperating boxes. The Contention-tolerant estimator (top), built from one-time offline profiling, combines a Solo-run predictor with a Contention guard to output worst-case latency estimates. These estimates flow to the SLO-aware dispatcher (bottom left), which computes a multiplexing plan partitioning GPU SMs/blocks between prefill (P) and decode (D) work. That plan drives the Bubble-less multiplex engine (bottom right), whose small timeline diagram shows prefill layers (PLs) and decode (D) micro-batches executing concurrently with partition boundaries, inflight batches, and sync points, while runtime feedback updates the contention guard. Cyan, cream, and blue-purple fills distinguish the three subsystems and their inner components, and red arrows/labels (Latency, Plan, Update) trace the control loop between them.",
+  "summary_zh": "该图展示MuxWise整体架构：抗竞争延迟估计器（离线画像+独立运行预测器+竞争守护）向SLO感知调度器提供延迟估计，调度器生成SM/块划分的复用计划驱动无气泡复用引擎并发执行预填充层与解码，引擎运行时反馈更新竞争守护。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "nsdi26-043_fig9",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-043",
+  "fig": "9",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 9: How speculation can aid in reducing latencies for depen- dent transactions. Suppose the pairs ta,tb and tx,ty are dependent. However, we allow ty to be submitted earlier along with a speculated result for tx. ty execution is contingent on whether that a speculated result is equivalent to t",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "timeline",
+  "subject": "how speculating a dependency's result lets a transaction be submitted and committed sooner than waiting for it",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.65,
+  "n_elements": 12,
+  "n_relations": 6,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-043/src/fig9_fig3.svg",
+    "preview.png": "lab/extracted/nsdi26-043/src/fig9_fig3.png",
+    "print.png": "lab/extracted/nsdi26-043/nsdi26-043_fig9_p11_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "Two dependent-transaction chains sharing one node-by-round grid, each arrowed up to the crowned round that commits it, so latency is read straight off as column distance.",
+      "what_to_learn": "Overlay both chains on one round grid and arrow each transaction up to the crowned round that commits it, so latency reads as column count — but four separate colours blur which pair is the fast path.",
+      "note_source": "agent"
+    }
+  ]
+}

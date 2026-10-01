@@ -1,0 +1,55 @@
+{
+  "id": "sosp25-024_fig1",
+  "kind": "mechanism",
+  "paper_id": "sosp25-024",
+  "fig": "1",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 1: Heterogeneous RAG workflows bring needs for efficient LLM and vector search coordination.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "scene",
+  "subject": "how everyday, multi-hop, and knowledge-summary questions require increasingly complex retrieval-generation workflows",
+  "arrangement": "panels-column",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "callout",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.06,
+  "n_elements": 10,
+  "n_relations": 4,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-024/sosp25-024_fig1_p1_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-024/sosp25-024_fig1_p1_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "One shared two-icon system legend at top, then growing question-complexity is shown purely by stretching the same retrieve-then-answer chain to more links across three stacked panels.",
+      "what_to_learn": "State the RAG system once as a tiny two-icon legend, then reuse one fixed shape (question, retrieved document, answer) across all three panels, growing only how many times it repeats — one-shot, then chained sub-questions, then an open iterative loop.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "sosp24-024_fig4",
+  "paper_id": "sosp24-024",
+  "fig": "4",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 4. System overview of T10.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.96,
+  "n_components": 12,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-024/src/fig4_ipu-overview1_drawio.svg",
+    "preview.png": "lab/extracted/sosp24-024/src/fig4_ipu-overview1_drawio.png",
+    "print.png": "lab/extracted/sosp24-024/sosp24-024_fig4_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, medium-confidence matrix exemplar of a 2x2 quadrant grid, each quadrant colour-coded and tied to one paper subsection number, read clockwise from the DNN model through plan-selection tradeoffs to generated device code.",
+      "what_to_learn": "Assign each quadrant of a 2x2 grid its own colour family and its own subsection number so the reading order is announced by the numbers rather than position alone; many similar pastel colours without a legend get hard to tell apart at this density, so keep quadrant palettes visibly distinct."
+    }
+  ]
+}

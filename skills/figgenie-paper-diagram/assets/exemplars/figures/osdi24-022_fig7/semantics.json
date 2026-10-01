@@ -1,0 +1,217 @@
+{
+  "paper_id": "osdi24-022",
+  "fig": "7",
+  "system": {
+    "name": "Sabre",
+    "one_liner": "a hardware-accelerated snapshot compression system for serverless microVMs using Intel IAA",
+    "domain": [
+      "serverless",
+      "virtualization",
+      "memory-management"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Guest physical memory",
+        "role": "guest memory pages (yellow = dirty), compressed on creation and reconstructed on restore",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Huffman tables",
+        "role": "per-chunk compression statistics used to Huffman-encode dirty pages",
+        "container": "(A) Snapshot creation",
+        "novel": true
+      },
+      {
+        "name": "Compressed partitions",
+        "role": "IAA-compressed chunks of dirty memory written to the snapshot file",
+        "container": "(A) Snapshot creation",
+        "novel": true
+      },
+      {
+        "name": "snapshot file",
+        "role": "on-disk file holding the compressed partitions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "partition file",
+        "role": "on-disk file recording partition/Huffman-table boundaries",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "mem pool",
+        "role": "optional pre-allocated buffer pool used during decompression",
+        "container": "(B) Single-chunk prefetching",
+        "novel": true
+      },
+      {
+        "name": "via PRS",
+        "role": "reads input data from disk",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "userfaultd",
+        "role": "installs decompressed pages into guest memory via user-space page faults",
+        "container": "(B) Single-chunk prefetching",
+        "novel": false
+      },
+      {
+        "name": "Partitions",
+        "role": "decompressed partition data read from the partition file",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Guest physical memory",
+        "to": "Huffman tables",
+        "what": "IAA: Statistics pass",
+        "step": null
+      },
+      {
+        "from": "Guest physical memory",
+        "to": "Compressed partitions",
+        "what": "IAA: Huffman pass",
+        "step": null
+      },
+      {
+        "from": "Compressed partitions",
+        "to": "snapshot file",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Huffman tables",
+        "to": "partition file",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "snapshot file",
+        "to": "via PRS",
+        "what": "mmap:: shared",
+        "step": null
+      },
+      {
+        "from": "via PRS",
+        "to": "Guest physical memory",
+        "what": "IAA: Decompress (through mem pool)",
+        "step": null
+      },
+      {
+        "from": "partition file",
+        "to": "Partitions",
+        "what": "read()",
+        "step": null
+      },
+      {
+        "from": "Partitions",
+        "to": "userfaultd",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "userfaultd",
+        "to": "Guest physical memory",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Partitions",
+        "to": "Guest physical memory",
+        "what": "direct DMA (bypasses userfaultd)",
+        "step": null
+      }
+    ],
+    "key_idea": "Sabre creates compressed VM snapshots using Intel IAA hardware, then restores memory either by prefetching one contiguous decompressed chunk via userfaultfd or by scattering decompressed partitions directly into memory with DMA.",
+    "reading_order": "Left to right across three lettered panels: (A) how a snapshot is compressed, (B) single-chunk prefetching into guest memory, (C) scattered direct-DMA prefetching."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.34,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f1c232",
+        "used_for": "dirty (modified) segments of the guest-physical-memory bar"
+      },
+      {
+        "hex": "#980000",
+        "used_for": "the Huffman tables, Compressed partitions, and Partitions boxes"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "non-dirty memory segments and neutral box fills"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "body text and thin connector lines"
+      },
+      {
+        "hex": "#434343",
+        "used_for": "panel-title text and underlines ((A)/(B)/(C))"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.61pt, dashed for indirect/bypass links, solid for the main pipeline arrows",
+    "font": "sans, 6.5-8pt",
+    "corners": "square",
+    "arrows": "many thin arrowheads, including fan-out/converging patterns onto userfaultd and the scattered-decompress destinations",
+    "icons": "vector file icons for snapshot file / partition file"
+  },
+  "encoding": {
+    "color_means": "yellow marks dirty (modified) guest memory pages; dark red/maroon marks compressed or partitioned data structures; gray marks non-dirty pages and generic UI chrome",
+    "line_style_means": "dashed arrows mark indirect/derived or bypass relationships (e.g. the scattered-prefetching DMA path that skips userfaultd); solid arrows mark the primary data movement",
+    "emphasis": "three panels share an identical guest-memory bar and file icons so the reader can visually diff how each design routes decompressed data back into memory",
+    "reusable_patterns": [
+      "shared visual vocabulary across side-by-side lettered design-alternative panels to enable direct comparison",
+      "segmented memory bar showing dirty vs. clean pages"
+    ],
+    "weaknesses": [
+      "IAA hardware stages appear only as arrow labels rather than boxed components, blurring the line between component and operation",
+      "dense fan-out arrows in panels B/C are hard to trace at small size"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "microvm",
+    "snapshot-compression",
+    "hardware-acceleration",
+    "memory-prefetching",
+    "intel-iaa"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Sabre Design (p.9)",
+      "4 Sabre Design (p.10)"
+    ],
+    "evidence": [
+      "Figure 7-A shows an overview of Sabre's snapshot creation pipeline along with two designs for memory prefetching",
+      "Sabre also implements memory prefetching based on scattered IAA decompression (Figure 7-C)",
+      "Sabre directly DMAs decompressed partitions into the right locations in the guest's physical memory"
+    ]
+  },
+  "summary": "Figure 7 compares Sabre's three hardware-accelerated snapshot mechanisms for serverless microVMs, drawn as three lettered side-by-side pipelines sharing a common visual vocabulary. Panel (A) shows snapshot creation: guest physical memory (dirty pages in yellow) is run through an IAA statistics pass to build Huffman tables and an IAA Huffman pass to produce compressed partitions, which are written to a snapshot file alongside a partition file. Panel (B) shows single-chunk prefetching: the snapshot file is mmap'd and decompressed as one contiguous IAA operation (optionally through a memory pool) while the partition file's partitions are read separately, and userfaultfd installs the result into guest memory. Panel (C) shows scattered prefetching: the same inputs are instead decompressed and DMA'd directly into their scattered destinations in guest memory, bypassing userfaultfd. Yellow marks dirty pages and dark red marks compressed/partitioned data structures throughout.",
+  "summary_zh": "该图用三个字母面板对比 Sabre 的快照压缩与两种预取：(A) 用 IAA 统计与霍夫曼编码生成压缩分区；(B) 单块预取经 userfaultfd 写回；(C) 分散预取直接 DMA 写入。",
+  "confidence": "high",
+  "notes": "layout-proposal: triptych-pipeline-comparison — three side-by-side lettered (A/B/C) mini-pipelines sharing a common visual vocabulary (files, IAA stages, guest-memory bar) to compare snapshot creation against two prefetching strategies; the index's panels=1 (single image) is kept per the schema even though the figure reads as three sub-diagrams.",
+  "venue": "OSDI24"
+}

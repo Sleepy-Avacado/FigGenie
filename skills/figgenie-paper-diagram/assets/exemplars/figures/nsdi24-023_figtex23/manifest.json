@@ -1,0 +1,55 @@
+{
+  "id": "nsdi24-023_figtex23",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-023",
+  "fig": "tex23",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "How the different pieces of Grace work together.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how Grace's encoder, congestion control, and decoder sub-blocks connect, including bitrate-control and fast-resync feedback loops",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "",
+  "aspect": 2.06,
+  "n_elements": 14,
+  "n_relations": 16,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-023/src/texfig23_e2e.svg",
+    "preview.png": "lab/extracted/nsdi24-023/src/texfig23_e2e.png",
+    "print.png": null
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "Sender and receiver of a real streaming system laid out as mirrored blocks, showing how forward data flow and two separate feedback loops fit in one compact diagram.",
+      "what_to_learn": "Mirror sender/receiver as matching grey boxes of blue sub-blocks; give bitrate control and fast re-sync each a bent-back feedback arrow, plus one arrow crossing the network to request re-sync — but identical labels leave only position telling sides apart.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "paper_id": "asplos26-006",
+  "fig": "2",
+  "system": {
+    "name": "Canon",
+    "one_liner": "a 2D-mesh spatial architecture that combines dynamic data-driven orchestration via programmable FSMs with time-lapsed SIMD execution",
+    "domain": [
+      "hardware",
+      "accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Orchestrator",
+        "role": "row-level FSM control unit issuing instructions to its PE row",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "S1",
+        "role": "FSM state corresponding to output instruction inst1",
+        "container": "Orchestrator",
+        "novel": true
+      },
+      {
+        "name": "S2",
+        "role": "FSM state corresponding to output instruction inst2",
+        "container": "Orchestrator",
+        "novel": true
+      },
+      {
+        "name": "PE",
+        "role": "processing element executing the instruction issued by its row's orchestrator",
+        "container": "PE Array",
+        "novel": true
+      },
+      {
+        "name": "PE Array",
+        "role": "grid of PEs organized in rows and columns, each row driven by one orchestrator",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Orchestrator",
+        "to": "PE",
+        "what": "inst2 issued to row 1 PEs [0,0] and [1,0]",
+        "step": null
+      },
+      {
+        "from": "Orchestrator",
+        "to": "PE",
+        "what": "inst2 then inst1 issued to row 2 PEs after FSM transition",
+        "step": null
+      },
+      {
+        "from": "Orchestrator",
+        "to": "Orchestrator",
+        "what": "msg (message) sent north-to-south triggering a state transition",
+        "step": null
+      },
+      {
+        "from": "S1",
+        "to": "S2",
+        "what": "FSM transition changing output instruction",
+        "step": null
+      }
+    ],
+    "key_idea": "A message from a neighboring (north) orchestrator can trigger a row orchestrator's FSM to transition state at runtime, changing the instruction it issues to its PE row from inst2 to inst1, illustrating dynamic data-driven instruction issue.",
+    "reading_order": "Top row first (Orchestrator with S1/S2 issuing inst2 to PE[0,0] and PE[1,0] with +3 cycles staggering), then the msg arrow down to the second row's Orchestrator, which switches from inst2 to inst1 before issuing to its PEs."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.44,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#40ad5a",
+        "used_for": "green fill/stroke of Orchestrator boxes and instruction arrows"
+      },
+      {
+        "hex": "#fff3b2",
+        "used_for": "yellow fill accents (carried over from Figure 1's palette)"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "gray fill of PE boxes"
+      },
+      {
+        "hex": "#e95694",
+        "used_for": "pink/magenta stroke for the msg arrow between orchestrators"
+      },
+      {
+        "hex": "#d12959",
+        "used_for": "dark red/magenta stroke accents on FSM states"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed thin strokes (median 0.69pt) with green and magenta highlighting instruction vs. message paths",
+    "font": "DejaVuSans sans, 6.5-13pt, bold for state/instruction labels",
+    "corners": "mixed",
+    "arrows": "orthogonal arrows labeled inst1/inst2 and msg, with +3 cycles annotations between PE columns",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = FSM states and instruction issue paths, pink/magenta = inter-orchestrator message path",
+    "line_style_means": "not distinguished beyond color; dashed strokes on FSM circles denote state boundaries",
+    "emphasis": "the two-row comparison with a msg arrow crossing between them highlights how a single message changes one row's issued instruction, the paper's dynamic orchestration mechanism",
+    "reusable_patterns": [
+      "two-row before/after comparison of FSM-driven instruction issue",
+      "time-lapsed staggering annotated with +N cycles between PE columns"
+    ],
+    "weaknesses": [
+      "abbreviated labels (inst1, inst2, S1, S2) require the caption/text to be understood"
+    ]
+  },
+  "tags": [
+    "FSM",
+    "dataflow",
+    "instruction-issue",
+    "SIMD",
+    "spatial-architecture",
+    "data-driven-orchestration"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Canon Architecture (p.3)"
+    ],
+    "evidence": [
+      "each row of processing elements is managed by a dedicated orchestrator, which is a lightweight, programmable finite-state machine",
+      "a message from the orchestrator at the North to South triggers the second row's transition from State S2 to S1",
+      "changing its output instruction from inst2 to inst1"
+    ]
+  },
+  "summary": "This figure illustrates Canon's data-driven orchestration mechanism with a minimal two-row example. Each row of the PE Array is controlled by its own Orchestrator, whose FSM (states S1, S2) determines the instruction issued to that row's PEs; PEs in the same row execute the same instruction staggered by a few cycles (annotated +3 cycles) as part of time-lapsed SIMD execution. Initially both rows' orchestrators issue inst2. A message (msg) sent from the first (North) orchestrator to the second (South) orchestrator triggers the second row's FSM to transition from state S2 to S1, changing its issued instruction from inst2 to inst1. The figure is a sparse, green/magenta color-coded diagram emphasizing how compile-time FSM programming combines with a runtime message to adapt instruction issue on the fly.",
+  "summary_zh": "该图用两行 PE 的简例说明 Canon 的数据驱动编排机制：每行由一个 Orchestrator（内含 FSM，状态 S1/S2）控制指令下发，PE 间按周期错开执行；北侧 Orchestrator 发出的 msg 触发南侧 Orchestrator 的 FSM 从 S2 转换到 S1，使其下发指令由 inst2 变为 inst1。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

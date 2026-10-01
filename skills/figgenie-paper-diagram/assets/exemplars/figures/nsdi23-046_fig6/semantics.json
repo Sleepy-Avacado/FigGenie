@@ -1,0 +1,180 @@
+{
+  "paper_id": "nsdi23-046",
+  "fig": "6",
+  "system": {
+    "name": "RingLeader",
+    "one_liner": "a system that offloads intra-server request scheduling and load balancing across services and cores to the NIC",
+    "domain": [
+      "networking",
+      "os-kernel",
+      "nic-offload"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "On-NIC Storage",
+        "role": "NIC-side storage container holding per-service scheduling and queuing state",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "DRAM (Storage)",
+        "role": "bulk NIC storage tier",
+        "container": "On-NIC Storage",
+        "novel": false
+      },
+      {
+        "name": "SRAM (Cache)",
+        "role": "fast cache tier for hot per-service queue data",
+        "container": "On-NIC Storage",
+        "novel": false
+      },
+      {
+        "name": "Per-Service Scheduling and Queuing",
+        "role": "per-service queue structures holding buffered requests",
+        "container": "On-NIC Storage",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "on-NIC scheduler component implementing the FEO discipline",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Queue Manager",
+        "role": "manages enqueue and dequeue of queue descriptors for FEO",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "FEO",
+        "role": "first-eligible-out priority queue that evaluates each element's eligibility via a bitmask and dequeues the highest-priority eligible element",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Load Balancer",
+        "role": "supplies the eligibility bitmask to FEO and issues read requests to fetch data for the dispatched request",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "On-NIC Storage",
+        "to": "Queue Manager",
+        "what": "Store Request",
+        "step": null
+      },
+      {
+        "from": "Queue Manager",
+        "to": "FEO",
+        "what": "Enqueue Queue Desc",
+        "step": null
+      },
+      {
+        "from": "Load Balancer",
+        "to": "FEO",
+        "what": "Eligibility Mask used to Eval eligibility",
+        "step": null
+      },
+      {
+        "from": "FEO",
+        "to": "Load Balancer",
+        "what": "Dequeue Queue Desc (highest-priority eligible element)",
+        "step": null
+      },
+      {
+        "from": "Load Balancer",
+        "to": "On-NIC Storage",
+        "what": "Read Request",
+        "step": null
+      }
+    ],
+    "key_idea": "FEO extends a PIFO priority queue by filtering elements to only those eligible for dispatch, via a bitmask supplied by the load balancer, before scheduling the smallest-ranked eligible element, avoiding head-of-line blocking.",
+    "reading_order": "Top-down then left-right: requests stored in On-NIC Storage (DRAM/SRAM per-service queues) are enqueued as descriptors into the Scheduler's Queue Manager and FEO, which evaluates eligibility against a bitmask from the Load Balancer before dequeuing back to it; the Load Balancer issues Read Requests back to storage."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.34,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue border/header of the On-NIC Storage box"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "dark green fill for occupied queue-slot icons in Per-Service Scheduling and Queuing"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray background fill inside DRAM/SRAM and queue-manager label areas"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "medium green fill for occupied/eligible queue-slot and mask-bit icons"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange fill for the Scheduler, Queue Manager, and Load Balancer boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid borders (~0.5pt), with a dashed arrow for the Read Request feedback loop back to storage",
+    "font": "Calibri sans-serif, about 5-6.5pt, mostly bold box titles",
+    "corners": "square",
+    "arrows": "straight arrows with filled heads linking storage, queue manager, FEO, and load balancer; one dashed arrow for the read-request feedback loop",
+    "icons": "a few small vector icons depicting queue slots (colored squares) in the Per-Service Scheduling and Queuing area and the Eligibility Mask bits"
+  },
+  "encoding": {
+    "color_means": "blue marks the On-NIC Storage container; orange marks the Scheduler, Queue Manager, and Load Balancer boxes; green-shaded squares mark occupied/eligible queue slots and mask bits",
+    "line_style_means": "solid arrows show the enqueue/dequeue descriptor path through Queue Manager and FEO; a dashed arrow shows the Load Balancer's Read Request back to On-NIC Storage",
+    "emphasis": "the explicit 1-1-1-0 Eligibility Mask bit pattern next to FEO's 'Eval eligibility' label calls out exactly how FEO filters elements before selecting the smallest-ranked eligible one",
+    "reusable_patterns": [
+      "priority-queue-with-eligibility-filter microarchitecture diagram",
+      "separate storage box (DRAM/SRAM) feeding a scheduler box via labeled enqueue/dequeue descriptors"
+    ],
+    "weaknesses": [
+      "the bitmask example (1 1 1 0) is not directly linked by a line to the specific queue slots it filters",
+      "several similarly colored orange boxes (Scheduler, Queue Manager, Load Balancer) require reading labels to distinguish roles"
+    ]
+  },
+  "tags": [
+    "priority-queue",
+    "pifo",
+    "eligibility-filter",
+    "nic-scheduler",
+    "load-balancing",
+    "request-scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "4 RingLeader Design (p.8)"
+    ],
+    "evidence": [
+      "As Figure 6 shows, when dequeuing elements, we first filter the set of elements eligible for dispatch",
+      "the load balancer provides a bitmask that records the dispatching eligibility of each service",
+      "FEO uses priority encoding to select the front-most element whose eligibility is true"
+    ]
+  },
+  "summary": "This figure zooms into RingLeader's on-NIC request scheduler, detailing the First-Eligible-Out (FEO) priority queue introduced to avoid head-of-line blocking. On-NIC Storage (DRAM for bulk storage, SRAM as cache) holds per-service scheduling and queuing state and issues a Store Request into the Scheduler's Queue Manager, which enqueues a queue descriptor into FEO. The Load Balancer supplies an Eligibility Mask (shown as an example 1-1-1-0 bit pattern) that FEO evaluates in parallel against each queued element; FEO then uses priority encoding to dequeue the front-most eligible element as a queue descriptor back to the Load Balancer, which issues a Read Request back to On-NIC Storage to fetch the corresponding data. Boxes are flat-filled: blue for On-NIC Storage, orange for the Scheduler/Queue Manager/Load Balancer, with green-shaded squares marking occupied or eligible queue slots.",
+  "summary_zh": "该图展示RingLeader网卡端请求调度器细节：FEO优先队列通过负载均衡器提供的资格位掩码（如1-1-1-0）筛选可调度元素，出队描述符返回负载均衡器，再向片上存储发起读请求。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

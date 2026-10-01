@@ -1,0 +1,64 @@
+{
+  "id": "osdi26-024_fig3",
+  "kind": "mechanism",
+  "paper_id": "osdi26-024",
+  "fig": "3",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 3: Example of (a) reward barrier and (b) our proposed speculative exploration.",
+  "groups_in_record": [
+    "comparison",
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "tree",
+  "subject": "how speculative exploration removes the reward-feedback wait that blocks BFS and DFS search-tree expansion",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.66,
+  "n_elements": 12,
+  "n_relations": 5,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-024/src/fig3_key_illustration.svg",
+    "preview.png": "lab/extracted/osdi26-024/src/fig3_key_illustration.png",
+    "print.png": "lab/extracted/osdi26-024/osdi26-024_fig3_p5_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same BFS/DFS branch templates drawn twice, before/after; a single vertical dashed rule marks the reward-wait barrier that the after-panel fills with new green speculative boxes.",
+      "what_to_learn": "Keep the identical branch layout in both panels and mark the blocking point as one vertical dashed rule; fill past it with solid green boxes for confirmed speculation and dashed-outline boxes for a second, unconfirmed layer.",
+      "note_source": "agent"
+    },
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "Same BFS/DFS branch templates drawn twice, before/after; a single vertical dashed rule marks the reward-wait barrier that the after-panel fills with new green speculative boxes.",
+      "what_to_learn": "Keep the identical branch layout in both panels and mark the blocking point as one vertical dashed rule; fill past it with solid green boxes for confirmed speculation and dashed-outline boxes for a second, unconfirmed layer.",
+      "note_source": "agent"
+    }
+  ]
+}

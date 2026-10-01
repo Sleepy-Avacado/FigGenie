@@ -1,0 +1,41 @@
+{
+  "id": "osdi25-002_fig7",
+  "paper_id": "osdi25-002",
+  "fig": "7",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 7: Tintin design overview.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.52,
+  "n_components": 9,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-002/osdi25-002_fig7_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi25-002/osdi25-002_fig7_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, medium-confidence two-band variant: a User/Kernel line sits above the Manager core, which nests four submodules across 9 components, handing off to a Scheduler/Monitor pair as the band below.",
+      "what_to_learn": "Put the privilege boundary between the caller band and the core rather than lower down, give the core four labelled submodules so it reads as an engine, and let two kernel-side modules share the band below as equals instead of nesting one inside the other."
+    }
+  ]
+}

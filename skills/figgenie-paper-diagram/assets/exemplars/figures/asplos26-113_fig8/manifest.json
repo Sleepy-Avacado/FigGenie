@@ -1,0 +1,54 @@
+{
+  "id": "asplos26-113_fig8",
+  "paper_id": "asplos26-113",
+  "fig": "8",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 8. An overview of PropHunt’s iterative optimization loop.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "illustrator",
+  "aspect": 1.77,
+  "n_components": 6,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-113/src/fig8_overview.svg",
+    "preview.png": "lab/extracted/asplos26-113/src/fig8_overview.png",
+    "print.png": "lab/extracted/asplos26-113/asplos26-113_fig8_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Double-column pipeline with 5 stages labelled by their section numbers (5.1-5.5), each its own boxed sub-diagram, and a big return arrow at the bottom literally closing the loop, in 6 components and 6 flows.",
+      "what_to_learn": "Number stages with the section numbers already used in the prose instead of plain digits, so panels map straight to text, and keep one consistent colour per semantic role across every panel (blue=ambiguous, yellow=candidate, green/red=accept/reject) instead of a legend."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Five numbered stages (5.1-5.5) snake across two rows and close with a return arrow to the SM Circuit, and green checks / red crosses on each change make the accept-reject decisions visible inline.",
+      "what_to_learn": "Arrange more than 3-4 loop stages in a serpentine two-row layout instead of forcing a single wide ring, numbering each box (5.1-5.5) in reading order, and mark automatic accept/reject decisions inline with a green check or red cross rather than a separate results table."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A star exemplar of the graph-editing convention: each of five loop panels draws a branching subgraph, yellow-shaded ambiguous regions, coloured circles for the MaxSAT-solved fix, arranged as a closed 5-panel loop rather than one DAG.",
+      "what_to_learn": "This is really control-loop's shape, not dataflow-dag's, but it still teaches a graph-editing device: shade the ambiguous subgraph region in one flat colour, then redraw the same nodes with green checkmarks or red crosses over each candidate fix so accept/reject reads at a glance."
+    }
+  ]
+}

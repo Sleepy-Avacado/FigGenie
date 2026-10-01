@@ -1,0 +1,53 @@
+{
+  "id": "osdi24-034_fig6",
+  "paper_id": "osdi24-034",
+  "fig": "6",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 6: NIC hardware block diagram.",
+  "corpus_template": "host-device",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.5,
+  "n_components": 11,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-034/osdi24-034_fig6_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-034/osdi24-034_fig6_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "An explicit boxed legend maps dashed to the management path and solid to the data path, separating the dashed host-side transport region above from the solid NIC hardware (TX Merge, RX Split, Flow Table) below.",
+      "what_to_learn": "Put a small boxed legend that names dashed as the management path and solid as the data path, then honor it everywhere: dashed for the host-side software containers, solid for the on-chip hardware, and color the two traffic directions (blue send, red receive) only where they physically cross at the net port."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar where a dashed host-side Application Buffers box nests a GPU HBM box that nests its MR descriptor, mirrored by the NIC's own nested Flow Table to MS List to MR Table chain.",
+      "what_to_learn": "Carry one indirection chain, table entry to resource, as boxes nested or linked one inside the next rather than a flat row, and put a boxed legend decoding dashed-versus-solid line meaning directly in the frame when both a management path and a data path are drawn."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A NIC floorplan reading: the chip boundary holds TX/RX merge units in the middle with per-flow tables (MS List, Flow Table) at the edge, while host-side GPU HBM sits outside as off-chip memory.",
+      "what_to_learn": "Draw the NIC's own boundary and put its splitting/merging compute in the middle, per-flow lookup tables at the edge, and the host's off-chip memory (GPU HBM) clearly outside that boundary; keep the boxed dashed-vs-solid legend so a floorplan reader still knows which lines are control."
+    }
+  ]
+}

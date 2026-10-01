@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-167_fig1",
+  "paper_id": "asplos25-167",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. High-level Wave design.",
+  "corpus_template": "host-device",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "google-slides",
+  "aspect": 1.06,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-167/src/fig1_wave-in-a-nutshell.svg",
+    "preview.png": "lab/extracted/asplos25-167/src/fig1_wave-in-a-nutshell.png",
+    "print.png": "lab/extracted/asplos25-167/asplos25-167_fig1_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "The purest host-device stack: SmartNIC tiers on top, a PCIe MMIO/DMA band in the middle, host tiers mirrored below.",
+      "what_to_learn": "Mirror the two sides around a named interconnect band; the band is a full-width row, not an arrow."
+    }
+  ]
+}

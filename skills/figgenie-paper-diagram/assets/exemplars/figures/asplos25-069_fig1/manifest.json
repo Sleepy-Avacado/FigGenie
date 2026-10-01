@@ -1,0 +1,47 @@
+{
+  "id": "asplos25-069_fig1",
+  "paper_id": "asplos25-069",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Fig. 1. Overview of QEC code synthesis. (a) A ESM circuit for error syndrome extraction. (b) The code topology associated with the ESM circuits. (c) A quantum hardware with sparse architecture. (d) Implementation of swapping-based method. (e) Implementation of swapping-based method with fixed data q",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.19,
+  "n_components": 5,
+  "n_flows": 1,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "letters",
+  "panels": 6,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-069/asplos25-069_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-069/asplos25-069_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence double-column matrix with 6 lettered panels sharing one legend on the right: a top row frames a connectivity gap with a bold red arrow and a bottom row compares two solution families.",
+      "what_to_learn": "Arrange a problem-then-solutions matrix as a top row stating the mismatch and a bottom row of lettered panels comparing candidate fixes, define component colours once in a shared legend at the right edge, and let one bold callout arrow, not a whole panel, carry the gap argument."
+    },
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Six panels share one legend on the right: the top row frames the code-versus-hardware connectivity gap with a red 'Gap!' arrow, and the bottom row redraws the identical four-qubit circuit to compare swapping against bridging.",
+      "what_to_learn": "When more than four panels are needed, arrange them as a labelled grid (here 2 rows of 3) with one qubit-colour legend on the side covering every panel, and let a bold callout arrow (the red 'Gap!') point between two panels to name the specific mismatch the rest of the figure resolves."
+    }
+  ]
+}

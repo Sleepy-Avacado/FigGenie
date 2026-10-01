@@ -1,0 +1,55 @@
+{
+  "id": "osdi26-040_fig1",
+  "kind": "mechanism",
+  "paper_id": "osdi26-040",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Fig. 1: Different approaches for realizing synchronization. Lay- ered approaches (left) incur redundant coherence transactions while standalone approaches (middle) preclude key optimizations, both signiﬁcantly degrading application performance over disaggregated memory’s slower inter-compute and com",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how locks can be layered atop, bypass, or generalize cache coherence for disaggregated shared memory",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 2.23,
+  "n_elements": 5,
+  "n_relations": 5,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-040/osdi26-040_fig1_p2_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-040/osdi26-040_fig1_p2_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Locks for disaggregated shared memory can be layered on top of cache coherence (redundant transactions), bypass it entirely (losing optimizations), or, as proposed, generalize the same substrate to implement both, unifying the two layers.",
+      "what_to_learn": "Dashed vertical rules instead of panel boxes; a bold descriptive caption per panel instead of (a)/(b)/(c) — and the cost: an automated panel counter reads it as one panel",
+      "note_source": "doc"
+    }
+  ]
+}

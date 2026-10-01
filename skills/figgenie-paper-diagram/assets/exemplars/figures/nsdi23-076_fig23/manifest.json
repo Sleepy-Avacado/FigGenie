@@ -1,0 +1,56 @@
+{
+  "id": "nsdi23-076_fig23",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-076",
+  "fig": "23",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 23: Double binary tree (DBT) permutations.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "tree",
+  "subject": "three different node-number permutations applied to the same double-binary-tree shape for a reduce operation",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "identical",
+  "delta_marking": "none",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.68,
+  "n_elements": 32,
+  "n_relations": 30,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-076/src/fig23_double_bin_tree_examples.svg",
+    "preview.png": "lab/extracted/nsdi23-076/src/fig23_double_bin_tree_examples.png",
+    "print.png": "lab/extracted/nsdi23-076/nsdi23-076_fig23_p24_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "The same double-binary-tree shape admits many different node-number permutations that all balance communication load equally, leaving freedom to pick one that also fits the network topology.",
+      "what_to_learn": "identical tree skeleton repeated side by side with only the node numbering changed to depict alternative permutations; a double binary tree drawn as two mirrored trees stacked, sharing the same node IDs split between leaf and internal role",
+      "note_source": "record"
+    }
+  ]
+}

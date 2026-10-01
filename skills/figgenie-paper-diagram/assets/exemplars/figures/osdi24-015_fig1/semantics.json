@@ -1,0 +1,244 @@
+{
+  "paper_id": "osdi24-015",
+  "fig": "1",
+  "system": {
+    "name": "ServerlessLLM",
+    "one_liner": "a low-latency serverless inference system for large language models that optimizes checkpoint loading, live migration and scheduling",
+    "domain": [
+      "ml-systems",
+      "cloud",
+      "serverless"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Controller",
+        "role": "dispatches inference requests to GPU nodes and to cloud storage",
+        "container": "Serverless Cluster",
+        "novel": null
+      },
+      {
+        "name": "Request Router",
+        "role": "routes incoming requests to nodes already running LLM inference or triggers loading",
+        "container": "Controller",
+        "novel": null
+      },
+      {
+        "name": "Model Loading Scheduler",
+        "role": "activates LLM inference processes on unallocated GPUs, deciding where to start a model",
+        "container": "Controller",
+        "novel": true
+      },
+      {
+        "name": "Model Storage",
+        "role": "cloud/remote storage hosting model checkpoints",
+        "container": "Serverless Cluster",
+        "novel": null
+      },
+      {
+        "name": "GPU Server",
+        "role": "node running an inference process on GPUs",
+        "container": "Serverless Cluster",
+        "novel": null
+      },
+      {
+        "name": "Inference Process",
+        "role": "GPU process/container downloading and loading the model checkpoint through SSD and DRAM into GPU memory",
+        "container": "GPU Server",
+        "novel": null
+      },
+      {
+        "name": "LLM",
+        "role": "the loaded language model generating tokens iteratively from input tokens",
+        "container": "LLM Inference",
+        "novel": null
+      },
+      {
+        "name": "KV Cache",
+        "role": "caches intermediate computations to accelerate subsequent token generation",
+        "container": "LLM Inference",
+        "novel": null
+      },
+      {
+        "name": "Input Tokens",
+        "role": "user-specified prompt tokens fed to the LLM",
+        "container": "LLM Inference",
+        "novel": null
+      },
+      {
+        "name": "Output Tokens",
+        "role": "tokens streamed back to the requesting client",
+        "container": "LLM Inference",
+        "novel": null
+      },
+      {
+        "name": "Next Token",
+        "role": "iteratively generated token checked against an end-of-sentence condition",
+        "container": "LLM Inference",
+        "novel": null
+      },
+      {
+        "name": "Fast Multi-Tier Checkpoint Loading",
+        "role": "novel design that speeds up checkpoint loading using in-server multi-tier storage",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Efficient Live Migration of LLM inference",
+        "role": "novel design coordinating GPU servers and the controller for locality-driven live migration",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Startup-Time-Optimized Model Scheduling",
+        "role": "novel scheduling policy in the controller that minimizes model startup latency",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Inference Request",
+        "to": "Request Router",
+        "what": "new inference request",
+        "step": null
+      },
+      {
+        "from": "Request Router",
+        "to": "GPU Server",
+        "what": "route to node already running inference",
+        "step": null
+      },
+      {
+        "from": "Request Router",
+        "to": "Model Loading Scheduler",
+        "what": "start-up request",
+        "step": null
+      },
+      {
+        "from": "Model Loading Scheduler",
+        "to": "GPU Server",
+        "what": "allocate",
+        "step": null
+      },
+      {
+        "from": "Model Storage",
+        "to": "Inference Process",
+        "what": "download checkpoint",
+        "step": null
+      },
+      {
+        "from": "Input Tokens",
+        "to": "LLM",
+        "what": "prompt tokens",
+        "step": null
+      },
+      {
+        "from": "LLM",
+        "to": "KV Cache",
+        "what": "cached intermediate computations",
+        "step": null
+      },
+      {
+        "from": "LLM",
+        "to": "Next Token",
+        "what": "generated token",
+        "step": null
+      },
+      {
+        "from": "Next Token",
+        "to": "Output Tokens",
+        "what": "streamed token (No branch of EOS?)",
+        "step": null
+      },
+      {
+        "from": "Fast Multi-Tier Checkpoint Loading",
+        "to": "GPU Server",
+        "what": "design contribution",
+        "step": null
+      },
+      {
+        "from": "Efficient Live Migration of LLM inference",
+        "to": "Controller",
+        "what": "design contribution",
+        "step": null
+      },
+      {
+        "from": "Startup-Time-Optimized Model Scheduling",
+        "to": "Model Loading Scheduler",
+        "what": "design contribution",
+        "step": null
+      }
+    ],
+    "key_idea": "ServerlessLLM introduces three designs -- fast multi-tier checkpoint loading, efficient live migration, and startup-time-optimized scheduling -- layered onto the standard GPU serverless cluster components (controller, GPU server, LLM inference loop) to minimize model startup latency.",
+    "reading_order": "left to right, top to bottom: an inference request enters the Controller (Request Router / Model Loading Scheduler), which allocates a GPU Server that downloads from Model Storage and runs the LLM Inference loop on the right; three contribution boxes at the bottom point up via dashed arrows to the components they optimize."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.94,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill for GPU boxes inside the Inference Process"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for the outer Controller/GPU Server/LLM Inference boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders, dashed arrows from contribution boxes to the architecture",
+    "font": "Arial (regular/bold), 4.5-5.5pt",
+    "corners": "mixed",
+    "arrows": "orthogonal and curved, filled arrowheads, dashed for contribution pointers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = GPU compute units, gray = surrounding infrastructure boxes",
+    "line_style_means": "dashed arrows from the three bottom contribution boxes point to the specific architecture parts they optimize",
+    "emphasis": "the three named contribution boxes along the bottom, connected by dashed arrows, are visually set apart from the rest of the (generic) serverless cluster diagram to highlight ServerlessLLM's novel designs",
+    "reusable_patterns": [
+      "generic system architecture diagram annotated with dashed pointers labeling where each paper contribution applies"
+    ],
+    "weaknesses": [
+      "very small font size (4.5-5.5pt) and high text density noted in the measured attributes"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "LLM inference",
+    "GPU cluster",
+    "checkpoint loading",
+    "scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)",
+      "3 Exploiting In-Server Multi-Tier Storage (p.6)"
+    ],
+    "evidence": [
+      "We introduce the key components in GPU serverless clusters in Figure 1.",
+      "ServerlessLLM addresses these concerns with three novel designs, as depicted in Figure 1.",
+      "During each iteration, the LLM caches intermediate computations in a KV-cache"
+    ]
+  },
+  "summary": "ServerlessLLM is a system for low-latency serverless inference of large language models. This overview figure shows the standard GPU serverless cluster components -- a Controller (with a Request Router and Model Loading Scheduler) that dispatches inference requests to a GPU Server running an Inference Process, which downloads model checkpoints from Model Storage through SSD/DRAM into GPU memory -- alongside a zoomed-in LLM Inference loop (Input Tokens through the LLM and KV Cache, producing Next Token/Output Tokens until an end-of-sentence token). Three novel designs are overlaid at the bottom of the figure and connected by dashed arrows to the parts of the architecture they target: Fast Multi-Tier Checkpoint Loading, Efficient Live Migration of LLM Inference, and Startup-Time-Optimized Model Scheduling. The diagram is a dense, small-font flat box diagram split into a left 'Serverless Cluster' panel and a right 'LLM Inference' panel, using blue fill only for GPU boxes.",
+  "summary_zh": "图1展示GPU无服务器集群的基本组件：控制器(含请求路由器与模型加载调度器)将推理请求分派给运行推理进程的GPU服务器，进程从模型存储下载检查点经SSD/DRAM载入GPU；右侧展示LLM推理循环(输入token经LLM与KV缓存生成输出token直至结束符)。底部虚线箭头标出ServerlessLLM的三项新设计：多级检查点加载、高效实时迁移与启动时间优化调度。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

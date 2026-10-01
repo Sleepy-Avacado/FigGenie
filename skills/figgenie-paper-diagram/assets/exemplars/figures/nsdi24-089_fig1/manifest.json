@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-089_fig1",
+  "paper_id": "nsdi24-089",
+  "fig": "1",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 1: A typical cloud gaming system. The congestion controller adjusts both frame bitrates and packet pacing rates before transmit- ting game frames from the gaming server to the end device.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.72,
+  "n_components": 9,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-089/nsdi24-089_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-089/nsdi24-089_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "A literal Internet cloud icon is the network boundary between two dashed, mirrored Client and Server boxes, with one orange Congestion controller and its two red control-signal labels the only asymmetry in a symmetric pipeline.",
+      "what_to_learn": "Draw the network as a literal cloud icon between two mirrored, dashed-outline client/server boxes with matching internal module counts, and make the one contributed component (the Congestion controller) the only differently-coloured box; add a small legend for that colour, since this figure's green-vs-orange split otherwise goes unexplained."
+    }
+  ]
+}

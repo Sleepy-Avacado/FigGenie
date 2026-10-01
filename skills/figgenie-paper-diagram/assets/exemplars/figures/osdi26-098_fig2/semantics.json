@@ -1,0 +1,173 @@
+{
+  "paper_id": "osdi26-098",
+  "fig": "2",
+  "system": {
+    "name": "ADAngel",
+    "one_liner": "a workload-aware framework that adaptively selects mixed-precision GEMM/GEMV kernel strategies to accelerate arbitrary-precision quantized (APQ) LLM inference",
+    "domain": [
+      "ml-systems",
+      "quantization",
+      "hardware-accelerators"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Transformer",
+        "role": "a standard decoder-only Transformer block (Attention, Add & Norm, FFN, Add & Norm) repeated between input and output tokens",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Attention",
+        "role": "self-attention sublayer whose Wq/Wk/Wv weights are quantized in the middle panel",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "FFN",
+        "role": "feed-forward sublayer whose weights/activations are quantized in the middle panel",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "LLM Quant.",
+        "role": "quantizes Wq/Wk/Wv from FP32 to Int4 via a single Quant operator",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Mixed-Precision Quant.",
+        "role": "quantizes weights W to Int4 and activations A to Int8 separately, the arbitrary-precision quantization (APQ) scheme this paper targets",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "On-the-fly Padding",
+        "role": "existing strategy that pads Int4 weights to Int8 before an Int8 Matmul, then dequantizes",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "LUT-based Strategy",
+        "role": "existing strategy that precomputes a lookup table indexed to evaluate the mixed-precision product without padding",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Tokens",
+        "to": "Transformer",
+        "what": "tokens processed by the decoder block",
+        "step": null
+      },
+      {
+        "from": "Attention",
+        "to": "LLM Quant.",
+        "what": "Wq/Wk/Wv weights sent for quantization (dashed cross-reference)",
+        "step": null
+      },
+      {
+        "from": "FFN",
+        "to": "Mixed-Precision Quant.",
+        "what": "weights and activations sent for mixed-precision quantization (dashed cross-reference)",
+        "step": null
+      },
+      {
+        "from": "Mixed-Precision Quant.",
+        "to": "On-the-fly Padding",
+        "what": "quantized W (Int4) and Q/A' (Int8) consumed by the padding strategy",
+        "step": null
+      },
+      {
+        "from": "Mixed-Precision Quant.",
+        "to": "LUT-based Strategy",
+        "what": "quantized W (Int4) and Q/A' (Int8) consumed by the LUT-based strategy",
+        "step": null
+      }
+    ],
+    "key_idea": "Background figure building from a standard Transformer decoder block, through how APQ quantizes weights and activations to different (mixed) bit-widths, to the two existing execution strategies, padding and LUT, that let mismatched Int4/Int8 operands run on hardware lacking native mixed-precision GEMM/GEMV support.",
+    "reading_order": "Left to right: input tokens flow through a generic Transformer block; dashed arrows point to how its Attention/FFN weights are quantized (uniformly, then in mixed precision); the rightmost column shows two existing ways, on-the-fly padding and LUT-based lookup, to execute the resulting mixed-precision multiply."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.14,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light-gray backgrounds and the SoftMax/Sampling box fills"
+      },
+      {
+        "hex": "#fbd7bb",
+        "used_for": "pale-orange fill of the Quant operator boxes in both quantization schemes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red LUT index label and dashed cross-reference lines from Transformer blocks to their quantization boxes"
+      },
+      {
+        "hex": "#92d050",
+        "used_for": "green fill of the Attention and FFN blocks"
+      },
+      {
+        "hex": "#fee599",
+        "used_for": "pale-yellow fill of the Add & Norm blocks"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt; dashed red lines cross-reference Transformer components to their quantization boxes, dashed border around the Transformer block itself",
+    "corners": "rounded",
+    "arrows": "many straight arrows with filled heads for the data flow within each mini-diagram; dashed red arrows connect the generic Transformer components to their quantization counterparts",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green marks the Attention/FFN compute blocks; pale yellow marks Add & Norm blocks; pale orange marks the Quant operator boxes across both quantization schemes; red marks the LUT index lookup and the dashed cross-references tying Transformer components to their quantized counterparts",
+    "line_style_means": "dashed red arrows cross-reference the generic Transformer's Attention/FFN blocks to the tensors quantized in the middle panel; solid black arrows show each panel's own internal data flow",
+    "emphasis": "the figure builds background left to right: a standard Transformer decoder block, then how its weights/activations get quantized (uniform vs mixed-precision), then two existing ways to execute mixed-precision GEMM once weights and activations differ in bit-width",
+    "reusable_patterns": [
+      "small multiples of quantization data-flow diagrams (tensor to op to tensor with bit-width annotations)",
+      "dashed cross-reference arrows linking a generic architecture diagram to the specific operators a later panel zooms into"
+    ],
+    "weaknesses": [
+      "three different diagram styles are packed into one figure with only faint visual grouping between them",
+      "bit-width annotations (Int4/Int8/Int32/FP32) require careful reading to track through each small diagram"
+    ]
+  },
+  "tags": [
+    "quantization",
+    "LLM-inference",
+    "mixed-precision",
+    "GEMM",
+    "LUT",
+    "edge-deployment"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "widely adopt padding to implement APQ LLM inference on edge devices.",
+      "It transforms low-bit-width weights to match activation bit-widths, then performs computation using",
+      "quantizing weights to low-bit-width representations and maintaining high-precision formats for activations"
+    ]
+  },
+  "summary": "This is a background figure from the ADAngel paper (ADAngel itself, a workload-aware framework for accelerating arbitrary-precision quantized LLM inference, is shown separately in Figure 6). It builds up the concepts ADAngel targets in three columns. Left: a standard decoder-only Transformer block (Attention, Add & Norm, FFN, repeated, ending in SoftMax/Sampling). Middle: how post-training quantization converts FP32 weights, and in arbitrary-precision quantization also activations, to low-bit-width Int4/Int8 representations, contrasting uniform LLM quantization with mixed-precision quantization where weights and activations get different bit-widths. Right: two existing ways to execute the resulting mixed-precision GEMM/GEMV on edge hardware without native support: On-the-fly Padding, which upcasts the lower-precision operand before an Int8 matmul, and a LUT-based Strategy, which precomputes a lookup table instead.",
+  "summary_zh": "该图是ADAngel背景图（其架构见图6）：左为标准Transformer解码块；中间展示APQ如何把权重/激活量化为Int4/Int8等低位宽；右侧对比两种执行混合精度GEMM的已有策略——在线填充与查找表(LUT)策略。",
+  "confidence": "high",
+  "notes": "layout-proposal: three-column concept gallery -- one flow diagram (decoder block) beside two stacked pairs of contrasting mini-diagrams (quantization schemes; padding vs LUT strategies), not a uniform matrix grid. This figure is background/motivation material explaining concepts ADAngel builds on; ADAngel's own architecture is shown in Figure 6.",
+  "venue": "OSDI26"
+}

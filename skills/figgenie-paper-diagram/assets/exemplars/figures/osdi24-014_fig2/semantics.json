@@ -1,0 +1,165 @@
+{
+  "paper_id": "osdi24-014",
+  "fig": "2",
+  "system": {
+    "name": "PCS",
+    "one_liner": "a generic scheduling framework that meets operator-specified objectives by tuning Weighted-Fair-Queuing policies",
+    "domain": [
+      "scheduling",
+      "cluster-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Operator",
+        "role": "specifies high level objectives via the preference framework",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Preference Interface",
+        "role": "captures the operator's high-level objectives",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Preference Solver",
+        "role": "uses a simulation-based search strategy to find Pareto-optimal WFQ configurations",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "User",
+        "role": "submits jobs with a demand function on the critical path",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Resources",
+        "role": "WFQ queues (weighted by w1/w2/w3) that process user jobs according to the chosen policy",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Operator",
+        "to": "Preference Interface",
+        "what": "Avg Pred_error, Avg JCT",
+        "step": 1
+      },
+      {
+        "from": "Preference Interface",
+        "to": "Preference Solver",
+        "what": null,
+        "step": 2
+      },
+      {
+        "from": "Preference Solver",
+        "to": "Preference Interface",
+        "what": "Pareto-optimal WFQ configurations / preference selection",
+        "step": 3
+      },
+      {
+        "from": "Preference Interface",
+        "to": "Resources",
+        "what": "Policy (WFQ configuration)",
+        "step": 4
+      },
+      {
+        "from": "User",
+        "to": "Resources",
+        "what": "Job, Demand Function",
+        "step": null
+      },
+      {
+        "from": "Resources",
+        "to": "User",
+        "what": "JCTpred",
+        "step": null
+      }
+    ],
+    "key_idea": "PCS separates a slow control loop, where operators tune scheduling preferences via a simulation-based solver, from the fast critical path, where user jobs are scheduled through tuned Weighted-Fair-Queuing resource queues.",
+    "reading_order": "Top band, left to right: operator exchanges preference metrics with the interface and solver (steps 1-4); bottom band: user jobs flow through the resulting WFQ queues to resources."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.7,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7d9d9c",
+        "used_for": "step-number badges (1-4) and the middle WFQ queue row (t1<J<=t2)"
+      },
+      {
+        "hex": "#cc0000",
+        "used_for": "the solver-invocation curved arrow and the User's Job/JCTpred request-response arrows"
+      },
+      {
+        "hex": "#334756",
+        "used_for": "back card of the stacked 'Sim N' simulations and the bottom WFQ queue row (J>t2)"
+      },
+      {
+        "hex": "#e4dccf",
+        "used_for": "front 'Sim N' card and the top WFQ queue row (J<=t1)"
+      },
+      {
+        "hex": "#637b7b",
+        "used_for": "middle card of the stacked simulations"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.94pt, dashed divider line separating the control band from the data band, solid elsewhere",
+    "font": "sans (Arial-Bold), 5-8.5pt, bold for labels and step badges",
+    "corners": "mixed",
+    "arrows": "thick black bidirectional block arrows for the control loop and policy push; red arrows for solver invocation and the user's request/response; thin lines forming the WFQ table grid",
+    "icons": "vector; person silhouettes for Operator/User/users, a small Pareto-front scatter plot, stacked cards for simulations, small grid icons for Resources"
+  },
+  "encoding": {
+    "color_means": "red arrows mark the two dynamic/on-demand interactions (invoking the preference solver, and the user's live job submission and predicted-JCT response); black arrows mark the more static configuration exchange (operator-interface preference exchange, resulting policy pushed to resources)",
+    "line_style_means": "a dashed horizontal rule separates the top preference-tuning control loop from the bottom user-facing critical/data path",
+    "emphasis": "four numbered badges walk the reader through the control loop before the eye drops to the critical path, echoing the text's own framing of a 'critical path' below the divider",
+    "reusable_patterns": [
+      "numbered control loop stacked above a labelled critical/data path, split by a dashed divider"
+    ],
+    "weaknesses": [
+      "the truncated caption leaves the exact wording of the user-facing critical path unclear"
+    ]
+  },
+  "tags": [
+    "scheduling",
+    "weighted-fair-queuing",
+    "completion-time-prediction",
+    "preference-based",
+    "cluster-scheduling",
+    "ml-jobs"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Predictability-Centric Scheduling (PCS) (p.6)"
+    ],
+    "evidence": [
+      "PCS, a generic scheduling framework (Fig.2), which captures these requirements using a high level preference interface",
+      "translates the specified high level objectives into a set of Pareto-optimal WFQ configurations",
+      "The preference solver uses a simulation-based search strategy to find Pareto-optimal WFQ configurations"
+    ]
+  },
+  "summary": "This figure gives an overview of PCS, a generic cluster scheduling framework built around Weighted-Fair-Queuing (WFQ). The diagram is split by a dashed horizontal line into two tiers. In the top control-loop tier, an Operator exchanges average prediction-error and JCT metrics with a Preference Interface (step 1), which invokes a simulation-based Preference Solver running many simulations (step 2) that returns Pareto-optimal WFQ configurations for the operator to select from (step 3); the resulting policy is then pushed down to configure the Resources (step 4). In the bottom critical-path tier, a User submits a job and its demand function directly to the WFQ-organized Resources, which are partitioned into three weighted queues (w1, w2, w3) by job-size thresholds t1 and t2, and returns a predicted job completion time (JCTpred). Red arrows mark the solver invocation and the user's live request/response, while black arrows carry the more static preference and policy exchange.",
+  "summary_zh": "该图展示调度框架 PCS：上方控制回路中 Operator 经偏好界面调用仿真求解器得到最优 WFQ 策略；下方关键路径中 User 任务经三个加权队列处理并返回预测完成时间。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

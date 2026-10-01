@@ -1,0 +1,245 @@
+{
+  "paper_id": "nsdi26-043",
+  "fig": "tex18",
+  "kind": "mechanism",
+  "system": {
+    "name": "Lemonshark",
+    "one_liner": "an asynchronous DAG-BFT protocol that achieves early finality for sharded transactions",
+    "domain": [
+      "distributed-systems",
+      "BFT-consensus",
+      "sharding"
+    ],
+    "abstraction": "consensus-protocol"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how a client's speculative early transaction gets corrected once the node reports the speculation was stale",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Round",
+        "kind": "label",
+        "role": "header marking rounds r, r+1, r+2 along the Node lane",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node",
+        "kind": "lane",
+        "role": "the process lane, subdivided per round into two sub-phase boxes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Client",
+        "kind": "actor",
+        "role": "the client lane, drawn as a person icon plus a time axis",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "BC1 (round r)",
+        "kind": "box",
+        "role": "first sub-phase of round r; receives the client's first transaction",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "BC2 (round r)",
+        "kind": "box",
+        "role": "second sub-phase of round r; sends back the speculative outcome",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "BC1 (round r+1)",
+        "kind": "box",
+        "role": "first sub-phase of round r+1; receives the client's second, speculative transaction",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "BC2 (round r+1)",
+        "kind": "box",
+        "role": "second sub-phase of round r+1; informs the client the speculation was stale",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "BC1 (round r+2)",
+        "kind": "box",
+        "role": "first sub-phase of round r+2; receives the client's resubmitted transaction",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Client",
+        "to": "BC1 (round r)",
+        "what": "the client sends its first transaction to the process",
+        "kind": "timeline-message",
+        "step": "1"
+      },
+      {
+        "from": "BC2 (round r)",
+        "to": "Client",
+        "what": "after BC1, the process sends a speculative outcome back to the client",
+        "kind": "timeline-message",
+        "step": "2"
+      },
+      {
+        "from": "Client",
+        "to": "BC1 (round r+1)",
+        "what": "using the speculative outcome, the client immediately sends its second, causally-related transaction",
+        "kind": "timeline-message",
+        "step": "3"
+      },
+      {
+        "from": "BC2 (round r+1)",
+        "to": "Client",
+        "what": "the process informs the client that its earlier speculative read has turned out to be stale",
+        "kind": "timeline-message",
+        "step": "4"
+      },
+      {
+        "from": "Client",
+        "to": "BC1 (round r+2)",
+        "what": "the client resubmits, sending a corrected transaction",
+        "kind": "timeline-message",
+        "step": "5"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "BC1 (round r)",
+        "what": "the client sends its first transaction to the process",
+        "carries": "first transaction"
+      },
+      {
+        "marker": "2",
+        "at": "BC2 (round r)",
+        "what": "after BC1 completes, the process sends back a speculative outcome for the first transaction",
+        "carries": "speculative outcome"
+      },
+      {
+        "marker": "3",
+        "at": "BC1 (round r+1)",
+        "what": "using that speculative outcome without waiting for finality, the client immediately sends its second, causally-related transaction",
+        "carries": "2nd causally-related transaction"
+      },
+      {
+        "marker": "4",
+        "at": "BC2 (round r+1)",
+        "what": "the process informs the client that the earlier speculative read has turned out to be stale",
+        "carries": "stale-read notification"
+      },
+      {
+        "marker": "5",
+        "at": "BC1 (round r+2)",
+        "what": "the client resubmits a corrected transaction after learning the speculation was wrong",
+        "carries": "resubmitted transaction"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A client can pipeline a causally-dependent second transaction immediately after a speculative outcome for the first, without waiting for finality; if the process later reports that speculation was stale, the client resubmits at a later round instead of stalling on every request.",
+    "reading_order": "left to right along the Node lane's round-by-round BC1/BC2 boxes, following each numbered arrow down to or up from the Client lane in order 1 through 5"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.21,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#90beff",
+        "used_for": "light-blue arrow (1): client sends its first transaction to the process"
+      },
+      {
+        "hex": "#001dbc",
+        "used_for": "dark-blue arrow (2): the process returns a speculative outcome to the client"
+      },
+      {
+        "hex": "#97d077",
+        "used_for": "light-green arrow (3): the client sends its second, causally-related transaction using the speculative outcome"
+      },
+      {
+        "hex": "#b20000",
+        "used_for": "dark-red arrow (4): the process informs the client the speculative read was stale"
+      },
+      {
+        "hex": "#009900",
+        "used_for": "dark-green arrow (5): the client resubmits after learning of the stale speculation"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the plain BC1/BC2 sub-phase boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on the BC1/BC2 boxes and the two lane baselines",
+    "corners": "square",
+    "arrows": "five thin diagonal arrows, each a different colour, alternating direction (up from Client, down from Node), with solid arrowheads",
+    "font": "serif/italic (math-style BC1/BC2 subscripts and round labels r, r+1, r+2)",
+    "icons": "a simple line-art person icon marking the Client lane's origin"
+  },
+  "encoding": {
+    "color_means": "each of the five numbered arrows gets its own colour mainly to stay visually distinct from its neighbours in the crossing diagram, not to mark a shared category",
+    "line_style_means": "all five message arrows are solid, differing only in colour, direction (up from Client vs down from Node), and which BC sub-box they touch",
+    "state_means": "not applicable; a single request/response exchange traced once, not a before/after or alternatives figure",
+    "marker_means": "plain parenthesised numbers (1)-(5) order the message exchange between client and process",
+    "emphasis": "the fourth arrow's dark-red colour and downward direction single out the one message that overturns the earlier speculation, right before the client's corrective fifth arrow",
+    "reusable_patterns": [
+      "a two-lane (server/client) swimlane with round-indexed sub-phase boxes on one lane, crossed by numbered, differently-coloured arrows tracing a speculate-then-correct message exchange"
+    ],
+    "weaknesses": [
+      "the paper's caption for this figure was extracted from LaTeX with a transaction-type subscript and part of one clause stripped out, so the exact transaction type and the full wording of steps 4-5 are reconstructed from the diagram and surrounding paragraphs rather than quoted directly",
+      "the BC1/BC2 sub-phase labels are not spelled out in the given context text, so their exact meaning (most likely two broadcast sub-steps of one DAG round) is inferred rather than confirmed"
+    ]
+  },
+  "tags": [
+    "Lemonshark",
+    "speculation",
+    "pipelining",
+    "stale-read",
+    "client-protocol",
+    "DAG-BFT"
+  ],
+  "provenance": {
+    "sections": [
+      "§Pipelining and Lemonshark",
+      "§Evaluation"
+    ],
+    "evidence": [
+      "allowing the client to resubmit its chain of transactions earlier; we illustrate this in",
+      "we saw an $80\\%$ improvement in latencies when there are no faults",
+      "Our client sends a Type transaction to the process."
+    ]
+  },
+  "summary": "This figure, 'Catching the next bus,' walks through Lemonshark's speculative transaction pipelining between a Client and a Node whose rounds (r, r+1, r+2) each split into two sub-phases, BC1 and BC2. In step 1, the client sends its first transaction, arriving at BC1 of round r. In step 2, after BC1, the process replies with a speculative outcome (BC2 of round r). In step 3, without waiting for finality, the client uses that speculation to send a second, causally-related transaction, arriving at BC1 of round r+1. In step 4, at BC2 of round r+1, the process instead informs the client that the earlier speculative read has turned out to be stale. In step 5, the client resubmits, sending a corrected transaction that lands at BC1 of round r+2.",
+  "summary_zh": "该图\"赶下一班车\"走读Lemonshark推测流水线：①客户端发第一笔交易到r轮BC1；②BC2后进程返推测结果；③凭推测结果立即发第二笔交易到r+1的BC1；④r+1的BC2告知推测已过期；⑤客户端于r+2重新提交。",
+  "confidence": "medium",
+  "notes": "The context file's caption was extracted from LaTeX with a transaction-type subscript and the end of steps 4 stripped out ('Our client sends a Type transaction...', '...the process inform[s]'). Because the source image was only 595x185px, the exact direction and endpoints of arrows (3)-(5) were confirmed by loading the author's source SVG in a browser and rescaling it, which clearly shows (3) and (5) running Client-to-Node and (2)/(4) running Node-to-Client; this rescaled reading, not the low-resolution preview alone, underlies content.steps/relations. BC1/BC2's exact expansion is not given in the provided text and is inferred as two broadcast sub-phases per round.",
+  "venue": "NSDI26"
+}

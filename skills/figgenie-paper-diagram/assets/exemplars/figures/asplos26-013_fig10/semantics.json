@@ -1,0 +1,216 @@
+{
+  "paper_id": "asplos26-013",
+  "fig": "10",
+  "system": {
+    "name": "AGS",
+    "one_liner": "an algorithm-hardware co-design accelerator for 3D Gaussian Splatting SLAM using CODEC-assisted frame covisibility detection",
+    "domain": [
+      "ml-systems",
+      "robotics/SLAM",
+      "hardware accelerator"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DRAM",
+        "role": "stores Frame Data, Gaussian Features, Gaussian Tables and GS Logging Table shared by all engines",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Video CODEC",
+        "role": "generates SAD values during motion estimation that are reused for frame covisibility detection",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FC Detection Engine",
+        "role": "extracts SAD values from the video CODEC and accumulates them into frame covisibility",
+        "container": "AGS Architecture",
+        "novel": true
+      },
+      {
+        "name": "Pose Tracking Engine",
+        "role": "performs coarse-then-fine-grained pose tracking",
+        "container": "AGS Architecture",
+        "novel": true
+      },
+      {
+        "name": "Systolic Array",
+        "role": "PE array for coarse-grained pose estimation",
+        "container": "Pose Tracking Engine",
+        "novel": true
+      },
+      {
+        "name": "GS Array (Light)",
+        "role": "lightweight Gaussian array for fine-grained pose refinement",
+        "container": "Pose Tracking Engine",
+        "novel": true
+      },
+      {
+        "name": "On-chip Buffer",
+        "role": "buffers data for the pose tracking engine",
+        "container": "Pose Tracking Engine",
+        "novel": false
+      },
+      {
+        "name": "Gauss Buffer",
+        "role": "buffers Gaussian data for an engine",
+        "container": "AGS Architecture",
+        "novel": false
+      },
+      {
+        "name": "Mapping Engine",
+        "role": "performs Gaussian contribution-aware mapping with GPE array",
+        "container": "AGS Architecture",
+        "novel": true
+      },
+      {
+        "name": "GS Array",
+        "role": "array of Gaussian Processing Elements (GPEs) for rendering",
+        "container": "Mapping Engine",
+        "novel": true
+      },
+      {
+        "name": "GS Logging Table / Update Unit",
+        "role": "records Gaussian contribution information for key frames",
+        "container": "Mapping Engine",
+        "novel": true
+      },
+      {
+        "name": "GS Skipping Table / Comparison Unit",
+        "role": "compares against logged contributions to skip non-contributory Gaussians in non-key frames",
+        "container": "Mapping Engine",
+        "novel": true
+      },
+      {
+        "name": "GPU",
+        "role": null,
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "DRAM",
+        "to": "Video CODEC",
+        "what": "frame data",
+        "step": null
+      },
+      {
+        "from": "Video CODEC",
+        "to": "FC Detection Engine",
+        "what": "SAD values",
+        "step": null
+      },
+      {
+        "from": "DRAM",
+        "to": "Pose Tracking Engine",
+        "what": "Gaussian features and frame data",
+        "step": null
+      },
+      {
+        "from": "DRAM",
+        "to": "Mapping Engine",
+        "what": "Gaussian tables and GS logging table",
+        "step": null
+      },
+      {
+        "from": "GPU",
+        "to": "DRAM",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "AGS is a hardware architecture with a dedicated FC (frame covisibility) detection engine feeding a pose tracking engine and a mapping engine that both reuse cross-frame similarity to cut redundant 3DGS computation.",
+    "reading_order": "Left to right along the top DRAM bus, down into the FC Detection Engine, then into the two bottom engine blocks (tracking, then mapping)."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.92,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7f7f7f",
+        "used_for": "dark gray container borders/fills for engine blocks"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "light gray fills for sub-component boxes (buffers, arrays)"
+      },
+      {
+        "hex": "#1e466e",
+        "used_for": "dark blue accents / DRAM bus fill"
+      },
+      {
+        "hex": "#376795",
+        "used_for": "blue accents on DRAM bus"
+      },
+      {
+        "hex": "#d3e2b7",
+        "used_for": "green fills for DRAM data-structure boxes (Frame Data, Gaussian Features, Gaussian Tables)"
+      },
+      {
+        "hex": "#a7c0de",
+        "used_for": "light blue fill for GS Logging Table box"
+      },
+      {
+        "hex": "#fee599",
+        "used_for": "yellow fill for Video CODEC box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1pt dark strokes, some dashed borders around engine containers",
+    "font": "Calibri sans, 8-12pt, moderate bold usage for titles",
+    "corners": "mixed",
+    "arrows": "bidirectional double-headed arrows connecting DRAM bus to engines",
+    "icons": "circled letters (A-I) labeling components for text cross-reference"
+  },
+  "encoding": {
+    "color_means": "green = DRAM-resident data structures, yellow = Video CODEC, blue = GS Logging Table, gray = compute engine blocks",
+    "line_style_means": null,
+    "emphasis": "circled letter callouts (A-I) tie each block to the numbered discussion in the architecture section",
+    "reusable_patterns": [
+      "shared DRAM bus at top feeding parallel specialized engines below"
+    ],
+    "weaknesses": [
+      "dense small text at 8pt makes internal engine components hard to read"
+    ]
+  },
+  "tags": [
+    "3D Gaussian Splatting",
+    "SLAM",
+    "hardware accelerator",
+    "architecture overview",
+    "video CODEC",
+    "pose tracking"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Architecture (p.7)"
+    ],
+    "evidence": [
+      "it comprises an FC detection engine, a pose tracking engine, and a mapping engine",
+      "requires little overhead for the FC detection engine to extract these values through main memory",
+      "the pose tracking engine utilizes a systolic array and a lightweight GS array"
+    ]
+  },
+  "summary": "This figure gives the top-level hardware architecture of AGS, an algorithm-hardware co-designed accelerator for 3D Gaussian Splatting SLAM. A DRAM bus at the top holds shared data structures (frame data, Gaussian features, Gaussian tables, GS logging table) and connects to a video CODEC and a GPU. Below, an FC (frame covisibility) Detection Engine taps SAD values produced by the CODEC's motion estimation to quantify similarity between consecutive frames. This covisibility signal drives two engines: a Pose Tracking Engine built from a systolic array plus a lightweight GS array for coarse-then-fine pose estimation, and a Mapping Engine with a GPE array, an update unit and a comparison unit that log and reuse Gaussian contribution information to skip redundant computation. The diagram uses flat colored boxes, dashed engine-container borders, and lettered callouts matching the architecture section's prose.",
+  "summary_zh": "该图展示AGS硬件架构：DRAM总线连接视频CODEC与GPU，FC协同可见性检测引擎提取SAD值，驱动位姿跟踪引擎（脉动阵列+轻量GS阵列）与建图引擎（GPE阵列+更新/比较单元）复用跨帧相似性以减少冗余计算。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

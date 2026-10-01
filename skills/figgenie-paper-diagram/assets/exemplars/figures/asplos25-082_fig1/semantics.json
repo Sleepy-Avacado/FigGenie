@@ -1,0 +1,141 @@
+{
+  "paper_id": "asplos25-082",
+  "fig": "1",
+  "system": {
+    "name": "MoC-System",
+    "one_liner": "a fault-tolerance system for sparse Mixture-of-Experts model training that reduces checkpoint size via partial-expert checkpointing",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "fault-tolerance"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Rank0",
+        "role": "a data-parallel/expert-parallel rank holding replicated non-expert layers and one expert shard",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rank1",
+        "role": "a data-parallel/expert-parallel rank holding replicated non-expert layers and one expert shard",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rank2",
+        "role": "a data-parallel/expert-parallel rank holding replicated non-expert layers and one expert shard",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Atten",
+        "role": "attention layer, replicated (non-expert) across DP ranks",
+        "container": "Rank",
+        "novel": false
+      },
+      {
+        "name": "FFN",
+        "role": "feed-forward layer, replicated (non-expert) across DP ranks",
+        "container": "Rank",
+        "novel": false
+      },
+      {
+        "name": "Expert1-0",
+        "role": "the distinct MoE expert assigned to Rank0 under expert parallelism",
+        "container": "Rank0",
+        "novel": false
+      },
+      {
+        "name": "Expert1-1",
+        "role": "the distinct MoE expert assigned to Rank1 under expert parallelism",
+        "container": "Rank1",
+        "novel": false
+      },
+      {
+        "name": "Expert1-2",
+        "role": "the distinct MoE expert assigned to Rank2 under expert parallelism",
+        "container": "Rank2",
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "Under ZeRO-2 DP+EP with 3 ranks, non-expert layers (Atten, FFN) are replicated identically on every rank while each rank holds a distinct expert, and the optimizer states similarly mark which parts are stored (1) vs. absent (0) per rank.",
+    "reading_order": "Top-to-bottom through Rank0-2 in panel (a) Model Parameters, then the same rank rows in panel (b) Optimizer States, comparing replicated vs. per-rank state."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.0,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#56957d",
+        "used_for": "replicated non-expert layer boxes (Atten, FFN)"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "expert box fill"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "expert box accent/border"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "binary flag boxes (0/1) in the optimizer-state panel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders (~0.37pt), no dashing",
+    "font": "Tw Cen MT sans-serif, small",
+    "corners": "square",
+    "arrows": "none (static state layout, no arrows)",
+    "icons": "small colored rank/GPU icons"
+  },
+  "encoding": {
+    "color_means": "green = replicated non-expert layers (Atten, FFN) present identically on every rank; yellow/orange = the single expert unique to each rank; gray 0/1 boxes in panel (b) flag which optimizer-state entries are stored (1) or absent (0) per rank",
+    "line_style_means": null,
+    "emphasis": "Side-by-side (a)/(b) panels emphasize that model parameters replicate non-expert layers while optimizer states differ per rank, motivating sharded checkpointing",
+    "reusable_patterns": [
+      "rank-by-rank grid contrasting a replicated component against a per-rank-unique component"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "Mixture-of-Experts",
+    "expert parallelism",
+    "ZeRO",
+    "checkpointing",
+    "distributed training"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background & Related Work (p.3)",
+      "2 Background & Related Work (p.4)"
+    ],
+    "evidence": [
+      "As depicted in Figure 1(a), EP can be viewed as an aug- mentation of Data Parallelism (DP)",
+      "each expert within an MoE layer is allocated to a distinct DP rank",
+      "model parameters are replicated across each DP rank"
+    ]
+  },
+  "summary": "Figure 1 illustrates the model state layout under MoC-System's target training configuration: ZeRO-2 data parallelism combined with expert parallelism (DP=3, EP=3) across three ranks. Panel (a) shows model parameters: each rank (Rank0-2) holds identical copies of the non-expert layers (Atten, FFN) but a distinct expert (Expert1-0, 1-1, 1-2), illustrating that expert parallelism assigns one expert per DP rank while replicating everything else. Panel (b) shows the corresponding optimizer states using the same rank layout, with 0/1 flag boxes marking which state entries are actually stored (partitioned, as in ZeRO-2) versus replicated per rank. Together the two panels set up the background problem MoC-System addresses: efficiently checkpointing this mixed replicated/sharded state without redundantly saving identical non-expert layers or every rank's own expert.",
+  "summary_zh": "图1展示 ZeRO-2 DP+EP（DP=3, EP=3）下三个 rank 的模型状态布局：(a)模型参数中非专家层（Atten、FFN）在各 rank 复制，而每个 rank 持有不同专家；(b)优化器状态以 0/1 标记各 rank 实际存储的状态分片。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

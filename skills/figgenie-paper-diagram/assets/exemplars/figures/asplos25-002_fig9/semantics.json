@@ -1,0 +1,250 @@
+{
+  "paper_id": "asplos25-002",
+  "fig": "9",
+  "system": {
+    "name": "Mint",
+    "one_liner": "an agent-side tracing framework that parses spans into commonality patterns and variability parameters to capture all requests cheaply",
+    "domain": [
+      "observability",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Host",
+        "role": "machine running the instrumented applications and Mint's agent-side components",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Application Service",
+        "role": "instrumented service handling ingress/egress traffic, containing tracepoints",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "Mint-agent",
+        "role": "intercepts spans from tracepoints and forwards them for parsing",
+        "container": "Host",
+        "novel": true
+      },
+      {
+        "name": "Pattern Library",
+        "role": "stores common pattern parts extracted from spans",
+        "container": "Host",
+        "novel": true
+      },
+      {
+        "name": "Params Buffer",
+        "role": "stores variable parameter parts extracted from spans",
+        "container": "Host",
+        "novel": true
+      },
+      {
+        "name": "Mint-collector",
+        "role": "reports patterns, bloom filters, and selectively sampled parameters to the backend",
+        "container": "Host",
+        "novel": true
+      },
+      {
+        "name": "Frontend",
+        "role": "handles user queries and returns matched traces",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Mint-backend",
+        "role": "unified backend with a distributed trace storage engine that matches, rebuilds, and merges traces",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Match",
+        "role": "matches incoming pattern/bloom-filter data against stored traces",
+        "container": "Mint-backend",
+        "novel": true
+      },
+      {
+        "name": "Rebuild Topo",
+        "role": "reconstructs an approximate trace topology from matched patterns",
+        "container": "Mint-backend",
+        "novel": true
+      },
+      {
+        "name": "Merge",
+        "role": "merges pattern and parameter parts into an exact trace when sampled",
+        "container": "Mint-backend",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application Service",
+        "to": "Mint-agent",
+        "what": "generated spans",
+        "step": null
+      },
+      {
+        "from": "Mint-agent",
+        "to": "Pattern Library",
+        "what": "common pattern part",
+        "step": null
+      },
+      {
+        "from": "Mint-agent",
+        "to": "Params Buffer",
+        "what": "variable parameter part",
+        "step": null
+      },
+      {
+        "from": "Pattern Library",
+        "to": "Mint-collector",
+        "what": "patterns and bloom filters",
+        "step": 1
+      },
+      {
+        "from": "Params Buffer",
+        "to": "Mint-collector",
+        "what": "sampled parameters",
+        "step": 2
+      },
+      {
+        "from": "Mint-collector",
+        "to": "Mint-backend",
+        "what": "reported patterns, bloom filters, and sampled parameters",
+        "step": null
+      },
+      {
+        "from": "Mint-backend",
+        "to": "Host",
+        "what": "notification to report all parameters of a sampled trace",
+        "step": null
+      },
+      {
+        "from": "Match",
+        "to": "Rebuild Topo",
+        "what": "matched patterns",
+        "step": null
+      },
+      {
+        "from": "Rebuild Topo",
+        "to": "Approximate trace",
+        "what": "reconstructed trace topology",
+        "step": null
+      },
+      {
+        "from": "Merge",
+        "to": "Exact trace",
+        "what": "merged pattern and parameter data",
+        "step": null
+      },
+      {
+        "from": "Mint-backend",
+        "to": "Storage",
+        "what": "trace data",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "Mint-backend",
+        "what": "trace match query",
+        "step": null
+      }
+    ],
+    "key_idea": "Mint's implementation splits into per-host agents/collectors that separate common patterns from variable parameters, and a backend that matches, rebuilds, and selectively merges them into approximate or exact traces.",
+    "reading_order": "Left block (Host: agent, pattern library, params buffer, collector) first, then rightward across colored arrows into the right block (Mint-backend: match, rebuild, merge) and up to Frontend/user."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#191919",
+        "used_for": "text labels and dark icon glyphs"
+      },
+      {
+        "hex": "#d3e8d0",
+        "used_for": "light green fill highlighting pattern-related boxes and the common-pattern legend icon"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light gray fill for service and container boxes"
+      },
+      {
+        "hex": "#fdf4c7",
+        "used_for": "light yellow fill for parameter-related boxes and the variable-parameter legend icon"
+      },
+      {
+        "hex": "#cee3fe",
+        "used_for": "light blue fill for the Match boxes in Mint-backend"
+      },
+      {
+        "hex": "#ffbfc0",
+        "used_for": "light red/pink fill for the tracepoint diamond icon"
+      },
+      {
+        "hex": "#439922",
+        "used_for": "green outline of the common-pattern-part icon and match highlighting"
+      },
+      {
+        "hex": "#517bb7",
+        "used_for": "blue arrow from backend to host for sampled-trace notification"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark gray borders on all boxes, dashed border around the 'if sampled' merge region",
+    "font": "Times New Roman-based serif, 4-8.5pt, bold for box titles and legend keywords",
+    "corners": "rounded",
+    "arrows": "orthogonal arrows in red (report), orange (sampled report), and blue (backend-to-host notification), plus a black double arrow for ingress/egress",
+    "icons": "small vector glyphs: green quarter-circle = common pattern part, yellow half-oval = variable parameter part, dark star = metadata in bloom filter, red diamond = tracepoint, plus a storage disk icon and a user icon"
+  },
+  "encoding": {
+    "color_means": "green = common pattern part, yellow = variable parameter part, dark navy/star = metadata stored in the bloom filter, red diamond = tracepoint, blue arrow = backend notifying hosts",
+    "line_style_means": "red arrows show collectors always reporting patterns/bloom filters, orange arrows show collectors selectively reporting sampled parameters, dashed box marks the merge path taken only 'if sampled'",
+    "emphasis": "an in-figure legend explicitly decodes the icon shapes and arrow colors used throughout the Host and Mint-backend regions",
+    "reusable_patterns": [
+      "host-side agent/collector paired with a backend matcher/merger, split into two bordered regions",
+      "icon legend with numbered arrow annotations explaining a reporting protocol"
+    ],
+    "weaknesses": [
+      "many small near-identical icons (pattern/parameter/bloom-filter glyphs) may be hard to distinguish at reduced size"
+    ]
+  },
+  "tags": [
+    "tracing",
+    "observability",
+    "implementation",
+    "distributed-tracing",
+    "sampling",
+    "cloud"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Implementation (p.8)"
+    ],
+    "evidence": [
+      "Mint comprises several components, including multiple mint-agents and mint-collectors distributed on application hosts",
+      "a unified mint-backend with a distributed trace storage engine, and a frontend for query and visualization",
+      "Fig. 9 illustrates the implementation architecture of Mint."
+    ]
+  },
+  "summary": "This figure shows Mint's implementation architecture, split into a Host region on the left and a Mint-backend region on the right. On each host, instrumented Application Services expose tracepoints; a Mint-agent extracts common pattern parts (stored in a Pattern Library) and variable parameter parts (stored in a Params Buffer) from each span, and a Mint-collector reports patterns and bloom filters continuously while selectively reporting sampled parameters. The Mint-backend, with a distributed trace storage engine, matches incoming pattern/bloom-filter data, rebuilds an approximate trace topology, and merges in parameters to produce an exact trace when the trace was sampled; a backend-to-host blue arrow notifies hosts to report all parameters of a sampled trace. A Frontend lets a user query traces. An in-figure legend defines the pattern/parameter/bloom-filter icons and the colored reporting arrows.",
+  "summary_zh": "该图展示 Mint 的实现架构：主机侧的 Mint-agent 将 span 拆分为公共模式和可变参数并由 Mint-collector 上报，后端 Mint-backend 匹配、重建拓扑并按需合并出精确迹，图例解释了图标与箭头含义。",
+  "confidence": "medium",
+  "notes": "The prose describing this figure is a single short paragraph; most component roles and the numbered reporting steps are inferred from the figure's own legend and icon labels rather than body text.",
+  "venue": "ASPLOS25"
+}

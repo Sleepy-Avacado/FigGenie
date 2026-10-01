@@ -1,0 +1,47 @@
+{
+  "id": "osdi24-014_fig2",
+  "paper_id": "osdi24-014",
+  "fig": "2",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 2: Key components of PCS: The preference framework can be used by operators to specify high level objectives. The preference solver uses a simulation-based search strategy to find Pareto-optimal WFQ configurations that are then shared with the operator. On the critical path, users submit thei",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.7,
+  "n_components": 5,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-014/osdi24-014_fig2_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-014/osdi24-014_fig2_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Textbook top/bottom split: four numbered steps trace the operator's preference-tuning control loop above one dashed rule, while the critical path below runs jobs into a color-tiered Weighted-Fair-Queuing table with no legend needed.",
+      "what_to_learn": "Stack the slow control loop above a single dashed divider and the fast critical path below it; number only the control loop's steps (1-4) since that is what the operator actually walks through, and let color tiers in the resource table stand in for a legend."
+    },
+    {
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "A numbered four-step operator-preference-solver control loop sits above a dashed divider from the unnumbered, continuously running WFQ critical path, red arrows marking the two dynamic on-demand interactions against black for static configuration.",
+      "what_to_learn": "Stack a numbered, slower control/tuning loop above a dashed divider from the unnumbered, fast critical path it configures, and colour arrows by dynamism (red for on-demand interactions, black for static configuration exchange) rather than by which component they touch."
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "paper_id": "nsdi26-090",
+  "fig": "4",
+  "system": {
+    "name": "Cortex",
+    "one_liner": "a semantic-aware caching system that reduces the latency and cost of LLM agents' remote data retrieval",
+    "domain": [
+      "ml-systems",
+      "caching"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Application",
+        "role": "hosts an LLM Agent and issues user-facing requests",
+        "container": "Region A",
+        "novel": false
+      },
+      {
+        "name": "LLM Agent",
+        "role": "issues tool-call queries that Cortex intercepts",
+        "container": "Application",
+        "novel": false
+      },
+      {
+        "name": "Data Client",
+        "role": "intercepts agent tool calls and forwards them to the Cache Engine or the remote data service",
+        "container": "Cortex",
+        "novel": true
+      },
+      {
+        "name": "Cortex Cache Engine",
+        "role": "checks for a semantically cached answer before falling back to remote data",
+        "container": "Cortex",
+        "novel": true
+      },
+      {
+        "name": "ANN Cache",
+        "role": "approximate-nearest-neighbor cache of past queries and results",
+        "container": "Cortex Cache Engine",
+        "novel": true
+      },
+      {
+        "name": "Semantic Judge",
+        "role": "verifies semantic equivalence of ANN cache candidate matches",
+        "container": "Cortex Cache Engine",
+        "novel": true
+      },
+      {
+        "name": "Priority-Aware GPU Co-location",
+        "role": "schedules GPU resources used by the cache engine",
+        "container": "Cortex",
+        "novel": true
+      },
+      {
+        "name": "Cache Manager",
+        "role": "manages cache entries and coordinates refresh from the remote data service",
+        "container": "Cortex",
+        "novel": true
+      },
+      {
+        "name": "Remote Data Service",
+        "role": "hosts the actual remote data sources reached on a cache miss",
+        "container": "Region B",
+        "novel": false
+      },
+      {
+        "name": "Search Engine",
+        "role": "remote data source",
+        "container": "Remote Data Service",
+        "novel": false
+      },
+      {
+        "name": "Private RAG",
+        "role": "remote data source",
+        "container": "Remote Data Service",
+        "novel": false
+      },
+      {
+        "name": "Data Lake",
+        "role": "remote data source",
+        "container": "Remote Data Service",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Users",
+        "to": "Application",
+        "what": "user request",
+        "step": 1
+      },
+      {
+        "from": "Application",
+        "to": "Data Client",
+        "what": "LLM agent tool-call query",
+        "step": 2
+      },
+      {
+        "from": "Data Client",
+        "to": "Cortex Cache Engine",
+        "what": "query for a cached answer",
+        "step": 3
+      },
+      {
+        "from": "Cortex Cache Engine",
+        "to": "Data Client",
+        "what": "cached response",
+        "step": 4
+      },
+      {
+        "from": "Data Client",
+        "to": "Remote Data Service",
+        "what": "direct call bypassing the cache on a miss",
+        "step": 5
+      },
+      {
+        "from": "Cache Manager",
+        "to": "ANN Cache",
+        "what": "cache entry management",
+        "step": 6
+      },
+      {
+        "from": "ANN Cache",
+        "to": "Semantic Judge",
+        "what": "candidate match for semantic verification",
+        "step": 7
+      },
+      {
+        "from": "Cache Manager",
+        "to": "Remote Data Service",
+        "what": "cache refresh / backfill from the remote data source",
+        "step": 8
+      }
+    ],
+    "key_idea": "Cortex sits as a layered caching interposer between LLM-agent applications and geo-distributed remote data services, serving semantically matched queries from an ANN cache verified by a Semantic Judge instead of paying a cross-region round trip.",
+    "reading_order": "top-down: Applications, then into the Cortex box (Data Client -> Cache Engine with nested ANN Cache/Semantic Judge, plus Cache Manager), down across the Region A/B boundary to the Remote Data Service"
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.18,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "Application/LLM Agent boxes and Search Engine/Private RAG/Data Lake boxes"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "Cortex outer container background"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "Data Client and Cortex Cache Engine box fills"
+      },
+      {
+        "hex": "#d9c7e6",
+        "used_for": "Semantic Judge box fill (purple)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black ~0.8pt, dashed line marking the Region A/Region B boundary",
+    "font": "Arial-Bold/serif sans, 6.5-9.5pt, mostly bold labels",
+    "corners": "mixed",
+    "arrows": "circled-number arrows 1-8 tracing the request path from user through the Cortex cache engine to the remote data service",
+    "icons": "vector user-group silhouette, database cylinder for ANN Cache"
+  },
+  "encoding": {
+    "color_means": "yellow marks application/remote-data-source endpoints, blue marks Cortex's own data-path components, purple marks the semantic verification component",
+    "line_style_means": "numbered solid arrows trace the sequential request path; a dashed line marks the Region A/Region B geo boundary",
+    "emphasis": "the Cortex box is drawn large and central with a nested Cache Engine to emphasize it as the paper's contribution sitting between applications and remote data",
+    "reusable_patterns": [
+      "layered architecture with a boxed subsystem nested inside a larger system box, numbered request path"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "LLM agents",
+    "semantic cache",
+    "geo-distributed",
+    "remote data access",
+    "GPU co-location"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design Overview (p.6)"
+    ],
+    "evidence": [
+      "Cortex adopts a layered architecture shown in Figure 4.",
+      "Each component is explicitly designed to tackle a subset of these challenges",
+      "Cortex's agentic caching architecture where agent LLM and data source reside in two geo-distributed regions"
+    ]
+  },
+  "summary": "Figure 4 presents Cortex's layered agentic caching architecture spanning two geo-distributed regions. In Region A, multiple Applications each embed an LLM Agent that talks to a shared Data Client (steps 1-2). The Data Client forwards each tool-call query into Cortex's Cache Engine (step 3), which checks an ANN Cache for semantically similar past queries and uses a Semantic Judge to verify matches before returning a cached response (step 4); on a cache miss, the Data Client calls straight through to the Remote Data Service (Search Engine, Private RAG, Data Lake) in Region B (step 5). A Cache Manager coordinates the ANN Cache (steps 6-7) and periodically refreshes entries from the Remote Data Service (step 8), while Priority-Aware GPU Co-location schedules the cache engine's GPU usage. The nested-box layout emphasizes Cortex as a caching layer interposed between agent applications and remote data.",
+  "summary_zh": "图4展示Cortex的分层语义缓存架构：应用中的LLM智能体请求经数据客户端进入Cortex缓存引擎，ANN缓存结合语义判别器返回命中结果，未命中则直连跨区域的远程数据服务，缓存管理器负责缓存维护与刷新。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

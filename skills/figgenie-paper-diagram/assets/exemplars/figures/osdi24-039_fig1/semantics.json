@@ -1,0 +1,195 @@
+{
+  "paper_id": "osdi24-039",
+  "fig": "1",
+  "system": {
+    "name": "EBS",
+    "one_liner": "Alibaba's cloud block storage architecture that virtualizes disks for VMs and persists data via block proxies to a distributed file system",
+    "domain": [
+      "storage",
+      "cloud",
+      "virtualization"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Compute Server",
+        "role": "hosts virtual machines",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VM#1",
+        "role": null,
+        "container": "Compute Server",
+        "novel": false
+      },
+      {
+        "name": "guestOS",
+        "role": null,
+        "container": "VM#1",
+        "novel": false
+      },
+      {
+        "name": "VD#0",
+        "role": "virtual disk",
+        "container": "VM#1",
+        "novel": false
+      },
+      {
+        "name": "VD#1",
+        "role": "virtual disk",
+        "container": "VM#1",
+        "novel": false
+      },
+      {
+        "name": "VD#2",
+        "role": "virtual disk",
+        "container": "VM#1",
+        "novel": false
+      },
+      {
+        "name": "VM#2",
+        "role": null,
+        "container": "Compute Server",
+        "novel": false
+      },
+      {
+        "name": "VD#3",
+        "role": "virtual disk",
+        "container": "VM#2",
+        "novel": false
+      },
+      {
+        "name": "Hypervisor",
+        "role": "embeds a client that forwards VDs' requests to backend storage clusters",
+        "container": "Compute Server",
+        "novel": false
+      },
+      {
+        "name": "Block Proxy",
+        "role": "receives VDs' requests and persists/fetches data to/from the distributed file system",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GC Worker",
+        "role": "garbage collection worker within a Block Proxy",
+        "container": "Block Proxy",
+        "novel": false
+      },
+      {
+        "name": "Snapshot Worker",
+        "role": "snapshot worker within a Block Proxy",
+        "container": "Block Proxy",
+        "novel": false
+      },
+      {
+        "name": "LSBD",
+        "role": "Log-Structured Block Device layer beneath the Block Proxy",
+        "container": "Block Proxy",
+        "novel": false
+      },
+      {
+        "name": "Append-only File System",
+        "role": "distributed file system (DFS) that persists each VD's data as a file",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "VD#0",
+        "to": "Hypervisor",
+        "what": "VD requests",
+        "step": null
+      },
+      {
+        "from": "Hypervisor",
+        "to": "Block Proxy",
+        "what": "forwarded VD requests",
+        "step": null
+      },
+      {
+        "from": "Block Proxy",
+        "to": "LSBD",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "LSBD",
+        "to": "Append-only File System",
+        "what": "persist/fetch data",
+        "step": null
+      }
+    ],
+    "key_idea": "EBS virtualizes disks inside VMs on compute servers; a hypervisor client forwards each virtual disk's requests to Block Proxies, which persist or fetch the data as files in a distributed append-only file system.",
+    "reading_order": "Top-down through three labeled layers: Compute Layer (VMs and virtual disks) over Block Layer (Block Proxies) over Persistence Layer (append-only file system)."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.19,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bfbfbf",
+        "used_for": "outer container boxes (Compute Server, Block Proxy, Append-only File System)"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "inner boxes nested within them (VMs, GC/Snapshot Worker, data files)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.53pt black, solid",
+    "font": "Times New Roman serif, 7.5-10.5pt, bold for layer/box titles",
+    "corners": "rounded",
+    "arrows": "few simple thin double-headed connectors between layers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "medium gray marks the outer container boxes and light gray marks the components nested inside them; no color-coding distinguishes novel vs. existing parts since this is background context",
+    "line_style_means": null,
+    "emphasis": "three explicitly labeled horizontal layers (Compute/Block/Persistence) on the left margin walk the reader top-to-bottom through the storage stack",
+    "reusable_patterns": [
+      "three-tier storage stack: compute (VMs/virtual disks) over block-serving proxies over a persistence file system"
+    ],
+    "weaknesses": [
+      "monochrome gray palette does not visually distinguish component roles beyond nesting"
+    ]
+  },
+  "tags": [
+    "block-storage",
+    "virtual-disk",
+    "hypervisor",
+    "distributed-file-system",
+    "cloud-storage"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "Figure 1 illustrates an overview of the EBS architecture",
+      "each server can host multiple Virtual Disks (VDs) and also embeds a client within the hypervisor",
+      "Once the Block Proxies receive the VDs' requests, they will then persist/fetch the data to/from"
+    ]
+  },
+  "summary": "This figure gives background on the architecture of EBS (Elastic Block Storage), the cloud block-storage system that the paper's own contribution, DeftPunk, builds on. Three horizontal layers are labeled down the left margin. In the Compute Layer, a Compute Server hosts multiple VMs (VM#1, VM#2), each running a guestOS on top of one or more virtual disks (VD#0-VD#3); a Hypervisor embeds a client that forwards each VD's requests onward. In the Block Layer, one or more Block Proxy instances, each with a GC Worker and Snapshot Worker sitting on an LSBD (Log-Structured Block Device), receive those requests. In the Persistence Layer, an Append-only File System stores each VD's data as a separate file. All boxes use a plain two-tone gray palette, since this figure only sets up background context rather than presenting the paper's own contribution.",
+  "summary_zh": "该图展示 EBS 背景架构，分三层：计算层（虚拟机与虚拟磁盘，经 Hypervisor 转发请求）、块层（Block Proxy 含 GC/Snapshot Worker 及 LSBD）、持久层（文件系统存数据文件）。",
+  "confidence": "high",
+  "notes": "Figure 1 depicts background/existing EBS architecture rather than DeftPunk's own contribution; all components are marked novel:false accordingly.",
+  "venue": "OSDI24"
+}

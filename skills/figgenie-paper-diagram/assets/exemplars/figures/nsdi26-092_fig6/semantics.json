@@ -1,0 +1,173 @@
+{
+  "paper_id": "nsdi26-092",
+  "fig": "6",
+  "system": {
+    "name": "Wallet",
+    "one_liner": "a confidential serverless computing system that runs functions in trusted processes inside a CVM, excluding the guest OS from the trust boundary",
+    "domain": [
+      "security",
+      "serverless-computing",
+      "confidential-computing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Trustlet1",
+        "role": "sender trustlet that creates a data object and writes to it",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Trustlet2",
+        "role": "receiver trustlet that gets the data object and reads from it",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Page table",
+        "role": "per-trustlet page table updated to grant write or read access to the object",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Object",
+        "role": "shared data object in memory used for inter-function communication",
+        "container": "Memory",
+        "novel": true
+      },
+      {
+        "name": "Trusted Monitor",
+        "role": "mediates object allocation and page-table updates to enforce isolation",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Trustlet1",
+        "to": "Page table",
+        "what": "createObject() API call",
+        "step": 1
+      },
+      {
+        "from": "Trusted Monitor",
+        "to": "Object",
+        "what": "Allocates object",
+        "step": 2
+      },
+      {
+        "from": "Trusted Monitor",
+        "to": "Page table",
+        "what": "Updates PT to grant Trustlet1 write access",
+        "step": 3
+      },
+      {
+        "from": "Trustlet2",
+        "to": "Page table",
+        "what": "getObject() API call",
+        "step": 4
+      },
+      {
+        "from": "Trusted Monitor",
+        "to": "Page table",
+        "what": "Updates PT to grant Trustlet2 read access",
+        "step": 5
+      },
+      {
+        "from": "Trustlet1",
+        "to": "Object",
+        "what": "Write (data path)",
+        "step": null
+      },
+      {
+        "from": "Object",
+        "to": "Trustlet2",
+        "what": "Read (data path)",
+        "step": null
+      }
+    ],
+    "key_idea": "Wallet lets two trustlets communicate through a shared-memory data object whose page-table permissions (write-only for the creator, read-only for the receiver) are granted only by the trusted monitor.",
+    "reading_order": "Top-down and symmetric: Trustlet1 (left) calls createObject and writes, Trustlet2 (right) calls getObject and reads, with the Trusted Monitor below mediating both sides' page tables."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.98,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for the Trustlet1 and Trustlet2 boxes"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "gray fill/border for the Page table boxes"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "pale green fill for the Trusted Monitor band"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "very light gray background for the Memory region"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale orange fill for the shared data Object box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid borders (~0.6pt) on boxes; the legend defines dashed arrows for the control path",
+    "font": "Times New Roman (with MS PGothic glyphs), uniform 6pt",
+    "corners": "square",
+    "arrows": "solid arrows for the data path (Write/Read to the object), dashed arrows for the control path (page-table updates), labeled with circled step numbers ①-⑤",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow = the two communicating Trustlets, orange = the shared data Object between them, green = the Trusted Monitor that mediates access",
+    "line_style_means": "solid arrows show the data path (direct read/write to the shared object); dashed arrows show the control path (createObject/getObject calls and page-table updates mediated by the trusted monitor)",
+    "emphasis": "a red X on the Object box between the write-only and read-only Trustlets visually enforces that neither trustlet can access the object beyond its granted permission without monitor mediation",
+    "reusable_patterns": [
+      "shared-memory object flanked by producer/consumer processes with asymmetric read/write permissions",
+      "explicit data-path vs. control-path legend applied via solid/dashed arrows"
+    ],
+    "weaknesses": [
+      "the red X mark's meaning (denied direct access) is not explained by an in-figure legend"
+    ]
+  },
+  "tags": [
+    "confidential-computing",
+    "serverless",
+    "inter-function-communication",
+    "shared-memory",
+    "TEE",
+    "data-objects"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Design (p.10)"
+    ],
+    "evidence": [
+      "Figure 6 illustrates their control and data path",
+      "Trustlet1 invokes the createObject() API call",
+      "the trusted monitor ensures that each object is attached to only two trustlets at most"
+    ]
+  },
+  "summary": "This figure shows how two trustlets in Wallet communicate through a shared-memory data object, illustrating both the control path and the data path. Trustlet1 calls createObject() (step 1); the Trusted Monitor allocates the object in Memory (2) and updates Trustlet1's page table to grant write access (3). Trustlet2 then calls getObject() (4), and the monitor updates Trustlet2's page table to grant read access (5). With permissions set, Trustlet1 writes directly to the Object and Trustlet2 reads from it via the solid-line data path, while the dashed-line control path shows the API calls and page-table updates mediated by the Trusted Monitor. A red X between the two trustlets marks that the object itself is never directly accessible beyond each trustlet's granted permission, and the monitor limits each object to at most one writer and one reader.",
+  "summary_zh": "该图展示 Wallet 中两个可信小程序经共享内存对象通信：创建者调用 createObject 获写权限，接收者调用 getObject 获读权限，均由可信监控器更新页表，二者再直接读写该对象。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

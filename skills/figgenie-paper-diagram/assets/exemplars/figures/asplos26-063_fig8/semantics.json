@@ -1,0 +1,189 @@
+{
+  "paper_id": "asplos26-063",
+  "fig": "8",
+  "system": {
+    "name": "CREST",
+    "one_liner": "a disaggregated transaction system that handles high-contention workloads via cell-level concurrency control, localized execution, and parallel commits",
+    "domain": [
+      "distributed-transactions",
+      "memory-disaggregation",
+      "concurrency-control"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Coordinators",
+        "role": "compute-node component holding a transaction's pending update and driving its execution",
+        "container": "CNs",
+        "novel": false
+      },
+      {
+        "name": "Txn Logic",
+        "role": "logic that manages a transaction's execution",
+        "container": "Coordinators",
+        "novel": false
+      },
+      {
+        "name": "Txn1",
+        "role": "a transaction pipelined through localized execution",
+        "container": "Coordinators",
+        "novel": false
+      },
+      {
+        "name": "Txn2",
+        "role": "a transaction pipelined through localized execution",
+        "container": "Coordinators",
+        "novel": false
+      },
+      {
+        "name": "Txn3",
+        "role": "a transaction pipelined through localized execution",
+        "container": "Coordinators",
+        "novel": false
+      },
+      {
+        "name": "RDMA",
+        "role": "RDMA operation issued by a pipelined transaction",
+        "container": "Pipeline Execution",
+        "novel": false
+      },
+      {
+        "name": "Pipeline Execution",
+        "role": "pipelines multiple transactions' RDMA operations under two-phase locking",
+        "container": "Coordinators",
+        "novel": true
+      },
+      {
+        "name": "2PL",
+        "role": "two-phase locking used to order the pipelined RDMA operations",
+        "container": "Pipeline Execution",
+        "novel": false
+      },
+      {
+        "name": "Cache Management",
+        "role": "manages the coordinator's Record Cache entries (cache mode, admission) for localized execution",
+        "container": "Coordinators",
+        "novel": true
+      },
+      {
+        "name": "Record Cache",
+        "role": "per-coordinator cache entry (Key, Ref, EN Array, Version List) for locally executing on a record",
+        "container": "Cache Management",
+        "novel": true
+      },
+      {
+        "name": "Remote Records",
+        "role": "memory-node-side records laid out as a header followed by a row of cells",
+        "container": "MNs",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Txn Logic",
+        "to": "Txn1",
+        "what": "dispatch of a transaction into the execution pipeline",
+        "step": null
+      },
+      {
+        "from": "Pipeline Execution",
+        "to": "Cache Management",
+        "what": "admission of a locally cached record version",
+        "step": null
+      },
+      {
+        "from": "Cache Management",
+        "to": "Remote Records",
+        "what": "cache-mode read or update of the remote record",
+        "step": null
+      }
+    ],
+    "key_idea": "A coordinator pipelines RDMA-based access to its own compute node's uncommitted record versions under 2PL, avoiding a round trip to fetch the latest version from the memory pool.",
+    "reading_order": "Top-down: the Coordinators/Pipeline Execution/Cache Management block on the CNs row, then down across the CNs/MNs divider to Remote Records."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.87,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dceaf7",
+        "used_for": "fill of the Record Cache table cells and the Remote Records header/cell boxes"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "fill of the RDMA boxes in the pipelined execution"
+      },
+      {
+        "hex": "#156082",
+        "used_for": "dark teal bold italic 'Pipeline Execution' heading text"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark red bold italic 'Cache Management' heading text"
+      },
+      {
+        "hex": "#fbe3d6",
+        "used_for": "fill of the 2PL box"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray background band separating the CNs row from the MNs row"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt borders, dashed for the pipeline and cache-management groupings",
+    "font": "Arial, 4.5-8pt, over half bold/italic for the colored technique headings (Pipeline Execution, Cache Management)",
+    "corners": "square",
+    "arrows": "solid black arrows, one carrying the 'Admission' label",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "teal bold italic = the 'Pipeline Execution' heading, red bold italic = the 'Cache Management' heading (matching Figure 5's red-for-novel-technique convention), light blue = record/table cells, pale peach = the 2PL box",
+    "line_style_means": null,
+    "emphasis": "the two colored italic headings (Pipeline Execution, Cache Management) mark exactly the two mechanisms this section discusses, layered over a plain CNs-over-MNs split",
+    "reusable_patterns": [
+      "colored bold-italic headings reused across figures to flag the paper's named techniques",
+      "a labelled CNs/MNs divider standing in for the compute/memory-pool split of the architecture figure"
+    ],
+    "weaknesses": [
+      "the record-cache field layout (Key/Ref/EN Array/Version List) is dense at this box size",
+      "the 'Admission' arrow's exact source and target are easy to misread"
+    ]
+  },
+  "tags": [
+    "disaggregated-memory",
+    "localized-execution",
+    "rdma",
+    "two-phase-locking",
+    "cache-management"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Localized Execution (p.6)"
+    ],
+    "evidence": [
+      "CREST uses localized execution to accelerate the processing of transactions running in the same compute node.",
+      "allow a coordinator to locally operate on uncommitted record versions within the same compute node",
+      "Figure 8 shows the workflow of localized execution."
+    ]
+  },
+  "summary": "Figure 8 walks through localized execution, the technique that lets a CREST coordinator operate on uncommitted record versions from transactions on its own compute node instead of fetching the latest version from the memory pool. On the CNs (compute-node) side, a coordinator's pending update ('Update B, TS_Commit=10') and its Txn Logic feed three transactions (Txn1-Txn3) whose pipelined RDMA operations are coordinated under two-phase locking ('2PL'); a Cache Management step (highlighted in red, matching CREST's other named techniques) shows the coordinator's Record Cache entry for key B, with a Ref, an EN Array, and a Version List, going through an admission step. On the MNs (memory-node) side, the corresponding Remote Records are laid out as a Header followed by a row of Cells, which the cache mode and admission logic on the compute side ultimately read from or write back to.",
+  "summary_zh": "该图展示CREST局部化执行流程：计算节点侧协调器在2PL下流水执行多个事务并管理记录缓存（红字标出的缓存管理），对应内存节点侧的远程记录由表头和若干单元格组成。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

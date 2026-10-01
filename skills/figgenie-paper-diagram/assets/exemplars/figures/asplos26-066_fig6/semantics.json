@@ -1,0 +1,179 @@
+{
+  "paper_id": "asplos26-066",
+  "fig": "6",
+  "system": {
+    "name": "FuseFlow",
+    "one_liner": "a fusion-centric compiler converting sparse PyTorch models into fused sparse dataflow graphs for reconfigurable dataflow architectures",
+    "domain": [
+      "compilers",
+      "ml-systems"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "PyTorch Model",
+        "role": "input model source (e.g., sparse matmuls and linear layers) to be compiled",
+        "container": "(a) PyTorch model",
+        "novel": false
+      },
+      {
+        "name": "Einsum expressions w/ optional user schedules and sparse formats",
+        "role": "intermediate representation extending the model with non-algebraic operators, schedules (red) and sparse formats (green)",
+        "container": "(b) Einsum expressions",
+        "novel": true
+      },
+      {
+        "name": "Fused Einsum Expressions",
+        "role": "cross-expression fused representation grouping fusable operators into a connected subgraph",
+        "container": "(c) Fused Einsum Expressions + POG",
+        "novel": true
+      },
+      {
+        "name": "Partial-Order Graph (POG)",
+        "role": "graph encoding index/iteration-order constraints derived from schedules and sparse formats for the fused region",
+        "container": "(c) Fused Einsum Expressions + POG",
+        "novel": true
+      },
+      {
+        "name": "Fusion Table",
+        "role": "new IR encoding fused iteration order (rows), fused tensors (columns) and IR nodes/stream pointers (cells) for lowering fused expressions",
+        "container": "(d) Fusion tables",
+        "novel": true
+      },
+      {
+        "name": "SAMML Fused Dataflow Graph",
+        "role": "generated hardware-ready sparse dataflow graph with ML primitives, targeting simulation, FPGA or a pruning heuristic",
+        "container": "(e) SAMML Fused Dataflow Graph",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "PyTorch Model",
+        "to": "Einsum expressions w/ optional user schedules and sparse formats",
+        "what": "lowering via Torch-MLIR/MPACT with user schedules and formats",
+        "step": null
+      },
+      {
+        "from": "Einsum expressions w/ optional user schedules and sparse formats",
+        "to": "Fused Einsum Expressions",
+        "what": "cross-expression kernel fusion (Section 5)",
+        "step": null
+      },
+      {
+        "from": "Fused Einsum Expressions",
+        "to": "Partial-Order Graph (POG)",
+        "what": "index constraints derived from schedules/formats",
+        "step": null
+      },
+      {
+        "from": "Fused Einsum Expressions",
+        "to": "Fusion Table",
+        "what": "lowering with fusion tables (Section 6)",
+        "step": null
+      },
+      {
+        "from": "Fusion Table",
+        "to": "SAMML Fused Dataflow Graph",
+        "what": "codegen",
+        "step": null
+      },
+      {
+        "from": "SAMML Fused Dataflow Graph",
+        "to": null,
+        "what": "evaluation targets: Dataflow Simulator, FPGA, Heuristic (Section 8)",
+        "step": null
+      }
+    ],
+    "key_idea": "FuseFlow lowers a PyTorch model to Einsum expressions carrying user schedules and sparse formats, fuses them across kernel boundaries into a partial-order graph, encodes the fused computation in a novel tabular fusion-table IR, and generates a hardware-ready sparse dataflow graph for simulation or FPGA/CGRA backends.",
+    "reading_order": "Left to right across the top row (a-c): PyTorch model, Einsum expressions, fused expressions with partial-order graph; then down and left to right across the bottom row (d-e): fusion table, SAMML fused dataflow graph feeding evaluation."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "letters",
+    "panels": 5,
+    "column": "double",
+    "aspect": 2.13,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray fill for IR/graph nodes (i, u0-u3, j circles in the partial-order graph) and general shapes"
+      },
+      {
+        "hex": "#56d398",
+        "used_for": "bright green highlighting sparse tensors, per the inline note 'Green indicates sparse tensor'"
+      },
+      {
+        "hex": "#ceead6",
+        "used_for": "pale green background wash grouping the fused region"
+      },
+      {
+        "hex": "#fad2cf",
+        "used_for": "pale pink/red background wash marking optional user-schedule annotations, per the inline note 'Optional schedule in red'"
+      },
+      {
+        "hex": "#aecffa",
+        "used_for": "light blue fill for operator blocks in the SAMML dataflow graph (panel e)"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "gray fill for secondary boxes/backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin outlines (~0.2pt median), dashed ellipses grouping the fused subgraph and partial-order-graph regions",
+    "font": "monospace/math (Computer Modern) for equations and code, sans (HelveticaNeue) for panel labels, 5.5-7pt",
+    "corners": "mixed",
+    "arrows": "thin black arrows linking panels and producer-consumer expressions within panel (c)",
+    "icons": "colored geometric blocks (green/blue/purple/orange/gray) representing operator types in the SAMML dataflow graph"
+  },
+  "encoding": {
+    "color_means": "red marks optional user-specified schedules; green marks sparse tensors/sparse-format annotations; this red=schedule, green=sparse-format convention is reused across the Einsum expressions, fusion table and partial-order graph; the SAMML dataflow graph uses distinct block colors for different operator types",
+    "line_style_means": "dashed ellipses group the fused subgraph and its partial-order-graph companion in panel (c); solid arrows connect producer-consumer expressions and pipeline stages",
+    "emphasis": "the five lettered panels trace the compiler pipeline end-to-end from PyTorch source to a hardware-ready SAMML dataflow graph, with consistent red/green annotation carried through each representation",
+    "reusable_patterns": [
+      "multi-stage compiler pipeline shown as sequential lettered panels",
+      "consistent color coding (schedule vs. sparsity) reused across multiple IR representations",
+      "tabular IR (fusion table) paired with a graph IR (partial order graph) for the same fused computation"
+    ],
+    "weaknesses": [
+      "dense mathematical/code notation across all panels demands domain familiarity",
+      "the red/green color convention is explained only via small inline caption text rather than a persistent legend box"
+    ]
+  },
+  "tags": [
+    "compiler",
+    "sparse-tensor",
+    "dataflow-architecture",
+    "kernel-fusion",
+    "mlir",
+    "reconfigurable-dataflow"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Overview of FuseFlow (p.6)",
+      "3 Forms of Fusion (p.5)"
+    ],
+    "evidence": [
+      "Figure 6 summarizes FuseFlow's compilation flow from PyTorch to a fused, hardware-ready sparse dataflow graph.",
+      "FuseFlow then applies cross-expression kernel fusion to user-marked fusion regions",
+      "FuseFlow introduces a new IR called fusion tables (Figure 6d)"
+    ]
+  },
+  "summary": "FuseFlow is a compiler that converts sparse PyTorch models into fused sparse dataflow graphs for reconfigurable dataflow architectures (RDAs), supporting general cross-expression fusion of sparse operations. This figure walks through FuseFlow's full compilation pipeline in five lettered panels. (a) A PyTorch model with sparse and dense operators is (b) lowered via Torch-MLIR/MPACT into Einsum expressions annotated with optional user schedules (red) and sparse tensor formats (green). (c) Cross-expression kernel fusion (Section 5) merges user-marked Fuse{} regions into a connected fused-Einsum subgraph plus a partial-order graph encoding index constraints. (d) A new fusion-table IR (Section 6) encodes the fused iteration order in its rows, fused tensors in its columns, and IR nodes/stream pointers in its cells, addressing the need to reference temporary streams across fused kernels. (e) Code generation from the fusion table produces a SAMML fused dataflow graph, which is evaluated via a cycle-accurate Dataflow Simulator, an FPGA backend, or a fast pruning heuristic.",
+  "summary_zh": "该图分五个面板展示FuseFlow编译流程：(a) PyTorch模型经Torch-MLIR/MPACT降级为(b) 带用户调度（红）与稀疏格式（绿）标注的Einsum表达式；(c) 跨表达式核融合生成融合子图与偏序图；(d) 新提出的融合表IR编码融合迭代顺序与张量流指针；(e) 代码生成得到SAMML融合数据流图，供仿真器、FPGA或启发式方法评估。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,216 @@
+{
+  "paper_id": "asplos26-067",
+  "fig": "3",
+  "system": {
+    "name": "vCXLGen",
+    "one_liner": "the first system that automatically synthesizes and formally verifies CXL bridges reconciling different host cache-coherence protocols and memory models",
+    "domain": [
+      "cxl",
+      "cache-coherence",
+      "cxl-bridges"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "CXL Memory Expander Node",
+        "role": "shared memory device implementing the CXL global protocol",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Global Directory",
+        "role": "device-side global coherence directory",
+        "container": "CXL Memory Expander Node",
+        "novel": false
+      },
+      {
+        "name": "Memory Controller",
+        "role": "controls the CXL memory expander's backing memory",
+        "container": "CXL Memory Expander Node",
+        "novel": false
+      },
+      {
+        "name": "Intel Compute Node",
+        "role": "a host running the Intel local coherence protocol",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ARM Compute Node",
+        "role": "a host running the Arm local coherence protocol",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Global CC",
+        "role": "host-side cache controller that emits global-protocol requests when local operations can't be satisfied locally; mirrored in the ARM Compute Node",
+        "container": "Intel Compute Node",
+        "novel": false
+      },
+      {
+        "name": "LLC",
+        "role": "the host's last-level cache; mirrored in the ARM Compute Node",
+        "container": "Intel Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Local Directory",
+        "role": "tracks local-protocol coherence state for the host's private caches; mirrored in the ARM Compute Node",
+        "container": "Intel Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Private Cache",
+        "role": "a core's private cache; mirrored in the ARM Compute Node",
+        "container": "Intel Compute Node",
+        "novel": false
+      },
+      {
+        "name": "CXL Bridges",
+        "role": "translates and propagates local- and global-protocol requests between each host's coherence domain and the shared CXL directory",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Private Cache",
+        "to": "Local Directory",
+        "what": "Intel-req.",
+        "step": 2
+      },
+      {
+        "from": "Global CC",
+        "to": "Global Directory",
+        "what": "CXL-req.",
+        "step": 3
+      },
+      {
+        "from": "Global Directory",
+        "to": "Global CC",
+        "what": "CXL-fwd",
+        "step": 4
+      },
+      {
+        "from": "Local Directory",
+        "to": "Private Cache",
+        "what": "Arm-fwd",
+        "step": 5
+      },
+      {
+        "from": "Private Cache",
+        "to": "Local Directory",
+        "what": "Arm-resp.",
+        "step": 6
+      },
+      {
+        "from": "Global CC",
+        "to": "Global Directory",
+        "what": "CXL-resp.",
+        "step": 7
+      },
+      {
+        "from": "Global Directory",
+        "to": "Memory Controller",
+        "what": "writeback",
+        "step": 8
+      },
+      {
+        "from": "Global CC",
+        "to": "Global Directory",
+        "what": "CXL-resp.",
+        "step": 9
+      },
+      {
+        "from": "Local Directory",
+        "to": "Private Cache",
+        "what": "Intel-resp.",
+        "step": 10
+      }
+    ],
+    "key_idea": "Two heterogeneous hosts keep their own local coherence protocol internally, while CXL bridges translate their local requests into nested global CXL.mem transactions against a shared directory.",
+    "reading_order": "Bottom-up: private caches and local directories at the bottom, up through the CXL bridges to the shared Global Directory on top."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.92,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "fill of the Global Directory and Global CC boxes, and the CXL Protocol legend swatch"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "hatched fill of the Intel Compute Node region and its Local Directory/Private Cache boxes, and the Intel Protocol legend swatch"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "hatched fill of the ARM Compute Node region and its boxes, and the Arm Protocol legend swatch"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "fill of the LLC boxes"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "blue border accents"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.32pt borders, solid",
+    "font": "Times New Roman serif, 5-6.5pt, ~28% bold",
+    "corners": "square",
+    "arrows": "curved black arrows with solid heads, numbered 1-10 with small circular badges",
+    "icons": "diagonal hatch-pattern fill distinguishing the Intel/Arm/CXL protocol regions"
+  },
+  "encoding": {
+    "color_means": "the figure's own legend: red/pink = Intel Protocol, purple = Arm Protocol, yellow/gold = CXL Protocol, applied as hatched region fills and box colors throughout",
+    "line_style_means": null,
+    "emphasis": "the dashed 'CXL Bridges' band drawn straddling both compute-node regions visually foregrounds the bridge as the thing connecting two otherwise-separate coloured protocol domains",
+    "reusable_patterns": [
+      "symmetric pair of heterogeneous host domains meeting at one shared directory node",
+      "numbered request/response arrows overlaid on a colour-coded protocol-domain diagram"
+    ],
+    "weaknesses": [
+      "the CXL Bridges band's exact boundary (which boxes are 'inside' the bridge) is only suggested by a dashed outline",
+      "step 1 (ld/st) is an external stimulus rather than a message between two labelled components, so it is omitted from the flows list"
+    ]
+  },
+  "tags": [
+    "cxl",
+    "cache-coherence",
+    "cxl-bridges",
+    "heterogeneous-systems",
+    "protocol-translation"
+  ],
+  "provenance": {
+    "sections": [
+      "5 CXL Bridge Architecture (p.5)",
+      "9 Evaluation (p.13)"
+    ],
+    "evidence": [
+      "The hosts (Intel and Arm) rely on LP internally and emit GP requests when memory operations can not be satisfied",
+      "The memory device tracks cache line states across hosts, with its coherence engine (DCOH) implementing a global directory.",
+      "a bridge processes either local requests or global forwarded requests, that it translates and propagates with their counterparts in the"
+    ]
+  },
+  "summary": "Figure 3 shows the CXL bridge operating principle on a concrete two-host example: an Intel Compute Node running the Intel local protocol and an ARM Compute Node running the Arm protocol both attach to a shared CXL Memory Expander Node, whose Global Directory and Memory Controller implement the CXL global protocol. Inside each compute node, private caches issue local requests to a Local Directory, which a bridge (drawn as a dashed CXL Bridges band spanning both Global CC/LLC blocks) translates into CXL requests and forwards to the Global Directory; the ten numbered arrows (ld/st, Intel/Arm request-response pairs, CXL request/forward/response, and a writeback to the Memory Controller) trace one such nested round trip. A three-colour legend marks which parts of the drawing belong to the Intel protocol, the Arm protocol, or the shared CXL protocol.",
+  "summary_zh": "该图以英特尔与ARM两台主机共享CXL内存扩展节点为例，展示CXL桥的工作原理：本地请求经本地目录由桥转换为CXL请求并转发至全局目录，十个编号箭头描绘一次嵌套往返。",
+  "confidence": "high",
+  "notes": "layout-proposal: bridge-between-domains — two heterogeneous host coherence domains (Intel and Arm, each with their own local protocol) connect through CXL Bridge components to a shared CXL directory/memory controller; host-device captures the host/device split but not the bridge-translation role drawn between them.",
+  "venue": "ASPLOS26"
+}

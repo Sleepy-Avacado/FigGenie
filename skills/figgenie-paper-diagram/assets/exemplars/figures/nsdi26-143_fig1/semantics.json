@@ -1,0 +1,158 @@
+{
+  "paper_id": "nsdi26-143",
+  "fig": "1",
+  "system": {
+    "name": "Octopus",
+    "one_liner": "a CXL memory-pooling topology that partitions servers into low-latency islands connected by sparse external links",
+    "domain": [
+      "hardware",
+      "networking"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "P0..P7",
+        "role": "memory pooling device (MPD) ports fully connected to every server",
+        "container": "(a) Fully-connected MPD",
+        "novel": false
+      },
+      {
+        "name": "S0..S3",
+        "role": "servers, each wired to every MPD",
+        "container": "(a) Fully-connected MPD",
+        "novel": false
+      },
+      {
+        "name": "CXL Switch",
+        "role": "intermediary switch connecting servers to MPDs",
+        "container": "(b) CXL Switch",
+        "novel": false
+      },
+      {
+        "name": "P0..P9",
+        "role": "MPD ports reached through the CXL Switch",
+        "container": "(b) CXL Switch",
+        "novel": false
+      },
+      {
+        "name": "S0..S19",
+        "role": "servers connected via the CXL Switch",
+        "container": "(b) CXL Switch",
+        "novel": false
+      },
+      {
+        "name": "Island 0..Island 5",
+        "role": "groups of 16 servers densely wired to 20 island-specific MPDs guaranteeing pairwise overlap",
+        "container": "(c) Octopus: sparse MPD topology",
+        "novel": true
+      },
+      {
+        "name": "P0..P19",
+        "role": "island-specific MPDs providing low-latency intra-island communication",
+        "container": "Island",
+        "novel": true
+      },
+      {
+        "name": "S0..S15",
+        "role": "servers within one island",
+        "container": "Island",
+        "novel": true
+      },
+      {
+        "name": "P0..P71",
+        "role": "external MPDs that interconnect islands to provide expansion for pooling",
+        "container": "(c) Octopus: sparse MPD topology",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "S0..S15 (per island)",
+        "to": "P0..P19 (island MPDs)",
+        "what": "CXL links guaranteeing pairwise MPD overlap for low-latency communication",
+        "step": null
+      },
+      {
+        "from": "P0..P71 (external MPDs)",
+        "to": "Island 0..Island 5",
+        "what": "CXL links interconnecting islands to ensure expansion for pooling",
+        "step": null
+      }
+    ],
+    "key_idea": "Octopus trades full connectivity for a sparse, islanded topology: dense intra-island CXL links give low-latency communication at small scale, while a separate set of external MPDs interconnects islands to still enable large-scale memory pooling.",
+    "reading_order": "left column reads baseline topologies top to bottom (a) Fully-connected MPD then (b) CXL Switch; right side shows the larger (c) Octopus sparse topology with islands and external MPDs"
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.71,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9f2d0",
+        "used_for": "server (S) node circles, green"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "MPD (P) node rectangles, light blue"
+      },
+      {
+        "hex": "#163e64",
+        "used_for": "external-MPD interconnect links and matching annotation text (dark navy)"
+      },
+      {
+        "hex": "#80350e",
+        "used_for": "intra-island CXL links and matching annotation text (brown)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black/navy/brown ~0.68pt, dashed island boundaries",
+    "font": "Aptos/Aptos-Bold sans, 6.5-11pt",
+    "corners": "mixed",
+    "arrows": "no arrowheads; plain colored lines represent CXL links",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "navy lines mark external MPD links that interconnect islands for pooling; brown lines mark intra-island CXL links that guarantee low-latency pairwise MPD overlap",
+    "line_style_means": "dashed rounded rectangles delimit each island/topology; solid colored lines are physical CXL connections",
+    "emphasis": "panel (c) is drawn larger and more detailed than the (a)/(b) baselines, and its two link colors visually separate the low-latency intra-island links from the pooling-oriented external links",
+    "reusable_patterns": [
+      "side-by-side comparison of baseline topologies against the paper's proposed sparse topology, using consistent server/MPD node shapes"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "CXL",
+    "memory pooling",
+    "network topology",
+    "hardware",
+    "datacenter interconnect"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Octopus Design (p.7)"
+    ],
+    "evidence": [
+      "organizing each pod into multiple islands of highly connected servers that provide low-latency intra-island communication",
+      "maintaining sufficient inter-island connectivity to increase expansion and enable effective memory pooling",
+      "Each island satisfies the pairwise MPD overlap property."
+    ]
+  },
+  "summary": "Figure 1 compares three CXL memory-pod topologies. (a) A Fully-connected MPD pod wires every server (S0-S3) to every memory pooling device (P0-P7) directly. (b) A CXL Switch pod instead routes all servers (S0-S19) through a single CXL Switch to reach the MPDs (P0-P9), trading full connectivity for switch-mediated sharing. (c) Octopus's sparse topology organizes 96 servers and 192 MPDs into six islands (Island 0...Island 5), each with 16 servers densely wired to 20 island-specific MPDs (brown links) to guarantee pairwise MPD overlap for low-latency intra-island communication, while a separate set of 72 external MPDs (navy links) interconnects the islands to provide the expansion needed for effective memory pooling across the whole pod. The figure visually contrasts full/switched connectivity against Octopus's islands-plus-external-MPD design.",
+  "summary_zh": "图1对比三种CXL存储池拓扑：(a)全连接MPD、(b)CXL交换机连接，与(c)Octopus的稀疏拓扑——六个岛内服务器密集连接岛内MPD保证低延迟，外部MPD互联各岛以扩展存储池规模。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

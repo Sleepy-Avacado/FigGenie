@@ -1,0 +1,228 @@
+{
+  "paper_id": "sosp25-011",
+  "fig": "7",
+  "system": {
+    "name": "HeteroInfer",
+    "one_liner": "a mobile LLM inference engine that jointly exploits GPU and NPU accelerators via profiling-guided heterogeneous parallelism",
+    "domain": [
+      "ml-systems",
+      "mobile-systems"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Weight",
+        "role": "weight tensor of shape hidden_size x row, split by row into NPU and GPU sub-tensors",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NPU",
+        "role": "sub-tensor of the weight matrix assigned to the NPU (top rows)",
+        "container": "Weight",
+        "novel": true
+      },
+      {
+        "name": "GPU",
+        "role": "sub-tensor of the weight matrix assigned to the GPU (bottom rows)",
+        "container": "Weight",
+        "novel": true
+      },
+      {
+        "name": "Activation",
+        "role": "activation tensor multiplied with the weight (transposed) to produce output",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Output",
+        "role": "result of Weight x Activation^T, likewise split into NPU/GPU sub-outputs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Execution Graph",
+        "role": "runtime computation graph implementing the weight-centric partition",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU-Graph",
+        "role": "entry/exit sub-graph running fully on GPU before/after the split region",
+        "container": "Execution Graph",
+        "novel": true
+      },
+      {
+        "name": "Split & Sync",
+        "role": "splits the graph execution across NPU and GPU and synchronizes them",
+        "container": "Execution Graph",
+        "novel": true
+      },
+      {
+        "name": "NPU Sub-graph",
+        "role": "portion of the computation graph executed on the NPU",
+        "container": "Execution Graph",
+        "novel": true
+      },
+      {
+        "name": "NPU Partition",
+        "role": "the NPU's assigned partition of weight-centric computation",
+        "container": "Execution Graph",
+        "novel": true
+      },
+      {
+        "name": "GPU Partition",
+        "role": "the GPU's assigned partition of weight-centric computation",
+        "container": "Execution Graph",
+        "novel": true
+      },
+      {
+        "name": "GPU Sub-graph",
+        "role": "portion of the computation graph executed on the GPU",
+        "container": "Execution Graph",
+        "novel": true
+      },
+      {
+        "name": "Merge & Sync",
+        "role": "merges NPU and GPU partition outputs and synchronizes back to a single graph",
+        "container": "Execution Graph",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Weight",
+        "to": "Output",
+        "what": "matrix multiplication of Weight and Activation^T, row-partitioned across NPU and GPU",
+        "step": null
+      },
+      {
+        "from": "GPU-Graph",
+        "to": "Split & Sync",
+        "what": "computation graph entering the partitioned region",
+        "step": null
+      },
+      {
+        "from": "Split & Sync",
+        "to": "NPU Sub-graph",
+        "what": "NPU-assigned portion of the graph",
+        "step": null
+      },
+      {
+        "from": "Split & Sync",
+        "to": "GPU Sub-graph",
+        "what": "GPU-assigned portion of the graph",
+        "step": null
+      },
+      {
+        "from": "NPU Sub-graph",
+        "to": "NPU Partition",
+        "what": "execution of the NPU partition",
+        "step": null
+      },
+      {
+        "from": "GPU Sub-graph",
+        "to": "GPU Partition",
+        "what": "execution of the GPU partition",
+        "step": null
+      },
+      {
+        "from": "NPU Partition",
+        "to": "Merge & Sync",
+        "what": "NPU partial output",
+        "step": null
+      },
+      {
+        "from": "GPU Partition",
+        "to": "Merge & Sync",
+        "what": "GPU partial output",
+        "step": null
+      },
+      {
+        "from": "Merge & Sync",
+        "to": "GPU-Graph",
+        "what": "merged/synchronized result continuing on GPU",
+        "step": null
+      }
+    ],
+    "key_idea": "HeteroInfer statically partitions a weight tensor along its row dimension between NPU and GPU sub-tensors, executing the corresponding sub-graphs concurrently and merging their outputs back into a single graph.",
+    "reading_order": "top: the matrix diagram showing Weight (split NPU/GPU rows) times Activation^T equals Output; bottom: the corresponding execution graph flowing left to right from GPU-Graph through Split & Sync, parallel NPU/GPU sub-graphs and partitions, to Merge & Sync back to GPU-Graph."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.67,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe6cc",
+        "used_for": "NPU-related matrix cells and NPU sub-graph/partition boxes (orange)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "GPU-related matrix cells and GPU-Graph boxes (blue)"
+      },
+      {
+        "hex": "#f6dada",
+        "used_for": "GPU Partition box accent (pink/red)"
+      },
+      {
+        "hex": "#f8f0d9",
+        "used_for": "NPU Partition box accent (pale yellow)"
+      },
+      {
+        "hex": "#dceaf4",
+        "used_for": "light blue accents in the execution graph"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on all boxes and matrix cells",
+    "font": "Helvetica sans, 5.5-8pt, bold for section labels (Weight-centric Partition, Execution Graph)",
+    "corners": "square",
+    "arrows": "straight and curved thin arrows with filled heads connecting graph nodes",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = NPU-assigned rows/sub-graph/partition, blue = GPU-assigned rows/sub-graph/partition, consistent across both the matrix diagram and the execution graph",
+    "line_style_means": null,
+    "emphasis": "the matched orange/blue coloring links the abstract matrix row-split at top directly to the concrete parallel sub-graphs at bottom, making the partitioning strategy visually traceable end-to-end",
+    "reusable_patterns": [
+      "paired matrix-partition diagram and corresponding dataflow/execution-graph diagram sharing one color code"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "heterogeneous-execution",
+    "weight-partitioning",
+    "NPU",
+    "GPU",
+    "mobile-inference"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design (p.6)"
+    ],
+    "evidence": [
+      "this strategy partitions the weight tensor along its row dimension, assigning sub-tensors to the GPU and NPU",
+      "The partition ratio is statically determined by an offline solver",
+      "enabling the NPU to construct the computa- tion graph based on static tensor shapes"
+    ]
+  },
+  "summary": "This figure illustrates HeteroInfer's weight-centric partitioning strategy for parallel GPU-NPU execution. At top, a matrix diagram shows the weight tensor (hidden_size x row) split along its row dimension into an NPU sub-tensor (top rows) and a GPU sub-tensor (bottom rows); multiplying by the activation tensor's transpose produces an output likewise split between NPU and GPU portions. At bottom, the corresponding Execution Graph shows how this partition is realized at runtime: a GPU-Graph splits and synchronizes into a parallel NPU sub-graph/partition and GPU sub-graph/partition, which are then merged and synchronized back into a single GPU-Graph. Orange consistently marks NPU-assigned elements and blue marks GPU-assigned elements across both halves of the figure, visually tying the static matrix partition to its dynamic graph-execution counterpart. The partition ratio itself is determined offline by a solver described elsewhere in the paper.",
+  "summary_zh": "该图展示HeteroInfer的权重中心划分策略：上半部分显示权重张量按行维度切分为NPU（上部行）与GPU（下部行）子张量，与激活张量转置相乘得到同样切分的输出；下半部分对应的执行图展示GPU-Graph经Split & Sync拆分为并行的NPU/GPU子图与分区，最终经Merge & Sync合并回GPU-Graph。全图以橙色标NPU、蓝色标GPU，划分比例由离线求解器静态确定。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

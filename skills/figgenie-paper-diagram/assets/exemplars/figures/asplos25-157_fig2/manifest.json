@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-157_fig2",
+  "paper_id": "asplos25-157",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Hierarchical CIM architecture (a) CIM core with CIM arrays and the corresponding peripheral units; (b) CIM array and the corresponding peripheral units; (c) CIM array.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.37,
+  "n_components": 8,
+  "n_flows": 2,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-157/src/fig2_CIM_archi.svg",
+    "preview.png": "lab/extracted/asplos25-157/src/fig2_CIM_archi.png",
+    "print.png": "lab/extracted/asplos25-157/asplos25-157_fig2_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Three lettered panels (a)/(b)/(c) chained by dashed leaders, each zooming into a region of the previous one.",
+      "what_to_learn": "Chained zoom: each panel's leader lines start at a marked region of its predecessor, so the reader can follow core -> array -> cell without a caption."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three panels zoom successively from the whole CIM core (a) into one CIM array (b) into its memory-circuit detail (c), each joined by dashed leaders exactly as the overview-with-inset-inside-composite rule prescribes.",
+      "what_to_learn": "Chain dashed zoom leaders panel to panel (core to array to cell) rather than drawing every level from scratch, and keep the same green-buffer/gray-blue-control/light-blue-array colour roles at every zoom level so a reader always knows which block is which even after three levels of nesting."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "Three lettered panels (a)-(c) walk the hardware hierarchy from a whole CIM core grid, to one array's control/buffer periphery, to the memory-circuit detail inside that array, dashed lines linking each level to the next.",
+      "what_to_learn": "Zoom a hardware hierarchy across separate lettered panels (a), (b), (c) rather than one figure with nested insets when each level needs its own full periphery (control, buffer, function unit) drawn out, and connect consecutive panels with a single dashed line rather than repeating labels."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-064_fig3",
+  "paper_id": "nsdi24-064",
+  "fig": "3",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 3: Klonet Controller.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.74,
+  "n_components": 16,
+  "n_flows": 3,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-064/nsdi24-064_fig3_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-064/nsdi24-064_fig3_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: one controller box with three distinct, non-identical neighbours (an external interface above, a data interface beside, an agent below) is flanked-core's engine-between-bands shape, not a hub with interchangeable peer spokes.",
+      "what_to_learn": "The real lesson is flanked-core's, not hub-spoke's: place the external caller interface above the engine, the executing agent below it, and a second interface beside it, then colour the engine's internal function-dispatch modules (orange) distinctly from its boundary (blue)."
+    }
+  ]
+}

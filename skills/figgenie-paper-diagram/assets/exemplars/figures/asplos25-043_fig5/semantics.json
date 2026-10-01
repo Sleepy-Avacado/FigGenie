@@ -1,0 +1,338 @@
+{
+  "paper_id": "asplos25-043",
+  "fig": "5",
+  "system": {
+    "name": "IKS (Intelligent Knowledge Store)",
+    "one_liner": "a type-2 CXL scale-out near-memory accelerator that speeds up exact nearest-neighbor search for retrieval-augmented generation",
+    "domain": [
+      "storage",
+      "hardware-accelerators",
+      "ml-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "CB 0",
+        "role": "first of 512 memory-mapped Context Buffers used to communicate offload context and doorbells",
+        "container": "System Address Space",
+        "novel": true
+      },
+      {
+        "name": "CB 511",
+        "role": "last of the 512 memory-mapped Context Buffers",
+        "container": "System Address Space",
+        "novel": true
+      },
+      {
+        "name": "IKS (CXL) Memory",
+        "role": "IKS internal DRAM, scratchpad spaces, and configuration registers mapped into host address space",
+        "container": "System Address Space",
+        "novel": true
+      },
+      {
+        "name": "Host Memory",
+        "role": "regular host DRAM/CXL memory storing the actual documents",
+        "container": "System Address Space",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "runs the vector database application and issues iks_search(query) offloads",
+        "container": "IKS system integration",
+        "novel": false
+      },
+      {
+        "name": "Host Mem",
+        "role": "host memory storing documents (Docs)",
+        "container": "IKS system integration",
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "runs the LLM generation model",
+        "container": "IKS system integration",
+        "novel": false
+      },
+      {
+        "name": "IKS",
+        "role": "near-memory accelerator storing embedding vectors and performing exact nearest-neighbor search",
+        "container": "IKS system integration",
+        "novel": true
+      },
+      {
+        "name": "CXL Ctrl",
+        "role": "CXL controller connecting the host to the NMAs via PCIe",
+        "container": "IKS system integration",
+        "novel": true
+      },
+      {
+        "name": "NMA",
+        "role": "Near-Memory Accelerator implementing an LPDDR5X memory controller and accelerator logic, one per LPDDR5X package",
+        "container": "IKS system integration",
+        "novel": true
+      },
+      {
+        "name": "LPDDR5X Package",
+        "role": "512Gb LPDDR5X DRAM package with eight 16-bit channels, directly connected to one NMA",
+        "container": "IKS system integration",
+        "novel": false
+      },
+      {
+        "name": "Processing Engine 0",
+        "role": "one of 64 per-NMA processing engines handling one query vector's similarity search",
+        "container": "NMA internal architecture",
+        "novel": true
+      },
+      {
+        "name": "Processing Engine 63",
+        "role": "the last of 64 per-NMA processing engines",
+        "container": "NMA internal architecture",
+        "novel": true
+      },
+      {
+        "name": "Query Scratchpad",
+        "role": "stores the query vector for a processing engine",
+        "container": "Processing Engine",
+        "novel": true
+      },
+      {
+        "name": "Dot-Product Unit",
+        "role": "computes similarity scores between the query and embedding vectors read from DRAM",
+        "container": "Processing Engine",
+        "novel": true
+      },
+      {
+        "name": "MAC 0",
+        "role": "first of 68 MAC units performing multiply-accumulate operations in the Dot-Product Unit",
+        "container": "Dot-Product Unit",
+        "novel": true
+      },
+      {
+        "name": "MAC 67",
+        "role": "last of 68 MAC units in the Dot-Product Unit",
+        "container": "Dot-Product Unit",
+        "novel": true
+      },
+      {
+        "name": "Top-K Unit",
+        "role": "maintains an ordered list of the top-K similarity scores",
+        "container": "Processing Engine",
+        "novel": true
+      },
+      {
+        "name": "Output Scratchpad",
+        "role": "stores the processing engine's final top-K results, mapped to host memory",
+        "container": "Processing Engine",
+        "novel": true
+      },
+      {
+        "name": "Memory Controllers",
+        "role": "interface between the 8x LPDDR5X channels and the processing engines",
+        "container": "NMA internal architecture",
+        "novel": true
+      },
+      {
+        "name": "Control Unit",
+        "role": "generates memory accesses, controls data movement, and activates processing engines",
+        "container": "NMA internal architecture",
+        "novel": true
+      },
+      {
+        "name": "PCIe Controller",
+        "role": "handles the x2 PCIe uplinks from the NMA to the CXL controller",
+        "container": "NMA internal architecture",
+        "novel": true
+      },
+      {
+        "name": "MAC Unit 0",
+        "role": "detailed MAC unit computing one dimension's product-accumulate for the dot product",
+        "container": "Dot-Product Unit detail",
+        "novel": true
+      },
+      {
+        "name": "MAC Unit 67",
+        "role": "last of 68 detailed MAC units in the Dot-Product Unit",
+        "container": "Dot-Product Unit detail",
+        "novel": true
+      },
+      {
+        "name": "Shift and Compare Unit",
+        "role": "inserts an incoming similarity score into the ordered score list if it beats the current worst score",
+        "container": "Top-K Unit detail",
+        "novel": true
+      },
+      {
+        "name": "Ordered Score List",
+        "role": "maintains the sorted top-K scores for a processing engine",
+        "container": "Top-K Unit detail",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "CPU",
+        "to": "IKS (CXL) Memory",
+        "what": "offload context (query vectors, dimensions, base addresses) and doorbell writes",
+        "step": null
+      },
+      {
+        "from": "IKS (CXL) Memory",
+        "to": "CPU",
+        "what": "coherent notification and top-K results via CXL.cache",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "CXL Ctrl",
+        "what": "CXL.mem/cache requests",
+        "step": null
+      },
+      {
+        "from": "GPU",
+        "to": "CXL Ctrl",
+        "what": "CXL.mem/cache requests for embeddings",
+        "step": null
+      },
+      {
+        "from": "CXL Ctrl",
+        "to": "NMA",
+        "what": "PCIe-routed offload/query traffic",
+        "step": null
+      },
+      {
+        "from": "LPDDR5X Package",
+        "to": "NMA",
+        "what": "embedding vectors read over 8 channels",
+        "step": null
+      },
+      {
+        "from": "Memory Controllers",
+        "to": "Dot-Product Unit",
+        "what": "data signals (embedding vector stream)",
+        "step": null
+      },
+      {
+        "from": "Control Unit",
+        "to": "Processing Engine 0",
+        "what": "control signals activating the engine",
+        "step": null
+      },
+      {
+        "from": "Query Scratchpad",
+        "to": "Dot-Product Unit",
+        "what": "query vector dimension",
+        "step": null
+      },
+      {
+        "from": "Dot-Product Unit",
+        "to": "Top-K Unit",
+        "what": "computed similarity score",
+        "step": null
+      },
+      {
+        "from": "Top-K Unit",
+        "to": "Output Scratchpad",
+        "what": "ordered top-K list",
+        "step": null
+      },
+      {
+        "from": "MAC Unit 0",
+        "to": "Shift and Compare Unit",
+        "what": "similarity score",
+        "step": null
+      },
+      {
+        "from": "Shift and Compare Unit",
+        "to": "Ordered Score List",
+        "what": "inserted or discarded score",
+        "step": null
+      },
+      {
+        "from": "Ordered Score List",
+        "to": "Output Scratchpad",
+        "what": "final ordered scores",
+        "step": null
+      }
+    ],
+    "key_idea": "IKS is a scale-out near-memory CXL accelerator where each of several Near-Memory Accelerators drives its own LPDDR5X package with 64 parallel processing engines, each running a dot-product and top-K pipeline over locally stored embeddings, all exposed to the host through memory-mapped context buffers and CXL.cache coherence.",
+    "reading_order": "Top to bottom through four zoom levels: (a) the host address-space mapping of context buffers and IKS memory, (b) system integration of CPU/GPU/IKS via CXL, (c) one NMA's internal array of processing engines, and (d) the Dot-Product and Top-K unit internals."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 4,
+    "column": "single",
+    "aspect": 0.51,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill for the majority of datapath and control boxes"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for scratchpad, context-buffer, and control-related boxes"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "darker gray fill highlighting select memory/context elements"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill accent on a few secondary boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders throughout, one panel (c) using a dark navy stroke for a highlighted control path",
+    "font": "Arial/Calibri sans-serif, 4-11.5pt, bold for panel captions",
+    "corners": "mixed",
+    "arrows": "solid black arrows for data/control paths, with an explicit legend in panel (c) distinguishing Control Signals from Data Signals arrow styles",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "the figure is essentially grayscale/monochrome: white boxes are datapath and control components, gray fills mark memory-like structures (context buffers, scratchpads); color carries almost no semantic meaning here",
+    "line_style_means": "panel (c) explicitly distinguishes Control Signals arrows from Data Signals arrows; other panels use plain black lines for interconnects (CXL.mem/cache, PCIe, memory channels)",
+    "emphasis": "four progressively zoomed-in panels move the reader from the host's view of IKS as address space, down to per-NMA and per-processing-engine hardware detail, emphasizing the scale-out near-memory design",
+    "reusable_patterns": [
+      "drill-down multi-panel figure moving from system/software view to hardware micro-architecture",
+      "explicit control-vs-data arrow legend inside a block diagram"
+    ],
+    "weaknesses": [
+      "extremely high element/text density (243 text boxes) across four stacked panels makes the figure hard to take in as a whole",
+      "repeated near-identical processing-engine and MAC-unit boxes rely on '...' ellipses rather than an explicit count label in-panel"
+    ]
+  },
+  "tags": [
+    "cxl",
+    "near-memory-computing",
+    "vector-search",
+    "rag",
+    "hardware-accelerator",
+    "nearest-neighbor-search"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Intelligent Knowledge Store (p.6-9)"
+    ],
+    "evidence": [
+      "Figure 5 provides an overview of the Intelligent Knowledge Store (IKS) architecture.",
+      "IKS incorporates a scale-out near-memory processing architecture with low-profile accelerators positioned near the memory controllers",
+      "each NMA implements 64 processing engines to accommodate similarity score calculations for up to 64 query vectors"
+    ]
+  },
+  "summary": "This four-panel figure documents the Intelligent Knowledge Store (IKS), a CXL type-2 near-memory accelerator for exact nearest-neighbor search in RAG pipelines, at progressively finer granularity. Panel (a) shows IKS's internal DRAM, scratchpads, and 512 memory-mapped Context Buffers (64 per NMA) mapped alongside Host Memory in the shared host address space. Panel (b) shows system integration: a CPU (running the vector database and issuing iks_search offloads) and a GPU (running the LLM) both reach IKS's embedding-holding memory over CXL.mem/cache, through a CXL controller connected via PCIe to multiple Near-Memory Accelerators (NMAs), each driving its own LPDDR5X package over 8 channels. Panel (c) zooms into one NMA, showing 64 parallel Processing Engines (each with a Query Scratchpad, Dot-Product Unit, Top-K Unit, and Output Scratchpad) fed by Memory Controllers and coordinated by a Control Unit, with an explicit legend distinguishing control and data signal arrows. Panel (d) details the Dot-Product Unit's 68 MAC units and the Top-K Unit's Shift-and-Compare logic maintaining an Ordered Score List. The figure is drawn in a mostly grayscale, dense block-diagram style typical of hardware architecture papers.",
+  "summary_zh": "该图分四层展示 IKS 近内存 CXL 加速器架构：(a) 主机地址空间中的上下文缓冲区与 IKS 内存映射；(b) CPU/GPU 通过 CXL 与多个近内存加速器（NMA）及其 LPDDR5X 封装的系统集成；(c) 单个 NMA 内 64 个处理引擎的内部结构；(d) 点积单元与 Top-K 单元的电路细节。",
+  "confidence": "high",
+  "notes": "Figure 5 is a composite of four sub-panels (a-d); this record covers all of them together as one figure entry, following the caption's own grouping.",
+  "venue": "ASPLOS25"
+}

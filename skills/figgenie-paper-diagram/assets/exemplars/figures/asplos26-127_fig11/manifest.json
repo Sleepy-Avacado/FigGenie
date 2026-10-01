@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-127_fig11",
+  "paper_id": "asplos26-127",
+  "fig": "11",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 11. Autonomy-Aware Voltage Scaling. (a) Entropy predictor network architecture. (b) Voltage scaling system: an LDO dynamically adjusts the controller model’s supply voltage based on real-time entropy predictions.",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.69,
+  "n_components": 9,
+  "n_flows": 10,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-127/src/fig11_aavs_design_11.svg",
+    "preview.png": "lab/extracted/asplos26-127/src/fig11_aavs_design_11.png",
+    "print.png": "lab/extracted/asplos26-127/asplos26-127_fig11_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Reassigned from control-loop by the note-writer: panel (a) is a small CNN+MLP diagram and panel (b) a straight chain (predictor to LDO to controller to action) with no return arrow drawn anywhere; this is two-panel, not control-loop.",
+      "what_to_learn": "A control system is only a control-loop figure if a return path is actually drawn; when the feedback runs through the physical world rather than back into the diagram, either draw a dashed arrow from the output back to the sensing input or file the figure under two-panel or flanked-core instead."
+    }
+  ]
+}

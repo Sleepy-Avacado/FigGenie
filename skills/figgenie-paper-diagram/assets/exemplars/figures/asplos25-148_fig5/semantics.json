@@ -1,0 +1,176 @@
+{
+  "paper_id": "asplos25-148",
+  "fig": "5",
+  "system": {
+    "name": "Micro Blossom",
+    "one_liner": "a heterogeneous hardware-accelerated Minimum-Weight Perfect Matching decoder achieving sub-microsecond quantum-error-correction decoding",
+    "domain": [
+      "quantum-computing",
+      "hardware-accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "CPU",
+        "role": "host processor issuing decoding instructions",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Controller",
+        "role": "broadcasts instructions to the processing-unit grid and collects the convergecast response",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Quantum Hardware",
+        "role": "3D grid of parallel processing units performing MWPM decoding directly on syndrome data",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Vertex PU (vPU)",
+        "role": "processing unit dedicated to one vertex of the decoding graph",
+        "container": "Quantum Hardware",
+        "novel": true
+      },
+      {
+        "name": "Edge PU (ePU)",
+        "role": "processing unit dedicated to one edge of the decoding graph",
+        "container": "Quantum Hardware",
+        "novel": true
+      },
+      {
+        "name": "Instruction",
+        "role": "broadcast message sent to all processing units",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Local State",
+        "role": "per-PU state updated after receiving an instruction",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Response",
+        "role": "per-PU response generated after updating local state, convergecast into a single response",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "CPU",
+        "to": "Controller",
+        "what": "instruction",
+        "step": null
+      },
+      {
+        "from": "Controller",
+        "to": "Quantum Hardware",
+        "what": "instruction (broadcast)",
+        "step": 1
+      },
+      {
+        "from": "Quantum Hardware",
+        "to": "Controller",
+        "what": "response (convergecast)",
+        "step": 2
+      },
+      {
+        "from": "Instruction",
+        "to": "Local State",
+        "what": "update",
+        "step": null
+      },
+      {
+        "from": "Local State",
+        "to": "Response",
+        "what": "generate response",
+        "step": null
+      }
+    ],
+    "key_idea": "Micro Blossom decodes with a 3D grid of one vertex-PU and one edge-PU per decoding-graph vertex/edge, using broadcast instructions and convergecast responses each measurement round to reach sub-microsecond latency.",
+    "reading_order": "Left side shows the host CPU/Controller and a small legend of the instruction/local-state/response cycle; the eye then moves right into the large 3D grid of vPU/ePU blocks stacked along a time axis of measurement rounds."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.67,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "vertex PU (vPU) blocks"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "edge PU (ePU) cylinders"
+      },
+      {
+        "hex": "#a9ce91",
+        "used_for": "lighter ePU shading"
+      },
+      {
+        "hex": "#375c9e",
+        "used_for": "darker vPU side/shadow shading"
+      },
+      {
+        "hex": "#698ed0",
+        "used_for": "vPU top-face shading"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin, dashed for the small local-state/response legend boxes",
+    "font": "Calibri sans, 5-6.5pt",
+    "corners": "rounded",
+    "arrows": "many curved fan-out/fan-in arrows with filled heads for broadcast and convergecast",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = vertex PUs (vPU), green = edge PUs (ePU)",
+    "line_style_means": "dashed boxes mark the per-PU instruction/local-state/response legend, solid connections show the physical PU grid",
+    "emphasis": "dense fan-out arrows from the Controller into the grid and fan-in arrows back visualize the broadcast/convergecast communication pattern across all PUs simultaneously",
+    "reusable_patterns": [
+      "3D grid of homogeneous processing units with broadcast-down/convergecast-up arrows and a measurement-round time axis"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "quantum error correction",
+    "MWPM decoding",
+    "hardware accelerator",
+    "FPGA",
+    "parallel processing units",
+    "surface code"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Micro Blossom Architecture (p.4)",
+      "6 Round-wise Fusion for Stream Decoding (p.8)"
+    ],
+    "evidence": [
+      "Micro Blossom is a heterogeneous architecture to solve MWPM decoding for QEC with sub-microsecond decoding latency",
+      "syndrome data for a d x d surface code comes in a series of d measurement rounds",
+      "An instruction is first broadcast to all PUs"
+    ]
+  },
+  "summary": "Micro Blossom is the first publicly known hardware-accelerated exact Minimum-Weight Perfect Matching decoder for quantum error correction, achieving sub-microsecond decoding latency via an FPGA-based heterogeneous architecture. This figure shows the architecture: a host CPU and Controller on the left, connected to a large 3D grid of processing units on the right representing the decoding graph, with one blue Vertex PU (vPU) per vertex and one green Edge PU (ePU) per edge. A small legend illustrates the per-PU cycle of receiving an Instruction, updating Local State, and producing a Response. The main diagram shows the Controller broadcasting an instruction into the grid (fan-out arrows) and collecting a single convergecast response (fan-in arrows), with the grid layers annotated by a time axis (t=1us to t=5us) corresponding to successive syndrome measurement rounds fed in during stream decoding.",
+  "summary_zh": "该图展示 Micro Blossom 的异构架构：主机 CPU/控制器向由顶点处理单元（vPU，蓝）和边处理单元（ePU，绿）组成的三维网格广播指令，各单元更新本地状态后再汇聚为单一响应，网格按测量轮次时间轴排列。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

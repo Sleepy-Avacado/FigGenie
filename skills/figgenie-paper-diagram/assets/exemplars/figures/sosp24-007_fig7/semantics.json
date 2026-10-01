@@ -1,0 +1,165 @@
+{
+  "paper_id": "sosp24-007",
+  "fig": "7",
+  "system": {
+    "name": "Apparate",
+    "one_liner": "a system that automatically applies and manages early exits (ramps) in ML models to ease latency-throughput tension",
+    "domain": [
+      "ml-systems",
+      "inference-serving"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Input",
+        "role": "model input",
+        "container": "ResNet Block",
+        "novel": false
+      },
+      {
+        "name": "Weight Layer",
+        "role": "convolutional/weight layer in a ResNet block",
+        "container": "ResNet Block",
+        "novel": false
+      },
+      {
+        "name": "ReLU",
+        "role": "activation function",
+        "container": "ResNet Block",
+        "novel": false
+      },
+      {
+        "name": "Add",
+        "role": "residual addition",
+        "container": "ResNet Block",
+        "novel": false
+      },
+      {
+        "name": "Conv Layer",
+        "role": "convolutional layer in VGG",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Pooling",
+        "role": "pooling layer in VGG",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Multi-Head Attention",
+        "role": "attention sublayer in a BERT encoder block",
+        "container": "Encoder",
+        "novel": false
+      },
+      {
+        "name": "Add & Norm",
+        "role": "residual + layer norm sublayer",
+        "container": "Encoder",
+        "novel": false
+      },
+      {
+        "name": "Feed Forward",
+        "role": "feed-forward sublayer in a BERT encoder block",
+        "container": "Encoder",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input",
+        "to": "Weight Layer",
+        "what": "activations",
+        "step": null
+      },
+      {
+        "from": "Weight Layer",
+        "to": "ReLU",
+        "what": "activations",
+        "step": null
+      },
+      {
+        "from": "Multi-Head Attention",
+        "to": "Add & Norm",
+        "what": "activations",
+        "step": null
+      },
+      {
+        "from": "Add & Norm",
+        "to": "Feed Forward",
+        "what": "activations",
+        "step": null
+      }
+    ],
+    "key_idea": "Ramps (early exits) can only be injected where a layer's intermediate output represents the full extent of data flow at that point, so feasible ramp locations differ across ResNet, VGG and BERT block structures.",
+    "reading_order": "left to right across three panels (a) ResNet, (b) VGG, (c) BERT, each read top to bottom through its layer stack with green-check/red-X markers at each boundary."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.77,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ebebeb",
+        "used_for": "layer/operation boxes (Weight Layer, Conv Layer, etc.)"
+      },
+      {
+        "hex": "#202124",
+        "used_for": "dark icon glyphs (check/X marks)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black dashed border around each panel's block boundary, solid strokes on layer boxes, square corners",
+    "font": "Verdana sans, small size",
+    "corners": "square",
+    "arrows": "thin black vertical arrows connecting layers top to bottom",
+    "icons": "red X and green check glyphs marking infeasible vs feasible ramp locations at each layer boundary"
+  },
+  "encoding": {
+    "color_means": null,
+    "line_style_means": null,
+    "emphasis": "green checkmarks vs red X icons at each layer boundary highlight where ramps can and cannot be inserted",
+    "reusable_patterns": [
+      "small multiples of a layer stack annotated with feasibility icons"
+    ],
+    "weaknesses": [
+      "relies on icon glyphs (emoji-style check/X) rather than an explicit legend, so meaning depends on the caption"
+    ]
+  },
+  "tags": [
+    "early-exit",
+    "model-serving",
+    "inference",
+    "resnet",
+    "vgg",
+    "bert"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.6)"
+    ],
+    "evidence": [
+      "Apparate only injects ramps that make full use of available data flows at that part of the model.",
+      "for VGG models, ramps are feasible at all layers since their intermediates represent the full extent",
+      "Figure 7 depicts examples."
+    ]
+  },
+  "summary": "Apparate automatically injects and manages early exits (ramps) in ML models. Figure 7 illustrates where ramps can feasibly be placed for three different model architectures. Panel (a) shows a ResNet block (Input, Weight Layer, ReLU, Weight Layer, Add, ReLU) with green checks and red X's marking which points along the residual path allow a ramp. Panel (b) shows a VGG stack of Conv/Pooling layers, where ramps are feasible after every layer since each intermediate reflects the full data flow. Panel (c) shows a BERT Encoder block (Multi-Head Attention, Add & Norm, Feed Forward, Add & Norm), where ramps are restricted to block boundaries rather than mid-block, since attention needs complete inputs. The three small, similarly structured diagrams are placed side by side to let a reader compare ramp feasibility across model families at a glance.",
+  "summary_zh": "图7比较了在ResNet、VGG和BERT三种模型结构中早退出（ramp）的可行插入位置：绿色对勾表示该处数据流完整、可插入ramp，红叉表示不可行，三个模型的层堆栈并排展示便于对比。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

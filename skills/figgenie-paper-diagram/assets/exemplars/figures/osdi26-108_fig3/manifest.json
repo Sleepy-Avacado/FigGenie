@@ -1,0 +1,48 @@
+{
+  "id": "osdi26-108_fig3",
+  "paper_id": "osdi26-108",
+  "fig": "3",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 3: TrainMover Overview",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 2.0,
+  "n_components": 13,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-108/src/fig3_new_system_overview_with_other_system.svg",
+    "preview.png": "lab/extracted/osdi26-108/src/fig3_new_system_overview_with_other_system.png",
+    "print.png": "lab/extracted/osdi26-108/osdi26-108_fig3_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two rows sharing one horizontal time axis, with a green 'Minimized Downtime' annotation on the gap being compared.",
+      "what_to_learn": "Two stacked timelines on one shared axis make a duration claim readable at a glance; keep role colours (stayer/leaver/joiner) identical across rows."
+    },
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "The reference doc's own cross-reference for phase-lanes: TrainMover's row and the baseline row sit column-aligned under one shared Training Timeline arrow, so the bottom row's longer gap visually proves the downtime claim without a number.",
+      "what_to_learn": "Put one shared time arrow directly under two stacked system rows drawn to the same horizontal scale, keep matching phases (preparation, switching) column-aligned between them, and let the visual length of the gap, not a caption number, carry the downtime comparison; color-code recurring machine roles (stayer, leaver, joiner) consistently in both rows."
+    }
+  ]
+}

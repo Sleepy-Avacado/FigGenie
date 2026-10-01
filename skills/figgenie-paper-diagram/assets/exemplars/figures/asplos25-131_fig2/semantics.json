@@ -1,0 +1,231 @@
+{
+  "paper_id": "asplos25-131",
+  "fig": "2",
+  "system": {
+    "name": "Pruner",
+    "one_liner": "a draft-then-verify exploration mechanism that accelerates tensor program tuning using a fast draft model and a learned cost model",
+    "domain": [
+      "compilers",
+      "ml-systems",
+      "auto-tuning"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Deep Neural Networks",
+        "role": "input DNN, converted into partitioned small subgraphs using a graph partitioning algorithm",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Tuning Scheduler",
+        "role": "schedules tuning of subgraphs over multiple rounds using Ansor's gradient-based task scheduler",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Graph Partition",
+        "role": "partitions the DNN into small subgraphs using a graph partitioning algorithm",
+        "container": "Tuning Scheduler",
+        "novel": false
+      },
+      {
+        "name": "Gradient-based Task Scheduler",
+        "role": "selects one subgraph per round according to the tuning record; adopted from Ansor",
+        "container": "Tuning Scheduler",
+        "novel": false
+      },
+      {
+        "name": "Draft: Latent Schedule Explorer",
+        "role": "the 'Draft' component (LSE) that designs hardware-aware symbols/penalties to roughly estimate performance for rapid exploration",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Hardware-aware Symbols",
+        "role": "hardware-aware symbols and penalties describing utilization of hardware performance across memory levels",
+        "container": "Draft: Latent Schedule Explorer",
+        "novel": true
+      },
+      {
+        "name": "Symbol-based Analyzer",
+        "role": "naive draft model used to draft small-scale potential candidates",
+        "container": "Draft: Latent Schedule Explorer",
+        "novel": true
+      },
+      {
+        "name": "Verify: Pattern-aware Cost Model",
+        "role": "the 'Verify' component (PaCM) that applies a learned cost model to identify the best drafted candidates",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Temporal Dataflow Pattern",
+        "role": "pattern-aware cost model sub-component modeling temporal dataflow patterns",
+        "container": "Verify: Pattern-aware Cost Model",
+        "novel": true
+      },
+      {
+        "name": "Pattern-aware Transformer",
+        "role": "pattern-aware cost model sub-component; a transformer-based learned cost model",
+        "container": "Verify: Pattern-aware Cost Model",
+        "novel": true
+      },
+      {
+        "name": "Momentum online Adaptation",
+        "role": "MoA-Pruner's momentum-based online adaptation strategy addressing cross-platform online unawareness; activated only for MoA-Pruner in online tuning",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Optimal Tensor Program",
+        "role": "final tuned output of the search process",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Deep Neural Networks",
+        "to": "Tuning Scheduler",
+        "what": "DNN partitioned into subgraphs and scheduled for tuning",
+        "step": null
+      },
+      {
+        "from": "Tuning Scheduler",
+        "to": "Draft: Latent Schedule Explorer",
+        "what": "schedule generation for candidate exploration",
+        "step": null
+      },
+      {
+        "from": "Draft: Latent Schedule Explorer",
+        "to": "Verify: Pattern-aware Cost Model",
+        "what": "drafted candidates passed to the cost model for verification",
+        "step": null
+      },
+      {
+        "from": "Verify: Pattern-aware Cost Model",
+        "to": "Momentum online Adaptation",
+        "what": "verified candidates feed into momentum online adaptation",
+        "step": null
+      },
+      {
+        "from": "Momentum online Adaptation",
+        "to": "Optimal Tensor Program",
+        "what": "produces the optimal tensor program",
+        "step": null
+      },
+      {
+        "from": "Momentum online Adaptation",
+        "to": "Tuning Scheduler",
+        "what": "feedback loop for online cost-model tuning back into the task scheduler",
+        "step": null
+      }
+    ],
+    "key_idea": "Pruner accelerates tensor program tuning with a draft-then-verify loop: a lightweight Latent Schedule Explorer drafts candidates, a Pattern-aware Cost Model verifies them, and MoA-Pruner's momentum online adaptation feeds results back into the scheduler.",
+    "reading_order": "top-down through the stacked stages from DNN input to Tuning Scheduler, Draft, Verify, Momentum online Adaptation, and the Optimal Tensor Program, with a feedback arrow to the scheduler"
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.3,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fad7ac",
+        "used_for": "peach fill of the 'Deep Neural Networks' band"
+      },
+      {
+        "hex": "#d7a993",
+        "used_for": "light brown background fill of the 'Tuning Scheduler' band"
+      },
+      {
+        "hex": "#a0522d",
+        "used_for": "darker brown/sienna fill of the Graph Partition and Gradient-based Task Scheduler sub-boxes"
+      },
+      {
+        "hex": "#e0eaf5",
+        "used_for": "very light blue background fill of the 'Draft: Latent Schedule Explorer' band"
+      },
+      {
+        "hex": "#1083c6",
+        "used_for": "blue fill of the Hardware-aware Symbols and Symbol-based Analyzer sub-boxes"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green background fill of the 'Verify: Pattern-aware Cost Model' band"
+      },
+      {
+        "hex": "#5da05a",
+        "used_for": "green fill of the Temporal Dataflow Pattern and Pattern-aware Transformer sub-boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow fill of the 'Momentum online Adaptation' band"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "very light gray fill of the 'Optimal Tensor Program' box"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "gray arrows, strokes, and section-label text (Sec 3, 4.1, 4.2, 4.3)"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red arrow highlighting the 'Drafted candidates' hand-off from Draft to Verify"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray strokes (~0.69pt), square corners, no dashed lines",
+    "font": "Tahoma/Arial sans, plain weight",
+    "corners": "square",
+    "arrows": "black/gray vertical arrows between stacked stages; one red arrow for the draft-to-verify hand-off; a gray feedback arrow looping from Momentum online Adaptation back to the Tuning Scheduler",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "peach = DNN input, brown = Tuning Scheduler (existing Ansor-based components), blue = Draft/Latent Schedule Explorer, green = Verify/Pattern-aware Cost Model, yellow = Momentum online Adaptation, gray = final output; red highlights the drafted-candidates hand-off",
+    "line_style_means": "no dashed lines; a red arrow specifically marks the draft-then-verify hand-off, distinguishing it from the plain gray flow arrows",
+    "emphasis": "color-coded horizontal bands stacked top-to-bottom, each tagged with its paper section (Sec 3, 4.1, 4.2, 4.3), map each pipeline stage directly to where it is described in the text",
+    "reusable_patterns": [
+      "vertical pipeline of color-coded stage bands, each containing two named sub-components",
+      "feedback arrow looping the final stage back to an earlier stage for online adaptation"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "tensor-program-tuning",
+    "auto-tuning",
+    "cost-model",
+    "draft-then-verify",
+    "online-adaptation",
+    "compiler"
+  ],
+  "provenance": {
+    "sections": [
+      "3 System Design (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 shows the system overview of Pruner, which is a \"Draft-then-Verify\" exploration mechanism",
+      "Pruner has two major components for \"Draft\" and \"Verify\", respectively: (1) latent schedule explorer",
+      "Pruner uses Ansor's gradient-based task scheduler [50] to tune these subgraphs over multiple rounds"
+    ]
+  },
+  "summary": "Figure 2 is Pruner's system overview, drawn as a top-down pipeline of color-coded stage bands, each labeled with its paper section. Deep Neural Networks (Sec 3) are partitioned via Graph Partition and scheduled by Ansor's Gradient-based Task Scheduler inside the Tuning Scheduler. Schedule Generation feeds the Draft stage, Latent Schedule Explorer (LSE, Sec 4.1), whose Hardware-aware Symbols and Symbol-based Analyzer roughly estimate performance to draft candidates; a red arrow marks these Drafted candidates flowing into the Verify stage, Pattern-aware Cost Model (PaCM, Sec 4.2), built from a Temporal Dataflow Pattern and Pattern-aware Transformer. Momentum online Adaptation (Sec 4.3, MoA-Pruner only) then produces the Optimal Tensor Program and loops feedback back up to the Tuning Scheduler for online cost-model tuning. Peach, brown, blue, green, yellow and gray bands distinguish input, scheduling, draft, verify, adaptation, and output stages respectively.",
+  "summary_zh": "图2是Pruner系统总览:自上而下为DNN输入、调优调度器、Draft阶段潜在调度探索器、Verify阶段模式感知代价模型,最后经动量在线自适应产出最优张量程序并反馈回调度器。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

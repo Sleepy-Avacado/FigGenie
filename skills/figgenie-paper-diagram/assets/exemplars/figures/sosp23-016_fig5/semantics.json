@@ -1,0 +1,184 @@
+{
+  "paper_id": "sosp23-016",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "vLLM / PagedAttention",
+    "one_liner": "an LLM serving system that manages KV cache memory in fixed-size, non-contiguous blocks, inspired by OS virtual memory paging",
+    "domain": [
+      "ml-systems",
+      "llm-serving",
+      "memory-management"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one data structure",
+    "subject": "how one query token's key/value vectors are spread across three fixed-size blocks stored non-contiguously in physical memory",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Query vector",
+        "kind": "label",
+        "role": "names the green box as the current token's query vector",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "forth",
+        "kind": "box",
+        "role": "the concrete query token currently being processed by PagedAttention",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Key and value vectors",
+        "kind": "label",
+        "role": "title over the block table naming what the grid holds",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Block 1",
+        "kind": "row",
+        "role": "physical block table row holding the key/value vectors for tokens 'years, ago, our, fathers'",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Block 2",
+        "kind": "row",
+        "role": "block holding key/value vectors for 'brought, forth'; only half full since generation is still in progress",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Block 0",
+        "kind": "row",
+        "role": "block holding key/value vectors for tokens 'Four, score, and, seven'",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "unrelated block row",
+        "kind": "row",
+        "role": "blank table rows interleaved between Block 1, Block 2 and Block 0, representing other physical blocks not part of this sequence",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "forth",
+        "to": "Block 1",
+        "what": "the query attends to this block's key vectors to compute attention scores",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "forth",
+        "to": "Block 2",
+        "what": "the query attends to this block's key vectors, including its own token 'forth'",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "forth",
+        "to": "Block 0",
+        "what": "the query attends to this block's key vectors",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the actual word tokens occupying each block's key/value slots: Block 0 = Four, score, and, seven; Block 1 = years, ago, our, fathers; Block 2 = brought, forth (2 of 4 slots used)",
+      "linked_by": "position (each word sits in its block's row, in left-to-right token order) and the arrows from the query box to each block's label",
+      "result_cells": "not a computed result; the filled pale-yellow cells simply show which token occupies which physical slot in each block"
+    },
+    "key_idea": "One request's key/value vectors are split into fixed-size blocks (4 tokens each) that PagedAttention stores in whatever physical block-table slots are free, so logically adjacent blocks need not be physically contiguous.",
+    "reading_order": "left to right from the green query-vector box, following the three arrows to Block 1, Block 2 and Block 0 in the physical block table, then within each highlighted row left to right through its word cells"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.36,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill of the table cells holding this sequence's actual key/value tokens, across all three blocks"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "pale-green fill of the 'forth' query-vector box"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the empty table cells: unrelated physical blocks and Block 2's two still-free slots"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.31pt) black outlines around every table cell, the query-vector box, and the arrows",
+    "corners": "square",
+    "arrows": "thin black arrows with small solid heads fanning out from the query box to each of the three block labels",
+    "font": "sans-serif, uniform small size",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale yellow marks table cells holding this sequence's actual key/value tokens; pale green marks the current query token; white marks empty table cells, whether an unrelated physical block or an unused slot in the still-filling Block 2",
+    "line_style_means": "solid black lines only; the table grid and the three fan-out arrows are undifferentiated by dash or colour",
+    "state_means": "not applicable; the figure is a single snapshot, not a before/after comparison",
+    "marker_means": "no numbered markers; the 'Block 0/1/2' text labels identify which table row is which logical block",
+    "emphasis": "the blank white rows deliberately separating Block 1, Block 2 and Block 0 in the table are what visually proves the three blocks are non-contiguous in physical memory",
+    "reusable_patterns": [
+      "fan-out arrows from a single query box to several highlighted rows of an otherwise mostly-empty table, using the empty rows themselves to argue non-contiguity"
+    ],
+    "weaknesses": [
+      "nothing in the figure explains why the blank rows exist unless the reader already knows from the caption/text that they represent other physical blocks",
+      "the block size (4 tokens/columns) is shown visually but never stated as a number in the figure itself"
+    ]
+  },
+  "tags": [
+    "paged-attention",
+    "kv-cache",
+    "llm-serving",
+    "virtual-memory",
+    "vllm",
+    "non-contiguous-memory"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Method (p.5)"
+    ],
+    "evidence": [
+      "the attention key and values vectors are stored as non-contiguous blocks in the memory",
+      "The key and value vectors are spread across three blocks, and the three blocks are not contiguous",
+      "the query token (“forth”)"
+    ]
+  },
+  "summary": "Figure 5 illustrates PagedAttention's core memory layout with one concrete example. A query vector for the token 'forth' (green box) fans out to three blocks of a physical key/value block table, each block holding up to four tokens' key/value vectors: Block 1 holds 'years, ago, our, fathers', Block 2 holds only 'brought, forth' so far (two slots still free), and Block 0 holds 'Four, score, and, seven', the start of the Gettysburg Address opening line. Blank white rows sit between the three highlighted blocks in the table, representing other physical blocks unrelated to this sequence. Because logical Block 0, Block 1 and Block 2 are drawn in non-adjacent physical rows, the figure visually demonstrates the paper's central claim: unlike a normal KV cache, PagedAttention lets a request's key/value blocks live in non-contiguous physical memory, closing the gap that fragmentation used to waste.",
+  "summary_zh": "该图示PagedAttention例：forth的查询指向块表三块——Block1含4词、Block2含2词（余2位）、Block0含4词；间隔空白行为无关块，示三者物理不连续存储。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP23"
+}

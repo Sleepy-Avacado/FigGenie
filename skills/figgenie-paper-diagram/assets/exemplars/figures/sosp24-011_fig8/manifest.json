@@ -1,0 +1,48 @@
+{
+  "id": "sosp24-011_fig8",
+  "paper_id": "sosp24-011",
+  "fig": "8",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 8. ReCycle system overview.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.13,
+  "n_components": 8,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-011/src/fig8_overview.svg",
+    "preview.png": "lab/extracted/sosp24-011/src/fig8_overview.png",
+    "print.png": "lab/extracted/sosp24-011/sosp24-011_fig8_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar split top-down into Offline and Online Phase bands, ending in a row of Executor boxes where one is picked out with a red dashed outline as the failure recovered from.",
+      "what_to_learn": "Separate offline planning from online execution as two stacked full-width bands joined by one labelled arrow, draw the bottom tier as a row of otherwise identical worker boxes, and mark the one instance that misbehaves with a red dashed outline instead of a caption."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar where the Planner box nests its own Failure Normalization and Adaptive Schedule Generation steps, and each Executor box in the Training Cluster row nests a small parallelism icon grid, to depth 3.",
+      "what_to_learn": "Give every repeated leaf box, here each Executor, the same small inner icon grid so per-worker internal state reads identically across the row, and reserve the one exception, a red dashed outline on the failed Executor, for exactly the box that differs."
+    }
+  ]
+}

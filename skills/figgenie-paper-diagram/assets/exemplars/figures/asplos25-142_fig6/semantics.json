@@ -1,0 +1,333 @@
+{
+  "paper_id": "asplos25-142",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "Teola",
+    "one_liner": "an orchestration framework for LLM-based applications that represents each query as a primitive-level dataflow graph for fine-grained scheduling",
+    "domain": [
+      "LLM-serving",
+      "workflow-orchestration",
+      "retrieval-augmented-generation"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how Teola's graph optimizer parallelizes and pipelines a RAG query's primitive-level dataflow graph across four numbered optimization passes",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Input: Docs",
+        "kind": "port",
+        "role": "raw documents entering the indexing pipeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Input: Question",
+        "kind": "port",
+        "role": "the user's question entering the query-expansion/retrieval pipeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Embedding",
+        "kind": "box",
+        "role": "computes an embedding for a document chunk or a query",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Ingestion",
+        "kind": "box",
+        "role": "ingests embedded document chunks into the index",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "In-place Aggregate",
+        "kind": "box",
+        "role": "aggregates partial outputs (embeddings, or reranked/refined results) in place",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "LLM Prefilling",
+        "kind": "box",
+        "role": "prefills the LLM's KV cache for the question-expansion prompt",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PD0",
+        "kind": "box",
+        "role": "partial-decode primitive streaming out the first expanded query",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Searching",
+        "kind": "box",
+        "role": "retrieves candidate chunks for one expanded query",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Reranking",
+        "kind": "box",
+        "role": "reranks retrieved chunks for one expanded query",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Partial Prefilling",
+        "kind": "box",
+        "role": "prefills only the new refine-instruction/context part of a prompt, reusing prior KV cache",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Full Prefilling",
+        "kind": "box",
+        "role": "prefills an entire prompt when no reusable KV cache exists",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "LLM Decoding",
+        "kind": "box",
+        "role": "decodes the LLM's answer given a prefilled prompt",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Pass 1",
+        "kind": "label",
+        "role": "optimization pass that pipelines document ingestion with query processing",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Pass 2",
+        "kind": "label",
+        "role": "optimization pass that splits embedding/ingestion into per-chunk-batch pieces",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Pass 3",
+        "kind": "label",
+        "role": "optimization pass that streams partial decoding output into subsequent primitives, applied at multiple points",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Pass 4",
+        "kind": "label",
+        "role": "optimization pass that parallelizes the expanded queries' search/rerank across separate branches",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Data dependency",
+        "kind": "label",
+        "role": "legend entry for the plain arrow denoting a data-dependency edge",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Input: Docs",
+        "to": "Embedding",
+        "what": "documents are embedded per chunk batch",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Embedding",
+        "to": "Ingestion",
+        "what": "chunk embeddings are ingested into the index",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Ingestion",
+        "to": "In-place Aggregate",
+        "what": "ingested chunk batches are aggregated in place, pipelined with query processing",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Input: Question",
+        "to": "LLM Prefilling",
+        "what": "the question, with a QA instruction, is prefilled for query expansion",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "LLM Prefilling",
+        "to": "PD0",
+        "what": "partial decoding streams out an expanded query as soon as it is available",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "PD0",
+        "to": "Searching",
+        "what": "the streamed new query is searched against the index without waiting for full decoding",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "Searching",
+        "to": "Reranking",
+        "what": "retrieved chunks for one expanded query are reranked",
+        "kind": "data",
+        "step": "4"
+      },
+      {
+        "from": "Reranking",
+        "to": "Full Prefilling",
+        "what": "the top reranked chunk with a QA instruction is fully prefilled for the initial candidate answer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Full Prefilling",
+        "to": "LLM Decoding",
+        "what": "decoding produces a candidate answer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "LLM Decoding",
+        "to": "Partial Prefilling",
+        "what": "the candidate answer plus a refine instruction and the next chunk's context are partially prefilled, reusing prior KV cache",
+        "kind": "data",
+        "step": "3"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "Pass 1",
+        "at": "Ingestion / In-place Aggregate",
+        "what": "pipelines document ingestion so indexing overlaps with query processing instead of running to completion first",
+        "carries": "ingested chunk batches"
+      },
+      {
+        "marker": "Pass 2",
+        "at": "Embedding / Ingestion",
+        "what": "splits embeddings into smaller per-chunk-batch pieces so they can be processed and aggregated incrementally",
+        "carries": "per-batch chunk embeddings"
+      },
+      {
+        "marker": "Pass 3",
+        "at": "LLM Prefilling / Partial Prefilling",
+        "what": "streams partial decoding output (an expanded query, or a refined answer) directly into the next primitive instead of waiting for full decoding to finish",
+        "carries": "streamed partial-decode output"
+      },
+      {
+        "marker": "Pass 4",
+        "at": "Searching / Reranking",
+        "what": "parallelizes the three expanded queries' searching and reranking across separate branches (PD0/PD1/PD2)",
+        "carries": "three parallel query-expansion branches"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Representing a query as a primitive-level dataflow graph lets Teola's optimizer apply targeted rewrite passes, splitting, pipelining, and parallelizing individual primitives like embedding, prefilling, and decoding, that a coarser task-level orchestrator could never expose.",
+    "reading_order": "top-left Input: Docs through the embedding/ingestion pipeline (Pass 1, Pass 2), then bottom-left Input: Question through LLM Prefilling splitting into parallel expanded-query branches (Pass 3, Pass 4) with Searching/Reranking, converging into the refine-mode LLM synthesis chain on the right (Partial/Full Prefilling and LLM Decoding, repeating Pass 3) toward the final candidate answer"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "badge",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.75,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill of Embedding/Ingestion boxes in the indexing pipeline"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "dark green text/border accents on indexing-pipeline annotations"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "grey fill of the Input: Docs / Input: Question source boxes"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "pale blue fill of Prefilling/Decoding boxes"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "medium blue fill of Searching/Reranking boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.6pt) mixed solid/dashed strokes; dashed purple rounded rectangles group primitives under one Pass label",
+    "corners": "rounded",
+    "arrows": "many thin black arrows denoting data dependencies between primitives",
+    "font": "Helvetica / Helvetica-Oblique sans, 5-8pt, italicized descriptive annotations",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = indexing-pipeline primitives (Embedding, Ingestion); blue shades = LLM-related primitives (Prefilling, Decoding, Searching, Reranking); grey = the two raw inputs (Docs, Question)",
+    "line_style_means": "solid black arrows denote data dependencies; dashed purple rounded boxes group the primitives one optimization pass rewrote, without implying a different edge kind",
+    "state_means": "not applicable; this is a single optimized graph, not a before/after comparison",
+    "marker_means": "bold 'Pass N' labels tag which of the optimizer's four rewrite passes produced or applies to the enclosed subgraph",
+    "emphasis": "italicized green annotations (e.g. 'Stream partial decoding output and pipeline subsequent primitives') spell out in words what each numbered pass buys, directly beside the boxes it rewrites",
+    "reusable_patterns": [
+      "a wide primitive-level dataflow graph with dashed pass-labelled boxes overlaid to narrate which optimizer rewrite touched which subgraph"
+    ],
+    "weaknesses": [
+      "very dense text at small (5-8pt) font size across a wide double-column figure makes it hard to read without zooming in",
+      "Pass 3 is applied at three different places in the graph without visually distinguishing why each instance counts as the same pass"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "RAG",
+    "workflow-orchestration",
+    "graph-optimization",
+    "pipelining",
+    "Teola"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Graph Optimizer",
+      "§7 Evaluation"
+    ],
+    "evidence": [
+      "Figure 6 presents an optimized e-graph for the app example shown in Figure 2d",
+      "query expansion module generates three new queries to enhance searching process",
+      "It then refines the candidate answer twice using the remaining two chunks with a refine-style prompt template"
+    ]
+  },
+  "summary": "This figure walks through an optimized primitive-level execution graph (e-graph) that Teola's graph optimizer produces for one advanced RAG query with a refine-mode synthesizer. Documents flow through Embedding and Ingestion primitives (Pass 2 splits this into per-chunk-batch pieces, Pass 1 pipelines it with query processing via In-place Aggregate), while the question is expanded by LLM Prefilling into three new queries, streamed out via partial decoding (Pass 3) before full decoding finishes. Each expanded query's Searching and Reranking runs in its own parallel branch (Pass 4), and the top-ranked chunk feeds a QA-style Full Prefilling and LLM Decoding to produce an initial candidate answer, which is then refined twice more: each refinement partially prefills just the new instruction and context (reusing the prior KV cache, another instance of Pass 3) before a full prefilling and decoding step yields the next candidate answer. Overlaid 'Pass 1' through 'Pass 4' labels on dashed boxes tie each optimization directly to the subgraph it rewrites, illustrating how fine-grained, primitive-level graph optimization exposes parallelization and pipelining opportunities a coarser, module-level orchestrator would miss.",
+  "summary_zh": "该图展示Teola图优化器为一个高级RAG（refine模式）查询生成的优化后原语级执行图：文档经Embedding/Ingestion（Pass2按批拆分，Pass1与查询流程流水线化）；问题经LLM Prefilling扩展为三条新查询并流式输出（Pass3），各自并行Searching/Reranking（Pass4），最终经Prefilling/Decoding多轮精炼生成候选答案，Pass标签标出各优化对应的子图。",
+  "confidence": "medium",
+  "notes": "style.palette uses the measured-attributes palette (from the PDF-extracted SVG) since this figure has no separate author source-SVG histogram in the context file. content.elements/relations/steps describe the dominant structure (indexing pipeline plus one representative query-expansion/refine branch) rather than every repeated instance of Searching/Reranking/Prefilling across all three expanded queries and two refine iterations, since the context text does not distinguish them beyond 'three new queries' and 'refines...twice'.",
+  "venue": "ASPLOS25"
+}

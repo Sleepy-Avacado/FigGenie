@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-088_fig14",
+  "paper_id": "asplos26-088",
+  "fig": "14",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 14. Execution timeline of Rasterization Engine. Inter- section Test Unit (ITU) and Subtile Computation Unit (SCU) process subtiles in a pipelined manner.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.9,
+  "n_components": 6,
+  "n_flows": 2,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-088/src/fig14_architecture-intersection-test-hiding.svg",
+    "preview.png": "lab/extracted/asplos26-088/src/fig14_architecture-intersection-test-hiding.png",
+    "print.png": "lab/extracted/asplos26-088/asplos26-088_fig14_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Two named lanes with a Time arrow and a right-hand legend; overlap between lanes is the entire message.",
+      "what_to_learn": "Two lanes plus one horizontal Time arrow is enough for a pipelining claim; blank cells in the first column show the pipeline fill cost."
+    }
+  ]
+}

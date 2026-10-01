@@ -1,0 +1,281 @@
+{
+  "paper_id": "asplos25-006",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "PartIR",
+    "one_liner": "a hardware- and runtime-agnostic system that composes SPMD partitioning strategies to shard neural network training across devices",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how batch parallelism's full AllReduce of gradients contrasts with Z3/FSDP's sharded AllGather of parameters and ReduceScatter of gradients",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Device 1",
+        "kind": "box",
+        "role": "one of two device containers running a replica/shard of the training step",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Device 2",
+        "kind": "box",
+        "role": "the other device container, mirrors Device 1's structure",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "fwd",
+        "kind": "box",
+        "role": "forward pass over the device's batch shard",
+        "container": "Device 1",
+        "highlighted": false
+      },
+      {
+        "name": "bwd",
+        "kind": "box",
+        "role": "backward pass producing local gradients",
+        "container": "Device 1",
+        "highlighted": false
+      },
+      {
+        "name": "update",
+        "kind": "box",
+        "role": "applies the (reduced/scattered) gradient to produce new parameters",
+        "container": "Device 1",
+        "highlighted": false
+      },
+      {
+        "name": "params",
+        "kind": "label",
+        "role": "parameter tensor fed into the forward pass, replicated in batch parallelism or sharded in FSDP",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "batch[0]",
+        "kind": "port",
+        "role": "input batch shard routed to Device 1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "AllReduce",
+        "kind": "box",
+        "role": "collective that sums gradients across devices in batch parallelism",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "AllGather",
+        "kind": "box",
+        "role": "collective that gathers the full parameter shard just before it is used in FSDP",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "ReduceScatter",
+        "kind": "box",
+        "role": "collective that reduces and re-shards gradients across devices in FSDP",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "new params",
+        "kind": "port",
+        "role": "updated parameter (or parameter shard) produced by the update step",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "batch[0]",
+        "to": "fwd",
+        "what": "batch shard is consumed by the forward pass",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "params",
+        "to": "fwd",
+        "what": "parameters feed the forward pass",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "fwd",
+        "to": "bwd",
+        "what": "activations flow from forward to backward pass",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "bwd",
+        "to": "AllReduce",
+        "what": "local gradients are summed across devices",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "params",
+        "to": "AllGather",
+        "what": "sharded parameters are gathered from the other device",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "AllGather",
+        "to": "fwd",
+        "what": "gathered full parameter feeds the forward pass",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "bwd",
+        "to": "ReduceScatter",
+        "what": "gradients are reduced and scattered back into per-device shards",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "AllReduce",
+        "to": "update",
+        "what": "reduced gradient feeds the parameter update",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "ReduceScatter",
+        "to": "update",
+        "what": "scattered gradient shard feeds the sharded update",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "update",
+        "to": "new params",
+        "what": "update step produces the new parameter (shard)",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "top: batch parallelism",
+        "axis": "alternatives",
+        "differs": "parameters and optimizer state are fully replicated on each device; only gradients are AllReduced before the update",
+        "verdict": null
+      },
+      {
+        "label": "bottom: Z3/FSDP",
+        "axis": "alternatives",
+        "differs": "parameters are sharded and AllGathered just before use (highlighted thick blue bars), and gradients are ReduceScattered instead of AllReduced, so each device only ever holds a shard",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Contrasting batch parallelism's full-parameter AllReduce of gradients with Z3/FSDP's sharded design, which AllGathers parameters just-in-time and ReduceScatters gradients, trading extra communication for lower peak memory.",
+    "reading_order": "top panel first, left to right within each Device box (params/batch into fwd, into bwd, into the shared collective, into update); then the bottom panel repeats the same layout with the added AllGather bars"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.12,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0000ff",
+        "used_for": "bold blue 'Device 1' / 'Device 2' labels and the thick bars marking the AllGather step in FSDP"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "grey fill of the 'fwd' (forward pass) boxes"
+      },
+      {
+        "hex": "#b6d7a8",
+        "used_for": "light green fill of the 'bwd' (backward pass) boxes"
+      },
+      {
+        "hex": "#d9d2e9",
+        "used_for": "light purple fill of the 'update' boxes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red text naming the collective operation (AllReduce / AllGather)"
+      },
+      {
+        "hex": "#d0e0e3",
+        "used_for": "pale blue-grey fill of the (+) combine box between backward pass and update"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.4pt) black box outlines; dashed grey rectangle enclosing each Device group",
+    "corners": "square",
+    "arrows": "thin solid black lines with small arrowheads, orthogonal routing, some looped back to show parameters feeding into fwd",
+    "font": "Arial/Arial-Bold sans, 4.5-5.5pt, bold for Device labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = device labels and the FSDP-specific AllGather step; grey = forward pass; green = backward pass; purple = parameter update; red = names the active collective operation",
+    "line_style_means": "dashed grey outline marks each Device's boundary; the data-flow arrows themselves are solid",
+    "state_means": "the two alternatives are told apart by an added AllGather stage and by renaming the collectives (AllReduce vs AllGather+ReduceScatter)",
+    "marker_means": "no numbered markers; bold red labels name which collective (AllReduce, AllGather, ReduceScatter) executes at that point",
+    "emphasis": "thick blue bars single out AllGather as the one new operation FSDP adds relative to batch parallelism",
+    "reusable_patterns": [
+      "two vertically stacked device-pair diagrams sharing one fwd/bwd/update template, with the changed collective op highlighted in a bold accent colour"
+    ],
+    "weaknesses": [
+      "dense small (4.5-5.5pt) labels crowd the boxes, and the looping params/new-params arrows require tracing carefully to see which device they return to"
+    ]
+  },
+  "tags": [
+    "SPMD",
+    "data-parallelism",
+    "FSDP",
+    "ZeRO",
+    "AllReduce",
+    "AllGather",
+    "PartIR"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background"
+    ],
+    "evidence": [
+      "the gradients are AllReduced to update the parameters",
+      "note the parameters are sharded and only AllGathered before their use",
+      "The gradients are ReducedScattered before updating the parameters"
+    ]
+  },
+  "summary": "This figure from PartIR's background section contrasts two SPMD parallelization strategies. The top panel shows batch parallelism: each device (Device 1, Device 2) holds a full parameter replica, runs a forward (fwd) and backward (bwd) pass on its batch shard, and the resulting gradients are AllReduced across devices before a shared update step produces new parameters. The bottom panel shows Z3/FSDP: parameters are instead sharded per device, so before each forward pass the needed shard is AllGathered from the other device (highlighted with thick blue bars), and after the backward pass gradients are ReduceScattered rather than AllReduced, yielding a distinct new parameter shard per device. Stacking the two structurally identical device-pair diagrams lets the reader see exactly which stage changes: FSDP inserts an AllGather before the forward pass and swaps AllReduce for ReduceScatter, trading extra communication for the lower peak memory of never materializing full parameters or gradients on one device.",
+  "summary_zh": "该图对比PartIR背景部分的两种SPMD并行策略：上方批并行在反向传播后对梯度做AllReduce；下方Z3/FSDP将参数分片，使用前先AllGather（蓝色粗条高亮），梯度改为ReduceScatter，从而降低峰值显存。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior label 'architecture' (not a valid v3 base value) to 'component', since the figure is drawn as boxes (fwd/bwd/update) inside Device containers connected by data arrows.",
+  "venue": "ASPLOS25"
+}

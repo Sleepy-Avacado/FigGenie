@@ -1,0 +1,286 @@
+{
+  "paper_id": "nsdi26-082",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "FlexLLM",
+    "one_liner": "token-level co-serving of LLM inference and finetuning (e.g. LoRA) with SLO guarantees",
+    "domain": [
+      "ml-systems",
+      "LLM-serving",
+      "fine-tuning"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how four candidate parallelization graphs combine two linear-layer tensor-parallel states via different communication collectives",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Base Model",
+        "kind": "box",
+        "role": "dashed container labelling the base model's fully-specified parallelization computation graph (PCG)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "LoRA",
+        "kind": "box",
+        "role": "dashed container labelling LoRA's bypass PCG, whose parallelization operators are left as '?' placeholders",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "?",
+        "kind": "box",
+        "role": "an undetermined parallelization operator (partition, combine, replicate, or reduce) that the search must fill in",
+        "container": "LoRA",
+        "highlighted": true
+      },
+      {
+        "name": "Input",
+        "kind": "port",
+        "role": "the layer's input activation, shared by the base model and LoRA branches",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Partition (dim=2)",
+        "kind": "box",
+        "role": "splits the input (and the matching weight) along dimension 2 before a Linear using tensor state ②",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W_L",
+        "kind": "box",
+        "role": "LoRA's down-projection weight matrix",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Linear (bottom)",
+        "kind": "box",
+        "role": "LoRA's down-projection matmul, drawn once per candidate using one of the four numbered tensor states",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "All Reduce",
+        "kind": "box",
+        "role": "collective that turns a pre-reduce partial-sum output into a fully replicated tensor, bridging state ②'s output to state ④'s input",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Replicate",
+        "kind": "box",
+        "role": "replicates a weight or activation with no partitioning",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W_R",
+        "kind": "box",
+        "role": "LoRA's up-projection weight matrix",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Linear (top)",
+        "kind": "box",
+        "role": "LoRA's up-projection matmul, drawn once per candidate using one of the four numbered tensor states",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Partition (dim=1)",
+        "kind": "box",
+        "role": "splits a weight along dimension 1 before a Linear using tensor state ④",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Output",
+        "kind": "port",
+        "role": "the layer's output activation",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Input",
+        "to": "Partition (dim=2)",
+        "what": "input is partitioned along the contraction dimension for state ②",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_L",
+        "to": "Partition (dim=2)",
+        "what": "the down-projection weight is partitioned to match",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Partition (dim=2)",
+        "to": "Linear (bottom)",
+        "what": "both partitioned operands feed the down-projection matmul",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Linear (bottom)",
+        "to": "All Reduce",
+        "what": "the contraction-partitioned matmul produces a pre-reduce output",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "All Reduce",
+        "to": "Linear (top)",
+        "what": "the reduced, now-replicated tensor feeds the up-projection matmul as its input",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W_R",
+        "to": "Partition (dim=1)",
+        "what": "the up-projection weight is partitioned for state ④",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Partition (dim=1)",
+        "to": "Linear (top)",
+        "what": "the partitioned weight feeds the up-projection matmul",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Linear (top)",
+        "to": "Output",
+        "what": "the up-projection matmul produces the layer's output",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "① + ④",
+        "axis": "alternatives",
+        "differs": "both Linears kept fully replicated (state ①) feeding a state-④ layer directly, with no communication operator needed since ①'s output already equals ④'s required input",
+        "verdict": null
+      },
+      {
+        "label": "② + ④",
+        "axis": "alternatives",
+        "differs": "the first Linear partitions input and weight along the contraction dimension (state ②), producing a pre-reduce output that an All Reduce turns into the replicated input state ④ needs",
+        "verdict": null
+      },
+      {
+        "label": "③ + ③",
+        "axis": "alternatives",
+        "differs": "both Linears use the same non-contracting partition (state ③); an All to All redistributes the first Linear's partitioned output into what the second Linear's identical state expects",
+        "verdict": null
+      },
+      {
+        "label": "③ + ④",
+        "axis": "alternatives",
+        "differs": "the first Linear uses state ③ (partitioned, non-contracting) and an All Gather turns its output into the fully replicated input the second Linear's state ④ requires",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "LoRA's two linear layers can each use one of four tensor-parallel states, and pairing them into a candidate graph requires inserting the right communication collective, none, All Reduce, All to All, or All Gather, to reconcile the first layer's output state with the second layer's required input state.",
+    "reading_order": "panel (a) shows the base model's fixed PCG beside LoRA's branch with '?' operators still undetermined; panel (b) defines the four single-Linear tensor states referenced by circled numbers; panel (c) reads bottom-to-top through four candidate PCGs, each pairing two of those numbered states with a different bridging collective"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "callout",
+    "direction": "bottom-up",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "above",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.64,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7f7f7f",
+        "used_for": "dark-gray fill of panel (a)'s Partition/Replicate/Reduction boxes and the LoRA branch's '?' (undetermined-operator) boxes"
+      },
+      {
+        "hex": "#afabab",
+        "used_for": "a lighter gray fill of panel (c)'s Partition/Replicate/All-Reduce/All-Gather/All-to-All operator boxes"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "blue fill of every LoRA 'Linear' trapezoid across panels (a), (b), and (c)"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "green fill of the Base Model's 'Linear' and 'W' boxes in panel (a)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed gray outlines around the Base Model / LoRA containers; thin gray arrows throughout",
+    "corners": "mixed",
+    "arrows": "thin gray arrows with solid heads, nearly every one annotated with a bracketed tensor-state tuple (e.g. [-,l,-])",
+    "font": "sans (ArialMT / Arial-BoldMT), small (~3.5-8pt); circled-number badges for the four states",
+    "icons": "none beyond the circled-number badges ①-④"
+  },
+  "encoding": {
+    "color_means": "green marks the Base Model's fixed compute path, blue marks LoRA's low-rank compute path; the two grays distinguish panel (a)'s undetermined '?' operators from panel (c)'s resolved, named collectives",
+    "line_style_means": "all edges are plain solid gray arrows; the tensor-state tuple written beside each one, not the line style, carries the parallelization information",
+    "state_means": "the four candidate alternatives are told apart by which named operator box (none, All Reduce, All to All, All Gather) sits between the two Linear layers and by the bracketed tensor-state tuple on each edge",
+    "marker_means": "circled numbers ①-④ name the four single-layer tensor-parallel states defined in panel (b), and the same numbers relabel each candidate in panel (c) as a pair, e.g. '② + ④'",
+    "emphasis": "panel (a)'s repeated '?' boxes single out exactly the operators panel (c) must determine, and keeping every candidate's Input/Output and W_L/W_R framing identical isolates the one differing operator box between the two Linears",
+    "reusable_patterns": [
+      "a small state-labelled template (panel b) whose numbered variants are recombined pairwise into side-by-side candidate graphs (panel c), each differing only in the communication operator bridging the two instances",
+      "a base-model computation graph with an added low-rank branch whose operators are left as '?' placeholders to motivate a search"
+    ],
+    "weaknesses": [
+      "the bracketed tensor-state tuples are small and repeat on nearly every edge, so matching a given tuple back to its defining state in panel (b) takes careful cross-referencing"
+    ]
+  },
+  "tags": [
+    "FlexLLM",
+    "LoRA",
+    "parallelization-computation-graph",
+    "tensor-parallelism",
+    "PCG-search",
+    "co-serving"
+  ],
+  "provenance": {
+    "sections": [
+      "§Dependent Parallelization"
+    ],
+    "evidence": [
+      "shows the four possible tensor states when parallelizing a tensor, including non-parallel ( -), partitioned ( |)",
+      "shows four candidate PCGs discovered by for parallelizing a LoRA network",
+      "chooses the candidate PCG with the lowest estimated execution cost"
+    ]
+  },
+  "summary": "This figure explains how FlexLLM parallelizes a LoRA bypass network. Panel (a) shows the base model's fully-specified parallelization computation graph (PCG), green Partition/Replicate operators feeding two Linear layers, alongside LoRA's blue branch, whose operators are left as '?' placeholders to be determined. Panel (b) defines four possible single-Linear tensor-parallel states (numbered 1-4) by their input, weight, and output tensor states (non-parallel -, partitioned |, replicated =, pre-reduce +): fully replicated (1), contraction-dimension partitioned needing an All Reduce (2), and two non-contracting partitioned variants (3, 4). Panel (c) then fills in LoRA's '?' operators by pairing states for its two Linear layers into four candidate PCGs, 1+4, 2+4, 3+3, and 3+4, each bridged by a different communication operator (none, All Reduce, All to All, or All Gather) that reconciles the first layer's output state with the second layer's required input state.",
+  "summary_zh": "该图示FlexLLM为LoRA定并行策略：(a)基础模型算子已定，LoRA算子留空待定；(b)定义Linear层四种张量并行状态；(c)两两组合成四候选PCG，分别用直连/AllReduce/AllToAll/AllGather衔接。",
+  "confidence": "high",
+  "notes": "The low-resolution PNG preview could not resolve every bracketed tensor-state tuple, so the exact per-candidate operator sequence (which collective bridges each pair of states) was confirmed by loading the author's source SVG in a browser and rescaling it 1.6-2x; content.elements/relations describe candidate ②+④ as the fullest representative template. content.panels leaves 'verdict' null since the given text says only that a profiling-based cost model picks the cheapest candidate, not which of these four wins.",
+  "venue": "NSDI26"
+}

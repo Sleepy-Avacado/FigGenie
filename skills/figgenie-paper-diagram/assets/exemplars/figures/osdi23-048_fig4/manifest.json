@@ -1,0 +1,56 @@
+{
+  "id": "osdi23-048_fig4",
+  "kind": "mechanism",
+  "paper_id": "osdi23-048",
+  "fig": "4",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 4: The exec. ﬂow of READ/WRITE on SNIC and RNIC.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "timeline",
+  "subject": "comparing READ/WRITE round-trip datapaths through SNIC's extra PCIe switch hop versus RNIC's single-hop baseline path",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "none",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 2.76,
+  "n_elements": 7,
+  "n_relations": 4,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "omnigraffle",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-048/src/fig4_network-slowdown-2.svg",
+    "preview.png": "lab/extracted/osdi23-048/src/fig4_network-slowdown-2.png",
+    "print.png": "lab/extracted/osdi23-048/osdi23-048_fig4_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "SNIC's extra internal PCIe switch adds a second PCIe hop that READ must cross twice round-trip, while WRITE saves one hop by completing at the switch instead of returning all the way to the RNIC core.",
+      "what_to_learn": "Two tiny swimlanes where the only difference is one extra lane; count the crossings, no colour needed",
+      "note_source": "doc"
+    }
+  ]
+}

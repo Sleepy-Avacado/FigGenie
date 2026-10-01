@@ -1,0 +1,239 @@
+{
+  "paper_id": "asplos25-110",
+  "fig": "1",
+  "system": {
+    "name": "Virgo",
+    "one_liner": "a GPU microarchitecture that disaggregates matrix units from SIMT cores to the cluster level for scalable, energy-efficient GEMM execution",
+    "domain": [
+      "gpu-architecture",
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Cluster",
+        "role": "group of SIMT cores connected via a cluster-level network-on-chip to shared memory",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SIMT Core",
+        "role": "core consisting of a warp scheduler, register file, and tightly-coupled execution units like Tensor Cores",
+        "container": "Cluster",
+        "novel": false
+      },
+      {
+        "name": "FPU",
+        "role": "floating-point execution unit in the SIMT core",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "ALU",
+        "role": "arithmetic logic execution unit in the SIMT core",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Tensor Core",
+        "role": "matrix unit tightly coupled to the SIMT core, receiving operands through the register file",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Register File",
+        "role": "supplies operands to execution units, including the Tensor Core, via the standard instruction datapath",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "L1 $",
+        "role": "per-core L1 cache",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Warps",
+        "role": "warp storage/scheduling state in the SIMT core",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Lanes",
+        "role": "SIMT execution lanes of the core",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "TC",
+        "role": "abbreviated Tensor Core shown in the other SIMT Core instances",
+        "container": "SIMT Core",
+        "novel": false
+      },
+      {
+        "name": "Shared Memory",
+        "role": "software-managed scratchpad shared by SIMT cores within a cluster",
+        "container": "Cluster",
+        "novel": false
+      },
+      {
+        "name": "Matrix",
+        "role": "matrix-related data resident in shared memory",
+        "container": "Shared Memory",
+        "novel": false
+      },
+      {
+        "name": "Shared LLC",
+        "role": "last-level cache shared across clusters",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Virgo Cluster",
+        "role": "Virgo's cluster containing a disaggregated matrix unit instead of per-core Tensor Cores",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Matrix Unit",
+        "role": "dedicated matrix unit physically disaggregated from the SIMT core, integrated at the cluster level",
+        "container": "Virgo Cluster",
+        "novel": true
+      },
+      {
+        "name": "Accumulator Memory",
+        "role": "stores accumulator values for the disaggregated matrix unit, offloaded from the register file",
+        "container": "Matrix Unit",
+        "novel": true
+      },
+      {
+        "name": "PE Array",
+        "role": "processing-element array performing the matrix multiply-add computation",
+        "container": "Matrix Unit",
+        "novel": true
+      },
+      {
+        "name": "Matrix Data",
+        "role": "matrix operand data staged in shared memory for the matrix unit",
+        "container": "Shared Memory",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Tensor Core",
+        "to": "Register File",
+        "what": "receives matrix operands through the register file via the standard instruction datapath",
+        "step": null
+      },
+      {
+        "from": "SIMT Core",
+        "to": "Shared Memory",
+        "what": "cluster-level access to the shared, software-managed scratchpad",
+        "step": null
+      },
+      {
+        "from": "Shared Memory",
+        "to": "Shared LLC",
+        "what": "cluster's shared memory connects to the shared last-level cache",
+        "step": null
+      },
+      {
+        "from": "Matrix Unit",
+        "to": "Shared Memory",
+        "what": "disaggregated matrix unit accesses shared memory directly, bypassing the register file",
+        "step": null
+      }
+    ],
+    "key_idea": "Contrasts today's GPU cluster, where Tensor Cores sit tightly coupled inside each SIMT core via the register file, with Virgo's cluster, where a single disaggregated Matrix Unit connects directly to shared memory.",
+    "reading_order": "left panel (a) baseline cluster read top-to-bottom, then right panel (b) Virgo cluster top-to-bottom, both ending at the shared LLC below"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.27,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#231f20",
+        "used_for": "near-black box outlines and body text throughout"
+      },
+      {
+        "hex": "#fcb515",
+        "used_for": "orange fill of the 'Matrix'/'Matrix Data' boxes and the double-headed data-path arrows"
+      },
+      {
+        "hex": "#ee3160",
+        "used_for": "magenta/red fill of the PE Array's small processing-element squares"
+      },
+      {
+        "hex": "#b9d2b6",
+        "used_for": "light green fill of the Tensor Core box in panel (a)"
+      },
+      {
+        "hex": "#ffe8bb",
+        "used_for": "light peach fill of the Shared Memory box background"
+      },
+      {
+        "hex": "#dd9fb4",
+        "used_for": "light pink/mauve fill of the Matrix Unit panel background in panel (b)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black strokes, roughly 1pt, square corners throughout",
+    "font": "Helvetica sans, mostly plain weight with bold for group titles (Tensor Core, Matrix Unit, Register File, Shared Memory)",
+    "corners": "square",
+    "arrows": "orange double-headed arrows between compute units and shared memory; black double-headed arrow between shared memory and the shared LLC",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = the tightly-coupled Tensor Core in the baseline, pink/mauve = Virgo's disaggregated Matrix Unit panel, magenta = PE-array processing elements, orange = matrix-related shared-memory data and its data-path arrows, peach = shared memory",
+    "line_style_means": "no dashed lines; solid double-headed orange arrows show bidirectional data movement between compute units and shared memory",
+    "emphasis": "side-by-side (a)/(b) panels contrast register-file-coupled Tensor Cores against Virgo's disaggregated Matrix Unit wired straight to shared memory",
+    "reusable_patterns": [
+      "before/after two-panel comparison of a baseline vs. proposed hardware organization",
+      "stacked overlapping rectangles to imply repetition of identical clusters across a chip"
+    ],
+    "weaknesses": [
+      "the PDF-extracted caption text is garbled ('overview of a today s gpu architecture with tightly coupled integration of ten...'), so it does not clearly describe panel (b)"
+    ]
+  },
+  "tags": [
+    "gpu-architecture",
+    "tensor-core",
+    "matrix-unit",
+    "disaggregation",
+    "shared-memory",
+    "comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "2.1 GPU Cluster Microarchitecture (p.2)",
+      "2.2 State-of-the-art Tensor Core Integration (p.2)"
+    ],
+    "evidence": [
+      "we propose Virgo, a novel GPU architecture that integrates dedicated matrix units at the cluster level",
+      "Figure 1(a) shows the modern GPU microarchitecture, featuring multiple clusters of SIMT cores connected to a shared last-level cache.",
+      "Tensor Cores receive matrix operands directly through the register file of the SIMT core"
+    ]
+  },
+  "summary": "Figure 1 contrasts today's GPU cluster microarchitecture (a) with Virgo's proposed cluster (b). In (a), each SIMT core bundles a warp scheduler, register file, L1 cache, FPU/ALU units, and a tightly-coupled Tensor Core that receives matrix operands through the register file via the standard instruction datapath; several such cores share a cluster-level Shared Memory scratchpad, which connects to a Shared LLC. In (b), Virgo removes the Tensor Core from each SIMT core (leaving only Lanes) and instead places one disaggregated Matrix Unit, containing an Accumulator Memory and a PE Array, at the cluster level, wired with orange double-headed arrows directly to Shared Memory alongside Matrix Data. Both panels stack overlapping cluster rectangles to imply repetition across a chip, and the same Shared LLC box anchors both designs at the bottom.",
+  "summary_zh": "图1对比今日GPU集群与Virgo集群:(a)中每个SIMT核心内置紧耦合的Tensor Core,经寄存器文件与共享内存交互;(b)中Virgo将矩阵单元(含累加器内存和PE阵列)从核心中剥离,置于集群级并直接连接共享内存。",
+  "confidence": "medium",
+  "notes": "Body text explains panel (a) and Virgo's general disaggregation idea well, but does not explicitly name panel (b)'s 'Accumulator Memory' or 'PE Array' labels; those are read from the image itself.",
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,55 @@
+{
+  "id": "asplos25-142_fig6",
+  "kind": "mechanism",
+  "paper_id": "asplos25-142",
+  "fig": "6",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 6. An illustrative optimized e-graph of a query for the advanced RAG-based document QA with a refine synthesis mode. (PD: partial decoding; annotated computed prompt part for Partial/Full Prefilling; primitive metadata omitted; block length not indicative of execution time.)",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "how Teola's graph optimizer parallelizes and pipelines a RAG query's primitive-level dataflow graph across four numbered optimization passes",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "badge",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 3.75,
+  "n_elements": 17,
+  "n_relations": 10,
+  "n_panels": 0,
+  "n_steps": 4,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-142/asplos25-142_fig6_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-142/asplos25-142_fig6_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "One primitive-level dataflow graph, colour-coded by operation type, gets a second independent overlay — dashed purple boxes labelled Pass N — marking exactly which subgraph each optimizer rewrite touched.",
+      "what_to_learn": "Keep one fixed colour per primitive type across the graph, overlay a second layer of dashed pass-labelled boxes to narrate which rewrite touched which subgraph — but repeating the same Pass-3 label three times leaves 'why the same pass' unanswered.",
+      "note_source": "agent"
+    }
+  ]
+}

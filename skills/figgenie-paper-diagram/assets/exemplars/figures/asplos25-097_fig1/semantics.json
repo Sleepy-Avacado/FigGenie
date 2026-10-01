@@ -1,0 +1,177 @@
+{
+  "paper_id": "asplos25-097",
+  "fig": "1",
+  "system": {
+    "name": "tnic",
+    "one_liner": "a trusted NIC architecture providing a minimal, formally verified silicon root-of-trust for building trustworthy distributed systems",
+    "domain": [
+      "networking",
+      "security"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Application code",
+        "role": "user application running on the host that uses tnic's APIs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "User-space buffers",
+        "role": "application-level buffers used by the network library",
+        "container": "TNIC (sw) programming API",
+        "novel": true
+      },
+      {
+        "name": "Network library",
+        "role": "exposes tnic's programming APIs to applications",
+        "container": "TNIC (sw) programming API",
+        "novel": true
+      },
+      {
+        "name": "RDMA OS abstractions",
+        "role": "user-space library implementing the software RDMA protocol, intermediating between the application and tnic hardware",
+        "container": "TNIC (sw) network stack",
+        "novel": true
+      },
+      {
+        "name": "Mapped memory",
+        "role": "memory region mapped for driver/hardware interaction",
+        "container": "TNIC (sw) network stack",
+        "novel": true
+      },
+      {
+        "name": "Security module",
+        "role": "hardware component implementing trusted network operations",
+        "container": "TNIC (hw) architecture",
+        "novel": true
+      },
+      {
+        "name": "Attestation kernel",
+        "role": "generates and verifies message attestations for non-equivocation and transferable authentication",
+        "container": "Security module",
+        "novel": true
+      },
+      {
+        "name": "RDMA network stack",
+        "role": "hardware implementation of the IB/RDMA protocol on the SmartNIC",
+        "container": "TNIC (hw) architecture",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application code",
+        "to": "TNIC (sw) programming API",
+        "what": "calls into tnic's programming APIs via the TNIC API interface",
+        "step": null
+      },
+      {
+        "from": "TNIC (sw) programming API",
+        "to": "TNIC (sw) network stack",
+        "what": "device access interface down to the network stack",
+        "step": null
+      },
+      {
+        "from": "TNIC (sw) network stack",
+        "to": "TNIC (hw) architecture",
+        "what": "software network stack drives the tnic hardware",
+        "step": null
+      },
+      {
+        "from": "Security module",
+        "to": "RDMA network stack",
+        "what": "data and control path between attestation and the RDMA protocol kernel",
+        "step": null
+      },
+      {
+        "from": "TNIC (hw) architecture",
+        "to": "Network",
+        "what": "trusted network operations sent over the untrusted network",
+        "step": null
+      }
+    ],
+    "key_idea": "tnic layers a trusted-network-operations hardware architecture (green) under a software network stack (orange) and a programming-API library (blue), giving applications a verifiable root-of-trust for RDMA networking.",
+    "reading_order": "Top-down through three horizontal layers separated by dashed interface lines: Application code, TNIC software programming API (blue), TNIC software network stack (orange), TNIC hardware architecture (green), down to the network."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.0,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "TNIC (hw) architecture layer fill"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "TNIC (sw) network stack layer fill"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "TNIC (sw) programming API / network library layer fill"
+      },
+      {
+        "hex": "#cccc00",
+        "used_for": "olive-yellow border/accent, consistent with the paper's 'yellow box' network-stack label"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "Application code and general sub-box background"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt solid borders on the three layer boxes; thin dashed horizontal lines label the interface boundaries between layers",
+    "font": "Arial sans, small ~3.5-5.5pt, bold for layer titles",
+    "corners": "square",
+    "arrows": "orthogonal arrows with filled heads; solid = data path, dashed = control path per the bottom legend",
+    "icons": "none; labels only, no pictorial icons"
+  },
+  "encoding": {
+    "color_means": "green = tnic hardware architecture layer, orange/yellow = tnic software network stack layer, blue = tnic software programming API/library layer",
+    "line_style_means": "solid arrows are data path, dashed arrows are control path, per the bottom legend",
+    "emphasis": "Each of the three layers is boxed in its own accent color and explicitly named 'TNIC (hw/sw) ...', mapping tnic's three-layer contribution directly onto the standard application-to-network software/hardware stack",
+    "reusable_patterns": [
+      "three-layer colored stack (hardware/stack/library) with dashed interface-boundary labels",
+      "bottom legend distinguishing data-path vs. control-path line styles"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "trusted execution",
+    "NIC",
+    "RDMA",
+    "SmartNIC",
+    "root of trust",
+    "networking",
+    "attestation"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.3)"
+    ],
+    "evidence": [
+      "tnic is comprised of three layers (shown in Figure 1)",
+      "the tnic hardware architecture (green box) that implements trusted network operations",
+      "the tnic network library (blue box) that exposes tnic's programming APIs"
+    ]
+  },
+  "summary": "tnic is a trusted NIC architecture that builds a minimal, formally verified silicon root-of-trust at the network interface to support trustworthy distributed systems in untrusted cloud environments. This system-overview figure stacks tnic's three layers top-down: application code calls into a blue TNIC (sw) programming API layer (user-space buffers plus a network library) that exposes tnic's programming APIs; below it, an orange TNIC (sw) network stack layer (RDMA OS abstractions and mapped memory) intermediates between the application and the hardware; at the bottom, a green TNIC (hw) architecture layer implements trusted network operations on a SmartNIC through a Security module (with an attestation kernel) and an RDMA network stack, before data reaches the network. Dashed labels mark the interface boundaries between layers (TNIC API, device access interface, TNIC hardware), and a legend distinguishes solid data-path arrows from dashed control-path arrows.",
+  "summary_zh": "该图示tnic三层架构：蓝色API层（用户缓冲区、网络库）供应用调用；橙色网络栈层（RDMA OS抽象、映射内存）承上启下；绿色硬件层含安全模块与RDMA网络栈，实线数据路径，虚线控制路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

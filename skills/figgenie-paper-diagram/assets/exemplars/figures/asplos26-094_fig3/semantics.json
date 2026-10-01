@@ -1,0 +1,310 @@
+{
+  "paper_id": "asplos26-094",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "Mugi",
+    "one_liner": "a value-level-parallelism (VLP) accelerator that replaces multipliers and lookup tables with temporal spike-coded comparators and shared accumulators/LUT rows for efficient LLM inference",
+    "domain": [
+      "ml-systems",
+      "hardware-accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how a floating-point LUT lookup for exp() is split into row (mantissa) and element (exponent) temporal subscriptions",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "LUT",
+        "kind": "box",
+        "role": "lookup table storing precomputed exp() values, addressed to retrieve a value or a row of values",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Addr",
+        "kind": "port",
+        "role": "the address fed into the LUT to select an entry or row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Val",
+        "kind": "label",
+        "role": "the LUT's output: a single value in the naive scheme, or a row of values in the split scheme",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "LUT row",
+        "kind": "row",
+        "role": "a row of consecutive exp() values fetched together for one shared sign-mantissa address (S-M)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "i: S-M",
+        "kind": "port",
+        "role": "the sign+mantissa fields of the floating-point input, used to address which LUT row to fetch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "i: E",
+        "kind": "port",
+        "role": "the exponent field of the floating-point input, used to select one element within the fetched row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "TC",
+        "kind": "box",
+        "role": "Temporal Converter that emits a spike to subscribe to either the LUT row (mantissa TC) or one row element (exponent TC)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "exp",
+        "kind": "box",
+        "role": "the final selected output value exp(S-M-E) captured for one input",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Cycle",
+        "kind": "label",
+        "role": "the clock-cycle axis along which LUT rows become available and subscriptions fire",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Addr",
+        "to": "LUT",
+        "what": "an address selects an entry (naive scheme) or a row (split scheme) from the LUT",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "LUT",
+        "to": "Val",
+        "what": "the LUT outputs the addressed value or row",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "i: S-M",
+        "to": "TC",
+        "what": "the mantissa/sign field drives a TC that subscribes to the matching LUT row",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "TC",
+        "to": "LUT row",
+        "what": "the mantissa TC's spike selects/captures the row of values matching S-M",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "i: E",
+        "to": "exp",
+        "what": "a second TC keyed on the exponent field subscribes to one element of the LUT row",
+        "kind": "control",
+        "step": "4"
+      },
+      {
+        "from": "LUT row",
+        "to": "exp",
+        "what": "the exponent subscription selects one element of the row as the final exp(S-M-E) output",
+        "kind": "data",
+        "step": "4"
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) naive LUT",
+        "axis": "time",
+        "differs": "baseline: one address i directly indexes one LUT entry, returning exp(i) in one step",
+        "verdict": null
+      },
+      {
+        "label": "(b) sequential bottleneck",
+        "axis": "time",
+        "differs": "the naive LUT can serve only one input per access; concurrent lookups for i[1], i[k] are blocked (red X)",
+        "verdict": "limitation"
+      },
+      {
+        "label": "(c) two-step split",
+        "axis": "time",
+        "differs": "splits the lookup into fetching a row of consecutive values first, then selecting one value from that row",
+        "verdict": null
+      },
+      {
+        "label": "(d) floating-point row addressing",
+        "axis": "time",
+        "differs": "applies the two-step split to a floating-point input: sign-mantissa (S-M) addresses a row of the LUT laid out as exp(S-M-E)",
+        "verdict": null
+      },
+      {
+        "label": "(e) row element selection",
+        "axis": "time",
+        "differs": "the exponent field E then selects the final value from the already-fetched LUT row",
+        "verdict": null
+      },
+      {
+        "label": "(f) single-input VLP",
+        "axis": "time",
+        "differs": "implements the split with TCs: numbered phases 1-4 (field split, value reuse, mantissa subscription, exponent subscription) for one input",
+        "verdict": null
+      },
+      {
+        "label": "(g) single-input timing",
+        "axis": "time",
+        "differs": "cycle-by-cycle timeline for (f): which LUT row is active each cycle and when the mantissa/exponent subscriptions fire for i:E=2",
+        "verdict": null
+      },
+      {
+        "label": "(h) multi-input VLP",
+        "axis": "time",
+        "differs": "replicates (f) across parallel inputs i[0], i[1], i[k], reusing one LUT row's values across inputs that share the same S-M",
+        "verdict": "full mechanism"
+      },
+      {
+        "label": "(i) multi-input timing",
+        "axis": "time",
+        "differs": "cycle-by-cycle timeline for (h): three lanes subscribe to their own (sometimes shared) LUT rows at their own cycles",
+        "verdict": null
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "S-M / E split",
+        "what": "input field split: the floating-point input i is split into its sign-mantissa (S-M) and exponent (E) fields",
+        "carries": "i: S-M, i: E"
+      },
+      {
+        "marker": "2",
+        "at": "LUT",
+        "what": "value reuse: the LUT's row output is shared by every input that needs that same row",
+        "carries": "LUT row (Val)"
+      },
+      {
+        "marker": "3",
+        "at": "TC (mantissa)",
+        "what": "mantissa temporal subscription: a TC keyed on S-M emits a spike that selects/fetches the correct row from the LUT output stream",
+        "carries": "S-M spike"
+      },
+      {
+        "marker": "4",
+        "at": "TC (exponent)",
+        "what": "exponent temporal subscription: a second TC keyed on E emits a spike that selects the one element within the fetched row",
+        "carries": "E spike, exp(S-M-E)"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "concrete S-M-E addresses and their exp() outputs (i=2 -> exp(2); S-M=0-3,E=2 -> exp(0-3-2); S-M=0-1,E=1 -> exp(0-1-1)) used throughout to ground the addressing scheme",
+      "linked_by": "colour: red marks the S-M=0-3 row and its values, blue marks the S-M=0-1 row, consistent from the LUT row through the cycle timeline to the final exp output",
+      "result_cells": "each result is a small hexagon labelled with its S-M-E address next to a boxed 'exp(...)' value"
+    },
+    "key_idea": "Computing exp() from a LUT is split into two temporal subscriptions: the mantissa selects which row of consecutive values to fetch (shared across inputs needing that row), and the exponent then picks the value from that row.",
+    "reading_order": "Left column (a)-(e) build the row-then-element LUT split conceptually; right column (f)-(i) realize it with TCs, alternating a circuit panel with its cycle-timing diagram, single-input then multi-input."
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 9,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": true,
+    "panels": 8,
+    "column": "double",
+    "aspect": 1.9,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cc2d1d",
+        "used_for": "the S-M=0-3 example row/lane: its highlighted LUT-row label, hexagons and captured value text"
+      },
+      {
+        "hex": "#fcc73c",
+        "used_for": "fill of the LUT-row element hexagons/cells"
+      },
+      {
+        "hex": "#8ecae6",
+        "used_for": "the second example row/lane, S-M=0-1, kept visually distinct from the red S-M=0-3 lane"
+      },
+      {
+        "hex": "#ef553b",
+        "used_for": "the TC spike-pulse waveforms"
+      },
+      {
+        "hex": "#f1f1f1",
+        "used_for": "light-grey background shading grouping a sub-circuit (e.g. the boxed region around panels f and h)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed diagonal lines link a circuit panel to its cycle-timing diagram; dashed vertical gridlines mark clock-cycle boundaries; solid black outlines elsewhere",
+    "font": "sans-serif (GillSans / GillSans-Bold), uniform ~8pt",
+    "corners": "rounded",
+    "arrows": "no arrowheads; plain wires, waveform traces and dashed callout lines imply direction by position",
+    "icons": "hexagon value markers and a red X for a blocked access; no pictorial icons"
+  },
+  "encoding": {
+    "color_means": "red marks the S-M=0-3 address/row and its values throughout; blue marks a second example row S-M=0-1; yellow marks fetched LUT-row element cells; light grey boxes just group a sub-circuit visually",
+    "line_style_means": "dashed diagonal lines are zoom-callouts linking a circuit panel to its cycle-timing diagram; dashed vertical gridlines mark clock-cycle boundaries; solid lines are wires/waveforms",
+    "state_means": "panels (a)-(e) are successive redesigns of the LUT addressing scheme, not one instance changing state; panels (f)-(i) then realize the final scheme in circuit form, single-input then multi-input, each paired with its own cycle-accurate timing diagram",
+    "marker_means": "circled 1-4 in (f) and (h) order the four VLP phases (field split, value reuse, mantissa subscription, exponent subscription); letters (a)-(i) order the construction stages; a red X marks a blocked concurrent access",
+    "emphasis": "the red S-M=0-3 example address is carried in colour from the naive-LUT panels through the split scheme to the final circuit and its timing diagram, so the reader can verify the optimized pipeline still computes the same exp(0-3-2) as the naive lookup",
+    "reusable_patterns": [
+      "building a two-step (row, then element) addressing scheme across several small panels before showing the circuit that implements it",
+      "pairing a circuit/dataflow panel with an adjacent cycle-by-cycle timing diagram, linked by dashed zoom-callout lines",
+      "colour-coded rows/lanes so a shared resource (one LUT row) can be traced to every input that reuses it"
+    ],
+    "weaknesses": [
+      "extremely dense (9 sub-panels, ~550 shapes) for a double-column figure; several labels are legible only at high zoom",
+      "the abstract (a)-(e) LUT-splitting scheme is not connected to the concrete TC circuit in (f)/(h) by explicit arrows, only by shared S-M-E notation"
+    ]
+  },
+  "tags": [
+    "value-level-parallelism",
+    "lookup-table",
+    "nonlinear-approximation",
+    "temporal-coding",
+    "exponential-function",
+    "pipelined-lut",
+    "llm-inference-hardware"
+  ],
+  "provenance": {
+    "sections": [
+      "3 VLP Nonlinear Approximation (p.4)"
+    ],
+    "evidence": [
+      "such a conventional LUT can only sequentially process different inputs, limiting the scalability",
+      "First, a row of exp values with consecutive input values are retrieved from the LUT",
+      "denotes four phases, i.e., input field split, value reuse, mantissa temporal subscription, and exponent temporal subscription"
+    ]
+  },
+  "summary": "Figure 3 develops VLP's approximation of a nonlinear function (exp) from a plain lookup table into a pipelined temporal circuit. (a)-(b) show a conventional LUT: one address returns one value, and it can serve only one input at a time. (c)-(e) redesign the addressing as two steps: first fetch a row of consecutive values, then select one; applied to a floating-point input split into sign-mantissa (S-M, addresses the row) and exponent (E, picks the element), this yields exp(S-M-E). (f) implements this for one input with four numbered phases: split the input into S-M/E, reuse the LUT's row output, subscribe to the row via a mantissa-keyed spike, then subscribe to one element via an exponent-keyed spike; (g) shows the matching cycle-by-cycle timing. (h)-(i) replicate the same circuit and timing across parallel inputs, sharing one fetched row whenever inputs share the same S-M.",
+  "summary_zh": "图3将exp()查表逐步优化为流水线电路：朴素LUT一次仅服一个输入；改为先取一行再选元素的两步寻址，行由尾数定位、指数选元素；单输入VLP按拆分、复用、尾数订阅、指数订阅四阶段实现，并给出周期时序；再复制到多路输入，共享同一行。",
+  "confidence": "medium",
+  "notes": "Corrected worked_example from prior False to True (concrete S-M-E addresses and exp values are reused throughout as the running illustration, as in Figure 2's marker). Corrected base from prior 'circuit' (not in this schema's enum) to 'mixed' (LUT tables + circuit blocks + cycle timelines). Confidence set to medium because panels (g) and (i), the cycle-by-cycle timing diagrams, are not walked through in the paper text (only the caption's phase list and paragraph on (a)-(f) are); their exact pipeline-latency semantics (why hexagons appear to shift cycles between the LUT-row track and the per-lane tracks) are inferred from the visual layout, not confirmed by prose.",
+  "venue": "ASPLOS26"
+}

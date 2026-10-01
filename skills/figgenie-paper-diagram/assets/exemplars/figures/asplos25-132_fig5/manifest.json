@@ -1,0 +1,47 @@
+{
+  "id": "asplos25-132_fig5",
+  "paper_id": "asplos25-132",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. PICACHU CGRA integrate with the systolic array.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 2.52,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-132/asplos25-132_fig5_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-132/asplos25-132_fig5_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar with a genuine 2-by-3 grid, two cases against three rounds, tracing coloured numbered arrows through identically laid-out cells, with a legend below defining buffer-segment and arrow colours.",
+      "what_to_learn": "Build the grid so every cell keeps the identical buffer sketch and only the highlighted arrow colour and an enable/disable label change between cells, and put the one legend below the whole grid rather than repeating it per cell; six dense cells plus a separate schematic is already a lot, so keep individual cells sparse."
+    },
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated round-by-round grid: Round 1-3 columns cross Case 1/Case 2 lanes, each cell showing the same four colored buffer segments so xbar-routed element-wise ops (Case 1) visibly contrast with DMA-buffered reduction ops (Case 2).",
+      "what_to_learn": "When two execution modes need comparing across the same repeating rounds, draw a small Round-by-Round-times-Case grid instead of one long timeline, keep the same colored segments in every cell so the eye tracks what changes, and reuse one arrow color per data item (Block-1/2/3) to trace it across rounds."
+    }
+  ]
+}

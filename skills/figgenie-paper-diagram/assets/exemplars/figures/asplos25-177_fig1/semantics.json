@@ -1,0 +1,182 @@
+{
+  "paper_id": "asplos25-177",
+  "fig": "1",
+  "system": {
+    "name": "PUSHtap",
+    "one_liner": "a PIM-based in-memory HTAP system that unifies OLTP row access and OLAP column access via interleaved CPU/PIM data placement",
+    "domain": [
+      "databases",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "OLTP Engine",
+        "role": "processes row-wise transactions on the database",
+        "container": "HTAP system",
+        "novel": false
+      },
+      {
+        "name": "OLAP Engine",
+        "role": "processes column-wise analytical queries on the database",
+        "container": "HTAP system",
+        "novel": false
+      },
+      {
+        "name": "Database",
+        "role": "table of rows R0-R3 and columns C0-C3 accessed by both engines",
+        "container": "HTAP system",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "interleaves data access across memory devices along the ADE dimension",
+        "container": "DRAM-based PIM architecture",
+        "novel": false
+      },
+      {
+        "name": "DRAM Bank",
+        "role": "memory bank holding data addressed across devices D0-D3",
+        "container": "DRAM-based PIM architecture",
+        "novel": false
+      },
+      {
+        "name": "PIM0",
+        "role": "processing-in-memory unit with localized access to device D0",
+        "container": "DRAM-based PIM architecture",
+        "novel": false
+      },
+      {
+        "name": "PIM1",
+        "role": "processing-in-memory unit with localized access to device D1",
+        "container": "DRAM-based PIM architecture",
+        "novel": false
+      },
+      {
+        "name": "PIM2",
+        "role": "processing-in-memory unit with localized access to device D2",
+        "container": "DRAM-based PIM architecture",
+        "novel": false
+      },
+      {
+        "name": "PIM3",
+        "role": "processing-in-memory unit with localized access to device D3",
+        "container": "DRAM-based PIM architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Database",
+        "to": "OLTP Engine",
+        "what": "row R0",
+        "step": null
+      },
+      {
+        "from": "Database",
+        "to": "OLAP Engine",
+        "what": "column C0",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "DRAM Bank",
+        "what": "interleaved access across the ADE dimension (devices D0-D3)",
+        "step": null
+      },
+      {
+        "from": "PIM0",
+        "to": "DRAM Bank",
+        "what": "localized IDE-dimension access within device D0",
+        "step": null
+      }
+    ],
+    "key_idea": "OLTP/OLAP engines naturally access rows/columns respectively, and this mirrors the two physical access dimensions of DRAM-based PIM: CPU interleaving (ADE) and localized PIM access (IDE).",
+    "reading_order": "Left panel (a) top-down: OLTP Engine, Database table, OLAP Engine; right panel (b) top-down: CPU, DRAM Bank grid with device columns, PIM units below."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.98,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dbeef3",
+        "used_for": "fill of the OLTP Engine and OLAP Engine boxes (blue-tinted)"
+      },
+      {
+        "hex": "#ebf1df",
+        "used_for": "fill of the CPU box and PIM unit boxes (green-tinted)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "background fill of the Database and DRAM Bank tables"
+      },
+      {
+        "hex": "#d8d8d8",
+        "used_for": "table cell borders and grid lines"
+      },
+      {
+        "hex": "#789440",
+        "used_for": "green highlighted row/column labels (R0, C0) and IDE dimension arrow"
+      },
+      {
+        "hex": "#31859b",
+        "used_for": "blue accent text such as the R0/C0 callout labels"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray table borders, black rounded-rectangle outlines around engine and CPU/PIM boxes",
+    "font": "Arial-based sans, 5-9pt",
+    "corners": "square",
+    "arrows": "thin straight connector lines, no arrowheads shown in the histogram",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue-tinted boxes = OLTP/OLAP engines, green-tinted boxes = CPU and PIM units, gray table cells = raw row/column data addresses",
+    "line_style_means": "green underline/text highlights the specific row (R0) or column (C0) each engine accesses; ADE/IDE dimension labels annotate the DRAM Bank grid axes",
+    "emphasis": "juxtaposes the software-level row/column split (a) directly against the hardware-level ADE/IDE access dimensions (b) to motivate the paper's core insight",
+    "reusable_patterns": [
+      "side-by-side software/hardware analogy panels",
+      "annotated grid with two labeled access dimensions"
+    ],
+    "weaknesses": [
+      "motivational figure has no numbered flow, so the connection between panels relies on reader inference from captions"
+    ]
+  },
+  "tags": [
+    "HTAP",
+    "processing-in-memory",
+    "DRAM",
+    "OLTP",
+    "OLAP",
+    "memory-interleaving"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)"
+    ],
+    "evidence": [
+      "the OLTP engine processes transactions, which are single-record operations on rows",
+      "in Figure 1 (b), PIM 0 can directly access data 0x00,04,08,0C in the device D0",
+      "Figure 1 (b) presents a memory space interleaved to four devices"
+    ]
+  },
+  "summary": "This figure motivates PUSHtap, a PIM-based in-memory HTAP database, by drawing a parallel between software workload access patterns and hardware memory access dimensions. Panel (a) shows a generic HTAP system where an OLTP engine reads/writes rows (e.g. R0) and an OLAP engine scans columns (e.g. C0) of a shared Database table. Panel (b) shows the corresponding DRAM-based PIM hardware: the CPU accesses data by interleaving across memory devices D0-D3 (the ADE dimension), while each PIM unit (PIM0-PIM3) accesses data locally within its own device (the IDE dimension). The two panels are drawn as simple boxes and a labeled grid table in a flat, pastel blue/green palette typical of a PowerPoint/Visio diagram, with green highlights picking out the example row and column. The figure sets up the paper's key insight that row-store maps naturally to CPU/ADE access and column-store to PIM/IDE access.",
+  "summary_zh": "该图展示 PUSHtap 的动机：(a) HTAP 系统中 OLTP 引擎按行访问、OLAP 引擎按列访问数据库；(b) 对应地，基于 DRAM 的 PIM 架构中 CPU 沿 ADE 维度跨设备交织访问，而 PIM 单元沿 IDE 维度在本地设备内访问，软硬件两个维度形成类比。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

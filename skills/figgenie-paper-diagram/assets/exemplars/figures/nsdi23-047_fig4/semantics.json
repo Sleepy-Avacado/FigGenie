@@ -1,0 +1,179 @@
+{
+  "paper_id": "nsdi23-047",
+  "fig": "4",
+  "system": {
+    "name": "BGL",
+    "one_liner": "a GPU-efficient GNN training system that optimizes graph data I/O and preprocessing",
+    "domain": [
+      "ml-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Distributed Graph Data Files",
+        "role": "input graph data stored in a distributed storage system (e.g. HDFS)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Graph Partition Module",
+        "role": "loads the graph data and shards the whole graph into partitions, a one-time cost reusable across training jobs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Graph Store Server",
+        "role": "holds a graph partition in memory, ready for subgraph sampling",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Sampler",
+        "role": "samples subgraphs from the graph store, including cross-partition sampling",
+        "container": "Graph Store Server",
+        "novel": true
+      },
+      {
+        "name": "Worker Machine",
+        "role": "hosts the CPU and GPUs that run GNN training on sampled subgraphs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Feature Cache Engine",
+        "role": "caches node features on CPU and GPU to reduce remote feature retrieval",
+        "container": "Worker Machine",
+        "novel": true
+      },
+      {
+        "name": "Worker",
+        "role": "GPU process that trains on sampled subgraphs",
+        "container": "Worker Machine",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Distributed Graph Data Files",
+        "to": "Graph Partition Module",
+        "what": "raw graph data",
+        "step": null
+      },
+      {
+        "from": "Graph Partition Module",
+        "to": "Graph Store Server",
+        "what": "graph partition",
+        "step": null
+      },
+      {
+        "from": "Graph Store Server",
+        "to": "Graph Store Server",
+        "what": "cross-partition communication between samplers",
+        "step": null
+      },
+      {
+        "from": "Graph Store Server",
+        "to": "Worker Machine",
+        "what": "sampled subgraphs and remote features",
+        "step": null
+      },
+      {
+        "from": "Worker Machine",
+        "to": "Worker Machine",
+        "what": "parameter synchronization",
+        "step": null
+      },
+      {
+        "from": "Feature Cache Engine",
+        "to": "Worker",
+        "what": "cached node features via NVLink/PCIe",
+        "step": null
+      }
+    ],
+    "key_idea": "BGL partitions the graph once and serves it from replicated graph store servers with local and cross-partition subgraph sampling, feeding sampled subgraphs to worker machines whose multi-GPU plus CPU feature cache engine minimizes redundant remote feature fetches during GNN training.",
+    "reading_order": "top-down: distributed graph data files feed the Graph Partition Module, which distributes partitions to two Graph Store Servers (with samplers and cross-partition links), which in turn feed two symmetric Worker Machines below, each containing a CPU-based Feature Cache Engine and multiple GPU workers linked by NVLink."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.05,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e1d5e7",
+        "used_for": "Graph Partition Module bar fill (lavender)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "worker/GPU box fill and data-file icon fill (light blue)"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "Graph Store Server / Sampler box fill (light green)"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "Feature Cache Engine box fill (pink)"
+      },
+      {
+        "hex": "#60a917",
+        "used_for": "green icon accents (e.g. remote feature markers)"
+      },
+      {
+        "hex": "#9673a6",
+        "used_for": "purple stroke on parameter-synchronization and cross-partition arrows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on boxes, colored strokes on arrows matching their function",
+    "font": "Arial sans, 4-7.5pt, bold for group titles",
+    "corners": "rounded",
+    "arrows": "orthogonal arrows with filled heads, colored by function (purple partition/parameter-sync, gray dashed cross-partition, black data flow)",
+    "icons": "vector: stacked-cylinder icons for distributed data files, small graph/network icon for sampled subgraphs, small green square icon for remote features"
+  },
+  "encoding": {
+    "color_means": "lavender = graph partition module, light green = graph store/sampler components, pink/salmon = feature cache engine, light blue = worker/GPU boxes and data-file icons",
+    "line_style_means": "purple arrows denote partitioning and parameter-synchronization control flow; gray/black arrows crossing between the two graph store servers denote cross-partition sampler communication",
+    "emphasis": "the fully symmetric two-server, two-worker-machine layout visually emphasizes BGL's distributed, replicated design with explicit cross-partition and cross-GPU communication links",
+    "reusable_patterns": [
+      "mirrored left/right symmetric sub-diagrams to represent replicated distributed nodes",
+      "layered top-down architecture: storage -> partitioning -> store servers -> compute workers"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "GNN-training",
+    "graph-partitioning",
+    "subgraph-sampling",
+    "feature-cache",
+    "distributed-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.5)"
+    ],
+    "evidence": [
+      "The overall architecture of BGL is shown in Figure 4",
+      "The graph par- tition module loads the graph data stored in the distributed storage system (e.g., HDFS), and shards the whole graph into several partitions",
+      "each partition is loaded into a graph store server's memory, ready for subgraph sampling"
+    ]
+  },
+  "summary": "This figure shows BGL's overall architecture in four layers. At the top, Distributed Graph Data Files feed the Graph Partition Module, which shards the graph once and distributes partitions to two symmetric Graph Store Servers below, each holding a Graph Store and multiple Samplers that also communicate cross-partition with the other server. The graph store servers feed sampled subgraphs and remote features down to two symmetric Worker Machines, each containing a CPU-side Feature Cache Engine and multiple GPU Workers linked by NVLink, with parameter synchronization occurring between the two worker machines. The mirrored, layered layout emphasizes BGL's replicated, distributed design for scaling graph storage, sampling, and GPU-efficient training together.",
+  "summary_zh": "该图展示BGL整体架构：分布式图数据经图分区模块分片后送至两台对称的图存储服务器（含采样器与跨分区通信），再向下送入两台工作机，每台工作机含CPU特征缓存引擎与通过NVLink互联的多GPU工作进程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

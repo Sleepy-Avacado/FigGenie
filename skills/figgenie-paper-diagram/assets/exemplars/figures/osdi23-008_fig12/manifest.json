@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-008_fig12",
+  "paper_id": "osdi23-008",
+  "fig": "12",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 12: Left: Microservices architecture of the hotel reservation benchmark [22]. Blue boxes are business logic, red boxes are caching services, yellow boxes are databases and purple boxes are networking services. Center: Results for the microservices experiment comparing four methods on P99 late",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 4.64,
+  "n_components": 21,
+  "n_flows": 16,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-008/osdi23-008_fig12_p15_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-008/osdi23-008_fig12_p15_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Named in the reference as the architecture-beside-two-result-plots exemplar: the dominant microservice graph sits beside a raw P99 scatter and its smoothed average, using two unrelated colour codes, role at left, method identity at right.",
+      "what_to_learn": "Give the dominant architecture panel over half the figure's area and let the two result plots (raw and smoothed) sit as clearly smaller subordinate panels; keep separate colour codes for structural role versus method identity fully apart, since sharing one figure without a divider (a listed weakness) risks a reader reading the wrong key."
+    }
+  ]
+}

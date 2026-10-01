@@ -1,0 +1,312 @@
+{
+  "paper_id": "nsdi25-064",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "OptiReduce",
+    "one_liner": "a resilient, tail-optimal AllReduce for distributed deep learning in the cloud, combining a peer-to-peer colocated parameter-server design with an unreliable bounded transport and Hadamard-transformed gradient sharding",
+    "domain": [
+      "distributed-training",
+      "networking",
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one component",
+    "subject": "how Transpose AllReduce, Unreliable Bounded Transport and Hadamard Transform combine in one node's gradient-sharding pipeline",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "PS0/W0",
+        "kind": "node",
+        "role": "one of four colocated parameter-server + worker nodes in the peer-to-peer AllReduce fabric",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PS1/W1",
+        "kind": "node",
+        "role": "a second colocated PS/worker node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PS2/W2",
+        "kind": "node",
+        "role": "a third colocated PS/worker node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PS3/W3",
+        "kind": "node",
+        "role": "a fourth colocated PS/worker node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Transpose AllReduce",
+        "kind": "label",
+        "role": "names the peer-to-peer collective-communication fabric connecting all PS/worker nodes",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Unreliable Bounded Transport",
+        "kind": "label",
+        "role": "names the best-effort, time-bounded transport connecting the nodes",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Input Bucket",
+        "kind": "row",
+        "role": "the initial gradient bucket ΔB entering one node's pipeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Hadamard Encode",
+        "kind": "row",
+        "role": "applies the Hadamard Transform to disperse the effect of any dropped gradient, producing ΔB'",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Create Shards",
+        "kind": "row",
+        "role": "splits the encoded bucket into per-node shards S3[0-3]",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Rotate Shard Resp.",
+        "kind": "row",
+        "role": "advances the global index r so shard-aggregation responsibility rotates among nodes each round",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Send / Receive",
+        "kind": "row",
+        "role": "shards are exchanged with neighboring nodes, bounded by the adaptive timeout",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Aggregate",
+        "kind": "row",
+        "role": "the node sums the shards it is responsible for into Sr",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bcast / Receive",
+        "kind": "row",
+        "role": "the aggregated shard Sr is broadcast to, and received from, all other nodes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Concat Shards",
+        "kind": "row",
+        "role": "the received aggregated shards are concatenated back into one bucket",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Hadamard Decode",
+        "kind": "row",
+        "role": "inverts the Hadamard Transform to recover the true gradient values",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Output Bucket",
+        "kind": "row",
+        "role": "the final aggregated gradient bucket B returned to the worker",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Adaptive Timeout",
+        "kind": "label",
+        "role": "bounds how long Send/Receive, Aggregate and Bcast/Receive wait for peers before proceeding",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Transpose AllReduce",
+        "to": "Input Bucket",
+        "what": "one ring node's internal pipeline is zoomed into below the topology",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "Input Bucket",
+        "to": "Hadamard Encode",
+        "what": "ΔB is encoded",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Hadamard Encode",
+        "to": "Create Shards",
+        "what": "ΔB' is split into shards",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Create Shards",
+        "to": "Rotate Shard Resp.",
+        "what": "shard-aggregation responsibility r is advanced",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Rotate Shard Resp.",
+        "to": "Send / Receive",
+        "what": "shards are exchanged according to the current responsibility",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Send / Receive",
+        "to": "Aggregate",
+        "what": "received shards are summed",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Aggregate",
+        "to": "Bcast / Receive",
+        "what": "the aggregated shard Sr is broadcast out and others' shards received",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Bcast / Receive",
+        "to": "Concat Shards",
+        "what": "all aggregated shards are concatenated",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Concat Shards",
+        "to": "Hadamard Decode",
+        "what": "the recombined bucket is decoded",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Hadamard Decode",
+        "to": "Output Bucket",
+        "what": "produces the final gradient bucket B",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "symbolic gradient/shard notation at each pipeline stage: ΔB, ΔB', per-node shards S3[0-3], the aggregated shard Sr, and the final decoded bucket B",
+      "linked_by": "colour (alternating peach/green/yellow value boxes) and vertical position down the pipeline list",
+      "result_cells": "the Output Bucket row shows the fully decoded result B, matching the original Input Bucket's gradient labels"
+    },
+    "key_idea": "OptiReduce's Transpose AllReduce connects colocated parameter-server/worker nodes in a peer-to-peer mesh over an Unreliable Bounded Transport; zooming into one node's pipeline shows how a gradient bucket is Hadamard-encoded (to disperse the effect of any lost gradient), split into shards that rotate responsibility among nodes each round, exchanged and aggregated under an adaptive timeout, then concatenated and Hadamard-decoded back into the output bucket.",
+    "reading_order": "top: the 4-node mesh topology labelled Transpose AllReduce and Unreliable Bounded Transport; a downward arrow zooms into the pipeline below, read top to bottom from Input Bucket through Hadamard Decode to Output Bucket, with the Adaptive Timeout bracket alongside the middle three stages"
+  },
+  "layout": {
+    "arrangement": "inset",
+    "panel_count": 2,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": true,
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.89,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "pale peach fill of the Hadamard Encode/Decode value boxes"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale green fill of alternating pipeline-stage value boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill, another alternating value-box colour"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "grey fill of the mesh-topology node boxes (PS/W)"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "dark orange stroke highlighting the Hadamard rows and bold pipeline labels"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~3pt bold arrows/brackets; thin gridlines separating pipeline rows; dark-orange (~1pt) accents on the Hadamard rows",
+    "corners": "square",
+    "arrows": "bold double-headed arrows in the mesh topology; a bold downward zoom arrow and a curly 'Adaptive Timeout' bracket in the pipeline",
+    "font": "Open Sans Regular/Bold/Italic, ~3.5-9.5pt, bold for stage names, italic for symbolic values",
+    "icons": "small square icons for the PS/W nodes"
+  },
+  "encoding": {
+    "color_means": "peach = Hadamard-transformed values; green/yellow alternate to distinguish successive shard/bucket variables down the pipeline; grey = the mesh-topology node boxes",
+    "line_style_means": "solid bold arrows/brackets only; no dashed lines are used",
+    "state_means": "not a before/after comparison; the pipeline instead shows one bucket's value changing name/form (ΔB → ΔB' → shards → Sr → B) as it passes through successive operations",
+    "marker_means": "no numbered or circled markers; each row's bold operation name (Hadamard Encode, Create Shards, Aggregate, ...) marks the step, and italic symbols show the concrete value at that point",
+    "emphasis": "bracketing Send/Receive, Aggregate and Bcast/Receive together under one 'Adaptive Timeout' label calls out that these three stages, not the whole pipeline, are what the timeout bounds",
+    "reusable_patterns": [
+      "a small network topology zoomed via a downward arrow into a linear, labelled operation-by-operation pipeline with symbolic values beside each stage"
+    ],
+    "weaknesses": [
+      "packing dozens of distinct subscripted symbols into a tall, dense single-column figure makes it hard to visually trace one specific shard's identity across every row"
+    ]
+  },
+  "tags": [
+    "allreduce",
+    "distributed-training",
+    "gradient-compression",
+    "hadamard-transform",
+    "parameter-server",
+    "worked-example"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design of OPTIREDUCE (p.5)",
+      "3 Design of OPTIREDUCE (p.6)",
+      "3 Design of OPTIREDUCE (p.8)"
+    ],
+    "evidence": [
+      "each node also serves as a parameter server (PS)",
+      "spreads the effect of a dropped gradient over the entire bucket",
+      "these shards are concatenated into a bucket (B) and forwarded to the worker"
+    ]
+  },
+  "summary": "Figure 4 is OptiReduce's design overview. On top, four colocated parameter-server/worker nodes (PS0/W0 ... PS3/W3) connect in a peer-to-peer mesh, labelled Transpose AllReduce (TAR) for the collective-communication pattern and Unreliable Bounded Transport (UBT) for the best-effort, time-bounded links between them. A downward arrow zooms into one node's internal pipeline: an input gradient bucket is Hadamard-encoded to spread the effect of any later dropped value, split into per-node shards whose aggregation responsibility rotates each round via a global index, exchanged and aggregated with neighbors under an adaptive timeout (bracketing Send/Receive, Aggregate and Bcast/Receive), then concatenated and Hadamard-decoded back into the output bucket. Colour-coded, italic symbolic values (ΔB, ΔB', shards, Sr) beside each stage make this a worked example of exactly how one gradient bucket transforms as it moves through OptiReduce's TAR/UBT/HT pipeline.",
+  "summary_zh": "该图展示OptiReduce设计：PS/Worker节点经Transpose AllReduce网状互连；箭头展开单节点流水线——输入桶经Hadamard编码、分片、轮转、超时内发送聚合广播，再解码得输出桶，标注具体符号值。",
+  "confidence": "high",
+  "notes": "prior base 'data-structure' broadened to 'mixed' since the figure combines a 4-node mesh topology with a separately zoomed pipeline list. layout.zoom_callout set true and arrangement 'inset' to reflect that the pipeline is an explicit zoom-in from the topology drawn above it.",
+  "venue": "NSDI25"
+}

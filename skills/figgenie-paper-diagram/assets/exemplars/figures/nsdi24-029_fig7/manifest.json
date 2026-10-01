@@ -1,0 +1,42 @@
+{
+  "id": "nsdi24-029_fig7",
+  "paper_id": "nsdi24-029",
+  "fig": "7",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 7: Overview of Parcae’s design and implementation.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.07,
+  "n_components": 10,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-029/src/fig7_implementation2.svg",
+    "preview.png": "lab/extracted/nsdi24-029/src/fig7_implementation2.png",
+    "print.png": "lab/extracted/nsdi24-029/nsdi24-029_fig7_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Scheduler / agents / parameter-server tiers with section tags, and two-tone shading separating stable from preemptible tiers.",
+      "what_to_learn": "Tier fill can encode a property of the tier (here: preemptible vs on-demand), not just identity; tag each tier box with its section."
+    }
+  ]
+}

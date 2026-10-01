@@ -1,0 +1,56 @@
+{
+  "id": "nsdi24-068_fig5",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-068",
+  "fig": "5",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "FIGURE 5: An example of how to pick the right allocator.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "tree",
+  "subject": "how to pick a max-min fair resource allocator based on whether fairness is guaranteed and what is prioritized",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.72,
+  "n_elements": 6,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "google-slides",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-068/src/fig5_decision_tree.svg",
+    "preview.png": "lab/extracted/nsdi24-068/src/fig5_decision_tree.png",
+    "print.png": "lab/extracted/nsdi24-068/nsdi24-068_fig5_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Practitioners can pick a suitable max-min fair allocator with two questions: whether a strict fairness guarantee is required (routing to GB), and if not, which pair of properties they prioritize, each routing to a different named allocator and parameter.",
+      "what_to_learn": "Colour only the leaves; leave decision nodes unfilled; write branch conditions as full words on the edge",
+      "note_source": "doc"
+    }
+  ]
+}

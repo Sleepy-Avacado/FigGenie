@@ -1,0 +1,187 @@
+{
+  "paper_id": "osdi25-013",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Picsou",
+    "one_liner": "a communication layer that lets replicated state machines exchange application messages efficiently using cumulative acknowledgments instead of per-message ACKs",
+    "domain": [
+      "distributed-systems",
+      "replicated-state-machines"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how 4 receiver replicas' message lists and cumulative-acknowledgment counters evolve over 5 time-steps as 8 messages arrive",
+    "base": "table",
+    "elements": [
+      {
+        "name": "R21",
+        "kind": "row",
+        "role": "receiver replica 1, tracks which messages it has received and its cumulative ack count",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "R22",
+        "kind": "row",
+        "role": "receiver replica 2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "R23",
+        "kind": "row",
+        "role": "receiver replica 3",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "R24",
+        "kind": "row",
+        "role": "receiver replica 4",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "cumulative acknowledgment",
+        "kind": "cell",
+        "role": "rightmost column (green) showing each receiver's highest fully-contiguous message count received so far",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "m1",
+        "to": "R21",
+        "what": "message m1 arrives at and is listed by R21",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "R21",
+        "to": "cumulative acknowledgment",
+        "what": "the receiver's contiguous message prefix determines its reported ack count",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Time-step 1",
+        "axis": "time",
+        "differs": "all lists are empty and every cumulative ack is 0",
+        "verdict": null
+      },
+      {
+        "label": "(b) Time-step 2",
+        "axis": "time",
+        "differs": "R21 stores m1 (ack=1); R22 stores m2 and R23 stores m3, but their ack stays 0 since m1 is still missing",
+        "verdict": null
+      },
+      {
+        "label": "(c) Time-step 3",
+        "axis": "time",
+        "differs": "an internal broadcast delivers m1-m4 to every receiver, so all four cumulative acks jump to 4",
+        "verdict": null
+      },
+      {
+        "label": "(d) Time-step 4",
+        "axis": "time",
+        "differs": "R21/R22/R23 each receive one more message (m8/m5/m6) but only R22's is contiguous (m1-m5), so only its ack advances to 5",
+        "verdict": null
+      },
+      {
+        "label": "(e) Time-step 5",
+        "axis": "time",
+        "differs": "the internal broadcast disseminates all remaining messages so every receiver holds m1-m8 and every ack reaches 8",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "which of 8 messages (m1..m8) each of 4 receivers (R21-R24) has received by each time-step, and the resulting cumulative acknowledgment count",
+      "linked_by": "position, the same message label repeated in each row/time-step it has arrived, plus a dedicated count column",
+      "result_cells": "the rightmost green cell in each row states the receiver's current cumulative-acknowledgment number, which becomes the ACK value sent to the sender"
+    },
+    "key_idea": "A receiver's cumulative acknowledgment only advances when messages arrive contiguously from m1 onward, so replicas with the same total message count can still report different ack values.",
+    "reading_order": "left to right, top to bottom through panels (a) to (e); within each, down the four receiver rows to the green count column"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 5,
+    "frame_template": "identical",
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 5,
+    "column": "single",
+    "aspect": 1.17,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe699",
+        "used_for": "pale yellow fill of the message-list cells (m1..m8) in each receiver's row"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "pale green fill of the cumulative-acknowledgment count column"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.37pt black table grid lines",
+    "corners": "square",
+    "arrows": "none, the table itself carries the message-arrival information",
+    "font": "Times New Roman serif, 4.5-9pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow = a received message's row entry; green = the derived cumulative-acknowledgment count for that receiver at that time-step",
+    "line_style_means": "plain black table grid lines only; no arrows are used, since the table itself carries the message-arrival information",
+    "state_means": "the same 4-row table is redrawn once per time-step, so a receiver's state is simply how many of its yellow message cells are filled in that frame",
+    "marker_means": "no numeric markers beyond the message labels m1..m8 themselves and the letter captions (a)-(e) naming each time-step",
+    "emphasis": "the green count column is the one cell every reader's eye is drawn to each frame, since it is the value the receiver actually acts on (the ACK it sends)",
+    "reusable_patterns": [
+      "identical small table replayed frame by frame, with newly-arrived values filling previously blank cells and a derived summary column recomputed each frame"
+    ],
+    "weaknesses": [
+      "five near-identical tables packed into one figure require close side-by-side comparison to spot exactly which cells changed between consecutive time-steps"
+    ]
+  },
+  "tags": [
+    "replicated-state-machines",
+    "acknowledgment",
+    "worked-example",
+    "Picsou",
+    "time-step"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Protocol Design (p.7)"
+    ],
+    "evidence": [
+      "Each row in Figure 2 describes a sorted list of messages received at each replica",
+      "R22 has received messages m1 to m5, and thus updates its cumulative acknowledgment to 5",
+      "R21 and R23 have received messages m8 and m6 respectively, they are missing m5"
+    ]
+  },
+  "summary": "Picsou lets replicated state machines communicate efficiently by having each receiver report a single cumulative-acknowledgment number instead of acknowledging every message. This worked-example figure replays the same small table, one row per receiver (R21-R24) plus a green count column, across five time-steps. At time-step 1 every list and count is empty. By time-step 2, R21, R22 and R23 have each received one message, but only R21's (m1) is contiguous from the start, so only its count advances to 1. At time-step 3 an internal broadcast delivers m1-m4 to everyone, bringing every count to 4. At time-step 4 each receiver gains one more message, yet only R22's new message (m5) extends its contiguous prefix, so only R22's count reaches 5 while R21 and R23 stay at 4 despite holding later messages m8 and m6. Finally, time-step 5's broadcast fills every row with all eight messages, so every count reaches 8.",
+  "summary_zh": "该图用五个时间步重放同一张表，展示Picsou接收方如何计算累计确认数：只有连续收到的消息才能推进计数，如t4时R22因收到m5使前缀连续而计数达5，R21、R23虽收到更靠后的m8、m6但计数仍停在4，t5全部到齐后计数才统一到8。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

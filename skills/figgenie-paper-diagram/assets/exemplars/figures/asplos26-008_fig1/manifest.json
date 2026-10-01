@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-008_fig1",
+  "paper_id": "asplos26-008",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Client-server Jupyter Notebook architecture.",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 3.31,
+  "n_components": 4,
+  "n_flows": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-008/src/fig1_Generic_Jupyter_Notebook_System_Architec.svg",
+    "preview.png": "lab/extracted/asplos26-008/src/fig1_Generic_Jupyter_Notebook_System_Architec.png",
+    "print.png": "lab/extracted/asplos26-008/asplos26-008_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "A minimal three-hop client-server-kernel chain drawn left to right, with reserved GPU(s) explicitly labelled on the kernel icon and bold double-headed arrows naming the HTTP/WebSocket and ZMQ protocols crossing each machine boundary.",
+      "what_to_learn": "Label the protocol name directly on the arrow crossing each machine boundary (HTTP & WebSockets, ZMQ) instead of a generic line, and use flat, distinct icon colours per tier; a background/motivation tier diagram can stay this sparse since it only needs to set up the problem, not show internals."
+    }
+  ]
+}

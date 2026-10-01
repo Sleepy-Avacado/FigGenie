@@ -1,0 +1,63 @@
+{
+  "id": "osdi23-032_fig8",
+  "kind": "mechanism",
+  "paper_id": "osdi23-032",
+  "fig": "8",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 8: The processes of the read delegation and the write combining on SMART respectively.",
+  "groups_in_record": [
+    "logic",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "flowchart",
+  "subject": "how lock-fail and key-conflict checks route concurrent reads or writes to delegation, combining, or a normal remote-memory access",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 3.86,
+  "n_elements": 15,
+  "n_relations": 4,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-032/osdi23-032_fig8_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-032/osdi23-032_fig8_p10_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Read-delegation and write-combining share one twin-diamond decision skeleton; a green 'Time Window' bracket marks the one real memory round-trip that queued duplicate requests reuse instead of repeating it.",
+      "what_to_learn": "Bracket the delegate's one memory round-trip as a 'Time Window,' with dashed arrows fanning back to queued duplicate requests instead of repeating the trip; draw the bypass path looping visibly under every memory-side phase box.",
+      "note_source": "agent"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Read-delegation and write-combining share one twin-diamond decision skeleton; a green 'Time Window' bracket marks the one real memory round-trip that queued duplicate requests reuse instead of repeating it.",
+      "what_to_learn": "Bracket the delegate's one memory round-trip as a 'Time Window,' with dashed arrows fanning back to queued duplicate requests instead of repeating the trip; draw the bypass path looping visibly under every memory-side phase box.",
+      "note_source": "agent"
+    }
+  ]
+}

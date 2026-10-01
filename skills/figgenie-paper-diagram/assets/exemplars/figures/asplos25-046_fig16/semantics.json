@@ -1,0 +1,296 @@
+{
+  "paper_id": "asplos25-046",
+  "fig": "16",
+  "kind": "mechanism",
+  "system": {
+    "name": "Coach",
+    "one_liner": "a system that exploits complementary temporal utilization patterns across VMs to oversubscribe all resources in cloud platforms",
+    "domain": [
+      "cloud-computing",
+      "resource-management",
+      "virtualization"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how per-window predicted memory demand for two CoachVMs is turned into a shared server's guaranteed (PA) and oversubscribed (VA) memory backing",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "0-8hr",
+        "kind": "label",
+        "role": "first of three time windows the scheduler predicts demand for",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "8-16hr",
+        "kind": "label",
+        "role": "second time window",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "16-24hr",
+        "kind": "label",
+        "role": "third time window",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Predicted Pmax_t",
+        "kind": "label",
+        "role": "predicted maximum (PA+VA) memory utilization for a time window",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Predicted PX_t",
+        "kind": "label",
+        "role": "predicted percentile (e.g. P95) utilization for a time window, setting the guaranteed portion",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PA-Demand",
+        "kind": "box",
+        "role": "guaranteed, physically-backed memory demand for one CVM/window",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "VA-Demand",
+        "kind": "box",
+        "role": "oversubscribed, virtually-backed memory demand for one CVM/window (the gap between Pmax and PX)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Sum of VM PA-Demand",
+        "kind": "label",
+        "role": "each CVM's PA-demand summed across CVMs",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Multiplexed VA-Demand",
+        "kind": "box",
+        "role": "the CVMs' VA-demand combined by taking the per-window maximum instead of summing, to save memory",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Server PA Backing",
+        "kind": "box",
+        "role": "the server's allocated guaranteed memory, sized to the summed PA-demand",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Server VA Backing",
+        "kind": "box",
+        "role": "the server's allocated oversubscribed memory, sized to the multiplexed VA-demand",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Total Memory Allocation",
+        "kind": "label",
+        "role": "the server's PA and VA backing added together",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Predicted Pmax_t",
+        "to": "VA-Demand",
+        "what": "the gap between the predicted maximum and the PX percentile defines the VA-demand for that window",
+        "kind": "mapping",
+        "step": "1"
+      },
+      {
+        "from": "Predicted PX_t",
+        "to": "PA-Demand",
+        "what": "the PX percentile prediction sets the guaranteed PA-demand for that window",
+        "kind": "mapping",
+        "step": "2"
+      },
+      {
+        "from": "PA-Demand",
+        "to": "Sum of VM PA-Demand",
+        "what": "each CVM's static PA-demand is summed across CVMs",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "VA-Demand",
+        "to": "Multiplexed VA-Demand",
+        "what": "each CVM's per-window VA-demand is multiplexed across CVMs instead of summed",
+        "kind": "data",
+        "step": "4"
+      },
+      {
+        "from": "Sum of VM PA-Demand",
+        "to": "Server PA Backing",
+        "what": "the summed PA-demand becomes the server's guaranteed backing allocation",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Multiplexed VA-Demand",
+        "to": "Server VA Backing",
+        "what": "the multiplexed VA-demand becomes the server's oversubscribed backing allocation",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Server PA Backing",
+        "to": "Total Memory Allocation",
+        "what": "PA and VA backing are added to give the server's total memory allocation",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Server VA Backing",
+        "to": "Total Memory Allocation",
+        "what": "PA and VA backing are added to give the server's total memory allocation",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Scheduling Policy (a)",
+        "what": "for each time window, predict the maximum memory utilization (PA+VA)",
+        "carries": "predicted Pmax_t per window"
+      },
+      {
+        "marker": "2",
+        "at": "Scheduling Policy (a)",
+        "what": "predict a percentile (e.g. P95) utilization per window, setting the guaranteed PA portion",
+        "carries": "predicted PX_t per window"
+      },
+      {
+        "marker": "3",
+        "at": "Sum of VM PA-Demand (b)",
+        "what": "sum each CVM's static PA-demand across CVMs to size the server's guaranteed backing",
+        "carries": "summed PA-demand"
+      },
+      {
+        "marker": "4",
+        "at": "Multiplexed VA-Demand (b)",
+        "what": "multiplex, rather than sum, each CVM's per-window VA-demand across CVMs to size the server's oversubscribed backing",
+        "carries": "multiplexed VA-demand"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "concrete per-window GB memory demands for two 32GB CoachVMs on a 48GB server, and the resulting 44GB total server allocation (28GB PA-backed + 16GB VA-backed)",
+      "linked_by": "colour (green = PA-demand, blue = VA-demand) and position along the shared Time Windows axis",
+      "result_cells": "the 'Server PA Backing' and 'Server VA Backing' boxes, summed into 'Total Memory Allocation'"
+    },
+    "key_idea": "Because VMs' memory demands peak at different times, summing each VM's static guaranteed (PA) demand but multiplexing (taking the max, not the sum, of) their time-varying oversubscribed (VA) demand lets the server provision far less total memory than naive per-VM summation.",
+    "reading_order": "left to right within panel (a): three time windows' predicted Pmax/PX bars for CVM 1 then CVM 2; then panel (b) to the right, where each CVM's VA-demand feeds a multiplexed sum (4) and PA-demand feeds a plain sum (3), added into the final Total Memory Allocation"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.72,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green fill of PA-Demand boxes (guaranteed memory)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue fill of VA-Demand boxes (oversubscribed memory)"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red dashed lines and labels marking per-window maximum-value thresholds"
+      },
+      {
+        "hex": "#61bbff",
+        "used_for": "saturated blue accent on VA-Demand related bars/borders"
+      },
+      {
+        "hex": "#76c279",
+        "used_for": "saturated green accent on PA-Demand related bars/borders"
+      },
+      {
+        "hex": "#006603",
+        "used_for": "dark green stroke/text accents on PA-Demand elements"
+      },
+      {
+        "hex": "#0066cb",
+        "used_for": "dark blue stroke/text accents on VA-Demand elements"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.5pt) solid black plus coloured green/blue box borders; dashed red horizontal reference lines for maximum values",
+    "corners": "square",
+    "arrows": "thin black connector lines and brackets linking predicted values to their Max annotations and linking per-window terms into the summed/multiplexed boxes",
+    "font": "Arimo sans, 4.5-11pt, mostly unbolded",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = PA-Demand (guaranteed, physically-backed memory); blue = VA-Demand (oversubscribed, virtually-backed memory); red dashed lines mark per-window maximum thresholds",
+    "line_style_means": "hatched fill distinguishes the 'Predicted Pmax_t' bar from the solid 'Predicted PX_t' bar; dashed red lines mark maximum-value thresholds",
+    "state_means": "not applicable; the two panels show two stages of one allocation computation rather than before/after states",
+    "marker_means": "parenthetical numbers (1)-(4) tag which formula computes that quantity; matching sub-labels (e.g. 1-1, 2-2) link a per-window segment to its position in the combined bar",
+    "emphasis": "the multiplexed VA-Demand box and the final Total Memory Allocation brace are visually set apart to highlight that multiplexing, not simple summing, is what saves memory",
+    "reusable_patterns": [
+      "hatch-vs-solid bar pairs encoding a predicted maximum vs a percentile threshold",
+      "small numbered sub-segments that recombine into one multiplexed/summed bar, with a formula number in parentheses tying the picture to the equations"
+    ],
+    "weaknesses": [
+      "dense mixed-size text and many small numbered sub-labels make the figure hard to parse without the accompanying formulas",
+      "PA vs VA colour coding is not restated in an explicit legend box within panel (b), relying on the reader recalling it from panel (a)"
+    ]
+  },
+  "tags": [
+    "cloud-oversubscription",
+    "memory-management",
+    "VM-scheduling",
+    "multiplexing",
+    "temporal-patterns",
+    "Coach"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Temporal pattern-based oversubscription"
+    ],
+    "evidence": [
+      "Figure 16a shows the VM scheduling for memory for two 32GB CoachVMs with three time windows",
+      "Coach allocates the maximum percentile prediction across all time windows for the guaranteed (i.e., PA) portion",
+      "we multiplex the VA-demand of each VM in each time window to further save memory"
+    ]
+  },
+  "summary": "Figure 16 works through Coach's memory-allocation mechanism for two 32GB CoachVMs sharing a 48GB server across three time windows (0-8hr, 8-16hr, 16-24hr). Panel (a) shows, per VM and per window, the predicted maximum memory utilization and a percentile (e.g. P95) prediction: the percentile sets the guaranteed, physically-backed (PA) demand, while the gap up to the maximum is the potential virtually-backed (VA) demand, with dashed red lines marking the per-window maximum thresholds the scheduler must respect. Panel (b) then maps these per-VM predictions onto shared server resources: each VM's PA-demand is simply summed across VMs to size the 'Server PA Backing,' but each VM's VA-demand is multiplexed, taking the maximum needed at each time window rather than summing, to size the smaller 'Server VA Backing.' Adding the two backing allocations gives the concrete example's total: 44GB (28GB PA-backed plus 16GB VA-backed) for two 32GB VMs, illustrating how multiplexing time-shifted demand saves memory versus naive per-VM summation.",
+  "summary_zh": "该图演示Coach的内存分配机制：(a)按时间窗预测两台32GB CoachVM的最大及P95利用率，P95部分为保证性PA需求，差值为VA需求；(b)将各VM的PA需求直接求和、VA需求按时间窗做多路复用取最大值，得到服务器PA+VA共44GB的分配，体现复用节省内存的原理。",
+  "confidence": "medium",
+  "notes": "steps 1-4 are reconstructed from the caption's 'numbers in parentheses refer to the formula that computes them' plus the surrounding derivation text; the exact visual position of each parenthetical number could not be verified pixel-by-pixel against the source SVG, so the step-to-formula mapping is an inference from the text rather than a direct read of the image.",
+  "venue": "ASPLOS25"
+}

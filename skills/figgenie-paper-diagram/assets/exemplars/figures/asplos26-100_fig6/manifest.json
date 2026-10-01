@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-100_fig6",
+  "paper_id": "asplos26-100",
+  "fig": "6",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 6. Integration of RTOSUnits’ custom instructions into a full out-of-order core. The instruction queue is used to collect out-of-order issued custom instructions (a)/(b) and passes them in-order to the RTOSUnit (e).",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.3,
+  "n_components": 9,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-100/asplos26-100_fig6_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-100/asplos26-100_fig6_p10_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: a single pipeline diagram with lettered arrows (a)-(e) indexing prose explanations of signals, not separate comparison panels; there is only one frame here, not multiple copies of a drawing.",
+      "what_to_learn": "Reserve lettered tags for indexing prose explanations of individual signals on one diagram (as this figure correctly does) rather than assuming letters always mean separate panels; box exactly the stages that changed (here the out-of-order I/X/W group) and colour only the new components, leaving the rest uncoloured."
+    }
+  ]
+}

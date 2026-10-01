@@ -1,0 +1,55 @@
+{
+  "id": "nsdi24-105_fig5",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-105",
+  "fig": "5",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 5: ACC state machine.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "state-machine",
+  "subject": "how an ACC sender classifies a flow from aggregated ACK marking (CE/NO/UE) and picks a rate-adjustment action",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.47,
+  "n_elements": 6,
+  "n_relations": 8,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-105/nsdi24-105_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-105/nsdi24-105_fig5_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "A start/end pseudo-state pair brackets three parallel classify-then-act branches, so a control loop with three different action paths still reads as one left-to-right pass.",
+      "what_to_learn": "Bracket the loop with dashed start/end pseudo-states; fan out from start into parallel same-shaped classification branches, one per case, each running its own action box before rejoining the end state and looping back to start.",
+      "note_source": "agent"
+    }
+  ]
+}

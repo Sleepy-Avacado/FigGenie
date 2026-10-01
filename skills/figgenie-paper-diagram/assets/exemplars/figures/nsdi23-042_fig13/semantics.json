@@ -1,0 +1,236 @@
+{
+  "paper_id": "nsdi23-042",
+  "fig": "13",
+  "kind": "mechanism",
+  "system": {
+    "name": "Dashlet",
+    "one_liner": "a short-video streaming system that models per-user swipe timing to make robust chunk-prefetch decisions",
+    "domain": [
+      "video streaming",
+      "mobile networking"
+    ],
+    "abstraction": "streaming client"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "the branching chunk-distance variable D21 and the chain of swipe-or-continue decisions from c21 to later chunks of video 2",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "c11",
+        "kind": "cell",
+        "role": "first chunk of video 1; how many of its chunks were watched before the first swipe is not yet fixed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c21",
+        "kind": "cell",
+        "role": "first chunk of video 2, reached once the user swipes away from video 1",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "c23",
+        "kind": "cell",
+        "role": "next chunk of video 2 reached if the user keeps watching past c21 (labelled c23 in the source figure)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c23",
+        "kind": "cell",
+        "role": "final chunk of video 2 reached if the user keeps watching past the previous chunk as well",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Swipe",
+        "kind": "label",
+        "role": "marks the branch where the user leaves video 2 instead of continuing to the next chunk",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "c11",
+        "to": "c21",
+        "what": "D_21 = 1: user watched exactly one chunk of video 1 before swiping",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "c11",
+        "to": "c21",
+        "what": "D_21 = 2: user watched exactly two chunks of video 1 before swiping",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "c11",
+        "to": "c21",
+        "what": "D_21 = 3: user watched exactly three chunks of video 1 before swiping",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "c21",
+        "to": "c23",
+        "what": "D_21+1: chunk count if the user keeps watching past c21",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "c21",
+        "to": "Swipe",
+        "what": "probability p21 the user swipes away at c21 instead of continuing",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "c23",
+        "to": "c23",
+        "what": "D_21+2: chunk count if the user keeps watching past the middle chunk",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "c23",
+        "to": "Swipe",
+        "what": "probability p22 the user swipes away at the middle chunk instead of continuing to the final one",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "c11",
+        "c21",
+        "c23 (middle)",
+        "c23 (final)",
+        "Swipe"
+      ],
+      "transitions": [
+        {
+          "from": "c11",
+          "to": "c21",
+          "guard": "D21 in {1,2,3} chunks of video 1 watched before swiping"
+        },
+        {
+          "from": "c21",
+          "to": "c23 (middle)",
+          "guard": "user keeps watching (chunk count becomes D21+1)"
+        },
+        {
+          "from": "c21",
+          "to": "Swipe",
+          "guard": "user swipes with probability p21"
+        },
+        {
+          "from": "c23 (middle)",
+          "to": "c23 (final)",
+          "guard": "user keeps watching (chunk count becomes D21+2)"
+        },
+        {
+          "from": "c23 (middle)",
+          "to": "Swipe",
+          "guard": "user swipes with probability p22"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "how many video-1 chunks were watched before the first swipe?",
+          "branches": [
+            "D21=1",
+            "D21=2",
+            "D21=3"
+          ]
+        },
+        {
+          "question": "does the user swipe away at this chunk of video 2?",
+          "branches": [
+            "continue (chunk count +1)",
+            "swipe (probability p2k)"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "Reaching a later chunk of video 2 requires surviving one independent swipe-away decision at every intervening chunk, each with its own probability.",
+    "reading_order": "left to right: three parallel D21 branches from c11 converge at c21, then the chain repeats a continue-or-swipe decision at each further chunk toward c23"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.91,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "red 'Swipe' labels and the curved arrows marking each swipe-away branch"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.7pt) solid black lines for the branch/chain structure, thin red curved strokes for the swipe arrows",
+    "corners": "square",
+    "arrows": "two short curved red arrows pointing to the 'Swipe' branches; the main chain and branch lines are plain unarrowed strokes",
+    "font": "serif (Cambria Math / Times), small bold math labels",
+    "icons": "4 small raster 3D-effect blue box icons for the c11/c21/c23/c23 chunk labels"
+  },
+  "encoding": {
+    "color_means": "red marks the swipe-away branch and its probability at each decision point; black is the main continue-watching chain and branch structure",
+    "line_style_means": "not used to distinguish paths; a curved red arrow always marks the swipe branch",
+    "state_means": "the three initial D21 outcomes are told apart by which of the three parallel branch lines is taken, not by colour",
+    "marker_means": "no numbered markers; algebraic subscripts (D21, p21, p22) identify which chunk-count or probability applies at each point",
+    "emphasis": "red isolates the swipe decision from the black chain of continued viewing, echoing the swipe-vs-continue choice the model turns on",
+    "reusable_patterns": [
+      "a repeating continue-or-branch-off decision unit chained left to right to build a recursive probability model"
+    ],
+    "weaknesses": [
+      "the middle and final chunk boxes are both labelled c23, so the figure alone cannot show that the middle one should read c22"
+    ]
+  },
+  "tags": [
+    "video-streaming",
+    "short-video",
+    "swipe-prediction",
+    "probability-model",
+    "chunk-distance",
+    "Dashlet"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design"
+    ],
+    "evidence": [
+      "Starting from chunk c21, the user must watch the second video continuously with swiping to reach chunk c23.",
+      "c23 will be played when and only when the user watches the i = 2nd video continuously without swiping",
+      "the user might swipe to the next video before watching ci j"
+    ]
+  },
+  "summary": "This figure continues Dashlet's chunk-viewing model past the first swipe, tracing the path from chunk c11 of video 1 to later chunks of video 2. Three parallel branches from c11 converge at c21, one for each value of D21 (1, 2, or 3), the number of video-1 chunks watched before the user first swiped away. From c21 onward the model becomes a repeating unit: at each chunk the user either keeps watching, advancing the cumulative chunk count (D21+1, then D21+2) toward the next chunk of video 2, or swipes away again with probability p21 or p22, drawn as a red curved arrow labelled Swipe. The figure argues that reaching any later chunk of video 2 requires surviving one independent swipe decision per intervening chunk. The source figure labels both the middle and the final chunk boxes c23, though the surrounding text implies the middle one is c22.",
+  "summary_zh": "该图接续Dashlet的分片观看模型：c11经三条分支（D21=1/2/3）汇合到c21，此后每个分片重复同一决策——继续观看使计数增至D21+1、D21+2，或以概率p21、p22滑走，直到c23；源图中间与最终分片框都标为c23。",
+  "confidence": "medium",
+  "notes": "Groups kept as 'logic' per prior labels (a branching decision structure with labelled branches). The source figure literally labels both the middle and the final chunk boxes 'c23' (the surrounding text implies the middle one should be c22); elements and relations keep the figure's literal labels. Confidence is medium because the one paragraph describes the general recursive Dij formula rather than this figure's specific p21/p22 branches, so some relation text is inferred from the image.",
+  "venue": "NSDI23"
+}

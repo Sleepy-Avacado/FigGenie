@@ -1,0 +1,248 @@
+{
+  "paper_id": "asplos26-026",
+  "fig": "10",
+  "kind": "mechanism",
+  "system": {
+    "name": "TLT",
+    "one_liner": "a system that losslessly accelerates reasoning RL training by integrating adaptive speculative decoding with a continuously-trained lightweight drafter",
+    "domain": [
+      "LLM-serving",
+      "reinforcement-learning-training",
+      "speculative-decoding"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how bucketing, disaggregating, and merging CUDAGraph captures cuts memory growth while keeping multi-strategy speculative-decoding throughput gains",
+    "base": "table",
+    "elements": [
+      {
+        "name": "V (target segment)",
+        "kind": "cell",
+        "role": "one Target Model CUDAGraph, sized by its Tokens_to_Verify (V) parameter",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "D (draft segment)",
+        "kind": "cell",
+        "role": "one Draft Model CUDAGraph, sized by its Draft_TopK (D) parameter",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S1-S4",
+        "kind": "label",
+        "role": "names one full speculative-decoding strategy, defined by its {V, D} parameter pair",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B1-B4",
+        "kind": "label",
+        "role": "names one batch-size bucket grouping several individual batch sizes together",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Mem: Nx",
+        "kind": "label",
+        "role": "the memory-footprint multiplier verdict for that panel, marked good (green check) or bad (red cross)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Throughput: Nx",
+        "kind": "label",
+        "role": "the throughput multiplier verdict for that panel, marked good (green check) or bad (red cross)",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "S1-S4",
+        "to": "V (target segment)",
+        "what": "each strategy pairs one target-model graph sized by its V",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "S1-S4",
+        "to": "D (draft segment)",
+        "what": "each strategy pairs one draft-model graph sized by its D",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "B1-B4",
+        "to": "V (target segment)",
+        "what": "each batch-size bucket becomes one disaggregated target-model graph",
+        "kind": "transition",
+        "step": "i-ii"
+      },
+      {
+        "from": "S1-S4",
+        "to": "D (draft segment)",
+        "what": "strategies sharing the same D value (S3, S4 both D=8) are merged into one shared draft-model graph",
+        "kind": "transition",
+        "step": "iii"
+      },
+      {
+        "from": "V (target segment)",
+        "to": "Mem: Nx",
+        "what": "the number and size of captured graphs determines the memory-multiplier verdict",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Baseline: Single Strategy",
+        "axis": "alternatives",
+        "differs": "captures only one CUDAGraph pair (V=8, D=4)",
+        "verdict": "Mem 1x good, Throughput 1x bad"
+      },
+      {
+        "label": "(b) Multiple Strategies",
+        "axis": "alternatives",
+        "differs": "captures four full, independent strategy graphs (S1-S4), each its own paired target+draft CUDAGraph",
+        "verdict": "Mem 4x bad, Throughput 1.8x good"
+      },
+      {
+        "label": "(c) Bucketed CUDAGraph Capture",
+        "axis": "alternatives",
+        "differs": "buckets batch sizes, disaggregates target/draft capture, and merges strategies sharing parameters, via sub-steps i-iii",
+        "verdict": "Mem 1.2x good, Throughput 2x good (ours)"
+      }
+    ],
+    "steps": [
+      {
+        "marker": "i",
+        "at": "batch-size buckets",
+        "what": "batch sizes are grouped into buckets B1-B4 instead of one graph per exact batch size",
+        "carries": "batch-size groupings"
+      },
+      {
+        "marker": "ii",
+        "at": "target/draft capture",
+        "what": "target-model and draft-model CUDAGraphs are captured separately (disaggregated) per bucket, sized 8/16/32/48 for targets",
+        "carries": "disaggregated target and draft graphs"
+      },
+      {
+        "marker": "iii",
+        "at": "merge",
+        "what": "strategies S3 and S4 share Draft_TopK=8, so their draft-model graphs are merged into one shared capture",
+        "carries": "merged CUDAGraph"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "the illustrative V/D parameter values (8,4 / 16,6 / 32,8 / 48,8) and the Mem/Throughput multipliers (1x/1x, 4x/1.8x, 1.2x/2x) shown per panel",
+      "linked_by": "colour (orange=target, blue=draft) and matching strategy labels S1-S4",
+      "result_cells": "the green-check/red-cross Mem and Throughput lines under each panel"
+    },
+    "key_idea": "Capturing one CUDAGraph per strategy wastes memory linearly with strategy count; bucketing batch sizes, disaggregating target/draft capture, and merging strategies that share parameters keeps memory nearly flat while still gaining the throughput of many adaptive strategies.",
+    "reading_order": "top to bottom through panels (a), (b), (c); within (c), follow arrows left to right through sub-steps i (bucket), ii (disaggregate), iii (merge) into the final segmented bar, then read the Mem/Throughput verdicts under each panel"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "badge",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.59,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f9e7c9",
+        "used_for": "pale orange fill of Target Model (V) CUDAGraph segments"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale blue fill of Draft Model (D) CUDAGraph segments"
+      },
+      {
+        "hex": "#017100",
+        "used_for": "dark green checkmarks and 'good' Mem/Throughput verdict text"
+      },
+      {
+        "hex": "#b51700",
+        "used_for": "dark red crosses and 'bad' Mem/Throughput verdict text"
+      },
+      {
+        "hex": "#5e5e5e",
+        "used_for": "dark grey panel captions and the arrows linking buckets/strategies in the i-iii construction"
+      },
+      {
+        "hex": "#d9a017",
+        "used_for": "gold outline stroke of the orange target segments"
+      },
+      {
+        "hex": "#7596c4",
+        "used_for": "medium-blue outline stroke of the blue draft segments"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black segment borders; amber outline on target segments, blue outline on draft segments; light-grey dashed divider lines separating strategies",
+    "corners": "mixed",
+    "arrows": "thin grey arrows linking buckets/strategies down into the merged bucketed-capture bar; black bracket arrows marking each strategy's span",
+    "font": "sans-serif (HelveticaNeue) body text with bold Times New Roman panel labels",
+    "icons": "green check marks and red cross marks scoring each panel's Mem and Throughput; small V/D colour swatches in the legend"
+  },
+  "encoding": {
+    "color_means": "orange = target-model CUDAGraph capacity, blue = draft-model CUDAGraph capacity, green = a good (winning) Mem/Throughput score, red = a bad (losing) score",
+    "line_style_means": "dashed grey vertical rules separate adjacent strategies within a bar; solid thin arrows trace which bucket or strategy feeds which captured graph in panel (c)",
+    "state_means": "the three panels are alternatives, not time steps, told apart by how many/which segments are captured and by the resulting Mem/Throughput checkmarks",
+    "marker_means": "check/cross icons grade each panel's Mem and Throughput outcome; roman numerals i-iii order the three optimizations that build the bucketed scheme; S1-S4/B1-B4 name strategies and batch-size buckets",
+    "emphasis": "panel (c) is the only row scoring two green checkmarks, visually singling out the paper's own bucketed-capture design as the one that wins on both axes",
+    "reusable_patterns": [
+      "a segmented proportional bar standing in for a memory allocation, coloured by which sub-model owns each segment",
+      "a repeated two-line check/cross scorecard (Mem, Throughput) under each of several compared designs",
+      "small roman-numeral callouts explaining the sub-steps that build the winning design"
+    ],
+    "weaknesses": [
+      "the caption itself warns that memory and throughput values are illustrative, not measured, so the numbers cannot be read as real benchmark results",
+      "panel (c)'s merge step only visibly shows S3/S4 merging, leaving whether S1/S2 also merge unstated"
+    ]
+  },
+  "tags": [
+    "speculative-decoding",
+    "CUDAGraph",
+    "memory-footprint",
+    "batching",
+    "reasoning-RL",
+    "TLT"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Adaptive Rollout Engine"
+    ],
+    "evidence": [
+      "Memory footprint of CUDA Graph for SD. S1∼S4 denote different SD strategies, B1∼B4 represent batch-size buckets.",
+      "memory usage grows linearly with the number of strategies, leaving insufficient space for model weights and KV caches",
+      "Memory and throughput values are illustrative."
+    ]
+  },
+  "summary": "This figure compares three CUDAGraph-capture strategies for adaptive speculative decoding, scoring each on memory footprint and throughput. (a) Baseline: Single Strategy captures just one target+draft graph pair (V=8, D=4): Mem 1x (good) but Throughput 1x (bad), since it cannot adapt. (b) Multiple Strategies captures four full, independent strategy pairs (S1-S4, e.g. V=8/D=4 through V=48/D=8): Throughput improves to 1.8x, but Mem balloons to 4x because each strategy duplicates its own target and draft graphs. (c) Bucketed CUDAGraph Capture, the paper's own design, applies three optimizations: (i) group batch sizes into buckets B1-B4, (ii) capture target and draft graphs separately instead of paired per strategy, and (iii) merge strategies (S3, S4) that share identical parameters into one graph. The result: Mem only 1.2x while Throughput reaches 2x, winning on both axes.",
+  "summary_zh": "该图对比三种CUDAGraph捕获策略的显存与吞吐：(a)单策略显存1x但吞吐1x差；(b)四策略独立捕获吞吐1.8x但显存暴涨4x；(c)本文分桶、目标/草稿模型分离捕获并合并同参数策略，显存仅1.2x且吞吐达2x，两项均优。",
+  "confidence": "high",
+  "notes": "Added 'walkthrough' as a secondary group alongside the prior primary 'comparison': panel (c) carries an explicit i/ii/iii sub-procedure (bucket, disaggregate, merge) building its design, a listed common pairing with comparison. The caption explicitly states the Mem/Throughput numbers are illustrative rather than measured; kept worked_example=true since the concrete values are still the content being reasoned about, but this caveat is included in provenance.evidence. Panel arrangement follows the measured '3 (3x1)' layout (stacked vertically), so layout.arrangement is panels-column and direction top-down.",
+  "venue": "ASPLOS26"
+}

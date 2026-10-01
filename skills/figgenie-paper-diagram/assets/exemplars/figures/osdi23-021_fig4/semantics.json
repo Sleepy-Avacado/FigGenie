@@ -1,0 +1,311 @@
+{
+  "paper_id": "osdi23-021",
+  "fig": "4",
+  "system": {
+    "name": "Hydro",
+    "one_liner": "a surrogate-based hyperparameter tuning service that shrinks and fuses trials into cheap surrogate models while allocating datacenter resources efficiently",
+    "domain": [
+      "ml-systems",
+      "resource-management",
+      "cloud"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "User Config",
+        "role": "developer-provided search space and target model definitions that start a tuning job",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Search Space",
+        "role": "the hyperparameter search space defined by the developer",
+        "container": "User Config",
+        "novel": false
+      },
+      {
+        "name": "Target Model",
+        "role": "the model the developer wants to tune",
+        "container": "User Config",
+        "novel": false
+      },
+      {
+        "name": "Hydro Tuner",
+        "role": "user interface that automatically generates and optimizes surrogate models and tuning trials",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Model Shrinker",
+        "role": "shrinks the target model into a surrogate via symbolic trace and parametrization",
+        "container": "Hydro Tuner",
+        "novel": true
+      },
+      {
+        "name": "Symbolic Trace",
+        "role": "traces the model program symbolically to enable transformation",
+        "container": "Model Shrinker",
+        "novel": true
+      },
+      {
+        "name": "Parametrization",
+        "role": "parametrizes the model to build a scalable surrogate",
+        "container": "Model Shrinker",
+        "novel": true
+      },
+      {
+        "name": "Trial Binder",
+        "role": "fuses multiple tuning trials together to reduce overhead",
+        "container": "Hydro Tuner",
+        "novel": true
+      },
+      {
+        "name": "Inter-Trial Fusion",
+        "role": "fuses independent trials together",
+        "container": "Trial Binder",
+        "novel": true
+      },
+      {
+        "name": "Intra-Trial Fusion",
+        "role": "fuses stages within a single trial together",
+        "container": "Trial Binder",
+        "novel": true
+      },
+      {
+        "name": "Surrogate Model",
+        "role": "the generated smaller model used to approximate full tuning trials",
+        "container": "Hydro Tuner",
+        "novel": true
+      },
+      {
+        "name": "Trial Profiler",
+        "role": "profiles trials to inform the surrogate model and trial planning",
+        "container": "Hydro Tuner",
+        "novel": true
+      },
+      {
+        "name": "Trial Planner",
+        "role": "orchestrates trial execution using adaptive fusion and eager transfer",
+        "container": "Hydro Tuner",
+        "novel": true
+      },
+      {
+        "name": "Adaptive Fusion",
+        "role": "adaptively decides how trials are fused during planning",
+        "container": "Trial Planner",
+        "novel": true
+      },
+      {
+        "name": "Eager Transfer",
+        "role": "eagerly transfers state/results to speed up planning",
+        "container": "Trial Planner",
+        "novel": true
+      },
+      {
+        "name": "Hydro Coordinator",
+        "role": "improves tuning efficiency and datacenter-level resource utilization",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Bubble Squeezer",
+        "role": "extends tuning workload resources by interleaving training with a pipeline-enabled large model",
+        "container": "Hydro Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Heterogeneity-Aware Allocator",
+        "role": "improves resource utilization and cluster-wide performance by allocating proper accelerators on different tuning stages",
+        "container": "Hydro Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Cluster Scheduler",
+        "role": "central scheduler connecting the coordinator's other modules (its detailed role is not covered by the excerpted text)",
+        "container": "Hydro Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Elastic Executor",
+        "role": "dynamically executes trials by splitting fused trials and enabling distributed training",
+        "container": "Hydro Coordinator",
+        "novel": true
+      },
+      {
+        "name": "Dynamic Split",
+        "role": "splits fused trials back apart dynamically at execution time",
+        "container": "Elastic Executor",
+        "novel": true
+      },
+      {
+        "name": "Distributed Training",
+        "role": "enables distributed training of split trials",
+        "container": "Elastic Executor",
+        "novel": true
+      },
+      {
+        "name": "Execution Backend",
+        "role": "underlying execution engines Hydro dispatches tuning trials to",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RAY",
+        "role": "execution backend used to run tuning trials",
+        "container": "Execution Backend",
+        "novel": false
+      },
+      {
+        "name": "PyTorch",
+        "role": "execution backend used to run tuning trials",
+        "container": "Execution Backend",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "User Config",
+        "to": "Hydro Tuner",
+        "what": "search space and target model, invoked via Hydro APIs",
+        "step": 1
+      },
+      {
+        "from": "Model Shrinker",
+        "to": "Surrogate Model",
+        "what": "generated surrogate model",
+        "step": null
+      },
+      {
+        "from": "Trial Binder",
+        "to": "Trial Profiler",
+        "what": "fused trials to profile",
+        "step": null
+      },
+      {
+        "from": "Surrogate Model",
+        "to": "Trial Profiler",
+        "what": "surrogate and profiling information exchanged bidirectionally",
+        "step": null
+      },
+      {
+        "from": "Trial Profiler",
+        "to": "Trial Planner",
+        "what": "profiling results used to plan trial execution",
+        "step": null
+      },
+      {
+        "from": "Hydro Tuner",
+        "to": "Hydro Coordinator",
+        "what": "optimized tuning trials handed off for resource allocation",
+        "step": 2
+      },
+      {
+        "from": "Bubble Squeezer",
+        "to": "Cluster Scheduler",
+        "what": "extended resource availability",
+        "step": null
+      },
+      {
+        "from": "Heterogeneity-Aware Allocator",
+        "to": "Cluster Scheduler",
+        "what": "accelerator allocation decisions",
+        "step": null
+      },
+      {
+        "from": "Cluster Scheduler",
+        "to": "Elastic Executor",
+        "what": "scheduled trial dispatch",
+        "step": null
+      },
+      {
+        "from": "Hydro Coordinator",
+        "to": "Execution Backend",
+        "what": "trials executed on Ray/PyTorch",
+        "step": 3
+      }
+    ],
+    "key_idea": "Hydro splits into a Tuner that shrinks and fuses trials into cheap surrogate models to plan tuning, and a Coordinator that allocates heterogeneous cluster resources and elastically executes the resulting trials on Ray/PyTorch.",
+    "reading_order": "Top-down through three numbered stages: Job Creation from User Config into the blue Hydro Tuner, Resource Allocation in the purple Hydro Coordinator, and Tuning Execution on the backend at the bottom."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.93,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe6cc",
+        "used_for": "fill of inner module/sub-feature boxes (e.g. Symbolic Trace, Inter-Trial Fusion, Adaptive Fusion, Dynamic Split)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "fill of the Hydro Tuner container (the 'blue block')"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "fill of the Hydro Coordinator container (the 'purple block')"
+      },
+      {
+        "hex": "#2c2c2c",
+        "used_for": "dark text and icon color for User Config and Execution Backend labels"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "secondary dark gray text/icon accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders on module boxes, dashed bidirectional arrow between Surrogate Model and Trial Profiler",
+    "font": "Arial sans-serif, 7pt, bold for module titles and stage labels",
+    "corners": "rounded",
+    "arrows": "thin black arrows chaining the three numbered stages, plus internal arrows linking modules within Hydro Tuner and Hydro Coordinator",
+    "icons": "vector, small icons for user config (search space, target model) and execution backend (terminal, Ray and PyTorch logos)"
+  },
+  "encoding": {
+    "color_means": "blue = Hydro Tuner, purple = Hydro Coordinator, orange = the sub-modules/techniques inside each block",
+    "line_style_means": "dashed double-headed arrow marks the bidirectional relationship between Surrogate Model and Trial Profiler; solid arrows show the main workflow",
+    "emphasis": "three circled numbers (Job Creation, Resource Allocation, Tuning Execution) walk the reader down the whole workflow from user-defined config to backend execution",
+    "reusable_patterns": [
+      "two-tier colored blocks (interface layer + coordination layer) each broken into labeled sub-modules",
+      "numbered top-to-bottom workflow stages spanning the whole architecture"
+    ],
+    "weaknesses": [
+      "Cluster Scheduler's specific role is not explained in the visible text, only its position connecting the other coordinator modules"
+    ]
+  },
+  "tags": [
+    "hyperparameter-tuning",
+    "surrogate-models",
+    "resource-scheduling",
+    "gpu-cluster",
+    "distributed-training",
+    "ml-systems"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Hydro Overview (p.5-6)"
+    ],
+    "evidence": [
+      "Figure 4 depicts the architecture of the Hydro service. It consists of two key system components",
+      "Hydro Coordinator also includes three modules: Bubble Squeezer...Heterogeneity-Aware Allocator...Elastic Executor",
+      "The system workflow of Hydro is presented by black arrows in Figure 4"
+    ]
+  },
+  "summary": "This figure shows Hydro's architecture and workflow for surrogate-based hyperparameter tuning. A developer's User Config (search space, target model) enters the blue Hydro Tuner block at step 1 (Job Creation), where a Model Shrinker (symbolic trace, parametrization) and Trial Binder (inter- and intra-trial fusion) produce a Surrogate Model that exchanges information with a Trial Profiler, feeding a Trial Planner (adaptive fusion, eager transfer). At step 2 (Resource Allocation), the purple Hydro Coordinator block takes over, with a Bubble Squeezer and Heterogeneity-Aware Allocator feeding a central Cluster Scheduler that drives an Elastic Executor (dynamic split, distributed training). At step 3 (Tuning Execution), trials run on the Ray or PyTorch execution backend. Three circled numbers mark the stages, and orange sub-module boxes sit inside the two color-coded blocks.",
+  "summary_zh": "Hydro 架构：用户配置进入蓝色 Tuner（模型收缩、试验绑定与规划生成代理模型），紫色 Coordinator 分配资源并调度弹性执行，试验最终在 Ray/PyTorch 上执行。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

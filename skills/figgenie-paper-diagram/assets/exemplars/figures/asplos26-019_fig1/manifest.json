@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-019_fig1",
+  "paper_id": "asplos26-019",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Overview of MoDM that balances between high image quality and short latency using a mixture of models.",
+  "corpus_template": "matrix",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.34,
+  "n_components": 7,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-019/src/fig1_Overvie_Figure.svg",
+    "preview.png": "lab/extracted/asplos26-019/src/fig1_Overvie_Figure.png",
+    "print.png": "lab/extracted/asplos26-019/asplos26-019_fig1_p1_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Three rows - Baseline / Prior Work / This Work - each an identical prompt-to-image mini-pipeline, with the bottom row on a shaded ground.",
+      "what_to_learn": "The row-per-approach matrix: same left-to-right skeleton per row, dashed row separators, and a shaded background on the row that is yours."
+    }
+  ]
+}

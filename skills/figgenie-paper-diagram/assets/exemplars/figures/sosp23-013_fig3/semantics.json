@@ -1,0 +1,170 @@
+{
+  "paper_id": "sosp23-013",
+  "fig": "3",
+  "system": {
+    "name": "Oobleck",
+    "one_liner": "a system for resilient distributed training of large models using heterogeneous pipeline templates",
+    "domain": [
+      "ml-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Pipeline Template Generator",
+        "role": "generates a set of heterogeneous pipeline templates once, before training begins",
+        "container": "Oobleck",
+        "novel": true
+      },
+      {
+        "name": "Distributed Execution Engine",
+        "role": "enables efficient heterogeneous pipeline execution by instantiating and running pipelines from the templates",
+        "container": "Oobleck",
+        "novel": true
+      },
+      {
+        "name": "Pipeline Instantiator",
+        "role": "instantiates at least f+1 pipeline replicas from the given templates considering the fault-tolerance threshold",
+        "container": "Distributed Execution Engine",
+        "novel": true
+      },
+      {
+        "name": "Batch Distributor",
+        "role": "calculates the number of microbatches per pipeline to balance execution latency across heterogeneous pipelines",
+        "container": "Distributed Execution Engine",
+        "novel": true
+      },
+      {
+        "name": "Node Change Monitor",
+        "role": "detects node failures and additions and triggers pipeline reconfiguration",
+        "container": "Oobleck",
+        "novel": true
+      },
+      {
+        "name": "Node Cluster",
+        "role": "pool of homogeneous nodes each running an agent, GPUs, and pipeline execution",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Agent",
+        "role": "per-node agent; one is highlighted (red dashed) as the node currently affected by a failure/change",
+        "container": "Node Cluster",
+        "novel": false
+      },
+      {
+        "name": "Pipeline Execution",
+        "role": "runs the assigned pipeline stage on a node's GPUs",
+        "container": "Node Cluster",
+        "novel": false
+      },
+      {
+        "name": "GPUs",
+        "role": "hardware resources on each node used for pipeline execution",
+        "container": "Node Cluster",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": null,
+        "to": "Oobleck",
+        "what": "Job Submission (fault tolerance threshold f, model, dataset, batch info)",
+        "step": 1
+      },
+      {
+        "from": "Pipeline Template Generator",
+        "to": "Distributed Execution Engine",
+        "what": "Pipeline Templates",
+        "step": 2
+      },
+      {
+        "from": "Distributed Execution Engine",
+        "to": "Node Cluster",
+        "what": "Pipelines Instantiation",
+        "step": 3
+      },
+      {
+        "from": "Node Cluster",
+        "to": "Node Change Monitor",
+        "what": "New Node Addition & Failure Detection",
+        "step": 4
+      },
+      {
+        "from": "Node Change Monitor",
+        "to": "Distributed Execution Engine",
+        "what": "Dynamic Reconfiguration",
+        "step": 5
+      }
+    ],
+    "key_idea": "Oobleck separates a one-time pipeline template generator from a distributed execution engine that instantiates and dynamically reconfigures heterogeneous pipeline replicas across a node cluster as nodes fail or are added.",
+    "reading_order": "Bottom-left person icon (Job Submission, step 1) into the Oobleck box, left-to-right through Pipeline Template Generator to Distributed Execution Engine (steps 2-3) down into the Node Cluster, then back up through Node Change Monitor to the engine (steps 4-5)."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "highlighted failing/changed Agent and GPUs (red dashed box) and the failure-related arrow/label (New Node Addition & Failure Detection)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "background panels for the Oobleck box and Node Cluster box (light gray)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black solid/dashed borders (~0.5pt)",
+    "font": "HelveticaNeue sans, 6-8pt, bold for component titles",
+    "corners": "rounded",
+    "arrows": "orthogonal arrows with filled triangular heads, small vector glyph depicting a pipeline graph inside the template generator icon",
+    "icons": "vector: small pipeline-graph icon in Pipeline Template Generator, person icon for job submission"
+  },
+  "encoding": {
+    "color_means": "red = the specific agent/node currently affected by a failure or reconfiguration; gray = static grouping backgrounds (Oobleck service, Node Cluster); black = normal/healthy components",
+    "line_style_means": "dashed red box calls out the specific failing/changing node; solid black arrows with circled step numbers trace the end-to-end job/recovery flow",
+    "emphasis": "circled step numbers 1-5 walk the reader through the job-submission-to-recovery flow, and a single red-dashed Agent+GPUs box highlights the fault-handling path among otherwise identical repeated nodes",
+    "reusable_patterns": [
+      "numbered end-to-end flow overlaid on a control-plane/data-plane box layout",
+      "one element recolored/dashed among repeated identical elements to indicate the faulty instance"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "distributed-training",
+    "fault-tolerance",
+    "pipeline-parallelism",
+    "resilience",
+    "cluster-management",
+    "heterogeneous-pipelines"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Oobleck Overview (p.4)"
+    ],
+    "evidence": [
+      "it has a pipeline template generator to generate a set of heterogeneous pipeline templates",
+      "Oobleck has a distributed execution engine that enables efficient heterogeneous pipeline execution",
+      "The node change monitor detects node failure(s) and node additions"
+    ]
+  },
+  "summary": "This figure gives Oobleck's system overview as a numbered end-to-end flow. A user submits a training job (step 1: fault-tolerance threshold f, model, dataset, batch info) into the Oobleck control plane, shown as a gray box containing a Pipeline Template Generator that produces a set of heterogeneous pipeline templates (step 2) and a Distributed Execution Engine, itself containing a Pipeline Instantiator and Batch Distributor, which instantiates pipelines onto a Node Cluster (step 3). Below, the Node Cluster is drawn as repeated groups of Agent, Pipeline Execution, and GPUs boxes; one Agent+GPUs pair is highlighted with a red dashed border to represent a node change. A Node Change Monitor detects such failures or additions (step 4) and feeds back into the Distributed Execution Engine to trigger dynamic reconfiguration (step 5), closing the loop between the control plane and the executing node cluster.",
+  "summary_zh": "图3展示Oobleck系统总览：用户提交训练任务(步骤1)进入灰色的Oobleck控制面，流水线模板生成器生成异构流水线模板(步骤2)，分布式执行引擎(含流水线实例化器与批次分配器)据此在节点集群上实例化流水线(步骤3)；节点集群中一个Agent+GPU用红色虚线突出表示故障/变更节点，节点变更监视器检测到后(步骤4)反馈执行引擎进行动态重配置(步骤5)。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP23"
+}

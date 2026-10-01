@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-098_fig2",
+  "paper_id": "asplos25-098",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. The overview of the proposed Past-Future scheduler. At time t, the service includes a running batch with 𝑘requests and a request queue with 𝑛−𝑘requests. The proposed scheduler will first predict the most probable output length for queued requests and update the predicted output length of e",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 3.57,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-098/src/fig2_new_frame.svg",
+    "preview.png": "lab/extracted/asplos25-098/src/fig2_new_frame.png",
+    "print.png": "lab/extracted/asplos25-098/asplos25-098_fig2_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "A figure whose right panel hides a real phase device: colored memory squares stack at future time ticks along a labeled Timeline arrow, with a red dashed box marking the window compared against Available Memory.",
+      "what_to_learn": "A future-facing prediction can still use a real time axis: stack small colored usage squares at each future tick (t, t+1, t+2...) under one labeled Timeline arrow, and draw a dashed box around exactly the window your decision compares, here peak projected memory against the available budget."
+    }
+  ]
+}

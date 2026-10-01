@@ -1,0 +1,338 @@
+{
+  "paper_id": "nsdi25-016",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "Minder",
+    "one_liner": "a system for detecting faulty machines in large-scale distributed model training",
+    "domain": [
+      "distributed systems",
+      "ML infrastructure",
+      "fault detection"
+    ],
+    "abstraction": "distributed system / cluster monitoring"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how cascading Z-score threshold checks across PFC, CPU, GPU, and NVLink metrics flag a faulty machine",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Inter-host network (PFC)",
+        "kind": "lane",
+        "role": "top lane grouping the network-level check",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(PFC Tx Packet Rate)",
+        "kind": "node",
+        "role": "first threshold check, on the inter-host network metric",
+        "container": "Inter-host network (PFC)",
+        "highlighted": false
+      },
+      {
+        "name": "Central processing (CPU)",
+        "kind": "lane",
+        "role": "lane grouping the CPU-level check",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(CPU Usage)",
+        "kind": "node",
+        "role": "threshold check on CPU usage",
+        "container": "Central processing (CPU)",
+        "highlighted": false
+      },
+      {
+        "name": "Computation (GPU)",
+        "kind": "lane",
+        "role": "lane grouping the four GPU-level checks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(GPU Duty Cycle)",
+        "kind": "node",
+        "role": "threshold check on GPU duty cycle",
+        "container": "Computation (GPU)",
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(GPU Power Draw)",
+        "kind": "node",
+        "role": "threshold check on GPU power draw",
+        "container": "Computation (GPU)",
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(GPU Graphics Engine Activity)",
+        "kind": "node",
+        "role": "threshold check on GPU graphics engine activity",
+        "container": "Computation (GPU)",
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(GPU Tensor Activity)",
+        "kind": "node",
+        "role": "threshold check on GPU tensor activity",
+        "container": "Computation (GPU)",
+        "highlighted": false
+      },
+      {
+        "name": "Intra-host network (NVLink)",
+        "kind": "lane",
+        "role": "bottom lane grouping the NVLink-level check",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Z-score(NVLink Bandwidth)",
+        "kind": "node",
+        "role": "last threshold check, on intra-host NVLink bandwidth",
+        "container": "Intra-host network (NVLink)",
+        "highlighted": false
+      },
+      {
+        "name": "Abnormal",
+        "kind": "node",
+        "role": "terminal leaf reached from any check's 'high' branch (drawn once per level, 7 times total)",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Z-score(PFC Tx Packet Rate)",
+        "to": "Z-score(CPU Usage)",
+        "what": "low",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(PFC Tx Packet Rate)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(CPU Usage)",
+        "to": "Z-score(GPU Duty Cycle)",
+        "what": "low",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(CPU Usage)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Duty Cycle)",
+        "to": "Z-score(GPU Power Draw)",
+        "what": "low",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Duty Cycle)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Power Draw)",
+        "to": "Z-score(GPU Graphics Engine Activity)",
+        "what": "low",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Power Draw)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Graphics Engine Activity)",
+        "to": "Z-score(GPU Tensor Activity)",
+        "what": "low",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Graphics Engine Activity)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Tensor Activity)",
+        "to": "Z-score(NVLink Bandwidth)",
+        "what": "low",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(GPU Tensor Activity)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Z-score(NVLink Bandwidth)",
+        "to": "Abnormal",
+        "what": "high",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "is Z-score(PFC Tx Packet Rate) high?",
+          "branches": [
+            "low: continue to Z-score(CPU Usage)",
+            "high: Abnormal"
+          ]
+        },
+        {
+          "question": "is Z-score(CPU Usage) high?",
+          "branches": [
+            "low: continue to Z-score(GPU Duty Cycle)",
+            "high: Abnormal"
+          ]
+        },
+        {
+          "question": "is Z-score(GPU Duty Cycle) high?",
+          "branches": [
+            "low: continue to Z-score(GPU Power Draw)",
+            "high: Abnormal"
+          ]
+        },
+        {
+          "question": "is Z-score(GPU Power Draw) high?",
+          "branches": [
+            "low: continue to Z-score(GPU Graphics Engine Activity)",
+            "high: Abnormal"
+          ]
+        },
+        {
+          "question": "is Z-score(GPU Graphics Engine Activity) high?",
+          "branches": [
+            "low: continue to Z-score(GPU Tensor Activity)",
+            "high: Abnormal"
+          ]
+        },
+        {
+          "question": "is Z-score(GPU Tensor Activity) high?",
+          "branches": [
+            "low: continue to Z-score(NVLink Bandwidth)",
+            "high: Abnormal"
+          ]
+        },
+        {
+          "question": "is Z-score(NVLink Bandwidth) high?",
+          "branches": [
+            "low: (implicit) normal, not drawn",
+            "high: Abnormal"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "A single decision tree, split into four subsystem lanes, cascades Z-score threshold checks so the metrics closest to the root are the ones most sensitive to a faulty machine.",
+    "reading_order": "Top-down through the dashed boundary: each blue Z-score box is read before branching right to an orange Abnormal leaf or continuing down."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.5,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#8caed2",
+        "used_for": "fill of the Z-score threshold-check boxes along the decision-tree chain"
+      },
+      {
+        "hex": "#e27225",
+        "used_for": "fill of the terminal 'Abnormal' leaf boxes"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "dark navy border stroke of the check boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.83pt), rounded corners; solid curved arrows for edges, dashed for the lane separators and outer boundary",
+    "font": "serif (Times New Roman), uniform ~6.5pt",
+    "corners": "rounded",
+    "arrows": "curved connecting lines from each check down to the next check and across to Abnormal, each labelled low/high",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = a Z-score threshold check to evaluate; orange = the Abnormal (faulty) verdict reached when that check exceeds threshold",
+    "line_style_means": "solid curved arrows connect each check to its low/high outcomes; dashed lines separate the four subsystem lanes and outline the overall boundary",
+    "state_means": "checks are told apart only by fill colour (blue = check, orange = Abnormal verdict), not by position alone",
+    "marker_means": "'low'/'high' edge labels mark which branch a threshold comparison follows",
+    "emphasis": "the orange Abnormal boxes stand out against the uniform blue checks, drawing attention to how quickly a fault gets flagged",
+    "reusable_patterns": [
+      "repeated check-node cascade (low: next check, high: verdict leaf), grouped into lanes by subsystem"
+    ],
+    "weaknesses": [
+      "the final check's 'low' branch has no explicit 'Normal' leaf drawn, leaving the non-faulty outcome implicit"
+    ]
+  },
+  "tags": [
+    "decision tree",
+    "fault detection",
+    "Z-score",
+    "distributed training",
+    "GPU monitoring",
+    "cascading thresholds"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Minder Framework"
+    ],
+    "evidence": [
+      "Minder uses a decision tree to prioritize the sensitivity of each metric in identifying the faulty machine",
+      "PFC, CPU, GPU, and NVLink-related metrics are identified as the most informative ones",
+      "Nodes located closer to the root of the tree indicate that the corresponding monitoring metrics are more sensitive"
+    ]
+  },
+  "summary": "Figure 7 shows the top seven layers of Minder's decision tree for prioritizing which monitoring metric to check when a training machine is suspected faulty. Enclosed in a single dashed boundary and split into four horizontal lanes by subsystem (Inter-host network/PFC, Central processing/CPU, Computation/GPU, Intra-host network/NVLink), the tree cascades through Z-score checks in fixed order: PFC Tx Packet Rate, CPU Usage, GPU Duty Cycle, GPU Power Draw, GPU Graphics Engine Activity, GPU Tensor Activity, and NVLink Bandwidth. At every blue check node, a 'high' branch peels off to an orange terminal 'Abnormal' box, while 'low' continues down to the next, more specific check, so nodes nearer the root are the metrics most sensitive to a fault.",
+  "summary_zh": "图7为Minder决策树前7层：按PFC、CPU、GPU、NVLink四个子系统分层，逐层检测指标Z-score，判高则分到橙色Abnormal，判低则进入下一层，越靠根部的指标对故障越敏感。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

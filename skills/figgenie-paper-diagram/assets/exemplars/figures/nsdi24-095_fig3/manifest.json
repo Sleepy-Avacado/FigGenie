@@ -1,0 +1,56 @@
+{
+  "id": "nsdi24-095_fig3",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-095",
+  "fig": "3",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 3: The design choices for RNN time steps.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "comparing two ways to implement RNN time steps on a switch: storing hidden states versus storing embedding vectors",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.46,
+  "n_elements": 3,
+  "n_relations": 3,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "wps",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-095/src/fig3_RNNtimesteps.svg",
+    "preview.png": "lab/extracted/nsdi24-095/src/fig3_RNNtimesteps.png",
+    "print.png": "lab/extracted/nsdi24-095/nsdi24-095_fig3_p5_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "One baseline self-loop cell versus two unrolled staircases; a single yellow halo shows exactly what a memory-constrained switch must keep between steps — one hidden state or all raw inputs.",
+      "what_to_learn": "Redraw the same GRU box as a diagonal staircase across time, grey out steps outside focus, and wrap only what must persist in constrained storage with one yellow halo — small around one hidden state, wide around every raw input.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "id": "asplos26-057_fig9",
+  "kind": "mechanism",
+  "paper_id": "asplos26-057",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 9. PIPM coherence design.",
+  "groups_in_record": [
+    "logic",
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "state-machine",
+  "subject": "how PIPM's extra ME/I' states extend MSI coherence with host- and device-side migration transitions",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 3.21,
+  "n_elements": 15,
+  "n_relations": 11,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "omnigraffle",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-057/asplos26-057_fig9_p8_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-057/asplos26-057_fig9_p8_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "PIPM extends MSI cache coherence with two migration-aware states (ME, I') encoded via directory state plus an in-memory bit, adding six new host/device transitions.",
+      "what_to_learn": "a directory-state-plus-status-bit truth table paired with a circle-and-arrow state diagram sharing the same state names",
+      "note_source": "record"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "PIPM extends MSI cache coherence with two migration-aware states (ME, I') encoded via directory state plus an in-memory bit, adding six new host/device transitions.",
+      "what_to_learn": "a directory-state-plus-status-bit truth table paired with a circle-and-arrow state diagram sharing the same state names",
+      "note_source": "record"
+    }
+  ]
+}

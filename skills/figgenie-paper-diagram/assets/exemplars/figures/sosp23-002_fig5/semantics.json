@@ -1,0 +1,271 @@
+{
+  "paper_id": "sosp23-002",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "Bagpipe",
+    "one_liner": "a system for training deep recommendation models that uses caching and prefetching to overlap remote embedding accesses with computation",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "recommendation-models"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how Bagpipe's four pipeline stages (data processors, oracle cachers, trainers, embedding servers) each scale independently via full RPC connectivity",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Data Storage service",
+        "kind": "box",
+        "role": "persistent store that Data Processors read training examples from and write back to",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Data Processors - 1",
+        "kind": "box",
+        "role": "one replica that pre-processes and batches training examples",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Data Processors - N",
+        "kind": "box",
+        "role": "another replica, showing the stage scales to N instances",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Oracle Cacher - 1",
+        "kind": "box",
+        "role": "one replica of the centralized lookahead service that decides what to prefetch/cache",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Oracle Cacher - N",
+        "kind": "box",
+        "role": "another Oracle Cacher replica",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Trainer 1",
+        "kind": "box",
+        "role": "one GPU trainer replica holding dense parameters and the local embedding cache",
+        "container": "dashed scaling-group boundary",
+        "highlighted": false
+      },
+      {
+        "name": "Trainer N",
+        "kind": "box",
+        "role": "another trainer replica",
+        "container": "dashed scaling-group boundary",
+        "highlighted": false
+      },
+      {
+        "name": "Dense NN Parameters",
+        "kind": "icon",
+        "role": "legend pentagon icon marking the dense neural-network parameters each trainer holds in GPU memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Local Caches",
+        "kind": "icon",
+        "role": "legend triangle icon marking each trainer's local embedding cache",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Embedding Server - Partition 1",
+        "kind": "box",
+        "role": "one shard of the embedding tables, serving prefetch/update requests",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Embedding Server - Partition N",
+        "kind": "box",
+        "role": "another embedding-table shard, showing this stage also scales to N partitions",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Data Storage service",
+        "to": "Data Processors - 1",
+        "what": "raw training data flows bidirectionally between storage and each processor replica",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Data Storage service",
+        "to": "Data Processors - N",
+        "what": "same bidirectional data flow for the Nth replica",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Data Processors - 1",
+        "to": "Oracle Cacher - 1",
+        "what": "pre-processed batches sent to a cacher via async RPC",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Data Processors - N",
+        "to": "Oracle Cacher - N",
+        "what": "pre-processed batches sent to a cacher via async RPC",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Data Processors - 1",
+        "to": "Oracle Cacher - N",
+        "what": "crossing async RPC showing any data-processor replica can reach any cacher replica",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Oracle Cacher - 1",
+        "to": "Trainer 1",
+        "what": "prefetch/cache decisions dispatched to trainers via async RPC",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Oracle Cacher - N",
+        "to": "Trainer N",
+        "what": "prefetch/cache decisions dispatched to trainers via async RPC",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Trainer 1",
+        "to": "Embedding Server - Partition 1",
+        "what": "trainers fetch needed embeddings from embedding-server partitions via sync RPC",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Trainer N",
+        "to": "Embedding Server - Partition N",
+        "what": "same sync-RPC embedding fetch for the Nth replica/partition",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Trainer 1",
+        "to": "Embedding Server - Partition N",
+        "what": "crossing sync RPC showing any trainer can reach any embedding-server partition",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Every stage of Bagpipe's pipeline is drawn as an interchangeable pool of N replicas with full any-to-any RPC connectivity to the next stage, so data processors, the Oracle Cacher, trainers and embedding servers can each be scaled independently.",
+    "reading_order": "left to right through the four replicated stages -- Data Processors, Oracle Cacher, Trainer, Embedding Server -- following the dashed (async) then solid (sync) crossing RPC arrows, with Data Storage service off to the left"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 4.34,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cccccc",
+        "used_for": "light-gray fill of the plain component boxes and Trainer diamonds (Data Storage service, Data Processors, Trainer 1/N, Embedding Server partitions)"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "slightly lighter gray fill that sets the two Oracle Cacher boxes apart from the other components"
+      },
+      {
+        "hex": "#5ab4ac",
+        "used_for": "teal fill of the pentagon 'Dense NN Parameters' icon (once in the legend, once inside each Trainer)"
+      },
+      {
+        "hex": "#008a00",
+        "used_for": "green fill of the triangle 'Local Caches' icon (once in the legend, once inside each Trainer)"
+      },
+      {
+        "hex": "#005700",
+        "used_for": "dark-green outline of the 'Local Caches' triangle icons"
+      },
+      {
+        "hex": "#333333",
+        "used_for": "dark-gray text specifically on the 'Oracle Cacher' labels"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on boxes, diamonds and arrows; dashed teal rounded-rectangle boundary grouping the two Trainer diamonds",
+    "corners": "mixed",
+    "arrows": "thin black arrows with solid triangular heads; dashed for async-RPC hops, solid for sync-RPC hops, several drawn crossing in an X between adjacent replicated stages",
+    "font": "Times New Roman serif, small uniform size",
+    "icons": "vector pentagon ('Dense NN Parameters') and triangle ('Local Caches') glyphs, defined in a top-right legend and repeated inside each Trainer"
+  },
+  "encoding": {
+    "color_means": "gray fills mark the plain pipeline boxes; a slightly lighter gray sets the two Oracle Cacher boxes apart; teal marks the Dense NN Parameters pentagon and green marks the Local Caches triangle, both explained in the legend and repeated once per Trainer",
+    "line_style_means": "dashed arrows mark asynchronous RPC calls (Data Processors to Oracle Cacher, Oracle Cacher to Trainer); solid arrows mark synchronous RPC calls (Trainer to Embedding Server); a dashed teal rounded rectangle groups the Trainer replicas",
+    "state_means": "not a before/after figure; every pipeline stage is instead drawn twice (replica 1 and replica N, joined by an ellipsis) with identical icons to show it is an interchangeable, independently-sized pool",
+    "marker_means": "no numbered markers; the legend's pentagon and triangle icons are the only symbolic markers, identifying what each Trainer diamond holds",
+    "emphasis": "crossing arrows drawn between every adjacent pair of replicated stages (1<->N) visually assert that any replica can talk to any replica in the next stage, backing the caption's claim that each component scales independently",
+    "reusable_patterns": [
+      "a left-to-right pipeline where each stage is drawn as a '1 ... N' pair of identical boxes with crossing arrows to the next stage, asserting independent, elastic scaling of every stage",
+      "dashed vs solid arrows distinguishing async vs sync RPCs, declared once in the caption rather than in an on-figure legend"
+    ],
+    "weaknesses": [
+      "the dashed-vs-solid async/sync RPC distinction is explained only in the caption text, not in an on-figure legend",
+      "labels in the PDF-extracted version of this figure are much harder to read than in the author's original source file"
+    ]
+  },
+  "tags": [
+    "recommendation-models",
+    "embedding-cache",
+    "prefetching",
+    "disaggregation",
+    "horizontal-scaling",
+    "Bagpipe"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Bagpipe Design (p.5)",
+      "§3 Bagpipe Design (p.9)"
+    ],
+    "evidence": [
+      "All the components of Bagpipe can be individually scaled.",
+      "The dashed arrows signify async RPCs while solid ones signify sync RPCs.",
+      "Bagpipe consists of four components that collectively perform training"
+    ]
+  },
+  "summary": "Figure 5 shows the disaggregated pipeline architecture behind Bagpipe, a caching-and-prefetching system for training deep recommendation models. Training data flows from a Data Storage service through Data Processors, which pre-process batches and forward them via asynchronous RPC to the Oracle Cacher, a lookahead service that decides what to prefetch and cache. The Oracle Cacher dispatches those decisions asynchronously to Trainers, GPU machines holding the dense neural-network parameters (teal pentagon icon) and a local embedding cache (green triangle icon), which synchronously fetch embeddings from partitioned Embedding Servers. Every stage, Data Processors, Oracle Cacher, Trainers, Embedding Server partitions, is drawn twice, as replica 1 and replica N, with crossing arrows to the next stage, visually asserting the caption's claim that each of Bagpipe's four components can be scaled independently rather than in lockstep.",
+  "summary_zh": "该图示Bagpipe流水线：数据经Data Processors异步传给Oracle Cacher定预取，再传给持参数与本地缓存的Trainer，同步取Embedding Server分片数据；各组件均画1、N号副本，交叉箭头示独立扩展。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'architecture' (not a valid v3 base value) to 'component', since the figure is a set of labelled component boxes/diamonds connected by RPC arrows. Palette taken from the context file's source-SVG colour histogram (the author's original fig5_system_schematic.svg), which is clearer than the PDF-extracted version; colours matched to roles by cross-referencing the surrounding SVG path/text context (e.g. '#333333' sits directly on the 'Oracle'/'Cacher' text runs) and by visual inspection of the author's PNG.",
+  "venue": "SOSP23"
+}

@@ -1,0 +1,265 @@
+{
+  "paper_id": "asplos26-041",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "STRAW",
+    "one_liner": "a wordline-level read-reclaim technique for NAND flash that tracks accumulated read-disturbance per wordline and reclaims only heavily-disturbed ones",
+    "domain": [
+      "NAND-flash",
+      "storage-systems",
+      "SSD-reliability"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how STRAW's flowchart counts reads, checks per-WL disturbance against a threshold, copies pages, and erases blocks",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Start with a read req.",
+        "kind": "node",
+        "role": "entry point triggered by every page read request",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "RC[BLK_tgt]++ / RC[WL_tgt]++",
+        "kind": "box",
+        "role": "increments the read counters for the target block and target wordline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "RC[BLK_tgt] % itv. == 0?",
+        "kind": "node",
+        "role": "decision checking whether the block's read count has reached the periodic checking interval",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "For every valid WL_i in BLK_tgt",
+        "kind": "box",
+        "role": "a loop container iterating the disturbance check over every valid wordline in the block",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "WL_i is heavily-disturbed?",
+        "kind": "node",
+        "role": "decision comparing WL_i's accumulated disturbance against the threshold",
+        "container": "For every valid WL_i in BLK_tgt",
+        "highlighted": true
+      },
+      {
+        "name": "Copy valid pages of WL_i to a free pages",
+        "kind": "box",
+        "role": "action that relocates a heavily-disturbed wordline's valid data before it can be corrupted",
+        "container": "For every valid WL_i in BLK_tgt",
+        "highlighted": false
+      },
+      {
+        "name": "BLK_tgt is empty?",
+        "kind": "node",
+        "role": "decision checking whether every page in the block has been copied out",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Erase BLK_tgt / Reset counters for BLK_tgt",
+        "kind": "box",
+        "role": "action that erases the emptied block and resets its per-WL counters",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "End",
+        "kind": "node",
+        "role": "exit point of the read-disturbance management procedure",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Start with a read req.",
+        "to": "RC[BLK_tgt]++ / RC[WL_tgt]++",
+        "what": "every read request increments the target block's and target WL's read counters",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "RC[BLK_tgt]++ / RC[WL_tgt]++",
+        "to": "RC[BLK_tgt] % itv. == 0?",
+        "what": "the updated block counter is checked against the periodic interval",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "RC[BLK_tgt] % itv. == 0?",
+        "to": "For every valid WL_i in BLK_tgt",
+        "what": "yes: the interval has elapsed, so every valid WL in the block is checked",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "WL_i is heavily-disturbed?",
+        "to": "Copy valid pages of WL_i to a free pages",
+        "what": "yes: a heavily-disturbed WL has its valid pages relocated",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "For every valid WL_i in BLK_tgt",
+        "to": "BLK_tgt is empty?",
+        "what": "after checking/copying every WL in the loop, the block is tested for emptiness",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "BLK_tgt is empty?",
+        "to": "Erase BLK_tgt / Reset counters for BLK_tgt",
+        "what": "yes: an emptied block is erased and its counters reset",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "BLK_tgt is empty?",
+        "to": "End",
+        "what": "no: the procedure ends for this interval without erasing",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Erase BLK_tgt / Reset counters for BLK_tgt",
+        "to": "End",
+        "what": "after erasing, the procedure ends",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "RC[BLK_tgt] % itv. == 0?",
+          "branches": [
+            "Y -> check every valid WL in the block",
+            "N -> (no periodic check this read)"
+          ]
+        },
+        {
+          "question": "WL_i is heavily-disturbed?",
+          "branches": [
+            "Y -> copy WL_i's valid pages to free pages",
+            "N -> continue to next WL_i"
+          ]
+        },
+        {
+          "question": "BLK_tgt is empty?",
+          "branches": [
+            "Y -> erase BLK_tgt and reset its counters",
+            "N -> End"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "STRAW tracks a read counter per block and per wordline; every interval it checks each wordline's accumulated disturbance against a threshold, relocates the valid pages of any heavily-disturbed wordline, and erases the block once nothing valid remains.",
+    "reading_order": "left to right along the main flow, entering the loop box to check each wordline, then continuing right through the block-emptiness check to the erase step and End"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.75,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d0d5da",
+        "used_for": "light grey fill of the Start/End rounded boxes, the 'For every valid WL' loop container, and the 'BLK_tgt is empty?' diamond"
+      },
+      {
+        "hex": "#006699",
+        "used_for": "dark blue fill of the 'WL_i is heavily-disturbed?' decision diamond"
+      },
+      {
+        "hex": "#3399cc",
+        "used_for": "medium blue fill of the 'Copy valid pages...' action box"
+      },
+      {
+        "hex": "#ff9900",
+        "used_for": "orange fill of the read-counter increment box"
+      },
+      {
+        "hex": "#ccee66",
+        "used_for": "light yellow-green fill of the 'Erase / Reset counters' box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on every box and diamond; black arrows connecting each step",
+    "corners": "mixed",
+    "arrows": "thin black arrows with solid heads, labelled Y/N at each decision's branches",
+    "font": "serif (Nimbus Roman/Cambria) with subscripted variable names, small (4-6pt) with larger 10pt for the start/end labels",
+    "icons": "none; standard flowchart box/diamond shapes only"
+  },
+  "encoding": {
+    "color_means": "orange = counter-update actions, dark blue = the per-WL disturbance decision, medium blue = the page-copy action, light green = the erase/reset action, grey = start/end/loop framing and the block-emptiness decision",
+    "line_style_means": "solid arrows only, no dashing; Y/N text labels each decision's two outgoing arrows",
+    "state_means": "not applicable in a before/after sense; this is a single decision procedure, not multiple compared states",
+    "marker_means": "Y/N letters mark which branch of each diamond decision is taken",
+    "emphasis": "colour groups the flowchart into its four functional stages (count in orange, per-WL check in blue tones, erase in green, framing in grey), letting the reader see the procedure's shape before reading any text",
+    "reusable_patterns": [
+      "a colour-coded flowchart where each functional stage (update, check, act, clean up) gets its own fill colour",
+      "a nested loop box ('for every X') containing its own internal decision and action",
+      "Y/N-labelled decision diamonds chained left to right along the main control path"
+    ],
+    "weaknesses": [
+      "the N branch out of the RC[BLK_tgt] % itv. == 0? diamond has no drawn continuation, leaving what happens on a non-interval read only implicit",
+      "dense subscripted variable names (BLK_tgt, WL_i, RC[...]) require the surrounding text to fully parse"
+    ]
+  },
+  "tags": [
+    "NAND-flash",
+    "read-disturbance",
+    "flowchart",
+    "wordline",
+    "read-reclaim",
+    "STRAW"
+  ],
+  "provenance": {
+    "sections": [
+      "STRAWFTL design (section number not captured in source)"
+    ],
+    "evidence": [
+      "Fig. 7 shows how STRAWFTL manages read-disturbance at a WL-granularity.",
+      "STRAWFTL copies the valid pages to free pages before the next interval, thereby preventing read-disturbance-induced data corruption.",
+      "If the block contains no valid pages after the checking procedure, STRAWFTL erases the block and resets all associated counters."
+    ]
+  },
+  "summary": "This flowchart shows how STRAWFTL manages NAND flash read disturbance at wordline (WL) granularity. Every read request increments per-block and per-WL read counters (RC[BLK_tgt]++, RC[WL_tgt]++). When the block's counter reaches a predefined interval, STRAWFTL loops over every valid WL in the block and asks whether it is heavily-disturbed; if so, that WL's valid pages are copied to free pages before disturbance can corrupt them. Once all WLs have been checked, the flowchart asks whether the block is now empty of valid pages: if so, STRAWFTL erases the block and resets its counters before ending, and if not, it simply ends until the next interval. Colour groups the four stages (orange counting, blue per-WL checking and copying, green erasing) so the procedure's shape is visible at a glance.",
+  "summary_zh": "该流程图示STRAWFTL按WL粒度管理读干扰：每次读请求递增块与WL读计数；每隔一定间隔遍历块内所有有效WL，若某WL被严重干扰则将其有效页迁移到空闲页；检查完后若块已空则擦除该块并重置计数器，否则结束。",
+  "confidence": "high",
+  "notes": "Corrected base from prior 'none' (not a valid mechanism base) to 'flowchart'. The context file's quoted paragraph opens mid-sentence with circled references '( 4 )' and '( 5 )' that belong to an earlier figure (not shown here); the text explicitly switches to 'Fig. 7 shows how STRAWFTL manages read-disturbance at a WL-granularity' before describing this flowchart, so those numbers were not treated as walkthrough markers on this figure. No source SVG or colour histogram file was available for this figure, so style.palette hex values are taken from the measured/index attributes' palette instead of a source-SVG histogram.",
+  "venue": "ASPLOS26"
+}

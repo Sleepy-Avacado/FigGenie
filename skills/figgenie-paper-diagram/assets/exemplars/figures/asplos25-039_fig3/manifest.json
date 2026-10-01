@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-039_fig3",
+  "paper_id": "asplos25-039",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. Helix overview. In Helix, the coordinator plans model placement as described in Sec. 4.4. We only need to run model placement once for each cluster. When a new request arrives, the coordinator node runs Helix scheduler to assign it a per-request pipeline and sends it to the first node in t",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "inkscape",
+  "aspect": 4.12,
+  "n_components": 18,
+  "n_flows": 16,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-039/src/fig3_fig-sec5-overview.svg",
+    "preview.png": "lab/extracted/asplos25-039/src/fig3_fig-sec5-overview.png",
+    "print.png": "lab/extracted/asplos25-039/asplos25-039_fig3_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Double-column (aspect 4.12), the widest clean hub-spoke: control subsystem, then a coloured heterogeneous topology, then a per-node zoom.",
+      "what_to_learn": "At double column a hub-spoke becomes three left-to-right zones (controller / topology / one-node detail) with the legend below."
+    },
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar where the Coordinator box nests a Profiler, a Placement Planner and a Scheduler stacked inside it, while a separate Compute Node panel nests three alternating Queue and Layer boxes, across 18 components.",
+      "what_to_learn": "Stack a coordinator's internal stages inside its own labelled box in top-to-bottom order even when the rest of the figure runs left to right, and keep a node's repeated queue-then-layer pairs the same size and colour so the pattern itself shows the pipeline running inside one node."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Also a named hub-spoke exemplar: three panels run left to right, Coordinator internals, a colour-typed cluster graph, and one Compute Node's queue/layer chain pulled into a zoomed panel by a dashed connector, legend below.",
+      "what_to_learn": "Chain three different kinds of panel left to right (control logic, then a topology graph, then one zoomed node) rather than forcing one drawing to hold all three, and put a single legend below spanning all of them since node colour and the layer icon both need explaining."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-008_fig3",
+  "paper_id": "osdi23-008",
+  "fig": "3",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 3: The Cilantro scheduler and client architecture. The sched- uler generates resource allocations for jobs and the clients collect performance feedback to report to the scheduler.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 0.9,
+  "n_components": 13,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-008/osdi23-008_fig3_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-008/osdi23-008_fig3_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "A three-level stack (Cilantro Scheduler internals, Resource Manager/Kubernetes, and per-job Clients/Job Servers) is connected top-down by red-labelled feedback arrows naming the exact data crossing each level (Res-Perf Data, confidence bounds, allocations).",
+      "what_to_learn": "Label every cross-tier arrow with the exact data it carries (Res-Perf Data, Load Data, confidence bounds, allocations) in red so the feedback loop reads without extra explanation, and nest each tier's internal modules inside a dashed sub-box; add a legend for the box-fill colours, since this figure leaves that coding unexplained."
+    }
+  ]
+}

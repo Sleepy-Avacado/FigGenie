@@ -1,0 +1,41 @@
+{
+  "id": "sosp25-007_fig2",
+  "paper_id": "sosp25-007",
+  "fig": "2",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 2. Overview of the TCB when running a JavaScript program (some non-TCB compartments are omitted).",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.36,
+  "n_components": 5,
+  "n_flows": 6,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-007/sosp25-007_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-007/sosp25-007_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: this is a 4-component trust-dependency mesh (Microvium depends directly on all three of Switcher, Allocator and Scheduler) with no single coordinator, closer to dataflow-dag than to hub-spoke.",
+      "what_to_learn": "The transferable lesson is a small trust/dependency graph, not hub-spoke: colour each node by its one narrow privilege, number each node to a legend entry below stating exactly what it is trusted for, and let a non-trusted example component (Microvium) hang off the graph to show what depending on the TCB looks like."
+    }
+  ]
+}

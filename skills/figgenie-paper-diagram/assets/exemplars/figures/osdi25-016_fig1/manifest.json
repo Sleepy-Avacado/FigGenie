@@ -1,0 +1,42 @@
+{
+  "id": "osdi25-016_fig1",
+  "paper_id": "osdi25-016",
+  "fig": "1",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 1: Concept of the KPerfIR infrastructure and ecosystem for compiler-centric performance tool. (Left) Overview and comparison of KPerfIR’s compiler-centric design and prior profiler designs. (Right) Demonstrative examples of novel performance tools facilitated by the compiler-centric design of",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 4.92,
+  "n_components": 16,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-016/src/fig1_concept.svg",
+    "preview.png": "lab/extracted/osdi25-016/src/fig1_concept.png",
+    "print.png": "lab/extracted/osdi25-016/osdi25-016_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: this is a before/after comparison (Prior Profiler Arts vs KPerfIR) with an Enables arrow fanning to three example tools, not a timeline; nothing sits on a time axis and no lanes or phases appear.",
+      "what_to_learn": "Read this as a hub-with-fan-out figure instead: put the shared IR at the visual center with 'Semantic' and 'Metrics' callouts, contrast it against the disconnected prior-art pipeline on the left, and fan one Enables arrow out to three dashed example-tool boxes on the right rather than forcing any of it onto a time axis."
+    }
+  ]
+}

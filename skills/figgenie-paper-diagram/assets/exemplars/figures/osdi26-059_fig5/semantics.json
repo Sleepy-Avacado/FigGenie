@@ -1,0 +1,172 @@
+{
+  "paper_id": "osdi26-059",
+  "fig": "5",
+  "system": {
+    "name": "UEP",
+    "one_liner": "a portable CPU-proxy-based communication library for expert-parallel MoE workloads across GPUs and NICs",
+    "domain": [
+      "ml-systems",
+      "networking",
+      "moe"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Proxy",
+        "role": "CPU-side proxy thread that intercepts lightweight GPU control messages and issues token-level data communication on the GPU's behalf",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "Control buffer",
+        "role": "temporarily buffers control messages (e.g. atomics) until their conditional check passes, then applies the carried values",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "FIFO",
+        "role": "per-GPU queue over which GPU threads issue lightweight control messages to the CPU proxy",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "GPU 0",
+        "role": "a GPU that initiates fine-grained token-level data movement by delegating transfers to the CPU proxy",
+        "container": "Node 0",
+        "novel": false
+      },
+      {
+        "name": "GPU N",
+        "role": "an additional GPU on the same node, delegating transfers the same way",
+        "container": "Node 0",
+        "novel": false
+      },
+      {
+        "name": "Communication channel",
+        "role": "a per-GPU ring buffer that temporarily buffers tokens to send in chunks; the high-throughput kernel uses several of these",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "GPU 0",
+        "to": "FIFO",
+        "what": "GPU threads issue lightweight control messages over PCIe to the CPU",
+        "step": null
+      },
+      {
+        "from": "FIFO",
+        "to": "Proxy",
+        "what": "the CPU proxy intercepts control messages from the FIFO",
+        "step": null
+      },
+      {
+        "from": "Proxy",
+        "to": "Communication channel",
+        "what": "proxy issues token-level data communication on behalf of the GPU threads, buffered in per-GPU ring buffers",
+        "step": null
+      },
+      {
+        "from": "Communication channel",
+        "to": "Communication channel",
+        "what": "GPUDirect RDMA moves data payloads directly between Node 0's and Node 1's communication channels",
+        "step": null
+      },
+      {
+        "from": "Proxy",
+        "to": "Control buffer",
+        "what": "atomic control messages (carried as immediate data) are buffered until their delivery condition is satisfied",
+        "step": null
+      },
+      {
+        "from": "Proxy",
+        "to": "Proxy",
+        "what": "manages / coordinates with the peer node's proxy",
+        "step": null
+      }
+    ],
+    "key_idea": "UEP splits GPU-initiated communication into a token-level data path the GPU still drives, and a CPU-proxy control path that intercepts messages and enforces delivery semantics on the GPU's behalf, giving portability across GPUs/NICs without sacrificing performance.",
+    "reading_order": "Two horizontal lanes, CPU above GPU, read left to right across two mirrored nodes connected by a GPUDirect RDMA link between their communication channels."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.77,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9ead3",
+        "used_for": "fill for the Proxy boxes"
+      },
+      {
+        "hex": "#fce5cd",
+        "used_for": "fill for the FIFO boxes"
+      },
+      {
+        "hex": "#c9daf8",
+        "used_for": "fill for the Communication channel boxes"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "fill for the GPU boxes"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "CPU/GPU lane labels and the dashed lane-divider line"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.34pt thin outlines, square corners",
+    "font": "Arial sans, 4.5-8pt",
+    "corners": "square",
+    "arrows": "thin arrows/lines, dashed 'Manages' and 'GPUDirect RDMA' connectors",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green marks the CPU proxy processes, orange marks the GPU-facing FIFOs carrying control messages, blue marks the ring-buffer communication channels carrying data payloads, gray marks the GPU compute units themselves",
+    "line_style_means": "dashed lines mark logical/management relationships ('Manages', 'GPUDirect RDMA') rather than direct physical data paths",
+    "emphasis": "the CPU lane and GPU lane are stacked and mirrored across Node 0 and Node 1, foregrounding the CPU-GPU role split (control vs. token movement) as the figure's main point",
+    "reusable_patterns": [
+      "CPU-proxy control-plane over a GPU data-plane, repeated symmetrically across two networked nodes"
+    ],
+    "weaknesses": [
+      "the 'imm' and 'Write' arrow labels are terse and depend on the surrounding paragraph text to fully parse"
+    ]
+  },
+  "tags": [
+    "gpu-networking",
+    "moe",
+    "expert-parallelism",
+    "rdma",
+    "cpu-proxy"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.6)",
+      "3 Design (p.9)"
+    ],
+    "evidence": [
+      "GPUs initiate the fine-grained data-movement...by delegating the transfer tasks to CPU proxies",
+      "employs multiple communication channels (Figure 5), a set of ring buffers per GPU",
+      "CPU proxy thread extracts the offset and value for the atomic itself...buffers them in the control buffer"
+    ]
+  },
+  "summary": "UEP is a portable expert-parallel communication system for MoE workloads that splits work between GPUs and CPU proxies. Figure 5 shows this split as two lanes, CPU above and GPU below, mirrored across two nodes. On each node, GPUs issue lightweight control messages over PCIe into per-GPU FIFOs; a CPU Proxy intercepts these messages and issues the actual token-level data transfer on the GPU's behalf through per-GPU Communication channel ring buffers, which move data payloads to the peer node via GPUDirect RDMA. A separate Control buffer holds atomic control messages, carried as immediate data, until the condition they specify passes, at which point their values are applied; the two nodes' proxies also manage each other directly. The design lets the GPU keep fast, pipelined data movement while the CPU proxy absorbs NIC- and delivery-semantics complexity.",
+  "summary_zh": "图5展示UEP架构:GPU经PCIe发控制消息到FIFO,CPU端Proxy拦截后代为发起token级传输,经通信通道并借GPUDirect RDMA传给对端;控制缓冲暂存原子消息,满足条件后应用,实现跨平台高性能通信。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

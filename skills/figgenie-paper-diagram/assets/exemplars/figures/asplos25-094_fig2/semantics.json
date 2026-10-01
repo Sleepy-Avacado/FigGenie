@@ -1,0 +1,176 @@
+{
+  "paper_id": "asplos25-094",
+  "fig": "2",
+  "system": {
+    "name": "Klotski",
+    "one_liner": "an efficient MoE inference engine that reduces pipeline bubbles via an expert-aware multi-batch pipeline",
+    "domain": [
+      "ml-systems",
+      "inference"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Attention",
+        "role": "attention sublayer within an MoE block",
+        "container": "MoE Block",
+        "novel": false
+      },
+      {
+        "name": "MoE Layer",
+        "role": "sparse layer containing a gating network and multiple experts",
+        "container": "MoE Block",
+        "novel": false
+      },
+      {
+        "name": "Gate",
+        "role": "gating network computing routing weights via softmax and activating top-k experts",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "E1",
+        "role": "an individual expert (FFN), sparsely activated per token",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "E2",
+        "role": "an individual expert (FFN), sparsely activated per token",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "E3",
+        "role": "an individual expert (FFN), sparsely activated per token",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "E4",
+        "role": "an individual expert (FFN), sparsely activated per token",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "Add & Normalize",
+        "role": "residual add and normalization applied after attention and after the MoE layer",
+        "container": "MoE Block",
+        "novel": false
+      },
+      {
+        "name": "MoE Block",
+        "role": "repeated transformer block combining attention and an MoE layer, stacked to form the model",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Embedding Inputs",
+        "role": "token embeddings fed into the stack of MoE Blocks",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Embedding Outputs",
+        "role": "output embeddings produced by the stack of MoE Blocks, used to predict the next token",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Embedding Inputs",
+        "to": "MoE Block",
+        "what": "token embeddings",
+        "step": null
+      },
+      {
+        "from": "Attention",
+        "to": "MoE Layer",
+        "what": "normalized attention output",
+        "step": null
+      },
+      {
+        "from": "MoE Layer",
+        "to": "Embedding Outputs",
+        "what": "weighted sum of expert outputs",
+        "step": null
+      }
+    ],
+    "key_idea": "Each MoE block sparsely routes each token through a gate to a small subset of experts inside the MoE layer; during autoregressive inference this stack runs once over the whole prompt in the prefill stage and then once per generated token in the decoding stage.",
+    "reading_order": "Left panel, bottom-to-top through one MoE Block (Attention, Add & Normalize, MoE Layer with Gate and E1-E4, Add & Normalize); right panel, left-to-right across stacked MoE Blocks for the prefill stage's full prompt, then per-token for the decoding stage."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.07,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#8faadc",
+        "used_for": "MoE Block boxes in the prefill/decoding timeline"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "Embedding Inputs/Outputs boxes"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "expert (FFN) boxes inside the MoE Layer"
+      },
+      {
+        "hex": "#baa5ff",
+        "used_for": "Gate box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin blue borders (~0.19pt), rounded corners, dashed outer box around the single expanded MoE block",
+    "font": "Arial, bold-italic for token labels",
+    "corners": "rounded",
+    "arrows": "thin blue arrows connecting sublayers and stacked blocks",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue shades distinguish MoE Block containers, embeddings, and individual experts; purple marks the Gate that selects experts",
+    "line_style_means": null,
+    "emphasis": "The right-hand timeline visually separates the one-shot Prefill Stage from the token-by-token Decoding Stage using matching MoE Block boxes",
+    "reusable_patterns": [
+      "single expanded block diagram paired with a stacked/tiled timeline showing repeated invocation of that block"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "Mixture-of-Experts",
+    "transformer",
+    "gating network",
+    "inference pipeline",
+    "LLM"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Related Work (p.3)"
+    ],
+    "evidence": [
+      "The MoE architecture primarily consists of multiple MoE blocks, each containing an attention layer, an MoE layer",
+      "It uses a softmax function to calculate the routing weights of each expert, then activates the top-k experts",
+      "This process comprises two stages: prefill and decoding"
+    ]
+  },
+  "summary": "Figure 2 presents background on the standard MoE model architecture and its autoregressive inference process, which Klotski's engine serves. On the left, a single MoE Block is expanded: an Attention sublayer and an MoE Layer (a Gate plus experts E1-E4) are each followed by Add & Normalize. The Gate applies softmax to compute routing weights and activates only the top-k experts per token, whose outputs are weighted-summed as the MoE layer's output. On the right, a timeline shows how stacked MoE Blocks are invoked during inference: in the Prefill Stage the whole prompt ('Research on MLSys') is processed at once through Embedding Inputs/Outputs, activating many experts; in the Decoding Stage, tokens are generated one at a time ('is', 'interesting', ... '<EOS>'), each requiring another pass through the MoE Block stack. This figure sets up the paper's motivation: decoding-stage batches are small and expert activation varies per step, causing I/O-bound pipeline bubbles that Klotski targets.",
+  "summary_zh": "图2展示 MoE 模型的基本架构与推理过程：单个 MoE Block 由注意力层与含门控和多个专家的 MoE 层组成，门控用 softmax 激活 top-k 专家；右侧时间线显示预填充阶段一次性处理整段提示，解码阶段逐词生成，均需重复经过堆叠的 MoE Block。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

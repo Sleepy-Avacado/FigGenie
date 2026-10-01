@@ -1,0 +1,56 @@
+{
+  "id": "sosp25-001_fig12",
+  "kind": "mechanism",
+  "paper_id": "sosp25-001",
+  "fig": "12",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 12: Hypergraph for the example in Fig. 10.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "how attention data and computation blocks are represented as weighted vertices linked by per-block hyperedges in DCP's hypergraph model",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.79,
+  "n_elements": 7,
+  "n_relations": 3,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-001/src/fig12_hyper-edge.svg",
+    "preview.png": "lab/extracted/sosp25-001/src/fig12_hyper-edge.png",
+    "print.png": "lab/extracted/sosp25-001/sosp25-001_fig12_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "A small worked hypergraph (3 queries, 5 compute blocks, 3 KV, 3 outputs) that teaches the paper's vertex/weight/hyperedge notation on one concrete example before it is used at scale.",
+      "what_to_learn": "Beneath each vertex circle print its [compute, data] weight tuple; group each hyperedge's members with a translucent hatch-coloured region instead of drawn lines — but overlapping hyperedges blend into a hard-to-read plaid where several share a block.",
+      "note_source": "agent"
+    }
+  ]
+}

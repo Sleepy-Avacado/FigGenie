@@ -1,0 +1,343 @@
+{
+  "paper_id": "nsdi24-036",
+  "fig": "1",
+  "system": {
+    "name": "Sirius",
+    "one_liner": "a system that composes multiple, order-conflicting network-function chains from edge-cloud business traffic onto one P4-capable gateway ASIC",
+    "domain": [
+      "networking",
+      "edge-computing",
+      "programmable-switches"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Edge Cloud",
+        "role": "the dashed deployment boundary containing the redundant gateway pair, commercial switches, and servers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Traffic",
+        "role": "example business traffic flows entering the gateway, labelled with example services (DDoS, LB, switch) as colored arrows",
+        "container": "(a) topology",
+        "novel": false
+      },
+      {
+        "name": "Gateway",
+        "role": "the P4-capable edge gateway (deployed redundantly) that Sirius's chain composition runs on",
+        "container": "(a) topology",
+        "novel": true
+      },
+      {
+        "name": "Commercial Switches",
+        "role": "off-the-shelf switches connecting the gateways to the edge cloud's servers",
+        "container": "(a) topology",
+        "novel": false
+      },
+      {
+        "name": "Servers",
+        "role": "light-weight, CPU-limited servers in the edge cloud that run business-traffic workloads",
+        "container": "(a) topology",
+        "novel": false
+      },
+      {
+        "name": "Backbone Network",
+        "role": "upstream network the gateway connects the edge cloud to",
+        "container": "(a) topology",
+        "novel": false
+      },
+      {
+        "name": "Network Function Chain 1: VPC-VPC",
+        "role": "example chain processing traffic flowing between private (VPC) networks",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "Network Function Chain 2: SNAT-OUT",
+        "role": "example chain processing traffic leaving the edge cloud",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "Network Function Chain 3: SNAT-IN",
+        "role": "example chain processing traffic entering the edge cloud, whose modules run in reverse order relative to SNAT-OUT",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "checker.p4",
+        "role": "network function that validates/filters packets at the start of a chain",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "VxLAN.p4",
+        "role": "network function handling VxLAN encapsulation/decapsulation",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "session.p4",
+        "role": "network function tracking per-connection session state",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "acl.p4",
+        "role": "access-control-list network function, highlighted since its position differs between the SNAT-OUT and SNAT-IN chains",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "switch.p4",
+        "role": "network function performing final packet switching/forwarding",
+        "container": "(b) traffic chains",
+        "novel": false
+      },
+      {
+        "name": "Programmable Switching ASIC",
+        "role": "the P4-programmable switch ASIC forming the core of Sirius's custom gateway",
+        "container": "(c) gateway architecture",
+        "novel": true
+      },
+      {
+        "name": "Pipeline 0",
+        "role": "one of four parallel packet-processing pipelines inside the switching ASIC",
+        "container": "Programmable Switching ASIC",
+        "novel": true
+      },
+      {
+        "name": "Pipeline 1",
+        "role": "a second parallel packet-processing pipeline inside the switching ASIC",
+        "container": "Programmable Switching ASIC",
+        "novel": true
+      },
+      {
+        "name": "Pipeline 2",
+        "role": "a third parallel packet-processing pipeline inside the switching ASIC",
+        "container": "Programmable Switching ASIC",
+        "novel": true
+      },
+      {
+        "name": "Pipeline 3",
+        "role": "a fourth parallel packet-processing pipeline inside the switching ASIC",
+        "container": "Programmable Switching ASIC",
+        "novel": true
+      },
+      {
+        "name": "Traffic Manager",
+        "role": "connects the ASIC's pipelines and enables packet recirculation, which Sirius uses to resolve network-function ordering conflicts",
+        "container": "Programmable Switching ASIC",
+        "novel": false
+      },
+      {
+        "name": "N x 100G Ethernet",
+        "role": "external network ports feeding ingress traffic into the ASIC's pipelines",
+        "container": "(c) gateway architecture",
+        "novel": false
+      },
+      {
+        "name": "Non-Programmable NIC",
+        "role": "fixed-function NIC connecting the ASIC's egress side to the server-grade CPU",
+        "container": "(c) gateway architecture",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "server-grade multi-core CPU handling functions the switch ASIC cannot, reached via PCIe",
+        "container": "(c) gateway architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Traffic",
+        "to": "Gateway",
+        "what": "example business traffic (labelled DDoS, LB, switch) entering the edge cloud",
+        "step": null
+      },
+      {
+        "from": "Gateway",
+        "to": "Backbone Network",
+        "what": "traffic forwarded upstream",
+        "step": null
+      },
+      {
+        "from": "Commercial Switches",
+        "to": "Servers",
+        "what": "traffic distributed to edge cloud servers",
+        "step": null
+      },
+      {
+        "from": "checker.p4",
+        "to": "VxLAN.p4",
+        "what": "VPC-VPC chain order",
+        "step": 1
+      },
+      {
+        "from": "VxLAN.p4",
+        "to": "switch.p4",
+        "what": "VPC-VPC chain order",
+        "step": 2
+      },
+      {
+        "from": "checker.p4",
+        "to": "VxLAN.p4",
+        "what": "SNAT-OUT chain order",
+        "step": 1
+      },
+      {
+        "from": "VxLAN.p4",
+        "to": "session.p4",
+        "what": "SNAT-OUT chain order",
+        "step": 2
+      },
+      {
+        "from": "session.p4",
+        "to": "acl.p4",
+        "what": "SNAT-OUT chain order",
+        "step": 3
+      },
+      {
+        "from": "acl.p4",
+        "to": "switch.p4",
+        "what": "SNAT-OUT chain order",
+        "step": 4
+      },
+      {
+        "from": "checker.p4",
+        "to": "acl.p4",
+        "what": "SNAT-IN chain order (reversed relative to SNAT-OUT)",
+        "step": 1
+      },
+      {
+        "from": "acl.p4",
+        "to": "session.p4",
+        "what": "SNAT-IN chain order (reversed relative to SNAT-OUT)",
+        "step": 2
+      },
+      {
+        "from": "session.p4",
+        "to": "VxLAN.p4",
+        "what": "SNAT-IN chain order (reversed relative to SNAT-OUT)",
+        "step": 3
+      },
+      {
+        "from": "VxLAN.p4",
+        "to": "switch.p4",
+        "what": "SNAT-IN chain order",
+        "step": 4
+      },
+      {
+        "from": "N x 100G Ethernet",
+        "to": "Programmable Switching ASIC",
+        "what": "ingress traffic entering the pipelines",
+        "step": null
+      },
+      {
+        "from": "Programmable Switching ASIC",
+        "to": "Non-Programmable NIC",
+        "what": "egress traffic leaving the ASIC",
+        "step": null
+      },
+      {
+        "from": "Non-Programmable NIC",
+        "to": "CPU",
+        "what": "traffic forwarded to the server CPU via PCIe",
+        "step": null
+      },
+      {
+        "from": "Pipeline 0",
+        "to": "Pipeline 1",
+        "what": "recirculated packets crossing between pipelines via the Traffic Manager",
+        "step": null
+      }
+    ],
+    "key_idea": "An edge cloud's business traffic maps to several network-function chains whose module orderings conflict (SNAT-IN reverses SNAT-OUT's order), so Sirius composes them onto one custom P4 gateway ASIC with multiple recirculating pipelines instead of one monolithic program.",
+    "reading_order": "Left to right across three sub-figures: (a) edge cloud topology, (b) three chains with checker/VxLAN/session/acl/switch modules in conflicting orders, (c) the gateway's internal ASIC pipelines and NIC/CPU path."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "double",
+    "aspect": 4.36,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffcc",
+        "used_for": "pale yellow fill of checker.p4-type module boxes"
+      },
+      {
+        "hex": "#ccffcc",
+        "used_for": "pale green fill of VxLAN.p4/switch.p4-type module boxes"
+      },
+      {
+        "hex": "#990000",
+        "used_for": "dark red used in the panel (a) traffic arrows and chain-conflict emphasis"
+      },
+      {
+        "hex": "#e6e6ff",
+        "used_for": "pale lavender fill of session.p4-type module boxes"
+      },
+      {
+        "hex": "#ccffff",
+        "used_for": "pale cyan fill used for other module/server elements"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.7pt) borders, mostly solid, with a dashed boundary around the Edge Cloud region in panel (a)",
+    "font": "Arial sans, 3-6.5pt, almost entirely non-bold",
+    "corners": "rounded",
+    "arrows": "many thin arrows (21 heads) linking small module boxes, plus a criss-crossing red ingress/egress pattern in panel (c)",
+    "icons": "vector icons for gateways, server racks, switches, and the CPU chip"
+  },
+  "encoding": {
+    "color_means": "pastel fill colors distinguish different P4 network-function module types (checker, VxLAN, session, switch); acl.p4 is visually called out since its chain position differs across chains",
+    "line_style_means": "colored arrows in panel (a) distinguish different business traffic types; a criss-crossing red arrow pattern in panel (c) shows ingress/egress crossing between ASIC pipelines",
+    "emphasis": "placing SNAT-OUT and SNAT-IN's module chains directly above/below each other in panel (b) visually exposes that acl.p4 and VxLAN.p4 swap positions, foreshadowing the ordering-conflict problem the paper solves",
+    "reusable_patterns": [
+      "small labelled boxes chained by arrows to depict a processing pipeline",
+      "two structurally similar chains drawn stacked to expose a conflicting element ordering"
+    ],
+    "weaknesses": [
+      "three unrelated diagram types are packed into one figure without a unifying visual language",
+      "the exact role of the Traffic Manager and how recirculation resolves ordering conflicts is not spelled out in this panel alone"
+    ]
+  },
+  "tags": [
+    "network-function-chaining",
+    "P4",
+    "edge-computing",
+    "programmable-switch",
+    "recirculation",
+    "gateway-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "We designed and built our own P4-capable edge gateway",
+      "SNAT-IN and SNAT-OUT traffic flow in reverse directions, thus, the two network function chains execute modules in reversed orders",
+      "the gateway is equipped with a programmable switch ASIC and server-grade CPU with dozens of cores"
+    ]
+  },
+  "summary": "This three-panel figure introduces Sirius's problem setting and gateway design. Panel (a) shows an edge cloud's topology: redundant P4-capable Gateways sit at the border between commercial switches/servers and the backbone network, absorbing several types of business traffic. Panel (b) shows three example network-function chains built from shared P4 modules (checker, VxLAN, session, acl, switch): VPC-VPC uses three modules, while SNAT-OUT and SNAT-IN use the same five modules but in different, partly reversed orders, illustrating the ordering conflicts Sirius must resolve when composing chains onto one program. Panel (c) shows the gateway's internal architecture: a programmable switching ASIC with four parallel pipelines and a traffic manager that recirculates packets, fed by external 100G Ethernet ports and connected through a non-programmable NIC and PCIe to a server-grade CPU.",
+  "summary_zh": "该图分三部分:(a) 边缘云拓扑,冗余网关连接交换机、服务器与骨干网;(b) 三条业务流量链共享 P4 模块但顺序冲突;(c) 网关内部可编程 ASIC 的四条流水线及经 PCIe 连接的 CPU。",
+  "confidence": "medium",
+  "notes": "layout-proposal: mixed-diagram triptych — three independently structured sub-figures (a hub-and-spoke edge topology, stacked P4 processing chains, and a layered ASIC/NIC/CPU pipeline) placed side by side under one caption; no single seven-item template covers all three at once.",
+  "venue": "NSDI24"
+}

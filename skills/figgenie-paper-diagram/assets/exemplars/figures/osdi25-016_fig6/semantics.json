@@ -1,0 +1,295 @@
+{
+  "paper_id": "osdi25-016",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "KPerfIR",
+    "one_liner": "a compiler-centric IR infrastructure that lets performance-profiling tools be composed as compiler passes sharing program semantics and metrics",
+    "domain": [
+      "compiler",
+      "ml-systems",
+      "performance-tooling"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how KPerfIR correlates compiler IR with iteration timing, critical-path traces, and GPU memory-access patterns in three novel profiling use cases",
+    "base": "code",
+    "elements": [
+      {
+        "name": "Loop IR",
+        "kind": "box",
+        "role": "panel (a)'s input: MLIR-like loop code annotated with profiling record calls",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Iteration-based Profiling",
+        "kind": "label",
+        "role": "panel (a)'s title: instrumenting loop IR to build a per-iteration timeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GEMM i",
+        "kind": "box",
+        "role": "timeline bar for one loop iteration's GEMM operation, correlated to its IR record call",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "SOFTMAX i",
+        "kind": "box",
+        "role": "timeline bar for the same iteration's SOFTMAX operation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Warp Specialized IR",
+        "kind": "box",
+        "role": "panel (b)'s input: IR for a warp-specialized kernel with two warp groups (WG0 producer, WG1 consumer)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Critical Path Analysis",
+        "kind": "label",
+        "role": "panel (b)'s title: identifying which operation dominates the runtime critical path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "WG0",
+        "kind": "lane",
+        "role": "warp group 0's timeline row in the critical-path analysis",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "WG1",
+        "kind": "lane",
+        "role": "warp group 1's timeline row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Compute IR",
+        "kind": "box",
+        "role": "panel (c)'s input: IR moving tensor blocks and waiting on barriers",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Wave ID",
+        "kind": "cell",
+        "role": "grid coloured by which GPU wave executes each tile, built by correlating Compute IR to hardware",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L2 Swizzling",
+        "kind": "label",
+        "role": "the optimization pass that rearranges the Wave ID grid to improve L2 cache locality",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "XCD Group",
+        "kind": "box",
+        "role": "the group of waves the swizzled layout highlights as sharing one GPU compute die",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Correspond",
+        "kind": "label",
+        "role": "legend entry: the arrow style linking an IR structure element to its runtime timing/memory region",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "IR Structure",
+        "kind": "label",
+        "role": "legend entry: grey boxes denote compiler IR nodes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Timing Region",
+        "kind": "label",
+        "role": "legend entry: blue boxes denote a measured timing interval",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Critical Path",
+        "kind": "label",
+        "role": "legend entry: pink outline marks the operations on the critical path",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Loop IR",
+        "to": "GEMM i",
+        "what": "Correspond: the 'gemm' record call in the loop IR maps to this GEMM timeline bar",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Loop IR",
+        "to": "SOFTMAX i",
+        "what": "Correspond: the 'softmax' record call maps to this SOFTMAX timeline bar",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Warp Specialized IR",
+        "to": "WG0",
+        "what": "warpgroup_id = 0 branch executes as WG0's timeline",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Warp Specialized IR",
+        "to": "WG1",
+        "what": "warpgroup_id = 1 branch executes as WG1's timeline",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Compute IR",
+        "to": "Wave ID",
+        "what": "Correspond: each 'Move in block' IR op maps to a coloured cell in the Wave ID grid",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Wave ID",
+        "to": "XCD Group",
+        "what": "L2 Swizzling rearranges the grid so waves sharing an XCD group become contiguous",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "①",
+        "at": "Critical Path Analysis (b)",
+        "what": "Load K Dominate: LOAD K operations on WG0/WG1's timeline form the critical path",
+        "carries": "critical-path trace 1"
+      },
+      {
+        "marker": "②",
+        "at": "Critical Path Analysis (b)",
+        "what": "Load V Dominate: LOAD V operations form the critical path instead",
+        "carries": "critical-path trace 2"
+      },
+      {
+        "marker": "③",
+        "at": "Critical Path Analysis (b)",
+        "what": "Compute Dominate: GEMM/SOFTMAX compute operations form the critical path instead",
+        "carries": "critical-path trace 3"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Because KPerfIR keeps IR structure available at profiling time, it can correlate code directly with per-iteration timelines, critical-path traces across warp groups, and program-object memory-access patterns.",
+    "reading_order": "panel (a) top-left (loop IR to timeline), down to (b) (warp-specialized IR to three critical-path cases), then (c) on the right (compute IR to a swizzled access-pattern grid)"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 3.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#eceff1",
+        "used_for": "light blue-gray fill of 'IR Structure' boxes (legend) and code/IR panels"
+      },
+      {
+        "hex": "#bbdefb",
+        "used_for": "light blue fill of 'Timing Region' boxes, the GEMM timeline bars and measured intervals"
+      },
+      {
+        "hex": "#c8e6c9",
+        "used_for": "light green fill, e.g. some Wave-ID grid cells and GEMM-adjacent boxes"
+      },
+      {
+        "hex": "#fff9c4",
+        "used_for": "pale yellow fill of the SOFTMAX timeline bars"
+      },
+      {
+        "hex": "#e1bee7",
+        "used_for": "light purple fill of some Wave ID grid cells"
+      },
+      {
+        "hex": "#ffebee",
+        "used_for": "pale pink fill/outline marking the 'Critical Path' (legend) and the highlighted path in each of the three critical-path cases"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.7pt black outlines; a pink (#ffbfbf) outline traces the Critical Path and the XCD Group",
+    "corners": "mixed",
+    "arrows": "thin curved 'Correspond' arrows link IR code lines to their timeline/grid counterpart; straight lines chain timeline segments",
+    "font": "ArialMT / HelveticaNeue sans (monospace-like for code), 4-5.5pt, italic for some IR keywords",
+    "icons": "a handful of small legend glyphs (arrow, boxes) explaining Correspond / IR Structure / Timing Region / Critical Path"
+  },
+  "encoding": {
+    "color_means": "gray = IR structure; blue = a measured timing region; yellow = SOFTMAX timing; pink outline = the critical path; purple/green/blue grid cells in (c) colour-code which GPU wave a tile belongs to",
+    "line_style_means": "curved 'Correspond' arrows (legend-defined) link an IR line to the timeline or grid region it produced; pink outlines trace the critical path or XCD group",
+    "state_means": "not applicable, the three lettered panels are different use cases rather than states of one structure; within (b) the three circled cases share one WG0/WG1 template with only the highlighted critical path differing",
+    "marker_means": "circled ①②③ number the three critical-path cases in panel (b); the legend's four swatches (Correspond / IR Structure / Timing Region / Critical Path) are reused unlabelled elsewhere",
+    "emphasis": "the pink critical-path outline is the one visual element repeated in all three panels, tying each disparate use case back to KPerfIR's central promise of runtime-to-IR correlation",
+    "reusable_patterns": [
+      "compiler IR snippet on the left with curved 'Correspond' arrows into a coloured timeline or grid on the right, closed off by a small reusable legend"
+    ],
+    "weaknesses": [
+      "three unrelated use cases and a dense legend are packed into one double-column figure at 4-5.5pt text, so each sub-panel gets very little room"
+    ]
+  },
+  "tags": [
+    "compiler-profiling",
+    "GPU-kernels",
+    "critical-path-analysis",
+    "warp-specialization",
+    "KPerfIR",
+    "MLIR"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Compiler-centric Performance Tool (p.8)",
+      "§4 Compiler-centric Performance Tool (p.9)"
+    ],
+    "evidence": [
+      "we can instrument the IR to collect clock ticks alongside loop iteration index semantics",
+      "there are three common critical paths dominated by different operations, as shown in Fig. 6-(b)",
+      "allowing developers to correlate memory performance metrics, such as access patterns, heat maps, and bank conflicts"
+    ]
+  },
+  "summary": "KPerfIR is a compiler-centric IR infrastructure that lets performance tools be built as compiler passes sharing the compiler's own program semantics. This figure showcases three such tools, each drawn as source-like IR on the left linked by curved 'Correspond' arrows (per the shared legend, alongside grey IR-Structure and blue Timing-Region swatches) to a runtime view on the right. In (a), instrumenting Loop IR's record calls builds a per-iteration timeline of alternating GEMM and SOFTMAX bars. In (b), instrumenting a warp-specialized kernel's IR lets three circled cases replay the same WG0/WG1 timeline template with a different, pink-outlined Critical Path highlighted each time: ① Load K Dominate, ② Load V Dominate, and ③ Compute Dominate. In (c), Compute IR's block-movement and barrier waits map onto a coloured Wave ID grid, which an L2 Swizzling pass rearranges to group waves sharing one XCD, exposing the resulting access pattern.",
+  "summary_zh": "该图展示KPerfIR用编译期IR支撑三种工具：(a)循环IR映射为GEMM/SOFTMAX时间线；(b)warp IR的三种关键路径①LoadK②LoadV③计算主导；(c)计算IR经Swizzling重排Wave ID网格按XCD分组。",
+  "confidence": "high",
+  "notes": "kept groups=[\"walkthrough\"] as given; content.steps holds the ①②③ markers from sub-panel (b) only (per the rule of filling just the primary group's block), while (a) and (c) show two further, unnumbered IR-to-runtime correspondences described in content.elements/relations.",
+  "venue": "OSDI25"
+}

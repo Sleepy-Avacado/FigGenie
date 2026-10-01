@@ -1,0 +1,300 @@
+{
+  "paper_id": "asplos26-125",
+  "fig": "4",
+  "system": {
+    "name": "ISAMORE",
+    "one_liner": "an end-to-end framework that discovers reusable custom RISC-V instructions from domain applications via e-graph anti-unification",
+    "domain": [
+      "risc-v",
+      "compilers",
+      "hardware-synthesis"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Domain programs",
+        "role": "set of domain-representative programs used as ISAMORE's input",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "LLVM",
+        "role": "compiles domain programs to LLVM IR",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DSL",
+        "role": "ISAMORE's structured domain-specific language encoding the compiled IR",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "E-graph",
+        "role": "e-graph encoding of the DSL program, the design entry for the RII flow",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "drives the phase-oriented iterative RII process, selecting which ruleset each phase applies",
+        "container": "RII",
+        "novel": true
+      },
+      {
+        "name": "Ruleset generation",
+        "role": "offline process constructing the rulesets each RII phase applies",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Ruleset",
+        "role": "the set of rewrite rules an RII phase applies, produced by ruleset generation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Phase",
+        "role": "one iteration of RII applying EqSat, smart AU, vectorize, select, and extract steps",
+        "container": "RII",
+        "novel": true
+      },
+      {
+        "name": "EqSat",
+        "role": "equality-saturation step expanding the e-graph with equivalent forms",
+        "container": "Phase",
+        "novel": true
+      },
+      {
+        "name": "smart AU",
+        "role": "scalable e-graph anti-unification technique identifying reusable patterns",
+        "container": "Phase",
+        "novel": true
+      },
+      {
+        "name": "vectorize",
+        "role": "pattern vectorization packing scalar operations into vectorized custom instructions",
+        "container": "Phase",
+        "novel": true
+      },
+      {
+        "name": "select",
+        "role": "Pareto-optimal pattern selection balancing performance gains and area overhead",
+        "container": "Phase",
+        "novel": true
+      },
+      {
+        "name": "extract",
+        "role": "extracts the selected patterns/program from the e-graph",
+        "container": "Phase",
+        "novel": true
+      },
+      {
+        "name": "profile",
+        "role": "realistic performance information from instrumenting and profiling the LLVM IR",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cost model",
+        "role": "hardware-aware cost model guiding pattern selection and extraction, informed by profiling, PDK, and HLS",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "PDK",
+        "role": "target process design kit informing the cost model's hardware estimates",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Patterns",
+        "role": "reusable pattern solutions produced by RII",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "HLS",
+        "role": "high-level synthesis engine estimating hardware performance/overhead and generating hardware implementations",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CI0, CI1, ...",
+        "role": "final sets of custom instructions with hardware implementations, ISAMORE's output",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Domain programs",
+        "to": "LLVM",
+        "what": "source programs compiled to LLVM IR",
+        "step": null
+      },
+      {
+        "from": "LLVM",
+        "to": "DSL",
+        "what": "compiled LLVM IR translated into the structured DSL",
+        "step": null
+      },
+      {
+        "from": "DSL",
+        "to": "E-graph",
+        "what": "DSL program encoded as an e-graph",
+        "step": null
+      },
+      {
+        "from": "E-graph",
+        "to": "Scheduler",
+        "what": "e-graph design entry for RII",
+        "step": null
+      },
+      {
+        "from": "Ruleset generation",
+        "to": "Ruleset",
+        "what": "constructed ruleset for each RII phase",
+        "step": null
+      },
+      {
+        "from": "Ruleset",
+        "to": "Phase",
+        "what": "rules applied during the phase",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Phase",
+        "what": "iterative phase invocation",
+        "step": null
+      },
+      {
+        "from": "profile",
+        "to": "Cost model",
+        "what": "instrumented/profiled LLVM IR performance data",
+        "step": null
+      },
+      {
+        "from": "PDK",
+        "to": "Cost model",
+        "what": "target process design kit parameters",
+        "step": null
+      },
+      {
+        "from": "HLS",
+        "to": "Cost model",
+        "what": "hardware performance/overhead estimation",
+        "step": null
+      },
+      {
+        "from": "Cost model",
+        "to": "Phase",
+        "what": "guidance for pattern selection and extraction",
+        "step": null
+      },
+      {
+        "from": "Phase",
+        "to": "Patterns",
+        "what": "RII solutions: sets of reusable patterns",
+        "step": null
+      },
+      {
+        "from": "Patterns",
+        "to": "HLS",
+        "what": "patterns translated into custom instructions with hardware implementation",
+        "step": null
+      },
+      {
+        "from": "HLS",
+        "to": "CI0, CI1, ...",
+        "what": "generated custom instructions",
+        "step": null
+      }
+    ],
+    "key_idea": "ISAMORE compiles domain programs into an e-graph and iteratively applies equality saturation, anti-unification, and vectorization inside a cost-model-guided Phase loop to extract Pareto-optimal, reusable custom instructions, synthesized to hardware via HLS.",
+    "reading_order": "Left to right: Domain programs through LLVM/DSL into the E-graph, into the iterative RII Scheduler/Phase loop, out to Patterns and HLS-generated custom instructions."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.89,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7ea6e0",
+        "used_for": "Scheduler icon and RII/Phase region border accents"
+      },
+      {
+        "hex": "#f9f7ed",
+        "used_for": "background fill of the Phase box region"
+      },
+      {
+        "hex": "#cdeb8b",
+        "used_for": "E-graph box highlight"
+      },
+      {
+        "hex": "#97d077",
+        "used_for": "sub-step boxes inside Phase (EqSat, smart AU, vectorize, select, extract)"
+      },
+      {
+        "hex": "#ffb570",
+        "used_for": "Patterns box and HLS-related highlight"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.4pt) borders with several stroke widths; a thin-bordered rounded rectangle frames the whole RII region",
+    "font": "embedded sans-serif fonts, ~5-10.5pt, larger for stage titles (RII, Phase)",
+    "corners": "rounded",
+    "arrows": "mostly curved connector lines rather than straight arrows, giving the pipeline a flowing look, plus a small loop arrow on the Scheduler icon",
+    "icons": "vector icons for domain-program documents, the E-graph/HLS symbols, and the looping Scheduler icon"
+  },
+  "encoding": {
+    "color_means": "blue marks the Scheduler/control element; green shades the DSL/E-graph/Phase-substep boxes that form RII's core; orange highlights the Patterns/output stage; a light cream background sets off the whole Phase box as one visual unit",
+    "line_style_means": "curved solid lines carry data through the pipeline; a small looping arrow on the Scheduler icon depicts the iterative phase-by-phase process",
+    "emphasis": "boxing EqSat/smart-AU/vectorize/select/extract together inside one rounded Phase region, itself inside the labeled RII area, foregrounds ISAMORE's core iterative methodology against the more conventional compiler front-end (LLVM/DSL/E-graph) and back-end (HLS) stages around it",
+    "reusable_patterns": [
+      "compiler-style left-to-right pipeline with one boxed iterative optimization loop in the middle",
+      "a cost model fed by profiling and a PDK, gating an iterative selection loop"
+    ],
+    "weaknesses": [
+      "sub-step boxes (EqSat, smart AU, vectorize, select, extract) are named only by short keywords, requiring the corresponding subsections to interpret",
+      "the measured color histogram's green/blue/orange hues are not individually explained by an in-figure legend"
+    ]
+  },
+  "tags": [
+    "e-graph",
+    "anti-unification",
+    "custom-instructions",
+    "RISC-V",
+    "high-level-synthesis",
+    "compiler"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Framework Overview (p.4)"
+    ],
+    "evidence": [
+      "ISAMORE is an end-to-end framework that begins with a set of domain-representative programs",
+      "RII innovatively introduces the smart AU technique for scalable e-graph anti-unification",
+      "guided by a tangible hardware-aware cost model"
+    ]
+  },
+  "summary": "This figure gives ISAMORE's end-to-end framework overview for discovering reusable RISC-V custom instructions. Domain-representative programs are compiled to LLVM IR, translated into ISAMORE's structured DSL, and encoded as an E-graph, the design entry for RII (Reusable Instruction Identification), the paper's core contribution. RII's Scheduler iterates over Phases, each applying a Ruleset (built offline by Ruleset generation) through equality saturation (EqSat), the novel smart-AU anti-unification technique, pattern vectorization, and Pareto-optimal pattern selection/extraction. A hardware-aware Cost model, informed by profiling the LLVM IR and the target PDK, guides these phase decisions using performance/overhead estimates from a high-level-synthesis (HLS) engine. The resulting reusable Patterns are finally translated by the HLS engine into concrete custom instructions (CI0, CI1, ...) with hardware implementations. The figure is drawn as a left-to-right pipeline with one boxed iterative loop (Scheduler/Phase) in the middle.",
+  "summary_zh": "该图展示 ISAMORE 框架：程序经 LLVM、DSL 编译为 E-graph，RII 由 Scheduler 驱动 Phase 循环执行等价饱和、smart AU 反统一与向量化，经成本模型指导，由 HLS 生成可复用自定义指令。",
+  "confidence": "high",
+  "notes": "layout-proposal: pipeline-with-iterative-core — a left-to-right compile flow (LLVM/DSL/E-graph) feeds an iterative Scheduler-Phase loop guided by a profiling- and PDK-informed cost model, before fanning out to HLS-generated custom instructions.",
+  "venue": "ASPLOS26"
+}

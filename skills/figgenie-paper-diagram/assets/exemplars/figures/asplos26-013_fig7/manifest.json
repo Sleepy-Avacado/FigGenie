@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-013_fig7",
+  "paper_id": "asplos26-013",
+  "fig": "7",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 7. Overview of the AGS Algorithm.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "visio",
+  "aspect": 3.08,
+  "n_components": 8,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-013/src/fig7_Algorithm_overview.svg",
+    "preview.png": "lab/extracted/asplos26-013/src/fig7_Algorithm_overview.png",
+    "print.png": "lab/extracted/asplos26-013/asplos26-013_fig7_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: three linked stages, covisibility detection feeding tracking feeding mapping, form a pipeline in three different diagram styles where one upstream signal gates two downstream decisions; this is pipeline or composite-figure, not N comparable alternatives.",
+      "what_to_learn": "When one upstream signal feeds two downstream decision paths in sequence, draw it as a linked pipeline with arrows carrying that signal forward, not as side-by-side comparison panels; let each stage keep its natural diagram type (block-matching grid, neural-net flowchart, point-cloud view) since forcing one shared vocabulary here would flatten real differences."
+    }
+  ]
+}

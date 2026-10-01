@@ -1,0 +1,341 @@
+{
+  "paper_id": "asplos25-138",
+  "fig": "17",
+  "system": {
+    "name": "TAPAS",
+    "one_liner": "a thermal- and power-aware framework for cloud LLM inference clusters that places VMs, routes requests, and reconfigures instances",
+    "domain": [
+      "cloud-systems",
+      "llm-serving",
+      "datacenter-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Profiles",
+        "role": "repository of historical/live telemetry (temperature, power, airflow, DC layout, load) TAPAS maintains and uses for decision-making",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LLM Temp/Power",
+        "role": "profile metric tracking LLM inference temperature/power behavior",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "DC layout",
+        "role": "profile metric describing the datacenter's physical layout",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "T_GPU",
+        "role": "profile metric: GPU temperature",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "T_inlet",
+        "role": "profile metric: rack inlet temperature",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "T_outside",
+        "role": "profile metric: outside/ambient temperature",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Load_DC",
+        "role": "profile metric: datacenter-level load",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Load_GPU",
+        "role": "profile metric: GPU-level load",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Power_GPU",
+        "role": "profile metric: GPU power draw",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Power_Server",
+        "role": "profile metric: server power draw",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Power_Row",
+        "role": "profile metric: row-level power draw",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Airflow_Aisle",
+        "role": "profile metric: aisle-level airflow",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "Airflow_Serv",
+        "role": "profile metric: server-level airflow",
+        "container": "Profiles",
+        "novel": true
+      },
+      {
+        "name": "SaaS/IaaS Operator",
+        "role": "actor who triggers IaaS/SaaS VM creations",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SaaS User",
+        "role": "actor issuing LLM inference requests",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VM Allocator",
+        "role": "extends the existing per-cluster VM Allocator; places new GPU workload VMs within cooling/power constraints using Profiles",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SaaS Frontends",
+        "role": "group of per-endpoint frontends serving SaaS requests",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Endpoint A",
+        "role": "one SaaS endpoint among several stacked endpoints",
+        "container": "SaaS Frontends",
+        "novel": false
+      },
+      {
+        "name": "Load Balancer",
+        "role": "extends the existing per-endpoint Load Balancer; routes LLM inference requests across SaaS VM instances",
+        "container": "Endpoint A",
+        "novel": false
+      },
+      {
+        "name": "Aisle 1",
+        "role": "physical datacenter aisle containing rows of racks/instances",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Row 1",
+        "role": "row of racks/instances within Aisle 1",
+        "container": "Aisle 1",
+        "novel": false
+      },
+      {
+        "name": "Row 2",
+        "role": "row of racks/instances within Aisle 1",
+        "container": "Aisle 1",
+        "novel": false
+      },
+      {
+        "name": "SaaS-B",
+        "role": "a SaaS VM instance (tagged IC, has an Instance Configurator)",
+        "container": "Row 1",
+        "novel": false
+      },
+      {
+        "name": "IaaS-1",
+        "role": "an IaaS VM instance",
+        "container": "Row 1",
+        "novel": false
+      },
+      {
+        "name": "SaaS-A",
+        "role": "a SaaS VM instance, deployed as multiple instances each paired with an Instance Configurator",
+        "container": "Row 1",
+        "novel": false
+      },
+      {
+        "name": "Instance Configurator",
+        "role": "TAPAS's new per-SaaS VM Instance Configurator that reconfigures SaaS VMs to manage load spikes and emergencies",
+        "container": "SaaS-A",
+        "novel": true
+      },
+      {
+        "name": "IaaS-2",
+        "role": "an IaaS VM instance",
+        "container": "Row 2",
+        "novel": false
+      },
+      {
+        "name": "SaaS-C",
+        "role": "a SaaS VM instance (tagged IC, has an Instance Configurator)",
+        "container": "Row 2",
+        "novel": false
+      },
+      {
+        "name": "IaaS-3",
+        "role": "an IaaS VM instance",
+        "container": "Row 2",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "SaaS/IaaS Operator",
+        "to": "VM Allocator",
+        "what": "IaaS/SaaS VM creations",
+        "step": null
+      },
+      {
+        "from": "SaaS User",
+        "to": "Load Balancer",
+        "what": "LLM inference request",
+        "step": null
+      },
+      {
+        "from": "VM Allocator",
+        "to": "Row 1",
+        "what": "VM Placement",
+        "step": null
+      },
+      {
+        "from": "Profiles",
+        "to": "VM Allocator",
+        "what": "profile used for decision-making",
+        "step": null
+      },
+      {
+        "from": "Profiles",
+        "to": "Aisle 1",
+        "what": "profile used for decision-making",
+        "step": null
+      },
+      {
+        "from": "Aisle 1",
+        "to": "Profiles",
+        "what": "offline profiling",
+        "step": null
+      },
+      {
+        "from": "Load Balancer",
+        "to": "Instance Configurator",
+        "what": "SaaS-A request routing among instances",
+        "step": null
+      }
+    ],
+    "key_idea": "TAPAS extends a cloud LLM inference cluster's VM Allocator and Load Balancer, adds a per-SaaS Instance Configurator, and maintains a Profiles store of thermal/power/airflow telemetry to jointly drive VM placement, request routing, and instance reconfiguration.",
+    "reading_order": "top band of Profiles metrics first, then the operator/user actors, VM Allocator, and SaaS Frontends' Load Balancer, into Aisle 1's rows of SaaS/IaaS instances"
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.42,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffc000",
+        "used_for": "bright orange/gold fill of the Profiles band and the VM Allocator box"
+      },
+      {
+        "hex": "#d3cbb6",
+        "used_for": "tan/beige fill of IaaS instance boxes"
+      },
+      {
+        "hex": "#b7e0a8",
+        "used_for": "light green fill of SaaS instance boxes"
+      },
+      {
+        "hex": "#549e39",
+        "used_for": "dark green fill of the Instance Configurator boxes and 'IC' badges"
+      },
+      {
+        "hex": "#e8f3d4",
+        "used_for": "very light green background of the Aisle 1 / Row panels"
+      },
+      {
+        "hex": "#dbf0f3",
+        "used_for": "very light blue background of the SaaS Frontends / Endpoint A panels"
+      },
+      {
+        "hex": "#baad8d",
+        "used_for": "darker tan border/shadow on IaaS boxes"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red request-routing arrows and highlight rectangles around the SaaS-A instances"
+      },
+      {
+        "hex": "#bbdb7e",
+        "used_for": "medium green background variant for a Row panel"
+      },
+      {
+        "hex": "#c1eefc",
+        "used_for": "pale blue fill of the Load Balancer box"
+      },
+      {
+        "hex": "#f9e807",
+        "used_for": "bright yellow minor accent"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black strokes; dashed borders group logical regions (Aisle 1, Rows, SaaS Frontends); dotted gray lines carry profile data; solid red lines/boxes highlight the request-routing path",
+    "font": "Calibri sans, bold for major labels",
+    "corners": "mixed",
+    "arrows": "dotted gray arrows for profile data feeding decisions, dashed black arrows for VM placement/creation, solid red arrows for LLM-inference request routing",
+    "icons": "vector icons for the person actors (operator/user), server rack/DC layout, VM boxes, and database-cylinder icons on Profiles/VM Allocator/Instance Configurator"
+  },
+  "encoding": {
+    "color_means": "gold = Profiles data store and VM Allocator, tan = IaaS instances, light green = SaaS instances, dark green = the new Instance Configurator, pale blue = Load Balancer/SaaS Frontends, red = the live LLM-inference request-routing path",
+    "line_style_means": "dotted lines = profile data feeding decisions, dashed lines = VM placement/creation actions, solid red lines = live inference request routing",
+    "emphasis": "red highlight boxes single out the two 'SaaS-A' Instance Configurator instances and the routing path between them, spotlighting TAPAS's new per-SaaS reconfiguration capability",
+    "reusable_patterns": [
+      "central telemetry/profile store feeding multiple downstream control components via dotted arrows",
+      "physical datacenter layout (aisle/row/instance) nested inside a logical architecture diagram"
+    ],
+    "weaknesses": [
+      "extremely dense (600 shapes, 72 text boxes) with many small repeated instance boxes (SaaS/IaaS-N) that require careful visual tracing"
+    ]
+  },
+  "tags": [
+    "llm-inference",
+    "datacenter-scheduling",
+    "thermal-management",
+    "power-management",
+    "vm-placement",
+    "load-balancing"
+  ],
+  "provenance": {
+    "sections": [
+      "4 TAPAS Design (p.8)"
+    ],
+    "evidence": [
+      "TAPAS (1) extends existing components of conventional cloud LLM inference clusters (e.g., per-cluster VM Allocator",
+      "(2) introduces a per-SaaS VM Instance Configurator, and (3) maintains multiple Profiles.",
+      "TAPAS focuses on three core aspects: VM placement, LLM inference request routing, and instance configuration."
+    ]
+  },
+  "summary": "Figure 17 is TAPAS's architecture overview. A top orange band of Profiles (LLM Temp/Power, DC layout, T_GPU/T_inlet/T_outside, Load_DC/Load_GPU, Power_GPU/Server/Row, Airflow_Aisle/Serv) feeds decision-making, via dotted arrows, into the VM Allocator, SaaS Frontends, and the datacenter's Aisle 1 rows, while offline profiling flows back up from the aisle. An SaaS/IaaS Operator triggers VM creations at the VM Allocator, which places VMs (dashed arrows) into Row 1 and Row 2 racks of SaaS and IaaS instances. An SaaS User's LLM Inference request enters the Load Balancer inside Endpoint A; a red-highlighted path then routes SaaS-A requests among multiple SaaS-A instances, each paired with TAPAS's new Instance Configurator, which reconfigures SaaS VMs to handle load spikes and emergencies. Gold marks Profiles/VM Allocator, tan marks IaaS instances, green marks SaaS instances and Instance Configurators, and red marks the live request-routing path.",
+  "summary_zh": "图17展示TAPAS架构:顶部Profiles为分配器、前端与机柜提供决策数据;运营者经VM Allocator部署VM,用户请求经负载均衡器,红色路径在多个SaaS-A的Instance Configurator间路由。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

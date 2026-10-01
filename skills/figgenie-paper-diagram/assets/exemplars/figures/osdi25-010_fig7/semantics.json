@@ -1,0 +1,216 @@
+{
+  "paper_id": "osdi25-010",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "F2FSJ",
+    "one_liner": "a decentralized, epoch-based journaling design for F2FS that enables fine-grained crash recovery with less complexity than JBD2/EXT4",
+    "domain": [
+      "storage",
+      "file-systems",
+      "crash-recovery"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how F2FSJ's page-state machine (one dirty state) compares to JBD2/EXT4's (two dirty states) across the same Record/Commit/Apply journal steps",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Uptodate",
+        "kind": "state",
+        "role": "clean page state; the only state the kernel page cache manager may evict",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "F2FSJ_Dirty",
+        "kind": "state",
+        "role": "page holds an uncommitted journal record; the single intermediate dirty state F2FSJ needs",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Dirty",
+        "kind": "state",
+        "role": "page whose journal record has been committed and can be used for journal apply",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Logs",
+        "kind": "box",
+        "role": "on-disk journal log that the Commit journal step writes the record into",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Running",
+        "kind": "state",
+        "role": "epoch phase during which new journal records are being recorded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Commit",
+        "kind": "state",
+        "role": "epoch phase during which recorded journal entries are committed to the log",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Apply",
+        "kind": "state",
+        "role": "epoch phase during which committed journal entries are applied back to their on-disk location",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Uptodate",
+        "to": "F2FSJ_Dirty",
+        "what": "Record journal",
+        "kind": "transition",
+        "step": 1
+      },
+      {
+        "from": "F2FSJ_Dirty",
+        "to": "Logs",
+        "what": "the commit journal step appends the record to the on-disk log",
+        "kind": "data",
+        "step": 2
+      },
+      {
+        "from": "F2FSJ_Dirty",
+        "to": "Dirty",
+        "what": "Commit journal",
+        "kind": "transition",
+        "step": 2
+      },
+      {
+        "from": "Dirty",
+        "to": "Uptodate",
+        "what": "Apply journal",
+        "kind": "transition",
+        "step": 3
+      },
+      {
+        "from": "Apply",
+        "to": "Running",
+        "what": "Journal again, the next epoch's Running phase begins",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Page state changes in F2FSJ",
+        "axis": "alternatives",
+        "differs": "uses one intermediate dirty state (F2FSJ_Dirty) and 3 numbered steps (Record/Commit/Apply journal)",
+        "verdict": "ours, simpler"
+      },
+      {
+        "label": "(b) Page state changes in JBD2/EXT4",
+        "axis": "alternatives",
+        "differs": "splits the intermediate state into JBD_Dirty and an extra Shadow state, needing 4 numbered steps",
+        "verdict": "baseline, more complex"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "F2FSJ simplifies page-state tracking to a single F2FSJ_Dirty state versus JBD2/EXT4's JBD_Dirty-then-Shadow pair, while both cycle through the same numbered Record/Commit/Apply-journal steps each epoch.",
+    "reading_order": "each panel top-down from Uptodate through the numbered journal steps to Dirty and back; F2FSJ (left) is compared with JBD2/EXT4 (right)"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "badge",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.61,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cdeb8b",
+        "used_for": "light green fill of the page-state boxes (Uptodate, F2FSJ_Dirty/JBD_Dirty/Shadow, Dirty)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale blue fill of the epoch-phase boxes (Running, Commit, Apply)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale cream fill of the 'Logs' box"
+      },
+      {
+        "hex": "#ffff88",
+        "used_for": "bright yellow fill of the circled step-number badges"
+      },
+      {
+        "hex": "#006633",
+        "used_for": "dark green, likely the state-box border/text accent"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.33pt) solid black outlines on every box",
+    "corners": "square",
+    "arrows": "small chevron-style direction marks rather than full arrowheads, plus a vertical 'Journal again' loop connecting Apply back to Running",
+    "font": "mixed Arial (labels) and Times New Roman italic (sub-captions), 5.5-6.5pt",
+    "icons": "33 small glyph paths forming the chevron direction marks and circle badges"
+  },
+  "encoding": {
+    "color_means": "green = page state; blue = epoch phase (Running/Commit/Apply); cream = the on-disk Logs; yellow circles badge the numbered steps",
+    "line_style_means": "small chevron marks (not full arrows) show direction between adjacent states/phases; a vertical bracket-style 'Journal again' connector loops Apply back to Running for the next epoch",
+    "state_means": "F2FSJ vs JBD2/EXT4 are told apart by how many green dirty-state boxes sit between Uptodate and Dirty (one vs two) and by the matching step count (3 vs 4)",
+    "marker_means": "circled numbers 1-3 (F2FSJ) / 1-4 (JBD2) label the Record/Commit/Apply-journal steps in order along the page-state column",
+    "emphasis": "placing F2FSJ's single 'F2FSJ_Dirty' box directly beside JBD2's two-box 'JBD_Dirty'+'Shadow' path visually argues F2FSJ's design is simpler",
+    "reusable_patterns": [
+      "two side-by-side identical state-machine templates (page states + epoch-phase column + numbered steps), differing only in how many intermediate states one path needs"
+    ],
+    "weaknesses": [
+      "the blue epoch-phase column and green page-state column are drawn side by side with only faint marks between them, so how the two columns' steps line up takes some work to follow"
+    ]
+  },
+  "tags": [
+    "journaling",
+    "crash-recovery",
+    "F2FS",
+    "JBD2",
+    "page-state",
+    "epoch"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 F2FSJ Design (p.9)"
+    ],
+    "evidence": [
+      "Compared with JBD2, which uses two page states JBD_Dirty (before journal commit) and Shadow",
+      "F2FSJ only requires one state (i.e., F2FSJ_Dirty), thus simplifying the design",
+      "the kernel page cache manger can only evict Uptodate pages"
+    ]
+  },
+  "summary": "F2FSJ is a decentralized, epoch-based journaling design for F2FS that gives fine-grained crash recovery with less complexity than existing journaling. This figure compares F2FSJ's page-state machine (a) with JBD2/EXT4's (b), both driven by the same Running-Commit-Apply epoch cycle that loops back via 'Journal again'. In F2FSJ, a page moves Uptodate to F2FSJ_Dirty (step 1, Record journal), the record is written to Logs (step 2, Commit journal), then to Dirty, before Apply journal (step 3) returns it to Uptodate. JBD2/EXT4 needs one more state and step to do the same job: Uptodate to JBD_Dirty (1, Record journal), to Shadow (2, Commit begin), to Dirty (3, Commit end), before Apply journal (4) returns it to Uptodate. Placing the two numbered state machines side by side argues that F2FSJ's single F2FSJ_Dirty state is a simpler design than JBD2's two-state Dirty/Shadow split.",
+  "summary_zh": "该图对比F2FSJ与JBD2/EXT4的页状态机：同属Running-Commit-Apply循环，F2FSJ只用F2FSJ_Dirty一个中间态、三步完成journal，JBD2/EXT4多一个Shadow态、需四步，更复杂。",
+  "confidence": "high",
+  "notes": "content.panels filled per the primary group 'comparison'; steps and logic left empty/null per the schema rule that only the primary group's block is populated, even though 'logic' and 'walkthrough' are valid secondary groups here (each panel is itself a numbered state machine).",
+  "venue": "OSDI25"
+}

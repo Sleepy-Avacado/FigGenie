@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172.631 96.821" width="172.631pt" height="96.821pt" data-symbol="zero-gated-multiplier-input-muxes" data-kind="motif" data-size-pt="172.631x96.821">
+  <title>zero-gated-multiplier-input-muxes</title>
+  <desc>two input mux trapezoids (Weight, IA) feeding a circled-X multiplier gate; a zero-detect flag ('==0'/'or'/'zero') forces the multiplier's second input to a literal 0 through a small mux, gating wasted work, all feeding an output mux onward | source: asplos25-032_fig9 (asplos25-032_fig9_p8_vector.svg) | candidate wave5:zero-gated-multiplier-input-muxes | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="zero-gated-multiplier-input-muxes" transform="scale(1) translate(-34.0160,-48.0890)"><defs>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_1">
+<path transform="matrix(1,0,0,-1,-51,558.79617)" d="M51 402.99668H297.04426V558.79617H51Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_2">
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M3.27272 15.341H206.25V160.65H3.27272Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_3">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M0 0H297.6378V108H0Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_4">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_5">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_6">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_7">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_8">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_9">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_10">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_11">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_12">
+<path transform="matrix(.76617,0,0,-.76617,304.7791,101.18608)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_13">
+<path transform="matrix(.76617,0,0,-.76617,364.89906,103.2834)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_14">
+<path transform="matrix(.76617,0,0,-.76617,425.01899,109.57537)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_15">
+<path transform="matrix(.76617,0,0,-.76617,485.13893,128.45128)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_16">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_17">
+<path transform="matrix(.76617,0,0,-.76617,304.7791,157.60405)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_18">
+<path transform="matrix(.76617,0,0,-.76617,364.89906,135.1627)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_19">
+<path transform="matrix(.76617,0,0,-.76617,425.01899,130.5486)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_20">
+<path transform="matrix(.76617,0,0,-.76617,485.13893,141.03522)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_21">
+<path transform="matrix(.76617,0,0,-.76617,272.957,178.62915)" d="M29.763779 23.76H288.70869V104.76H29.763779Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_22">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M0 0H297.6378V108H0Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_23">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_24">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_25">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_26">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_27">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_28">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_29">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_30">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_31">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_32">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_33">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_34">
+<path transform="matrix(.76617,0,0,-.76617,343.70198,257.09306)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_35">
+<path transform="matrix(.76617,0,0,-.76617,446.45503,268.67204)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_36">
+<path transform="matrix(.76617,0,0,-.76617,485.24259,285.68605)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_37">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_38">
+<path transform="matrix(.76617,0,0,-.76617,428.76246,275.70213)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_39">
+<path transform="matrix(.76617,0,0,-.76617,360.71409,266.30897)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_40">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_41">
+<path transform="matrix(.76617,0,0,-.76617,306.95588,257.86103)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_42">
+<path transform="matrix(.76617,0,0,-.76617,383.17005,279.7193)" d="M-7.5-7.5H7.5V7.5H-7.5Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_43">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+<clipPath id="asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_44">
+<path transform="matrix(.76617,0,0,-.76617,272.957,306.71113)" d="M32.740159 23.76H288.70869V104.76H32.740159Z"/>
+</clipPath>
+</defs>
+<g>
+<g clip-path="url(#asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_1)">
+<g>
+<g clip-path="url(#asplos25-032-fig9-zero-gated-multiplier-input-muxes-clip_2)">
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M74.76 102.17 72.32 97.295 69.88 102.17H74.76Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M59.941 90.208H84.814V97.2894H59.941Z" fill="#f4b183" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M59.941 90.208H84.814V97.2894H59.941Z"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.3" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-91.075" x="66.725 70.475399">==</tspan></text>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.3" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-91.075" x="74.7">0</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M151.38 90.704H167.821V97.1704H151.38Z" fill="#f4b183" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M151.38 90.704H167.821V97.1704H151.38Z"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.3" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-91.475" x="156.67 161.19499">or</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M27.535 78.161H56.335V87.43H27.535Z" fill="#deebf6" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M27.535 78.161H56.335V87.43H27.535Z"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M55.882 84.323 53.509 82.422 55.882 80.744"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M42.153 105.71V91.521"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M44.593 92.131 42.153 87.251 39.713 92.131H44.593Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M21.402 65.889V101.36H41.686"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M23.842 66.499 21.402 61.619 18.962 66.499H23.842Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M42.206 77.888 42.019 65.888"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M44.468 66.46 41.953 61.619 39.589 66.536 44.468 66.46Z" fill-rule="evenodd"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="6.775" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-80.375" x="30.475 36.49798 40.264879 41.76215 45.52905 49.295949">Weight</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M85.235 94.002H147.17"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M146.56 96.443 151.44 94.002 146.56 91.562V96.443Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M161.81 101.93 159.37 97.052 156.93 101.93H161.81Z" fill-rule="evenodd"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.275" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-71.75" x="65.35 70.62117 74.40285 77.42322 81.19662 83.46397 84.986568 89.504718 94.022869 98.541019 100.816638 103.083988 106.85738 109.877758 111.40035 118.914058 122.687458 124.9548 127.975177 129.49777 134.01593 136.28328 137.80588 142.32402 144.59964 146.86699">Gate Input of Multiplier  </tspan></text>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.3" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-64.525" x="79.175 85.1759 89.66621 93.41781 97.90811 99.410419 103.90072 106.89702 111.38732 118.151828 119.65413 121.895137 124.89143">when Psum is </tspan></text>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.3" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-64.525" x="126.75">0</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.61 77.566H165.72"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M165.11 80.006 169.99 77.566 165.11 75.126V80.006Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.59 90.322V77.625"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.59 77.416V75.498"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M162.03 76.108 159.59 71.228 157.15 76.108H162.03Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M169.81 73.484H186.393V82.753H169.81Z" fill="#deebf6" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M169.81 73.484H186.393V82.753H169.81Z"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M170.14 75.835 172.52 77.736 170.14 79.413"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.3" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-75.25" x="175.63 177.905">IA</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M178.38 73.107 178.51 65.888"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M180.94 66.541 178.58 61.619 176.06 66.455 180.94 66.541Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.18 82.625H60.274"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M60.884 80.185 56.004 82.625 60.884 85.065V80.185Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M148.06 64.504H170.596V71.6708H148.06Z" fill="#f4b183" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M148.06 64.504H170.596V71.6708H148.06Z"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M170.47 69.741 167.11 67.866 170.47 66.212"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.275" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-65.225" x="152.7 155.72864 160.24678 162.5224">zero</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M180.61 87.452 178.17 82.572 175.73 87.452H180.61Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M46.215 61.858H17.443L19.373 56.465H44.285L46.215 61.858Z" fill="#cbffff" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M46.215 61.858H17.443L19.373 56.465H44.285L46.215 61.858Z"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.74 60.292V52.127"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.77 59.042H169.2"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M168.59 61.482 173.47 59.042 168.59 56.602V61.482Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.77 59.042H49.209"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M49.819 56.602 44.939 59.042 49.819 61.482V56.602Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M87.49 51.275C87.49 54.038 85.216 56.279 82.41 56.279 79.605 56.279 77.331 54.038 77.331 51.275 77.331 48.511 79.605 46.271 82.41 46.271 85.216 46.271 87.49 48.511 87.49 51.275Z" fill="#f4b183" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M87.49 51.275C87.49 54.038 85.216 56.279 82.41 56.279 79.605 56.279 77.331 54.038 77.331 51.275 77.331 48.511 79.605 46.271 82.41 46.271 85.216 46.271 87.49 48.511 87.49 51.275Z"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M78.847 54.762 86.201 48.015"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M85.67 55.096 78.847 47.712"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M31.922 56.192V51.192H73.268"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M72.658 48.752 77.538 51.192 72.658 53.632V48.752Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M182.28 56.323V51.221H91.474"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M92.084 48.781 87.204 51.221 92.084 53.661V48.781Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M82.509 45.89V37.137"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M84.949 37.747 82.509 32.867 80.069 37.747H84.949Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M98.089 40.945H111.128V47.690999H98.089Z" fill="#f4b183" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width=".75075" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M98.089 40.945H111.128V47.690999H98.089Z"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.275" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-41.35" x="105"> </tspan></text>
+<text fill="#4672c4" xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="12.05" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-33.6" x="100.77"> </tspan></text>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.275" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-41.325" x="103.05">0</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M104.82 40.378V37.29"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M107.26 37.9 104.82 33.02 102.38 37.9H107.26Z" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M110.56 33.076H78.148L80.323 27.682H108.39L110.56 33.076Z" fill="#cbffff" fill-rule="evenodd"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" stroke-linejoin="miter" fill="none" stroke="#000000" d="M110.56 33.076H78.148L80.323 27.682H108.39L110.56 33.076Z"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M94.314 27.131V21.971"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M96.754 22.581 94.314 17.701 91.874 22.581H96.754Z" fill-rule="evenodd"/>
+<text xml:space="preserve" transform="matrix(.9461 0 -0 .9461 23.90741 154.49427)" font-size="8.275" font-family="Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-19" x="22.125 26.618325 29.62215 34.115476 40.13967 42.3822 44.633 49.126325 51.36885 55.87045 60.363775 64.8571 68.605678 71.60122 73.09899 76.847568 79.84311 84.33643">Psum to Adder Tree</tspan></text>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="#000000" d="M159.59 64.595V30.046H113.56"/>
+<path transform="matrix(.9461,0,0,-.9461,23.90741,154.49427)" d="M114.17 27.606 109.29 30.046 114.17 32.486V27.606Z" fill-rule="evenodd"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

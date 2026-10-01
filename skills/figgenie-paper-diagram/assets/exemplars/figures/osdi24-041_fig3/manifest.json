@@ -1,0 +1,47 @@
+{
+  "id": "osdi24-041_fig3",
+  "paper_id": "osdi24-041",
+  "fig": "3",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 3: dLoRA architecture.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.44,
+  "n_components": 15,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-041/osdi24-041_fig3_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-041/osdi24-041_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two dashed-outline containers (Load Balancer, LLM Replicas) stand in for panel frames, each internally nested three levels deep, connected by two labelled cross-panel arrows (Requests, Migration) that state exactly what crosses the boundary.",
+      "what_to_learn": "Use a dashed rounded outline as a lightweight panel boundary instead of a hard frame, and always label the arrows that cross between panels with the noun they carry (Requests, Migration) rather than leaving the connective implicit."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar reaching real depth inside one of two dashed panels: LLM Replicas nests a stacked GPU icon nesting Cross-adapter Batching, nesting a Base Model box, nesting two Adapter boxes, four levels deep.",
+      "what_to_learn": "When one side of a two-panel figure is actually a deep hierarchy, let it nest, GPU pool over batching over base model over per-request adapters, while the other panel stays shallow; use one accent colour only for the cross-cutting controller that ties both panels together."
+    }
+  ]
+}

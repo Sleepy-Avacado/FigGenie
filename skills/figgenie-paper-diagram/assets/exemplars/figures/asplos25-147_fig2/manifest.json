@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-147_fig2",
+  "paper_id": "asplos25-147",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Architecture overview of Spindle.",
+  "corpus_template": "pipeline",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.09,
+  "n_components": 8,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-147/src/fig2_MTP_Overview_1Cols.svg",
+    "preview.png": "lab/extracted/asplos25-147/src/fig2_MTP_Overview_1Cols.png",
+    "print.png": "lab/extracted/asplos25-147/asplos25-147_fig2_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Vertical five-stage pipeline that pairs every stage with a thumbnail of the artefact it produces; legend on the right.",
+      "what_to_learn": "An output-artefact column beside the stage column turns abstract stage names into concrete data structures without any extra prose."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "The annotation-rail variant: a five-stage vertical pipeline pairs every stage box with a small red-labelled thumbnail of its output artifact, from a MetaGraph icon down to a per-worker execution-plan timeline.",
+      "what_to_learn": "Give every stage in a vertical pipeline its own small thumbnail icon of the concrete data structure it outputs, aligned in a right-hand rail, so an abstract stage name (Graph Contraction, Wavefront Scheduler) is anchored to a picture rather than left purely verbal."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The inline-glyph variant: a tiny Computation Graph icon of two branching tasks sits at the very start of the pipeline, exactly the 20-30pt DAG-as-icon convention the template calls out, feeding into a five-stage annotated planner.",
+      "what_to_learn": "When a DAG is only the trigger for a pipeline rather than the figure's subject, shrink it to a small multi-coloured icon (20-30pt) rather than drawing it at full scale, and let the rest of the figure show what consumes it."
+    }
+  ]
+}

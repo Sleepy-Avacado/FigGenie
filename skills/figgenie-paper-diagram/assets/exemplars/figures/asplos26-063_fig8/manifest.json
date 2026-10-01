@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-063_fig8",
+  "paper_id": "asplos26-063",
+  "fig": "8",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 8. Localized execution in CREST.",
+  "corpus_template": "host-device",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.87,
+  "n_components": 11,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-063/asplos26-063_fig8_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-063/asplos26-063_fig8_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Minimalist variant: plain margin labels 'CNs' and 'MNs', not a boxed band, stand in for the compute/memory-pool split, while colored bold-italic headings (teal Pipeline Execution, red Cache Management) flag the paper's two named mechanisms.",
+      "what_to_learn": "When space is tight, replace the usual boxed interconnect band with a single margin label per tier (CNs / MNs) and rely on it alone to mark the boundary; reuse a bold-italic color per named technique (teal, red) across figures so a reader recognizes the same mechanism later without re-reading a legend."
+    }
+  ]
+}

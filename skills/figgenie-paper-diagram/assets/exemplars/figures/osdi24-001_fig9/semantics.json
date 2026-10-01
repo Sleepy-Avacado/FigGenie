@@ -1,0 +1,188 @@
+{
+  "paper_id": "osdi24-001",
+  "fig": "9",
+  "system": {
+    "name": "HongMeng",
+    "one_liner": "a production microkernel (HM) that configures isolation strength per OS service to balance microkernel principles with performance and Linux compatibility",
+    "domain": [
+      "os-kernel",
+      "microkernel",
+      "device-drivers"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Apps",
+        "role": "applications that invoke drivers, e.g., via ioctl",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Device Manager",
+        "role": "registers device file nodes for each driver container",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Core Kernel",
+        "role": "the trusted core kernel underlying apps and the VFS path",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Virtual File System",
+        "role": "exposes driver device nodes (e.g., /dev/a) and redirects invocations to the right driver container",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Linux Driver Container",
+        "role": "runs the Linux Runtime (DC-Base) hosting a reused Linux Driver, reached via IPC from the VFS",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Linux Driver",
+        "role": "a reused, unmodified Linux driver running inside the Linux Driver Container",
+        "container": "Linux Driver Container",
+        "novel": false
+      },
+      {
+        "name": "DC-Base",
+        "role": "driver container base providing redirected kthread/memory interfaces for the Linux runtime",
+        "container": "Linux Driver Container",
+        "novel": true
+      },
+      {
+        "name": "Native Driver Container",
+        "role": "houses the performance-critical Twin Driver on the native/fast path",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Twin Driver",
+        "role": "a rewritten twin of a performance-critical driver that handles I/O IRQs on the fast path while the control plane stays in the Linux Driver Container",
+        "container": "Native Driver Container",
+        "novel": true
+      },
+      {
+        "name": "Hardware",
+        "role": "underlying hardware issuing IO IRQs",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Device Manager",
+        "to": "Virtual File System",
+        "what": "registers a file node (/dev/a) for the driver",
+        "step": 1
+      },
+      {
+        "from": "Apps",
+        "to": "Virtual File System",
+        "what": "ioctl(fd,...) invocation on the device node",
+        "step": 2
+      },
+      {
+        "from": "Virtual File System",
+        "to": "Linux Driver",
+        "what": "IPC redirecting the invocation to the driver container",
+        "step": 3
+      },
+      {
+        "from": "Native Driver Container",
+        "to": "Linux Driver",
+        "what": "init/wake control-plane synchronization (slow path)",
+        "step": 4
+      },
+      {
+        "from": "Hardware",
+        "to": "Twin Driver",
+        "what": "IO IRQ delivered on the fast path",
+        "step": 5
+      }
+    ],
+    "key_idea": "HM's device manager registers each reused driver as a VFS file node; regular invocations take a slow IPC path into a Linux Driver Container, while a performance-critical Twin Driver in a Native Driver Container handles I/O IRQs directly on a fast path, keeping the control plane (init/wake) in the Linux container.",
+    "reading_order": "Left to right: Apps and Device Manager feed the Virtual File System (via ioctl and registration), which redirects via IPC to the Linux Driver; a parallel fast path on the right lets Hardware IRQs reach the Twin Driver directly while control-plane calls (init/wake) still cross to the Linux Driver Container."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.98,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "slow-path elements: the /dev/a text, the init/wake label, and the Slow Path arrow"
+      },
+      {
+        "hex": "#385723",
+        "used_for": "fast-path elements: the IO IRQ label and the Fast Path arrow"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "Linux Driver and Twin Driver box fills"
+      },
+      {
+        "hex": "#dff3d2",
+        "used_for": "the Linux Runtime background region"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium dashed border (~1.2pt) around the Linux Runtime region, solid black arrows for the main data path",
+    "font": "Microsoft YaHei sans with Courier New monospace for code snippets, 4.5-6pt",
+    "corners": "square",
+    "arrows": "orthogonal black arrows for the main request path, colored vertical arrows (red/green) for the slow-path/fast-path split",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red = slow-path/control-plane elements, dark green = fast-path/data-plane elements, pale yellow = driver boxes, pale green = the Linux runtime region",
+    "line_style_means": "color, not dashing, distinguishes the slow control path from the fast data path; both are solid arrows",
+    "emphasis": "the red Slow Path and green Fast Path arrows are drawn as bold vertical lines directly beneath the components they connect, visually separating control-plane and data-plane traffic despite sharing the same Linux Driver",
+    "reusable_patterns": [
+      "a single request path annotated with circled step numbers",
+      "a fast-path/slow-path split rendered as two parallel colored arrows beneath a shared component"
+    ],
+    "weaknesses": [
+      "the Core Kernel and Hardware labels sit at the diagram's edges without clear box outlines, making their scope ambiguous"
+    ]
+  },
+  "tags": [
+    "device-drivers",
+    "linux-compatibility",
+    "microkernel",
+    "control-plane",
+    "data-plane",
+    "virtual-file-system"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Compatibility Design of HongMeng (p.12)",
+      "5 Compatibility Design of HongMeng (p.13)"
+    ],
+    "evidence": [
+      "it registers entries (in Figure 9) in the virtual file system (VFS)",
+      "HM applies control plane and data plane separation by creating a twin driver",
+      "The twinned drivers synchronize the states (usually a variable) via IPC"
+    ]
+  },
+  "summary": "This figure shows how HongMeng reuses Linux drivers while keeping critical I/O fast. A Device Manager registers a file node such as /dev/a in the Virtual File System for each driver; Apps invoke the driver through ioctl on that node, and the VFS redirects the call via IPC into a Linux Driver running inside a Linux Driver Container built on DC-Base. For performance-critical drivers, a Native Driver Container hosts a Twin Driver that receives Hardware I/O IRQs directly on a labeled 'Fast Path', while the corresponding control-plane operations (init/wake) still cross to the Linux Driver on a labeled 'Slow Path'. Circled numbers 1 through 5 tie each arrow to the registration, invocation, IPC redirection, control-plane synchronization, and fast-path IRQ delivery steps described in the text.",
+  "summary_zh": "该图展示HongMeng复用Linux驱动：Device Manager注册文件节点，应用经ioctl由VFS转发至Linux Driver；性能关键驱动的Twin Driver在快速路径处理硬件中断，控制面走慢速路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

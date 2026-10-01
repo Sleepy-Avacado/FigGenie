@@ -1,0 +1,257 @@
+{
+  "paper_id": "asplos25-097",
+  "fig": "2",
+  "system": {
+    "name": "tnic",
+    "one_liner": "a trusted NIC architecture providing a minimal, formally verified silicon root-of-trust for building trustworthy distributed systems",
+    "domain": [
+      "networking",
+      "security"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Host CPU",
+        "role": "issues RDMA requests to the RoCE protocol kernel",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host memory",
+        "role": "source/destination of DMA transfers for message payloads",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PCIe DMA/Bridge IP",
+        "role": "transfers data between host memory and the FPGA NIC",
+        "container": "Trusted FPGA NIC",
+        "novel": false
+      },
+      {
+        "name": "Attestation kernel",
+        "role": "generates (Attest) and verifies (Verify) message attestations for non-equivocation and transferable authentication",
+        "container": "Trusted FPGA NIC",
+        "novel": true
+      },
+      {
+        "name": "Keystore",
+        "role": "stores the shared secret keys used by HMAC",
+        "container": "Attestation kernel",
+        "novel": true
+      },
+      {
+        "name": "HMAC",
+        "role": "generates message authentication codes (MAC) for attestation",
+        "container": "Attestation kernel",
+        "novel": true
+      },
+      {
+        "name": "Counters store",
+        "role": "keeps per-session send/receive counters (send_cnts, recv_cnts) for non-equivocation",
+        "container": "Attestation kernel",
+        "novel": true
+      },
+      {
+        "name": "RoCE protocol kernel",
+        "role": "implements the reliable IB/RDMA transport and network layers (RoCE v2)",
+        "container": "Trusted FPGA NIC",
+        "novel": false
+      },
+      {
+        "name": "Req handler",
+        "role": "receives the request opcode issued by the host and initiates DMA fetch of payload",
+        "container": "RoCE protocol kernel",
+        "novel": false
+      },
+      {
+        "name": "Request generation",
+        "role": "constructs the outgoing network packet from the opcode and attested message, appending IB/UDP/IP headers",
+        "container": "RoCE protocol kernel",
+        "novel": false
+      },
+      {
+        "name": "State tables",
+        "role": "stores protocol queues and metadata (PSNs, MSNs, retransmission timer)",
+        "container": "RoCE protocol kernel",
+        "novel": false
+      },
+      {
+        "name": "Cmd merger",
+        "role": "merges command/data streams within the RoCE protocol kernel data path",
+        "container": "RoCE protocol kernel",
+        "novel": false
+      },
+      {
+        "name": "Request decoder",
+        "role": "extracts headers, metadata, and the attested message from received packets",
+        "container": "RoCE protocol kernel",
+        "novel": false
+      },
+      {
+        "name": "ARP server",
+        "role": "lookup table of MAC/IP address correspondences, used to resolve the remote MAC before transmission",
+        "container": "Trusted FPGA NIC",
+        "novel": false
+      },
+      {
+        "name": "100Gb MAC",
+        "role": "link layer connecting tnic to the network fabric over 100G Ethernet, with Tx/Rx interfaces",
+        "container": "Trusted FPGA NIC",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Host CPU",
+        "to": "Req handler",
+        "what": "request opcode issued by the host",
+        "step": null
+      },
+      {
+        "from": "Req handler",
+        "to": "PCIe DMA/Bridge IP",
+        "what": "initializes a DMA command to fetch payload from host memory",
+        "step": null
+      },
+      {
+        "from": "PCIe DMA/Bridge IP",
+        "to": "Attestation kernel",
+        "what": "payload data fetched via DMA",
+        "step": null
+      },
+      {
+        "from": "Attestation kernel",
+        "to": "Req handler",
+        "what": "forwards the attested message (data plus certificate alpha)",
+        "step": null
+      },
+      {
+        "from": "Req handler",
+        "to": "Request generation",
+        "what": "attested message passed through states appending IB/UDP/IP headers",
+        "step": null
+      },
+      {
+        "from": "Request generation",
+        "to": "ARP server",
+        "what": "extracts the remote MAC address from the lookup table",
+        "step": null
+      },
+      {
+        "from": "Request generation",
+        "to": "100Gb MAC",
+        "what": "constructed network packet forwarded for transmission",
+        "step": null
+      },
+      {
+        "from": "100Gb MAC",
+        "to": "Request decoder",
+        "what": "received network packet",
+        "step": null
+      },
+      {
+        "from": "Request decoder",
+        "to": "State tables",
+        "what": "parses the packet header and updates protocol state",
+        "step": null
+      },
+      {
+        "from": "Request decoder",
+        "to": "Attestation kernel",
+        "what": "attested message forwarded for verification",
+        "step": null
+      },
+      {
+        "from": "Attestation kernel",
+        "to": "Host memory",
+        "what": "verified message delivered/copied to host memory",
+        "step": null
+      }
+    ],
+    "key_idea": "tnic's hardware places an Attestation kernel (Keystore, HMAC, Counters store) inline in the RoCE protocol kernel's data pipeline between PCIe DMA and the network, attesting every outgoing message and verifying every incoming one.",
+    "reading_order": "Top-down: Host CPU/memory feed PCIe DMA into the Attestation kernel, which sits between the RoCE protocol kernel's transmit and receive paths, out through the ARP server/100Gb MAC to the network."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.92,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3333ff",
+        "used_for": "transmission-path arrows (blue-colored axes, per the paper's own description)"
+      },
+      {
+        "hex": "#cc0000",
+        "used_for": "reception-path arrows (red-colored axes)"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "Trusted FPGA NIC outer hardware boundary fill"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "Host CPU / Host memory box fill"
+      },
+      {
+        "hex": "#cccc00",
+        "used_for": "RoCE protocol kernel box accent"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt solid strokes, square corners throughout",
+    "font": "Arial sans, 4.5-5.5pt, bold module titles",
+    "corners": "square",
+    "arrows": "orthogonal arrows; blue arrows trace the transmission path and red arrows trace the reception path, per the paper's own color legend",
+    "icons": "none beyond text labels"
+  },
+  "encoding": {
+    "color_means": "green = Trusted FPGA NIC hardware boundary, light gray = host-side components (CPU, memory), olive/yellow = RoCE protocol kernel; blue arrows = transmission path, red arrows = reception path",
+    "line_style_means": "legend at bottom distinguishes Tx/Rx control path, Tx/Rx data path, host data path, and auxiliary data by separate arrow colors",
+    "emphasis": "The Attestation kernel is drawn as a mandatory choke point between the PCIe DMA/host side and the RoCE protocol kernel on both transmission and reception paths, visually asserting that every message is attested or verified",
+    "reusable_patterns": [
+      "security module inserted inline on both Tx and Rx data paths of a NIC pipeline",
+      "color-coded control vs. data vs. host-data arrow legend"
+    ],
+    "weaknesses": [
+      "dense sub-component labeling (Headers, Message/alpha, Tag, PSN/MSN state) inside small boxes may be hard to read at reduced size"
+    ]
+  },
+  "tags": [
+    "trusted NIC",
+    "RDMA",
+    "RoCE",
+    "attestation",
+    "HMAC",
+    "SmartNIC",
+    "networking security"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Trusted NIC Hardware (p.4-5)"
+    ],
+    "evidence": [
+      "the attestation kernel resides in the data pipeline between the RoCE protocol kernel and the PCIe DMA",
+      "the HMAC component that generates the message authentication codes (MAC), the Keystore",
+      "The transmission path is shown with the blue-colored axes in Figure 2"
+    ]
+  },
+  "summary": "tnic is a trusted NIC architecture that embeds a formally verified root-of-trust in a SmartNIC's hardware. This figure details that hardware: inside the Trusted FPGA NIC, a PCIe DMA/Bridge IP connects to Host CPU and Host memory, and an Attestation kernel sits inline between the DMA and the RoCE protocol kernel. The Attestation kernel's Keystore holds per-session shared keys, its HMAC module computes message authentication codes, and its Counters store tracks monotonic send/receive counters for non-equivocation. The RoCE protocol kernel implements the reliable IB/RDMA transport: a Req handler and Request generation module build outgoing packets (appending IB, UDP/IP headers) using an ARP server for MAC lookup and a 100Gb MAC for the link layer, while a Request decoder parses incoming packets and routes them back through the Attestation kernel for verification before delivery to host memory. Blue axes trace the transmission path and red axes trace the reception path.",
+  "summary_zh": "该图示tnic硬件：PCIe DMA连接主机，认证内核（Keystore/HMAC/Counters store）居于DMA与RoCE协议内核之间；经ARP与100Gb MAC收发包，蓝线为发送路径，红线为接收路径。",
+  "confidence": "high",
+  "notes": "The 'Cmd merger' box is visible in the figure but not individually described in the excerpted text; its role is inferred generically from its position in the RoCE protocol kernel's data path.",
+  "venue": "ASPLOS25"
+}

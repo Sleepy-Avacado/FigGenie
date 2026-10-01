@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-070_fig3",
+  "paper_id": "nsdi23-070",
+  "fig": "3",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 3: The eBPF measurement framework’s architecture. Valinor-h consists of a data plane and a control plane, communi- cating via lock-free ring buffers.",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.09,
+  "n_components": 20,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-070/nsdi23-070_fig3_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-070/nsdi23-070_fig3_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Names its two planes directly in the boxes (Valinor-H Data-plane inside the kernel stack, Valinor-H Control-plane outside it) and hands off through explicit Write/Read arrows into a shared per-CPU ring buffer across 20 components.",
+      "what_to_learn": "Label the two planes inline where they sit in an existing OS stack rather than boxing them separately, and embed a short struct snippet to document the wire format crossing the ring buffer; draw one explicit arrow from the hook point to the control plane instead of relying on adjacency."
+    }
+  ]
+}

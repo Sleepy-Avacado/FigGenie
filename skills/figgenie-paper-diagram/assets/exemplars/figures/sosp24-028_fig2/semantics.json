@@ -1,0 +1,272 @@
+{
+  "paper_id": "sosp24-028",
+  "fig": "2",
+  "system": {
+    "name": "Anduril",
+    "one_liner": "a feedback-driven fault injection tool that quickly reproduces a given fault-induced production failure in distributed systems",
+    "domain": [
+      "distributed systems",
+      "software debugging",
+      "fault injection"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "System code",
+        "role": "input system bytecode analyzed and instrumented by the Instrumenter",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instrumenter",
+        "role": "performs static causal analysis on system code and inserts fault-injection and logging code, producing a causal graph and an instrumented system",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "static causal graph",
+        "role": "graph of program points (fault candidates f1-f3 linked to observation points o1-o3) potentially related to the failure symptom",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Instrumented system",
+        "role": "system code with injected fault-triggering and logging snippets, produced by the Instrumenter and run by the Explorer",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Failure log (from production)",
+        "role": "failure log collected from the uninstrumented production system, used to compute initial fault-candidate priorities",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Failure oracle",
+        "role": "checks whether a run reproduces the target failure",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Workload",
+        "role": "input workload run against the instrumented system to exercise fault candidates",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Explorer",
+        "role": "searches for the root-cause fault's location and injection timing using a feedback-driven loop over the causal graph, logs, oracle, and workload",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Update priorities",
+        "role": "recomputes fault-candidate priorities based on the causal graph and log data",
+        "container": "feedback loop",
+        "novel": true
+      },
+      {
+        "name": "Fault location and time",
+        "role": "the highest-priority candidate fault location and injection timing chosen for the next run",
+        "container": "feedback loop",
+        "novel": true
+      },
+      {
+        "name": "Symptoms",
+        "role": "observed behavior after running the workload with the chosen fault injected",
+        "container": "feedback loop",
+        "novel": true
+      },
+      {
+        "name": "Repro run logs (from instrumented system)",
+        "role": "logs from an unsuccessful reproduction attempt, fed back to update priorities",
+        "container": "feedback loop",
+        "novel": true
+      },
+      {
+        "name": "script",
+        "role": "the output reproduction script once the oracle confirms the failure is reproduced",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "System code",
+        "to": "Instrumenter",
+        "what": "input system bytecode",
+        "step": null
+      },
+      {
+        "from": "Instrumenter",
+        "to": "static causal graph",
+        "what": "computed causal graph of fault candidates and observation points",
+        "step": null
+      },
+      {
+        "from": "Instrumenter",
+        "to": "Instrumented system",
+        "what": "code instrumented with fault-injection and logging snippets",
+        "step": null
+      },
+      {
+        "from": "static causal graph",
+        "to": "Explorer",
+        "what": "causal graph used to prioritize fault candidates",
+        "step": null
+      },
+      {
+        "from": "Instrumented system",
+        "to": "Explorer",
+        "what": "instrumented system run by Explorer to exercise fault candidates",
+        "step": null
+      },
+      {
+        "from": "Failure log (from production)",
+        "to": "Explorer",
+        "what": "production failure log used to compute initial priorities",
+        "step": null
+      },
+      {
+        "from": "Failure oracle",
+        "to": "Explorer",
+        "what": "oracle used to check whether the failure is reproduced",
+        "step": null
+      },
+      {
+        "from": "Workload",
+        "to": "Explorer",
+        "what": "workload run against the instrumented system",
+        "step": null
+      },
+      {
+        "from": "Explorer",
+        "to": "Update priorities",
+        "what": "fault candidate priorities to update",
+        "step": null
+      },
+      {
+        "from": "Update priorities",
+        "to": "Fault location and time",
+        "what": "decide the next fault location and injection time",
+        "step": null
+      },
+      {
+        "from": "Fault location and time",
+        "to": "Symptoms",
+        "what": "run the workload with the fault injected",
+        "step": null
+      },
+      {
+        "from": "Symptoms",
+        "to": "Repro run logs (from instrumented system)",
+        "what": "unsuccessful reproduction attempt logged",
+        "step": null
+      },
+      {
+        "from": "Repro run logs (from instrumented system)",
+        "to": "Explorer",
+        "what": "feed logs back into the feedback loop",
+        "step": null
+      },
+      {
+        "from": "Symptoms",
+        "to": "script",
+        "what": "reproduced: output a reproduction script",
+        "step": null
+      }
+    ],
+    "key_idea": "Anduril's Instrumenter statically analyzes and instruments system code into a causal graph and an instrumented system, which Explorer then searches over in an iterative feedback loop until the oracle confirms the failure is reproduced.",
+    "reading_order": "Left to right: System code and inputs flow into Instrumenter, whose outputs feed Explorer, which cycles through the shaded feedback loop until Symptoms yields a reproduced script."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffbf",
+        "used_for": "pale-yellow fill for the Instrumenter and Explorer boxes"
+      },
+      {
+        "hex": "#ffbfff",
+        "used_for": "pink fill for the small diamond icons inside the Instrumented system icon"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light-gray shading for the 'feedback loop' background region"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "dark gray fill for the thick input/output arrows"
+      },
+      {
+        "hex": "#fffde3",
+        "used_for": "pale cream fill for the script output icon"
+      },
+      {
+        "hex": "#7a81ff",
+        "used_for": "periwinkle-blue stroke for the static causal graph's node outlines and arrows"
+      },
+      {
+        "hex": "#0096ff",
+        "used_for": "bright-blue stroke for the feedback-loop arrows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.44pt) strokes at a few widths; thick gray/black arrows for main inputs, thin periwinkle outlines for the causal graph, thin bright-blue arrows for the feedback loop",
+    "font": "Times New Roman serif, mostly 5-7pt with a larger bold label for 'feedback loop'",
+    "corners": "rounded",
+    "arrows": "mix of thick gray/black arrows for major inputs/outputs, thin curved black arrows linking Instrumenter's outputs to Explorer, and thin blue arrows forming the feedback loop",
+    "icons": "vector/bitmap icons: curly-brace 'code' icons (System code, Instrumented system), a document icon (Failure log), a stacked-document icon (Repro run logs), and a note icon (script)"
+  },
+  "encoding": {
+    "color_means": "yellow fill = Anduril's two major novel components (Instrumenter, Explorer); blue causal-graph outlines mark the static-analysis output; bright-blue arrows trace the iterative feedback loop separately from the thicker gray/black one-shot data arrows",
+    "line_style_means": "thick gray/black arrows carry one-shot inputs/outputs (code, logs, oracle, workload, final script); thin bright-blue arrows form the cyclic feedback loop inside the shaded 'feedback loop' region",
+    "emphasis": "a shaded gray background box explicitly bounds and labels the 'feedback loop', visually separating Anduril's one-shot preprocessing (Instrumenter side) from its iterative search (Explorer's loop)",
+    "reusable_patterns": [
+      "linear preprocessing pipeline feeding a hub component that then runs an explicitly boxed cyclic feedback loop",
+      "color-coded arrows distinguishing one-shot pipeline data from iterative loop signals",
+      "small labeled icons (braces, documents) standing in for code/log artifacts instead of plain boxes"
+    ],
+    "weaknesses": [
+      "the Failure oracle arrow terminates at the Explorer box even though the text implies the oracle is invoked specifically during the Symptoms-checking step, so its exact use within the loop is not pinpointed visually"
+    ]
+  },
+  "tags": [
+    "fault injection",
+    "failure reproduction",
+    "distributed systems debugging",
+    "feedback-driven search",
+    "causal analysis",
+    "root-cause diagnosis"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview of Anduril (p.4)"
+    ],
+    "evidence": [
+      "Anduril contains two major components, Instrumenter and Explorer (Figure 2).",
+      "It performs static analysis and computes a causal graph consisting of program points potentially related to the failure symptom.",
+      "Explorer's goal is to quickly search for the location of the root-cause fault as well as the timing for injection."
+    ]
+  },
+  "summary": "Anduril is a feedback-driven fault injection tool that quickly reproduces a given fault-induced production failure in distributed systems by searching for the right fault and timing. Figure 2 shows its architecture and workflow: System code feeds an Instrumenter, which performs static causal analysis to produce a static causal graph (fault candidates f1-f3 linked to observation points o1-o3) and an Instrumented system with injected fault/logging code. These, plus a production Failure log, a Failure oracle, and a Workload, feed the Explorer, which runs inside a shaded 'feedback loop': it updates fault-candidate priorities, decides a fault location and time, runs the workload to observe Symptoms, and either logs an unsuccessful attempt back into the loop or, once the oracle confirms reproduction, emits a reproduction script. Thick gray arrows carry one-shot inputs/outputs while thin blue arrows trace the iterative loop.",
+  "summary_zh": "图2示Anduril架构：Instrumenter静态分析系统代码，生成因果图与插桩系统；连同故障日志、oracle、workload输入Explorer，反馈循环中定位故障、运行、观察症状，成功输出复现脚本，否则记录重试。",
+  "confidence": "high",
+  "notes": "layout-proposal: pipeline-into-feedback-loop — a linear preprocessing pipeline (System code and other inputs into Instrumenter, then into Explorer) feeds an explicitly boxed cyclic sub-process (Update priorities to Fault location and time to Symptoms to Repro run logs and back to Explorer) that exits to a script once the oracle succeeds; none of the seven named templates captures this pipeline-feeding-a-labeled-cycle shape.",
+  "venue": "SOSP24"
+}

@@ -1,0 +1,187 @@
+{
+  "paper_id": "osdi26-020",
+  "fig": "tex7",
+  "system": {
+    "name": "Cocoon",
+    "one_liner": "a system architecture for differentially private training that splits and stores a large correlated-noise history across GPU, main memory, and CXL memory",
+    "domain": [
+      "ml-systems",
+      "security"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Preprocessing Phase",
+        "role": "grouping for the noise pre-computation and coalescing stage that runs before training",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Noise Pre-compute & Coalesce (§4.1)",
+        "role": "computes and coalesces correlated noise ahead of training on the GPU",
+        "container": "Preprocessing Phase / GPU",
+        "novel": true
+      },
+      {
+        "name": "Coalesced Noise",
+        "role": "compact noise output of the preprocessing stage, stored on the CPU",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "CPU",
+        "role": "main-memory host holding coalesced noise when CXL memory can be avoided",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "device running DP training (Emb, DNN) and combining noise from all three sources",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DP Training",
+        "role": "differentially private training region combining embedding and DNN computation with noise",
+        "container": "GPU",
+        "novel": true
+      },
+      {
+        "name": "Emb",
+        "role": "embedding component of the trained model",
+        "container": "DP Training",
+        "novel": false
+      },
+      {
+        "name": "DNN",
+        "role": "deep neural network component of the trained model",
+        "container": "DP Training",
+        "novel": false
+      },
+      {
+        "name": "NMP (§4.2)",
+        "role": "near-memory processing that produces noise directly from the CXL memory when the noise history spills there",
+        "container": "CXL Mem",
+        "novel": true
+      },
+      {
+        "name": "CXL Mem",
+        "role": "CXL-attached memory device holding the remaining noise history and performing NMP",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Distributed Noise History",
+        "role": "legend listing the three noise sources (①GPU, ②CPU, ③CXL Mem) that together hold the full noise history",
+        "container": "CXL Mem",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Noise Pre-compute & Coalesce (§4.1)",
+        "to": "Coalesced Noise",
+        "what": "precomputed noise",
+        "step": null
+      },
+      {
+        "from": "Coalesced Noise",
+        "to": "DP Training",
+        "what": "noise combined via GEMV",
+        "step": 2
+      },
+      {
+        "from": "GPU",
+        "to": "DP Training",
+        "what": "GPU-generated noise combined via GEMV",
+        "step": 1
+      },
+      {
+        "from": "CXL Mem",
+        "to": "DP Training",
+        "what": "NMP-produced noise",
+        "step": 3
+      }
+    ],
+    "key_idea": "Cocoon partitions the noise history heuristically across GPU/main memory and CXL memory, keeping it entirely off CXL when possible so the GPU can focus on training, and only spilling to CXL near-memory processing when the noise history is too large.",
+    "reading_order": "Left to right: preprocessing phase and CPU coalescing feed into the central GPU DP-training box, which also draws GPU-local noise and CXL near-memory-processed noise from the Distributed Noise History panel on the right."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.49,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#156082",
+        "used_for": "primary dark blue borders/text for CPU, GPU, CXL Mem boxes and circled numbers"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "light blue fill for circled-number tags and GEMV boxes"
+      },
+      {
+        "hex": "#fbe3d6",
+        "used_for": "light peach fill for the Coalesced Noise box"
+      },
+      {
+        "hex": "#e97132",
+        "used_for": "orange border/fill for the Noise Pre-compute & Coalesce box and GEMV multiply symbols"
+      },
+      {
+        "hex": "#e8e8e8",
+        "used_for": "light gray background of the Preprocessing Phase grouping"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.5pt, solid on component boxes, dashed on the DP Training region and Distributed Noise History dividers",
+    "font": "Aptos sans-serif, 12-28pt, italic for section/phase labels",
+    "corners": "square",
+    "arrows": "straight, filled triangular heads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = core hardware/data-path components (CPU, GPU, CXL Mem, circled step numbers), orange = noise pre-computation elements (Noise Pre-compute & Coalesce, GEMV operator), gray = the preprocessing-phase grouping box",
+    "line_style_means": "dashed border marks the DP Training sub-region inside the GPU box and separates the three entries in the Distributed Noise History list",
+    "emphasis": "circled numbers 1/2/3 tie the three physically distributed noise sources (GPU, CPU, CXL Mem) directly to matching entries in the Distributed Noise History legend on the right",
+    "reusable_patterns": [
+      "host-device box diagram (CPU/GPU/CXL memory) annotated with circled numbers linking distributed components to an explanatory legend list"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "differential privacy",
+    "correlated noise",
+    "cxl memory",
+    "near-memory processing",
+    "gpu training",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "\\sys: A System for DP Training with Correlated Noises"
+    ],
+    "evidence": [
+      "splits and stores the large noise history across GPU memory, main memory, and CXL memory",
+      "When using CXL memory can be avoided, places the noise history entirely on main memory",
+      "places as much noise history as possible in GPU/main memory and only places the rest in CXL memory"
+    ]
+  },
+  "summary": "This figure gives the system overview of Cocoon, an architecture for differentially private training with correlated noise. It shows noise generated and combined from three distributed sources, marked with circled numbers 1-3 and cross-referenced in a 'Distributed Noise History' panel on the right: GPU-local noise (1), CPU-coalesced noise precomputed in a preprocessing phase (2, via §4.1 Noise Pre-compute & Coalesce), and CXL-memory near-memory-processed noise (3, via §4.2 NMP). All three are combined through GEMV operations into a DP Training region on the GPU that trains an embedding (Emb) and DNN model. The paper text confirms Cocoon uses a heuristic to partition the noise history, favoring GPU/main memory and placing history on CXL memory only when it does not fit, to keep the GPU focused on training. The diagram is a host-device box diagram with square-cornered flat-colored boxes for CPU, GPU and CXL Mem, dashed borders marking the DP Training sub-region and the noise-history legend, and circled numbers linking distributed hardware components to the legend.",
+  "summary_zh": "该图展示 Cocoon 系统架构概览：噪声分别由 GPU（①）、CPU 预处理合并（②，§4.1）和 CXL 内存近存处理（③，§4.2）生成，通过 GEMV 汇总进入 GPU 上的差分隐私训练（Emb、DNN），右侧图例以圈码对应三个来源；正文说明系统优先使用 GPU/主存，仅在必要时才使用 CXL 内存。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

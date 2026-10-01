@@ -1,0 +1,277 @@
+{
+  "paper_id": "nsdi26-044",
+  "fig": "3",
+  "system": {
+    "name": "FRACTAL",
+    "one_liner": "a system for fault-tolerant distribution of unmodified POSIX shell scripts across executor nodes using exactly-once remote pipes",
+    "domain": [
+      "distributed-computing",
+      "fault-tolerance"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "PaSh-JIT Compiler",
+        "container": null,
+        "role": "just-in-time compiler that parses a POSIX shell script into an AST and emits a command-level DFG",
+        "novel": false
+      },
+      {
+        "name": "blk1",
+        "container": null,
+        "role": "one DFG subgraph derived from the client shell script",
+        "novel": false
+      },
+      {
+        "name": "blk2",
+        "container": null,
+        "role": "another DFG subgraph derived from the client shell script",
+        "novel": false
+      },
+      {
+        "name": "Main",
+        "container": null,
+        "role": "subgraph type containing the AST region unsafe for distribution, executed on the client/authoritative node",
+        "novel": true
+      },
+      {
+        "name": "Merger",
+        "container": null,
+        "role": "subgraph type containing an aggregator vertex (e.g., sort -m) that merges outputs of multiple upstream subgraphs",
+        "novel": true
+      },
+      {
+        "name": "Regular",
+        "container": null,
+        "role": "subgraph type without an aggregator vertex",
+        "novel": true
+      },
+      {
+        "name": "Remote Pipe",
+        "container": null,
+        "role": "lightweight primitive replacing a Unix pipe at inter-subgraph edges, recording byte-level progress and enforcing exactly-once semantics",
+        "novel": true
+      },
+      {
+        "name": "Coordinator",
+        "container": null,
+        "role": "groups subgraphs by type (A1), instruments edges with remote pipes (A2), decides persistence (A3), and schedules/monitors executors (A4-6)",
+        "novel": true
+      },
+      {
+        "name": "Progress Monitor",
+        "container": "Coordinator",
+        "role": "tracks execution progress of scheduled subgraphs",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "container": "Coordinator",
+        "role": "assigns subgraphs to executor nodes",
+        "novel": true
+      },
+      {
+        "name": "Health Monitor",
+        "container": "Coordinator",
+        "role": "detects executor/node faults",
+        "novel": true
+      },
+      {
+        "name": "Executor",
+        "container": null,
+        "role": "receives assigned subgraphs, reconstructs them into shell scripts, and runs them in a non-blocking event loop",
+        "novel": true
+      },
+      {
+        "name": "Executor Runtime",
+        "container": "Executor",
+        "role": "runs the reconstructed shell script for an assigned subgraph",
+        "novel": true
+      },
+      {
+        "name": "Event Queue",
+        "container": "Executor",
+        "role": "queues events for the executor's non-blocking event loop",
+        "novel": true
+      },
+      {
+        "name": "Event loop",
+        "container": "Executor",
+        "role": "tight, non-blocking loop maximizing CPU utilization without oversubscription",
+        "novel": true
+      },
+      {
+        "name": "DFS File Reader",
+        "container": "Executor",
+        "role": "reads input data for the subgraph from the distributed file system",
+        "novel": true
+      },
+      {
+        "name": "Local Disk Persistence",
+        "container": "Executor",
+        "role": "persists subgraph output locally when the per-subgraph heuristic decides to do so",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "PaSh-JIT Compiler",
+        "to": "blk1",
+        "what": "DFG subgraph",
+        "step": null
+      },
+      {
+        "from": "PaSh-JIT Compiler",
+        "to": "blk2",
+        "what": "DFG subgraph",
+        "step": null
+      },
+      {
+        "from": "Coordinator",
+        "to": "blk1",
+        "what": "groups the subgraph into Main/Regular/Merger by side-effect annotation (A1)",
+        "step": null
+      },
+      {
+        "from": "Coordinator",
+        "to": "blk1",
+        "what": "instruments inter-subgraph edges with Remote Pipes (A2)",
+        "step": null
+      },
+      {
+        "from": "Coordinator",
+        "to": "blk1",
+        "what": "decides whether to persist the subgraph's output locally (A3)",
+        "step": null
+      },
+      {
+        "from": "Health Monitor",
+        "to": "Scheduler",
+        "what": "node health status (A4)",
+        "step": null
+      },
+      {
+        "from": "Progress Monitor",
+        "to": "Scheduler",
+        "what": "execution progress (A5)",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Executor",
+        "what": "assigned subgraphs (A6)",
+        "step": null
+      },
+      {
+        "from": "Executor Runtime",
+        "to": "Event Queue",
+        "what": "runtime events (B1)",
+        "step": null
+      },
+      {
+        "from": "Event Queue",
+        "to": "Event loop",
+        "what": "queued events (B2)",
+        "step": null
+      },
+      {
+        "from": "Event Queue",
+        "to": "DFS File Reader",
+        "what": "read requests (B3)",
+        "step": null
+      },
+      {
+        "from": "Executor",
+        "to": "Executor",
+        "what": "peer executor communication (B4)",
+        "step": null
+      }
+    ],
+    "key_idea": "FRACTAL compiles a shell script into a DFG, classifies subgraphs (Main/Regular/Merger), instruments edges with exactly-once Remote Pipes, then a Coordinator schedules and monitors replicated Executors that run subgraphs in a non-blocking event loop with optional local persistence.",
+    "reading_order": "Left-to-right: shell script through PaSh-JIT into an annotated DFG (A1-3), into the Coordinator's scheduling/monitoring (A4-6), out to the replicated Executors' event loops (B1-4)."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "letters",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.77,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f9cb9c",
+        "used_for": "fill of the Coordinator's Progress Monitor, Scheduler, and Health Monitor boxes"
+      },
+      {
+        "hex": "#8e7cc3",
+        "used_for": "fill of the Regular-subgraph legend swatch and matching DFG pill segments"
+      },
+      {
+        "hex": "#d9d2e9",
+        "used_for": "fill of the Main-subgraph legend swatch and matching DFG pill segments"
+      },
+      {
+        "hex": "#d5a6bd",
+        "used_for": "fill of the Merger-subgraph legend swatch (e.g., the sort -m pill)"
+      },
+      {
+        "hex": "#dcedc9",
+        "used_for": "fill of the Executor boxes (Executor Runtime, Event Queue, etc.)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin-to-medium (~0.7pt) strokes, dashed line for the B4 peer connection between Executors",
+    "font": "Times New Roman serif for labels (5.5-7.5pt) plus a monospace font for the embedded shell script",
+    "corners": "rounded",
+    "arrows": "many thin connecting lines (60) linking DFG pill segments, with 18 arrowheads and 4 curved connectors",
+    "icons": "roughly 70 small vector icons/glyphs: a terminal/script icon, a PaSh-JIT gear icon, pipe-chain pill icons, monitor icons in the Coordinator, and event-loop/disk icons in the Executors"
+  },
+  "encoding": {
+    "color_means": "purple = Regular subgraphs, pale lavender = Main subgraphs, pink = Merger subgraphs (aggregator vertices like sort -m), matching the in-figure Main/Merger/Regular/Remote-Pipe legend; peach/orange = the Coordinator's monitoring and scheduling boxes; pale green = Executor internals",
+    "line_style_means": "small blue circles mark Remote Pipe primitives inserted at inter-subgraph edges; a dashed line (B4) connects the two Executors as peers; solid arrows carry the compile-schedule-execute data flow",
+    "emphasis": "letter-number tags (A1-A6, B1-B4) pin every part of the figure directly to the numbered explanation in the design section, and the color-coded Main/Merger/Regular legend lets the same DFG chain be read twice -- once as a plain shell pipeline, once annotated with FRACTAL's fault-tolerance machinery",
+    "reusable_patterns": [
+      "a small color-swatch legend placed inline to key a pipe/DFG diagram",
+      "paired identical subsystem boxes (two Executors) with a dashed peer link to indicate replication",
+      "letter-number callouts (A1-6, B1-4) tying diagram regions directly to the prose"
+    ],
+    "weaknesses": [
+      "very high element count (258 shapes, 74 text boxes) in a wide double-column figure makes some labels (e.g., individual B-callouts) small and hard to read",
+      "the left DFG-compilation portion and the right Coordinator/Executor portion are visually different styles (pipe-chain vs. boxes) stitched into one figure"
+    ]
+  },
+  "tags": [
+    "shell-scripting",
+    "fault-tolerance",
+    "distributed-execution",
+    "data-flow-graph",
+    "exactly-once",
+    "task-scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Example and Overview (p.6)",
+      "4 System Design (p.7)"
+    ],
+    "evidence": [
+      "FRACTAL builds on PaSh-JIT to retrieve a DFG representation of the target script",
+      "groups subgraphs into one of three types with different fault-recovery semantics",
+      "Executors (Fig. 3, B1-4) receive their assigned subgraphs, reconstruct them into shell scripts"
+    ]
+  },
+  "summary": "Figure 3 shows FRACTAL's end-to-end architecture for fault-tolerant shell-script distribution. Starting from a client shell script, PaSh-JIT compiles it into a data-flow graph (blk1, blk2); the Coordinator then applies side-effect annotations to classify subgraphs as Main, Regular, or Merger (A1), instruments inter-subgraph edges with exactly-once Remote Pipe primitives (A2), and decides per-subgraph whether to persist outputs locally (A3) -- summarized in an inline Main/Merger/Regular/Remote-Pipe legend. The Coordinator's Progress Monitor, Scheduler, and Health Monitor (A4-6) then assign subgraphs to replicated Executors, shown as two peer boxes on the right; each Executor (B1-4) reconstructs its subgraph into a shell script and runs it via an Executor Runtime, Event Queue, and non-blocking Event loop, reading from a DFS File Reader and optionally writing to Local Disk Persistence. The figure is a dense, wide double-column diagram mixing pipe-chain glyphs, a small color legend, and boxed components tied together by letter-number callouts.",
+  "summary_zh": "该图展示FRACTAL架构：脚本经PaSh-JIT编译为DFG，协调器标注子图类型并插桩Remote Pipe（A1-3）；进度/调度/健康监控（A4-6）分配子图给多个执行器，执行器（B1-4）以事件循环运行并读写DFS与本地磁盘。",
+  "confidence": "high",
+  "notes": "layout-proposal: compile-coordinate-execute fan-out — a left-to-right chain from shell script through PaSh-JIT DFG annotation (A1-3) and the Coordinator's three monitors (A4-6) that then fans out to multiple peer Executors (B1-4); pipeline captures the left-to-right narrative but not the coordinator's hub-and-spoke fan-out to replicated executors.",
+  "venue": "NSDI26"
+}

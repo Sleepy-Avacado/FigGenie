@@ -1,0 +1,54 @@
+{
+  "id": "nsdi23-047_fig4",
+  "paper_id": "nsdi23-047",
+  "fig": "4",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 4: The architecture of BGL.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "chrome",
+  "aspect": 1.05,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-047/src/fig4_overview.svg",
+    "preview.png": "lab/extracted/nsdi23-047/src/fig4_overview.png",
+    "print.png": "lab/extracted/nsdi23-047/nsdi23-047_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar of the mirrored-replica variant: identical Graph Store Server and Worker Machine boxes sit side by side at each bottom tier, cross-linked by explicit arrows, in 7 components and 6 flows.",
+      "what_to_learn": "When a tier is really N replicated nodes, draw exactly two identical side-by-side boxes with a crossing arrow between them to stand for the whole replicated set, and reuse the same internal layout one tier below so the eye maps server-to-worker pairs straight down the page."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar of the mirrored-replica variant: two identical Worker Machine boxes each contain a CPU region nesting one Feature Cache Engine and GPU regions each nesting one Worker box, to depth 3.",
+      "what_to_learn": "Repeat the identical three-level containment, machine over CPU-or-GPU over its inner engine or worker, in two side-by-side mirrored boxes rather than describing the replication in text, and keep one consistent fill per role across both copies so the eye reads them as the same structure twice."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Two full stacks, Graph Store Server then Worker Machine, mirror left and right at high confidence, with explicitly labelled Cross-Partition Communication and Parameter Synchronization arrows crossing the gap between the twin pairs.",
+      "what_to_learn": "Stack two double-column mirrored pairs vertically, storage servers over worker machines, keep each pair's internal boxes (Graph Store plus Samplers, Feature Cache Engine plus GPU Workers) identically arranged on both sides, and write the exact noun each crossing arrow carries, Cross-Partition Communication, Parameter Synchronization, directly on the arrow instead of leaving it implicit."
+    }
+  ]
+}

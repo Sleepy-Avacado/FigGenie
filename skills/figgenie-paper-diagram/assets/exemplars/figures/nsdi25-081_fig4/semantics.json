@@ -1,0 +1,255 @@
+{
+  "paper_id": "nsdi25-081",
+  "fig": "4",
+  "system": {
+    "name": "P4RTC",
+    "one_liner": "a system that extends P4 to program run-to-completion (RTC) network chips via a new architecture model, compiler backend, and toolchain",
+    "domain": [
+      "networking",
+      "programmable-data-plane",
+      "many-core-architecture"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "RX / TX MAC",
+        "role": "receives incoming packets and transmits outgoing packets at the chip's network ports",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Dispatcher",
+        "role": "selects an idle foreground core and assigns it an incoming packet",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cores",
+        "role": "the chip's pool of independent cores, each running its own P4-defined logical pipeline",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Foreground",
+        "role": "cores running the user's foreground_pipe package to parse, process, and forward received packets",
+        "container": "Cores",
+        "novel": true
+      },
+      {
+        "name": "C1",
+        "role": "an example foreground core executing ingress1's table1.apply() check",
+        "container": "Foreground",
+        "novel": false
+      },
+      {
+        "name": "C2",
+        "role": "an example foreground core concurrently executing ingress1's counter.count()",
+        "container": "Foreground",
+        "novel": false
+      },
+      {
+        "name": "Background",
+        "role": "cores running the user's background_pipe package independently of packet arrivals",
+        "container": "Cores",
+        "novel": true
+      },
+      {
+        "name": "Cb",
+        "role": "an example background core looping ingress2/deparser2 to periodically clear the counter",
+        "container": "Background",
+        "novel": false
+      },
+      {
+        "name": "Reorder",
+        "role": "restores per-flow packet ordering across the many parallel cores before the traffic manager",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Traffic Manager",
+        "role": "queues and schedules reordered packets to the output port",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory",
+        "role": "the chip's shared memory system reachable by all cores",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Table 1",
+        "role": "an example on-chip match-action table declared in the P4 program",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "Counter",
+        "role": "an example on-chip counter extern shared by multiple cores",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "Other Tables & Counters",
+        "role": "additional match-action tables and counters kept off-chip",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "P4 Code",
+        "role": "example P4 source showing the foreground/background pipeline split with per-line core annotations (C1, C2, Cb)",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "RX / TX MAC",
+        "to": "Dispatcher",
+        "what": "Rx Pkts.: received packets",
+        "step": null
+      },
+      {
+        "from": "Dispatcher",
+        "to": "Foreground",
+        "what": "packet dispatched to an idle foreground core",
+        "step": null
+      },
+      {
+        "from": "Foreground",
+        "to": "Reorder",
+        "what": "packets from cores, to be reordered",
+        "step": null
+      },
+      {
+        "from": "Background",
+        "to": "Reorder",
+        "what": "packets from cores, to be reordered",
+        "step": null
+      },
+      {
+        "from": "Reorder",
+        "to": "Traffic Manager",
+        "what": "reordered packets",
+        "step": null
+      },
+      {
+        "from": "Traffic Manager",
+        "to": "RX / TX MAC",
+        "what": "Tx Pkts.: packets scheduled for transmission",
+        "step": null
+      },
+      {
+        "from": "C1",
+        "to": "Table 1",
+        "what": "R: table1.apply() lookup",
+        "step": null
+      },
+      {
+        "from": "C2",
+        "to": "Counter",
+        "what": "R&W: counter.count() read-modify-write",
+        "step": null
+      },
+      {
+        "from": "Cb",
+        "to": "Counter",
+        "what": "W: counter.clear() periodic reset",
+        "step": null
+      }
+    ],
+    "key_idea": "P4RTC compiles ordinary P4 control blocks into independent packet-triggered foreground cores and free-running background cores that share on-/off-chip tables and counters; per-line code annotations (C1, C2, Cb) show exactly which core runs which statement.",
+    "reading_order": "Top row left-to-right traces a packet through RX/TX MAC, Dispatcher, Cores, Reorder, Traffic Manager; the bottom row expands Cores/Memory and the P4 Code whose C1/C2/Cb arrows map lines to cores."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.38,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light-green header background of the P4 Code and Memory panels"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "light-blue header background of the Cores panel"
+      },
+      {
+        "hex": "#1f4e79",
+        "used_for": "dark-navy fill of the foreground core circles C1, C2"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "orange/rust fill of the background core circle Cb"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray fill of the RX/TX MAC, Dispatcher, Reorder, and Traffic Manager boxes"
+      },
+      {
+        "hex": "#2f5597",
+        "used_for": "blue P4-keyword text (control, Pipeline, foreground_pipe, background_pipe) in the code panel"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue directional arrows for Rx/Tx packets and the Dispatcher-to-Cores/Cores-to-Reorder flow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on solid boxes; dashed borders on the on-chip/off-chip table and counter placeholders",
+    "font": "sans-serif for diagram labels, monospace-like code font with syntax-highlighted keywords for the P4 Code panel",
+    "corners": "square",
+    "arrows": "solid blue arrows for the packet-processing pipeline; dashed black arrows labeled R/W/R&W for core-to-memory access; small gray arrows linking code lines to their C1/C2/Cb core labels",
+    "icons": "filled circles labeled C1, C2, Cb representing individual cores"
+  },
+  "encoding": {
+    "color_means": "navy blue marks foreground (packet-triggered) cores, orange marks background (free-running) cores; light green headers mark the code/memory panels and light blue marks the cores panel; gray boxes are the fixed (non-programmable) pipeline hardware",
+    "line_style_means": "solid blue arrows show the packet path through fixed hardware; dashed black arrows labeled R/W/R&W show which cores read or write which memory locations; small labeled arrows (C1, C2, Cb) tie specific P4 statements to the core that executes them",
+    "emphasis": "the C1/C2/Cb annotations directly on the P4 source make the many-core execution model concrete by showing, line by line, which core runs what and how cores share the same Counter",
+    "reusable_patterns": [
+      "annotated source code linked by labeled arrows to the hardware units executing each line",
+      "foreground/background core split sharing a common on-chip/off-chip memory hierarchy"
+    ],
+    "weaknesses": [
+      "the top pipeline row and the bottom Code/Cores/Memory row are only loosely connected visually (via the Dispatcher-to-Cores and Cores-to-Reorder arrows), so the two halves must be read together with the caption/text",
+      "background core Cb's incoming dispatch arrow is not explained in the figure itself"
+    ]
+  },
+  "tags": [
+    "p4",
+    "run-to-completion",
+    "many-core",
+    "programmable-switches",
+    "packet-scheduling",
+    "shared-memory"
+  ],
+  "provenance": {
+    "sections": [
+      "4 P4RTC Programming (p.5)",
+      "4 P4RTC Programming (p.6)"
+    ],
+    "evidence": [
+      "a packet enters the chip through the RX MAC and is dispatched to an idle core",
+      "While C1 is accessing table 1, C2 updates a counter",
+      "Cb is running the background_pipe independently as a background core, which resets the counter every 100 ms"
+    ]
+  },
+  "summary": "Figure 4 illustrates P4RTC's many-core programming abstraction using one packet's path plus an annotated code example. Along the top, packets enter via RX/TX MAC, and the Dispatcher selects an idle Foreground core to run the user's foreground_pipe; Reorder then restores packet order from all cores before the Traffic Manager transmits them. The bottom row zooms in: Cores holds many Foreground cores (C1, C2, ...) alongside independent Background cores (Cb, ...) that loop the background_pipe without waiting for packets; Memory holds on-chip Table 1 and a Counter plus off-chip Other Tables & Counters. The P4 Code panel shows ingress1 (annotated C1 for table1.apply(), C2 for counter.count()) and ingress2 (annotated Cb for the periodic counter.clear()), with dashed arrows marking C1 reading Table 1, C2 read-writing the Counter, and Cb writing that same Counter.",
+  "summary_zh": "该图展示P4RTC多核编程抽象:数据包经MAC与Dispatcher分发至前台核心,经Reorder、Traffic Manager发出;后台核心独立循环;P4代码用C1/C2/Cb标注各行对应核心及对片上表/计数器的读写。",
+  "confidence": "high",
+  "notes": "layout-proposal: pipeline-with-code-and-memory-detail - a top packet-processing pipeline (MAC-Dispatcher-Reorder-Traffic Manager) sits above a three-panel detail row (P4 Code, Cores, Memory) that expands the Dispatcher-to-Cores step; pipeline is the closest named template but does not capture the added code/memory side panels.",
+  "venue": "NSDI25"
+}

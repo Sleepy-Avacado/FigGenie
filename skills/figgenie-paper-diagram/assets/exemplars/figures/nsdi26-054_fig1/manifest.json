@@ -1,0 +1,48 @@
+{
+  "id": "nsdi26-054_fig1",
+  "paper_id": "nsdi26-054",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: MoE models invoke alltoallv twice per MoE layer, making it a critical communication primitive.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.01,
+  "n_components": 9,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-054/src/fig1_MoE.svg",
+    "preview.png": "lab/extracted/nsdi26-054/src/fig1_MoE.png",
+    "print.png": "lab/extracted/nsdi26-054/nsdi26-054_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline in the zoom-into-lanes variant: a short top row of alternating Dense/MoE boxes expands into 3 parallel GPU lanes, with the two AlltoAllv arrows recoloured red to flag the operation under study.",
+      "what_to_learn": "Zoom a single stage of a short top-level chain into a lower panel of repeated per-worker lanes to show what happens inside one step, and recolour only the specific operation under study in the accent colour, leaving the rest gray or blue."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A star exploded-stage exemplar: a top row of alternating Dense/MoE layer boxes zooms into one MoE Layer's three parallel GPU rows below, with the two AlltoAllv exchanges the paper targets highlighted in red.",
+      "what_to_learn": "Zoom from a layer-level pipeline down into one layer's per-GPU detail below it, and spend your one accent colour (red) only on the operation the paper is actually about, so it reads as the reason for the whole figure rather than one more box."
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "paper_id": "asplos25-077",
+  "fig": "tex1",
+  "system": {
+    "name": "Velosiraptor",
+    "one_liner": "a system that synthesizes correct OS code for configuring memory-translation hardware from a high-level specification",
+    "domain": [
+      "os-kernel",
+      "program-synthesis",
+      "security"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Software",
+        "role": "issues load/store operations that reach the mapping unit",
+        "container": "data plane",
+        "novel": false
+      },
+      {
+        "name": "Input",
+        "role": "receives (inaddr, mode) from software loads/stores",
+        "container": "Unit",
+        "novel": false
+      },
+      {
+        "name": "map()",
+        "role": "one of the unit's three main components; translates an input address/mode into an output address or exception",
+        "container": "Unit",
+        "novel": true
+      },
+      {
+        "name": "Output",
+        "role": "produces (outaddr, mode) or an exception",
+        "container": "Unit",
+        "novel": false
+      },
+      {
+        "name": "Interface",
+        "role": "one of the unit's three main components; exposes reg/mem/mmio/instr operations and addmap()/setperms()/delmap() to the control plane",
+        "container": "Unit",
+        "novel": true
+      },
+      {
+        "name": "State",
+        "role": "one of the unit's three main components; consists of registers and memory locations, queried by map() and updated via the Interface",
+        "container": "Unit",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Software",
+        "to": "Input",
+        "what": "load/store (inaddr, mode)",
+        "step": null
+      },
+      {
+        "from": "Input",
+        "to": "map()",
+        "what": "address translation request",
+        "step": null
+      },
+      {
+        "from": "map()",
+        "to": "Output",
+        "what": "(outaddr, mode) or exception",
+        "step": null
+      },
+      {
+        "from": "map()",
+        "to": "State",
+        "what": "state query",
+        "step": null
+      },
+      {
+        "from": "Interface",
+        "to": "State",
+        "what": "state update via addmap()/setperms()/delmap()",
+        "step": null
+      }
+    ],
+    "key_idea": "A memory-hardware mapping unit is modeled as a state machine with a data plane (map() translating addresses via State) and a control plane (Interface letting the OS update State), mirroring a network switch's data/control-plane split.",
+    "reading_order": "Left-to-right along the data plane: Software issues load/store into Input, through map() to Output/exception; above, the control plane's Interface updates State that map() queries, separated by a dashed vertical divider."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.28,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#666666",
+        "used_for": "Interface and State box fills"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "Unit outer box background"
+      },
+      {
+        "hex": "#b3b3b3",
+        "used_for": "secondary box fill (reg/mem sub-boxes)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed vertical divider between data plane and control plane, solid thin borders elsewhere (~0.57pt)",
+    "font": "Noto Sans italic for plane labels, DejaVu Sans Mono for code-like labels (inaddr, mode, map())",
+    "corners": "mixed",
+    "arrows": "thin arrows for load/store, map() output, and state query/update",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "dark gray fill marks the unit's three main components (map(), State, Interface); lighter boxes mark Input/Output",
+    "line_style_means": "dashed vertical line separates the control plane (top, Interface/State updates) from the data plane (bottom, load/store translation), mirroring a network switch",
+    "emphasis": "the dashed divider and plane labels (control plane / data plane) foreground the separation between configuration and translation-time behavior",
+    "reusable_patterns": [
+      "abstract function-block model with a control-plane/data-plane split, borrowed from network-switch terminology"
+    ],
+    "weaknesses": [
+      "figure text is compact and relies on the caption/prose to explain that the three dark boxes are the unit's 'main components'"
+    ]
+  },
+  "tags": [
+    "memory translation",
+    "formal model",
+    "OS interface",
+    "address translation",
+    "abstraction",
+    "state machine"
+  ],
+  "provenance": {
+    "sections": [
+      "Operational Model"
+    ],
+    "evidence": [
+      "The operational model of a consists of three main components: , state, and interface",
+      "Similar to a network switch, the operational model consists of a data plane and a control plane",
+      "instead of processing network packets, it processes memory accesses"
+    ]
+  },
+  "summary": "This figure gives the abstract behavioral model Velosiraptor uses for a memory-translation mapping unit ('unit'). The paper describes the unit as a state machine with three main components, shown as the dark boxes in the figure: map(), State, and Interface. On the data plane, Software issues load/store operations that arrive at the unit's Input as an (inaddr, mode) pair; map() translates this into an Output of (outaddr, mode) or raises an exception, consulting the unit's State (registers/memory) via a state query. On the control plane, separated by a dashed vertical line — echoing how a network switch separates data and control planes — an Interface exposes reg/mem/mmio/instr-style operations and the addmap()/setperms()/delmap() API that the OS uses to update State. This formal model is the abstraction that Velosiraptor's specification language describes and that its synthesis pipeline operates on.",
+  "summary_zh": "该图给出 Velosiraptor 对内存映射单元的抽象行为模型：类比网络交换机的数据面/控制面划分，数据面中 map() 函数查询内部状态将输入地址转换为输出地址或异常，控制面通过 Interface 更新该状态。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

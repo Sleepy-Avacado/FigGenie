@@ -1,0 +1,210 @@
+{
+  "paper_id": "nsdi24-096",
+  "fig": "1",
+  "system": {
+    "name": "Horus",
+    "one_liner": "an in-network, granular task scheduler that assigns short-lived tasks to datacenter workers using programmable switch data planes",
+    "domain": [
+      "scheduling",
+      "networking",
+      "datacenter"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Application",
+        "role": "submits tasks to the granular task scheduler",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Application",
+        "role": "submits jobs to the resource manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Application",
+        "role": "submits jobs to the resource manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Granular Task Scheduler",
+        "role": "schedules large numbers of short-lived tasks directly onto workers, the class of system this paper contributes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Policy",
+        "role": "scheduling policy used by the granular task scheduler",
+        "container": "Granular Task Scheduler",
+        "novel": true
+      },
+      {
+        "name": "State",
+        "role": "load/state information used by the granular task scheduler",
+        "container": "Granular Task Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Resource Manager",
+        "role": "receives job submissions from applications and allocates datacenter resources",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Spark Scheduler",
+        "role": "schedules Spark jobs under the resource manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MapReduce Scheduler",
+        "role": "schedules MapReduce jobs under the resource manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rack",
+        "role": "groups servers that run tasks",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Server",
+        "role": "physical machine hosting workers within a rack",
+        "container": "Rack",
+        "novel": false
+      },
+      {
+        "name": "Worker",
+        "role": "executes tasks scheduled onto the server",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Task",
+        "role": "unit of work assigned to a worker",
+        "container": "Worker",
+        "novel": false
+      },
+      {
+        "name": "Worker Pool",
+        "role": "the broader pool of workers across racks that the resource manager allocates into",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application",
+        "to": "Granular Task Scheduler",
+        "what": "task submission",
+        "step": null
+      },
+      {
+        "from": "Granular Task Scheduler",
+        "to": "Rack",
+        "what": "task scheduling onto a worker",
+        "step": null
+      },
+      {
+        "from": "Resource Manager",
+        "to": "Rack",
+        "what": "resource allocation",
+        "step": null
+      },
+      {
+        "from": "Resource Manager",
+        "to": "Worker Pool",
+        "what": "resource allocation",
+        "step": null
+      }
+    ],
+    "key_idea": "Granular task scheduling sits alongside a datacenter's resource manager and coarse-grained job schedulers (Spark, MapReduce), letting applications submit short tasks that are scheduled directly onto shared worker pools across server racks.",
+    "reading_order": "Top-down: applications at top submit tasks either to the granular scheduler or the resource manager, both of which allocate down into racks of servers and worker pools below."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.79,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ececec",
+        "used_for": "neutral fills for the Resource Manager, Spark/MapReduce Scheduler, Rack and Server boxes"
+      },
+      {
+        "hex": "#ffaaaa",
+        "used_for": "leftmost Application box and the highlighted dashed Worker/Task box reached by the granular scheduler"
+      },
+      {
+        "hex": "#e5d5ff",
+        "used_for": "middle Application box and a matching per-task bar inside the Server"
+      },
+      {
+        "hex": "#deaa87",
+        "used_for": "a per-task bar inside the Server representing a colocated task"
+      },
+      {
+        "hex": "#ffe6d5",
+        "used_for": "rightmost Application box and another per-task bar inside the Server"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.67pt) dark borders on boxes, dashed outline on the emphasized Worker box",
+    "font": "Times New Roman serif, uniform ~7pt",
+    "corners": "square",
+    "arrows": "straight arrows, some dashed for 'Allocate', red for the granular-scheduling path",
+    "icons": "vector rack/server icons for the Rack and Worker Pool groups"
+  },
+  "encoding": {
+    "color_means": "the three pastel Application fills appear to carry through to matching colored task bars inside the Server, suggesting tasks from different applications colocated on one server; red marks the granular-scheduling path (Submit Task/Schedule Task arrows and the Worker/Task box)",
+    "line_style_means": "dashed arrows mark the Resource Manager's 'Allocate' actions and the bracket linking the Worker box to the Worker Pool; solid arrows mark direct task submission/scheduling",
+    "emphasis": "the granular task scheduler, its Submit/Schedule Task arrows, and the destination Worker/Task box are outlined in red against the plain gray existing infrastructure (Resource Manager, Spark/MapReduce Scheduler)",
+    "reusable_patterns": [
+      "two parallel control paths (fine-grained scheduler vs. resource manager) converging on shared worker infrastructure",
+      "color-matched boxes implicitly linking application tenants to their colocated tasks"
+    ],
+    "weaknesses": [
+      "small uniform 7pt font makes the many labels hard to distinguish at this size",
+      "the implied correspondence between application colors and task-bar colors has no legend"
+    ]
+  },
+  "tags": [
+    "scheduling",
+    "datacenter",
+    "resource-management",
+    "granular-computing",
+    "in-network-computing"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "3 Proposed In-Network Scheduling (p.5)"
+    ],
+    "evidence": [
+      "As illustrated in Figure 1, datacenter operators deploy mul-",
+      "it can coexist with schedulers of long-lived tasks such as Borg",
+      "This paper contributes to the realization of granular computing."
+    ]
+  },
+  "summary": "Horus is a distributed, in-network, granular task scheduler for cloud datacenters that assigns large numbers of short-lived tasks to shared worker pools using programmable switch data planes. Figure 1 sets the context rather than depicting Horus itself: it sketches how a granular task scheduler (with its own policy and state) sits next to a conventional resource manager and framework-specific schedulers such as Spark and MapReduce. Applications submit tasks either through 'Submit Task' to the granular scheduler, which 'Schedule Task's them directly onto a rack of servers, or through the resource manager, which 'Allocate's resources across racks and a separate worker pool. The diagram is a flat, gray, serif-labeled box-and-arrow layout with red used only to highlight the granular-scheduling path and its target worker/task, and pastel colors tying each application box to a matching task bar on the server.",
+  "summary_zh": "图1展示数据中心资源管理全景：细粒度任务调度器与传统资源管理器（Spark/MapReduce调度器）并行，二者都将任务/资源分配到机架服务器与工作池，红色突出Horus所属的细粒度调度路径。",
+  "confidence": "medium",
+  "notes": "Text describing Figure 1 specifically is thin (the intro sentence is truncated, and the design-overview paragraph mostly describes Figure 3), so component roles for Resource Manager/Spark/MapReduce Scheduler are read from the figure's own labels. layout-proposal: converging control paths — a granular task scheduler and a resource manager (fanning out to per-framework schedulers) act as two parallel top-level controllers that both feed allocation/scheduling decisions down into a shared rack of servers and a separate worker pool; layered is the closest named template but the branching/converging structure is looser than a strict stack.",
+  "venue": "NSDI24"
+}

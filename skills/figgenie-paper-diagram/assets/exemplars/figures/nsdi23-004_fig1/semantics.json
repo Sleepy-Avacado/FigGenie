@@ -1,0 +1,223 @@
+{
+  "paper_id": "nsdi23-004",
+  "fig": "1",
+  "system": {
+    "name": "mRPC",
+    "one_liner": "an RPC framework that runs marshalling and policy enforcement as a single privileged, managed system service instead of a library plus sidecar",
+    "domain": [
+      "networking",
+      "distributed-systems"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "App",
+        "role": "the application issuing and receiving RPC calls",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RPC Library",
+        "role": "linked-in library that marshals RPC parameters (current approach)",
+        "container": "App",
+        "novel": false
+      },
+      {
+        "name": "Sidecar",
+        "role": "separate process that mediates network traffic and applies policies (current approach)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Policies",
+        "role": "policy logic run inside the sidecar",
+        "container": "Sidecar",
+        "novel": false
+      },
+      {
+        "name": "mRPC Library",
+        "role": "lightweight library apps link against in the proposed design",
+        "container": "App",
+        "novel": true
+      },
+      {
+        "name": "mRPC",
+        "role": "privileged, trusted system service that performs marshalling after policy processing",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Frontend Engine",
+        "role": "part of the mRPC service that routes RPCs and applies flexible processing logic",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "Transport Engine",
+        "role": "part of the mRPC service that handles the transport backend (e.g. RDMA/TCP)",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "Flexible RPC Processing Logic",
+        "role": "pluggable policy/transport modules such as rate limiting, ACL, RDMA, TCP",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "Rate Limit",
+        "role": "example policy module",
+        "container": "Flexible RPC Processing Logic",
+        "novel": false
+      },
+      {
+        "name": "ACL",
+        "role": "example access-control policy module",
+        "container": "Flexible RPC Processing Logic",
+        "novel": false
+      },
+      {
+        "name": "RDMA",
+        "role": "example transport backend",
+        "container": "Flexible RPC Processing Logic",
+        "novel": false
+      },
+      {
+        "name": "TCP",
+        "role": "example transport backend",
+        "container": "Flexible RPC Processing Logic",
+        "novel": false
+      },
+      {
+        "name": "Kernel",
+        "role": "OS kernel network stack traversed by both designs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NIC",
+        "role": "network interface card",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Client",
+        "role": "endpoint issuing a Call",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Server",
+        "role": "endpoint issuing a Reply",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client",
+        "to": "Server",
+        "what": "RPC Call, marshalled/unmarshalled (M/U) at each hop",
+        "step": null
+      },
+      {
+        "from": "Server",
+        "to": "Client",
+        "what": "RPC Reply, marshalled/unmarshalled (M/U) at each hop",
+        "step": null
+      },
+      {
+        "from": "App",
+        "to": "mRPC",
+        "what": "RPC data processed by the managed service instead of an app-linked sidecar",
+        "step": null
+      }
+    ],
+    "key_idea": "Collapsing the app-linked RPC library and the separate policy-enforcing sidecar into one privileged mRPC service cuts the number of (un)marshalling steps from 12 to 4 while still centrally enforcing policy.",
+    "reading_order": "left panel (a) top-to-bottom shows the current library+sidecar design and its Call/Reply marshal/unmarshal trace; right panel (b) shows the proposed mRPC design and its shorter trace, inviting direct visual comparison of the two."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.47,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#65e05c",
+        "used_for": "App box fill (green)"
+      },
+      {
+        "hex": "#79bcfb",
+        "used_for": "RPC/mRPC Library and Frontend/Transport Engine box fill (blue)"
+      },
+      {
+        "hex": "#69f4f3",
+        "used_for": "Sidecar and mRPC header fill (cyan)"
+      },
+      {
+        "hex": "#d7eaff",
+        "used_for": "Rate Limit/ACL/RDMA/TCP box fill (light blue)"
+      },
+      {
+        "hex": "#d8b5f5",
+        "used_for": "Policies box fill (purple)"
+      },
+      {
+        "hex": "#fae08b",
+        "used_for": "Marshal (M) / Unmarshal (U) circles (yellow)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines; dashed vertical divider between panels (a) and (b); dashed box around Flexible RPC Processing Logic",
+    "font": "HelveticaNeue sans, 4.5-7pt, bold for module titles",
+    "corners": "square",
+    "arrows": "thin black arrows with small triangular heads along the Call/Reply traces",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = application, blue = RPC/mRPC library and processing engines, cyan = sidecar/mRPC service header, purple = policy module, light blue = pluggable transport backends, yellow circles = marshal (M) / unmarshal (U) operations",
+    "line_style_means": "dashed vertical rule separates the two compared architectures; dashed box marks the pluggable 'Flexible RPC Processing Logic' region",
+    "emphasis": "counting the yellow M/U circles along the bottom Call/Reply traces visually contrasts 12 marshal/unmarshal steps in (a) against 4 in (b)",
+    "reusable_patterns": [
+      "side-by-side two-panel comparison of a current vs. proposed architecture",
+      "annotated request/reply trace counting per-hop operations to make an efficiency argument"
+    ],
+    "weaknesses": [
+      "the legend for M/U circles sits far above the traces it explains"
+    ]
+  },
+  "tags": [
+    "RPC",
+    "sidecar",
+    "managed-service",
+    "marshalling",
+    "architecture-comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2-3)"
+    ],
+    "evidence": [
+      "The typical architecture is to enforce policies in a sidecar—a separate process that mediates the network traffic",
+      "we combine them into a single privilege and trusted sys- tem service (Figure 1b)",
+      "Using a sidecar triples the number of (un)marshalling steps (from 4 to 12)"
+    ]
+  },
+  "summary": "This figure compares two RPC architectures side by side. Panel (a), 'Now: Library+Sidecar', shows an app linked with an RPC library that marshals data, plus a separate sidecar process that unmarshals, applies policies, and re-marshals traffic before it reaches the kernel and NIC; the Call/Reply trace at the bottom shows 12 marshal/unmarshal (M/U) operations. Panel (b), 'Our Vision: RPC as a Managed Service', shows the app linked with a thin mRPC library talking to a single privileged mRPC service containing a Frontend Engine, Transport Engine, and pluggable Flexible RPC Processing Logic (rate limiting, ACL, RDMA, TCP); its trace shows only 4 M/U operations. The figure argues visually that merging marshalling and policy enforcement into one service removes redundant data copies and marshalling steps while retaining the sidecar's flexible policy control.",
+  "summary_zh": "该图对比两种RPC架构：(a)当前的库+边车方案，App库与Sidecar分别封送数据，Call/Reply路径上共12次封送/解封送；(b)提出的mRPC托管服务方案，将封送与策略执行合并进单一特权服务，路径上仅4次操作。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

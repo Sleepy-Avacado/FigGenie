@@ -1,0 +1,180 @@
+{
+  "paper_id": "nsdi26-091",
+  "fig": "4",
+  "system": {
+    "name": "Libra",
+    "one_liner": "an LLM-serving system that flexibly partitions prefill/decode at any token position and schedules micro-requests across unified GPU instances",
+    "domain": [
+      "ml-systems",
+      "llm-serving",
+      "scheduling"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Global Scheduler",
+        "role": "centrally partitions and dispatches requests based on collected latency/utilization metrics",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Partitioner",
+        "role": "decides the splitting point dividing each request into micro-requests",
+        "container": "Global Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Partition Plan",
+        "role": "resulting set of micro-requests (e.g. rα, rβ) for each request",
+        "container": "Global Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Predictor",
+        "role": "predicts performance of candidate partition plans to guide the partitioner",
+        "container": "Global Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Local Scheduler",
+        "role": "runtime local to each GPU server that schedules, batches and executes assigned micro-requests",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Unified Instances",
+        "role": "GPU instances that execute both prefill and decode micro-requests without dedicated roles",
+        "container": "Local Scheduler",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Global Scheduler",
+        "to": "Partitioner",
+        "what": "Requests (e.g. Ap/Ad, Bp/Bd)",
+        "step": 1
+      },
+      {
+        "from": "Partitioner",
+        "to": "Partition Plan",
+        "what": "splitting decision",
+        "step": 2
+      },
+      {
+        "from": "Partition Plan",
+        "to": "Predictor",
+        "what": "candidate partition plan to evaluate",
+        "step": 3
+      },
+      {
+        "from": "Predictor",
+        "to": "Partitioner",
+        "what": "Predicted Perf.",
+        "step": 4
+      },
+      {
+        "from": "Global Scheduler",
+        "to": "Local Scheduler",
+        "what": "Routing of micro-requests",
+        "step": 5
+      },
+      {
+        "from": "Local Scheduler",
+        "to": "Local Scheduler",
+        "what": "KV (cache transfer for a request split across two schedulers)",
+        "step": null
+      },
+      {
+        "from": "Local Scheduler",
+        "to": "Global Scheduler",
+        "what": "Perf. Metrics",
+        "step": null
+      }
+    ],
+    "key_idea": "A Global Scheduler splits each request into prefill/decode micro-requests at any token position, predicting performance to guide the split, then routes them to Local Schedulers on unified GPU instances that execute them and report metrics back.",
+    "reading_order": "Top-down: circled steps ①-④ inside Global Scheduler (Requests, Partitioner, Partition Plan, Predicted Perf.), then ⑤ Routing down to the Local Schedulers' timelines."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.44,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#333333",
+        "used_for": "text labels and box borders"
+      },
+      {
+        "hex": "#9acfff",
+        "used_for": "decode-phase segments of requests/micro-requests"
+      },
+      {
+        "hex": "#f2aa84",
+        "used_for": "prefill-phase segments of requests/micro-requests"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "light gray background fill of the Global Scheduler and Local Scheduler boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill for secondary boxes such as Partition Plan"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed borders (~0.6pt) around the Global Scheduler and each Local Scheduler box",
+    "font": "Arial (with some DengXian glyphs), 5-7pt, heavy bold on box titles",
+    "corners": "mixed",
+    "arrows": "thin straight black arrows connecting the circled steps, including feedback arrows for Predicted Perf. and Perf. Metrics",
+    "icons": "vector icons for a balance/scale (Partitioner), a gear (Predictor), and scissors (request splitting) in the Local Schedulers"
+  },
+  "encoding": {
+    "color_means": "orange segments denote a request's prefill stage and blue segments its decode stage, both before and after partitioning into micro-requests",
+    "line_style_means": "dashed box borders group the Global Scheduler and each Local Scheduler as distinct components; arrows carry requests/plans and, on the right, a labeled feedback loop of performance metrics",
+    "emphasis": "circled steps ①-⑦ walk through the global scheduler's partition-and-predict loop before routing down to per-GPU local schedulers, with 'Perf. Metrics' framing the right side as a closed feedback loop",
+    "reusable_patterns": [
+      "two-level (global/local) scheduler hierarchy with an explicit performance-feedback loop",
+      "colored sub-segments on request bars to show a flexible split point"
+    ],
+    "weaknesses": [
+      "very dense with many small labeled segments (e.g. Aα1, Bβ2) that require careful reading",
+      "only two Local Scheduler instances are drawn though the design targets many GPU servers"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "prefill-decode-disaggregation",
+    "scheduling",
+    "load-balancing",
+    "SLO",
+    "GPU-serving"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Libra Overview: Approach and Challenges (p.5)"
+    ],
+    "evidence": [
+      "FPS proposes a new micro-request abstraction that allows partitioning the prefill/decode phases of a serving request at any token position",
+      "Partitioning and dispatching decisions are centrally made by a global scheduler based on collected latency and resource utilization metrics",
+      "a runtime system local to each GPU server schedules, batches, and executes the assigned micro-requests to maximize throughput"
+    ]
+  },
+  "summary": "This figure shows Libra's overall architecture, built around Flexible Partition and Scheduling (FPS). At the top, a Global Scheduler receives incoming requests, each shown as an orange (prefill) and blue (decode) bar; step ① Requests feeds a ② Partitioner that chooses a split point, producing a ③ Partition Plan of micro-requests (e.g. Aα/Aβ), evaluated by a ④ Predictor that returns Predicted Perf. to refine the split. The scheduler then performs ⑤ Routing of micro-requests down to Local Schedulers, one per GPU server, each running Unified Instances that schedule, batch and execute the assigned micro-requests over time (shown as colored timelines), transferring KV state (⑦) when a request's prefill and decode halves land on different servers. Local Schedulers report Perf. Metrics back up to the Global Scheduler, closing the loop. The figure argues that this flexible, any-point split subsumes prior PD-colocation and disaggregation as special cases.",
+  "summary_zh": "该图展示 Libra 架构：全局调度器对请求进行①接收②划分③生成分区方案④预测性能，再⑤路由微请求到各 GPU 的本地调度器；本地调度器在统一实例上调度执行并在拆分请求间传输 KV 缓存，同时将性能指标反馈给全局调度器，形成闭环两级调度。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

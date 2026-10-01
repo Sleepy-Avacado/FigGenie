@@ -1,0 +1,260 @@
+{
+  "paper_id": "osdi26-024",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "SPEX",
+    "one_liner": "a speculative exploration framework that breaks the reward-feedback barrier in tree-of-thought reasoning",
+    "domain": [
+      "LLM-reasoning",
+      "tree-of-thought",
+      "speculative-execution"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how SPEX simulates speculative rollouts on a search tree, updating visit counts and values before each real exploration",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Explored Node",
+        "kind": "label",
+        "role": "legend swatch: grey circle marking a node whose rollout has already completed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Exploring Node on Main Branch",
+        "kind": "label",
+        "role": "legend swatch: yellow circle marking the node currently selected for real (non-speculative) exploration",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Speculative Exploring Node",
+        "kind": "label",
+        "role": "legend swatch: green circle marking a node being spun up speculatively ahead of confirmed selection",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "V",
+        "kind": "label",
+        "role": "legend abbreviation for the value estimate printed under a node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "label",
+        "role": "legend abbreviation for the visit count printed under a node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Rollout iter i",
+        "kind": "label",
+        "role": "names the starting frame of the depth-first example",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "root",
+        "kind": "node",
+        "role": "the tree's root, from which four children branch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "1",
+        "kind": "node",
+        "role": "first child of the root, highlighted as the main-branch exploring node in the starting frame",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "2",
+        "kind": "node",
+        "role": "second child of the root",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3",
+        "kind": "node",
+        "role": "third child of the root",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "4",
+        "kind": "node",
+        "role": "fourth child of the root",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "speculative simulation to find next k=2 exploration",
+        "kind": "label",
+        "role": "names the boxed sub-sequence of frames that speculatively rolls out candidates 2 and 3 ahead of the real selection",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "root",
+        "to": "1",
+        "what": "the root branches to child 1, selected as the main-branch node to explore in this rollout",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "speculative simulation to find next k=2 exploration",
+        "what": "after selecting node 1, SPEX speculatively simulates k=2 further candidate children ahead of the next real choice",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "speculative simulation to find next k=2 exploration",
+        "to": "2",
+        "what": "the speculative simulation updates node 2's visit count and marks it a completed speculative candidate",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "speculative simulation to find next k=2 exploration",
+        "to": "3",
+        "what": "the speculative simulation updates node 3's visit count and marks it a completed speculative candidate",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Rollout iter i",
+        "axis": "time",
+        "differs": "template: root's child 1 is the highlighted main-branch exploring node; children 2-4 are unexplored",
+        "verdict": null
+      },
+      {
+        "label": "Rollout iter i+1",
+        "axis": "time",
+        "differs": "inside the speculative-simulation box: node 1 becomes explored (grey), node 3 is spun up as the speculative candidate with visit count raised to 2",
+        "verdict": null
+      },
+      {
+        "label": "Rollout iter i+2",
+        "axis": "time",
+        "differs": "node 2 instead becomes the speculative candidate with visit count raised to 2, while node 3 settles to explored",
+        "verdict": null
+      },
+      {
+        "label": "Rollout iter i (result)",
+        "axis": "time",
+        "differs": "outside the box again: node 1 is now the confirmed main-branch node, and nodes 2 and 3 are both marked speculative-exploring (green) from the simulation",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "A node's fill colour (grey/yellow/green) tracks whether it is explored, the current main-branch choice, or a speculative lookahead candidate, and a dashed box isolates the speculative-simulation frames that run ahead of the confirmed rollout.",
+    "reading_order": "Top-down through Depth-First Search's two example rows in (a), each frame left to right into and out of its dashed speculative-simulation box; then Breadth-First Search's single frame row in (b)."
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "double",
+    "aspect": 1.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7f7f7f",
+        "used_for": "fill of grey 'Explored Node' circles"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "fill of yellow 'Exploring Node on Main Branch' circles"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "fill of green 'Speculative Exploring Node' circles"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red text colour marking an updated visit-count or value number within a frame"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of default/unexplored node circles"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "dark-navy stroke outlining the two main panels (a)/(b) and the dashed sub-simulation insets"
+      }
+    ],
+    "background": "white",
+    "fill": "flat pastel circle fills identifying each node's exploration status",
+    "stroke": "black outlines on nodes and arrows; dark-navy borders framing the two main panels and the dashed sub-simulation insets",
+    "corners": "square",
+    "arrows": "thin black tree edges plus bold chevron block arrows separating successive rollout frames",
+    "font": "sans (Arial)",
+    "icons": "chevron block-arrow icons separating successive rollout frames; small circular node glyphs colour-coded by exploration status"
+  },
+  "encoding": {
+    "color_means": "grey marks nodes whose rollout is already explored, yellow marks the node currently chosen on the real (main) branch, green marks nodes being speculatively explored ahead of confirmation, and red text flags a value or visit count that just changed",
+    "line_style_means": "plain black edges draw the fixed tree shape in every frame; dashed rectangles group the frames that belong to one speculative-simulation lookahead",
+    "state_means": "a node's fill colour (grey/yellow/green/white) tells explored, main-branch, speculative, or untouched apart, and is redrawn identically in each frame so only the colours and V/C numbers change",
+    "marker_means": "circled numbers 1-7 are persistent node identities, not step order; V and C labels tag each node's value estimate and visit count",
+    "emphasis": "red numerals highlight exactly which value or visit count a frame just updated, and the dashed box isolates the lookahead frames from the confirmed rollout on either side",
+    "reusable_patterns": [
+      "a fixed small tree redrawn frame by frame with only node colour and V/C numbers changing, and a dashed box isolating a speculative lookahead sub-sequence between two confirmed frames"
+    ],
+    "weaknesses": [
+      "node numbering restarts and reuses the same 1-5 labels across the two DFS examples and the BFS panel, so the two examples must be told apart by their captions rather than by node identity",
+      "the caption text supplied for panel (b) is cut off mid-sentence, so the exact softmax allocation rule is not fully readable here"
+    ]
+  },
+  "tags": [
+    "tree-of-thought",
+    "speculative-execution",
+    "Monte-Carlo-rollout",
+    "DFS",
+    "BFS",
+    "reward-model",
+    "SPEX"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 The SPEX Design"
+    ],
+    "evidence": [
+      "If the selected node is already under speculative expansion, it is skipped.",
+      "the speculative budget matches the count of completed nodes",
+      "shorter branches finish significantly earlier than the longest ones"
+    ]
+  },
+  "summary": "Figure 9 walks through SPEX's speculative rollout mechanism on a small search tree, using a shared legend of grey (explored), yellow (main-branch exploring), and green (speculative exploring) nodes annotated with value V and visit count C. In (a) Depth-First Search, two examples show a boxed 'speculative simulation' sub-sequence: starting from a chosen node, SPEX simulates k further iterations ahead of the real choice, incrementing candidate nodes' visit counts (shown in red) frame by frame, before the outer rollout resumes with the newly explored nodes marked speculative (green). In (b) Breadth-First Search, frames show speculative branches expanded onto already-completed nodes (e.g., node 2) while a too-small branch (node 4) is excluded, illustrating how SPEX fills idle slots left by faster-finishing branches with additional speculative expansions instead of waiting.",
+  "summary_zh": "图9展示SPEX推测式rollout：灰=已探索、黄=主分支探索中、绿=推测节点，标V/C。(a)DFS虚线框内先推演k步再回主rollout；(b)BFS对已完成分支推测扩展，过小分支被排除。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

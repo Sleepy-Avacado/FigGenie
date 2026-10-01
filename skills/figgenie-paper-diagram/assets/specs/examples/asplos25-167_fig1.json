@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "_purpose": "Spec-writing example only: it shows which fields exist and how they are filled for a real figure. It is not a style reference, so do not carry its fonts, palette, legend, numbering or node count into another figure. For style, look at the figure it was written from (assets/exemplars/figures/asplos25-167_fig1/, listed in assets/exemplars/host-device/index.json) and at the exemplars of your own template.",
+    "id": "wave-fig1",
+    "title": "High-level Wave design",
+    "system": {
+      "name": "Wave",
+      "one_liner": "a framework for offloading userspace system-software resource-management decisions to SmartNIC ARM cores"
+    },
+    "figure_kind": "whole-system",
+    "venue_style": "acm",
+    "column": "single",
+    "width_pt": 246,
+    "max_height_pt": 232,
+    "template": "host-device",
+    "modifiers": ["multi-tier"],
+    "direction": "top-down",
+    "panels": 1,
+    "palette": "greyscale",
+    "font": "arial",
+    "step_markers": "none",
+    "language": "en",
+    "version": 1,
+    "caption_draft": "High-level Wave design. Wave agents run in userspace on the SmartNIC and reach the host kernel through a shared-memory queue backed by PCIe MMIO or DMA: the Wave mechanism pushes the state the agents need over the queue and receives resource-allocation decisions back through a transaction-based API, which it then enforces on the host workload.",
+    "open_questions": [
+      "greyscale is faithful to the original, but the corpus record flags 'nearly monochrome palette gives no colour cue to distinguish component types' -- switch to grey-scaffold and tint only the two Wave boxes?",
+      "Do the four crossing arrows (API Calls / Txns / Interrupts / Messages) all belong to the same queue, or should they be grouped under one labelled channel?",
+      "Which side of the PCIe band should carry the MMIO-vs-DMA choice?"
+    ],
+    "_source": "assets/exemplars/figures/asplos25-167_fig1",
+    "_notes": "Captured: the three stacked bands with the interconnect as a full-width row rather than an arrow, the depth-3 nesting (band > inner OS frame > box), the two Wave boxes as the only novel components, and the four named crossing channels. Not captured: the rotated arrow labels in the left gutter are recorded as ordinary edge labels plus a route_hint; the drawer decides the rotation. The 'Kernel Space' / 'Userspace' strips are annotations, not containers, because they label the two boxes rather than enclosing anything else."
+  },
+  "containers": [
+    {
+      "id": "host-os",
+      "label": "",
+      "kind": "solid",
+      "parent": "host-cpu",
+      "title_position": "top-left",
+      "role": "existing",
+      "order": 0,
+      "note": "white frame inside the Host CPU band, split into kernel space and userspace"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "smartnic-cpu",
+      "label": "SmartNIC CPU",
+      "kind": "tier",
+      "orientation": "horizontal",
+      "order": 0,
+      "label_side": "top",
+      "role": "existing"
+    },
+    {
+      "id": "pcie",
+      "label": "PCIe MMIO/DMA",
+      "kind": "tier",
+      "orientation": "horizontal",
+      "order": 1,
+      "label_side": "center",
+      "role": "boundary",
+      "note": "the interconnect is a full-width band, not an arrow; it holds no boxes so its name sits inside it"
+    },
+    {
+      "id": "host-cpu",
+      "label": "Host CPU",
+      "kind": "tier",
+      "orientation": "horizontal",
+      "order": 2,
+      "label_side": "bottom",
+      "role": "existing"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "wave-userspace-agents",
+      "label": "Wave Userspace Agents",
+      "sublabel": "System Software for: Thread Scheduling / RPC Stack / Memory Management / ...",
+      "kind": "module",
+      "parent": "smartnic-cpu",
+      "role": "novel",
+      "size_hint": "l",
+      "grid": { "row": 0, "col": 0, "colspan": 2 },
+      "order": 0
+    },
+    {
+      "id": "smartnic-cache-dram",
+      "label": "SmartNIC Cache/DRAM",
+      "kind": "store",
+      "parent": "smartnic-cpu",
+      "role": "existing",
+      "symbol": "rect",
+      "grid": { "row": 1, "col": 0, "colspan": 2 },
+      "order": 1,
+      "note": "full-width strip at the bottom of the SmartNIC band; backs the shared queue"
+    },
+    {
+      "id": "host-cache-dram",
+      "label": "Host Cache/DRAM",
+      "kind": "store",
+      "parent": "host-cpu",
+      "role": "existing",
+      "symbol": "rect",
+      "grid": { "row": 2, "col": 0, "colspan": 2 },
+      "order": 2,
+      "note": "mirrors the SmartNIC strip across the band"
+    },
+    {
+      "id": "wave-mechanism",
+      "label": "Wave Mechanism",
+      "kind": "module",
+      "parent": "host-os",
+      "role": "novel",
+      "grid": { "row": 3, "col": 0 },
+      "order": 3
+    },
+    {
+      "id": "workload",
+      "label": "Workload",
+      "kind": "module",
+      "parent": "host-os",
+      "role": "existing",
+      "grid": { "row": 3, "col": 1 },
+      "order": 4
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-state",
+      "from": "wave-mechanism",
+      "to": "host-cache-dram",
+      "label": "required state",
+      "kind": "data",
+      "weight": "main",
+      "from_side": "top",
+      "to_side": "bottom"
+    },
+    {
+      "id": "e-queue",
+      "from": "host-cache-dram",
+      "to": "smartnic-cache-dram",
+      "label": "shared memory queue",
+      "kind": "data",
+      "weight": "main",
+      "head": "both",
+      "from_side": "top",
+      "to_side": "bottom",
+      "route_hint": "straight up through the PCIe MMIO/DMA band; the band is what it crosses, not what it connects to"
+    },
+    {
+      "id": "e-deliver",
+      "from": "smartnic-cache-dram",
+      "to": "wave-userspace-agents",
+      "label": "required state",
+      "kind": "data",
+      "weight": "main",
+      "from_side": "top",
+      "to_side": "bottom"
+    },
+    {
+      "id": "e-api-calls",
+      "from": "wave-userspace-agents",
+      "to": "wave-mechanism",
+      "label": "API Calls",
+      "kind": "control",
+      "from_side": "bottom",
+      "to_side": "top",
+      "route_hint": "one of four parallel channels in the left gutter; labels set rotated beside the lines"
+    },
+    {
+      "id": "e-txns",
+      "from": "wave-userspace-agents",
+      "to": "wave-mechanism",
+      "label": "Txns",
+      "kind": "control",
+      "from_side": "bottom",
+      "to_side": "top",
+      "note": "the transaction-based decision API"
+    },
+    {
+      "id": "e-interrupts",
+      "from": "wave-mechanism",
+      "to": "wave-userspace-agents",
+      "label": "Interrupts",
+      "kind": "control",
+      "from_side": "top",
+      "to_side": "bottom"
+    },
+    {
+      "id": "e-messages",
+      "from": "wave-mechanism",
+      "to": "wave-userspace-agents",
+      "label": "Messages",
+      "kind": "data",
+      "from_side": "top",
+      "to_side": "bottom"
+    },
+    {
+      "id": "e-enforce",
+      "from": "wave-mechanism",
+      "to": "workload",
+      "label": "enforces decisions",
+      "kind": "control",
+      "head": "both",
+      "from_side": "right",
+      "to_side": "left"
+    }
+  ],
+  "steps": [],
+  "legend": { "mode": "none" },
+  "annotations": [
+    {
+      "id": "kernel-space",
+      "text": "Kernel Space",
+      "anchor": "wave-mechanism",
+      "leader": false,
+      "kind": "label",
+      "side": "bottom"
+    },
+    {
+      "id": "userspace",
+      "text": "Userspace",
+      "anchor": "workload",
+      "leader": false,
+      "kind": "label",
+      "side": "bottom"
+    }
+  ],
+  "constraints": [
+    { "kind": "same-row", "targets": ["wave-mechanism", "workload"], "note": "kernel space and userspace sit side by side in one frame" },
+    { "kind": "same-height", "targets": ["wave-mechanism", "workload"] },
+    { "kind": "same-width", "targets": ["smartnic-cache-dram", "host-cache-dram"], "note": "the two memory strips mirror each other across the interconnect band" },
+    { "kind": "distribute-v", "targets": ["smartnic-cpu", "pcie", "host-cpu"], "note": "three full-width bands; the middle one is thinner" }
+  ],
+  "style_overrides": {}
+}

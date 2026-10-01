@@ -1,0 +1,212 @@
+{
+  "paper_id": "asplos25-080",
+  "fig": "1",
+  "system": {
+    "name": "xUI",
+    "one_liner": "processor extensions that build on Intel UIPI to deliver low-latency, flexible interrupt-based notification without polling",
+    "domain": [
+      "computer architecture",
+      "os-kernel"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Processor Core (Sender)",
+        "role": "sender-side core executing SENDUIPI to post an interrupt",
+        "container": "Sender",
+        "novel": false
+      },
+      {
+        "name": "Program Code (Sender)",
+        "role": "sender application code issuing reg_sender/SENDUIPI",
+        "container": "Processor Core (Sender)",
+        "novel": false
+      },
+      {
+        "name": "Local Apic (Sender)",
+        "role": "sender's local APIC that writes ICR to dispatch the interrupt over the system bus",
+        "container": "Sender",
+        "novel": false
+      },
+      {
+        "name": "Interrupt Command Register (ICR)",
+        "role": "register written with receiver APICID/vector to trigger sending",
+        "container": "Local Apic (Sender)",
+        "novel": false
+      },
+      {
+        "name": "Mem",
+        "role": "shared memory holding the UPID that coordinates sender and receiver",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "UPID",
+        "role": "user posted-interrupt descriptor updated by the sender and read by the receiver's microcode",
+        "container": "Mem",
+        "novel": false
+      },
+      {
+        "name": "Processor Core (Receiver)",
+        "role": "receiver-side core that runs microcode to process and deliver the interrupt",
+        "container": "Receiver",
+        "novel": false
+      },
+      {
+        "name": "Micro Seq ROM (MSROM)",
+        "role": "microcode ROM implementing UI notification-processing and delivery procedures",
+        "container": "Processor Core (Receiver)",
+        "novel": false
+      },
+      {
+        "name": "Program Code (Receiver)",
+        "role": "receiver's user-level interrupt handler, exited via uiret",
+        "container": "Processor Core (Receiver)",
+        "novel": false
+      },
+      {
+        "name": "UIRR",
+        "role": "register holding the delivered user interrupt vector",
+        "container": "Processor Core (Receiver)",
+        "novel": false
+      },
+      {
+        "name": "UIF",
+        "role": "user interrupt flag gating interrupt delivery",
+        "container": "Processor Core (Receiver)",
+        "novel": false
+      },
+      {
+        "name": "Local Apic (Receiver)",
+        "role": "receiver's local APIC that raises the interrupt signal line to the core",
+        "container": "Receiver",
+        "novel": false
+      },
+      {
+        "name": "End of Interrupt Register (EOI)",
+        "role": "register signaling interrupt completion to the receiver's local APIC",
+        "container": "Local Apic (Receiver)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Processor Core (Sender)",
+        "to": "UPID",
+        "what": "looks up receiver's UPID in the UITT, updates PIR, sets the outstanding-interrupt (ON) bit",
+        "step": 1
+      },
+      {
+        "from": "UPID",
+        "to": "Interrupt Command Register (ICR)",
+        "what": "sending core reads APICID/vector from UPID and writes ICR",
+        "step": 2
+      },
+      {
+        "from": "Interrupt Command Register (ICR)",
+        "to": "Processor Core (Receiver)",
+        "what": "IOAPIC sends the interrupt over the system bus; local APIC raises the interrupt signal line",
+        "step": 3
+      },
+      {
+        "from": "Processor Core (Receiver)",
+        "to": "UIRR",
+        "what": "full pipeline flush; MSROM notification processing reads the vector from UPID into UIRR, clears outstanding bit",
+        "step": 4
+      },
+      {
+        "from": "Micro Seq ROM (MSROM)",
+        "to": "Program Code (Receiver)",
+        "what": "delivery microcode pushes stack pointer/PC/vector, clears UIF, jumps to UINT_Handler",
+        "step": 5
+      },
+      {
+        "from": "Program Code (Receiver)",
+        "to": "Program Code (Receiver)",
+        "what": "the user-level interrupt handler executes",
+        "step": 6
+      },
+      {
+        "from": "Program Code (Receiver)",
+        "to": "UIF",
+        "what": "uiret pops stack pointer and PC, sets UIF, resumes normal control flow",
+        "step": 7
+      }
+    ],
+    "key_idea": "Figure 1 traces the seven microcode-driven steps Intel UIPI uses to post and deliver a user interrupt purely through shared memory (UPID) and APIC registers, without kernel involvement or polling.",
+    "reading_order": "Left-to-right, Sender to Receiver, following numbered steps 1-7 from SENDUIPI in the sender's Program Code, across the system bus, to the receiver's microcode delivery and uiret."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.85,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffbf",
+        "used_for": "shared-memory UPID box"
+      },
+      {
+        "hex": "#bfffbf",
+        "used_for": "Program Code (source-code) boxes on sender and receiver"
+      },
+      {
+        "hex": "#ffbfbf",
+        "used_for": "Micro Seq ROM (MSROM) receiver microcode region"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.3pt), mostly dashed borders grouping each host's Processor Core / Local Apic, square corners",
+    "font": "mixed serif/monospace (CMUSansSerif labels, Courier New for code snippets), 4-6pt",
+    "corners": "square",
+    "arrows": "orthogonal and some curved arrows tracing register/memory access; unenclosed digit labels mark the 7 steps",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale yellow = shared-memory UPID, pale green = program/source-code boxes (SENDUIPI, handler code), pale pink = receiver microcode (MSROM) region that processes the interrupt",
+    "line_style_means": "dashed box borders group each host's Processor Core / Local Apic; solid arrows trace the interrupt's path with numbered steps",
+    "emphasis": "Numbered steps 1-7 walk the reader through the full send/receive path end-to-end, with the pink-highlighted MSROM box calling attention to the microcode central to the paper's latency analysis",
+    "reusable_patterns": [
+      "symmetric two-host message-passing diagram (Sender/Receiver) split by a system bus",
+      "numbered steps overlaid on a hardware register/memory diagram"
+    ],
+    "weaknesses": [
+      "duplicate box labels (Processor Core, Program Code, Local Apic) on both sides require reading the Sender/Receiver headers to disambiguate"
+    ]
+  },
+  "tags": [
+    "user interrupts",
+    "UIPI",
+    "APIC",
+    "microcode",
+    "interrupt latency",
+    "computer architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Characterizing Intel UIPI (p.5)"
+    ],
+    "evidence": [
+      "Figure 1 illustrates the end-to-end process of sending and receiving a posted UIPI",
+      "The sender communicates the UIPI vector through shared memory (UPID)",
+      "UIPI is largely implemented in microcode"
+    ]
+  },
+  "summary": "This paper studies Extended User Interrupts (xUI), processor extensions built on Intel's existing UIPI mechanism for low-latency, poll-free notification. Before introducing xUI's own extensions, the paper analyzes UIPI itself, and this figure gives that architecture view: a Sender and a Receiver processor core, each with Program Code and a Local Apic, communicate through a shared-memory UPID and the system bus. Seven numbered steps trace a posted interrupt end-to-end: the sender updates the UPID and its outstanding-interrupt bit, writes the Interrupt Command Register, and the local APIC signals the receiver over the bus; the receiver's Micro Seq ROM (MSROM) microcode then flushes the pipeline, reads the vector into UIRR, delivers it by jumping to the user handler, and the handler eventually executes uiret to restore the flag UIF and resume execution. Pale color blocks distinguish the memory, code, and microcode regions.",
+  "summary_zh": "该图展示Intel UIPI架构：发送核更新共享内存UPID并写入ICR，经系统总线通知接收核；接收核微码MSROM刷新流水线、读取向量至UIRR并跳转用户处理程序，最终uiret恢复UIF。xUI在此基础上扩展。",
+  "confidence": "high",
+  "notes": "All components are marked non-novel: the figure documents the pre-existing Intel UIPI mechanism that xUI (introduced later in the paper) extends, not xUI's own new mechanisms.",
+  "venue": "ASPLOS25"
+}

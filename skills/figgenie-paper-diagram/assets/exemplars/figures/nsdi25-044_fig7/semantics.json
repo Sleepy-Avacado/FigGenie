@@ -1,0 +1,210 @@
+{
+  "paper_id": "nsdi25-044",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": null,
+    "one_liner": "an empirical study of slow-fault detection and tolerance practices across widely used distributed storage and coordination systems (HBase, CockroachDB, Cassandra, HDFS, Kafka, etcd)",
+    "domain": [
+      "distributed-systems",
+      "fault-tolerance",
+      "reliability"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "the common two-staged warning/fatal threshold logic used across distributed systems to detect and escalate a slow metric",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "System metric slow?",
+        "kind": "label",
+        "role": "the monitored condition every studied system checks (e.g. sync, query, or logging latency)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "old FT",
+        "kind": "table",
+        "role": "small reference table of concrete fatal-threshold values (e.g. 20s, 10s, 2min) drawn from the studied systems",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Trigger a warning action",
+        "kind": "label",
+        "role": "escalation step taken once the warning threshold is exceeded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Trigger a fatal action",
+        "kind": "label",
+        "role": "escalation step taken once the fatal threshold is exceeded, or after enough accumulated warnings",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Static threshold",
+        "kind": "label",
+        "role": "legend swatch noting that both thresholds are static, developer-set values",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "System metric slow?",
+        "to": "Trigger a fatal action",
+        "what": "> fatal threshold",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "System metric slow?",
+        "to": "Trigger a warning action",
+        "what": "> warning threshold",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Trigger a warning action",
+        "to": "Trigger a fatal action",
+        "what": "warning accumulates > warning count",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "System metric slow?",
+        "Trigger a warning action",
+        "Trigger a fatal action"
+      ],
+      "transitions": [
+        {
+          "from": "System metric slow?",
+          "to": "Trigger a fatal action",
+          "guard": "> fatal threshold"
+        },
+        {
+          "from": "System metric slow?",
+          "to": "Trigger a warning action",
+          "guard": "> warning threshold"
+        },
+        {
+          "from": "Trigger a warning action",
+          "to": "Trigger a fatal action",
+          "guard": "warning accumulates > warning count"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "Does the system metric exceed the fatal threshold?",
+          "branches": [
+            "yes -> Trigger a fatal action",
+            "no -> check warning threshold"
+          ]
+        },
+        {
+          "question": "Does the system metric exceed the warning threshold?",
+          "branches": [
+            "yes -> Trigger a warning action and accumulate warning count",
+            "no -> keep monitoring"
+          ]
+        },
+        {
+          "question": "Has the accumulated warning count exceeded its limit?",
+          "branches": [
+            "yes -> Trigger a fatal action",
+            "no -> keep monitoring"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "All studied systems detect slowness the same two-staged way: a monitored metric first crosses a warning threshold, triggering a warning action, and only reaches a fatal action either by exceeding a separate, higher fatal threshold directly, or by accumulating enough warnings (the warning count) over time.",
+    "reading_order": "starts at the 'System metric slow?' decision on the left, branching down to 'Trigger a warning action' (blue) and right to 'Trigger a fatal action' (red), with a diagonal arrow showing accumulated warnings can also escalate to the fatal action"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.03,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0430ff",
+        "used_for": "blue text/arrow for the warning-threshold branch and 'Trigger a warning action'"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red text/arrow for the fatal-threshold branch and 'Trigger a fatal action'"
+      },
+      {
+        "hex": "#e1ffff",
+        "used_for": "pale cyan fill of the 'Static threshold' legend swatch"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.3pt), some dashed connectors",
+    "corners": "square",
+    "arrows": "thin black/coloured arrows, straight and diagonal, connecting the decision text to its two action outcomes",
+    "font": "Calibri / TeX Gyre Termes mixed sans/serif, ~6-8.5pt, bold for 'System metric slow?'",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = the warning path (lower threshold, accumulates a count); red = the fatal path (higher threshold, or enough accumulated warnings)",
+    "line_style_means": "solid arrows for direct threshold crossings; a diagonal 'warning accumulates' arrow shows the secondary path from warning count to fatal action",
+    "state_means": "not a before/after comparison; warning vs fatal are distinguished purely by colour and by which threshold or count triggers them",
+    "marker_means": "no numbered markers; a small pale-cyan swatch labelled 'Static threshold' serves as an in-figure legend for how the thresholds are set",
+    "emphasis": "the diagonal 'warning accumulates > warning count' arrow calls out the paper's added insight that repeated warnings, not just a single fatal threshold, can also escalate to a fatal action",
+    "reusable_patterns": [
+      "a two-threshold decision flowchart generalized from many concrete systems' logic, with a small reference table of real threshold values alongside it"
+    ],
+    "weaknesses": [
+      "the small 'old FT' table on the left is not directly wired into the flowchart with arrows, so its connection to the generalized logic must be inferred from the caption/text"
+    ]
+  },
+  "tags": [
+    "fault-tolerance",
+    "slow-fault-detection",
+    "flowchart",
+    "threshold-based-monitoring",
+    "distributed-systems"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Current Practices to Handle Slowness (p.8)"
+    ],
+    "evidence": [
+      "Figure 7 summarizes the common logic of two- staged slow detection in the studied systems",
+      "developers first set a warning threshold (WT) to detect slowness",
+      "escalated actions like log rolls or service kill will be triggered"
+    ]
+  },
+  "summary": "Figure 7 generalizes the slow-fault detection logic that this measurement study found repeated across systems like HBase, CockroachDB (pebble), Cassandra, HDFS and Kafka. For any monitored system metric, developers set a warning threshold (WT); crossing it triggers a warning action (blue). Independently, exceeding a separate, more severe fatal threshold (FT) directly triggers a fatal action (red) such as a log roll or service kill. A diagonal arrow shows the additional path the paper highlights: even without ever crossing the fatal threshold, if the warning count (WC) accumulates enough times, the system also escalates to a fatal action. A small 'old FT' table beside the flowchart lists concrete fatal-threshold values (20s, 10s, 2min, etc.) drawn from the real systems studied, grounding the generalized two-stage logic in the actual numbers developers picked.",
+  "summary_zh": "该图归纳多个分布式系统共通的慢故障检测逻辑：系统指标超过预警阈值(WT)触发警告(蓝色)，超过更严重的致命阈值(FT)直接触发致命动作(红色)；警告次数(WC)累计过多也会通过对角箭头升级为致命动作。左侧小表列出各系统实际使用的FT数值。",
+  "confidence": "high",
+  "notes": "prior base 'graph' replaced with the more specific, valid v3 value 'flowchart'. system.name left null since the figure generalizes across several named systems (HBase, CockroachDB, Cassandra, HDFS, Kafka) rather than describing one system the paper proposes.",
+  "venue": "NSDI25"
+}

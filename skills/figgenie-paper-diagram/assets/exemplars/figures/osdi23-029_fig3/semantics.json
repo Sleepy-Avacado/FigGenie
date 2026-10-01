@@ -1,0 +1,219 @@
+{
+  "paper_id": "osdi23-029",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "AlpaServe",
+    "one_liner": "a model-serving system that statistically multiplexes GPU clusters across many large deep learning models using model parallelism",
+    "domain": [
+      "ml-serving",
+      "gpu-scheduling",
+      "model-parallelism"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "comparing replication versus model-parallel placement of 4 models across 4 GPUs as memory budget scales from 1x to 4x",
+    "base": "table",
+    "elements": [
+      {
+        "name": "GPU 1",
+        "kind": "row",
+        "role": "first device column, shown in both placement strategies",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU 2",
+        "kind": "row",
+        "role": "second device column",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU 3",
+        "kind": "row",
+        "role": "third device column",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU 4",
+        "kind": "row",
+        "role": "fourth device column",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "1x",
+        "kind": "row",
+        "role": "smallest memory budget row: one model-size worth of memory per GPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "2x",
+        "kind": "row",
+        "role": "twice a single model's size worth of memory per GPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "4x",
+        "kind": "row",
+        "role": "four times a single model's size, enough to hold all four models per GPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "cell",
+        "role": "model A tile (green); at 1x placed whole on GPU1, at 4x replicated whole on every GPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "cell",
+        "role": "model B tile (yellow)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "cell",
+        "role": "model C tile (red/pink)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "D",
+        "kind": "cell",
+        "role": "model D tile (blue)",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "A",
+        "to": "A1",
+        "what": "model A is split into 4 equal shards under 1x-memory model parallelism (one shard per GPU)",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Replication",
+        "axis": "alternatives",
+        "differs": "whole-model tiles replicate as memory grows: 1 model per GPU at 1x, 2 (round-robin) at 2x, all 4 at 4x",
+        "verdict": null
+      },
+      {
+        "label": "(b) Model Parallelism",
+        "axis": "alternatives",
+        "differs": "models are sharded instead: 4-way shards per GPU at 1x, 2-way shards replicated in pairs at 2x, converging to full replication at 4x",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "As per-GPU memory grows from 1x to 4x a model's size, replication adds more whole-model copies per GPU while model parallelism shards each model across fewer GPUs, until the two strategies converge.",
+    "reading_order": "left panel (a) top-to-bottom by memory budget (1x, 2x, 4x) across GPU 1-4, then the same for the right panel (b)"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.1,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#eeeeee",
+        "used_for": "light-grey fill of each GPU's outer device-column container"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "light-green fill of model A's tiles/shards"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light-yellow fill of model B's tiles/shards"
+      },
+      {
+        "hex": "#f4cccc",
+        "used_for": "light-red/pink fill of model C's tiles/shards"
+      },
+      {
+        "hex": "#cfe2f3",
+        "used_for": "light-blue fill of model D's tiles/shards"
+      },
+      {
+        "hex": "#c9daf8",
+        "used_for": "a second, slightly deeper light-blue minor accent"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on every tile and device container; dotted horizontal separators between the three memory-budget rows",
+    "corners": "square",
+    "arrows": "none",
+    "font": "sans (Arial), 3.5-5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each model keeps one consistent colour (A green, B yellow, C pink, D blue) across both placement strategies and all memory budgets, so a tile's colour identifies which model it is regardless of whether it is whole or a shard",
+    "line_style_means": "not applicable; all outlines are solid black, dotted lines only separate the three memory-budget rows",
+    "state_means": "the two placement strategies are told apart by tile granularity: whole coloured bars in (a) versus subdivided lettered+numbered shard tiles (e.g. A1, B1) in (b)",
+    "marker_means": "subscript numbers on shard tiles (A1, A2, ...) mark which shard of a model that piece is",
+    "emphasis": "keeping model colour constant while only changing tile granularity across the grid lets the reader see at a glance how each strategy's memory footprint per GPU grows",
+    "reusable_patterns": [
+      "a memory-budget x GPU grid where identically coloured tiles for the same logical item are drawn whole in one column and subdivided into shards in the other, to compare two placement strategies"
+    ],
+    "weaknesses": [
+      "at 2x under model parallelism, GPU pairs holding identical shard groups (GPU1/GPU3 and GPU2/GPU4) are easy to miss without comparing tile labels column by column"
+    ]
+  },
+  "tags": [
+    "AlpaServe",
+    "model-parallelism",
+    "replication",
+    "GPU-memory",
+    "statistical-multiplexing",
+    "model-serving"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Motivation and Tradeoff Analysis (p.5)"
+    ],
+    "evidence": [
+      "we replicate each model the same number of times (Fig. 3a)",
+      "For model parallelism, more GPU memory can also reduce the number of pipeline stages and reduce the overhead",
+      "When the GPU memory capacity is large enough to hold all models, there is no gain from model parallelism."
+    ]
+  },
+  "summary": "This figure from AlpaServe's motivation section compares two ways to place 4 models (A-D) across 4 GPUs as the per-GPU memory budget scales from 1x to 4x a single model's size. In (a) Replication, each GPU holds whole model copies: one model per GPU at 1x, two round-robin replicas per GPU at 2x, and all four models per GPU at 4x. In (b) Model Parallelism, each model is instead sharded across GPUs: at 1x every GPU holds a 1/4 shard of every model, at 2x two-GPU shard groups are replicated across the remaining pairs, and at 4x each GPU again holds whole copies of every model, identical to full replication. The comparison shows model parallelism's advantage over replication shrinking as memory grows, until the two placements converge.",
+  "summary_zh": "该图对比AlpaServe中4个模型(A-D)在4块GPU上随显存预算从1x增至4x的两种放置方式：(a)复制方式每GPU放整份模型，1x时各放1个，2x时轮流放2个，4x时全放4个；(b)模型并行则将每个模型切分，1x时每GPU存各模型的1/4分片，2x时两GPU一组复制，4x时收敛为与复制相同的整份放置。",
+  "confidence": "high",
+  "notes": "Added 'evolution' as a secondary group alongside the prior primary 'comparison': within each of the two side-by-side placement strategies, the same GPU grid is redrawn across three increasing memory-budget rows (1x, 2x, 4x), matching the documented comparison+evolution overlap category. content.panels lists the 2 top-level alternatives (matching the schema's comparison usage); the internal 1x/2x/4x progression is folded into each panel's 'differs' text rather than expanded into a 3x2 panel grid. layout.panels is kept at 1 to mirror the index's measured panel count, while layout.panel_count reflects the 2 semantic alternatives.",
+  "venue": "OSDI23"
+}

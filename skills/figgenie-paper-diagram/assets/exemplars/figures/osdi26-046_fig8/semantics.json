@@ -1,0 +1,151 @@
+{
+  "paper_id": "osdi26-046",
+  "fig": "8",
+  "system": {
+    "name": "RollArt",
+    "one_liner": "a system for disaggregated multi-task agentic RL training that runs rollout at trajectory-level granularity",
+    "domain": [
+      "ml-systems",
+      "reinforcement-learning"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Reward Worker",
+        "role": "asynchronously scores completed trajectories",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "EnvManager",
+        "role": "lightweight controller managing the lifecycle of a single environment to collect a trajectory, running its own independent event loop",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LLM Proxy",
+        "role": "gateway that dispatches per-trajectory requests to inference workers, decoupling generation clients from serving instances",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Inference Worker",
+        "role": "runs a command-driven event loop managing an inference engine (e.g., vLLM, SGLang) to generate actions",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "EnvManager",
+        "to": "LLM Proxy",
+        "what": "Historical Obs., Action",
+        "step": null
+      },
+      {
+        "from": "LLM Proxy",
+        "to": "Inference Worker",
+        "what": "generation request",
+        "step": null
+      },
+      {
+        "from": "Inference Worker",
+        "to": "EnvManager",
+        "what": "Action",
+        "step": null
+      },
+      {
+        "from": "EnvManager",
+        "to": "EnvManager",
+        "what": "Reset (environment lifecycle re-initialization)",
+        "step": null
+      },
+      {
+        "from": "EnvManager",
+        "to": "Reward Worker",
+        "what": "Trajectory",
+        "step": null
+      }
+    ],
+    "key_idea": "Each trajectory progresses independently through its own EnvManager event loop, LLM Proxy dispatch, and inference worker generation, so a slow environment never blocks others and reward computation happens asynchronously per trajectory.",
+    "reading_order": "Left to right: Reward Worker receives completed Trajectories from the dashed control-plane box, inside which EnvManager loops through Reset/Action with the environment, exchanging Historical Obs./Action with the LLM Proxy, which dispatches to the Inference Worker."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 4.1,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fed966",
+        "used_for": "Reward Worker stacked boxes (gold)"
+      },
+      {
+        "hex": "#bebebe",
+        "used_for": "EnvManager stacked boxes (gray)"
+      },
+      {
+        "hex": "#fef1cd",
+        "used_for": "LLM Proxy box (pale yellow)"
+      },
+      {
+        "hex": "#b7a7da",
+        "used_for": "Inference Worker stacked boxes (purple)"
+      }
+    ],
+    "background": "white, with a pale lavender panel enclosing the control-plane components (EnvManager, LLM Proxy, Inference Worker)",
+    "fill": "flat",
+    "stroke": "dark navy dashed border around the control-plane grouping box",
+    "font": "Calibri-Bold / DengXian-Bold sans, 4.5-7pt, mostly bold",
+    "corners": "square",
+    "arrows": "thin orthogonal arrows with small filled heads, plus a curved self-loop for Reset",
+    "icons": "vector: stacked-rectangle icon behind each box indicating many parallel per-trajectory instances"
+  },
+  "encoding": {
+    "color_means": "gold = reward computation, gray = environment-interaction controller, pale yellow = LLM request gateway, purple = inference serving workers",
+    "line_style_means": "dashed outer boundary groups the trajectory-level control-plane components; solid arrows show data/control flow (historical obs/action, action, reset, trajectory)",
+    "emphasis": "the stacked-card icon reused on every box signals that each component runs many independent per-trajectory instances, the core trajectory-level design idea",
+    "reusable_patterns": [
+      "stacked-rectangle icon for 'many parallel instances'",
+      "self-loop arrow denoting a per-instance reset/initialization step"
+    ],
+    "weaknesses": [
+      "figure is very compressed and wide (aspect ~4.1), with tight text in a small vertical space"
+    ]
+  },
+  "tags": [
+    "reinforcement-learning",
+    "agentic-RL",
+    "trajectory-level-rollout",
+    "disaggregated-training",
+    "LLM-serving",
+    "asynchronous-reward"
+  ],
+  "provenance": {
+    "sections": [
+      "6 System-Managed Control Plane (p.9)",
+      "6 System-Managed Control Plane (p.10)"
+    ],
+    "evidence": [
+      "each trajectory progresses through generation, environment interaction, and reward computation independently",
+      "Each inference worker runs a command-driven event loop",
+      "a slow environment never blocks others"
+    ]
+  },
+  "summary": "This figure gives a trajectory-level view of RollArt's rollout and reward pipeline. Inside a dashed control-plane box, an EnvManager runs an independent event loop per trajectory: it resets the environment, exchanges historical observations and actions with an LLM Proxy, which dispatches per-trajectory requests to an Inference Worker running an inference engine such as vLLM or SGLang; the resulting action flows back to the EnvManager. Completed trajectories are sent out of the control-plane box to a Reward Worker, which scores them asynchronously. Every component is drawn as a stacked-rectangle icon (gold for Reward Worker, gray for EnvManager, pale yellow for LLM Proxy, purple for Inference Worker) to indicate that many independent instances run in parallel, each on its own timeline so a slow environment never blocks the others.",
+  "summary_zh": "该图展示RollArt按轨迹粒度的rollout与奖励流程：虚线控制面内的EnvManager独立事件循环，通过Reset与环境交互，并与LLM Proxy交换历史观测/动作，LLM Proxy分发请求给推理Worker(如vLLM/SGLang)生成动作；完成的轨迹送往Reward Worker异步打分。各组件均以堆叠矩形图标表示大量并行实例，互不阻塞。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

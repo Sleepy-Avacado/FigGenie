@@ -1,0 +1,56 @@
+{
+  "id": "osdi25-031_fig8",
+  "kind": "mechanism",
+  "paper_id": "osdi25-031",
+  "fig": "8",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 8: Fast approximate Top-K operation of DecDEC.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "data-structure",
+  "subject": "how DecDEC approximates global top-K channel selection using per-chunk bucket-based sampling of activation elements",
+  "arrangement": "inset",
+  "panel_count": 2,
+  "frame_template": "free",
+  "delta_marking": "callout",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 2.94,
+  "n_elements": 16,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": true,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-031/src/fig8_top-k.svg",
+    "preview.png": "lab/extracted/osdi25-031/src/fig8_top-k.png",
+    "print.png": "lab/extracted/osdi25-031/osdi25-031_fig8_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "DecDEC approximates global top-K selection by splitting the input into independent chunks and, within each chunk, scattering elements into magnitude buckets, then gathering from low buckets and randomly filling any boundary bucket.",
+      "what_to_learn": "A dashed zoom callout from one element of the overview into the numbered sub-steps that happen inside it",
+      "note_source": "doc"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "paper_id": "asplos26-026",
+  "fig": "5",
+  "system": {
+    "name": "TLT",
+    "one_liner": "a system that accelerates reasoning RL training losslessly via adaptive speculative decoding",
+    "domain": [
+      "ml-systems",
+      "LLM inference",
+      "reinforcement learning"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Target Model",
+        "role": "the large model that generates one token per step in vanilla decoding, and verifies all drafted tokens in parallel in speculative decoding",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Draft Model",
+        "role": "lightweight model that rapidly generates a sequence of candidate tokens for verification",
+        "container": "Drafting Stage",
+        "novel": false
+      },
+      {
+        "name": "Drafting Stage",
+        "role": "draft model proposes a run of candidate tokens (numbered steps)",
+        "container": "(b) Example of Speculative Decoding",
+        "novel": false
+      },
+      {
+        "name": "Verification Stage",
+        "role": "target model verifies the drafted tokens in a single parallel forward pass, accepting up to the first mismatch",
+        "container": "(b) Example of Speculative Decoding",
+        "novel": false
+      },
+      {
+        "name": "Roofline Model Analysis",
+        "role": "H100 tensor TFLOPS vs. batch size plot showing speculative decoding reaches peak throughput at a much smaller batch size than vanilla decoding",
+        "container": "(c)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Target Model",
+        "to": "Target Model",
+        "what": "vanilla decoding generates one new token per step, feeding it back as input for the next step",
+        "step": null
+      },
+      {
+        "from": "Draft Model",
+        "to": "Draft Model",
+        "what": "sequentially drafts candidate tokens (steps 1-4)",
+        "step": 1
+      },
+      {
+        "from": "Draft Model",
+        "to": "Target Model",
+        "what": "drafted token sequence sent for parallel verification",
+        "step": 2
+      },
+      {
+        "from": "Target Model",
+        "to": "Target Model",
+        "what": "accepts drafted tokens up to the first mismatch, keeps target's own token at that position",
+        "step": 3
+      }
+    ],
+    "key_idea": "Speculative decoding replaces vanilla decoding's one-token-per-step loop with a draft model proposing several tokens at once and the target model verifying them all in a single parallel pass, which the roofline analysis shows reaches peak GPU throughput at far smaller batch sizes.",
+    "reading_order": "Left column top-to-bottom: (a) vanilla decoding example above (c) roofline chart; right column: (b) speculative decoding's drafting stage above its verification stage."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.45,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1081cc",
+        "used_for": "blue fill for prompt tokens and Target/Draft Model boxes"
+      },
+      {
+        "hex": "#f8b62c",
+        "used_for": "yellow/orange fill for drafted tokens in the legend and drafting stage"
+      },
+      {
+        "hex": "#05aebb",
+        "used_for": "teal fill accents"
+      },
+      {
+        "hex": "#8ad27d",
+        "used_for": "green fill for accepted tokens"
+      },
+      {
+        "hex": "#ff644a",
+        "used_for": "red fill for rejected tokens"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium (~0.5pt) dashed strokes around the 'tokens sent at the same time' groupings",
+    "font": "Helvetica Neue Medium sans, 4-7.5pt, moderately bold",
+    "corners": "mixed",
+    "arrows": "38 arrowheads with some curved, linking token boxes to model boxes",
+    "icons": "colored token chips (blue/yellow/green/red) explained by an explicit legend"
+  },
+  "encoding": {
+    "color_means": "blue = prompt token, yellow = drafted token, green = accepted token, red = rejected token",
+    "line_style_means": "dashed outline groups tokens that are sent to a model in the same forward pass",
+    "emphasis": "a gray arrow in panel (c) points left, calling out that speculative decoding reaches peak TFLOPS at much smaller batch sizes than vanilla decoding",
+    "reusable_patterns": [
+      "side-by-side sequential-vs-parallel token generation diagram paired with a roofline throughput chart"
+    ],
+    "weaknesses": [
+      "combines three different visual types (token-sequence diagrams and a line chart) in one figure, requiring the shared legend to tie them together"
+    ]
+  },
+  "tags": [
+    "speculative decoding",
+    "LLM inference",
+    "draft model",
+    "roofline analysis",
+    "token verification",
+    "throughput"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "a lightweight draft model rapidly generates a sequence of candidate tokens ... verified in parallel by the much larger target model",
+      "The system accepts the drafted sequence up to the first token that mismatches the target model's prediction",
+      "this process improves throughput by shifting the typically memory-bound autoregressive generation towards a more compute-bound operation"
+    ]
+  },
+  "summary": "This figure explains speculative decoding as background for TLT. Panel (a) shows vanilla decoding: the target model generates one new token per step, sequentially extending the sequence. Panel (b) shows speculative decoding in two stages: a Drafting Stage where a lightweight draft model proposes several candidate tokens at once, and a Verification Stage where the target model checks all of them in a single parallel pass, keeping accepted tokens (green) up to the first rejected one (red) and substituting its own token there. Panel (c) is a roofline-style plot of H100 tensor TFLOPS versus batch size, showing that speculative decoding (yellow line) reaches peak compute throughput at a much smaller batch size than vanilla decoding (red line), illustrated with a gray arrow. A shared legend defines prompt/drafted/accepted/rejected token colors used across panels (a) and (b).",
+  "summary_zh": "该图介绍推测解码背景：(a)传统解码逐token生成；(b)推测解码分起草阶段（草稿模型批量生成候选token）与验证阶段（目标模型并行验证，接受绿色token、拒绝红色token）；(c)屋顶线分析显示推测解码在更小批大小即可达到峰值吞吐。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

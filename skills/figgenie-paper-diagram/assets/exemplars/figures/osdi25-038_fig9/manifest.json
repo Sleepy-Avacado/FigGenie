@@ -1,0 +1,55 @@
+{
+  "id": "osdi25-038_fig9",
+  "kind": "mechanism",
+  "paper_id": "osdi25-038",
+  "fig": "9",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 9: The states and transitions of Scalio’s cache consis- tency protocol.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "state-machine",
+  "subject": "how a cache slot's occupied/complete flags step through four states under Fill, Lock, Invalidate, and Evict",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.55,
+  "n_elements": 9,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-038/osdi25-038_fig9_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi25-038/osdi25-038_fig9_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Two per-slot flags, occupied and complete, define four states - clean, being filled, valid, and invalidated-while-filling - and the Fill/Lock/Invalidate/Evict transitions between them let Scalio detect the race where a slot is invalidated while still being filled.",
+      "what_to_learn": "Four states as one repeated record layout in a 2×2 grid; the flag bits inside are what distinguishes them",
+      "note_source": "doc"
+    }
+  ]
+}

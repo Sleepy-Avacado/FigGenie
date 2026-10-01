@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-059_fig5",
+  "paper_id": "osdi26-059",
+  "fig": "5",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 5: UEP-architecture. Control buffer temporarily buffers con- trol messages (e.g., atomics) until the conditional check specified by the message is passed, upon which the values carried by these control messages are applied. Multiple communication channels are used for moving the data payloads",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.77,
+  "n_components": 6,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-059/osdi26-059_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-059/osdi26-059_fig5_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-30 pick that colours by block type exactly as the rule prescribes: green marks the novel CPU proxy, orange the FIFOs, blue the interconnect channel, and grey the unmodified GPU, mirrored across two nodes.",
+      "what_to_learn": "Assign one colour per hardware role, control, buffer, interconnect, compute, and keep existing hardware in neutral grey while the paper's new component gets the accent colour; mirror the two-node layout around the shared RDMA link so the symmetry shows the protocol is peer-to-peer, and spell out terse arrow labels like this figure's imm and Write."
+    }
+  ]
+}

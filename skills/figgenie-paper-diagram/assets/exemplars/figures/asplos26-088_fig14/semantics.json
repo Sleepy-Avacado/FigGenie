@@ -1,0 +1,140 @@
+{
+  "paper_id": "asplos26-088",
+  "fig": "14",
+  "system": {
+    "name": "Neo",
+    "one_liner": "a hardware accelerator for real-time on-device 3D Gaussian Splatting using reuse-and-update sorting",
+    "domain": [
+      "computer-graphics",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "ITU",
+        "role": "Intersection Test Unit; tests Gaussian-subtile intersections and generates bitmaps for successive subtile groups over time",
+        "container": "Intersection Test lane",
+        "novel": true
+      },
+      {
+        "name": "SCU",
+        "role": "Subtile Computation Unit; performs alpha-blending rasterization for a subtile group once its intersection test is complete",
+        "container": "Subtile Rasterization lane",
+        "novel": true
+      },
+      {
+        "name": "Idle",
+        "role": "time slots where a unit has no work scheduled, shown in the legend",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Subtile 1:4",
+        "role": "the first group of four subtiles processed, shown in the legend color coding",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Subtile 5:8",
+        "role": "the second group of four subtiles processed, shown in the legend color coding",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Subtile N-4:N",
+        "role": "the final group of subtiles processed, shown in the legend color coding",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "ITU",
+        "to": "SCU",
+        "what": "intersection bitmap for a completed subtile group, unlocking its rasterization",
+        "step": null
+      },
+      {
+        "from": "ITU",
+        "to": "ITU",
+        "what": "pipelined progression to the next subtile group's intersection test while the previous group rasterizes",
+        "step": null
+      }
+    ],
+    "key_idea": "Intersection testing (ITU) and subtile rasterization (SCU) are pipelined over time per subtile group: after the first group's ITU-then-SCU dependency, later groups' ITU work overlaps with the ongoing rasterization of the prior group, hiding intersection-test latency.",
+    "reading_order": "Two horizontal lanes over a shared time axis: top lane 'Intersection Test' shows sequential ITU boxes per subtile group; bottom lane 'Subtile Rasterization' shows corresponding SCU boxes offset to start after their ITU completes, with a legend on the right decoding the color-coded subtile groups and idle time."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.9,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d8f3dc",
+        "used_for": "lightest green fill for the earliest/idle-adjacent subtile-group time blocks"
+      },
+      {
+        "hex": "#74c69d",
+        "used_for": "medium green fill for mid-sequence subtile-group time blocks"
+      },
+      {
+        "hex": "#40916c",
+        "used_for": "darkest green fill for the latest subtile-group (N-4:N) time blocks"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on each timeline block",
+    "font": "HelveticaNeue / HelveticaNeue-Bold sans, 7.5-9pt",
+    "corners": "square",
+    "arrows": "thin black time axis with an arrowhead at the right end",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "a green gradient (light to dark) encodes progression through successive subtile groups over time, shared between the ITU and SCU lanes and decoded in the right-side legend",
+    "line_style_means": null,
+    "emphasis": "the offset/overlap between ITU and SCU blocks in adjacent lanes visually demonstrates pipelining, with white/blank cells showing idle time only for the very first ITU-SCU dependency",
+    "reusable_patterns": [
+      "two-lane Gantt-style execution timeline with color-coded work units",
+      "pipeline overlap diagram showing a producer stage running ahead of its consumer stage"
+    ],
+    "weaknesses": [
+      "ellipsis (...) compresses the middle of the timeline, so exact subtile-group count and timing proportions are not fully shown"
+    ]
+  },
+  "tags": [
+    "3D-gaussian-splatting",
+    "hardware-accelerator",
+    "pipelining",
+    "execution-timeline",
+    "rasterization",
+    "intersection-test"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Neo Accelerator Architecture (p.9)"
+    ],
+    "evidence": [
+      "Figure 14 illustrates this pipelining scheme",
+      "subsequent subtiles benefit from overlapping execution as the ITUs process the next group of subtiles concurrently",
+      "This overlap effectively hides the latency of on-the-fly bitmap generation"
+    ]
+  },
+  "summary": "This figure is an execution timeline showing how Neo pipelines intersection testing and rasterization within the Rasterization Engine. Two lanes run along a shared time axis: the top lane shows the Intersection Test Unit (ITU) processing successive groups of four subtiles, and the bottom lane shows the Subtile Compute Unit (SCU) rasterizing each group after its bitmap is ready. For the first subtile group, SCU must wait for ITU to finish (visible as an idle gap), but for all later groups the ITU's work on the next group overlaps with the SCU's ongoing rasterization of the current group. A green color gradient with a right-side legend (Idle, Subtile 1:4, Subtile 5:8, ..., Subtile N-4:N) marks which subtile group each timeline block belongs to, visually demonstrating that pipelining hides on-the-fly bitmap-generation latency after the initial group.",
+  "summary_zh": "该图展示Neo光栅化引擎中交叉测试与光栅化的流水线执行时序：上方ITU车道依次处理各组子瓦片的相交测试，下方SCU车道在对应位图就绪后进行光栅化；除首组因等待ITU而空闲外，后续各组ITU可与前一组SCU的光栅化并行执行，绿色渐变配合右侧图例标示不同子瓦片组，体现流水线隐藏位图生成延迟的效果。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

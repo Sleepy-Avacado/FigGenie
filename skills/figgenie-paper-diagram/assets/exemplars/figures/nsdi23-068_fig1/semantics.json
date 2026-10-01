@@ -1,0 +1,181 @@
+{
+  "paper_id": "nsdi23-068",
+  "fig": "1",
+  "system": {
+    "name": "DChannel",
+    "one_liner": "a system that accelerates mobile applications by steering traffic across parallel high-bandwidth and low-latency cellular channels",
+    "domain": [
+      "networking",
+      "mobile",
+      "cellular"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Client app",
+        "role": "mobile application generating traffic to be accelerated",
+        "container": "User equipment",
+        "novel": false
+      },
+      {
+        "name": "DChannel client",
+        "role": "client-side agent that steers outgoing traffic across HBC and LLC and reorders incoming traffic",
+        "container": "User equipment",
+        "novel": true
+      },
+      {
+        "name": "Packet steerer",
+        "role": "steers application traffic to the LLC and HBC channels",
+        "container": "DChannel client",
+        "novel": true
+      },
+      {
+        "name": "Reordering buffer",
+        "role": "reorders packets coming from the LLC before passing them to the app",
+        "container": "DChannel client",
+        "novel": true
+      },
+      {
+        "name": "DChannel proxy",
+        "role": "proxy-side agent in the packet core gateway performing the symmetric steering and reordering functions",
+        "container": "Packet core gateway",
+        "novel": true
+      },
+      {
+        "name": "Reordering buffer",
+        "role": "reorders packets coming from the LLC on the proxy side",
+        "container": "DChannel proxy",
+        "novel": true
+      },
+      {
+        "name": "Packet steerer",
+        "role": "steers traffic headed toward the client between LLC and HBC",
+        "container": "DChannel proxy",
+        "novel": true
+      },
+      {
+        "name": "App server",
+        "role": "remote server the mobile app communicates with over the Internet",
+        "container": "Internet",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client app",
+        "to": "DChannel client",
+        "what": "outgoing application traffic via a virtual interface",
+        "step": null
+      },
+      {
+        "from": "DChannel client",
+        "to": "DChannel proxy",
+        "what": "traffic split across the HBC and LLC channels",
+        "step": null
+      },
+      {
+        "from": "DChannel proxy",
+        "to": "App server",
+        "what": "IP packets forwarded to the Internet",
+        "step": null
+      },
+      {
+        "from": "App server",
+        "to": "DChannel proxy",
+        "what": "IP packets returning from the Internet",
+        "step": null
+      },
+      {
+        "from": "DChannel proxy",
+        "to": "DChannel client",
+        "what": "downlink traffic split across the HBC and LLC channels",
+        "step": null
+      },
+      {
+        "from": "Reordering buffer",
+        "to": "Client app",
+        "what": "reordered packets delivered to the app after the LLC/HBC merge",
+        "step": null
+      }
+    ],
+    "key_idea": "Mirrored client and proxy agents each split traffic across a high-bandwidth channel and a low-latency channel, then reorder what arrives over the low-latency channel before delivering it.",
+    "reading_order": "Left to right across the network path (User equipment to Internet), matching the symmetric Packet steerer / Reordering buffer pair on the client against the same pair on the proxy."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.7,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "dark red for the HBC channel label/line"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill for the DChannel client/proxy and Client app/App server boxes"
+      },
+      {
+        "hex": "#385723",
+        "used_for": "dark green, likely for the LLC channel label/line"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "light blue fill for the inner Packet steerer / Reordering buffer boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders on boxes (~0.29pt), rounded corners",
+    "font": "sans-serif (Calibri), 6.5-8pt, some bold",
+    "corners": "rounded",
+    "arrows": "thick dashed double-headed arrows for the HBC/LLC channel paths; thin solid arrows for the virtual interface and IP packet paths",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue fill marks the DChannel components and their host apps; red/green line colors distinguish the HBC and LLC channel paths",
+    "line_style_means": "dashed colored arrows show the two parallel channels (HBC, LLC) between client and proxy; thin arrows show ordinary IP packet flow to/from the Internet",
+    "emphasis": "the symmetric placement of identical Packet steerer / Reordering buffer pairs on both the client and gateway side emphasizes that DChannel performs mirrored steering and reordering at both ends of the path",
+    "reusable_patterns": [
+      "swimlane network-path diagram with a mirrored client/proxy component pair",
+      "two parallel channel paths drawn as distinct colored arrows between the same two endpoints"
+    ],
+    "weaknesses": [
+      "the HBC and LLC line colors are not explained by an in-figure legend"
+    ]
+  },
+  "tags": [
+    "mobile-networks",
+    "multipath",
+    "traffic-steering",
+    "packet-reordering",
+    "cellular",
+    "low-latency"
+  ],
+  "provenance": {
+    "sections": [
+      "3 DChannel Design (p.4)"
+    ],
+    "evidence": [
+      "steers application traffic to LLC and HBC, and reordering buffer that reorders packets coming from LLC",
+      "The client-side agent captures outgoing packets on this interface and implements an algorithm to steer traffic",
+      "The proxy-side agent performs symmetric functions using the same algorithms"
+    ]
+  },
+  "summary": "Figure 1 gives DChannel's end-to-end overview across five network zones: User equipment, Base station, Core network, Packet core gateway, and Internet. On the client, a Client app sends traffic through a virtual interface into the DChannel client, whose Packet steerer splits traffic across two parallel paths, HBC (high-bandwidth) and LLC (low-latency), while its Reordering buffer reassembles packets arriving over LLC. The Packet core gateway hosts a symmetric DChannel proxy with its own Packet steerer and Reordering buffer, performing the mirrored function for traffic headed toward the client and toward the Internet, where it exchanges ordinary IP packets with an App server. The figure uses a swimlane layout to show the network path and colored dashed arrows to distinguish the HBC and LLC channels between the two mirrored DChannel agents.",
+  "summary_zh": "图1展示DChannel架构：客户端与网关的DChannel代理均含Packet steerer和Reordering buffer，对称地在HBC与LLC两条信道间分流并重排乱序包。",
+  "confidence": "high",
+  "notes": "layout-proposal: symmetric endpoint pair over network lanes — mirrored client/proxy stacks (Packet steerer plus Reordering buffer) sit at the two ends of a five-lane network path (User equipment...Internet), linked by two parallel labelled channels (HBC, LLC) rather than a simple two-way comparison panel.",
+  "venue": "NSDI23"
+}

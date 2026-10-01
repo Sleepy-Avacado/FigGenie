@@ -1,0 +1,178 @@
+{
+  "paper_id": "nsdi26-065",
+  "fig": "1",
+  "system": {
+    "name": "DroidSpeak",
+    "one_liner": "a system for sharing KV cache across different fine-tuned LLM variants that process the same context",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Baseline agent",
+        "role": "answers the user's initial query in a multi-agent workflow",
+        "container": "A) Workflows with multiple LLM agents",
+        "novel": false
+      },
+      {
+        "name": "Expert agent",
+        "role": "receives the baseline agent's Q+A conversation history to continue the task",
+        "container": "A) Workflows with multiple LLM agents",
+        "novel": false
+      },
+      {
+        "name": "Coding agent",
+        "role": "responds to the user's coding query",
+        "container": "A) Workflows with multiple LLM agents",
+        "novel": false
+      },
+      {
+        "name": "Debugging agent",
+        "role": "continues the conversation from the coding agent to debug",
+        "container": "A) Workflows with multiple LLM agents",
+        "novel": false
+      },
+      {
+        "name": "Validation agent",
+        "role": "continues the conversation from the coding agent to validate",
+        "container": "A) Workflows with multiple LLM agents",
+        "novel": false
+      },
+      {
+        "name": "Model A",
+        "role": "one fine-tuned model instance processing the shared content",
+        "container": "B) Multiple models working on same content, storing their own KV cache",
+        "novel": false
+      },
+      {
+        "name": "Model B",
+        "role": "another fine-tuned model instance processing the same shared content",
+        "container": "B) Multiple models working on same content, storing their own KV cache",
+        "novel": false
+      },
+      {
+        "name": "KV cache",
+        "role": "per-model cache of intermediate states, stored separately by each model today",
+        "container": "B) Multiple models working on same content, storing their own KV cache",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "User",
+        "to": "Baseline agent",
+        "what": "Q (query)",
+        "step": null
+      },
+      {
+        "from": "Baseline agent",
+        "to": "Expert agent",
+        "what": "Q+A conversation history",
+        "step": null
+      },
+      {
+        "from": "User",
+        "to": "Coding agent",
+        "what": "Q (query)",
+        "step": null
+      },
+      {
+        "from": "Coding agent",
+        "to": "Debugging agent",
+        "what": "conversation history",
+        "step": null
+      },
+      {
+        "from": "Coding agent",
+        "to": "Validation agent",
+        "what": "conversation history",
+        "step": null
+      },
+      {
+        "from": "Model A",
+        "to": "KV cache",
+        "what": "stored intermediate states",
+        "step": null
+      },
+      {
+        "from": "Model B",
+        "to": "KV cache",
+        "what": "stored intermediate states",
+        "step": null
+      }
+    ],
+    "key_idea": "The same textual context is repeatedly reprocessed from scratch by different fine-tuned LLMs across agent workflows, multi-model/LoRA serving, and personalized assistants, each keeping a separate KV cache.",
+    "reading_order": "Left to right across three labeled vignettes A, B, C, each read top-down from the shared query/content to the separate models or agents that reprocess it."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.35,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#9dbb61",
+        "used_for": "boxes for the coding-agent workflow (Coding/Debugging/Validation agents) and Model B"
+      },
+      {
+        "hex": "#ab9ac0",
+        "used_for": "boxes for the baseline-agent workflow (Baseline/Expert agents) and Model A"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders (~0.2pt) on rounded rectangles",
+    "font": "Calibri, uniform ~8.5pt",
+    "corners": "rounded",
+    "arrows": "thin straight arrows connecting user/content icons to agent or model boxes",
+    "icons": "vector icons of a person/user, robot-style agents, a document, and database cylinders for KV cache"
+  },
+  "encoding": {
+    "color_means": "purple vs. green box color distinguishes the two example agents/models within each vignette, not a fixed cross-panel category",
+    "line_style_means": null,
+    "emphasis": "repeating the same 'one shared input, multiple separate LLM copies' sketch across three differently-labeled real-world scenarios (A, B, C) builds the case that cross-model KV-cache sharing is a general, recurring need",
+    "reusable_patterns": [
+      "small-multiples of motivating use-case vignettes sharing one visual grammar (source icon fanning out to colored agent/model boxes)"
+    ],
+    "weaknesses": [
+      "no legend explaining what the purple vs. green colors mean beyond distinguishing the two examples in each panel",
+      "icons for user/agents are unlabeled, relying on icon recognition"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "KV-cache-sharing",
+    "multi-agent",
+    "LoRA",
+    "fine-tuned-models",
+    "personalization"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)"
+    ],
+    "evidence": [
+      "in multi-agent systems (Figure 1A), when the coding agent talks to the validation agent",
+      "In a multi-LLM or multi-LoRA inference system (Figure 1B), an updated model in a chatbot",
+      "In a personalized assistant system (Figure 1C), where each assistant is fine-tuned for a different user’s"
+    ]
+  },
+  "summary": "This motivating figure shows three real-world scenarios where the same textual context is shared across multiple fine-tuned LLMs, framing the problem DroidSpeak solves. Vignette A depicts multi-agent workflows: a user's query and answer pass from a Baseline agent to an Expert agent, and separately a Coding agent's conversation is continued by both a Debugging agent and a Validation agent. Vignette B shows a document processed independently by Model A and Model B, each maintaining its own KV cache despite sharing the same content, as happens with multi-LoRA or continuously updated model serving. Vignette C shows personalized agents, each fine-tuned for a different user, answering different users' queries about the same underlying content (e.g., the same news article). Together the three panels argue that prefix sharing across different models is common but currently forces redundant recomputation, motivating cross-model KV-cache reuse.",
+  "summary_zh": "该图展示三种同一上下文被多个微调大模型共享的场景：A) 多智能体工作流中对话历史在不同智能体间传递；B) 多个模型处理同一文档但各自维护 KV 缓存；C) 针对不同用户个性化的智能体访问相同内容，说明跨模型复用 KV 缓存的普遍需求。",
+  "confidence": "high",
+  "notes": "layout-proposal: scenario-gallery — three independently labeled (A/B/C) vignettes, each a small hub-and-spoke sketch of one query/content source fanning out to multiple LLM agents/models, arranged to motivate cross-model KV-cache sharing; none of the seven named templates cover a multi-vignette motivation gallery.",
+  "venue": "NSDI26"
+}

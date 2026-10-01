@@ -1,0 +1,250 @@
+{
+  "paper_id": "nsdi24-105",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "ACC",
+    "one_liner": "an ACK-driven congestion control scheme for lossless Ethernet that classifies flows from ACK marking and adjusts their sending rate",
+    "domain": [
+      "networking",
+      "congestion-control",
+      "datacenter-networks"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how an ACC sender classifies a flow from aggregated ACK marking (CE/NO/UE) and picks a rate-adjustment action",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Receiving ACK",
+        "kind": "state",
+        "role": "entry pseudo-state where the sender reads each period's aggregated ACK marking",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Congested",
+        "kind": "state",
+        "role": "flow steadily marked CE above the threshold (90%), considered congested",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Uncongested",
+        "kind": "state",
+        "role": "flow with neither CE nor UE marking received, considered uncongested",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Undetermined",
+        "kind": "state",
+        "role": "victim flow that received UE marking but no CE marking",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Source Halt",
+        "kind": "state",
+        "role": "congested flow stops transmitting while its ACK arrival rate is recorded for later use",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Sending",
+        "kind": "state",
+        "role": "exit pseudo-state where the adjusted rate is applied and the flow keeps transmitting",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Receiving ACK",
+        "to": "Congested",
+        "what": "CE-marked ACK fraction above threshold during period T",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Receiving ACK",
+        "to": "Uncongested",
+        "what": "NO: neither CE nor UE marking received",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Receiving ACK",
+        "to": "Undetermined",
+        "what": "UE-marked ACK received, no CE marking",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Congested",
+        "to": "Source Halt",
+        "what": "records ACK sequence / ACK arrival rate then halts sending",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Source Halt",
+        "to": "Sending",
+        "what": "Rate decrease using the recorded ACK arrival rate",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Uncongested",
+        "to": "Sending",
+        "what": "Rate increase",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Undetermined",
+        "to": "Sending",
+        "what": "Rate keep or decrease, based on the UE marking duration pattern",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Sending",
+        "to": "Receiving ACK",
+        "what": "next monitoring period's ACKs are read again (dashed feedback loop)",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Receiving ACK",
+        "Congested",
+        "Uncongested",
+        "Undetermined",
+        "Source Halt",
+        "Sending"
+      ],
+      "transitions": [
+        {
+          "from": "Receiving ACK",
+          "to": "Congested",
+          "guard": "CE (marking fraction above 90% threshold)"
+        },
+        {
+          "from": "Receiving ACK",
+          "to": "Uncongested",
+          "guard": "NO (no CE or UE marking)"
+        },
+        {
+          "from": "Receiving ACK",
+          "to": "Undetermined",
+          "guard": "UE (UE marking, no CE)"
+        },
+        {
+          "from": "Congested",
+          "to": "Source Halt",
+          "guard": "record ACK sequence / ACK arrival rate"
+        },
+        {
+          "from": "Source Halt",
+          "to": "Sending",
+          "guard": "Rate decrease"
+        },
+        {
+          "from": "Uncongested",
+          "to": "Sending",
+          "guard": "Rate increase"
+        },
+        {
+          "from": "Undetermined",
+          "to": "Sending",
+          "guard": "Rate keep or decrease"
+        },
+        {
+          "from": "Sending",
+          "to": "Receiving ACK",
+          "guard": null
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "An ACC sender classifies each flow every period by the priority-ordered ACK marking CE > UE > NO into Congested, Undetermined or Uncongested, and each class drives a distinct rate-adjustment path before looping back to read the next period's ACKs.",
+    "reading_order": "left to right: Receiving ACK branches into three parallel rows (Congested/Uncongested/Undetermined) keyed by CE/NO/UE, each row's action leads right into Sending, which loops back along the bottom to Receiving ACK"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.47,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#deebf7",
+        "used_for": "pale blue fill of the Congested / Uncongested / Undetermined state boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.9pt), dashed outline on the Receiving ACK and Sending boxes and on the bottom feedback line; solid outline on the state boxes",
+    "corners": "rounded",
+    "arrows": "solid black arrows, some curved, linking states; one dashed arrow loops along the bottom from Sending back to Receiving ACK",
+    "font": "Calibri Bold / Bold-Italic sans, 7-8pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale blue fill marks the three classification states (Congested/Uncongested/Undetermined); bold red and blue text on the CE/UE transition labels visible in the rendered figure calls out the triggering signal",
+    "line_style_means": "dashed boxes/line mark the Receiving-ACK entry, the Sending exit, and the feedback edge between them; solid arrows mark the classification and rate-adjustment transitions",
+    "state_means": "the three parallel congestion states are told apart by which incoming ACK-marking label (CE/NO/UE) drives them and by their distinct downstream rate action",
+    "marker_means": "no numbered markers; short verb-phrase labels (CE, NO, UE, Rate decrease, Rate increase, Rate keep or decrease) name each transition's trigger or effect",
+    "emphasis": "an italic annotation on the Congested branch calls out that only this branch records ACK sequence/arrival-rate data before halting transmission",
+    "reusable_patterns": [
+      "a start/end pseudo-state pair bracketing three parallel classification-to-action branches"
+    ],
+    "weaknesses": [
+      "the dashed feedback arrow from Sending back to Receiving ACK is easy to miss along the bottom edge"
+    ]
+  },
+  "tags": [
+    "congestion-control",
+    "state-machine",
+    "ACK-driven",
+    "lossless-ethernet",
+    "rate-adjustment"
+  ],
+  "provenance": {
+    "sections": [
+      "4 ACK-Driven Congestion Control (p.6)"
+    ],
+    "evidence": [
+      "Figure 5 illustrates the state machine of ACK-driven rate adjustment at ACC senders",
+      "TCD marking is aggregated in each T with the priority order CE > UE > NO",
+      "Only when neither UE nor CE marking is received, the flow is uncongested"
+    ]
+  },
+  "summary": "Figure 5 of this paper on lossless-Ethernet congestion control shows the ACC sender's ACK-driven state machine. Starting from Receiving ACK, the sender classifies each period's aggregated ACK marking by priority CE > UE > NO: a CE-marked ACK above a 90% threshold moves the flow to Congested, which first enters Source Halt (recording the ACK sequence and arrival rate) before a Rate decrease step; a UE-marked ACK with no CE moves the flow to Undetermined, driving a Rate keep or decrease; and no CE/UE marking leaves the flow Uncongested, which directly triggers a Rate increase. All three branches rejoin at Sending, which loops back (dashed arrow) to Receiving ACK for the next monitoring period. Pale-blue boxes mark the three classification states, and dashed boxes/lines mark the loop's start, end and feedback edge.",
+  "summary_zh": "该图展示ACC发送端按CE>UE>NO优先级对ACK标记分类的状态机：拥塞流先进入Source Halt记录ACK到达速率再降速，受害流按UE模式调速，未拥塞流直接提速，三者汇合到Sending后循环回到接收ACK。",
+  "confidence": "high",
+  "notes": "style.palette had only one measured hex (#deebf7); the red/blue accent text colours visible on the CE/UE labels and the italic annotation in the PNG are not present in the measured attributes and are described in `encoding` without inventing hex codes.",
+  "venue": "NSDI24"
+}

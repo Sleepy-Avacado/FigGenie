@@ -1,0 +1,234 @@
+{
+  "paper_id": "nsdi24-067",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "MetaOpt",
+    "one_liner": "a system that automatically converts a bi-level optimization (a pair of heuristics) into a single-level optimization to find adversarial inputs",
+    "domain": [
+      "optimization",
+      "networking",
+      "adversarial-analysis"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how MetaOpt decides whether to leave an inner problem as is, mark it NA, or rewrite it via primal-dual KKT",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "H' or H",
+        "kind": "port",
+        "role": "the inner (follower) problem entering the decision cascade",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "aligned?",
+        "kind": "node",
+        "role": "decision: does optimizing the outer objective also optimize this inner problem?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "feasibility?",
+        "kind": "node",
+        "role": "decision: is the inner problem merely a feasibility problem with no objective?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "convex?",
+        "kind": "node",
+        "role": "decision: is the inner problem a convex optimization?",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "as is",
+        "kind": "box",
+        "role": "outcome: merge the inner problem's constraints into the outer problem without rewriting it",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NA",
+        "kind": "box",
+        "role": "outcome: none of the three cases (aligned, feasibility, convex) apply",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "primal-dual kkt",
+        "kind": "box",
+        "role": "outcome: the inner problem is rewritten using the primal-dual/KKT technique",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "H' or H",
+        "to": "aligned?",
+        "what": "the inner problem enters the cascade",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "aligned?",
+        "to": "as is",
+        "what": "Y",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "aligned?",
+        "to": "feasibility?",
+        "what": "N",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "feasibility?",
+        "to": "as is",
+        "what": "Y",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "feasibility?",
+        "to": "convex?",
+        "what": "N",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "convex?",
+        "to": "primal-dual kkt",
+        "what": "Y",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "convex?",
+        "to": "NA",
+        "what": "N",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "aligned?",
+          "branches": [
+            "Y -> as is",
+            "N -> feasibility?"
+          ]
+        },
+        {
+          "question": "feasibility?",
+          "branches": [
+            "Y -> as is",
+            "N -> convex?"
+          ]
+        },
+        {
+          "question": "convex?",
+          "branches": [
+            "Y -> primal-dual kkt",
+            "N -> NA"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "MetaOpt avoids needlessly rewriting an inner problem: if aligned with the outer objective or merely a feasibility problem, its constraints are merged in as is; otherwise a convex problem gets a primal-dual/KKT rewrite, and anything else is marked NA.",
+    "reading_order": "left to right through the aligned?, feasibility?, and convex? diamonds, dropping down to the Y/N outcome box below each diamond as it resolves."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.36,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e6e6ff",
+        "used_for": "fill of the outcome boxes ('as is', 'NA', 'primal-dual kkt')"
+      },
+      {
+        "hex": "#ffe6e6",
+        "used_for": "fill of the decision diamonds ('aligned?', 'feasibility?', 'convex?')"
+      },
+      {
+        "hex": "#fde2e4",
+        "used_for": "secondary shading/edge tint of the decision diamonds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.35pt) dashed and solid black/grey outlines and arrows",
+    "corners": "mixed (diamond decision nodes, rectangular outcome boxes)",
+    "arrows": "thin black solid arrows for the Y/N branches, labelled in green (Y) and red (N); one dashed arrow introduces the input 'H' or H' into the cascade",
+    "font": "Nimbus Roman / Nimbus Sans, small (6-7pt)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale pink fills the three decision diamonds and pale lavender fills the outcome boxes, purely to tell node type apart; green 'Y' and red 'N' colour the two branch labels at every decision",
+    "line_style_means": "a dashed arrow marks the problem entering the cascade; solid arrows carry each Y/N branch outcome to its box or the next diamond",
+    "state_means": "not applicable; this is a one-shot classification cascade, not alternating states",
+    "marker_means": "green 'Y' and red 'N' letters are the only markers, naming which branch of each decision diamond is taken",
+    "emphasis": "chaining the three diamonds left to right, each dropping its 'yes' outcome straight down to a box, keeps the single 'no' path running further right, so the hardest unhandled case (NA) visually stands out at the far end",
+    "reusable_patterns": [
+      "a left-to-right cascade of diamond decisions, each with a downward Y-branch to a terminal box and a rightward N-branch to the next decision"
+    ],
+    "weaknesses": [
+      "the label 'as is' is reused for two different decisions' Y-branches, so the two outcomes can only be told apart by which diamond they hang from",
+      "no legend in the figure itself explains what 'NA' means beyond the surrounding paper text"
+    ]
+  },
+  "tags": [
+    "bi-level-optimization",
+    "decision-tree",
+    "problem-classification",
+    "selective-rewriting",
+    "primal-dual",
+    "MetaOpt"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 MetaOpt Design (p.6)"
+    ],
+    "evidence": [
+      "It avoids rewriting in two cases (Fig. 5): when the inner problem is a feasibility problem or when it",
+      "MetaOpt automatically converts the bi-level problem to a single-level optimization.",
+      "optimizing the outer problem's objective directly or indirectly optimizes the inner problem as well"
+    ]
+  },
+  "summary": "Figure 5 is the decision cascade MetaOpt uses for selective rewriting of an inner (follower) problem H' or H. The problem first asks 'aligned?': if optimizing the outer objective already optimizes this inner problem too, its constraints are merged in as is, with no rewrite. If not aligned, 'feasibility?' asks whether the inner problem has no objective of its own (a pure feasibility problem); if so, it is again merged in as is. Otherwise 'convex?' checks whether the inner problem is a convex optimization: if yes, MetaOpt applies its primal-dual/KKT rewrite technique; if no, the case is marked NA, since none of MetaOpt's automated rewrites (KKT, Primal-Dual, or Quantized Primal-Dual) is guaranteed to apply. Colour-coded Y (green) and N (red) labels mark which branch of each pink decision diamond is taken, and the outcomes are pale lavender boxes.",
+  "summary_zh": "图5展示MetaOpt的选择性重写决策流程：依次判断内层问题是否对齐、是否为可行性问题，若都不是再判断是否凸优化，从而决定原样合并、标记NA还是用primal-dual/KKT重写。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

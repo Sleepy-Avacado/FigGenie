@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-018_fig6",
+  "kind": "mechanism",
+  "paper_id": "asplos25-018",
+  "fig": "6",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 6: Contrasting two reference image uploading strategies: (a) using satellite-local images as reference images and (b) uploading reference images using uplink. By uploading images using uplink, one can reduce the average age of the reference image by 3× (from 30 days to 10 days) and the downlo",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "scene",
+  "subject": "how picking reference images only from a satellite's own history versus from the whole constellation changes reference age and the fraction of tiles that must be downloaded",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 3.33,
+  "n_elements": 11,
+  "n_relations": 2,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-018/src/fig6_contrast-satellite-new.svg",
+    "preview.png": "lab/extracted/asplos25-018/src/fig6_contrast-satellite-new.png",
+    "print.png": "lab/extracted/asplos25-018/asplos25-018_fig6_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Two policies drawn on the identical satellite x day grid; only the reference arrows' source row changes, making the cause of the lower change-% immediately traceable.",
+      "what_to_learn": "Keep the satellite-row/day-column grid, colours and callout box identical across panels, and change only each dashed arrow's source row (same satellite vs. any satellite) so the drop in change-% reads on its own — but satellite icons stay unlabelled.",
+      "note_source": "agent"
+    }
+  ]
+}

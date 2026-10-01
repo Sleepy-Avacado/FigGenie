@@ -1,0 +1,247 @@
+{
+  "paper_id": "osdi23-053",
+  "fig": "3",
+  "system": {
+    "name": "EinNet",
+    "one_liner": "a tensor program optimizer that applies derivation-based transformations over tensor algebra expressions to discover new operators and schedules",
+    "domain": [
+      "ml-systems",
+      "compilers",
+      "tensor-programs"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Conv3x3",
+        "role": "3x3 convolution predefined operator, input to the optimization",
+        "container": "(i) Original",
+        "novel": false
+      },
+      {
+        "name": "Conv1x1",
+        "role": "1x1 convolution predefined operator",
+        "container": "(i) Original",
+        "novel": false
+      },
+      {
+        "name": "Relu",
+        "role": "ReLU predefined operator",
+        "container": "(i) Original",
+        "novel": false
+      },
+      {
+        "name": "Add",
+        "role": "elementwise add predefined operator",
+        "container": "(i) Original",
+        "novel": false
+      },
+      {
+        "name": "DLT",
+        "role": "eOperator for data-layout transformation, discovered by intra-expression derivation to help convert Conv into Matmul form",
+        "container": "(ii) Intra-expression derivation",
+        "novel": true
+      },
+      {
+        "name": "Matmul",
+        "role": "predefined matrix-multiplication operator that Conv3x3/Conv1x1 are transformed into",
+        "container": "(ii) Intra-expression derivation",
+        "novel": false
+      },
+      {
+        "name": "OffsetReduce",
+        "role": "eOperator that reduces offset tensors, replacing part of Conv3x3's computation",
+        "container": "(ii) Intra-expression derivation",
+        "novel": true
+      },
+      {
+        "name": "DLT+Concat",
+        "role": "fused eOperator merging the data-layout transform and concatenation of the two weight tensors",
+        "container": "(iii) Inter-expression derivation",
+        "novel": true
+      },
+      {
+        "name": "Split",
+        "role": "splits the fused Matmul output back into two equivalent outputs",
+        "container": "(iii) Inter-expression derivation",
+        "novel": false
+      },
+      {
+        "name": "OffsetReduce+Relu",
+        "role": "fused eOperator merging OffsetReduce and Relu via expression fusion",
+        "container": "(iii) Inter-expression derivation",
+        "novel": true
+      },
+      {
+        "name": "Conv",
+        "role": "baseline convolution over an h,w,c input and r,s,c weight, the starting point optimized in panels (b) and (c)",
+        "container": "(i) Conv",
+        "novel": false
+      },
+      {
+        "name": "DLT",
+        "role": "splits/reshapes the weight tensor along kernel dimensions r and s ahead of the Matmul-based rewrite",
+        "container": "(ii) Split weight",
+        "novel": true
+      },
+      {
+        "name": "Matmul",
+        "role": "matrix multiplication applied to each split weight slice against the input",
+        "container": "(iii) Transform Conv to Matmul with OffsetReduce",
+        "novel": false
+      },
+      {
+        "name": "OffsetReduce",
+        "role": "reduces the per-slice Matmul outputs into the final convolution result",
+        "container": "(iii) Transform Conv to Matmul with OffsetReduce",
+        "novel": true
+      },
+      {
+        "name": "DLT",
+        "role": "flattens the small r,s,c weight tensor into a vector for the im2col-style Matmul",
+        "container": "(ii) Duplicate input",
+        "novel": false
+      },
+      {
+        "name": "OffsetConcat",
+        "role": "concatenates the duplicated, offset copies of the input tensor (the classic im2col step)",
+        "container": "(ii) Duplicate input",
+        "novel": false
+      },
+      {
+        "name": "Matmul",
+        "role": "matrix multiplication of the concatenated duplicated input with the flattened weight vector",
+        "container": "(iii) Transform Conv to Matmul using im2col algorithm",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Conv3x3",
+        "to": "DLT",
+        "what": "transformed via intra-expression derivation",
+        "step": null
+      },
+      {
+        "from": "DLT",
+        "to": "Matmul",
+        "what": "data-layout-transformed weight feeding the Matmul",
+        "step": null
+      },
+      {
+        "from": "Matmul",
+        "to": "OffsetReduce",
+        "what": "matmul output reduced with offsets",
+        "step": null
+      },
+      {
+        "from": "Matmul",
+        "to": "DLT+Concat",
+        "what": "two Matmuls merged via inter-expression derivation",
+        "step": null
+      },
+      {
+        "from": "OffsetReduce",
+        "to": "OffsetReduce+Relu",
+        "what": "fused with Relu via expression fusion",
+        "step": null
+      },
+      {
+        "from": "Conv",
+        "to": "OffsetReduce",
+        "what": "rewritten as split Matmuls reduced by OffsetReduce",
+        "step": null
+      },
+      {
+        "from": "Conv",
+        "to": "OffsetConcat",
+        "what": "rewritten as a duplicated-input Matmul (im2col)",
+        "step": null
+      }
+    ],
+    "key_idea": "EinNet automatically discovers non-obvious tensor-program rewrites, such as transforming a Conv3x3 into a Matmul plus a new OffsetReduce eOperator and fusing adjacent operators, that go beyond classic optimizations like im2col.",
+    "reading_order": "Left to right across three panels: (a) a three-step before/after derivation of a small subgraph, (b) EinNet's own convolution-to-Matmul rewrite via OffsetReduce, (c) the classic im2col rewrite shown for comparison."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.46,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "input/output tensor nodes (W0, W1, T0, T1) drawn as pale circles"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "tensor cube outlines/fills for the weight and input tensors in panels (b) and (c)"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "output tensor squares after Matmul/Conv"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green grouping boxes around derivation sub-steps in panel (a), and small kernel-position tensors"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "dark green DLT transformation arrows and kernel-tensor borders"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed light borders (~0.28pt) around grouping regions; solid thin arrows between operator boxes",
+    "font": "mixed serif (Linux Libertine) and Calibri, 5-11pt, larger for panel titles",
+    "corners": "mixed",
+    "arrows": "thin diagonal/orthogonal arrows with solid heads linking operator boxes; thick gray block arrows separating the top-level panels",
+    "icons": "small tensor-cube icons (2D/3D grids) representing weight and input tensors"
+  },
+  "encoding": {
+    "color_means": "red-filled boxes mark eOperators EinNet automatically discovers (DLT, OffsetReduce, DLT+Concat, OffsetReduce+Relu, OffsetConcat); tan/orange boxes mark predefined operators (Conv, Matmul, Relu, Add); pale-yellow circles mark named tensors; small red squares inside output tiles mark values produced by an eOperator",
+    "line_style_means": null,
+    "emphasis": "red eOperator boxes visually pop against the tan predefined-operator boxes across all three panels, and thick gray arrows between the (i)/(ii)/(iii) steps of panel (a) narrate its two-step derivation",
+    "reusable_patterns": [
+      "three-step before/after operator-graph derivation",
+      "side-by-side comparison of the paper's rewrite against a well-known baseline technique (im2col)",
+      "small tensor-cube glyphs annotated with dimension letters (h,w,c,r,s)"
+    ],
+    "weaknesses": [
+      "very high text/shape density makes the figure hard to read at reduced size",
+      "reused operator names (DLT, Matmul, OffsetReduce) across panels without panel-local qualification could confuse a reader scanning quickly"
+    ]
+  },
+  "tags": [
+    "tensor-compiler",
+    "operator-fusion",
+    "convolution-optimization",
+    "im2col",
+    "derivation-rules",
+    "eoperator"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Overview and Motivating Example (p.4)"
+    ],
+    "evidence": [
+      "Figure 3(a) shows an optimization found by EINNET",
+      "Figure 3(c) illustrates the classic im2col [36] optimization for convolution",
+      "EINNET transforms a Conv3x3 to a Matmul and an eOperator (OffsetReduce)"
+    ]
+  },
+  "summary": "This figure compares three optimization examples for convolution. Panel (a) walks a small subgraph through EinNet's process: an original Conv3x3/Conv1x1/Relu/Add graph is first rewritten by intra-expression derivation into DLT and Matmul operators plus a new OffsetReduce eOperator, then by inter-expression derivation into a fused DLT+Concat and OffsetReduce+Relu. Panel (b) shows EinNet's own convolution rewrite in more detail: the weight tensor is split along kernel dimensions r and s (via DLT), each slice is matrix-multiplied, and OffsetReduce combines the results. Panel (c) shows the classic im2col rewrite for comparison, which instead duplicates the input tensor for each kernel position and concatenates it (OffsetConcat) before a single Matmul. Red boxes mark EinNet's automatically discovered eOperators throughout, contrasted with tan predefined operators.",
+  "summary_zh": "该图对比三种卷积优化：(a)EinNet对子图先做表达式内推导得DLT/Matmul/OffsetReduce，再做表达式间推导融合；(b)展示该重写细节；(c)展示经典im2col做法作对比。",
+  "confidence": "high",
+  "notes": "layout-proposal: side-by-side derivation triptych — three side-by-side panels, each a short chain of small operator-graph diagrams, comparing EinNet's found rewrites (a, b) against the classic im2col baseline (c).",
+  "venue": "OSDI23"
+}

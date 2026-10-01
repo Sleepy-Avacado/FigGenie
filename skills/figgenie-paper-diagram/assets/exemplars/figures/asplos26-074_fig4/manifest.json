@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-074_fig4",
+  "kind": "mechanism",
+  "paper_id": "asplos26-074",
+  "fig": "4",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Fig. 4. Hardwired-Neuron architecture. ❶A conventional cell- embedding neuron contains 2,880 4b multipliers (16 shown) followed by an 8b×2,880 adder tree, where 2,880 is the hidden size in gpt-oss 120 B; ❷ With ME, Hardwired-Neurons accept 1b serialized inputs (LSB-first), (1) route the inputs multi",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how metal-embedding replaces cell-embedding's one-multiplier-per-input datapath with shared per-weight-value accumulators and multipliers",
+  "arrangement": "panels-column",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.15,
+  "n_elements": 7,
+  "n_relations": 3,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-074/src/fig4_metal-embedding-arch.svg",
+    "preview.png": "lab/extracted/asplos26-074/src/fig4_metal-embedding-arch.png",
+    "print.png": "lab/extracted/asplos26-074/asplos26-074_fig4_p4_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Two stacked circuit variants share one input row and one four-colour weight-value key, so shrinking 16 multipliers to 4 shared accumulators is visible as a colour count, not a claim.",
+      "what_to_learn": "Stack both variants on one aligned input row, colour every occurrence of the same weight value identically in both, so sixteen boxes shrinking to four reads as a colour count — but the routing order still needs tracing.",
+      "note_source": "agent"
+    }
+  ]
+}

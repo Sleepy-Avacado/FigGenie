@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-147_fig6",
+  "kind": "mechanism",
+  "paper_id": "asplos25-147",
+  "fig": "6",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 6. Illustration of Spindle device placement.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "topology",
+  "subject": "how Spindle remaps two MetaOps across GPU islands so the higher-volume data flow becomes intra-island",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.93,
+  "n_elements": 5,
+  "n_relations": 5,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-147/src/fig6_MTP_Device_Placement_c.svg",
+    "preview.png": "lab/extracted/asplos25-147/src/fig6_MTP_Device_Placement_c.png",
+    "print.png": "lab/extracted/asplos25-147/asplos25-147_fig6_p8_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "Same four-GPU topology drawn twice; only the colours on two edges swap (red inter-island, green intra-island), making a device-placement trade-off visible as which flow now crosses the boundary.",
+      "what_to_learn": "Redraw the identical topology before and after, joined by one open chevron arrow; recolour only the edges whose island-crossing status changed (red = crosses, green = doesn't), keeping every data-volume label in place so the swap reads by colour alone.",
+      "note_source": "agent"
+    }
+  ]
+}

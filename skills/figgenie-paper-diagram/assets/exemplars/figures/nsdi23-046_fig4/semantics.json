@@ -1,0 +1,217 @@
+{
+  "paper_id": "nsdi23-046",
+  "fig": "4",
+  "system": {
+    "name": "RingLeader",
+    "one_liner": "a system that offloads intra-server request scheduling and load balancing across services and cores to the NIC",
+    "domain": [
+      "networking",
+      "os-kernel",
+      "nic-offload"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Datapath OS",
+        "role": "single-address-space host OS that multiplexes per-core coroutines for multiple services",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Core 1",
+        "role": "host core running a coroutine scheduler and per-core buffer for one or more services",
+        "container": "Datapath OS",
+        "novel": true
+      },
+      {
+        "name": "Core 2",
+        "role": "second host core with the same coroutine scheduler / per-core buffer structure",
+        "container": "Datapath OS",
+        "novel": true
+      },
+      {
+        "name": "Core N",
+        "role": "further host core with the same coroutine scheduler / per-core buffer structure",
+        "container": "Datapath OS",
+        "novel": true
+      },
+      {
+        "name": "Coroutines Scheduler",
+        "role": "per-core scheduler that launches the runnable coroutine for the highest-priority request",
+        "container": "Core 1",
+        "novel": true
+      },
+      {
+        "name": "Per-core Buffer",
+        "role": "per-core buffer holding requests awaiting a coroutine on that core",
+        "container": "Core 1",
+        "novel": true
+      },
+      {
+        "name": "Core Allocator",
+        "role": "reassigns cores across services as load changes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "RMT Pipeline",
+        "role": "programmable match+action pipeline that parses a packet's L3-L7 headers to identify its service and compute its rank",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "on-NIC Request Buffer",
+        "role": "per-service packet buffer queue holding requests waiting to be scheduled",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "on-NIC Request Scheduler",
+        "role": "schedules different services' requests with a first-eligible-out (FEO) policy",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "on-NIC Request Load Balancer",
+        "role": "steers the scheduled service's request to an eligible core with the lowest rank using JBSRQ",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "RMT Pipeline",
+        "to": "on-NIC Request Buffer",
+        "what": "packet parsed by L3-L7 headers to identify service and compute rank",
+        "step": null
+      },
+      {
+        "from": "on-NIC Request Buffer",
+        "to": "on-NIC Request Scheduler",
+        "what": "per-service buffered requests waiting to be scheduled",
+        "step": null
+      },
+      {
+        "from": "on-NIC Request Load Balancer",
+        "to": "on-NIC Request Scheduler",
+        "what": "eligibility mask indicating which services have room at a core",
+        "step": null
+      },
+      {
+        "from": "on-NIC Request Scheduler",
+        "to": "on-NIC Request Load Balancer",
+        "what": "highest-priority eligible service selected by the FEO queue",
+        "step": null
+      },
+      {
+        "from": "on-NIC Request Load Balancer",
+        "to": "Coroutines Scheduler",
+        "what": "request steered to an eligible core with the lowest rank (JBSRQ)",
+        "step": null
+      },
+      {
+        "from": "Datapath OS",
+        "to": "on-NIC Request Load Balancer",
+        "what": "load feedback via TX packet descriptor or MMIO register write",
+        "step": null
+      },
+      {
+        "from": "Datapath OS",
+        "to": "on-NIC Request Load Balancer",
+        "what": "scale up/down hints for per-service core allocation",
+        "step": null
+      },
+      {
+        "from": "Core Allocator",
+        "to": "on-NIC Request Load Balancer",
+        "what": "core reallocation events",
+        "step": null
+      }
+    ],
+    "key_idea": "RingLeader offloads request scheduling and load balancing onto the NIC: an RMT pipeline classifies packets by service, an on-NIC scheduler (FEO) picks the highest-priority eligible service, and a load balancer (JBSRQ) steers it to the least-loaded core, whose coroutine scheduler runs it and feeds load status back.",
+    "reading_order": "Bottom-up on the NIC: an incoming packet enters the RMT Pipeline, is buffered per service, scheduled, and load-balanced across cores; the top shows the resulting per-core coroutine scheduling on the Datapath OS host, with a Core Allocator reassigning cores across services."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "bottom-up",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.61,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill of the on-NIC Request Load Balancer box and blue text for the arrow labels (Load Feedback, Scale up/down Hints, Core Reallocation Events, Eligibility mask)"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red icons for coroutines and per-core buffer occupancy, and the red packet block entering the RMT Pipeline"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "medium-blue accents on the on-NIC Request Scheduler and Core boxes"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark red accents on coroutine/queue icons"
+      },
+      {
+        "hex": "#4285f4",
+        "used_for": "blue dashed borders around the Core 1 / Core 2 / Core N boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "mostly solid black borders (~0.85pt), with dashed rectangles for the Core boxes and the Host/NIC divider line",
+    "font": "Calibri sans-serif, about 5.5-6.5pt, entirely bold box titles",
+    "corners": "square",
+    "arrows": "straight and curved black/blue arrows with filled heads connecting pipeline stages and feedback paths",
+    "icons": "small vector glyphs depicting coroutines (spiral icon) and buffers/queues (bar icons); no bitmap icons"
+  },
+  "encoding": {
+    "color_means": "blue marks NIC-side scheduling/load-balancing components and their control-arrow labels; red marks coroutine and buffer/queue occupancy icons and the incoming packet; green marks the Core Allocator; tan/gold marks the Load Monitor and RMT Pipeline",
+    "line_style_means": "a dashed horizontal line separates Host (top) from NIC (bottom) across the labeled PCIe boundary; dashed rectangles group the Coroutines Scheduler and Per-core Buffer inside each Core box",
+    "emphasis": "the Host/NIC split with a labeled PCIe boundary foregrounds RingLeader's central idea of moving scheduling and load-balancing functions onto the NIC while the host retains per-core coroutine execution",
+    "reusable_patterns": [
+      "host-device split diagram with an explicit bus/PCIe boundary",
+      "repeated identical per-core sub-structure (Core 1...Core N) representing horizontal scale-out"
+    ],
+    "weaknesses": [
+      "many similarly styled small boxes and blue-labeled arrows increase visual density",
+      "the eligibility-mask interaction between scheduler and load balancer requires reading arrow labels closely"
+    ]
+  },
+  "tags": [
+    "nic-offload",
+    "request-scheduling",
+    "load-balancing",
+    "coroutines",
+    "datapath-os",
+    "smartnic"
+  ],
+  "provenance": {
+    "sections": [
+      "3 RingLeader Overview (p.5)",
+      "3 RingLeader Overview (p.6)"
+    ],
+    "evidence": [
+      "Figure 4 shows the system running multiple services.",
+      "the on-NIC load balancer then steers this highest priority service's request to an eligible core",
+      "the datapath OS provides load feedback to the NIC through the TX packet's descriptor"
+    ]
+  },
+  "summary": "This figure shows RingLeader's whole-system architecture for offloading intra-server request scheduling and load balancing onto the NIC. On the host side, a Datapath OS runs identical Core 1...Core N structures, each with a Coroutines Scheduler and Per-core Buffer, alongside a Core Allocator that reassigns cores across services. Across a PCIe boundary, the NIC has an RMT Pipeline that parses packet headers to identify service and rank, an on-NIC Request Buffer queuing them per service, an on-NIC Request Scheduler using a first-eligible-out (FEO) policy guided by an eligibility mask, and an on-NIC Request Load Balancer that steers each request to the least-loaded eligible core via JBSRQ. Load Feedback, Scale up/down Hints, and Core Reallocation Events arrows close the loop between cores and NIC. Boxes use blue for NIC scheduling, red for coroutine/queue icons, green for the Core Allocator, and tan for the Load Monitor and RMT Pipeline.",
+  "summary_zh": "该图展示RingLeader整体架构：主机侧Datapath OS的多个核心运行协程调度器与核心分配器；网卡侧RMT流水线解析数据包，经请求缓冲、FEO调度器与JBSRQ负载均衡器分派至最优核心，并反馈负载信息。",
+  "confidence": "high",
+  "notes": "The direction of the 'Eligibility mask' arrow was inferred from the RingLeader Overview text (the scheduler/load-balancer interface 'expos[es] available room at per-core buffers to the scheduler') rather than from reading the arrowhead alone.",
+  "venue": "NSDI23"
+}

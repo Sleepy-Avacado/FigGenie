@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-142_fig4",
+  "paper_id": "nsdi26-142",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: Architecture diagram of FPGA-based SmartNIC.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.41,
+  "n_components": 10,
+  "n_flows": 5,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-142/nsdi26-142_fig4_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-142/nsdi26-142_fig4_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A modest fit inside a numbered hardware-block figure: n-1 VM Queue icons plus an ellipsis plus one distinguished LM Queue icon sit inside the LM Controller, echoing the index-and-distinguish-the-last-one replication rule at small scale.",
+      "what_to_learn": "Even inside a single hardware block, use the ellipsis-plus-one-distinguished-instance device for a queue array (ordinary VM queues, ellipsis, one dedicated LM queue) rather than drawing every queue, and number the resulting datapaths with a small color-coded legend the way this figure numbers its four."
+    },
+    {
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "Medium-confidence pick showing numbering and legend together: one LM Controller box mediates all NVMe traffic, and four colour-coded, numbered datapaths, ordinary access, double write, migration send and receive, share an inside legend.",
+      "what_to_learn": "When several distinct request types share one hardware block, give each its own number and colour and keep a compact legend inside a free corner near that block rather than redrawing it per path; keep the FPGA boundary as a dotted outline with the true off-chip resource drawn outside it."
+    }
+  ]
+}

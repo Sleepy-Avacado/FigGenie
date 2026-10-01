@@ -1,0 +1,42 @@
+{
+  "id": "osdi26-063_fig8",
+  "paper_id": "osdi26-063",
+  "fig": "8",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 8: Kareus system overview.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.36,
+  "n_components": 12,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-063/src/fig8_system_diagram.svg",
+    "preview.png": "lab/extracted/osdi26-063/src/fig8_system_diagram.png",
+    "print.png": "lab/extracted/osdi26-063/osdi26-063_fig8_p10_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Three tinted regions (Input / Optimizer / Training Runtime) wired by circled numbers 1-6 with a hardware row at the bottom.",
+      "what_to_learn": "Tinted dashed regions name the planes, circled numbers order the loop, and a plain device row anchors the bottom - all at single-column width."
+    }
+  ]
+}

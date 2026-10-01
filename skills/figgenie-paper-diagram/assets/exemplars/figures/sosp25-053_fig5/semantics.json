@@ -1,0 +1,353 @@
+{
+  "paper_id": "sosp25-053",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "ByteRobust",
+    "one_liner": "A large-scale GPU infrastructure management system for robust, stable training of LLMs at ByteDance.",
+    "domain": [
+      "distributed systems",
+      "ML systems infrastructure",
+      "fault tolerance",
+      "datacenter operations"
+    ],
+    "abstraction": "cluster manager"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how ByteRobust escalates a suspected failure from real-time checks through eviction, rollback, and replay to a diagnosis",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Real-time Checks",
+        "kind": "state",
+        "role": "continuous lightweight check that flags suspect machines, code errors, or no findings",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Infrastructure",
+        "kind": "state",
+        "role": "diagnosis result: the fault is traced to a hardware/infrastructure machine",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Evict Machine",
+        "kind": "box",
+        "role": "removes the suspect machine and reruns to confirm whether it caused the fault",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Stop-time Checks",
+        "kind": "state",
+        "role": "in-depth diagnostic check run when real-time checks found no suspect",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Reattempt",
+        "kind": "box",
+        "role": "policy action that reruns the job when stop-time checks find no suspect",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "No Conclusion",
+        "kind": "state",
+        "role": "diagnosis result: reattempt succeeded without pinpointing a root cause",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "User Code",
+        "kind": "state",
+        "role": "diagnosis result: the fault is traced to defective user code",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Rollback",
+        "kind": "box",
+        "role": "policy action that reverts the job to a previous code/checkpoint version",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Dual-Phase Replay",
+        "kind": "box",
+        "role": "policy action that replays execution in two phases to catch corner cases such as SDCs",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Human",
+        "kind": "state",
+        "role": "diagnosis result: the case is escalated to a human operator",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Real-time Checks",
+        "to": "Evict Machine",
+        "what": "Have Suspects",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "Real-time Checks",
+        "to": "Rollback",
+        "what": "Have Code Errors",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Real-time Checks",
+        "to": "Stop-time Checks",
+        "what": "No Suspects",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "Evict Machine",
+        "to": "Infrastructure",
+        "what": "Success",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Evict Machine",
+        "to": "Stop-time Checks",
+        "what": "Fail",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Stop-time Checks",
+        "to": "Evict Machine",
+        "what": "Have Suspects",
+        "kind": "transition",
+        "step": "4"
+      },
+      {
+        "from": "Stop-time Checks",
+        "to": "Reattempt",
+        "what": "No Suspects",
+        "kind": "transition",
+        "step": "5"
+      },
+      {
+        "from": "Evict Machine",
+        "to": "Rollback",
+        "what": "Fail",
+        "kind": "transition",
+        "step": "7"
+      },
+      {
+        "from": "Reattempt",
+        "to": "No Conclusion",
+        "what": "Success",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Reattempt",
+        "to": "Rollback",
+        "what": "Fail",
+        "kind": "transition",
+        "step": "6"
+      },
+      {
+        "from": "Rollback",
+        "to": "User Code",
+        "what": "Success",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Rollback",
+        "to": "Dual-Phase Replay",
+        "what": "Fail",
+        "kind": "transition",
+        "step": "8"
+      },
+      {
+        "from": "Dual-Phase Replay",
+        "to": "Human",
+        "what": "No Suspects",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Dual-Phase Replay",
+        "to": "Evict Machine",
+        "what": "Have Suspects",
+        "kind": "transition",
+        "step": "9"
+      },
+      {
+        "from": "Evict Machine",
+        "to": "Infrastructure",
+        "what": "Success",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Evict Machine",
+        "to": "Human",
+        "what": "Fail",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Real-time Checks",
+        "what": "a suspect machine is found, triggering eviction",
+        "carries": "suspect machine"
+      },
+      {
+        "marker": "2",
+        "at": "Real-time Checks",
+        "what": "a code error is detected, sending the job straight to rollback",
+        "carries": "job with code error"
+      },
+      {
+        "marker": "3",
+        "at": "Real-time Checks",
+        "what": "no suspect is found, escalating to stop-time diagnostics",
+        "carries": "unresolved failure"
+      },
+      {
+        "marker": "4",
+        "at": "Stop-time Checks",
+        "what": "in-depth analysis finds a suspect, triggering eviction",
+        "carries": "suspect machine"
+      },
+      {
+        "marker": "5",
+        "at": "Stop-time Checks",
+        "what": "no suspect is found, triggering a reattempt of the job",
+        "carries": "job"
+      },
+      {
+        "marker": "6",
+        "at": "Reattempt",
+        "what": "the reattempt fails, falling back to rollback",
+        "carries": "job"
+      },
+      {
+        "marker": "7",
+        "at": "Evict Machine",
+        "what": "the second eviction fails, falling back to rollback",
+        "carries": "job"
+      },
+      {
+        "marker": "8",
+        "at": "Rollback",
+        "what": "rollback fails, escalating to dual-phase replay",
+        "carries": "job"
+      },
+      {
+        "marker": "9",
+        "at": "Dual-Phase Replay",
+        "what": "replay finds a suspect, triggering one final eviction",
+        "carries": "suspect machine"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A single numbered pipeline escalates a training failure from cheap real-time checks through machine eviction, reattempt, rollback, and dual-phase replay, ending in a diagnosis or human escalation.",
+    "reading_order": "Left to right along the nine numbered arrows, starting at Real-time Checks and following each guard label to the next stage."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.54,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f8cecc",
+        "used_for": "Entrypoint check nodes (Real-time Checks, Stop-time Checks)"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "Eviction action nodes (Evict Machine)"
+      },
+      {
+        "hex": "#badaa4",
+        "used_for": "Policy action nodes (Reattempt, Rollback, Dual-Phase Replay)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "Diagnosis-result terminal nodes (Infrastructure, User Code, No Conclusion, Human)"
+      }
+    ],
+    "background": "#ffffff",
+    "fill": "flat",
+    "stroke": "#000000, ~2pt solid outlines",
+    "font": "Verdana sans-serif, ~5pt, not bold",
+    "corners": "rounded",
+    "arrows": "solid black arrowheads, mostly straight lines with one curved connector",
+    "icons": "none, text-labelled shapes only"
+  },
+  "encoding": {
+    "color_means": "node category: pink/red = entrypoint check, blue = eviction action, green = policy action, yellow = diagnosis result",
+    "line_style_means": "all edges are solid guarded transitions labelled with the condition (Have Suspects, No Suspects, Success, Fail, Have Code Errors)",
+    "state_means": "shape plus colour: ellipses are check/result states, rounded rectangles are actions taken by the system",
+    "marker_means": "circled numbers 1-9 give the escalation order of the decision path through the mechanism",
+    "emphasis": "the escalating rightward chain (eviction to reattempt to rollback to replay) visually argues that ByteRobust exhausts cheap fixes before expensive ones",
+    "reusable_patterns": [
+      "a repeated check-then-evict gate: an entrypoint ellipse feeding an eviction box that fans out to a result or the next gate"
+    ],
+    "weaknesses": [
+      "the same 'Evict Machine' and 'Infrastructure' labels are reused at three separate points, so the node name alone does not disambiguate which escalation stage is meant"
+    ]
+  },
+  "tags": [
+    "fault-tolerance",
+    "LLM-training",
+    "GPU-infrastructure",
+    "eviction",
+    "rollback",
+    "replay",
+    "state-machine",
+    "ByteRobust"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Automated Fault Tolerance"
+    ],
+    "evidence": [
+      "The automated fault tolerance mechanism of ByteRobust.",
+      "combines real-time checks for immediate detection of common errors, stop-time diagnostics for in-depth analysis of complex failures",
+      "in-place reattempts to recover from transient faults, code rollbacks to revert from defective user codes"
+    ]
+  },
+  "summary": "This single wide flowchart depicts ByteRobust's automated fault-tolerance mechanism as one numbered escalation path. A pink Real-time Checks entrypoint either evicts a suspect machine (step 1), sends a job with code errors straight to Rollback (step 2), or escalates to Stop-time Checks when no suspect is found (step 3). Stop-time Checks likewise branches to eviction (step 4) or a Reattempt policy (step 5); failures there cascade through Rollback (steps 6-7) to Dual-Phase Replay (step 8), which either hands the case to a human or performs one last eviction (step 9). Every branch ends at a yellow diagnosis-result node (Infrastructure, User Code, No Conclusion, or Human), showing how the pipeline narrows a training failure's cause while minimizing human intervention and wasted GPU time.",
+  "summary_zh": "本图展示 ByteRobust 的自动容错机制：从实时检查出发，按编号依次判断是否驱逐可疑机器、直接回滚代码或重试任务，再升级到双阶段重放，最终将故障归因于基础设施、用户代码，或转交人工处理。",
+  "confidence": "high",
+  "notes": "Kept the prior 'walkthrough' grouping; the nine circled numbers plainly trace one ordered escalation path. 'Evict Machine' and 'Infrastructure' each label three distinct occurrences in the chain (after real-time checks, after stop-time checks, and after dual-phase replay); elements list each name once but relations/steps carry all occurrences.",
+  "venue": "SOSP25"
+}

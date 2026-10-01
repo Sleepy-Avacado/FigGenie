@@ -1,0 +1,217 @@
+{
+  "paper_id": "nsdi24-062",
+  "fig": "2",
+  "system": {
+    "name": "Harmonic",
+    "one_liner": "a hardware-assisted RDMA performance isolation system for public clouds that intercepts RDMA control verbs at the kernel driver",
+    "domain": [
+      "networking",
+      "RDMA",
+      "virtualization",
+      "cloud"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Tenant",
+        "role": "row label for tenant-owned software in each virtualization scheme",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host",
+        "role": "row label for cloud-owned host software in each virtualization scheme",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NIC",
+        "role": "row label for cloud-owned NIC hardware in each virtualization scheme",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "(1) Bare-metal",
+        "role": "scheme where the tenant instance has full, direct hardware access with no host virtualization layer; not considered by Harmonic since isolation is unnecessary here",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Userspace Libraries",
+        "role": "tenant-owned userspace RDMA library issuing verbs to the driver",
+        "container": "(1) Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "Drivers",
+        "role": "tenant-owned driver issuing control/data verbs directly to the NIC",
+        "container": "(1) Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "Firmware",
+        "role": "NIC firmware, cloud-owned hardware",
+        "container": "(1) Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "ASIC",
+        "role": "NIC ASIC, cloud-owned hardware",
+        "container": "(1) Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "(2) Containerize Cloud",
+        "role": "scheme where a containerized tenant's control verbs pass through a cloud-owned host driver; Harmonic's prototype focus",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "(3) Guest Virtual Machine",
+        "role": "scheme where a hypervisor mediates a VM tenant's control verbs, with SR-IOV allowing some to bypass it directly",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Hypervisor",
+        "role": "virtualizes the NIC for the guest VM, mediating control verbs",
+        "container": "(3) Guest Virtual Machine",
+        "novel": false
+      },
+      {
+        "name": "(4) Microkernel Approach",
+        "role": "scheme where a privileged daemon on the host mediates the tenant's control verbs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Privileged Daemon",
+        "role": "host-side privileged process mediating the tenant's control verbs, microkernel-style",
+        "container": "(4) Microkernel Approach",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Drivers",
+        "to": "Firmware",
+        "what": "control verbs, issued directly by the tenant driver (bare-metal, scenario 1)",
+        "step": null
+      },
+      {
+        "from": "Drivers",
+        "to": "ASIC",
+        "what": "data verbs, issued directly by the tenant driver (bare-metal, scenario 1)",
+        "step": null
+      },
+      {
+        "from": "Userspace Libraries",
+        "to": "Drivers",
+        "what": "control verbs passed from the tenant's userspace library to the cloud-owned host driver (containerized, scenario 2)",
+        "step": null
+      },
+      {
+        "from": "Userspace Libraries",
+        "to": "Hypervisor",
+        "what": "control verbs mediated by the hypervisor (guest VM, scenario 3)",
+        "step": null
+      },
+      {
+        "from": "Drivers",
+        "to": "ASIC",
+        "what": "control verbs bypassing the hypervisor via SR-IOV (guest VM, scenario 3)",
+        "step": null
+      },
+      {
+        "from": "Drivers",
+        "to": "Privileged Daemon",
+        "what": "control verbs mediated by a privileged daemon (microkernel, scenario 4)",
+        "step": null
+      }
+    ],
+    "key_idea": "RDMA control verbs can be intercepted at four different points depending on the virtualization scheme (bare-metal, containerized, guest VM with SR-IOV, or microkernel daemon); Harmonic needs driver-level interception, which holds for scenarios (2)-(4) but not bare-metal.",
+    "reading_order": "Left to right across the four numbered schemes (1)-(4), each read top-to-bottom through its Tenant, Host, and NIC rows, following the colored control/data-verb arrows down to Firmware/ASIC."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 5.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red control-verb arrows, both solid (host-mediated) and dashed (SR-IOV bypass)"
+      },
+      {
+        "hex": "#7938ac",
+        "used_for": "purple data-verb arrows"
+      },
+      {
+        "hex": "#5f2c0b",
+        "used_for": "fill of tenant-owned boxes (Userspace Libraries, tenant Drivers)"
+      },
+      {
+        "hex": "#73bc4e",
+        "used_for": "fill of cloud-owned hardware boxes (Firmware, ASIC)"
+      },
+      {
+        "hex": "#3669be",
+        "used_for": "fill of cloud-owned host software boxes (host Drivers, Hypervisor, Privileged Daemon)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.67pt) borders, dashed for the SR-IOV control-verb path and the tenant-instance boundary",
+    "font": "mixed Calibri/Times New Roman, 8pt",
+    "corners": "rounded",
+    "arrows": "many thin colored arrows (60 heads) distinguishing control vs. data verb paths per scheme",
+    "icons": "vector icons marking tenant instances"
+  },
+  "encoding": {
+    "color_means": "per the figure's own legend: brown/tan = software owned by tenants, blue = software owned by clouds, green = hardware owned by clouds; red = control verbs (dashed variant for SR-IOV), purple = data verbs",
+    "line_style_means": "dashed arrows mark the SR-IOV control-verb path that bypasses the hypervisor; dashed boxes mark tenant-instance boundaries",
+    "emphasis": "repeating the same Tenant/Host/NIC row structure across all four numbered schemes isolates exactly which layer (driver, hypervisor, or daemon) intercepts control verbs in each virtualization approach",
+    "reusable_patterns": [
+      "a small matrix of structurally identical mini-architecture diagrams comparing variants of the same layered stack",
+      "consistent color-by-ownership coding (tenant/cloud-software/cloud-hardware) reused across all variants"
+    ],
+    "weaknesses": [
+      "the four schemes are drawn close together without strong panel borders, so the automatic layout measurement recorded this as a single panel despite four distinct variants",
+      "very small, dense text and many overlapping arrows at this aspect ratio"
+    ]
+  },
+  "tags": [
+    "RDMA",
+    "virtualization",
+    "kernel-bypass",
+    "SR-IOV",
+    "performance-isolation",
+    "multi-tenant-cloud"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Harmonic Overview (p.6)"
+    ],
+    "evidence": [
+      "Harmonic can handle the (2), (3) and (4) scenarios in Figure 2",
+      "We do not consider the virtualization scenario (1) because RNIC isolation is unnecessary on the bare-metal setting",
+      "we show SR-IOV itself is not enough to provide performance isolation"
+    ]
+  },
+  "summary": "This background figure catalogs four RDMA virtualization schemes that Harmonic considers for intercepting control verbs. Each scheme is drawn as a small Tenant/Host/NIC stack: (1) Bare-metal, where the tenant's own driver talks directly to NIC firmware/ASIC with no isolation boundary; (2) Containerize Cloud, where a cloud-owned host driver mediates the tenant's control verbs; (3) Guest Virtual Machine, where a hypervisor mediates control verbs but SR-IOV lets some bypass it directly to the NIC; and (4) Microkernel Approach, where a privileged host daemon mediates control verbs. A shared legend colors boxes by ownership (tenant software, cloud software, cloud hardware) and distinguishes red control-verb arrows (solid or SR-IOV-dashed) from purple data-verb arrows. Harmonic targets schemes (2)-(4), where the cloud provider can intercept control verbs at the driver/hypervisor/daemon layer, excluding bare-metal where such interception is unnecessary.",
+  "summary_zh": "该图梳理四种 RDMA 虚拟化方案:(1)裸金属驱动直连网卡;(2)容器化云由主机驱动介入;(3)客户虚拟机由 Hypervisor 介入,SR-IOV 可绕过;(4)微内核方案由特权守护进程介入控制verb。",
+  "confidence": "high",
+  "notes": "The measured index records this figure as a single panel, but it visually presents four side-by-side scheme variants sharing one legend; treated here as a matrix of four comparable mini-diagrams.",
+  "venue": "NSDI24"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "sosp25-039_fig1",
+  "kind": "mechanism",
+  "paper_id": "sosp25-039",
+  "fig": "1",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 1. Voter-registration workflow in the TRIP architecture In this workflow, the voter (1) authenticates to an official at a check-in desk to obtain a check-in ticket, (2) enters a supervised private environment to create a real and any potential fake credentials, (3) presents one of their crede",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "scene",
+  "subject": "how a voter moves through check-in, credentialing, check-out, and activation stages, each in a different supervision/environment setting",
+  "arrangement": "frames-row",
+  "panel_count": 4,
+  "frame_template": "aligned",
+  "delta_marking": "bold-stroke",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 3.95,
+  "n_elements": 14,
+  "n_relations": 5,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "keynote",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-039/src/fig1_High-Level-Design-2.svg",
+    "preview.png": "lab/extracted/sosp25-039/src/fig1_High-Level-Design-2.png",
+    "print.png": "lab/extracted/sosp25-039/sosp25-039_fig1_p5_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "A voter's registration moves through four stages of decreasing supervision: public check-in, private kiosk credentialing (real and fake), supervised check-out display, then unsupervised activation of the real credential.",
+      "what_to_learn": "Frame border dash-pattern as the encoding; one bold Time arrow beneath every frame; a small legend for the pattern",
+      "note_source": "doc"
+    }
+  ]
+}

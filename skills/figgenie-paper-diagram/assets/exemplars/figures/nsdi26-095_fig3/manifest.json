@@ -1,0 +1,55 @@
+{
+  "id": "nsdi26-095_fig3",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-095",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 3: Illustration that BAR-SAV supports DSR.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "topology",
+  "subject": "how BAR-SAV correctly accepts a Direct-Server-Return response that naive SAV policies would wrongly drop as spoofed",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.83,
+  "n_elements": 11,
+  "n_relations": 8,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "labelled-arrows",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-095/nsdi26-095_fig3_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-095/nsdi26-095_fig3_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Because AS2 holds a ROA for 5.6/16 even without announcing it, BAR-SAV correctly accepts its Direct-Server-Return response that naive SAV policies would wrongly drop as spoofed.",
+      "what_to_learn": "a small AS-level topology with provider/customer and peer edges plus a distinct arrow colour per traffic type (announcement, request, response), annotated with a pass/fail verdict at the decision point",
+      "note_source": "record"
+    }
+  ]
+}

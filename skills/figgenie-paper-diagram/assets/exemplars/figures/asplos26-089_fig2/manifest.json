@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-089_fig2",
+  "paper_id": "asplos26-089",
+  "fig": "2",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 2. System overview of SNIP, showing its integration into LLM training. SNIP periodically collects statistics on activations, weights, and optimizers, then asynchronously analyzes divergence metrics, solves an ILP problem, and updates layer-wise quantization.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.65,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-089/src/fig2_system_simplified.svg",
+    "preview.png": "lab/extracted/asplos26-089/src/fig2_system_simplified.png",
+    "print.png": "lab/extracted/asplos26-089/asplos26-089_fig2_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "A minimal single-lane instance: one repeating Fwd/Bwd timeline runs across the top under one Time arrow, while four numbered SNIP steps hang off it as an asynchronous side process feeding a before/after precision comparison below.",
+      "what_to_learn": "Keep the recurring training loop as one plain lane under a single Time arrow, and let an asynchronous side process (numbered steps in their own color) hang off that lane without sharing its axis; keep the color legend next to the panel it explains, not far below it as this figure does."
+    }
+  ]
+}

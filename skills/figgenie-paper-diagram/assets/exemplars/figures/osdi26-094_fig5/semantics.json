@@ -1,0 +1,204 @@
+{
+  "paper_id": "osdi26-094",
+  "fig": "5",
+  "system": {
+    "name": "EcoServe",
+    "one_liner": "an LLM-serving system that hierarchically schedules requests across overall, macro-instance, and instance levels using temporal disaggregation and rolling activation",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Requests",
+        "role": "incoming inference requests",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Overall Scheduler",
+        "role": "assigns requests to macro-instances based on their capabilities",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Instance Handler",
+        "role": "connects the overall scheduler to the instances within a macro-instance",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Macro Instance",
+        "role": "the basic scheduling unit composed of multiple collaborating instances",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Instance",
+        "role": "a single serving unit within a macro-instance",
+        "container": "Macro Instance",
+        "novel": null
+      },
+      {
+        "name": "Macro-Instance Scheduler",
+        "role": "coordinates multiple instances by aggregating execution state and dispatching requests per profiling results and SLOs",
+        "container": "Partially Disaggregated Strategy",
+        "novel": true
+      },
+      {
+        "name": "Status queues",
+        "role": "per-instance decode progress and memory usage reported up to the macro-instance scheduler",
+        "container": "Partially Disaggregated Strategy",
+        "novel": null
+      },
+      {
+        "name": "Adaptive Scheduling Algorithm",
+        "role": "coordinates instance- and macro-instance schedulers in a master-worker pattern using TTFT/TPOT SLOs and profiling results",
+        "container": "Partially Disaggregated Strategy",
+        "novel": true
+      },
+      {
+        "name": "Instance Scheduler",
+        "role": "manages execution within a single instance, including prefill-decode coordination and device orchestration",
+        "container": "Partially Disaggregated Strategy",
+        "novel": true
+      },
+      {
+        "name": "Rolling Activation",
+        "role": "staggers instances' prefill phases in a cyclic pattern so at least one instance is always available for prefill",
+        "container": "Partially Disaggregated Strategy",
+        "novel": true
+      },
+      {
+        "name": "Temporal Disaggregation",
+        "role": "disaggregates prefill and decode along the time dimension within a single instance",
+        "container": "Partially Disaggregated Strategy",
+        "novel": true
+      },
+      {
+        "name": "Mitosis Scaling Approach",
+        "role": "adds or removes instance schedulers at the instance level for fine-grained capacity adjustment",
+        "container": "Partially Disaggregated Strategy",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Requests",
+        "to": "Overall Scheduler",
+        "what": "incoming inference requests",
+        "step": null
+      },
+      {
+        "from": "Overall Scheduler",
+        "to": "Macro Instance",
+        "what": "requests assigned via the Instance Handler based on macro-instance capabilities",
+        "step": null
+      },
+      {
+        "from": "Instance Scheduler",
+        "to": "Macro-Instance Scheduler",
+        "what": "status queues: decode progress and memory usage",
+        "step": null
+      },
+      {
+        "from": "Macro-Instance Scheduler",
+        "to": "Instance Scheduler",
+        "what": "dispatch decisions guided by TTFT/TPOT SLOs and profiling results",
+        "step": null
+      },
+      {
+        "from": "Mitosis Scaling Approach",
+        "to": "Instance Scheduler",
+        "what": "adds or removes an instance scheduler for capacity adjustment",
+        "step": null
+      }
+    ],
+    "key_idea": "EcoServe schedules through three hierarchical levels (overall, macro-instance, instance) so that instances within a macro-instance time-multiplex prefill and decode while rolling activation staggers their prefill phases to keep one always available, and mitosis scaling elastically adds or removes instances.",
+    "reading_order": "Top: Requests enter the Overall Scheduler and fan out to Macro Instances of collaborating Instances. Below, a zoomed-in box details one macro-instance's Macro-Instance Scheduler coordinating several Instance Schedulers, each drawn as a colored prefill/decode timeline read left to right."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 1.78,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "dark-blue Decode blocks/legend and the scheduling arrows between hierarchy levels"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "medium-blue Instance Scheduler bars and coordination arrows"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "dark-green Prefill accents and the 'Temporal Disaggregation' label"
+      },
+      {
+        "hex": "#8faadc",
+        "used_for": "pale-blue Instance boxes and GPU Device icon fill"
+      },
+      {
+        "hex": "#9ecb7f",
+        "used_for": "light-green Prefill legend swatch and timeline blocks"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.81pt; dashed for the TTFT/TPOT SLO box and the elastically added/removed fourth Instance Scheduler",
+    "corners": "mixed",
+    "arrows": "many filled-head arrows linking scheduler levels and status/profiling boxes; a couple of curved double-arrows show bidirectional coordination",
+    "icons": "one small cylinder icon marking the profiling-result data store (Comp. Latency / Mem. Budget)"
+  },
+  "encoding": {
+    "color_means": "blue marks Decode work/timeline blocks and inter-scheduler arrows; green marks Prefill work/timeline blocks; gray marks generic Instance/GPU Device units; yellow marks the profiling-result data store",
+    "line_style_means": "dashed boxes/bars mark SLO targets (TTFT SLO, TPOT SLO) and the ghost fourth Instance Scheduler added by mitosis scaling; solid blue double arrows show continuous bidirectional status/coordination traffic",
+    "emphasis": "the lower zoomed-in box walks through one macro-instance's internals with per-instance timelines marking exactly when a new request can (green check) or cannot (red cross) be inserted, illustrating the TTFT/TPOT trade-off directly",
+    "reusable_patterns": [
+      "small top-level hierarchy diagram paired with a detailed zoomed-in box explaining one node of that hierarchy",
+      "per-row Gantt-style timelines with colored blocks showing a time-multiplexed schedule",
+      "a dashed ghost copy of a repeated unit to indicate elastic scaling"
+    ],
+    "weaknesses": [
+      "the top mini-hierarchy and the bottom detail box are only loosely linked visually, with no connecting arrow",
+      "the insert-request check/cross icons on the timelines are small and easy to miss"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "hierarchical-scheduling",
+    "prefill-decode",
+    "GPU-cluster",
+    "autoscaling",
+    "SLO"
+  ],
+  "provenance": {
+    "sections": [
+      "3 EcoServe Design (p.5)",
+      "3 EcoServe Design (p.6)"
+    ],
+    "evidence": [
+      "The system adopts a hierarchical architecture with three levels of scheduling",
+      "instances enter the prefill phase in a cyclic pattern",
+      "The mitosis scaling approach enables capacity adjustments at the instance level rather than the coarser macro-instance level"
+    ]
+  },
+  "summary": "EcoServe follows a partially disaggregated (PaDG) strategy for cost-effective LLM serving. This figure shows its three-level hierarchical scheduling: an Overall Scheduler assigns incoming requests to Macro Instances, each a basic unit of several collaborating Instances. The lower, zoomed-in box details one macro-instance's internals: a Macro-Instance Scheduler exchanges status queues (decode progress, memory usage) and SLO/profiling information with several Instance Schedulers, each rendered as a colored timeline alternating Decode (blue) and Prefill (green) blocks. Temporal disaggregation lets each instance run both phases over time instead of simultaneously; rolling activation staggers instances' prefill windows so a new request can always be admitted immediately; and the mitosis scaling approach adds or removes instance schedulers, shown as a dashed fourth row, for fine-grained capacity adjustment.",
+  "summary_zh": "图示EcoServe三级调度：总调度器把请求分给多实例组成的宏实例；下方放大宏实例内部，调度器间交换状态与SLO信息，各实例按时间轮流做解码/预填充，并靠滚动激活与弹性伸缩动态增减实例。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

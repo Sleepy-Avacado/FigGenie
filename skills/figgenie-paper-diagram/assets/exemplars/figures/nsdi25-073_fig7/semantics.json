@@ -1,0 +1,234 @@
+{
+  "paper_id": "nsdi25-073",
+  "fig": "7",
+  "system": {
+    "name": "Prism",
+    "one_liner": "a GPU-disaggregated serving system for deep learning recommendation models that splits inference into CPU-intensive and GPU-efficient subgraphs across disaggregated nodes",
+    "domain": [
+      "recommendation-systems",
+      "gpu-disaggregation",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "RTP Framework",
+        "role": "top layer that turns a recommendation model's compute graph into disaggregated CPU/GPU subgraphs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Graph Optimizer(s)",
+        "role": "existing graph-level optimizations applied to the computational graph before partitioning",
+        "container": "RTP Framework",
+        "novel": false
+      },
+      {
+        "name": "Resource-Aware Graph Partitioner",
+        "role": "divides the monolithic model into a CPU-intensive and a GPU-efficient subgraph",
+        "container": "RTP Framework",
+        "novel": true
+      },
+      {
+        "name": "Computational Graph",
+        "role": "input compute graph of the recommendation model",
+        "container": "RTP Framework",
+        "novel": false
+      },
+      {
+        "name": "Embedding Tables",
+        "role": "input embedding tables associated with the model",
+        "container": "RTP Framework",
+        "novel": false
+      },
+      {
+        "name": "Configs",
+        "role": "input configuration parameters, e.g. enabling/disabling custom optimizers",
+        "container": "RTP Framework",
+        "novel": false
+      },
+      {
+        "name": "Cluster Orchestration",
+        "role": "middle layer that places and allocates resources for the partitioned subgraphs across the cluster",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Topology-Aware Resource Manager",
+        "role": "packages the two subgraphs into containerized instances and places them onto nodes considering network and node topology",
+        "container": "Cluster Orchestration",
+        "novel": true
+      },
+      {
+        "name": "Inter-Node Scheduling",
+        "role": "selects which nodes host the CN and HN instances",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "CN Instance",
+        "role": "containerized instance running the CPU-intensive subgraph",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "HN Instance",
+        "role": "containerized instance running the GPU-efficient subgraph",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "Intra-Node Allocation",
+        "role": "allocates CPU, GPU, and RNIC resources within a selected node",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "allocatable compute resource within a node",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "allocatable accelerator resource within a node",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "RNIC",
+        "role": "allocatable network-interface resource within a node",
+        "container": "Cluster Orchestration",
+        "novel": false
+      },
+      {
+        "name": "RPC & Networking",
+        "role": "bottom layer that connects CN and HN instances and schedules their requests to meet latency SLOs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Incast Flow Control",
+        "role": "controls incast congestion among concurrent requests to the same node",
+        "container": "RPC & Networking",
+        "novel": true
+      },
+      {
+        "name": "SLO-Aware Comm. Scheduling",
+        "role": "schedules requests to meet per-request latency SLOs",
+        "container": "RPC & Networking",
+        "novel": true
+      },
+      {
+        "name": "TCP/IP",
+        "role": "existing transport protocol available for CN-HN connections",
+        "container": "RPC & Networking",
+        "novel": false
+      },
+      {
+        "name": "RDMA",
+        "role": "existing transport protocol used to establish CN-HN connections",
+        "container": "RPC & Networking",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "RTP Framework",
+        "to": "Cluster Orchestration",
+        "what": "partitioned CPU/GPU subgraphs to package and place onto nodes",
+        "step": null
+      },
+      {
+        "from": "Cluster Orchestration",
+        "to": "RPC & Networking",
+        "what": "placed CN/HN instances to connect and schedule for latency SLOs",
+        "step": null
+      },
+      {
+        "from": "Resource-Aware Graph Partitioner",
+        "to": "CN Instance",
+        "what": "CPU-intensive subgraph packaged into a containerized instance",
+        "step": null
+      },
+      {
+        "from": "Resource-Aware Graph Partitioner",
+        "to": "HN Instance",
+        "what": "GPU-efficient subgraph packaged into a containerized instance",
+        "step": null
+      }
+    ],
+    "key_idea": "Prism layers a resource-aware graph partitioner, a topology-aware resource manager, and SLO-aware communication scheduling/incast control on top of standard containers and TCP/RDMA transport to disaggregate recommendation-model serving.",
+    "reading_order": "Top to bottom through three dashed layers (RTP Framework, Cluster Orchestration, RPC & Networking), with purple boxes marking Prism's four novel components."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.65,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d0cee2",
+        "used_for": "light-purple fill of Prism's four key-design boxes (Resource-Aware Graph Partitioner, Topology-Aware Resource Manager, Incast Flow Control, SLO-Aware Comm. Scheduling)"
+      },
+      {
+        "hex": "#56517e",
+        "used_for": "dark-indigo border stroke of those same four key-design boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on ordinary boxes; darker indigo borders on the purple key-design boxes; dashed borders group the three architectural layers",
+    "font": "bold sans-serif for layer titles and key-design boxes, regular for supporting boxes",
+    "corners": "rounded",
+    "arrows": "none; relationships are shown purely by nesting and vertical stacking of the three dashed layer groups",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "purple fill/border marks Prism's four key novel components (Resource-Aware Graph Partitioner, Topology-Aware Resource Manager, Incast Flow Control, SLO-Aware Comm. Scheduling); white boxes are existing or supporting building blocks",
+    "line_style_means": "dashed rectangles group the three architectural layers; no arrows are drawn, so inter-layer relationships rely on vertical position and the reader's knowledge of the pipeline",
+    "emphasis": "highlighting exactly four boxes in purple against an otherwise white/gray diagram immediately tells the reader which parts of a conventional disaggregated-serving stack are Prism's contribution",
+    "reusable_patterns": [
+      "three-layer architecture stack (framework / orchestration / networking)",
+      "color-highlighting a subset of boxes in an otherwise plain box-and-container diagram to mark novel contributions"
+    ],
+    "weaknesses": [
+      "no arrows, so the exact data/control flow between layers and boxes must be inferred from the surrounding text rather than the figure alone",
+      "the purple-means-novel convention is explained only in the caption, not inside the figure"
+    ]
+  },
+  "tags": [
+    "recommendation-systems",
+    "gpu-disaggregation",
+    "resource-management",
+    "rdma",
+    "cluster-scheduling",
+    "slo-aware-scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Prism Overview (p.6)"
+    ],
+    "evidence": [
+      "Figure 7 provides an overview of Prism.",
+      "It divides a monolithic recommendation model into two subgraphs",
+      "the communication scheduler establishes RDMA connections and performs incast control"
+    ]
+  },
+  "summary": "Figure 7 gives Prism's overall architecture as three stacked layers, with the paper's key novel components highlighted in purple. The RTP Framework takes a computational graph, embedding tables, and configs, applies generic Graph Optimizer(s), and uses a Resource-Aware Graph Partitioner to split the model into a CPU-intensive and a GPU-efficient subgraph. Cluster Orchestration's Topology-Aware Resource Manager packages these into containerized CN and HN Instances, using Inter-Node Scheduling to place them and Intra-Node Allocation to assign CPU, GPU, and RNIC resources, considering network and node topology. RPC & Networking then connects the placed instances over TCP/IP or RDMA, with Incast Flow Control and SLO-Aware Comm. Scheduling managing congestion and per-request latency SLOs. The layered layout with purple emphasis lets a reader see which four components are Prism's contribution versus which building blocks are reused.",
+  "summary_zh": "该图展示Prism整体架构,分三层:RTP框架用资源感知图分区器将模型切分为CPU/GPU子图;集群编排层的拓扑感知资源管理器完成容器打包与节点/资源分配;RPC与网络层靠Incast流控和SLO感知调度保障延迟,紫色标出四个关键创新点。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

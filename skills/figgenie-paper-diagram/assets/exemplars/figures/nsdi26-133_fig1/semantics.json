@@ -1,0 +1,216 @@
+{
+  "paper_id": "nsdi26-133",
+  "fig": "1",
+  "system": {
+    "name": "service mesh (background)",
+    "one_liner": "background diagram of a common Kubernetes service mesh where sidecar proxies and an ingress gateway route external traffic to backend pods",
+    "domain": [
+      "networking",
+      "service-mesh",
+      "microservices"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Client",
+        "role": "originates external requests",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "External router",
+        "role": "routes external client traffic toward the service mesh",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Ingress gateway",
+        "role": "primary entry point that inspects packets, matches services, and load-balances to endpoint pods",
+        "container": "Node (server)",
+        "novel": false
+      },
+      {
+        "name": "Service mesh",
+        "role": "groups the services and sidecars managed as one mesh",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Service A",
+        "role": "a service abstraction over a set of pods running the same application",
+        "container": "Service mesh",
+        "novel": false
+      },
+      {
+        "name": "Service B",
+        "role": "a second service abstraction over its own set of pods",
+        "container": "Service mesh",
+        "novel": false
+      },
+      {
+        "name": "App",
+        "role": "application container inside a pod",
+        "container": "Pod",
+        "novel": false
+      },
+      {
+        "name": "Sidecar",
+        "role": "proxy sharing the pod's namespace that intercepts the app container's packets",
+        "container": "Pod",
+        "novel": false
+      },
+      {
+        "name": "Node (server)",
+        "role": "a physical/virtual server hosting the ingress gateway and/or application pods",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Pod",
+        "role": "management unit packaging an app container with its sidecar; annotated with circuit-breaking or retry settings",
+        "container": "Node (server)",
+        "novel": false
+      },
+      {
+        "name": "Request routing / traffic management",
+        "role": "ingress gateway logic that selects an endpoint pod and applies traffic-management features",
+        "container": "Ingress gateway",
+        "novel": false
+      },
+      {
+        "name": "Virtual switch",
+        "role": "root-namespace switch that all pods on a node attach to for packet forwarding",
+        "container": "Node (server)",
+        "novel": false
+      },
+      {
+        "name": "Network interface card (NIC)",
+        "role": "physical interface through which inter-node packets are sent and received",
+        "container": "Node (server)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client",
+        "to": "External router",
+        "what": "external client traffic (blue)",
+        "step": null
+      },
+      {
+        "from": "External router",
+        "to": "Ingress gateway",
+        "what": "external traffic entering the service mesh (blue)",
+        "step": null
+      },
+      {
+        "from": "Network interface card (NIC)",
+        "to": "Ingress gateway",
+        "what": "Path 1: incoming packet traverses the virtual switch and network-stack operations at both the root and gateway namespaces",
+        "step": 1
+      },
+      {
+        "from": "Ingress gateway",
+        "to": "Pod",
+        "what": "Path 2: gateway forwards the packet back through the virtual switch to the selected endpoint pod",
+        "step": 2
+      },
+      {
+        "from": "Ingress gateway",
+        "to": "Pod",
+        "what": "upstream connection to a locally selected endpoint pod (green arrow)",
+        "step": null
+      },
+      {
+        "from": "Ingress gateway",
+        "to": "Pod",
+        "what": "packet encapsulated and forwarded via the NIC when the endpoint pod is on a different node (orange, inter-node path)",
+        "step": null
+      }
+    ],
+    "key_idea": "A generic service mesh places sidecars alongside app containers and routes all external traffic through an ingress gateway, whose packet analysis and forwarding path traverses a virtual switch and network stack twice, once at the root namespace and once at the destination pod's namespace.",
+    "reading_order": "Top: client to external router to ingress gateway into the service mesh's services/sidecars. Bottom: two peer nodes, each a stack of gateway/pod, virtual switch, and NIC, linked by inter- and intra-node paths."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.48,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae3f3",
+        "used_for": "pale blue fill for the service mesh and node background boxes"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "strong blue for the ingress gateway box and external-traffic arrows"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for App/Sidecar/Pod boxes"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "orange for the inter-node forwarding path"
+      },
+      {
+        "hex": "#00b050",
+        "used_for": "green for the gateway-to-pod upstream connection arrow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.52pt, dashed for group/service-mesh boundaries, solid on boxes",
+    "font": "Calibri sans, 6-10.5pt, mostly non-bold",
+    "corners": "mixed",
+    "arrows": "straight arrows with filled heads, colored by traffic type",
+    "icons": "vector, one small icon detected in the source but not clearly identifiable at preview resolution"
+  },
+  "encoding": {
+    "color_means": "blue = external client traffic, green = gateway-to-pod upstream connection, orange = inter-node forwarding path, yellow = intra-node path, gray = generic connection (per legend)",
+    "line_style_means": "dashed borders group logical units (service mesh, services); solid arrows show packet paths",
+    "emphasis": "mirrored two-node layout with matching gateway/pod, virtual switch, and NIC boxes highlights the repeated network-stack traversal the paper later targets for offload",
+    "reusable_patterns": [
+      "sidecar-per-pod service mesh with a dedicated ingress gateway",
+      "per-node network stack shown as gateway/pod, virtual switch, NIC layers linked by inter/intra-node arrows"
+    ],
+    "weaknesses": [
+      "dense mix of grouping boxes, per-pod annotations (circuit-breaking limit, retry count), and a bottom legend competes for attention"
+    ]
+  },
+  "tags": [
+    "service-mesh",
+    "sidecar",
+    "ingress-gateway",
+    "kubernetes",
+    "packet-forwarding",
+    "background"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)",
+      "2 Background and Motivation (p.5)"
+    ],
+    "evidence": [
+      "Figure 1 shows a common service mesh architecture.",
+      "depicted as the green arrow in Figure 1",
+      "this path comprises two sub-paths: (1) from the NIC to the gateway and (2) from the gateway to endpoint pods"
+    ]
+  },
+  "summary": "Figure 1 is a background diagram (not HybridMesh itself) explaining how a typical Kubernetes service mesh is structured. External clients reach the mesh through an external router and an ingress gateway, which inspects L7 packet headers and payloads to match a destination service and select an endpoint pod, then forwards packets over an upstream connection (green arrow) or, if the pod is on another node, an inter-node path through the NIC (orange arrow). Each service groups pods that pair an app container with a sidecar proxy in the same namespace. The bottom half shows two peer nodes, each drawn as a stack of gateway/pod, virtual switch, and network interface card, illustrating the complex forwarding path (Path 1, Path 2) that repeatedly crosses the virtual switch and network stack. A bottom legend distinguishes connection, external, inter-node, and intra-node traffic.",
+  "summary_zh": "图1为背景图，展示典型Kubernetes服务网格：客户端经外部路由器到入口网关，网关解析流量后经上行连接或跨节点路径转发到目标Pod；每个节点内网关/Pod、虚拟交换机、网卡分层堆叠，体现复杂的转发路径。",
+  "confidence": "high",
+  "notes": "layout-proposal: twin-node layered network stack — two side-by-side peer nodes, each a vertical stack (gateway/pod, virtual switch, NIC), linked by inter-/intra-node paths and fed from a shared client-to-gateway chain above; no single named template captures both the top pipeline and the mirrored per-node layering.",
+  "venue": "NSDI26"
+}

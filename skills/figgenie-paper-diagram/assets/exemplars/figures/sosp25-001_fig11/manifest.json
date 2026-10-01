@@ -1,0 +1,56 @@
+{
+  "id": "sosp25-001_fig11",
+  "kind": "mechanism",
+  "paper_id": "sosp25-001",
+  "fig": "11",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 11: Example of DCP blocks for a shared question masked sequence, with two different possible place- ments. Showing blocks for a single head only.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "data-structure",
+  "subject": "how attention blocks for a masked sequence are assigned to two devices under current methods versus DCP's balanced placement",
+  "arrangement": "panels-column",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.99,
+  "n_elements": 6,
+  "n_relations": 5,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-001/src/fig11_dcp_block_mask_exp.svg",
+    "preview.png": "lab/extracted/sosp25-001/src/fig11_dcp_block_mask_exp.png",
+    "print.png": "lab/extracted/sosp25-001/sosp25-001_fig11_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "A triangular masked-attention block map, coloured data-vs-compute, whose colours carry into flat per-device shelves for two placements so the reader can just count blue tiles to see the imbalance vanish.",
+      "what_to_learn": "Draw the triangular block map once, colour data vs compute blocks, then reuse those colours in flat per-device shelves so imbalance is countable at a glance — but no arrows mark which block moved between placements.",
+      "note_source": "agent"
+    }
+  ]
+}

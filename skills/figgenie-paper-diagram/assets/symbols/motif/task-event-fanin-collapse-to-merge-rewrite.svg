@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 133.599 54.398" width="133.599pt" height="54.398pt" data-symbol="task-event-fanin-collapse-to-merge-rewrite" data-kind="motif" data-size-pt="133.599x54.398">
+  <title>task-event-fanin-collapse-to-merge-rewrite</title>
+  <desc>the mirror rewrite rule: many event nodes fanning in via blue arrows to one task is rewritten into each event feeding its own task, all of which converge via blue arrows into one merged event that finally feeds the original task via a green arrow | source: osdi26-101_fig6 (src/fig6b_rewrite_2.svg) | candidate pilot-evolution:task-event-fanin-collapse-to-merge-rewrite | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="task-event-fanin-collapse-to-merge-rewrite" transform="scale(0.356585) translate(13.8760,13.8760)"><defs>
+<clipPath id="osdi26-101-fig6-task-event-fanin-collapse-to-merge-rewrite-clip_1">
+<path transform="matrix(1,0,0,-1,0,125)" d="M0 .2H346.9091V125H0Z"/>
+</clipPath>
+</defs>
+<g clip-path="url(#osdi26-101-fig6-task-event-fanin-collapse-to-merge-rewrite-clip_1)">
+<path transform="matrix(1,0,0,-1,0,125)" d="M0 125H346.9091V.2H0Z" fill="#ffffff"/>
+</g>
+<path transform="matrix(1,0,0,-1,0,125)" d="M130.8546 116.4268C130.8546 119.7559 133.5533 122.4546 136.8823 122.4546H340.1723C343.5013 122.4546 346.2 119.7559 346.2 116.4268V9.354998C346.2 6.025967 343.5013 3.32725 340.1723 3.32725H136.8823C133.5533 3.32725 130.8546 6.025967 130.8546 9.354998Z" fill="#deebf7" fill-opacity=".502" fill-rule="evenodd"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M.5999989 119.0528C.5999989 122.016 3.002172 124.4182 5.965402 124.4182H101.271C104.2342 124.4182 106.6364 122.016 106.6364 119.0528V8.692649C106.6364 5.72942 104.2342 3.32725 101.271 3.32725H5.965402C3.002172 3.32725 .5999989 5.72942 .5999989 8.692649Z" fill="#deebf7" fill-opacity=".502" fill-rule="evenodd"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M6.272755 76.63637C6.272755 83.6253 11.9384 89.29095 18.92732 89.29095H32.67272C39.66164 89.29095 45.32728 83.6253 45.32728 76.63637H45.32724C45.32724 69.64743 39.6616 63.98178 32.67267 63.98178L18.92732 63.98182C11.9384 63.98182 6.272755 69.64747 6.272755 76.63641Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 17.71271 179.12728)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 26.58771 183.92728)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">2</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M6.054566 104.4546C6.054566 111.5037 11.76904 117.2182 18.8182 117.2182H32.12735C39.17651 117.2182 44.89099 111.5037 44.89099 104.4546H44.89094C44.89094 97.40539 39.17647 91.69091 32.12731 91.69091L18.8182 91.69095C11.76904 91.69095 6.054566 97.40543 6.054566 104.4546Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 17.3346 151.19998)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 26.2096 155.99999)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">1</tspan></text>
+<text xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 18.98574 204.21817)" font-size="91.99999" font-family="Calibri-Bold, Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-572" x="0">…</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M304.0909 71.83639H343.1454V48.70906H304.0909Z" fill="#9dc3e6"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 314.9754 195.4909)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">T</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 324.7254 200.2909)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">0</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M249.1091 59.83639C249.1091 66.82531 254.7747 72.49095 261.7636 72.49095H275.5091C282.498 72.49095 288.1636 66.82531 288.1636 59.83639 288.1636 52.84746 282.498 47.18182 275.5091 47.18182H261.7636C254.7747 47.18182 249.1091 52.84746 249.1091 59.83639Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 261.3658 197.45453)" font-size="72.99999" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 270.2408 197.45453)" font-size="91.99999" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">’</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M288.1954 58.69711 298.5546 58.98951 298.4911 61.23861 288.1319 60.94622ZM297.4935 56.70866 304.1456 60.27277 297.303 63.45598Z" fill="#70ad47"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M190.6364 116.7818H229.4728V93.65458H190.6364Z" fill="#9dc3e6"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 201.487 150.54546)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">T</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 211.237 155.34545)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">1</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M190.6364 89.07277H229.4728V65.94544H190.6364Z" fill="#9dc3e6"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 201.487 178.25455)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">T</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 211.237 183.05454)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">2</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M138.0546 105.2182C138.0546 112.2071 143.7202 117.8728 150.7091 117.8728H163.8001C170.789 117.8728 176.4546 112.2071 176.4546 105.2182 176.4546 98.22931 170.7889 92.56367 163.8 92.56367L150.7091 92.56371C143.7202 92.56371 138.0546 98.22935 138.0546 105.2183Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 149.179 150.54546)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 158.054 155.34545)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">1</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M176.4546 106.3432H184.9118V104.0932H176.4546ZM183.7868 108.5932 190.5368 105.2181 183.7868 101.8432Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M138.0546 77.50908C138.0546 84.498 143.7202 90.16363 150.7091 90.16363H163.8001C170.789 90.16363 176.4546 84.498 176.4546 77.50908 176.4546 70.52017 170.7889 64.85453 163.8 64.85453L150.7091 64.85458C143.7202 64.85458 138.0546 70.52021 138.0546 77.50912Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 149.179 178.25455)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 158.054 183.05454)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">2</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M176.4546 78.63406 184.9118 78.63402V76.38402L176.4546 76.38406ZM183.7868 80.88402 190.5368 77.50898 183.7868 74.13402Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M230.5066 105.6617 247.7902 65.37331 245.7224 64.48626 228.4389 104.7747ZM249.4144 67.29427 248.9739 59.7604 243.2111 64.63309Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M230.2284 78.34247 245.5626 64.43851 244.0512 62.77169 228.7171 76.67565ZM246.2405 66.86101 248.9739 59.8267 241.7064 61.86055Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M230.4693 22.09302 247.36 54.33171 245.367 55.37592 228.4762 23.13723ZM248.8309 52.29101 248.974 59.83639 242.8519 55.42361Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M190.6364 34.09095H229.4728V10.96363H190.6364Z" fill="#9dc3e6"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 201.4869 233.0182)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">T</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 211.2369 237.8182)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">k</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M138.0546 22.41814C138.0546 29.46732 143.7691 35.18182 150.8182 35.18182H163.6909C170.7401 35.18182 176.4546 29.46732 176.4546 22.41814 176.4546 15.36895 170.7401 9.65445 163.6909 9.65445L150.8182 9.654492C143.7691 9.654492 138.0546 15.36899 138.0546 22.41818Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 149.179 233.23639)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 158.054 238.0364)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">k</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M231.236 45.17943 246.9317 56.88137 245.5868 58.68521 229.8912 46.98327ZM247.3746 54.4051 250.7689 61.14544 243.3401 59.81663Z" fill="#5b9bd5"/>
+<text xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 147.8796 201.59999)" font-size="91.99999" font-family="Calibri-Bold, Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-572" x="0">…</tspan></text>
+<text xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 205.1982 201.81818)" font-size="91.99999" font-family="Calibri-Bold, Calibri, 'Segoe UI', sans-serif" font-weight="bold"><tspan y="-572" x="0">…</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M107.0728 67.96363H118.3091V73.58182L129.5455 62.34544 118.3091 51.10907V56.72725H107.0728Z" fill="#bfbfbf" fill-rule="evenodd"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M175.1454 24.08863 186.544 24.08858V21.83858L175.1454 21.83863ZM185.419 26.33858 192.169 22.96355 185.419 19.58858Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M65.18181 71.83639H104.2364V48.70906H65.18181Z" fill="#9dc3e6"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 76.1707 195.4909)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">T</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 85.9207 200.2909)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">0</tspan></text>
+<path transform="matrix(1,0,0,-1,0,125)" d="M45.91222 104.5991 63.81222 65.85435 61.76967 64.91069 43.86967 103.6554ZM65.38294 67.81929 65.15008 60.27615 59.25529 64.98832Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M45.59023 77.29946 61.44304 64.72022 60.04447 62.95769 44.19166 75.53693ZM61.96035 67.18203 65.15008 60.34253 57.76464 61.89445Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M45.45356 47.59879 60.84162 56.48548 59.7164 58.43391 44.32833 49.54722ZM60.99264 53.97445 65.15008 60.27277 57.61696 59.81972Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M45.66241 21.53982 63.6366 54.78951 61.65729 55.85949 43.6831 22.6098ZM65.08091 52.72988 65.32189 60.27276 59.143 55.93981Z" fill="#5b9bd5"/>
+<path transform="matrix(1,0,0,-1,0,125)" d="M6.054566 22.09092C6.054566 29.07982 11.72018 34.74544 18.70908 34.74544H32.01824C39.00714 34.74544 44.67275 29.07982 44.67275 22.09092 44.67275 15.10201 39.00714 9.436388 32.01824 9.436388H18.70908C11.72018 9.436388 6.054566 15.10201 6.054566 22.09092Z" fill="#a9d18e" fill-rule="evenodd"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 17.14547 233.6727)" font-size="72.99999" font-family="ArialMT, Helvetica, Arial, sans-serif"><tspan y="-572" x="0">e</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.2181818 0 -0 .2181818 26.02047 238.4727)" font-size="61" font-family="Arial-BoldMT, Helvetica, Arial, sans-serif" font-weight="bold"><tspan y="-572" x="0">k</tspan></text>
+</g>
+</svg>

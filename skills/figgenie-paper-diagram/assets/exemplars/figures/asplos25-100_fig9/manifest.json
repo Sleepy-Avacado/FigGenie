@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-100_fig9",
+  "paper_id": "asplos25-100",
+  "fig": "9",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 9. (a) Tensor parallelism: each transformer block is assigned to multiple CXL devices. Prompts are processed se- quentially. (b) In a transformer block, fully connected layers are spread across CXL devices, while other operations are confined to a single device.",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.43,
+  "n_components": 11,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-100/src/fig9_Model_Parallelism.svg",
+    "preview.png": "lab/extracted/asplos25-100/src/fig9_Model_Parallelism.png",
+    "print.png": "lab/extracted/asplos25-100/asplos25-100_fig9_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Two lettered panels with one shared legend placed below and spanning both.",
+      "what_to_learn": "When both panels use the same colour encoding, the legend goes below spanning the full width - never duplicated per panel."
+    },
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "A minor but real phase device: panel (a) runs one vertical time arrow past stacked Decoder 0/1/2 boxes showing a prompt's blocks processed one at a time, before panel (b) zooms into the per-layer mapping.",
+      "what_to_learn": "When only one stage of a bigger figure is genuinely sequential, don't force the whole thing into lanes: draw one small vertical time arrow beside the sequential boxes (Decoder 0, 1, 2...) and keep the rest of the figure as an ordinary architecture diagram."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Panel (a)'s coarse per-decoder timeline sits beside panel (b)'s detailed per-layer device map, sharing one blue-single-device/green-multi-device legend so the reader sees which decoder runs when and which of its layers pay the broadcast/gather cost.",
+      "what_to_learn": "Pair a coarse timeline/mapping overview with one detailed per-layer zoom, and carry a single two-colour legend (single-device vs multi-device placement) across both panels so the coarse view and the fine view never need separate keys."
+    }
+  ]
+}

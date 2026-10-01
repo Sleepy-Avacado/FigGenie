@@ -1,0 +1,235 @@
+{
+  "paper_id": "asplos25-012",
+  "fig": "2",
+  "system": {
+    "name": "MoE-Lightning",
+    "one_liner": "a high-throughput batch-inference system for Mixture-of-Experts LLMs on memory-constrained GPUs",
+    "domain": [
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Input Token",
+        "role": "input to the model",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Token Embedding",
+        "role": "converts the input token into an embedding vector",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "Positional Encoding",
+        "role": "added to the token embedding to inject position information",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "Self Attention",
+        "role": "computes attention over the sequence",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "Add + Layer Norm",
+        "role": "residual add and normalization after Self Attention and after the MoE FFN",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "Router",
+        "role": "selects which expert FFN(s) process the current token",
+        "container": "Mixture of Experts Feed-Forward Network",
+        "novel": false
+      },
+      {
+        "name": "FFN 1",
+        "role": "one expert feed-forward network, not selected for this token",
+        "container": "Mixture of Experts Feed-Forward Network",
+        "novel": false
+      },
+      {
+        "name": "FFN 2",
+        "role": "the expert feed-forward network selected by the router for this token",
+        "container": "Mixture of Experts Feed-Forward Network",
+        "novel": false
+      },
+      {
+        "name": "FFN N",
+        "role": "another expert feed-forward network, not selected for this token",
+        "container": "Mixture of Experts Feed-Forward Network",
+        "novel": false
+      },
+      {
+        "name": "Mixture of Experts Feed-Forward Network",
+        "role": "sparse FFN layer composed of a router and multiple expert FFNs",
+        "container": "Transformer",
+        "novel": false
+      },
+      {
+        "name": "Linear + Softmax",
+        "role": "produces output token probabilities",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Output Token",
+        "role": "predicted output of the model",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Token",
+        "to": "Token Embedding",
+        "what": "raw token",
+        "step": null
+      },
+      {
+        "from": "Token Embedding",
+        "to": "Self Attention",
+        "what": "embedding summed with positional encoding",
+        "step": null
+      },
+      {
+        "from": "Self Attention",
+        "to": "Add + Layer Norm",
+        "what": "attention output",
+        "step": null
+      },
+      {
+        "from": "Add + Layer Norm",
+        "to": "Router",
+        "what": "normalized hidden state",
+        "step": null
+      },
+      {
+        "from": "Router",
+        "to": "FFN 2",
+        "what": "token routed to the selected expert",
+        "step": null
+      },
+      {
+        "from": "Router",
+        "to": "FFN 1",
+        "what": "candidate routing path not taken",
+        "step": null
+      },
+      {
+        "from": "Router",
+        "to": "FFN N",
+        "what": "candidate routing path not taken",
+        "step": null
+      },
+      {
+        "from": "FFN 2",
+        "to": "Add + Layer Norm",
+        "what": "selected expert's output",
+        "step": null
+      },
+      {
+        "from": "Add + Layer Norm",
+        "to": "Linear + Softmax",
+        "what": "normalized hidden state",
+        "step": null
+      },
+      {
+        "from": "Linear + Softmax",
+        "to": "Output Token",
+        "what": "predicted token distribution",
+        "step": null
+      }
+    ],
+    "key_idea": "Each Transformer layer's feed-forward network is replaced by a sparse Mixture-of-Experts block, where a router sends each token through only one (or few) of many expert FFNs.",
+    "reading_order": "Bottom to top: from Input Token through Token Embedding, Self Attention, and the Mixture-of-Experts FFN block, up to Output Token."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "bottom-up",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.48,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#96dcf8",
+        "used_for": "blue fill for FFN boxes and the Linear + Softmax box"
+      },
+      {
+        "hex": "#ffffe0",
+        "used_for": "pale yellow fill for the stacked Transformer layer background"
+      },
+      {
+        "hex": "#f8de7e",
+        "used_for": "gold fill for the Add + Layer Norm boxes"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "light blue fill for the Mixture of Experts Feed-Forward Network container"
+      },
+      {
+        "hex": "#f2cfee",
+        "used_for": "light purple fill for the Token Embedding box"
+      },
+      {
+        "hex": "#ffe5b4",
+        "used_for": "light orange fill for the Self Attention box"
+      },
+      {
+        "hex": "#c2f1c8",
+        "used_for": "light green fill for the Router box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on all boxes; FFN 2 has a thicker black outline to mark it as selected",
+    "font": "LinLibertine serif, ~5pt",
+    "corners": "square",
+    "arrows": "solid black arrows for the main data path, dashed arrows from the Router to all expert FFNs to show routing choices, with a bold solid arrow to the selected FFN 2",
+    "icons": "a sine-wave glyph for Positional Encoding and a circled-plus for the embedding/position sum"
+  },
+  "encoding": {
+    "color_means": "blue = feed-forward/linear computation boxes, gold = Add + Layer Norm, green = Router, purple = Token Embedding, orange = Self Attention, pale yellow background = one repeated Transformer layer",
+    "line_style_means": "dashed arrows from Router to every expert show possible routing paths; the bold solid arrow to FFN 2 shows the path actually taken for the depicted token",
+    "emphasis": "stacked yellow layers behind the front Transformer block imply repetition across many layers, while the router's dashed-vs-bold arrows highlight sparse conditional expert selection",
+    "reusable_patterns": [
+      "standard Transformer block with FFN replaced by a router-plus-experts subblock",
+      "stacked-layer background shading to imply N repeated blocks"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "mixture-of-experts",
+    "transformer",
+    "routing",
+    "llm",
+    "background-diagram",
+    "sparse-computation"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background"
+    ],
+    "evidence": [
+      "Figure 2. Architecture of a Mixture of Experts in Large Language Models."
+    ]
+  },
+  "summary": "This is a background/tutorial figure explaining the standard Mixture-of-Experts (MoE) Transformer architecture that MoE-Lightning targets for efficient inference. An input token flows bottom-up through token embedding plus positional encoding, self-attention with residual add-and-layer-norm, and into an MoE feed-forward block: a router examines the hidden state and, via dashed candidate arrows to every expert FFN, selects one expert (FFN 2, highlighted with a bold arrow and thicker outline) to actually process the token. The expert's output passes through another add-and-layer-norm and a final linear-plus-softmax layer to produce the output token. Pale yellow stacked rectangles behind the main block indicate that this Transformer layer is repeated N times. The figure uses flat pastel color-coding per component type and dashed-versus-bold arrows to visually distinguish routing options from the selected computation path.",
+  "summary_zh": "该图是标准 MoE Transformer 架构的背景说明图：token 经嵌入、自注意力后进入混合专家前馈层，路由器以虚线连接所有专家、粗实线标出实际选中的 FFN 2，体现稀疏条件计算。",
+  "confidence": "medium",
+  "notes": "No body paragraph referencing this figure was found in the context file; it is a standard background diagram and its content is read directly from the figure and caption rather than from surrounding prose.",
+  "venue": "ASPLOS25"
+}

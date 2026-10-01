@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-151_fig1",
+  "paper_id": "asplos25-151",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. (a) Architectural schematics of a shared QRAM that is concurrently accessed by multiple QPUs. (b) Cost com- parison between Fat-Tree and Bucket-Brigade (BB) QRAMs for executing 𝑂(log(𝑁)) independent queries. The proposed Fat-Tree QRAM allows 𝑂(log(𝑁)) queries to be executed in parallel whi",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.93,
+  "n_components": 7,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-151/src/fig1_motivation.svg",
+    "preview.png": "lab/extracted/asplos25-151/src/fig1_motivation.png",
+    "print.png": "lab/extracted/asplos25-151/asplos25-151_fig1_p2_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Panel (a)'s 7-component schematic (QPU array through bus and queue to shared QRAM) is paired with panel (b)'s Big-O table, the schematic-plus-cost-table two-panel variant, at high confidence with only 3 flows.",
+      "what_to_learn": "Use a metrics table, not a second schematic, as panel (b) when the comparison is quantitative: rows are the metrics, columns are the two designs, and Big-O terms substitute for exact numbers."
+    }
+  ]
+}

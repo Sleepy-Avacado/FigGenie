@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-032_fig4",
+  "paper_id": "nsdi25-032",
+  "fig": "4",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 4: System overview of ntprof. PA refers to the Programmable Profiling Agent, attached to each switching queue. “S” refers to a processing stage. The right side of the figure illustrates four example applications. The I/O paths of app1 and app2 overlap at Stage 2 because both are mapped to the",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 4.08,
+  "n_components": 28,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-032/nsdi25-032_fig4_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-032/nsdi25-032_fig4_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar built as a 9-stage-by-4-app grid, far denser than this template's usual floor, where each app keeps one colour across its path line and the queue cells it touches.",
+      "what_to_learn": "When several items' paths overlap on some grid cells and diverge on others, give every item one consistent colour for both its route line and its cell icons; the weakness here warns this pattern breaks down once cell count passes a few hundred, so cap the grid before density hides the comparison."
+    }
+  ]
+}

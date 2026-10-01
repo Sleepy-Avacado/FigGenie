@@ -1,0 +1,56 @@
+{
+  "id": "nsdi23-089_fig2",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-089",
+  "fig": "2",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Fig. 2: The end-to-end lifecycle of a trace in Hindsight (§4).",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "topology",
+  "subject": "how Hindsight lazily collects a request's spans by triggering a coordinator's backward breadcrumb traversal instead of reporting eagerly",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "callout",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.51,
+  "n_elements": 8,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 6,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": true,
+  "tool": "tikz",
+  "confidence": "low",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-089/src/fig2_architecture3.svg",
+    "preview.png": "lab/extracted/nsdi23-089/src/fig2_architecture3.png",
+    "print.png": "lab/extracted/nsdi23-089/nsdi23-089_fig2_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Instead of reporting every span immediately, Hindsight buffers locally and only pulls a request's spans, backward through its breadcrumb trail, once a trigger flags that request as worth the cost.",
+      "what_to_learn": "the same base topology as a sibling figure, redrawn with one new colour-coded mechanism layered on top; paired zoom-in callouts opening two components' internals from specific points on a main path",
+      "note_source": "record"
+    }
+  ]
+}

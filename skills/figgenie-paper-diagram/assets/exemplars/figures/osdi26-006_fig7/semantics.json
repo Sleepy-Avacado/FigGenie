@@ -1,0 +1,184 @@
+{
+  "paper_id": "osdi26-006",
+  "fig": "7",
+  "system": {
+    "name": "RamRyder",
+    "one_liner": "a system that manages DIMM and CXL memory channels in software for elastic, isolated capacity and bandwidth allocation to VMs",
+    "domain": [
+      "os-kernel",
+      "storage"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Large VM",
+        "role": "VM whose guest physical memory (GPM) is mapped across many channels for high bandwidth",
+        "container": "(a) Channel Allocation",
+        "novel": false
+      },
+      {
+        "name": "Medium VM",
+        "role": "VM mapped across a medium number of channels for medium bandwidth",
+        "container": "(a) Channel Allocation",
+        "novel": false
+      },
+      {
+        "name": "Small VM",
+        "role": "VM mapped across few channels for low bandwidth",
+        "container": "(a) Channel Allocation",
+        "novel": false
+      },
+      {
+        "name": "GPM",
+        "role": "guest physical memory region inside a VM that the hypervisor maps to channel devices",
+        "container": "(a) Channel Allocation",
+        "novel": false
+      },
+      {
+        "name": "MEM",
+        "role": "physical memory device (DIMM or CXL) attached to a channel and mapped into a VM's GPM",
+        "container": "(a) Channel Allocation",
+        "novel": false
+      },
+      {
+        "name": "sNode",
+        "role": "S-NUMA node aggregating cNodes from the same socket/zNUMA domain, exposed to the guest OS",
+        "container": "(b) Channel Abstraction",
+        "novel": true
+      },
+      {
+        "name": "cNode",
+        "role": "C-NUMA node virtualizing the guest physical memory mapped to one memory channel",
+        "container": "(b) Channel Abstraction",
+        "novel": true
+      },
+      {
+        "name": "DIMM",
+        "role": "statically allocated hardware memory device attached to a channel",
+        "container": "(b) Channel Abstraction",
+        "novel": false
+      },
+      {
+        "name": "CXL",
+        "role": "CXL memory device attached to a channel",
+        "container": "(b) Channel Abstraction",
+        "novel": false
+      },
+      {
+        "name": "Channel",
+        "role": "a memory channel; the unit RamRyder allocates and virtualizes",
+        "container": "(b) Channel Abstraction",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Large VM",
+        "to": "MEM",
+        "what": "guest physical memory mapped across many channels for high bandwidth",
+        "step": null
+      },
+      {
+        "from": "DIMM",
+        "to": "cNode",
+        "what": "channel virtualized as a C-NUMA node",
+        "step": null
+      },
+      {
+        "from": "CXL",
+        "to": "cNode",
+        "what": "channel virtualized as a C-NUMA node",
+        "step": null
+      },
+      {
+        "from": "cNode",
+        "to": "sNode",
+        "what": "cNodes from the same socket/zNUMA domain grouped into one S-NUMA node",
+        "step": null
+      }
+    ],
+    "key_idea": "RamRyder gives a VM as many memory channels as its target bandwidth requires (a), and exposes each channel to the guest OS as a cNode that is grouped by socket/zNUMA domain into a coarser sNode (b).",
+    "reading_order": "Left panel (a) reads left-to-right across three VM sizes with increasing channel count for higher bandwidth; right panel (b) reads top-down from guest-visible sNode/cNode NUMA nodes to the physical DIMM/CXL channels below the Guest OS/hardware boundary."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.28,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0f2e4c",
+        "used_for": "dark navy box borders, text labels and italic GPM/MEM/BW annotations"
+      },
+      {
+        "hex": "#fdf0ca",
+        "used_for": "pale cream fill for GPM sub-boxes and DIMM-derived channel boxes"
+      },
+      {
+        "hex": "#edf0ca",
+        "used_for": "pale yellow-green fill used on some VM/channel boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill for CXL-derived channel boxes"
+      },
+      {
+        "hex": "#f1e6e3",
+        "used_for": "pale pink-tan fill accenting the low-bandwidth Small VM group"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark navy stroke on boxes; dashed lines used for grouping brackets and the Guest OS/hardware boundary",
+    "font": "GillSans-like sans, 7-8.5pt, italic for defined-term annotations (GPM, MEM, BW)",
+    "corners": "rounded",
+    "arrows": "thin arrows and curly braces grouping channels under each VM or NUMA node",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "cream/tan vs. gray-blue fills distinguish DIMM-backed channels from CXL-backed channels across both panels",
+    "line_style_means": "dashed horizontal line in panel (b) separates the guest-OS-visible NUMA abstraction (sNode/cNode) from the underlying hardware channels",
+    "emphasis": "panel (a)'s shrinking channel counts next to Large/Medium/Small VM labels visually tie channel count to bandwidth; panel (b)'s bracket grouping visually ties multiple channels to one socket/zNUMA domain",
+    "reusable_patterns": [
+      "side-by-side (a)/(b) panels: one showing a resource-to-consumer allocation, the other showing the resulting abstraction hierarchy",
+      "curly-brace grouping of repeated hardware units into a higher-level node"
+    ],
+    "weaknesses": [
+      "dense abbreviation legend (GPM/MEM/BW) at the top must be read before the panels make sense"
+    ]
+  },
+  "tags": [
+    "numa",
+    "cxl",
+    "memory-channel",
+    "virtualization",
+    "bandwidth-allocation",
+    "hypervisor"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Ramryder (p.6)"
+    ],
+    "evidence": [
+      "the RAMRYDER hypervisor maps the VM's guest physical memory to the memory devices attached to the target channels",
+      "the RAMRYDER hypervisor virtualizes the guest physical memory mapped to each memory channel as a distinct C-NUMA node (cNode)",
+      "Memory on each channel is then exposed as a C-NUMA node (i.e., cNode) in the guest OS"
+    ]
+  },
+  "summary": "RamRyder allocates and virtualizes memory channels for VMs. Figure 7 has two panels. Panel (a), Channel Allocation, shows a Large, Medium and Small VM, each with a guest physical memory (GPM) region mapped by the hypervisor to a shrinking number of DIMM/CXL channels (MEM boxes), giving high, medium and low bandwidth respectively. Panel (b), Channel Abstraction, shows how each physical channel (DIMM or CXL) is virtualized as a C-NUMA node (cNode); cNodes from the same server socket or zNUMA domain are then grouped by the guest kernel into a coarser S-NUMA node (sNode) exposed above a dashed Guest-OS/hardware boundary. Both panels use flat cream and gray-blue fills to distinguish DIMM from CXL channels, rounded navy-outlined boxes, small sans-serif labels, and curly-brace groupings to show channels aggregating into higher-level abstractions.",
+  "summary_zh": "图7分两部分：(a)通道分配示大/中/小型VM按带宽需求映射到不同数量的DIMM/CXL通道；(b)通道抽象示每通道虚拟化为cNode，同插槽/zNUMA域内的cNode聚合为更高层sNode，虚线分隔客户OS与硬件。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

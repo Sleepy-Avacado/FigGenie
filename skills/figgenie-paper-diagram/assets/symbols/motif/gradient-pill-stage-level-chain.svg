@@ -1,0 +1,259 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.09 69.896" width="255.09pt" height="69.896pt" data-symbol="gradient-pill-stage-level-chain" data-kind="motif" data-size-pt="255.09x69.896">
+  <title>gradient-pill-stage-level-chain</title>
+  <desc>full stage-level chain of vertically-labelled gradient-filled pill/capsule nodes for each network stage (input, zero padding, convolution, batchnorm, ReLU, maxpooling, repeated conv/identity blocks with repeat-count labels, pooling, flatten, FC, output), plain arrows between them | source: osdi23-052_fig2 (osdi23-052_fig2_p3_mixed.svg) | candidate wave4:gradient-pill-stage-level-chain | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="gradient-pill-stage-level-chain" transform="scale(1) translate(4.9500,-1.5520)"><defs>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_1">
+<path transform="matrix(1,0,0,-1,-50.641,493.67555)" d="M50.641 281.50968H298.8674V493.67555H50.641Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_2">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M9.24068 0V20.61998C9.24068 23.18765 11.32214 25.2691 13.8898 25.2691 16.45746 25.2691 18.53891 23.18765 18.53891 20.61998V-20.61998C18.53891-23.18765 16.45746-25.2691 13.8898-25.2691 11.32214-25.2691 9.24068-23.18765 9.24068-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_3">
+<path transform="matrix(.18597,0,0,-1.01088,28.79829,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_4">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M25.1149 0V20.61998C25.1149 23.18765 27.19635 25.2691 29.764 25.2691 32.33167 25.2691 34.41312 23.18765 34.41312 20.61998V-20.61998C34.41312-23.18765 32.33167-25.2691 29.764-25.2691 27.19635-25.2691 25.1149-23.18765 25.1149-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_5">
+<path transform="matrix(.18597,0,0,-1.01088,44.672494,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_6">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M35.03624 0V20.61998C35.03624 23.18765 37.11769 25.2691 39.68535 25.2691 42.253 25.2691 44.33446 23.18765 44.33446 20.61998V-20.61998C44.33446-23.18765 42.253-25.2691 39.68535-25.2691 37.11769-25.2691 35.03624-23.18765 35.03624-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_7">
+<path transform="matrix(.18597,0,0,-1.01088,54.59385,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_8">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M44.95757 0V20.61998C44.95757 23.18765 47.03902 25.2691 49.60667 25.2691 52.17433 25.2691 54.2558 23.18765 54.2558 20.61998V-20.61998C54.2558-23.18765 52.17433-25.2691 49.60667-25.2691 47.03902-25.2691 44.95757-23.18765 44.95757-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_9">
+<path transform="matrix(.18597,0,0,-1.01088,64.51517,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_10">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M54.8789 0V20.61998C54.8789 23.18765 56.96036 25.2691 59.52802 25.2691 62.09569 25.2691 64.17714 23.18765 64.17714 20.61998V-20.61998C64.17714-23.18765 62.09569-25.2691 59.52802-25.2691 56.96036-25.2691 54.8789-23.18765 54.8789-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_11">
+<path transform="matrix(.18597,0,0,-1.01088,74.4365,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_12">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M70.7531 0V20.61998C70.7531 23.18765 72.83455 25.2691 75.40222 25.2691 77.96988 25.2691 80.05133 23.18765 80.05133 20.61998V-20.61998C80.05133-23.18765 77.96988-25.2691 75.40222-25.2691 72.83455-25.2691 70.7531-23.18765 70.7531-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_13">
+<path transform="matrix(.18597,0,0,-1.01088,90.31072,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_14">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M80.67445 0V20.61998C80.67445 23.18765 82.75592 25.2691 85.32358 25.2691 87.89124 25.2691 89.97269 23.18765 89.97269 20.61998V-20.61998C89.97269-23.18765 87.89124-25.2691 85.32358-25.2691 82.75592-25.2691 80.67445-23.18765 80.67445-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_15">
+<path transform="matrix(.18597,0,0,-1.01088,100.23208,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_16">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M96.54866 0V20.61998C96.54866 23.18765 98.63011 25.2691 101.19777 25.2691 103.76543 25.2691 105.84688 23.18765 105.84688 20.61998V-20.61998C105.84688-23.18765 103.76543-25.2691 101.19777-25.2691 98.63011-25.2691 96.54866-23.18765 96.54866-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_17">
+<path transform="matrix(.18597,0,0,-1.01088,116.10625,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_18">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M106.47 0V20.61998C106.47 23.18765 108.55145 25.2691 111.11911 25.2691 113.68677 25.2691 115.76822 23.18765 115.76822 20.61998V-20.61998C115.76822-23.18765 113.68677-25.2691 111.11911-25.2691 108.55145-25.2691 106.47-23.18765 106.47-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_19">
+<path transform="matrix(.18597,0,0,-1.01088,126.02761,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_20">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M122.3439 0V20.61998C122.3439 23.18765 124.42535 25.2691 126.99301 25.2691 129.56069 25.2691 131.64214 23.18765 131.64214 20.61998V-20.61998C131.64214-23.18765 129.56069-25.2691 126.99301-25.2691 124.42535-25.2691 122.3439-23.18765 122.3439-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_21">
+<path transform="matrix(.18597,0,0,-1.01088,141.90152,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_22">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M132.26523 0V20.61998C132.26523 23.18765 134.34668 25.2691 136.91436 25.2691 139.48201 25.2691 141.56346 23.18765 141.56346 20.61998V-20.61998C141.56346-23.18765 139.48201-25.2691 136.91436-25.2691 134.34668-25.2691 132.26523-23.18765 132.26523-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_23">
+<path transform="matrix(.18597,0,0,-1.01088,151.82285,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_24">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M148.13944 0V20.61998C148.13944 23.18765 150.2209 25.2691 152.78856 25.2691 155.35622 25.2691 157.43767 23.18765 157.43767 20.61998V-20.61998C157.43767-23.18765 155.35622-25.2691 152.78856-25.2691 150.2209-25.2691 148.13944-23.18765 148.13944-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_25">
+<path transform="matrix(.18597,0,0,-1.01088,167.69705,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_26">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M158.06079 0V20.61998C158.06079 23.18765 160.14225 25.2691 162.7099 25.2691 165.27756 25.2691 167.35901 23.18765 167.35901 20.61998V-20.61998C167.35901-23.18765 165.27756-25.2691 162.7099-25.2691 160.14225-25.2691 158.06079-23.18765 158.06079-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_27">
+<path transform="matrix(.18597,0,0,-1.01088,177.61838,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_28">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M173.935 0V20.61998C173.935 23.18765 176.01645 25.2691 178.5841 25.2691 181.15177 25.2691 183.23323 23.18765 183.23323 20.61998V-20.61998C183.23323-23.18765 181.15177-25.2691 178.5841-25.2691 176.01645-25.2691 173.935-23.18765 173.935-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_29">
+<path transform="matrix(.18597,0,0,-1.01088,193.49259,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_30">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M183.85633 0V20.61998C183.85633 23.18765 185.93778 25.2691 188.50543 25.2691 191.07309 25.2691 193.15456 23.18765 193.15456 20.61998V-20.61998C193.15456-23.18765 191.07309-25.2691 188.50543-25.2691 185.93778-25.2691 183.85633-23.18765 183.85633-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_31">
+<path transform="matrix(.18597,0,0,-1.01088,203.41391,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_32">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M193.77768 0V20.61998C193.77768 23.18765 195.85913 25.2691 198.42679 25.2691 200.99446 25.2691 203.07592 23.18765 203.07592 20.61998V-20.61998C203.07592-23.18765 200.99446-25.2691 198.42679-25.2691 195.85913-25.2691 193.77768-23.18765 193.77768-20.61998Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_33">
+<path transform="matrix(.18597,0,0,-1.01088,213.33527,86.96554)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_34">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M39.00645-44.33446H76.080799V-35.03624H39.00645Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_35">
+<path transform="matrix(.74158,0,0,-.18597,44.671609,85.40539)" d="M0 0H100V100H0Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_36">
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" d="M147.25647-44.33446H190.06906V-35.03624H147.25647Z"/>
+</clipPath>
+<clipPath id="osdi23-052-fig2-gradient-pill-stage-level-chain-clip_37">
+<path transform="matrix(.85635,0,0,-.18597,150.05225,85.40539)" d="M0 0H100V100H0Z"/>
+</clipPath>
+</defs>
+<g xmlns:xlink="http://www.w3.org/1999/xlink" clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_1)">
+<text xml:space="preserve" transform="matrix(0 -1 1 0 450.315 118.99353)" font-size="8.9664" font-family="'Nimbus Roman No9 L', sans-serif" font-weight="bold"><tspan y="-437.819" x="63.137 66.62493 69.61074 74.09394 78.57714 84.79982 87.29248 91.13906 95.5326 99.51368">stagelevel</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 475.30104 115.62555)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-451.996" x="73.946 75.604778 78.09542 80.58607 83.07671">Input</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M1.98438 0H7.9288"/>
+<path transform="matrix(1,0,0,-1,32.1358,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_2)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_3)">
+<image x="33" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAA6ElEQVR4nI3K2RaBAABF0fv/35ZCGcoQkqlQhliW5fqF87Dftn6/ nwnh+P1+TfD4+XxM8Ph+v03o9XqZUNd1JvR8Pk3o8XiY0P1+N6Hb7WZCbduaUNM0 JnS9Xk3ocrmY0Pl8NqG6rk2oqioTOp1OJnQ8Hk3ocDiY0H6/N6HdbmdCZVma0Ha7 NaGiKExos9mY0Hq9NqHVamVCeZ6b0HK5NKHFYmFC8/nchGazmQllWWZCaZqa0HQ6 NaHJZGJC4/HYhEajkQklSWJCcRyb0HA4NKHBYGBC/X7fhKIoMqEwDE2o1+uZUBAE Jv7EUFVosUN3pwAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M9.24068 0V20.61998C9.24068 23.18765 11.32214 25.2691 13.8898 25.2691 16.45746 25.2691 18.53891 23.18765 18.53891 20.61998V-20.61998C18.53891-23.18765 16.45746-25.2691 13.8898-25.2691 11.32214-25.2691 9.24068-23.18765 9.24068-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 477.68403 145.31653)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-438.392" x="95.96 98.1717 100.3834 102.042179 105.778148 108.26879 110.48049 112.97114 115.461788 116.84659 119.337238">zeropadding</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M18.25522 0H23.80301"/>
+<path transform="matrix(1,0,0,-1,48.01001,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_4)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_5)">
+<image x="49" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAxUlEQVR4nI3KRY4CAAAEwfn/27DF3d0dQgi9X+hD3Sq/HxjR8fsF w8fPBwwf328w8nqBkecTjDweYOR+ByO3Gxi5XsHI5QJGzmcwcjqBkeMRjBwOYGS/ ByO7HRjZbsHIZgNG1mswslqBkeUSjCwWYGQ+ByOzGRiZTsHIZAJGxmMwMhqBkeEQ jAwGYKTfByO9HhjpdsFIpwNG2m0w0mqBkWYTjDQaYKReByO1GhipVsHI3x8YqVTA SLkMRkolMFIsgpFCAYx/NvCJFlDrsj0AAAAASUVORK5CYII="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#0000ff" d="M25.1149 0V20.61998C25.1149 23.18765 27.19635 25.2691 29.764 25.2691 32.33167 25.2691 34.41312 23.18765 34.41312 20.61998V-20.61998C34.41312-23.18765 32.33167-25.2691 29.764-25.2691 27.19635-25.2691 25.1149-23.18765 25.1149-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 494.74104 160.00754)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-439.575" x="111.834 114.0457 116.53635 118.82774 121.218769 123.70941 125.094219 127.58486 128.96967 130.35446 132.84511">convolution</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_6)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_7)">
+<image x="59" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAwUlEQVR4nJXKx0ECABQFwdd/beYsgpmcMyKy/hKWw9wmHI8Y8fHv gHFCPOwxToi/O4yKW4yw32BUXGOEnxVGxSVG2C0wKs4xwnaGUXGKETYTjIpjjLAe YVQcYoTVAKNiHyMsexgVuxhh0cGo2MYI82+Mil8YYfaJUfEDI0zfMSq+YYTJK0bF FkYYNzEqvmCEUQOj4jNGGD5hVHzECIMHjIr3GKF/h1HxFiP0bjAqXmOE7hVGxUuM 0LnAqHiOEdpnGP/r9qJc8s6DIgAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#ff8000" d="M35.03624 0V20.61998C35.03624 23.18765 37.11769 25.2691 39.68535 25.2691 42.253 25.2691 44.33446 23.18765 44.33446 20.61998V-20.61998C44.33446-23.18765 42.253-25.2691 39.68535-25.2691 37.11769-25.2691 35.03624-23.18765 35.03624-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 505.761 168.82953)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-440.674" x="121.756 124.24664 126.45834 127.84315 130.05484 132.54549 135.03614 137.52678 139.18555">batchnorm</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_8)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_9)">
+<image x="69" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAkklEQVR4nI3KR04CAAAAwf3/2xBUsIAFGzZQwYLGGJcvbOY6/NuQ 459Nj782Pf7Y8G3D1oYvGz5t+LDh3YaNDWsb3mx4teHFhpUNSxuebXiy4dGGBxvu bVjYcGfDrQ03NlzbcGXD3IZLGy5sOLfhzIaZDVMbTm04seHYhiMbJjaMbTi04cCG fRtGNgxt2LNhYLMDap6JFv8ZG84AAAAASUVORK5CYII="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#00ff00" d="M44.95757 0V20.61998C44.95757 23.18765 47.03902 25.2691 49.60667 25.2691 52.17433 25.2691 54.2558 23.18765 54.2558 20.61998V-20.61998C54.2558-23.18765 52.17433-25.2691 49.60667-25.2691 47.03902-25.2691 44.95757-23.18765 44.95757-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 520.247 174.18555)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-445.239" x="131.677 134.99953 137.21123 140.2548">ReLU</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_10)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_11)">
+<image x="79" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAA30lEQVR4nI3KxZEEARDEwPLftmNmHmbGnb42QY+M0EM6jsMI4fG0 n4zg477uRvBxmzcjtE0egNZxNULr4AFo6RcjtHQegOZ2NkJz4wFoqicjNFUegMZy NEJj4QFoyAcjNGQegPq0N0J94gGoizsj1EUegNqwNUJt4AGo+WuMUPPrAaj+qY1Q /e0BqPqqjFD16QGo/CiNUPnuAah4K4xQ8eoBKH/JjVD+7AEoe8qMUPboASh9SI1Q eu8BKLlLjFBy6wEovomNUHztASi6ioxQdOkBKLwIjVB47gEoOAuM+Adfs4f0vCnr nAAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#800080" d="M54.8789 0V20.61998C54.8789 23.18765 56.96036 25.2691 59.52802 25.2691 62.09569 25.2691 64.17714 23.18765 64.17714 20.61998V-20.61998C64.17714-23.18765 62.09569-25.2691 59.52802-25.2691 56.96036-25.2691 54.8789-23.18765 54.8789-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 524.355 189.91953)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-439.426" x="141.598 145.47347 147.68517 150.17581 152.66646 155.1571 157.64775 159.03255 160.41735 162.90799">maxpooling</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M63.89343 0H69.44124"/>
+<path transform="matrix(1,0,0,-1,93.64824,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_12)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_13)">
+<image x="94" y="11" width="11" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAsAAAAzCAYAAABBhfLmAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAyUlEQVR4nJXKRXICAAAEwf3/27Agwd1dAxRFMfnCcOhbh88HK9/l 9xvry/x6YX2Zn0+s8HhghfsdK/z9YYXbDStcr1jhcsEK5zNWOJ2wwvGIFQ4HrLDf Y4XdDitst1hhs8EK6zVWWK2wwnKJFRYLrDCfY4XZDCtMp1hhMsEK4zFWGI2wwnCI FQYDrNDvY4VeDyt0u1ih08EK7TZWaLWwQrOJFX5/sUKjgRXqdaxQq2GFahUr/Pxg hUoFK5TLWKFUwgrFIlYoFLD+Ac3TSgNfJM4HAAAAAElFTkSuQmCC"/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#ff0000" d="M70.7531 0V20.61998C70.7531 23.18765 72.83455 25.2691 75.40222 25.2691 77.96988 25.2691 80.05133 23.18765 80.05133 20.61998V-20.61998C80.05133-23.18765 77.96988-25.2691 75.40222-25.2691 72.83455-25.2691 70.7531-23.18765 70.7531-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 541.23007 204.79254)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-440.427" x="157.472 159.6837 162.17435 164.46575 168.20172 170.69237 172.07717 174.56781 176.77951">convblock</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_14)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_15)">
+<image x="104" y="11" width="11" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAsAAAAzCAYAAABBhfLmAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAqElEQVR4nJXKR1JCAQDA0Nz/bPbeAHsBBbuO4/jNEfIXL6vwNwxD xaj511Tj5h9TjZu/TcWXqfg0FR+m4t1UvJmKV1PxYiqeTcXKVCxNxZOpeDQVC1Mx NxUPpuLeVNyZiltTcWMqrk3Flam4NBUXpuLcVMxMxdRUTEzFmak4NRUnpuLYVByZ ikNTcWAq9k3FnqnYNRU7pmLbVGyZik1TsWEq1k3Fmqn+AV1ugtxbxMADAAAAAElF TkSuQmCC"/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#00aeef" d="M80.67445 0V20.61998C80.67445 23.18765 82.75592 25.2691 85.32358 25.2691 87.89124 25.2691 89.97269 23.18765 89.97269 20.61998V-20.61998C89.97269-23.18765 87.89124-25.2691 85.32358-25.2691 82.75592-25.2691 80.67445-23.18765 80.67445-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 545.103 220.76355)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="167.393 168.7778 171.26845 173.48015 175.9708 177.35559 178.74039 180.12519 183.86116 186.3518 187.7366 190.22725 192.43895">identityblock</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 545.103 220.76355)" font-size="4.9813" font-family="'Computer Modern', sans-serif" font-style="italic"><tspan y="-434.377" x="194.93001">×</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 545.103 220.76355)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="198.8">2</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M89.689 0H95.23647"/>
+<path transform="matrix(1,0,0,-1,119.443477,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_16)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_17)">
+<image x="120" y="11" width="11" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAsAAAAzCAYAAABBhfLmAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAyUlEQVR4nJXKRXICAAAEwf3/27Agwd1dAxRFMfnCcOhbh88HK9/l 9xvry/x6YX2Zn0+s8HhghfsdK/z9YYXbDStcr1jhcsEK5zNWOJ2wwvGIFQ4HrLDf Y4XdDitst1hhs8EK6zVWWK2wwnKJFRYLrDCfY4XZDCtMp1hhMsEK4zFWGI2wwnCI FQYDrNDvY4VeDyt0u1ih08EK7TZWaLWwQrOJFX5/sUKjgRXqdaxQq2GFahUr/Pxg hUoFK5TLWKFUwgrFIlYoFLD+Ac3TSgNfJM4HAAAAAElFTkSuQmCC"/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#ff0000" d="M96.54866 0V20.61998C96.54866 23.18765 98.63011 25.2691 101.19777 25.2691 103.76543 25.2691 105.84688 23.18765 105.84688 20.61998V-20.61998C105.84688-23.18765 103.76543-25.2691 101.19777-25.2691 98.63011-25.2691 96.54866-23.18765 96.54866-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 567.026 230.58856)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-440.427" x="183.267 185.4787 187.96935 190.26074 193.99672 196.48737 197.87216 200.36281 202.57451">convblock</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_18)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_19)">
+<image x="130" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAApklEQVR4nI3KWTKDAQDA4Nz/bCiKUnuppfYqOh3jlyPk4ctT+BuG oSCPv6bo48YUfVybgh9T8G0KvkzByhR8moKlKfgwBe+m4M0UvJqCF1PwbAqeTMHC FDyaggdTcG8K7kzB3BTcmoIbUzAzBdem4MoUXJqCC1NwbgrOTMGpKZiaghNTcGwK JqbgyBQcmoIDUzA2BfumYM8U7JqCkSnYMQXbpmDLFP/dL7zEkbfFggAAAABJRU5E rkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#00aeef" d="M106.47 0V20.61998C106.47 23.18765 108.55145 25.2691 111.11911 25.2691 113.68677 25.2691 115.76822 23.18765 115.76822 20.61998V-20.61998C115.76822-23.18765 113.68677-25.2691 111.11911-25.2691 108.55145-25.2691 106.47-23.18765 106.47-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 570.898 246.55854)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="193.188 194.5728 197.06345 199.27515 201.7658 203.15059 204.53539 205.92018 209.65616 212.1468 213.5316 216.02225 218.23395">identityblock</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 570.898 246.55854)" font-size="4.9813" font-family="'Computer Modern', sans-serif" font-style="italic"><tspan y="-434.377" x="220.725">×</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 570.898 246.55854)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="224.595">3</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M115.48453 0H121.03201"/>
+<path transform="matrix(1,0,0,-1,145.23902,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_20)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_21)">
+<image x="146" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAx0lEQVR4nJXKRXICAAAEwf3/23B3CxbcoSiKyRcmh751+H4x4uPn g/GP+H5j/CO+Xhjh+cQIjwdGuN8xwu2GEa5XjHC5YITzGSOcThjheMQIhwNG2O8x wm6HEbZbjLDZYITfX4ywXmOE1QojLJcYYbHACPM5Rvj5wQizGUaYTjHCZIIRxmOM MBphhOEQIwwGGKHfxwi9HkbodjFCp4MR2m2M0GphhGYTIzQaGKFexwi1GkaoVjFC pYIRymWMUCphhGIRIxQKGH+eTIkWYyrFFAAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#ff0000" d="M122.3439 0V20.61998C122.3439 23.18765 124.42535 25.2691 126.99301 25.2691 129.56069 25.2691 131.64214 23.18765 131.64214 20.61998V-20.61998C131.64214-23.18765 129.56069-25.2691 126.99301-25.2691 124.42535-25.2691 122.3439-23.18765 122.3439-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 592.82107 256.38356)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-440.427" x="209.062 211.2737 213.76435 216.05574 219.79172 222.28237 223.66716 226.1578 228.3695">convblock</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_22)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_23)">
+<image x="156" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAApklEQVR4nI3KWTKDAQDA4Nz/bCiKUnuppfYqOh3jlyPk4ctT+BuG oSCPv6bo48YUfVybgh9T8G0KvkzByhR8moKlKfgwBe+m4M0UvJqCF1PwbAqeTMHC FDyaggdTcG8K7kzB3BTcmoIbUzAzBdem4MoUXJqCC1NwbgrOTMGpKZiaghNTcGwK JqbgyBQcmoIDUzA2BfumYM8U7JqCkSnYMQXbpmDLFP/dL7zEkbfFggAAAABJRU5E rkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#00aeef" d="M132.26523 0V20.61998C132.26523 23.18765 134.34668 25.2691 136.91436 25.2691 139.48201 25.2691 141.56346 23.18765 141.56346 20.61998V-20.61998C141.56346-23.18765 139.48201-25.2691 136.91436-25.2691 134.34668-25.2691 132.26523-23.18765 132.26523-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 596.693 272.35353)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="218.983 220.3678 222.85845 225.07015 227.56079 228.94559 230.33039 231.71518 235.45116 237.9418 239.3266 241.81725 244.02895">identityblock</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 596.693 272.35353)" font-size="4.9813" font-family="'Computer Modern', sans-serif" font-style="italic"><tspan y="-434.377" x="246.52">×</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 596.693 272.35353)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="250.39">5</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M141.27976 0H146.82756"/>
+<path transform="matrix(1,0,0,-1,171.03456,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_24)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_25)">
+<image x="172" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAx0lEQVR4nJXKRXICAAAEwf3/23B3CxbcoSiKyRcmh751+H4x4uPn g/GP+H5j/CO+Xhjh+cQIjwdGuN8xwu2GEa5XjHC5YITzGSOcThjheMQIhwNG2O8x wm6HEbZbjLDZYITfX4ywXmOE1QojLJcYYbHACPM5Rvj5wQizGUaYTjHCZIIRxmOM MBphhOEQIwwGGKHfxwi9HkbodjFCp4MR2m2M0GphhGYTIzQaGKFexwi1GkaoVjFC pYIRymWMUCphhGIRIxQKGH+eTIkWYyrFFAAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#ff0000" d="M148.13944 0V20.61998C148.13944 23.18765 150.2209 25.2691 152.78856 25.2691 155.35622 25.2691 157.43767 23.18765 157.43767 20.61998V-20.61998C157.43767-23.18765 155.35622-25.2691 152.78856-25.2691 150.2209-25.2691 148.13944-23.18765 148.13944-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 618.616 282.17857)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-440.427" x="234.857 237.0687 239.55934 241.85074 245.58672 248.07736 249.46216 251.9528 254.1645">convblock</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_26)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_27)">
+<image x="182" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAApklEQVR4nI3KWTKDAQDA4Nz/bCiKUnuppfYqOh3jlyPk4ctT+BuG oSCPv6bo48YUfVybgh9T8G0KvkzByhR8moKlKfgwBe+m4M0UvJqCF1PwbAqeTMHC FDyaggdTcG8K7kzB3BTcmoIbUzAzBdem4MoUXJqCC1NwbgrOTMGpKZiaghNTcGwK JqbgyBQcmoIDUzA2BfumYM8U7JqCkSnYMQXbpmDLFP/dL7zEkbfFggAAAABJRU5E rkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#00aeef" d="M158.06079 0V20.61998C158.06079 23.18765 160.14225 25.2691 162.7099 25.2691 165.27756 25.2691 167.35901 23.18765 167.35901 20.61998V-20.61998C167.35901-23.18765 165.27756-25.2691 162.7099-25.2691 160.14225-25.2691 158.06079-23.18765 158.06079-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 622.48806 298.14854)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="244.779 246.1638 248.65445 250.86615 253.3568 254.7416 256.1264 257.5112 261.2472 263.73786 265.12266 267.6133 269.825">identityblock</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 622.48806 298.14854)" font-size="4.9813" font-family="'Computer Modern', sans-serif" font-style="italic"><tspan y="-434.377" x="272.315">×</tspan></text>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 622.48806 298.14854)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-434.377" x="276.185">2</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M167.07532 0H172.6231"/>
+<path transform="matrix(1,0,0,-1,196.8301,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_28)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_29)">
+<image x="198" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAA30lEQVR4nI3KxZEEARDEwPLftmNmHmbGnb42QY+M0EM6jsMI4fG0 n4zg477uRvBxmzcjtE0egNZxNULr4AFo6RcjtHQegOZ2NkJz4wFoqicjNFUegMZy NEJj4QFoyAcjNGQegPq0N0J94gGoizsj1EUegNqwNUJt4AGo+WuMUPPrAaj+qY1Q /e0BqPqqjFD16QGo/CiNUPnuAah4K4xQ8eoBKH/JjVD+7AEoe8qMUPboASh9SI1Q eu8BKLlLjFBy6wEovomNUHztASi6ioxQdOkBKLwIjVB47gEoOAuM+Adfs4f0vCnr nAAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#800080" d="M173.935 0V20.61998C173.935 23.18765 176.01645 25.2691 178.5841 25.2691 181.15177 25.2691 183.23323 23.18765 183.23323 20.61998V-20.61998C183.23323-23.18765 181.15177-25.2691 178.5841-25.2691 176.01645-25.2691 173.935-23.18765 173.935-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 639.42 312.96455)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-435.436" x="260.653 262.76509 265.18104 267.39274 269.0515 271.2632 273.75389 277.2109 279.70158 282.19224 284.6829 286.0677 287.45249 289.94316">averagepooling</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_30)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_31)">
+<image x="208" y="11" width="10" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAoAAAAzCAYAAACuR5nYAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAwUlEQVR4nJXKx0ECABQFwdd/beYsgpmcMyKy/hKWw9wmHI8Y8fHv gHFCPOwxToi/O4yKW4yw32BUXGOEnxVGxSVG2C0wKs4xwnaGUXGKETYTjIpjjLAe YVQcYoTVAKNiHyMsexgVuxhh0cGo2MYI82+Mil8YYfaJUfEDI0zfMSq+YYTJK0bF FkYYNzEqvmCEUQOj4jNGGD5hVHzECIMHjIr3GKF/h1HxFiP0bjAqXmOE7hVGxUuM 0LnAqHiOEdpnGP/r9qJc8s6DIgAAAABJRU5ErkJggg=="/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#ff8000" d="M183.85633 0V20.61998C183.85633 23.18765 185.93778 25.2691 188.50543 25.2691 191.07309 25.2691 193.15456 23.18765 193.15456 20.61998V-20.61998C193.15456-23.18765 191.07309-25.2691 188.50543-25.2691 185.93778-25.2691 183.85633-23.18765 183.85633-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 659.005 313.22157)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-445.1" x="270.574 273.3436 275.5553 276.9401 278.3249 280.5366">ﬂatten</tspan></text>
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_32)">
+<g clip-path="url(#osdi23-052-fig2-gradient-pill-stage-level-chain-clip_33)">
+<image x="217" y="11" width="11" height="51" xlink:href="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAsAAAAzCAYAAABBhfLmAAAACXBIWXMAAA7EAAAO xAGVKw4bAAAAyUlEQVR4nJXKRXICAAAEwf3/27Agwd1dAxRFMfnCcOhb5/MBK1/l 9xus7/LrBdZ3+fkEK48HWLnfwcrfH1i53cDK9QpWLhewcj6DldMJrByPYOVwACv7 PVjZ7cDKdgtWNhuwsl6DldUKrCyXYGWxACvzOViZzcDKdApWJhOwMh6DldEIrAyH YGUwACv9Pljp9cBKtwtWOh2w0m6DlVYLrDSbYOX3F6w0GmClXgcrtRpYqVbBys8P WKlUwEq5DFZKJbBSLIKVQgGsf1whSgMN7qFbAAAAAElFTkSuQmCC"/>
+</g>
+</g>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".59776" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#0000ff" d="M193.77768 0V20.61998C193.77768 23.18765 195.85913 25.2691 198.42679 25.2691 200.99446 25.2691 203.07592 23.18765 203.07592 20.61998V-20.61998C203.07592-23.18765 200.99446-25.2691 198.42679-25.2691 195.85913-25.2691 193.77768-23.18765 193.77768-20.61998Z"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 659.728 332.34056)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-435.902" x="280.495 282.15379 284.64445 286.02925 287.41404 291.15003 293.36174 295.8524 298.34306 300.8337 303.0454 305.2571 306.6419 308.8536">fullyconnected</tspan></text>
+<path transform="matrix(1,0,0,-1,24.207,36.42154)" stroke-width=".3985" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M202.79219 0H208.34"/>
+<path transform="matrix(1,0,0,-1,232.547,36.42154)" d="M1.99252 0-1.19551 1.59401 0 0-1.19551-1.59401"/>
+<text xml:space="preserve" transform="matrix(0 -1 1 0 689.99 333.63655)" font-size="4.9813" font-family="'Nimbus Roman No9 L', sans-serif"><tspan y="-450.335" x="290.296 293.8925 296.38316 297.76795 300.2586 302.74928">Output</tspan></text>
+</g>
+</g>
+</svg>

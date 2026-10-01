@@ -1,0 +1,179 @@
+{
+  "paper_id": "nsdi24-003",
+  "fig": "1",
+  "system": {
+    "name": "OctoSketch",
+    "one_liner": "a system enabling real-time, continuous network monitoring over multiple CPU cores",
+    "domain": [
+      "networking",
+      "measurement",
+      "multicore-systems"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "NIC",
+        "role": "distributes incoming packets into multiple Rx queues across cores",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Core 1",
+        "role": "a CPU core polling packets from the NIC and running driver, application, and monitoring",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Core 2",
+        "role": "another CPU core with the same driver/application/monitoring stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Core 3",
+        "role": "another CPU core with the same driver/application/monitoring stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Driver (e.g., DPDK PMD)",
+        "role": "polls packets from one or more NIC queues on a core",
+        "container": "Core 1",
+        "novel": false
+      },
+      {
+        "name": "Application (e.g., load balancer)",
+        "role": "the multicore network application processing packets on a core",
+        "container": "Core 1",
+        "novel": false
+      },
+      {
+        "name": "Monitoring",
+        "role": "per-core measurement program that shares CPU resources with the driver and application on that core",
+        "container": "Core 1",
+        "novel": false
+      },
+      {
+        "name": "Aggregator",
+        "role": "collects and combines per-core monitoring results into a global measurement result",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "NIC",
+        "to": "Core 1",
+        "what": "packets polled from one or more Rx queues",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "Core 2",
+        "what": "packets polled from one or more Rx queues",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "Core 3",
+        "what": "packets polled from one or more Rx queues",
+        "step": null
+      },
+      {
+        "from": "Monitoring",
+        "to": "Aggregator",
+        "what": "per-core monitoring statistics from Core 1",
+        "step": null
+      },
+      {
+        "from": "Monitoring",
+        "to": "Aggregator",
+        "what": "per-core monitoring statistics from Core 2",
+        "step": null
+      },
+      {
+        "from": "Monitoring",
+        "to": "Aggregator",
+        "what": "per-core monitoring statistics from Core 3",
+        "step": null
+      }
+    ],
+    "key_idea": "Driver, application, and monitoring code all compete for the same per-core CPU resources once the NIC spreads traffic across cores, so per-core monitoring results must then be aggregated globally.",
+    "reading_order": "Top to bottom: traffic enters the NIC and fans into three identical core columns, each stacking Driver, Application, and Monitoring, collected on the left by the Aggregator."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.8,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill for the NIC bar and the downward distribution arrows"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "pale yellow fill for the Monitoring row and the Aggregator box"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "light gray fill for the Driver row"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "pale blue fill for the Application row"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark borders on boxes (~0.38pt), dashed cell borders inside the core columns",
+    "font": "sans-serif (ArialMT), 6-7pt",
+    "corners": "square",
+    "arrows": "solid blue arrows fanning out from NIC into each core, labelled 'poll queues in NIC'; curved arrows from each core's Monitoring row into the Aggregator",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray marks the Driver layer, pale blue the Application layer, and pale yellow the Monitoring layer, applied consistently across all three core columns; blue also marks the NIC and its distribution arrows",
+    "line_style_means": "straight blue arrows show packets distributed from the NIC into each core; curved arrows show each core's Monitoring output being collected by the Aggregator",
+    "emphasis": "drawing Driver/Application/Monitoring as three stacked, identically colored bands repeated across three core columns emphasizes that all three functions compete for the same per-core resources on every core",
+    "reusable_patterns": [
+      "grid of repeated per-instance layers (row = layer, column = core/replica) to show resource sharing at scale",
+      "fan-out from a single source (NIC) into parallel identical units, fanned back into a single aggregator"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "multicore",
+    "network-monitoring",
+    "packet-distribution",
+    "resource-sharing",
+    "aggregation",
+    "dpdk"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "The NIC will distribute the incoming packets into multiple Rx queues, and each CPU core will poll packets",
+      "The resource in each core is shared between drivers, applications, and monitoring programs",
+      "Figure 1 shows a typical workflow for monitoring traffic distributed over multiple cores"
+    ]
+  },
+  "summary": "Figure 1 illustrates the motivating multicore monitoring problem that OctoSketch addresses. Incoming traffic arrives at a NIC, which distributes packets into multiple Rx queues; three CPU cores (Core 1, Core 2, Core 3) each poll one or more of these queues through a Driver (e.g., DPDK PMD). On every core, the polled packets are then handed to an Application (e.g., a load balancer) and, in parallel, to a Monitoring program, both of which compete with the driver for the same per-core CPU resources. Each core's Monitoring output is collected by a single Aggregator on the left, which must combine per-core statistics into a global, timely measurement result. The figure is drawn as a grid with Driver, Application, and Monitoring as three identically colored horizontal bands repeated across the three core columns, emphasizing the shared-resource and aggregation challenges of monitoring at multicore scale.",
+  "summary_zh": "图1展示OctoSketch面对的多核监控问题：NIC将流量分发到多个Rx队列，三个CPU核各自通过驱动轮询并运行应用与监控程序，三者共享同一核资源；各核监控结果再由左侧Aggregator聚合，构成典型的多核监控工作流。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

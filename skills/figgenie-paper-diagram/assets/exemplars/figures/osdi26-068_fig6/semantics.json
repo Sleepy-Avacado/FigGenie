@@ -1,0 +1,253 @@
+{
+  "paper_id": "osdi26-068",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "Jetpack",
+    "one_liner": "a consensus system that makes fast-path commitment (CURP) generally safe when layered atop Raft",
+    "domain": [
+      "distributed-consensus",
+      "Raft",
+      "fault-tolerance"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how two view-change gaps in CURP+Raft let conflicting commands A and B silently violate fast-commit durability or ordering",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "witness instance",
+        "kind": "label",
+        "role": "legend: circle symbol representing a CURP witness replica's state",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Raft log instance",
+        "kind": "label",
+        "role": "legend: square symbol representing a server's Raft log",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Raft leader",
+        "kind": "label",
+        "role": "legend: crown icon marking which server is currently the elected leader",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "client request",
+        "kind": "label",
+        "role": "legend: black arrow symbol for a client's command submission",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "getRecoveryData",
+        "kind": "label",
+        "role": "legend: red arrow symbol for the leader's witness-freezing recovery message",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "end & start",
+        "kind": "label",
+        "role": "legend: blue arrow symbol for the message that resets witness state and resumes normal processing",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "replication",
+        "kind": "label",
+        "role": "legend: green arrow symbol for Raft log replication between servers",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S1",
+        "kind": "actor",
+        "role": "first server/replica row, tracked across every lettered frame",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S2",
+        "kind": "actor",
+        "role": "second server/replica row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S3",
+        "kind": "actor",
+        "role": "third server/replica row, becomes leader in Case 1",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "S4",
+        "kind": "actor",
+        "role": "fourth server/replica row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S5",
+        "kind": "actor",
+        "role": "fifth server/replica row, becomes leader in both cases before crashing",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Term",
+        "kind": "label",
+        "role": "per-server, per-panel counter showing the Raft term each replica believes it is in",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "client request",
+        "to": "S1",
+        "what": "a client submits a command directly to whichever server is currently believed to be the leader",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Raft leader",
+        "to": "witness instance",
+        "what": "getRecoveryData from the new leader freezes and collects state from every witness during a view change",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Raft leader",
+        "to": "witness instance",
+        "what": "end & start messages reset witness state after recovery completes",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Raft log instance",
+        "to": "Raft log instance",
+        "what": "the leader replicates its Raft log entries to the other replicas",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Case 1",
+        "axis": "alternatives",
+        "differs": "a gap related to R1: a fast-committed command A can be silently lost when a stale witness (S1) later clears its state during a delayed recovery, letting a new leader (S3) insert command B in its place",
+        "verdict": "gap"
+      },
+      {
+        "label": "Case 2",
+        "axis": "alternatives",
+        "differs": "a gap related to R2: after S1 recovers and is re-elected, it appends recovered command B after its own uncommitted command A and commits both, breaking the promised commit order from the previous term",
+        "verdict": "gap"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Two lettered replay scenarios show how CURP+Raft's view-change recovery can either silently drop a fast-committed command (Case 1) or let a recovered leader commit two conflicting commands out of their promised order (Case 2).",
+    "reading_order": "Left to right through Case 1's six lettered frames (a-f) on top, tracking server rows S1-S5 and their witness/log state and term; then through Case 2's four frames (a-d) below."
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 10,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 6,
+    "column": "double",
+    "aspect": 2.32,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#595959",
+        "used_for": "dark-grey text, server labels (S1-S5), and 'Term' captions"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue 'end & start' arrows"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red 'getRecoveryData' arrows"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "green 'replication' arrows"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light-grey fill marking a crashed or stale replica's witness/log boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat, with crashed replicas shown in flat grey fill",
+    "stroke": "thin black outlines on every witness circle and log square",
+    "corners": "square",
+    "arrows": "colour-coded straight arrows for client requests, getRecoveryData, end & start, and replication messages",
+    "font": "serif (Times New Roman) body text with Helvetica Neue for some labels",
+    "icons": "a small crown icon marking the current Raft leader; a small burst/explosion icon marking a replica crash"
+  },
+  "encoding": {
+    "color_means": "arrow colour names the message kind - black for client requests, red for getRecoveryData, blue for end & start, green for replication - while grey fill marks a crashed or stale-witness replica",
+    "line_style_means": "all message arrows are solid; no dashed lines are used, so timing and order are conveyed by left-to-right frame position and by the crown/crash icons rather than by line style",
+    "state_means": "each server's row is redrawn in every lettered frame with its witness (circle) and log (square) contents, term number, leader crown, and crash icon updated to show that server's state at that moment",
+    "marker_means": "letters (a) through (f)/(d) order the frames in time; the crown marks the current leader and the burst icon marks a crash",
+    "emphasis": "the crown and crash icons, plus the colour-coded arrows converging on one server, draw the eye to exactly which replica is acting (or failing) in each frame",
+    "reusable_patterns": [
+      "a fixed 5-row server roster redrawn frame by frame with coloured message arrows and leader/crash icons updating state, repeated once per failure-case row"
+    ],
+    "weaknesses": [
+      "ten densely lettered frames with five server rows each pack in a great deal of state, so tracking one specific replica across the full sequence takes careful attention",
+      "the difference between a plain grey fill (stale) and a grey fill with a burst icon (crashed) is subtle at this figure's size"
+    ]
+  },
+  "tags": [
+    "consensus",
+    "Raft",
+    "CURP",
+    "view-change",
+    "fast-path-commit",
+    "Jetpack",
+    "distributed-protocol"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Handling View Changes",
+      "§6 Case Studies and Evaluation"
+    ],
+    "evidence": [
+      "the new leader broadcasts getRecoveryData to all witnesses",
+      "the new leader can insert a different command B where A should appear.",
+      "replicas carrying stale commands are never eligible for election, preventing this case by construction"
+    ]
+  },
+  "summary": "Figure 6 walks through two view-change failure scenarios in CURP+Raft using a five-server roster (S1-S5) redrawn across lettered frames, each server shown as a witness circle plus a Raft-log square, with colour-coded arrows for client requests, getRecoveryData, end-and-start, and replication messages. Case 1 (a-f) shows how command A can be fast-committed by a superquorum that includes S1's stale witness, but when a delayed end-and-start message later clears S1's witness state during a view change to leader S5 and then S3, the new leader S3 inserts a different command B in A's place, permanently losing the already fast-committed A. Case 2 (a-d) shows leader S1 committing unacknowledged command A, crashing and recovering after S5 fast-commits B, then re-appending and committing both A and B in an order that violates the prior term's ordering guarantee.",
+  "summary_zh": "图6用五节点见证者/日志状态追踪CURP+Raft两种视图切换缺陷：情形1中新领导者用命令B覆盖已快提交的命令A致其丢失；情形2中恢复后按A、B顺序提交，违反此前任期的提交顺序保证。",
+  "confidence": "high",
+  "notes": "corrected base from the prior 'state-machine' to 'timeline': the prior pass's own note already flagged this as lettered state-frames rather than a node/edge FSM, matching the figure's own caption ('Time sequence illustrating...').",
+  "venue": "OSDI26"
+}

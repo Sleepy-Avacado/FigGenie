@@ -1,0 +1,195 @@
+{
+  "paper_id": "nsdi24-095",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "BoS",
+    "one_liner": "an in-network data plane that runs NN-driven (binary RNN + escalation to a transformer) traffic analysis at line-speed",
+    "domain": [
+      "networking",
+      "ml-systems",
+      "security"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "comparing two ways to implement RNN time steps on a switch: storing hidden states versus storing embedding vectors",
+    "base": "component",
+    "elements": [
+      {
+        "name": "h_t",
+        "kind": "port",
+        "role": "the GRU cell's hidden-state output at the current time step",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GRU",
+        "kind": "box",
+        "role": "the recurrent cell computing the new hidden state from the input event and its own previous output via a self-loop",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ev_t",
+        "kind": "port",
+        "role": "the input event/embedding fed to the GRU at the current time step",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "ev_t",
+        "to": "GRU",
+        "what": "input event enters the cell",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "GRU",
+        "to": "h_t",
+        "what": "cell outputs the hidden state",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "GRU",
+        "to": "GRU",
+        "what": "self-loop: the hidden state feeds back as the cell's own recurrent input",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) RNN cell",
+        "axis": "alternatives",
+        "differs": "the baseline template: one GRU cell with a self-loop turning its own output h_t back into a recurrent input",
+        "verdict": null
+      },
+      {
+        "label": "(b) solution 1",
+        "axis": "alternatives",
+        "differs": "unrolls the self-loop across pipeline stages in time and keeps the hidden state (h_{t-1}, h_t) in switch storage (yellow highlight), reading and writing it as each new event ev_t arrives",
+        "verdict": null
+      },
+      {
+        "label": "(c) solution 2",
+        "axis": "alternatives",
+        "differs": "instead keeps the sequence of input events (ev_1...ev_t) in switch storage (yellow highlight) and re-runs the full chain of GRU cells across serial stages for every new packet",
+        "verdict": "adopted"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Because a switch register can only be read/written once per packet, BoS cannot keep a GRU cell's self-loop; it must unroll RNN time steps across pipeline stages, storing either the running hidden state (solution 1) or the input embeddings (solution 2).",
+    "reading_order": "left to right across the three panels: (a) the plain single-cell RNN template, (b) solution 1's hidden-state storage with the highlight on h_{t-1}/h_t, and (c) solution 2's embedding storage spanning ev_1 through ev_t."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.46,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#82b366",
+        "used_for": "fill/border of the solid, active 'GRU' boxes"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "fill of the faded/greyed-out 'GRU' boxes for non-active unrolled time steps"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "fill of the solid, active 'ev_t' input circles"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "border colour of the 'ev_t' input circles"
+      },
+      {
+        "hex": "#dcadf4",
+        "used_for": "fill of the 'h_t' hidden-state output circles"
+      },
+      {
+        "hex": "#582351",
+        "used_for": "border colour of the 'h_t' circles"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "fill of the 'switch storage' highlight halo/pill and its legend swatch"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "border colour of the 'switch storage' highlight"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "fill/text colour of greyed-out, not-currently-active elements"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "matching-hue borders on each box/circle (green GRU, blue ev, purple h, gold switch-storage highlight); greyed elements use light grey throughout",
+    "corners": "mixed (rounded pill/circle nodes, rectangular GRU boxes)",
+    "arrows": "black solid arrows for active dataflow; light grey arrows for the faded, non-highlighted time steps; a self-loop arrow around the lone GRU cell in panel (a)",
+    "font": "GillSansMT sans-serif",
+    "icons": "none beyond the coloured box/circle/pill glyphs"
+  },
+  "encoding": {
+    "color_means": "green fills every GRU cell, blue every input event ev, and purple every hidden state h, regardless of panel; a yellow halo or pill additionally marks whichever value(s) must be kept in switch storage; grey marks elements that are faded because they are not part of the current computation step",
+    "line_style_means": "solid black arrows are the active dataflow; the same arrows fade to light grey where they lead into a greyed-out, non-active cell",
+    "state_means": "the three panels are told apart by their (a)/(b)/(c) titles and by which values carry the yellow switch-storage highlight; within panel (b), 'active' vs 'not yet/already processed' time steps are told apart by solid colour versus grey fade",
+    "marker_means": "no numbered markers; a small legend swatch spells out that the yellow halo/pill means 'switch storage'; green ellipsis dots stand in for the omitted middle time steps in panel (c)",
+    "emphasis": "greying out every element except the current time step in panel (b), and encircling the whole run of stored embeddings in one yellow pill in panel (c), makes it visually obvious what each solution must keep resident in switch memory",
+    "reusable_patterns": [
+      "a baseline single-cell diagram compared against two unrolled-in-time variants, with a yellow highlight marking exactly which values must be kept in limited on-device storage"
+    ],
+    "weaknesses": [
+      "panel (b)'s greyed-out ev_{t+1} and its arrow are cut off at the panel's dashed border, which could read as a truncation error rather than an intentional 'continues beyond this frame' cue",
+      "the two blue hex values (#6c8ebf and #6d8ebf) recorded in the source are nearly identical, suggesting an unintentional duplicate colour rather than a deliberate second shade"
+    ]
+  },
+  "tags": [
+    "RNN",
+    "GRU",
+    "programmable-switch",
+    "data-plane-inference",
+    "hidden-state-storage",
+    "Brain-on-Switch"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Data Plane Friendly RNN Architecture"
+    ],
+    "evidence": [
+      "The design choices for RNN time steps.",
+      "we need to expand RNN time steps in serial stages, as shown in Figure 3(b), where the read write of",
+      "We adopt this solution in the final prototype as it consumes fewer hardware resources."
+    ]
+  },
+  "summary": "Figure 3 compares two ways BoS can unroll RNN time steps onto a switch pipeline, starting from the plain RNN cell template in (a): one GRU box that feeds its own hidden-state output h_t back into itself as a recurrent input. Because a switch register can be read and written only once per packet, that self-loop cannot survive as drawn, so (b) 'solution 1' spreads the loop across pipeline stages by storing the running hidden state (h_{t-1}, h_t, shown inside a yellow 'switch storage' halo) and re-injecting it at each new event ev_t, while surrounding, not-currently-active time steps are greyed out. Alternative (c) 'solution 2' instead keeps the whole sequence of input embeddings ev_1...ev_t in switch storage and re-executes the full chain of GRU cells in serial stages for every new packet. BoS adopts solution 2 in its final prototype because it uses fewer hardware resources.",
+  "summary_zh": "图3对比BoS展开RNN时间步的两种方案：(a)原始GRU单元自环；(b)方案一将隐藏状态存入交换机存储并跨流水线级读写；(c)方案二改存嵌入向量序列，最终因硬件开销更小被采用。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

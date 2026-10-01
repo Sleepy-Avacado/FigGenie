@@ -1,0 +1,230 @@
+{
+  "paper_id": "nsdi25-036",
+  "fig": "2",
+  "system": {
+    "name": "LoopTailor",
+    "one_liner": "an end-to-end VSync regulator that decouples game rendering from the cloud pipeline and coordinates VSync timing with the client",
+    "domain": [
+      "mobile-cloud-gaming",
+      "virtualization"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Client",
+        "role": "mobile device that displays rendered frames and decodes incoming video",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Display",
+        "role": "renders the final game frame to the player",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Layer Composition",
+        "role": "composites decoded layers before display",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Frame Decoding",
+        "role": "decodes the video-encoded game frame received from the cloud",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Network",
+        "role": "carries user inputs to the cloud and encoded game frames back to the client",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cloud",
+        "role": "cloud-side host running the mobile game inside a virtualized Android emulator",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host OS",
+        "role": "host operating system on the cloud server that runs the Emulator",
+        "container": "Cloud",
+        "novel": false
+      },
+      {
+        "name": "Emulator",
+        "role": "virtual machine emulating an Android device to run the mobile game",
+        "container": "Host OS",
+        "novel": false
+      },
+      {
+        "name": "Android",
+        "role": "guest OS inside the Emulator where the game executes and renders frames",
+        "container": "Emulator",
+        "novel": false
+      },
+      {
+        "name": "Input Injection",
+        "role": "injects the client's user inputs into the guest Android system, triggering VSync1",
+        "container": "Emulator",
+        "novel": false
+      },
+      {
+        "name": "Game Rendering",
+        "role": "guest-side rendering stage that produces each game frame",
+        "container": "Emulator",
+        "novel": false
+      },
+      {
+        "name": "Game Frame Interceptor",
+        "role": "captures game frames directly from rendering and submits them to encoding, bypassing VSync2 and VSync3",
+        "container": "Emulator",
+        "novel": true
+      },
+      {
+        "name": "Frame Encoding",
+        "role": "encodes the captured game frame for network transmission, triggering VSync4",
+        "container": "Emulator",
+        "novel": false
+      },
+      {
+        "name": "Remote VSync Coordinator",
+        "role": "forecasts and synchronizes the remaining VSync events (VSync1, VSync4, VSync5) across the cloud and client",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client",
+        "to": "Network",
+        "what": "user inputs",
+        "step": null
+      },
+      {
+        "from": "Network",
+        "to": "Input Injection",
+        "what": "user inputs (VSync1)",
+        "step": null
+      },
+      {
+        "from": "Input Injection",
+        "to": "Game Rendering",
+        "what": "injected input driving the guest game",
+        "step": null
+      },
+      {
+        "from": "Game Rendering",
+        "to": "Game Frame Interceptor",
+        "what": "captured game frame",
+        "step": null
+      },
+      {
+        "from": "Game Frame Interceptor",
+        "to": "Frame Encoding",
+        "what": "submitted game frame",
+        "step": null
+      },
+      {
+        "from": "Frame Encoding",
+        "to": "Network",
+        "what": "encoded game frame (VSync4)",
+        "step": null
+      },
+      {
+        "from": "Network",
+        "to": "Client",
+        "what": "game frames",
+        "step": null
+      },
+      {
+        "from": "Frame Decoding",
+        "to": "Layer Composition",
+        "what": "decoded frame",
+        "step": null
+      },
+      {
+        "from": "Layer Composition",
+        "to": "Display",
+        "what": "composited frame (VSync5 boundary)",
+        "step": null
+      }
+    ],
+    "key_idea": "LoopTailor inserts a Game Frame Interceptor to capture frames early (bypassing two VSyncs) and a Remote VSync Coordinator to synchronize the remaining VSync events between the cloud pipeline and the client.",
+    "reading_order": "a round trip from Client through Network into the Cloud's Host OS/Emulator/Android stack, through Input Injection, Game Rendering, and the Interceptor, then back to the Client"
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.98,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#548235",
+        "used_for": "VSync labels and the Remote VSync Coordinator text"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "Capture/Submit labels and the Game Frame Interceptor accents"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "Game Frame Interceptor box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines; dashed boundaries for Host OS/Emulator/Cloud regions, solid highlighted border for Game Frame Interceptor",
+    "font": "sans-serif (Calibri), 5-6.5pt, bold box titles",
+    "corners": "rounded",
+    "arrows": "thin black arrows for the main data path, colored labels marking VSync events and Capture/Submit actions",
+    "icons": "vector icons: smartphone silhouette for Client, cloud shape for Network"
+  },
+  "encoding": {
+    "color_means": "green marks VSync timing events and the Remote VSync Coordinator; blue marks the Game Frame Interceptor and its Capture/Submit actions on the frame path",
+    "line_style_means": "dashed boxes delineate virtualization/OS boundaries (Host OS, Emulator, Cloud); solid arrows show the actual input/frame data path",
+    "emphasis": "the two novel modules, Game Frame Interceptor and Remote VSync Coordinator, are set apart in color from the plain black-and-white baseline pipeline (Input Injection, Game Rendering, Frame Encoding) they modify",
+    "reusable_patterns": [
+      "client-cloud round-trip pipeline with two color-highlighted new components inserted into an otherwise generic virtualization stack"
+    ],
+    "weaknesses": [
+      "no explicit legend for the green/blue color coding",
+      "the Remote VSync Coordinator's exact connections are implied by position rather than drawn arrows"
+    ]
+  },
+  "tags": [
+    "mobile-cloud-gaming",
+    "vsync-coordination",
+    "frame-interception",
+    "android-emulation",
+    "latency-optimization"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.3)",
+      "4 System Design (p.9)"
+    ],
+    "evidence": [
+      "Figure 2 shows the architectural overview of LoopTailor, which streamlines the interactive loop of X-MCG",
+      "Game Frame Interceptor which extracts and reroutes game frames to bypass unnecessary VSyncs (VSync2 and VSync3)",
+      "Remote VSync Coordinator which coordinates ahead of time the remaining VSyncs (VSync1, VSync4, and VSync5)"
+    ]
+  },
+  "summary": "LoopTailor is an end-to-end VSync regulator that streamlines mobile cloud gaming's interactive loop by decoupling game rendering from the cloud pipeline and coordinating VSync timing directly with the client. Figure 2 traces one round trip of that loop: a Client sends User Inputs over the Network to a cloud Host OS running an Android Emulator, where Input Injection (VSync1) feeds Game Rendering. LoopTailor's Game Frame Interceptor captures the rendered frame directly and submits it to Frame Encoding (VSync4), bypassing the VSync2/VSync3 stages a generic pipeline would need. The encoded frame travels back over the Network to the Client, which decodes it and composites it (Layer Composition, VSync5) for Display. A Remote VSync Coordinator, shown alongside the pipeline, synchronizes the three remaining VSync events between cloud and client.",
+  "summary_zh": "图2展示LoopTailor循环：输入经网络触发云端渲染，Interceptor截帧后提交编码跳过VSync2/VSync3，帧送回客户端解码显示，Coordinator协调剩余VSync事件。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

@@ -1,0 +1,193 @@
+{
+  "paper_id": "asplos26-013",
+  "fig": "7",
+  "system": {
+    "name": "AGS",
+    "one_liner": "an algorithm-hardware co-design framework that accelerates 3DGS-SLAM by exploiting cross-frame covisibility",
+    "domain": [
+      "ml-systems",
+      "robotics/SLAM"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Previous Frame",
+        "role": "prior video frame supplying macro-blocks for matching",
+        "container": "Frame Covisibility Detection",
+        "novel": false
+      },
+      {
+        "name": "Current Frame",
+        "role": "incoming video frame matched against the previous frame",
+        "container": "Frame Covisibility Detection",
+        "novel": false
+      },
+      {
+        "name": "Macro-Block Matching",
+        "role": "CODEC motion-estimation step that finds minimum-SAD matching macro-blocks across frames",
+        "container": "Frame Covisibility Detection",
+        "novel": true
+      },
+      {
+        "name": "SAD Accumulation",
+        "role": "sums minimum SAD values across all macro-blocks to produce frame covisibility",
+        "container": "Frame Covisibility Detection",
+        "novel": true
+      },
+      {
+        "name": "Coarse-Grained Pose Estimation (A)",
+        "role": "neural-network-based (feature extraction + ConvGRU) fast pose estimate run for every frame",
+        "container": "Movement-Adaptive Tracking",
+        "novel": true
+      },
+      {
+        "name": "Fine-Grained Pose Refinement (B)",
+        "role": "additional 3DGS training iterations that refine the pose when covisibility is below Thresh_T",
+        "container": "Movement-Adaptive Tracking",
+        "novel": true
+      },
+      {
+        "name": "Key Frame: Full Mapping (C)",
+        "role": "runs baseline 3DGS mapping and records per-Gaussian contribution information",
+        "container": "Gaussian Contribution-Aware Mapping",
+        "novel": true
+      },
+      {
+        "name": "Non-Key Frame: Selective Mapping (D)",
+        "role": "reuses recorded contribution information to skip non-contributory Gaussians",
+        "container": "Gaussian Contribution-Aware Mapping",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Previous Frame",
+        "to": "Macro-Block Matching",
+        "what": "macro-blocks",
+        "step": null
+      },
+      {
+        "from": "Current Frame",
+        "to": "Macro-Block Matching",
+        "what": "macro-blocks",
+        "step": null
+      },
+      {
+        "from": "Macro-Block Matching",
+        "to": "SAD Accumulation",
+        "what": "minimum SAD per macro-block",
+        "step": null
+      },
+      {
+        "from": "SAD Accumulation",
+        "to": "Coarse-Grained Pose Estimation (A)",
+        "what": "frame covisibility value",
+        "step": null
+      },
+      {
+        "from": "Coarse-Grained Pose Estimation (A)",
+        "to": "Fine-Grained Pose Refinement (B)",
+        "what": "coarse pose, refined when covisibility < Thresh_T",
+        "step": null
+      },
+      {
+        "from": "SAD Accumulation",
+        "to": "Key Frame: Full Mapping (C)",
+        "what": "frame covisibility used for key/non-key frame designation",
+        "step": null
+      },
+      {
+        "from": "Key Frame: Full Mapping (C)",
+        "to": "Non-Key Frame: Selective Mapping (D)",
+        "what": "recorded Gaussian contribution information",
+        "step": null
+      }
+    ],
+    "key_idea": "AGS derives frame covisibility for free from video-CODEC motion estimation, then uses it to gate both a coarse-vs-fine pose tracking path and a full-vs-selective Gaussian mapping path, skipping unnecessary computation on highly similar frames.",
+    "reading_order": "Left to right across three linked panels: frame covisibility detection, then movement-adaptive tracking, then Gaussian contribution-aware mapping."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "double",
+    "aspect": 3.08,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e76254",
+        "used_for": "red/orange fill for Gaussian icons and highlighted matched macro-blocks"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray panel background fills"
+      },
+      {
+        "hex": "#fee599",
+        "used_for": "yellow fill for frame/tile boxes"
+      },
+      {
+        "hex": "#a7c0de",
+        "used_for": "light blue fill for neural-network boxes (feature extraction, ConvGRU)"
+      },
+      {
+        "hex": "#4672c4",
+        "used_for": "blue accents on network diagram nodes"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark red text/border for emphasis (e.g. thresholds, non-contributory markers)"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin (~0.41pt) dark strokes, dashed panel separators",
+    "font": "Calibri and SimHei sans, very small (2-6pt), nearly all bold",
+    "corners": "mixed",
+    "arrows": "many orthogonal connecting lines (183) with some curved arrows",
+    "icons": "vector icons of macro-block frames, neural-network layers, and Gaussian ellipsoids"
+  },
+  "encoding": {
+    "color_means": "red/orange marks matched macro-blocks and Gaussian ellipsoids; blue marks the neural-network pose-estimation blocks",
+    "line_style_means": null,
+    "emphasis": "the three-panel layout visually chains covisibility detection into its two downstream uses (tracking, mapping) to argue one signal serves both",
+    "reusable_patterns": [
+      "single upstream signal (covisibility) gating two independent downstream decision branches shown as parallel panels"
+    ],
+    "weaknesses": [
+      "very small (2-6pt) text and 650 shapes make the figure dense and hard to read without zooming"
+    ]
+  },
+  "tags": [
+    "3D Gaussian Splatting",
+    "SLAM",
+    "frame covisibility",
+    "motion estimation",
+    "adaptive tracking",
+    "selective mapping"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Algorithm (p.5-6)"
+    ],
+    "evidence": [
+      "we save the minimum SADs for all MBs and accumulate them by sum of SAD_min",
+      "we first conduct a coarse-grained pose estimation (A in Fig. 7) ... and selectively execute a fine-grained pose refinement (B)",
+      "For key frames, we run full mapping (C in Fig. 7) ... For non-key frames, we reuse the recorded information to execute selective mapping (D)"
+    ]
+  },
+  "summary": "This figure gives the algorithm-level overview of AGS across three linked panels. The first panel shows frame covisibility detection: macro-blocks from the previous and current frame are matched via the video CODEC's motion estimation, and their minimum SAD values are accumulated into a frame covisibility score. The second panel, movement-adaptive tracking, always runs a lightweight neural-network coarse pose estimate (A) and conditionally follows it with a fine-grained 3DGS pose refinement (B) when covisibility falls below a threshold. The third panel, Gaussian contribution-aware mapping, designates key frames that run full mapping and record per-Gaussian contribution (C), and non-key frames that reuse that record to skip non-contributory Gaussians in selective mapping (D). The figure mixes vector icons, neural-network block diagrams and Gaussian ellipsoid sketches in a dense, small-font, three-panel layout.",
+  "summary_zh": "该图展示AGS算法总览，分三部分：帧协同可见性检测（宏块匹配与SAD累加得到协同可见性）、运动自适应跟踪（粗粒度位姿估计A，必要时精细化B）、高斯贡献感知建图（关键帧全量建图C记录贡献信息，非关键帧选择性建图D跳过非贡献高斯）。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

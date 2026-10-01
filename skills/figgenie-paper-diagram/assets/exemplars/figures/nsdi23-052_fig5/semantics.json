@@ -1,0 +1,162 @@
+{
+  "paper_id": "nsdi23-052",
+  "fig": "5",
+  "system": {
+    "name": "Syndicate",
+    "one_liner": "a system that jointly optimizes ML collective communication scheduling and execution planning for distributed training",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Model (PyTorch, etc.)",
+        "role": "application-level model definition, the first step toward a comm-op",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Parallelization Strategy (Data- / Model- / etc.)",
+        "role": "determines how the model and data are parallelized across devices",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Comm-Op Scheduler (DDP / ByteScheduler / etc.)",
+        "role": "schedules the communication collectives that parallelization requires",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Comm-Op Interface (ProcessGroup / etc.)",
+        "role": "generic interface abstraction through which scheduled comm-ops are issued to the backend",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Comm-Op Execution (NCCL / etc.)",
+        "role": "executes the communication operation over the network",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Worker Processes",
+        "role": "the per-device processes across which this entire stack is replicated",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Model (PyTorch, etc.)",
+        "to": "Parallelization Strategy (Data- / Model- / etc.)",
+        "what": "model definition",
+        "step": 1
+      },
+      {
+        "from": "Parallelization Strategy (Data- / Model- / etc.)",
+        "to": "Comm-Op Scheduler (DDP / ByteScheduler / etc.)",
+        "what": "training DAG requiring communication ops",
+        "step": 2
+      },
+      {
+        "from": "Comm-Op Scheduler (DDP / ByteScheduler / etc.)",
+        "to": "Comm-Op Interface (ProcessGroup / etc.)",
+        "what": "comm ops / collectives",
+        "step": 3
+      },
+      {
+        "from": "Comm-Op Interface (ProcessGroup / etc.)",
+        "to": "Comm-Op Execution (NCCL / etc.)",
+        "what": "comm-op dispatched for execution",
+        "step": 4
+      }
+    ],
+    "key_idea": "Existing ML training systems layer communication handling into an App Layer (model, parallelization strategy, comm-op scheduling) and a Comm Layer (a generic interface handing off to a backend like NCCL), with four numbered steps leading to a comm-op's network execution.",
+    "reading_order": "Top-down through four numbered stages: Model, Parallelization Strategy, and Comm-Op Scheduler in the App Layer, then Comm-Op Interface and Comm-Op Execution in the Comm Layer, replicated per Worker Process; side diagrams illustrate the tensor operator graph, training DAG, schedule order, and per-device execution."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.07,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow/cream fill for the main stage boxes"
+      },
+      {
+        "hex": "#ffff00",
+        "used_for": "bright yellow accent, e.g. layer-label backgrounds"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "amber/gold accent, e.g. circled step-number fill"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray background shading for the outer Worker Processes box"
+      },
+      {
+        "hex": "#ffbf00",
+        "used_for": "amber accent shared with the gold tones above"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid black borders (~1.2pt) on stage boxes, dashed lines separating the stack from the side illustrative diagrams",
+    "font": "Times New Roman serif, about 5-8pt body text with an 11pt title (Existing System Stack), mostly not bold",
+    "corners": "rounded",
+    "arrows": "downward arrows with filled heads linking the four numbered stages, plus curved arrows in the small side diagrams",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow/gold fill uniformly marks the existing-system stack boxes with no further semantic color coding",
+    "line_style_means": null,
+    "emphasis": "circled numbers 1-4 directly on the stack trace the exact sequence a comm-op follows from model definition down to network execution",
+    "reusable_patterns": [
+      "layered app-layer/comm-layer stack with numbered steps",
+      "side-by-side abstract diagrams (tensor operator graph, training DAG, schedule order, execution) illustrating each stage's output"
+    ],
+    "weaknesses": [
+      "App Layer / Comm Layer bracket labels sit visually apart from the boxes they group",
+      "side diagrams use dense mathematical notation (op3(op2(x),op1(x))) that requires careful reading"
+    ]
+  },
+  "tags": [
+    "ml-training",
+    "collective-communication",
+    "distributed-training",
+    "communication-scheduling",
+    "gpu-cluster",
+    "baseline-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Motivation (p.5)"
+    ],
+    "evidence": [
+      "Figure 5 shows the two sets of layers in the communication stack used for ML training",
+      "the application (app) layer and the communication (comm) layer",
+      "the four steps leading to execution of a comm-op over the network"
+    ]
+  },
+  "summary": "This figure, titled 'Existing System Stack,' lays out the baseline ML-training communication stack that motivates SYNDICATE's design (contrasted later with SYNDICATE's own stack in Figure 7). It shows two layers: an App Layer containing Model (PyTorch, etc.), Parallelization Strategy (Data-/Model-parallel, etc.), and Comm-Op Scheduler (DDP/ByteScheduler, etc.); and a Comm Layer containing Comm-Op Interface (ProcessGroup, etc.) and Comm-Op Execution (NCCL, etc.), all replicated per Worker Process. Four circled numbers trace the steps from model definition down to a comm-op's network execution. Side diagrams illustrate each stage's abstraction: a tensor operator graph for the model's forward pass, a training DAG assigning forward/backward ops across devices a/b/c, a scheduled device order, and per-device execution streams performing an all-reduce via NCCL ring all-reduce. The figure uses flat yellow/gold-filled boxes with black borders and serif text, without color-coding beyond a uniform stage fill.",
+  "summary_zh": "该图为'现有系统栈'，展示ML训练通信栈的应用层（模型、并行策略、通信调度器）与通信层（ProcessGroup接口、NCCL执行），四个编号步骤对应SYNDICATE的对比基线（见图7）。",
+  "confidence": "high",
+  "notes": "This figure is explicitly the 'Existing System Stack' (a generic/baseline architecture used for motivation), not SYNDICATE's own design; the paper's proposed stack is shown separately in Figure 7. All components here are marked non-novel accordingly.",
+  "venue": "NSDI23"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "nsdi23-079_fig1",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-079",
+  "fig": "1",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 1: The kernel’s remote-access data path.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "flowchart",
+  "subject": "how a page fault is handled: swap-cache lookup, memory accounting, optional eviction, and fetch, ending in a PTE update",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.59,
+  "n_elements": 10,
+  "n_relations": 12,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-079/src/fig1_kernel-swapin-path.svg",
+    "preview.png": "lab/extracted/nsdi23-079/src/fig1_kernel-swapin-path.png",
+    "print.png": "lab/extracted/nsdi23-079/nsdi23-079_fig1_p4_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A page fault takes one of three shortcuts depending on cache and memory state, but every path converges on the same metadata-update and PTE-install finish, with only two steps needing locks.",
+      "what_to_learn": "Long bypass arrows over the top for fast paths; an icon + fill + legend marking the steps that need locks",
+      "note_source": "doc"
+    }
+  ]
+}

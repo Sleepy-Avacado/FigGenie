@@ -1,0 +1,41 @@
+{
+  "id": "sosp25-029_fig2",
+  "paper_id": "sosp25-029",
+  "fig": "2",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 2. The architecture of Radical. Radical’s runtime begins by executing 𝑓rw to find the read/write set and sends it to the near-storage location as part of the LVI request while speculatively executing the 𝑓, which communicates with the cache through Radical’s storage library. The LVI request i",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 3.51,
+  "n_components": 16,
+  "n_flows": 6,
+  "nesting_depth": 4,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-029/sosp25-029_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-029/sosp25-029_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "The central Near-Storage Location, hosting the LVI Server, sits on the axis between two identical Near-User Location panels, each running the same Function Execution/Storage Library/Cache stack, the textbook central-server-flanked-by-two-instances case.",
+      "what_to_learn": "Flank one central server box with two literally identical copies of the peer panel, mirrored left and right, and route each peer's request/response arrows to the same handler inside the centre box; add colour or distinct line styles to the many double-headed arrows, since this exemplar uses none and they become hard to trace."
+    }
+  ]
+}

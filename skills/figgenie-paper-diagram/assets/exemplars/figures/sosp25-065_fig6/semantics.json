@@ -1,0 +1,163 @@
+{
+  "paper_id": "sosp25-065",
+  "fig": "6",
+  "system": {
+    "name": "Sandman",
+    "one_liner": "a CPU scheduling framework for storage servers that scales I/O threads across cores to save power without hurting performance",
+    "domain": [
+      "storage",
+      "energy-efficiency",
+      "os-scheduling"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Main Core",
+        "role": "runs a Scheduler that gathers metrics and makes decisions to redistribute I/O threads among cores to save power",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Worker Core",
+        "role": "processes networking and storage I/O requests in polling mode and can receive migrated I/O threads from the scheduler",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "gathers metrics and makes decisions about redistributing I/O threads among cores",
+        "container": "Main Core",
+        "novel": true
+      },
+      {
+        "name": "Event Queue",
+        "role": "lets cores communicate, carrying scheduling events such as metric reports and migration decisions",
+        "container": "Main Core",
+        "novel": true
+      },
+      {
+        "name": "I/O Thread",
+        "role": "a lightweight thread processing networking/storage I/O that can quickly migrate between cores",
+        "container": "Main Core",
+        "novel": true
+      },
+      {
+        "name": "NIC",
+        "role": "a network device polled by a core's I/O thread for networking requests",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SSD",
+        "role": "a storage device polled by a core's I/O thread for storage requests",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Worker Core",
+        "to": "Main Core",
+        "what": "gather metrics / get metric events reported to the scheduler",
+        "step": 1
+      },
+      {
+        "from": "Main Core",
+        "to": "Worker Core",
+        "what": "make decisions / mark move, a scheduling decision sent to a worker core",
+        "step": 2
+      },
+      {
+        "from": "Worker Core",
+        "to": "Main Core",
+        "what": "move thread, an I/O thread migrating between cores as directed by the scheduler",
+        "step": 3
+      },
+      {
+        "from": "NIC",
+        "to": "Main Core",
+        "what": "TX/RX and SQ/CQ I/O flow polled by the core's I/O thread",
+        "step": null
+      },
+      {
+        "from": "SSD",
+        "to": "Worker Core",
+        "what": "TX/RX and SQ/CQ I/O flow polled by the core's I/O thread",
+        "step": null
+      }
+    ],
+    "key_idea": "One main core's scheduler gathers metrics from worker cores and migrates I/O threads between them to consolidate work and save power, without disrupting the underlying polling I/O path.",
+    "reading_order": "Top legend first, then left-to-right across Main Core and Worker Cores, following blue scheduling arrows up top and black I/O arrows from the devices below."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.54,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e3cec7",
+        "used_for": "dusty pink/mauve fill for the inner component bars (Scheduler, Event Queue, I/O Thread) and the NIC/SSD device boxes"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue lines for the Scheduling Flow arrows (Gather metrics, Make decisions)"
+      },
+      {
+        "hex": "#edf0ca",
+        "used_for": "pale khaki/yellow-green fill for the outer Main Core and Worker Core container boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid black outlines (~0.6pt) on all boxes",
+    "font": "GillSans sans-serif, 7pt, mostly regular with a little bold for headings",
+    "corners": "mixed",
+    "arrows": "thin black arrows for I/O flow between devices and cores, blue arrows for scheduling flow between cores, plus a bold black curved arrow for thread migration",
+    "icons": "vector - alarm-clock icon for timed polling, circular-arrow icon for busy polling, reused next to each polled component"
+  },
+  "encoding": {
+    "color_means": "khaki = a CPU core's outer container box, dusty pink = the functional bars/devices inside a core or on the device row; color otherwise does not distinguish role",
+    "line_style_means": "black arrows = I/O Flow (device traffic into cores), blue arrows = Scheduling Flow (metrics and migration decisions between cores); repeated clock/circular-arrow icons mark timed vs. busy polling",
+    "emphasis": "overlaying two arrow colors, black I/O flow and blue scheduling flow, on the same set of core boxes shows that Sandman's power-saving scheduler works alongside, not instead of, the normal polling I/O path",
+    "reusable_patterns": [
+      "one coordinator core plus repeated identical worker cores, each independently wired to its own devices",
+      "a two-color arrow legend separating a control/scheduling flow from the underlying data/I-O flow on one diagram"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "power-management",
+    "cpu-scheduling",
+    "polling",
+    "storage-server",
+    "thread-migration",
+    "energy-efficiency"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Sandman (p.7)"
+    ],
+    "evidence": [
+      "Sandman categorizes CPU cores into two types: one main core and several worker cores",
+      "they both run in polling mode to process network- ing and storage I/O requests, and can communicate via event queues",
+      "It maintains a scheduler that gathers metrics and makes decisions to redistribute I/O threads among cores to save power"
+    ]
+  },
+  "summary": "Figure 6 is Sandman's system diagram, showing one Main Core and several Worker Cores that all run in polling mode to process networking and storage I/O, communicating via event queues. Only the Main Core additionally runs a Scheduler that gathers metrics and decides how to redistribute I/O threads across cores to save power. A legend distinguishes a black 'I/O Flow' from a blue 'Scheduling Flow': black arrows connect NIC and SSD devices below, via TX/RX and SQ/CQ, up to each core's I/O Thread, while blue arrows carry metric events from Worker Cores to the Main Core and decisions back down, with a separate bold arrow showing an I/O thread physically migrating between cores. Clock and circular-arrow icons further mark which components use timed versus busy polling.",
+  "summary_zh": "图6为Sandman系统图：主核心与工作核心均以轮询处理网络和存储I/O，经事件队列通信；仅主核心运行调度器，采集指标并决策线程迁移以省电。图例区分黑色I/O流与蓝色调度流，NIC/SSD经TX/RX、SQ/CQ接入各核心。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

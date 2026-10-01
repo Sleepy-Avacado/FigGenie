@@ -1,0 +1,137 @@
+{
+  "paper_id": "osdi26-052",
+  "fig": "1",
+  "system": {
+    "name": "FORGE",
+    "one_liner": "mitigates cross-node synchronization amplification for housekeeping tasks in memory-disaggregated caching systems",
+    "domain": [
+      "memory-disaggregation",
+      "caching",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "CPU",
+        "role": "processor in a monolithic server performing cache-coherent load/store to local memory",
+        "container": "Monolithic Server",
+        "novel": false
+      },
+      {
+        "name": "CPU Cache",
+        "role": "on-chip cache of the monolithic server's CPU",
+        "container": "CPU",
+        "novel": false
+      },
+      {
+        "name": "Local Memory",
+        "role": "the monolithic server's directly attached memory, reached in 10-100 ns",
+        "container": "Monolithic Server",
+        "novel": false
+      },
+      {
+        "name": "Compute Nodes",
+        "role": "CPUs in a disaggregated architecture that no longer have local memory attached",
+        "container": "Disaggregated Architecture",
+        "novel": false
+      },
+      {
+        "name": "CPU Cache",
+        "role": "on-chip cache of each compute node's CPU",
+        "container": "Compute Nodes",
+        "novel": false
+      },
+      {
+        "name": "Memory Nodes",
+        "role": "separate nodes holding memory, reached from compute nodes in 250-2000 ns",
+        "container": "Disaggregated Architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "CPU",
+        "to": "Local Memory",
+        "what": "cache-coherent CPU load/store, 10-100 ns",
+        "step": null
+      },
+      {
+        "from": "Compute Nodes",
+        "to": "Memory Nodes",
+        "what": "cross-node memory access over a disaggregated interconnect, 250-2000 ns",
+        "step": null
+      }
+    ],
+    "key_idea": "Disaggregating memory from compute turns a 10-100ns local load/store into a 250-2000ns cross-node access, motivating FORGE's focus on cutting the synchronization cost of housekeeping tasks that used to be cheap.",
+    "reading_order": "Left panel (Monolithic Server) first, then right panel (Disaggregated Architecture); within each, top-down from CPU/Compute Nodes down an arrow to memory, with the latency number in red beside the arrow."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.18,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#08080a",
+        "used_for": "box outlines, CPU/cache icon strokes, body text"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "fill for the Local Memory / Memory Nodes bars and cache-icon cells"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "the two red latency call-outs ('10-100 ns', '250-2000 ns')"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.64pt solid outlines, square corners",
+    "font": "Calibri sans, 7-7.5pt, some bold",
+    "corners": "square",
+    "arrows": "short thin vertical arrows with filled heads",
+    "icons": "vector: small square icons representing stacked CPU-cache/register cells"
+  },
+  "encoding": {
+    "color_means": "red text isolates the two latency numbers being contrasted; the rest of the figure is monochrome black-on-white",
+    "line_style_means": null,
+    "emphasis": "red latency call-outs (10-100 ns vs 250-2000 ns) are the only colored elements, drawing the eye straight to the large gap the paper cites",
+    "reusable_patterns": [
+      "side-by-side monolithic-vs-disaggregated box diagram with a labelled access-latency arrow in each panel"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "memory-disaggregation",
+    "caching",
+    "latency",
+    "cxl",
+    "rdma"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)"
+    ],
+    "evidence": [
+      "housekeeping must be offloaded to CNs",
+      "incurring delays at least 20x higher than monolithic setups",
+      "Memory access latencies in different architectures"
+    ]
+  },
+  "summary": "FORGE targets synchronization amplification in memory-disaggregated caching systems. Figure 1 motivates the problem with a two-panel comparison: on the left, a Monolithic Server where a CPU's cache-coherent load/store reaches Local Memory in 10-100 ns; on the right, a Disaggregated Architecture where Compute Nodes, lacking local memory, must reach separate Memory Nodes in 250-2000 ns over interconnects such as CXL or RDMA. Both panels are drawn as simple stacked boxes with small square icons standing in for cache/register cells and a single downward arrow to memory, kept deliberately plain except for the latency numbers, highlighted in red. The figure's only job is to make the roughly 20x latency gap between the two architectures visually obvious, setting up the paper's claim that housekeeping tasks cheap in the monolithic case become bottlenecks once compute and memory are disaggregated.",
+  "summary_zh": "图1对比单机与内存分离架构的访存延迟:单机CPU经缓存一致load/store访问本地内存仅需10-100纳秒;分离架构中计算节点访问独立内存节点则需250-2000纳秒,凸显跨节点同步开销,是FORGE要解决的问题背景。",
+  "confidence": "high",
+  "notes": "Background/motivation figure contrasting prior architectures; it does not depict FORGE's own design.",
+  "venue": "OSDI26"
+}

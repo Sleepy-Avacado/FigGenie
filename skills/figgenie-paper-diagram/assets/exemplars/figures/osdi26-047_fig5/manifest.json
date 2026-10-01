@@ -1,0 +1,48 @@
+{
+  "id": "osdi26-047_fig5",
+  "paper_id": "osdi26-047",
+  "fig": "5",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 5: The overview of SEER.",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.93,
+  "n_components": 14,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-047/src/fig5_seer_architecture.svg",
+    "preview.png": "lab/extracted/osdi26-047/src/fig5_seer_architecture.png",
+    "print.png": "lab/extracted/osdi26-047/osdi26-047_fig5_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Densest figure in the batch (14 components, nesting depth 3, star-rated): two separate inside legends, one for chunk state and one for solid/dashed-red flow type, sit top-left above N replicated inference instances.",
+      "what_to_learn": "When one figure needs two kinds of legend, state (chunk fill/hatch) and flow type (solid vs dashed-red arrows), keep both inside the frame but in separate corners rather than merging them, and let the replicated instances below use a plain ellipsis so the control components above stay the visual anchor."
+    },
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "The same figure judged for replicated-grid: Instance 1, 2, 3, ellipsis, N sit in one Inference Engine Pool row beneath the Request Buffer and Context Manager, each showing its own row of colored chunk states.",
+      "what_to_learn": "Keep the coordinator (Request Buffer, Context Manager) visually above the replicated pool it drives, index the instances 1, 2, 3, ellipsis, N, and repeat the same per-instance visual device, a row of colored chunk cells, in every box so the reader can read each instance's state directly."
+    }
+  ]
+}

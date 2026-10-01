@@ -1,0 +1,142 @@
+{
+  "paper_id": "nsdi26-052",
+  "fig": "7",
+  "system": {
+    "name": "QCON",
+    "one_liner": "a network-side system that estimates real-time-streaming QoE by tracking per-frame packet transmission across 5G/4G multi-connectivity links",
+    "domain": [
+      "networking",
+      "wireless-systems",
+      "video-streaming"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Frame Transmission Status",
+        "role": "table tracking per-frame arrival and departure timestamps observed at the base station",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "5G egress",
+        "role": "radio link egress path carrying a frame's packets onward to the UE over 5G",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "4G egress",
+        "role": "radio link egress path carrying a frame's packets onward to the UE over 4G in the multi-connectivity setup",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Arrival",
+        "to": "Frame Transmission Status",
+        "what": "per-packet arrival timestamps used to fill the table (Pkts(Fn+1), Pkts(Fn))",
+        "step": null
+      },
+      {
+        "from": "Frame Transmission Status",
+        "to": "Departure",
+        "what": "identification of the earliest not-yet-departed frame",
+        "step": null
+      },
+      {
+        "from": "Departure",
+        "to": "5G egress",
+        "what": "frame packets transmitted over the 5G link",
+        "step": null
+      },
+      {
+        "from": "Departure",
+        "to": "4G egress",
+        "what": "frame packets transmitted over the 4G link (Pkts(Fn-1))",
+        "step": null
+      }
+    ],
+    "key_idea": "The base station, as last-hop router, observes per-packet arrival and departure across radio links to reconstruct millisecond-accurate frame transmission timelines for QoE estimation.",
+    "reading_order": "Top-down: the frame status table first, then left-to-right following packets from the server through BS arrival to 5G/4G departure links to the UE."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.94,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1e242b",
+        "used_for": "text labels, icons (server, tower, phone) and table borders"
+      },
+      {
+        "hex": "#8dd35f",
+        "used_for": "packet squares egressing to the UE over the 5G/4G links"
+      },
+      {
+        "hex": "#ff9955",
+        "used_for": "arrival packet squares for frame Fn and departure packets for Fn-1"
+      },
+      {
+        "hex": "#87aade",
+        "used_for": "arrival packet squares for frame Fn+1"
+      },
+      {
+        "hex": "#d1d1d1",
+        "used_for": "highlighted table row for the earliest tracked frame"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark borders (~0.6pt) on table cells and icons",
+    "font": "DejaVu Sans, 4.5-6pt, bold for table column headers",
+    "corners": "rounded",
+    "arrows": "thin lines linking packet icons to the tower, with a downward arrow highlighting the earliest row",
+    "icons": "vector icons for a server rack, cellular tower/antennas, and a smartphone (UE)"
+  },
+  "encoding": {
+    "color_means": "orange vs. blue packet squares distinguish arriving frames (Fn vs. Fn+1); green marks packets egressing over the 5G/4G radio links",
+    "line_style_means": null,
+    "emphasis": "the shaded table row and the 'Earliest' arrow tie the abstract per-frame timestamp table to the concrete packet relay below it",
+    "reusable_patterns": [
+      "annotated status table paired with a device relay diagram to explain a monitoring mechanism"
+    ],
+    "weaknesses": [
+      "server, base-station and phone icons are unlabeled, relying on shape recognition rather than text"
+    ]
+  },
+  "tags": [
+    "5G",
+    "QoE",
+    "multi-connectivity",
+    "RAN",
+    "frame-tracking",
+    "video-streaming"
+  ],
+  "provenance": {
+    "sections": [
+      "4 QCON Design (p.6)"
+    ],
+    "evidence": [
+      "As shown in Figure 7, combining this vantage with per-packet frame membership insights",
+      "can reconstruct frame transmission timelines with millisecond-level accuracy",
+      "the RAN's BS holds a uniquely privileged vantage point to observe packet arrivals at the UE"
+    ]
+  },
+  "summary": "This figure explains how QCON's QoE Monitor tracks frame-level transmission status inside the Radio Access Network. A table titled 'Frame Transmission Status' records, per frame ID, the arrival time (when the frame's packets reached the base station from the application server) and departure time (when they left toward the UE), with the earliest not-yet-departed frame highlighted. Below the table, a small relay diagram shows packets for frames Fn+1 and Fn arriving at the base station, which then forwards frames onward through separate 5G and 4G egress links toward the UE's phone icon, with Fn-1's packets shown departing over 4G. Because the base station is the last hop before the UE, it can observe packet arrivals directly, letting QCON reconstruct millisecond-accurate per-frame transmission timelines without relying on coarse metrics like frame rate.",
+  "summary_zh": "该图展示 QCON 在基站侧如何逐帧跟踪传输状态：上方表格记录每帧的到达与离开时间并标出最早未离开的帧，下方示意图显示数据包经基站通过 5G/4G 双链路转发到终端，用于毫秒级还原帧传输时间线以估计 QoE。",
+  "confidence": "medium",
+  "notes": "layout-proposal: table-over-relay — a per-frame arrival/departure status table stacked above a short server-to-BS-to-UE packet relay diagram with dual 5G/4G egress links. Diagram mechanics inferred mainly from the image; the surrounding text describes the concept but not the table/icon layout in detail.",
+  "venue": "NSDI26"
+}

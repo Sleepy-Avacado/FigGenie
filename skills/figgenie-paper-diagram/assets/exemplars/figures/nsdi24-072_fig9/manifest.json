@@ -1,0 +1,42 @@
+{
+  "id": "nsdi24-072_fig9",
+  "paper_id": "nsdi24-072",
+  "fig": "9",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 9: Using CASSINI to augment Themis [40].",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 0.78,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-072/src/fig9_system_architechture.svg",
+    "preview.png": "lab/extracted/nsdi24-072/src/fig9_system_architechture.png",
+    "print.png": "lab/extracted/nsdi24-072/nsdi24-072_fig9_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Tall single-column layered figure (aspect 0.78) with three tinted bands labelled in a right-hand gutter.",
+      "what_to_learn": "Band labels can live in a rotated right gutter instead of the left, freeing the left margin for the feedback arrow that closes the loop."
+    }
+  ]
+}

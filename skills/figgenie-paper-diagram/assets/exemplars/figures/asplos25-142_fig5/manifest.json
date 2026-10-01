@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-142_fig5",
+  "paper_id": "asplos25-142",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. System Overview of Teola.",
+  "corpus_template": "pipeline",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.07,
+  "n_components": 10,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-142/asplos25-142_fig5_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-142/asplos25-142_fig5_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A star exemplar: the Graph Optimizer panel stacks three small labelled graphs, each with visible branching nodes, to show three different query-specific dataflow-graph optimizations produced from the same declarative input.",
+      "what_to_learn": "Stack two or three small example graphs inside the box that produces them to show a family of possible transformations, using small filled and outlined circles for operators; label each of the three so a reader can tell which optimization pass produced which graph, since this exemplar leaves that unlabelled."
+    }
+  ]
+}

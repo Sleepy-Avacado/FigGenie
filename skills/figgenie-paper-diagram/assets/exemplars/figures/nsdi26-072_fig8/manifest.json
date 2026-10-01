@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-072_fig8",
+  "paper_id": "nsdi26-072",
+  "fig": "8",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 8: Agentix’s system architecture. Users run their programs locally, which initiates a stateful session and submits LLM calls to Agentix’s backend. Agentix leverages a global process table to track sessions and better inform its custom load-balancer and scheduler.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.19,
+  "n_components": 14,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-072/nsdi26-072_fig8_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-072/nsdi26-072_fig8_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-14, dense 14-component exemplar: a stacked-paper Programs band on top feeds a Process Table side column into an LLM Engine core nesting five submodules (Priority Function, Scheduler, Memory Manager, KV Cache, Model Executor).",
+      "what_to_learn": "Use a stacked-paper icon behind a box to signal many concurrent instances without drawing them all, and route shared metadata into both the dispatcher and the engine's scheduler; the weakness is that the long wraparound arrow carrying it into the engine is easy to miss, so keep shared-state arrows short and direct."
+    }
+  ]
+}

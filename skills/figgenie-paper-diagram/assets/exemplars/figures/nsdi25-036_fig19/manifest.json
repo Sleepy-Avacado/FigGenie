@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-036_fig19",
+  "paper_id": "nsdi25-036",
+  "fig": "19",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 19: Architectural comparison of X-MCG and other representative MCG solutions. The numbers atop arrows refer to the average latency overhead per game frame.",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.79,
+  "n_components": 20,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "low",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-036/nsdi25-036_fig19_p13_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-036/nsdi25-036_fig19_p13_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Three architecture rows (MCG-X, Google Android Emulator, DroidCloud) are stacked as wide strips sharing one downstream Host pipeline, with red VSync markers and per-hop latency numbers annotated on each row instead of a data table.",
+      "what_to_learn": "Stack architecture rows as wide strips that converge into one shared downstream pipeline on the right, and annotate per-hop timing numbers directly on the arrows in red rather than a separate table; still add a legend for what red text and dashed VM/Container boundaries mean, since this figure has none despite using both."
+    }
+  ]
+}

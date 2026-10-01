@@ -1,0 +1,293 @@
+{
+  "paper_id": "osdi23-022",
+  "fig": "2",
+  "system": {
+    "name": "Graph-Based Oracle Construction",
+    "one_liner": "an approach that builds statement-dependency graphs from transaction executions to construct semantically-equivalent test-case oracles for detecting transactional bugs in DBMSs",
+    "domain": [
+      "databases",
+      "testing"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Databases",
+        "role": "the DBMSs under test that random SQL statements are generated against",
+        "container": "Random Generation",
+        "novel": false
+      },
+      {
+        "name": "SQL statements for each transaction",
+        "role": "randomly generated SQL statements composing each transaction",
+        "container": "Random Generation",
+        "novel": true
+      },
+      {
+        "name": "Item-tracking instrumentation",
+        "role": "instruments SQL statements to track item-level accesses",
+        "container": "SQL-level Instrumentation",
+        "novel": true
+      },
+      {
+        "name": "Version-set-tracking instrumentation",
+        "role": "instruments SQL statements to track version-set accesses",
+        "container": "SQL-level Instrumentation",
+        "novel": true
+      },
+      {
+        "name": "Instrumented test case",
+        "role": "the SQL test case after instrumentation, ready for execution",
+        "container": "SQL-level Instrumentation",
+        "novel": true
+      },
+      {
+        "name": "Transaction Execution",
+        "role": "executes the instrumented transactions (Txn 0, Txn 1, Txn 2) against a database",
+        "container": "Building Statement-Dependency Graph",
+        "novel": true
+      },
+      {
+        "name": "Statement output",
+        "role": "recorded output of each statement captured during transaction execution",
+        "container": "Building Statement-Dependency Graph",
+        "novel": true
+      },
+      {
+        "name": "Statement-dependency graph",
+        "role": "graph describing the dependencies among statements in the transactions",
+        "container": "Building Statement-Dependency Graph",
+        "novel": true
+      },
+      {
+        "name": "Graph Decycling",
+        "role": "removes cycles from the statement-dependency graph, rebuilding or refining and re-executing the test case as needed",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Acyclic graph",
+        "role": "the cycle-free statement-dependency graph produced by Graph Decycling",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Semantically Equivalent Test Case",
+        "role": "SQL test case built by topologically sorting the acyclic graph so statements run in dependency order without transactions",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Execution without transactions",
+        "role": "runs the semantically-equivalent test case's statements individually, outside of transactions",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Refined test case",
+        "role": "a refined test case fed back for re-execution when the graph must be rebuilt",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Transaction execution results",
+        "role": "results of the original transaction execution used as the comparison baseline",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Execution results comparison",
+        "role": "compares the equivalent test case's results against the original transaction execution results",
+        "container": "Transactional Oracle Construction",
+        "novel": true
+      },
+      {
+        "name": "Equivalent",
+        "role": "outcome when both executions produce the same results, i.e. no bug detected",
+        "container": "Execution results comparison",
+        "novel": true
+      },
+      {
+        "name": "Not equivalent",
+        "role": "outcome when results differ, indicating a detected transactional bug",
+        "container": "Execution results comparison",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Databases",
+        "to": "SQL statements for each transaction",
+        "what": "random generation of statements for each transaction",
+        "step": 1
+      },
+      {
+        "from": "SQL statements for each transaction",
+        "to": "Instrumented test case",
+        "what": "item-tracking and version-set-tracking instrumentation applied",
+        "step": 2
+      },
+      {
+        "from": "Instrumented test case",
+        "to": "Transaction Execution",
+        "what": "instrumented transactions executed",
+        "step": 3
+      },
+      {
+        "from": "Transaction Execution",
+        "to": "Statement output",
+        "what": "recorded output of each statement",
+        "step": 3
+      },
+      {
+        "from": "Statement output",
+        "to": "Statement-dependency graph",
+        "what": "built dependency graph among statements",
+        "step": 3
+      },
+      {
+        "from": "Statement-dependency graph",
+        "to": "Graph Decycling",
+        "what": "candidate graph to decycle",
+        "step": 4
+      },
+      {
+        "from": "Graph Decycling",
+        "to": "Acyclic graph",
+        "what": "cycle-free graph output",
+        "step": 4
+      },
+      {
+        "from": "Acyclic graph",
+        "to": "Semantically Equivalent Test Case",
+        "what": "topological sorting produces an ordered equivalent test case",
+        "step": 4
+      },
+      {
+        "from": "Semantically Equivalent Test Case",
+        "to": "Execution without transactions",
+        "what": "executes the equivalent test case's statements individually",
+        "step": 4
+      },
+      {
+        "from": "Execution without transactions",
+        "to": "Refined test case",
+        "what": "results used to refine the test case if the graph needs rebuilding",
+        "step": null
+      },
+      {
+        "from": "Refined test case",
+        "to": "Graph Decycling",
+        "what": "refined test case re-executed and fed back to rebuild the graph",
+        "step": null
+      },
+      {
+        "from": "Execution without transactions",
+        "to": "Execution results comparison",
+        "what": "results of the semantically-equivalent test case",
+        "step": null
+      },
+      {
+        "from": "Transaction execution results",
+        "to": "Execution results comparison",
+        "what": "results of the original transaction execution",
+        "step": null
+      },
+      {
+        "from": "Execution results comparison",
+        "to": "Equivalent",
+        "what": "outcome when results match",
+        "step": null
+      },
+      {
+        "from": "Execution results comparison",
+        "to": "Not equivalent",
+        "what": "outcome when results differ, indicating a bug",
+        "step": null
+      }
+    ],
+    "key_idea": "By recording how statements in real transaction executions depend on each other, the approach builds a dependency graph and reorders it into an equivalent transaction-free test case, then treats disagreement between the two executions as evidence of a transactional bug.",
+    "reading_order": "Left to right across the three numbered steps at top (Random Generation, SQL-level Instrumentation, Building Statement-Dependency Graph), then down into the large Transactional Oracle Construction box (step 4) ending at the Equivalent/Not equivalent verdict."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.05,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#afabab",
+        "used_for": "fill of process/step boxes"
+      },
+      {
+        "hex": "#030104",
+        "used_for": "text and icon outline color"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "darker box borders and icon fills"
+      },
+      {
+        "hex": "#767171",
+        "used_for": "dashed group-box borders"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "fill of container/group boxes (e.g. Transaction Execution, Graph Decycling)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed borders around the Transaction Execution and Graph Decycling groups, solid borders on other boxes",
+    "font": "Calibri sans-serif, 6-7.5pt, bold for step titles",
+    "corners": "rounded",
+    "arrows": "thin black arrows chaining the pipeline steps, with one large gray chevron arrow leading into the Transactional Oracle Construction box",
+    "icons": "vector icons for databases (cylinder), SQL documents, gears (instrumentation), tables (statement output), graphs (dependency graph), and check/cross marks for the equivalence verdict"
+  },
+  "encoding": {
+    "color_means": "grayscale fills distinguish process boxes from group/container boxes; red highlights the semantically-equivalent test case and the execution-without-transactions path being compared; green/red check and cross icons mark the Equivalent/Not equivalent verdict",
+    "line_style_means": "dashed group borders delimit the Transaction Execution and Graph Decycling sub-processes; a feedback arrow returns a refined test case into Graph Decycling",
+    "emphasis": "the four circled numbers walk the reader through the whole technique, culminating in a highlighted results-comparison step that visually resembles a test assertion (equivalent vs. not equivalent)",
+    "reusable_patterns": [
+      "numbered multi-stage pipeline building up to a larger boxed sub-pipeline",
+      "feedback loop for iterative refinement (refine test case, re-execute, rebuild graph)",
+      "oracle-comparison pattern contrasting two executions to flag a bug"
+    ],
+    "weaknesses": [
+      "dense mix of icons and nested dashed groups without an explicit legend explaining icon meanings"
+    ]
+  },
+  "tags": [
+    "database-testing",
+    "transactions",
+    "bug-detection",
+    "dependency-graph",
+    "test-oracle",
+    "differential-testing"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Approach (p.4)"
+    ],
+    "evidence": [
+      "Our core idea is to extract the dependencies among statements in transactions and construct semantically-equivalent test cases",
+      "we first define statement dependencies and propose a new concept, statement-dependency graphs",
+      "The constructed test cases are used as oracles to validate the original transaction executions"
+    ]
+  },
+  "summary": "This figure gives an overview of a graph-based approach for detecting transactional bugs in database engines. Random SQL statements are generated for each transaction against target Databases (step 1), instrumented for item- and version-set-tracking (step 2), and executed so their per-statement outputs can be recorded and built into a statement-dependency graph (step 3). In the larger Transactional Oracle Construction stage (step 4), Graph Decycling removes cycles from this graph, optionally refining and re-executing the test case; the resulting acyclic graph is topologically sorted into a Semantically Equivalent Test Case whose statements are executed individually, without transactions. Comparing these results against the original Transaction execution results yields an Equivalent or Not equivalent verdict, with the latter flagging a bug. The figure is a numbered pipeline of gray process and container boxes with a highlighted comparison step at the end.",
+  "summary_zh": "该图展示基于图的事务缺陷检测法：随机生成并插桩 SQL、执行记录构建语句依赖图，去环后拓扑排序生成等价测试用例并单独执行，比对结果判定是否等价从而发现缺陷。",
+  "confidence": "high",
+  "notes": "No specific tool/system name is given in the excerpted title, caption or paragraph text (only 'our approach'/'our core idea'), so the system name here is a descriptive label drawn from the paper's own title phrase 'Graph-Based Oracle Construction' rather than a proper noun.",
+  "venue": "OSDI23"
+}

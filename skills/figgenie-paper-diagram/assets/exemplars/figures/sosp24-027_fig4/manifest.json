@@ -1,0 +1,42 @@
+{
+  "id": "sosp24-027_fig4",
+  "paper_id": "sosp24-027",
+  "fig": "4",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 4. Architecture of SWARM-KV with a single key. Clients use SWARM reads and writes to directly access the value replicated in disaggregated memory. The replicas that form Safe-Guess’ max register are spread across different memory nodes and implemented via In-n-Out max registers. The location ",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.86,
+  "n_components": 7,
+  "n_flows": 2,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-027/src/fig4_swarm-kv.svg",
+    "preview.png": "lab/extracted/sosp24-027/src/fig4_swarm-kv.png",
+    "print.png": "lab/extracted/sosp24-027/sosp24-027_fig4_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Minimal control-data instance: only 7 components and 2 flows separate one small Index/Client control box (top-right) from a dashed Memory-Node group whose ellipsis-joined pair forms the actual replicated data plane.",
+      "what_to_learn": "Group the replicated data-plane nodes in one dashed box separate from the small control-plane index/client pair, and use only two nodes plus an ellipsis rather than drawing every replica; avoid this figure's mistake of setting labels in a small serif font that hurts legibility."
+    }
+  ]
+}

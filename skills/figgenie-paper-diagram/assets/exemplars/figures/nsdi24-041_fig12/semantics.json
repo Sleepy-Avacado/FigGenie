@@ -1,0 +1,265 @@
+{
+  "paper_id": "nsdi24-041",
+  "fig": "12",
+  "system": {
+    "name": "Routable PCIe fabric",
+    "one_liner": "an empirical study characterizing how routable PCIe fabrics connecting host servers to disaggregated device chassis share bandwidth",
+    "domain": [
+      "hardware",
+      "interconnect",
+      "composable-infrastructure"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Server 1",
+        "role": "host server whose CPU and Root Complex (RC) originate PCIe flows F1/F2",
+        "container": "(a)/(b) topology",
+        "novel": false
+      },
+      {
+        "name": "Server 2",
+        "role": "second host server whose CPU/RC originate PCIe flows F3/F4",
+        "container": "(a)/(b) topology",
+        "novel": false
+      },
+      {
+        "name": "Host Adapter 1",
+        "role": "adapter connecting Server 1's root complex to the routable PCIe fabric, shared by F1 and F2",
+        "container": "Server 1",
+        "novel": false
+      },
+      {
+        "name": "Host Adapter 2",
+        "role": "adapter connecting Server 2's root complex to the routable PCIe fabric",
+        "container": "Server 2",
+        "novel": false
+      },
+      {
+        "name": "PCIe Switch",
+        "role": "external PCIe switch routing fabric traffic between both servers and both remote chassis, shared by F1 and F3",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Remote Chassis 1",
+        "role": "disaggregated chassis hosting FPGA endpoints reached over the fabric",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Endpoint Adapter 1",
+        "role": "adapter connecting Remote Chassis 1's FPGAs to the routable PCIe fabric",
+        "container": "Remote Chassis 1",
+        "novel": false
+      },
+      {
+        "name": "FPGA 1",
+        "role": "PCIe endpoint device inside Remote Chassis 1",
+        "container": "Remote Chassis 1",
+        "novel": false
+      },
+      {
+        "name": "FPGA 2",
+        "role": "second PCIe endpoint device inside Remote Chassis 1",
+        "container": "Remote Chassis 1",
+        "novel": false
+      },
+      {
+        "name": "Remote Chassis 2",
+        "role": "second disaggregated chassis hosting FPGA endpoints, shared by F2 and F4 via its endpoint adapter",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Endpoint Adapter 2",
+        "role": "adapter connecting Remote Chassis 2's FPGAs to the routable PCIe fabric, shared by F2 and F4",
+        "container": "Remote Chassis 2",
+        "novel": false
+      },
+      {
+        "name": "FPGA 3",
+        "role": "PCIe endpoint device inside Remote Chassis 2",
+        "container": "Remote Chassis 2",
+        "novel": false
+      },
+      {
+        "name": "FPGA 4",
+        "role": "second PCIe endpoint device inside Remote Chassis 2",
+        "container": "Remote Chassis 2",
+        "novel": false
+      },
+      {
+        "name": "SerDes (Retimer)",
+        "role": null,
+        "container": "(c) port architecture",
+        "novel": false
+      },
+      {
+        "name": "Upstream",
+        "role": "group of upstream lanes feeding an arbiter before the credit engine",
+        "container": "(c) port architecture",
+        "novel": false
+      },
+      {
+        "name": "Lane 1",
+        "role": "the first individual SerDes lane within the upstream/downstream group",
+        "container": "Upstream",
+        "novel": false
+      },
+      {
+        "name": "Lane n",
+        "role": "the last individual SerDes lane within the upstream/downstream group",
+        "container": "Upstream",
+        "novel": false
+      },
+      {
+        "name": "Downstream",
+        "role": "group of downstream lanes feeding a second arbiter before the credit engine",
+        "container": "(c) port architecture",
+        "novel": false
+      },
+      {
+        "name": "Aribter",
+        "role": "round-robin (RR) arbiter selecting among a direction's lanes before the credit engine; appears once for Upstream and once for Downstream (spelled 'Aribter' in the figure, likely a typo for 'Arbiter')",
+        "container": "(c) port architecture",
+        "novel": false
+      },
+      {
+        "name": "Credit Engine",
+        "role": "allocates/tracks credits for arbitrated lane traffic passing through the port",
+        "container": "(c) port architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Server 1",
+        "to": "Remote Chassis 1",
+        "what": "flow F1, sharing the host adapter with F2 and the PCIe switch with F3",
+        "step": null
+      },
+      {
+        "from": "Server 1",
+        "to": "Remote Chassis 2",
+        "what": "flow F2, sharing the host adapter with F1 and the endpoint adapter with F4",
+        "step": null
+      },
+      {
+        "from": "Server 2",
+        "to": "Remote Chassis 1",
+        "what": "flow F3, sharing the PCIe switch with F1",
+        "step": null
+      },
+      {
+        "from": "Server 2",
+        "to": "Remote Chassis 2",
+        "what": "flow F4, sharing the endpoint adapter with F2",
+        "step": null
+      },
+      {
+        "from": "Upstream",
+        "to": "Aribter",
+        "what": "upstream lane traffic (Lane 1 .. Lane n) arriving for round-robin arbitration",
+        "step": null
+      },
+      {
+        "from": "Downstream",
+        "to": "Aribter",
+        "what": "downstream lane traffic (Lane 1 .. Lane n) arriving for round-robin arbitration",
+        "step": null
+      },
+      {
+        "from": "Aribter",
+        "to": "Credit Engine",
+        "what": "arbitrated lane traffic arriving for credit accounting",
+        "step": null
+      }
+    ],
+    "key_idea": "Two hosts and two remote FPGA chassis share a routable PCIe fabric; flows sharing a host adapter, switch, or endpoint adapter (a) are compared against orthogonal flows under one root complex (b), while (c) shows a port lane/arbiter/credit-engine structure.",
+    "reading_order": "Left pair of panels (a) interleaved and (b) orthogonal path-sharing scenarios across the same Server-Switch-Chassis topology, then the smaller inset (c) detailing one port's lanes and credit engine."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "double",
+    "aspect": 5.47,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a5a5a5",
+        "used_for": "medium gray fill of the Server/Switch/Chassis topology boxes"
+      },
+      {
+        "hex": "#ff2600",
+        "used_for": "bright red highlighting of one PCIe flow (e.g. F1) in panels (a)/(b)"
+      },
+      {
+        "hex": "#0433ff",
+        "used_for": "bright blue highlighting of another PCIe flow (e.g. F2) in panels (a)/(b)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "light gray fill of adapter and FPGA sub-boxes"
+      },
+      {
+        "hex": "#6b7ca5",
+        "used_for": "steel-blue accents, e.g. the Credit Engine shape in panel (c)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt gray borders throughout, mostly solid",
+    "font": "HelveticaNeue sans, 3.5-6pt, non-bold",
+    "corners": "rounded",
+    "arrows": "thin colored arrows (red/blue/etc.) tracing each labeled flow (F1-F4) across the shared topology",
+    "icons": "none beyond the labelled boxes"
+  },
+  "encoding": {
+    "color_means": "gray = shared fabric topology (servers, switch, chassis, adapters), red/blue = individually tracked competing flows (F1-F4) whose bandwidth sharing is being measured",
+    "line_style_means": "distinct arrow colors distinguish each of the four concurrent PCIe flows so the reader can see which fabric components a colored pair of flows shares",
+    "emphasis": "drawing the identical Server-Switch-Chassis topology twice (a, b) with only the highlighted flow pattern changed isolates the effect of interleaved vs. orthogonal path sharing",
+    "reusable_patterns": [
+      "repeating one topology diagram twice with different highlighted flows to compare two traffic scenarios",
+      "a small generic-component inset (port architecture) attached to a larger topology figure"
+    ],
+    "weaknesses": [
+      "panel (c)'s port architecture is not explained by any retrieved body text, so its role is read from the figure and caption alone",
+      "exact per-flow (F1-F4) endpoints are inferred from the text's pairwise sharing description rather than directly labeled arrow-by-arrow"
+    ]
+  },
+  "tags": [
+    "PCIe",
+    "composable-infrastructure",
+    "disaggregation",
+    "interconnect-fabric",
+    "bandwidth-sharing",
+    "root-complex"
+  ],
+  "provenance": {
+    "sections": [
+      "5 In-Fabric Traffic Orchestration (p.9)",
+      "5 In-Fabric Traffic Orchestration (p.10)"
+    ],
+    "evidence": [
+      "we configure three path interleaving scenarios that share the host adapter (F1 v.s. F2), switch (F1 v.s. F3)",
+      "we explore how orthogonal communication paths interact with each other over the PCIe fabric",
+      "We consider a small deployment with two host servers and two remote chassis, connected via an external PCIe switch"
+    ]
+  },
+  "summary": "This figure documents a small routable-PCIe testbed used to study in-fabric traffic sharing. Two host servers, each with a CPU, Root Complex, and Host Adapter, connect through an external PCIe Switch to two Remote Chassis, each exposing two FPGA endpoints through an Endpoint Adapter. Panel (a) shows an interleaved-path scenario where flows F1-F4 are configured so pairs of them share a host adapter (F1 vs F2), the switch (F1 vs F3), or an endpoint adapter (F2 vs F4), letting the authors measure how bandwidth is partitioned when paths interleave. Panel (b) repeats the same topology for orthogonal paths issued under the same root complex. Panel (c) is a smaller, generic port-architecture inset: SerDes/Retimer lanes (Lane 1 .. Lane n) in each of the Upstream and Downstream directions feed their own round-robin arbiter, and both arbiters feed a shared Credit Engine, illustrating the port-level mechanism underlying the fabric's bandwidth allocation.",
+  "summary_zh": "该图展示可路由 PCIe 测试床:两台服务器经适配器、交换机连接两个远程机箱。(a)交织路径场景 F1-F4 两两共享组件;(b)同根复合体下的正交路径场景;(c)端口通用架构,上下行经仲裁器共用信用引擎。",
+  "confidence": "medium",
+  "notes": "layout-proposal: paired-scenario-plus-inset — two structurally identical topology panels (a, b) contrasted only by which flows are highlighted, plus an unrelated small port-architecture inset (c); two-panel captures the (a)/(b) comparison but not the added inset, and no retrieved text describes panel (c) directly.",
+  "venue": "NSDI24"
+}

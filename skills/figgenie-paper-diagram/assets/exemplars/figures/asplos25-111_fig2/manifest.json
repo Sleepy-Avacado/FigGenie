@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-111_fig2",
+  "paper_id": "asplos25-111",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Design of Aqa.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "google-slides",
+  "aspect": 1.8,
+  "n_components": 12,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "low",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-111/src/fig2_aqua-design-full.svg",
+    "preview.png": "lab/extracted/asplos25-111/src/fig2_aqua-design-full.png",
+    "print.png": "lab/extracted/asplos25-111/asplos25-111_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "Already flagged low-confidence: three pink AQUA-* control components sit around a stacked multi-server NVLink Domain, but the record's own note that the source text was truncated before explaining their roles limits how much this teaches.",
+      "what_to_learn": "Stack repeated resource-pool sheets to suggest the design generalizes across many servers, and single out one concrete instance (GPU 8, in dark magenta) inside the schematic pool; but do not leave any arrow's meaning to inference, as this exemplar does with its two unexplained dashed GPU-to-GPU links."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "osdi26-024_fig9",
+  "kind": "mechanism",
+  "paper_id": "osdi26-024",
+  "fig": "9",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 9: SPEX for (a) DFS and (b) BFS. (a) SPEX simulates the next k iterations, updating visit counts (C) and values (V) after each simulated choice, and skipping nodes already under or completed in speculation. (b) SPEX allocates speculative branches via softmax over reward scores, prioritizing h",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "tree",
+  "subject": "how SPEX simulates speculative rollouts on a search tree, updating visit counts and values before each real exploration",
+  "arrangement": "frames-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 1.96,
+  "n_elements": 12,
+  "n_relations": 4,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-024/src/fig9_spex_illustration.svg",
+    "preview.png": "lab/extracted/osdi26-024/src/fig9_spex_illustration.png",
+    "print.png": "lab/extracted/osdi26-024/osdi26-024_fig9_p8_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "A node's fill colour (grey/yellow/green) tracks whether it is explored, the current main-branch choice, or a speculative lookahead candidate, and a dashed box isolates the speculative-simulation frames that run ahead of the confirmed rollout.",
+      "what_to_learn": "Chevrons between frames, a dashed box around a speculative sub-sequence, red numerals for just-changed values, a legend strip on top",
+      "note_source": "doc"
+    }
+  ]
+}

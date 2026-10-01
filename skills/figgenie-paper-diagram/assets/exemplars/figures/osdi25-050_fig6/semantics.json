@@ -1,0 +1,168 @@
+{
+  "paper_id": "osdi25-050",
+  "fig": "6",
+  "system": {
+    "name": "BlitzScale",
+    "one_liner": "a large-model autoscaling system that achieves fast, live scaling with O(1) host-side parameter caching",
+    "domain": [
+      "ml-systems",
+      "llm-serving",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Load monitor & trigger",
+        "role": "tracks per-model serving load and decides whether/how many new instances to scale (§5.3)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Scale planner",
+        "role": "derives a scaling plan guiding how to load parameters onto scaled instances efficiently (§5.1)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Global parameter pool",
+        "role": "identifies the sources of model parameters across GPUs/hosts for the scale planner to consult",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Local model cache",
+        "role": "caches model parameters locally on a host (e.g., in a server's CPU memory) to accelerate scaling",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Live exe. Scheduler",
+        "role": "redirects requests between instances to utilize scaled instances even before parameters are fully loaded (§5.2)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Model executor",
+        "role": "executes the model on the managed GPUs of each server",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU servers managed by the BlitzScale",
+        "role": "the pool of physical servers (0 through N) that host GPUs and are orchestrated by BlitzScale",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Load monitor & trigger",
+        "to": "Scale planner",
+        "what": "scaling decision",
+        "step": 1
+      },
+      {
+        "from": "Scale planner",
+        "to": "Global parameter pool",
+        "what": "consults for parameter sources",
+        "step": 2
+      },
+      {
+        "from": "Global parameter pool",
+        "to": "Model executor",
+        "what": "parameters loaded from a GPU or host CPU memory source",
+        "step": 3
+      },
+      {
+        "from": "Live exe. Scheduler",
+        "to": "Model executor",
+        "what": "redirected requests",
+        "step": 4
+      }
+    ],
+    "key_idea": "BlitzScale adds a scale planner that consults a global parameter pool to find the fastest source for model parameters, and a live execution scheduler that redirects requests to scaling instances before their parameters finish loading, on top of a conventional load-monitor-triggered autoscaling loop.",
+    "reading_order": "Top row shows the Global parameter pool and Local model cache resources; the numbered ①-④ middle row (Load monitor & trigger, Scale planner, Live exe. Scheduler, Model executor) reads left to right; the bottom row shows the pool of GPU servers (0..N) that these components manage."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.23,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red markers/text highlighting new modules introduced by BlitzScale and annotations like the CPU-cached parameter source"
+      },
+      {
+        "hex": "#0432ff",
+        "used_for": "blue accents on GPU/model icons"
+      },
+      {
+        "hex": "#fff6e6",
+        "used_for": "cream fill of the Global parameter pool and control-component boxes"
+      },
+      {
+        "hex": "#e6fff0",
+        "used_for": "light green accent fill"
+      },
+      {
+        "hex": "#f5e6ff",
+        "used_for": "light purple accent fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders, dashed lines linking annotations (e.g., 'Deployed on GPU0 on Server N') to the diagram",
+    "font": "Lato / Courier New sans-monospace mix, small (4.5-11.5pt)",
+    "corners": "mixed",
+    "arrows": "thin numbered black arrows connecting the four control components, plus pointers from parameter-source labels into the global parameter pool",
+    "icons": "small server/GPU rack icons across the bottom row, model-chunk icon in the parameter pool"
+  },
+  "encoding": {
+    "color_means": "red = new modules introduced by BlitzScale (per in-figure caption convention) and CPU-cache source annotations, blue = GPU/model resource icons",
+    "line_style_means": "dashed lines connect explanatory annotations (e.g., where a model's parameters are cached) to the relevant diagram element",
+    "emphasis": "numbering the four control components 1-4 and red-marking the new ones (scale planner, global parameter pool, live execution scheduler) highlights which parts are BlitzScale's contribution versus prior autoscaling designs",
+    "reusable_patterns": [
+      "numbered control-plane pipeline sitting above a managed resource pool (GPU servers)",
+      "inline annotation pointing to a specific cached-parameter example"
+    ],
+    "weaknesses": [
+      "very high text density for the figure's small size",
+      "red color-coding convention for 'new modules' relies on the caption for interpretation"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "autoscaling",
+    "parameter-loading",
+    "gpu-caching",
+    "cloud",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 System Overview of BLITZSCALE (p.6)"
+    ],
+    "evidence": [
+      "we have a load monitor (➀) tracking the serving load for each model service",
+      "our scale planner (➁) will derive a scaling plan that guides how to load parameters",
+      "our live execution (exe.) scheduler (➃) will redirect requests between instances"
+    ]
+  },
+  "summary": "This figure shows the system architecture of BlitzScale, a large-model autoscaling system. Like prior autoscaling systems, a Load monitor & trigger tracks per-model serving load and decides when and how much to scale. BlitzScale's contributions, marked in red, are a Scale planner that derives an efficient scaling plan by consulting a Global parameter pool to find the fastest source for model parameters (e.g., another GPU's memory or a host's CPU-cached copy via a Local model cache), and a Live exe. Scheduler that redirects requests to newly scaled instances even before their parameters are fully loaded. A Model executor runs inference on the GPUs of each server, and the bottom row shows the pool of GPU servers (numbered 0 through N) that BlitzScale manages. The diagram is a dense, flat-filled boxes-and-arrows architecture drawing with red highlighting for the paper's novel modules and an inline annotation illustrating a concrete parameter-caching example.",
+  "summary_zh": "该图展示 BlitzScale 的系统架构：负载监控与触发器决定何时扩容，新增的规划器咨询全局参数池以确定最快的参数来源（如某主机 CPU 缓存的模型副本），执行调度器在参数完全加载前就将请求重定向到新实例，底层由一组 GPU 服务器承载，图中以红色标出新增模块。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-028_fig2",
+  "paper_id": "nsdi26-028",
+  "fig": "2",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 2: vDUSE and its limitations",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.83,
+  "n_components": 15,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-028/nsdi26-028_fig2_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-028/nsdi26-028_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: the dashed divider here separates userspace from kernel space, a privilege boundary, not a time axis; there are no phases, no Gantt blocks, only three numbered limitation callouts on an ordinary stack diagram.",
+      "what_to_learn": "Read this as a layered or host-device-style figure instead: stack userspace over kernel space across one dashed boundary the way a PCIe or OS boundary is drawn elsewhere, and overlay numbered red-italic callouts directly on the components a limitation applies to."
+    }
+  ]
+}

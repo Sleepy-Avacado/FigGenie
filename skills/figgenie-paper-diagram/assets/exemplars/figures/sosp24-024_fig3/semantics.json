@@ -1,0 +1,236 @@
+{
+  "paper_id": "sosp24-024",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "T10",
+    "one_liner": "a DL compiler that exploits inter-core communication and distributed on-chip memory on AI chips like the Graphcore IPU via a compute-shift execution pattern",
+    "domain": [
+      "dl-compilers",
+      "ai-accelerators",
+      "distributed-computing"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how a MatMul operator can be partitioned across 2 cores either spatially only, or also temporally into 2 shift steps",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Input",
+        "kind": "row",
+        "role": "the m x k input matrix of the MatMul operator; m=4 rows split top (yellow) / bottom (red), k=2 columns",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Weight",
+        "kind": "row",
+        "role": "the k x n weight matrix; k=2 rows, n=2 columns split left (blue) / right (green)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Output",
+        "kind": "row",
+        "role": "the m x n output matrix; m=4 rows split top (orange) / bottom (purple), matching Input's row split",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Core 0",
+        "kind": "lane",
+        "role": "first of the two cores the MatMul is mapped onto; holds the top (yellow/orange) row-block of Input/Output",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Core 1",
+        "kind": "lane",
+        "role": "second core; holds the bottom (red/purple) row-block of Input/Output",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Step 0",
+        "kind": "label",
+        "role": "first temporal step in panel (c)'s 2-step schedule",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Shift",
+        "kind": "label",
+        "role": "the inter-step phase where the two cores swap their halves of the weight tile",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Step 1",
+        "kind": "label",
+        "role": "second temporal step, after the shift, computing the remaining half of each core's output",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Input",
+        "to": "Weight",
+        "what": "matrix multiplication (x)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Weight",
+        "to": "Output",
+        "what": "the product is written into the output matrix (=)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Core 0",
+        "to": "Core 1",
+        "what": "in the Shift phase, Core 0 sends its half of the weight tile to Core 1",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Core 1",
+        "to": "Core 0",
+        "what": "in the Shift phase, Core 1 sends its half of the weight tile to Core 0",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Entire MatMul operator",
+        "axis": "alternatives",
+        "differs": "shows the whole, un-partitioned m=4,k=2,n=2 MatMul (Input x Weight = Output) as the shared baseline the other two panels partition",
+        "verdict": null
+      },
+      {
+        "label": "(b) Spatially partition into 2 cores",
+        "axis": "alternatives",
+        "differs": "each core gets one row-block of Input/Output but a full redundant copy of Weight, computing its whole output tile in one step with no inter-core communication",
+        "verdict": "higher memory footprint, no communication"
+      },
+      {
+        "label": "(c) Temporally partition into 2 steps, shifting blue and green",
+        "axis": "alternatives",
+        "differs": "Weight is also split by column across the two cores; each core computes half its output per step (Step 0, Step 1) and the two cores swap (Shift) their weight halves in between",
+        "verdict": "lower memory footprint, more communication overhead"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "The same MatMul can map to 2 cores either with a full redundant weight copy per core (plan b) or with the weight split and shifted between cores over 2 steps (plan c), trading memory for communication.",
+    "reading_order": "left to right across the three labelled panels: (a) the whole operator, then (b) and (c) each read top (Core 0) then bottom (Core 1); within (c), left to right through Step 0, the Shift, and Step 1"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "timeline-ticks",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 7.26,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill of Input's top row-block / Core 0's input tile"
+      },
+      {
+        "hex": "#ff9999",
+        "used_for": "pale-red/salmon fill of Input's bottom row-block / Core 1's input tile"
+      },
+      {
+        "hex": "#9999ff",
+        "used_for": "periwinkle-blue fill of Weight's left column and the 'blue' shifted tile"
+      },
+      {
+        "hex": "#6d8764",
+        "used_for": "olive-green fill of Weight's right column and the 'green' shifted tile"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale-orange fill of Output's top row-block / Core 0's output tile"
+      },
+      {
+        "hex": "#cc99ff",
+        "used_for": "pale-purple fill of Output's bottom row-block / Core 1's output tile"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray rounded background band behind each 'Core X: ... = ...' row"
+      },
+      {
+        "hex": "#cc0000",
+        "used_for": "red 'Step 0'/'Shift'/'Step 1' phase labels and dashed dividers in panel (c), and the 'm=4' dimension labels in panel (a)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin coloured cell borders matching each tile's fill hue; dashed black outline on the placeholder half of a weight tile during the Shift sub-frame; dashed red vertical rules separating Step 0 / Shift / Step 1",
+    "corners": "mixed",
+    "arrows": "a small number of thin black arrows only in the Shift sub-frame, showing each core's weight-tile half moving to the other core",
+    "font": "Arial sans, coloured labels for each matrix dimension (m, k, n) and for Core 0/Core 1",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow/red distinguish Core 0's vs Core 1's row-block of Input and Output; blue/green distinguish the two column-halves of Weight; orange/purple distinguish Core 0's vs Core 1's Output tile; gray is just the per-core row background",
+    "line_style_means": "solid coloured borders on every tile; a dashed black outline marks a tile-half that is empty or about to be filled; dashed red vertical rules mark the Step 0 / Shift / Step 1 phase boundaries in panel (c)",
+    "state_means": "panel (b) vs (c) are told apart by whether each core's Weight tile is a full 2x2 copy (b) or only a coloured half (c); within (c), Step 0 vs Step 1 are told apart by which half of each core's Output is filled in (white vs coloured) and by which colour (blue/green) each core currently holds",
+    "marker_means": "no numbered markers; 'Step 0', 'Shift', 'Step 1' text labels order panel (c)'s three sub-frames, and small black arrows in the Shift sub-frame show the swap direction",
+    "emphasis": "identical row/column colour-coding is kept from panel (a) through (b) and (c), so the reader can see exactly which slice of Input/Weight/Output each core is responsible for at every stage",
+    "reusable_patterns": [
+      "a baseline 'whole data structure' panel followed by two side-by-side partitioned variants that reuse its exact colour key",
+      "a 3-beat Step/Shift/Step micro-sequence inside one comparison panel, showing a ring-shift of data between two lanes"
+    ],
+    "weaknesses": [
+      "panel (c)'s internal Step 0 / Shift / Step 1 sub-sequence is a nested evolution inside a comparison panel, which the flat 'panels' vocabulary of this schema record cannot fully separate from the (a)/(b)/(c) comparison in one field",
+      "the 'Shift' sub-frame's dashed placeholder tiles look visually similar to the plain white 'not yet computed' output cells, which could be misread as the same kind of blank"
+    ]
+  },
+  "tags": [
+    "dl-compiler",
+    "inter-core-communication",
+    "compute-shift",
+    "tensor-partitioning",
+    "ipu",
+    "T10"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Core Idea of T10 (p.3)",
+      "§3 Core Idea of T10 (p.4)"
+    ],
+    "evidence": [
+      "Both (b) and (c) are valid compute-shift execution plans, but with different tradeoffs between memory footprint and communication overhead.",
+      "Plan (b) finishes the entire computation in one step without inter-core communication, but has a higher memory footprint.",
+      "Plan (c) has less memory footprint but incurs more communication overhead."
+    ]
+  },
+  "summary": "Figure 3 walks through T10's compute-shift mapping of a MatMul operator (m=4, k=2, n=2) onto 2 cores, comparing two valid execution plans. Panel (a) shows the whole, un-partitioned Input x Weight = Output operation, colour-coding each matrix's row/column halves. Panel (b) spatially partitions only the Input/Output row-blocks across Core 0 and Core 1, but gives each core a full redundant copy of Weight, so the whole computation finishes in one step with no inter-core communication, at a higher memory cost. Panel (c) additionally partitions Weight by column across the two cores and computes in two steps: Step 0 computes half of each core's Output using its own weight half, a Shift phase swaps the blue and green weight halves between the two cores, and Step 1 computes the other half of each Output, using less memory but requiring one round of communication.",
+  "summary_zh": "该图示T10将MatMul映射到2核的compute-shift方案：(a)完整算子；(b)仅空间划分，每核持全Weight副本，一步完成无需通信但内存高；(c)再切分Weight，分两步交换blue/green权重块，省内存但增通信。",
+  "confidence": "high",
+  "notes": "content.groups corrected from the prior 'evolution' (primary) to primary 'comparison' with 'evolution' kept as a secondary group: the caption explicitly frames (b) and (c) as 'valid compute-shift execution plans' being compared for their memory/communication tradeoff, which matches the v3 comparison definition and takes priority over evolution per the labelling order; the Step0/Shift/Step1 temporal sequence still exists but only inside panel (c), so it is recorded as evolution/secondary and described within that one panel's 'differs' text rather than as separate top-level frames.",
+  "venue": "SOSP24"
+}

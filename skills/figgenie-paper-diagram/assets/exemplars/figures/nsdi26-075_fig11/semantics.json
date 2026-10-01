@@ -1,0 +1,246 @@
+{
+  "paper_id": "nsdi26-075",
+  "fig": "11",
+  "kind": "mechanism",
+  "system": {
+    "name": "MAE",
+    "one_liner": "a more adaptive video encoder for consistent low latency in high-quality real-time communication",
+    "domain": [
+      "video-encoding",
+      "real-time-communication",
+      "rate-control"
+    ],
+    "abstraction": "codec-module"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how an encoder predicts, bounds, then budget-checks a frame's compression ratio to produce the final frame",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Current frame complexity",
+        "kind": "icon",
+        "role": "input signal: the content complexity of the frame being encoded now",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "History complexity + History encoded size",
+        "kind": "icon",
+        "role": "input signal: complexity and encoded size of recently encoded frames",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Initial Compression Ratio",
+        "kind": "box",
+        "role": "Step 1 output: the predicted compression ratio before any bounding",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "max_ratio",
+        "kind": "label",
+        "role": "upper bound applied to the initial compression ratio in Step 2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "min_ratio",
+        "kind": "label",
+        "role": "lower bound applied to the initial compression ratio in Step 2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Compression Ratio",
+        "kind": "box",
+        "role": "Step 2 output: the initial ratio after clipping to [min_ratio, max_ratio]",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Overused",
+        "kind": "label",
+        "role": "Step 3 branch: the encoded size would exceed the remaining byte budget",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Underused",
+        "kind": "label",
+        "role": "Step 3 branch: the encoded size would fall short of the remaining byte budget",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Final frame",
+        "kind": "box",
+        "role": "Step 3 output on the Overused branch",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Final Frame",
+        "kind": "box",
+        "role": "Step 3 output on the Underused branch",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Current frame complexity",
+        "to": "Initial Compression Ratio",
+        "what": "content complexity feeds the initial ratio prediction",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "History complexity + History encoded size",
+        "to": "Initial Compression Ratio",
+        "what": "historical stats feed the initial ratio prediction",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Initial Compression Ratio",
+        "to": "Compression Ratio",
+        "what": "clipped between the max_ratio and min_ratio bounds",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "max_ratio",
+        "to": "Compression Ratio",
+        "what": "upper bound constrains the output ratio",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "min_ratio",
+        "to": "Compression Ratio",
+        "what": "lower bound constrains the output ratio",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "Compression Ratio",
+        "to": "Final frame",
+        "what": "Overused branch: the byte budget is exceeded",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "Compression Ratio",
+        "to": "Final Frame",
+        "what": "Underused branch: the byte budget is not fully used",
+        "kind": "control",
+        "step": "3"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "Step 1",
+        "at": "Initial Compression Ratio",
+        "what": "predicts an initial compression ratio from the current frame's content complexity and historical complexity/encoded-size stats",
+        "carries": "current + historical complexity signals"
+      },
+      {
+        "marker": "Step 2",
+        "at": "Compression Ratio",
+        "what": "the initial ratio is clipped between a max_ratio and a min_ratio bound",
+        "carries": "initial compression ratio"
+      },
+      {
+        "marker": "Step 3",
+        "at": "Final frame / Final Frame",
+        "what": "the bounded ratio's resulting size is checked against the remaining byte budget; overusing or underusing it yields the final frame",
+        "carries": "compression ratio, remaining byte budget"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A general encoder rate-control loop moves a frame's compression ratio through three gates, initial prediction from complexity signals, clipping between max/min bounds, and a final remaining-byte-budget check, before emitting the final frame.",
+    "reading_order": "left to right across the three labelled steps: complexity signals into the Initial Compression Ratio (Step 1), clipped to a Compression Ratio between min_ratio and max_ratio (Step 2), then checked against the remaining byte budget to emit the Final Frame on either an Overused or Underused branch (Step 3)"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.08,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fffad6",
+        "used_for": "pale-yellow header band highlighting the 'Initial prediction' and 'Ratio limitation check' column titles"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "pale-blue fill of the 'Initial Compression Ratio' and 'Compression Ratio' boxes"
+      },
+      {
+        "hex": "#ffd06e",
+        "used_for": "deeper orange/gold fill of the 'Remain bytes check' header band and the two 'Final frame' outcome boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.41pt), some dashed, black outlines",
+    "corners": "square",
+    "arrows": "thin connecting lines with no arrowheads linking each stage to the next; vertical divider lines separating the three steps",
+    "font": "sans (Aptos), small (~5pt)",
+    "icons": "two small face/portrait icons illustrating the 'current frame' versus 'history' complexity signals"
+  },
+  "encoding": {
+    "color_means": "pale yellow marks the first two step headers, deeper orange marks the third step's header and its two outcome boxes; pale blue marks the two intermediate compression-ratio boxes",
+    "line_style_means": "vertical divider lines separate the three steps; thin connecting lines (without arrowheads) link each stage to the next",
+    "state_means": "not applicable; a single generic rate-control pipeline rather than a before/after or alternatives figure",
+    "marker_means": "the text labels 'Step 1', 'Step 2', 'Step 3' mark the three stages in order; 'Overused'/'Underused' label the two possible outcomes of the final check",
+    "emphasis": "the orange header/box colour is reserved for the third step and its outcome boxes, visually flagging the remaining-byte-budget check and its Final Frame result as the pipeline's end point",
+    "reusable_patterns": [
+      "a three-stage labelled pipeline (predict, bound, budget-check) with two small icons standing in for its input signals and a colour change marking the final decision stage"
+    ],
+    "weaknesses": [
+      "the two outcome boxes are both labelled 'Final frame'/'Final Frame' without a clearer visual distinction between the Overused and Underused adjustment each represents"
+    ]
+  },
+  "tags": [
+    "MAE",
+    "rate-control",
+    "video-encoding",
+    "compression-ratio",
+    "real-time-communication"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design"
+    ],
+    "evidence": [
+      "During encoding, the encoder first calculates a frame's compression ratio based on its content complexity",
+      "The rate control module then validates whether this compression ratio meets the bitrate requirement",
+      "the bottleneck lies in the \"Remain bytes check\" phase"
+    ]
+  },
+  "summary": "This figure sketches the general rate-control workflow inside a video encoder, framed as three labelled steps. In Step 1 (Initial prediction), the encoder combines the current frame's content complexity with historical complexity and historical encoded size to predict an Initial Compression Ratio. In Step 2 (Ratio limitation check), that initial ratio is clipped between a max_ratio and a min_ratio bound to produce a Compression Ratio. In Step 3 (Remain bytes check), the bounded ratio's resulting size is checked against the remaining bit/byte budget: if the budget is overused or underused, the encoder adjusts accordingly to emit the Final Frame. The paper walks through this generic pipeline to argue that buffer size, which governs the Step 3 check, is the parameter best suited for adaptive adjustment, since the other candidate parameters influence only earlier, less bottlenecked steps.",
+  "summary_zh": "该图走读通用编码器码率控制流程：步骤一由当前帧复杂度与历史复杂度/编码大小预测初始压缩比；步骤二将其限制在max_ratio与min_ratio之间；步骤三按剩余字节预算判断超用或欠用，据此生成最终帧。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior label's 'none' (not a valid v3 base value) to 'component', since the figure is a labelled box-and-arrow processing pipeline. style.palette uses the measured-attributes top colours since this figure has no separate author source-SVG histogram in the context file.",
+  "venue": "NSDI26"
+}

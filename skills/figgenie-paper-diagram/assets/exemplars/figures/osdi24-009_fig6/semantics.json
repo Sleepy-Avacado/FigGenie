@@ -1,0 +1,173 @@
+{
+  "paper_id": "osdi24-009",
+  "fig": "6",
+  "system": {
+    "name": "Chop Chop",
+    "one_liner": "a Byzantine atomic broadcast protocol that uses a broker layer between clients and servers to reach the network's throughput limit",
+    "domain": [
+      "distributed-systems",
+      "consensus",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "AWS",
+        "role": "cloud provider hosting the continent/region-organized deployment of load clients, brokers and servers",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "continent",
+        "role": "grouping of regions spanning North America, South America, Europe, South Africa, Australia and Asia",
+        "container": "AWS",
+        "novel": null
+      },
+      {
+        "name": "region",
+        "role": "grouping within a continent containing load clients and brokers",
+        "container": "continent",
+        "novel": null
+      },
+      {
+        "name": "Load clients",
+        "role": "18 client load-generation instances per region",
+        "container": "region",
+        "novel": null
+      },
+      {
+        "name": "Brokers",
+        "role": "6 broker instances per region relaying messages between clients and servers",
+        "container": "region",
+        "novel": null
+      },
+      {
+        "name": "Clients",
+        "role": "16 client instances shown interacting directly with Brokers",
+        "container": "AWS",
+        "novel": null
+      },
+      {
+        "name": "Servers",
+        "role": "64 server instances (c6i.8xlarge) processing atomic broadcast",
+        "container": "AWS",
+        "novel": null
+      },
+      {
+        "name": "OVH",
+        "role": "second cloud provider hosting additional load brokers",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Load brokers",
+        "role": "64 broker load-generation instances on OVH connected to the AWS servers",
+        "container": "OVH",
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Load clients",
+        "to": "Brokers",
+        "what": "load-generated client messages",
+        "step": null
+      },
+      {
+        "from": "Clients",
+        "to": "Brokers",
+        "what": "client messages",
+        "step": null
+      },
+      {
+        "from": "Brokers",
+        "to": "Servers",
+        "what": "submitted messages",
+        "step": null
+      },
+      {
+        "from": "Servers",
+        "to": "Load brokers",
+        "what": "cross-cloud broker traffic",
+        "step": null
+      }
+    ],
+    "key_idea": "The evaluation deployment spans 64 geo-distributed AWS servers across 14 regions on six continents, load-tested by AWS-hosted load clients/brokers and cross-cloud OVH-hosted load brokers.",
+    "reading_order": "top-right to bottom: Clients and OVH Load brokers surround a central AWS box containing nested continent and region groupings of Load clients and Brokers, which connect to Servers."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.37,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff9900",
+        "used_for": "orange dashed outline for the AWS grouping box"
+      },
+      {
+        "hex": "#878787",
+        "used_for": "gray dashed outline for the continent grouping"
+      },
+      {
+        "hex": "#264670",
+        "used_for": "dark blue for the OVH cloud icon/outline"
+      },
+      {
+        "hex": "#009900",
+        "used_for": "green dashed outline for the region grouping"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed colored borders nesting AWS > continent > region",
+    "font": "Arial, 7-10.5pt",
+    "corners": "mixed",
+    "arrows": "orthogonal, filled arrowheads (some bidirectional)",
+    "icons": "vector cloud icons for AWS and OVH"
+  },
+  "encoding": {
+    "color_means": "orange = AWS scope, gray = continent scope, green = region scope, blue = OVH cloud icon",
+    "line_style_means": "nested dashed boxes of different colors encode the AWS > continent > region containment hierarchy",
+    "emphasis": "nested colored dashed boxes visually communicate the multi-level geo-distribution of the deployment across clouds, continents and regions",
+    "reusable_patterns": [
+      "nested containment diagram summarizing a benchmark deployment's scale and geography"
+    ],
+    "weaknesses": [
+      "dense nesting of dashed boxes can be hard to trace at small size"
+    ]
+  },
+  "tags": [
+    "deployment",
+    "geo-distribution",
+    "cloud",
+    "benchmark",
+    "Byzantine fault tolerance"
+  ],
+  "provenance": {
+    "sections": [
+      "6 Evaluation (p.11)"
+    ],
+    "evidence": [
+      "the Chop Chop benchmarks involve 64 c6i.8xlarge AWS servers, of 32 Intel vCPUs each, geo-distributed across 14 regions",
+      "the system survives 21 faulty servers out of 64",
+      "Fig. 6 overviews the used deployment."
+    ]
+  },
+  "summary": "This figure summarizes the geo-distributed cloud deployment used to evaluate Chop Chop. The default benchmark setup involves 64 AWS c6i.8xlarge servers (32 vCPUs each) spread across 14 regions grouped into six continents (North America, South America, Europe, South Africa, Australia, Asia). Within each region, 18 load-client and 6 broker instances generate and relay load; 16 additional AWS clients interact directly with brokers, and the servers also connect to 64 load-broker instances hosted on a second cloud provider, OVH, to test cross-cloud broker behavior. The diagram is a nested containment diagram: an orange dashed AWS box contains a gray dashed continent box, which contains a green dashed region box holding Load clients and Brokers; Clients, Servers and the OVH Load brokers sit as separate boxes connected by arrows, with cloud icons marking the two providers.",
+  "summary_zh": "图6概述Chop Chop评测所用的跨云部署：默认基准涉及64台AWS c6i.8xlarge服务器，分布在14个地区、覆盖六大洲，每个地区含18个负载客户端与6个Broker，另有16个客户端及OVH云上64个负载Broker实例参与跨云测试，图中以嵌套虚线框表示AWS/大洲/地区的包含关系。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

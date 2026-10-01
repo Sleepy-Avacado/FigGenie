@@ -1,0 +1,279 @@
+{
+  "paper_id": "sosp25-042",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "Moirai",
+    "one_liner": "a cost-optimization framework that analyzes job and data access patterns to jointly place data and schedule jobs across hybrid on-premises/cloud deployments",
+    "domain": [
+      "hybrid-cloud",
+      "data-placement",
+      "job-scheduling"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how Moirai's Spinner/Allotter/Enacter pipeline turns job-data access logs into updated job-scheduling and data-placement plans",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Job Queue",
+        "kind": "box",
+        "role": "holds pending jobs (shown as 3,2,1) waiting to be scheduled",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Job Scheduler",
+        "kind": "box",
+        "role": "routes queued jobs to on-premises or the public cloud and receives updated job plans",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "On-premises",
+        "kind": "box",
+        "role": "local site running jobs 1 and 2 over tables A, B, C, D",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Public cloud",
+        "kind": "box",
+        "role": "cloud site running job 3 over a replicated copy of table D",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Spinner",
+        "kind": "box",
+        "role": "builds a job-data graph (jobs and the tables they access) from access logs",
+        "container": "Moirai",
+        "highlighted": true
+      },
+      {
+        "name": "Jobs (id, resource demand)",
+        "kind": "row",
+        "role": "job nodes 1,2,3 inside the Spinner's graph, weighted by resource demand",
+        "container": "Spinner",
+        "highlighted": false
+      },
+      {
+        "name": "Tables (id)",
+        "kind": "row",
+        "role": "table nodes A,B,C,D inside the Spinner's graph, linked to the jobs that access them",
+        "container": "Spinner",
+        "highlighted": false
+      },
+      {
+        "name": "Allotter",
+        "kind": "box",
+        "role": "computes updated job-scheduling and data-placement plans from the job-data graph, current data sizes/placement, replication strategy, cost model, and capacity constraints",
+        "container": "Moirai",
+        "highlighted": true
+      },
+      {
+        "name": "Data Placement Enacter",
+        "kind": "box",
+        "role": "repartitions and replicates data according to the Allotter's updated data plan",
+        "container": "Moirai",
+        "highlighted": true
+      },
+      {
+        "name": "Current data sizes and placement",
+        "kind": "box",
+        "role": "Input2 to the Allotter, describing the present data layout",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Job Queue",
+        "to": "Job Scheduler",
+        "what": "queued jobs (3,2,1) are pulled by the scheduler",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Job Scheduler",
+        "to": "On-premises",
+        "what": "jobs 2 and 1 are routed to run on-premises",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Job Scheduler",
+        "to": "Public cloud",
+        "what": "job 3 is routed to run in the public cloud",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Job Scheduler",
+        "to": "Spinner",
+        "what": "logs of job and data access are sent to the Spinner",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Spinner",
+        "to": "Allotter",
+        "what": "the Spinner emits a job-data graph (Input1) built from jobs and the tables they access",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Current data sizes and placement",
+        "to": "Allotter",
+        "what": "current data sizes and placement feed the Allotter as Input2",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Allotter",
+        "to": "Job Scheduler",
+        "what": "an updated job plan is sent back to the Job Scheduler",
+        "kind": "control",
+        "step": "2a"
+      },
+      {
+        "from": "Allotter",
+        "to": "Data Placement Enacter",
+        "what": "an updated data plan is sent to the Data Placement Enacter",
+        "kind": "control",
+        "step": "2b"
+      },
+      {
+        "from": "Data Placement Enacter",
+        "to": "Public cloud",
+        "what": "the enacter repartitions/replicates table D into the public cloud",
+        "kind": "control",
+        "step": "2b"
+      },
+      {
+        "from": "Data Placement Enacter",
+        "to": "On-premises",
+        "what": "the enacter updates data partitioning on-premises too",
+        "kind": "control",
+        "step": "2b"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Spinner",
+        "what": "the Spinner consumes logs of job and data access to generate a job-data graph of jobs and the tables they touch",
+        "carries": "logs of job and data access -> job-data graph"
+      },
+      {
+        "marker": "2a",
+        "at": "Allotter to Job Scheduler",
+        "what": "the Allotter uses the job-data graph plus current data sizes/placement to compute an updated job scheduling policy, sent back to the Job Scheduler",
+        "carries": "updated job plan"
+      },
+      {
+        "marker": "2b",
+        "at": "Allotter to Data Placement Enacter",
+        "what": "the Allotter likewise computes an updated data-placement plan, sent to the Data Placement Enacter, which repartitions/replicates tables (e.g. replicating D to the public cloud)",
+        "carries": "updated data plan"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "a concrete example placement: jobs 1 and 2 plus tables A,B,C run on-premises, job 3 plus a replicated copy of table D run in the public cloud",
+      "linked_by": "position inside the On-premises/Public-cloud boxes, plus matching numeric/letter IDs shared with the Spinner's job-data graph",
+      "result_cells": "the on-premises and public-cloud boxes show the resulting job/table placement directly, with D shaded pink and linked by a dashed 'replicated' arrow between the two sites"
+    },
+    "key_idea": "Moirai periodically turns logs of job and data access into a job-data graph, feeds it and current data placement into a cost-aware Allotter, and pushes updated job-scheduling and data-placement plans back to the Job Scheduler and Enacter.",
+    "reading_order": "left to right from Job Queue through Job Scheduler to the on-premises/public-cloud placement, then down into Moirai's Spinner, Allotter, and Data Placement Enacter pipeline"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.33,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4495d1",
+        "used_for": "medium blue fill of the Job Scheduler box"
+      },
+      {
+        "hex": "#434445",
+        "used_for": "dark gray text and chip-icon accents on the job/table graph nodes"
+      },
+      {
+        "hex": "#00bef2",
+        "used_for": "bright cyan accents on the Allotter's gear/lightning icon and the small chip icons"
+      },
+      {
+        "hex": "#0078d4",
+        "used_for": "blue outline of the Public cloud icon"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pale pink/red fill highlighting table D, the one replicated across sites"
+      }
+    ],
+    "background": "white, with a tan band enclosing the Moirai pipeline",
+    "fill": "flat",
+    "stroke": "thin black arrows for control/data flow; dashed gray arrow for the 'replicated' link between sites",
+    "corners": "mixed",
+    "arrows": "thin black arrows throughout, chevron-style block arrows from the Job Scheduler to each site, and one dashed curved arrow marking replication",
+    "font": "sans-serif (Arial), bold red for the Step 1/2a/2b callouts, bold black for component names",
+    "icons": "small CPU-chip icons on job/table graph nodes, a gear-and-lightning icon on the Allotter, a document icon for logs, and outline icons for the two user figures at the Job Queue"
+  },
+  "encoding": {
+    "color_means": "blue marks the Job Scheduler; green marks the Spinner; orange marks the Allotter; purple marks the Data Placement Enacter; pink singles out table D as the item replicated between on-premises and the public cloud",
+    "line_style_means": "solid black arrows carry jobs, logs, graphs, and plans between components; a dashed gray arrow specifically marks D's replication from on-premises to the public cloud",
+    "state_means": "not applicable in the FSM sense; the figure shows one pass of a periodically repeated optimization cycle rather than a persistent state machine",
+    "marker_means": "bold red 'Step 1', 'Step 2a', 'Step 2b' labels order the optimization cycle: graph generation, then two parallel plan updates",
+    "emphasis": "the tan background box isolates Moirai's own three components (Spinner, Allotter, Data Placement Enacter) from the pre-existing Job Queue/Scheduler and the on-premises/public-cloud deployment it optimizes",
+    "reusable_patterns": [
+      "a components-plus-numbered-step diagram where a worked routing/placement example (numbered jobs, lettered tables) sits directly above the abstract pipeline that produced it"
+    ],
+    "weaknesses": [
+      "the small circled 1/2/3 job-ID labels next to the Job Scheduler's arrows visually resemble the red Step 1/2a/2b markers but encode a different thing (which job, not which step), which could be misread as one numbering scheme"
+    ]
+  },
+  "tags": [
+    "hybrid-cloud",
+    "data-placement",
+    "job-scheduling",
+    "cost-optimization",
+    "Moirai"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Moirai Design"
+    ],
+    "evidence": [
+      "The Job Scheduler collects data access logs that record executed jobs, the tables accessed, and the size of data accessed",
+      "The Spinner uses collected data to generate a Job-Data Graph for jobs that occurred since the last optimization round",
+      "the Allotter takes it along with resource constraints for on-premises and public cloud environments"
+    ]
+  },
+  "summary": "Figure 3 walks through Moirai's periodic optimization cycle for placing jobs and data across on-premises and public-cloud sites. Above, a worked example shows the Job Scheduler routing queued jobs 2 and 1 to run on-premises (alongside tables A, B, C) and job 3 to the public cloud, with table D replicated between the two sites. Below, inside Moirai, Step 1 has the Spinner consume logs of job and data access to generate a job-data graph (job id/resource-demand nodes linked to the table id nodes they touch). That graph, together with current data sizes and placement (Input2), feeds the Allotter, which applies a replication strategy, cost model, and capacity constraints to compute updated plans: Step 2a sends an updated job plan back to the Job Scheduler, and Step 2b sends an updated data plan to the Data Placement Enacter, which repartitions and replicates the affected tables.",
+  "summary_zh": "该图走读Moirai优化流程：Scheduler按示例将作业分派本地与公有云，表D两端复制；Spinner据日志生成作业-数据图输入Allotter，据策略/成本/容量算出更新计划，分传回Scheduler与Enacter执行。",
+  "confidence": "high",
+  "notes": "Corrected base from the prior pass's 'architecture' (not a valid value for this schema) to 'component', since the figure is dominated by named component boxes connected by flow arrows.",
+  "venue": "SOSP25"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-040_fig6",
+  "paper_id": "osdi26-040",
+  "fig": "6",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Fig. 6: Soul is a full-system realization of GCP atop MIND (§4).",
+  "corpus_template": "host-device",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.85,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-040/osdi26-040_fig6_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-040/osdi26-040_fig6_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated: matching section-number tags and identical blue fill tie the compute blade's cache controller directly to the switch's cache directory across the split, though the switch's own Control Plane band is left unlabeled inside.",
+      "what_to_learn": "Tag two mechanisms that must be read together, one on the host side and one on the device side, with the same paper-section number and fill color so the eye links them without an arrow; don't leave a named band like Control Plane empty, or its role stays implicit as it does here."
+    }
+  ]
+}

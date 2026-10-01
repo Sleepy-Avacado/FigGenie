@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-038_fig1",
+  "kind": "mechanism",
+  "paper_id": "asplos25-038",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. GPU provisioning of serverless DL systems.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "component",
+  "subject": "how exclusive, static, and resourcing-on-demand GPU allocation pack the same four training/inference requests onto different numbers of GPUs",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "badge",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.77,
+  "n_elements": 7,
+  "n_relations": 3,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "quartz",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-038/src/fig1_mechanisms.svg",
+    "preview.png": "lab/extracted/asplos25-038/src/fig1_mechanisms.png",
+    "print.png": "lab/extracted/asplos25-038/asplos25-038_fig1_p2_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Moving from exclusive, to static, to on-demand GPU allocation packs the same four training/inference functions onto fewer GPUs (4 to 3 to 2) by matching each function's actual compute request/limit instead of over- or statically provisioning it.",
+      "what_to_learn": "One full-width legend above three panels; identical icon chain inside each; one bold verdict line at the same y in every panel",
+      "note_source": "doc"
+    }
+  ]
+}

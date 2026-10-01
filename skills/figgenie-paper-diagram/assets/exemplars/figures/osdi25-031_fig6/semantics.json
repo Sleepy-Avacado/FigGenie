@@ -1,0 +1,239 @@
+{
+  "paper_id": "osdi25-031",
+  "fig": "6",
+  "system": {
+    "name": "DecDEC",
+    "one_liner": "a CPU-augmented inference system for quantized LLMs that performs decoding with dynamic error compensation fetched from CPU memory",
+    "domain": [
+      "ml-systems",
+      "llm-inference",
+      "quantization"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Linear 1 (Q/K/V proj)",
+        "role": "example linear layer (GEMV) in a transformer block that DecDEC augments",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Self-Attention",
+        "role": "attention sublayer surrounding the augmented linear layers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Linear 2 (output proj)",
+        "role": "example linear layer (GEMV) in a transformer block that DecDEC augments",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Linear 3 (gate/up proj)",
+        "role": "example linear layer (GEMV) in a transformer block that DecDEC augments",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Linear 4 (down proj)",
+        "role": "example linear layer (GEMV) in a transformer block that DecDEC augments",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU Memory",
+        "role": "holds the quantized base weights and the input activation vector",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Q_b(W)",
+        "role": "the base-quantized weight matrix W̃ used for the base GEMV",
+        "container": "GPU Memory",
+        "novel": false
+      },
+      {
+        "name": "Base GEMV",
+        "role": "computes the base output o_b = W x using the base-quantized weights",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU Memory",
+        "role": "holds the quantized weight residuals used for dynamic error compensation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Q_r(R)",
+        "role": "the quantized weight residual R̃ stored in CPU memory",
+        "container": "CPU Memory",
+        "novel": true
+      },
+      {
+        "name": "Dynamic Error Compensation",
+        "role": "the four-step process that computes and adds an error-compensation term to the base GEMV output",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Channel Selection",
+        "role": "step 1: selects salient channel indices (sc_indices) from the input activation vector",
+        "container": "Dynamic Error Compensation",
+        "novel": true
+      },
+      {
+        "name": "Residual Fetch",
+        "role": "step 2: fetches the quantized residuals for the selected channels from CPU memory over PCIe",
+        "container": "Dynamic Error Compensation",
+        "novel": true
+      },
+      {
+        "name": "Residual GEMV",
+        "role": "step 3: computes the error compensation term o_dec from the fetched residuals and selected activations",
+        "container": "Dynamic Error Compensation",
+        "novel": true
+      },
+      {
+        "name": "Addition",
+        "role": "step 4: adds o_dec to the base GEMV result o_b to produce the final output o",
+        "container": "Dynamic Error Compensation",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Q_b(W)",
+        "to": "Base GEMV",
+        "what": "base-quantized weights",
+        "step": null
+      },
+      {
+        "from": "GPU Memory",
+        "to": "Base GEMV",
+        "what": "input vector x",
+        "step": null
+      },
+      {
+        "from": "GPU Memory",
+        "to": "Channel Selection",
+        "what": "input activation vector x",
+        "step": 1
+      },
+      {
+        "from": "Channel Selection",
+        "to": "Residual Fetch",
+        "what": "sc_indices",
+        "step": 1
+      },
+      {
+        "from": "CPU Memory",
+        "to": "Residual Fetch",
+        "what": "Q_r(R)[sc_indices, :] over PCIe",
+        "step": 2
+      },
+      {
+        "from": "Residual Fetch",
+        "to": "Residual GEMV",
+        "what": "fetched quantized residuals",
+        "step": 3
+      },
+      {
+        "from": "Residual GEMV",
+        "to": "Addition",
+        "what": "o_dec",
+        "step": 4
+      },
+      {
+        "from": "Base GEMV",
+        "to": "Addition",
+        "what": "o_b",
+        "step": 4
+      }
+    ],
+    "key_idea": "DecDEC augments each linear layer's base GEMV with a lightweight four-step dynamic error compensation pipeline that selects salient input channels, fetches only their quantized weight residuals from CPU memory, and adds the correction to the base output.",
+    "reading_order": "Left side shows which linear layer in a transformer block is augmented; right side reads left to right: GPU-resident base weights/input feed Base GEMV at top, while the numbered ①-④ Dynamic Error Compensation pipeline (Channel Selection, Residual Fetch from CPU Memory, Residual GEMV, Addition) runs in parallel below and merges into the final output on the right."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.48,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#595959",
+        "used_for": "dark gray fill of circled step-number icons and header bars"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "light gray fill of the GPU/CPU Memory container backgrounds"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "very light gray fill of secondary boxes"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red accent highlighting CPU-side residual elements"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "navy accent for borders/text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on all boxes, dashed arrows for cross-device (CPU-to-GPU) data movement",
+    "font": "Calibri/Calibri-Bold sans with math symbols (5-14pt)",
+    "corners": "mixed",
+    "arrows": "solid black arrows for within-GPU data flow, dashed arrows for data fetched from CPU via PCIe (per legend)",
+    "icons": "small quantized-matrix bar icons for W̃ and R̃, circled step numbers ①-④"
+  },
+  "encoding": {
+    "color_means": "gray = step/process boxes, red = CPU-resident residual elements needing PCIe transfer, navy = structural borders/text",
+    "line_style_means": "solid = data movement within the GPU, dashed = data fetched from CPU memory via PCIe (explicit in-figure legend)",
+    "emphasis": "GPU Memory sits above CPU Memory with the four numbered Dynamic Error Compensation steps bridging them, visually foregrounding the selective CPU residual fetch as the paper's key mechanism",
+    "reusable_patterns": [
+      "GPU/CPU memory split annotated with a within-device vs. cross-device (PCIe) arrow legend",
+      "numbered pipeline of steps overlaid on a base computation plus correction-term structure"
+    ],
+    "weaknesses": [
+      "left context panel (transformer layer stack) is visually disconnected from the main diagram without an explicit linking arrow"
+    ]
+  },
+  "tags": [
+    "llm-inference",
+    "quantization",
+    "error-compensation",
+    "cpu-gpu-offloading",
+    "gemv",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 DecDEC Design (p.5, p.7-8)"
+    ],
+    "evidence": [
+      "DecDEC augments each linear layer, essentially a GEMV operation, with dynamic error compensation",
+      "odec is computed by multiplying the input vector with a subset of weight residuals",
+      "The dynamic error compensation process consists of four sequential steps"
+    ]
+  },
+  "summary": "This figure shows the overview of DecDEC, a CPU-augmented decoding system for low-bit quantized LLMs. A small left-hand panel indicates that DecDEC augments a linear (GEMV) layer inside a standard transformer block (e.g., Q/K/V, output, gate/up, or down projections). The main diagram shows GPU Memory holding the base-quantized weight matrix and input vector, feeding a Base GEMV that produces o_b, while CPU Memory holds a quantized weight-residual matrix. A four-step, numbered Dynamic Error Compensation pipeline runs alongside: Channel Selection picks salient input channels (sc_indices) from the activation vector, Residual Fetch retrieves the corresponding quantized residuals from CPU memory over PCIe (dashed arrows), Residual GEMV computes the correction term, and Addition combines it with the base GEMV output to form the final result. The figure uses gray flat-filled boxes with black borders, circled step numbers, and an explicit legend distinguishing solid within-GPU arrows from dashed CPU-via-PCIe arrows.",
+  "summary_zh": "该图展示 DecDEC 的整体设计：GPU 内存中的基础量化权重与输入向量计算基础 GEMV 输出，同时四步动态误差补偿流程（通道选择、经 PCIe 从 CPU 内存取残差、残差 GEMV、相加）并行运行，最终将补偿项与基础输出相加得到最终结果。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

@@ -1,0 +1,202 @@
+{
+  "paper_id": "asplos26-002",
+  "fig": "1",
+  "system": {
+    "name": "DSV",
+    "one_liner": "a system that accelerates video DiT training via dynamic query/key low-rank sparsity and sparsity-aware context parallelism",
+    "domain": [
+      "ml-systems",
+      "video-generation",
+      "gpu-training"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Latent noised video input (FxHxWxC)",
+        "role": "the noised latent video tensor fed into the DiT model",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Token Embedding",
+        "role": "embeds the latent noised video into tokens for the DiT blocks",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Conditioning",
+        "role": "conditioning signals combined with the video tokens",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Time stamp",
+        "role": "diffusion timestep used as a conditioning signal",
+        "container": "Conditioning",
+        "novel": false
+      },
+      {
+        "name": "Text Prompt",
+        "role": "text prompt used as conditioning and as the key-value input to the cross-attention module",
+        "container": "Conditioning",
+        "novel": false
+      },
+      {
+        "name": "DiT Block",
+        "role": "processes video tokens alongside conditioning through self-attention and cross-attention, repeated N times",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Post Process and Reshape",
+        "role": "reshapes the DiT blocks' output into the predicted noise/flow",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Training Loss",
+        "role": "computed from the predicted noise/flow versus the input noise/flow",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Spatial Attention",
+        "role": "self-attention restricted to the spatial dimensions of video tokens",
+        "container": "(b) Spatial-Temporal Attention",
+        "novel": false
+      },
+      {
+        "name": "Temporal Attention",
+        "role": "self-attention restricted to the temporal dimension of video tokens",
+        "container": "(b) Spatial-Temporal Attention",
+        "novel": false
+      },
+      {
+        "name": "Full Attention",
+        "role": "3D self-attention over all video tokens jointly instead of factorized spatial/temporal attention",
+        "container": "(c) Full Attention",
+        "novel": false
+      },
+      {
+        "name": "Cross Attention",
+        "role": "aligns video tokens with text-prompt embeddings, used in both attention variants",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Latent noised video input (FxHxWxC)",
+        "to": "Token Embedding",
+        "what": "noised latent video tensor",
+        "step": null
+      },
+      {
+        "from": "Token Embedding",
+        "to": "DiT Block",
+        "what": "video tokens plus conditioning (timestamp, text prompt)",
+        "step": null
+      },
+      {
+        "from": "DiT Block",
+        "to": "Post Process and Reshape",
+        "what": "processed tokens after N DiT blocks",
+        "step": null
+      },
+      {
+        "from": "Post Process and Reshape",
+        "to": "Training Loss",
+        "what": "predicted noise/flow compared against input noise/flow",
+        "step": null
+      },
+      {
+        "from": "Text Prompt",
+        "to": "Cross Attention",
+        "what": "key-value input for cross attention",
+        "step": null
+      }
+    ],
+    "key_idea": "A video DiT model embeds noised latent video tokens, conditions them on timestamp and text prompt, and repeatedly applies DiT blocks whose self-attention is either factorized spatial/temporal attention or full 3D attention, each followed by cross-attention to the text prompt.",
+    "reading_order": "Left to right in (a): input video latent through token embedding and N DiT blocks to the training loss; (b) and (c) on the right detail two alternative attention arrangements inside a block."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.94,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#6c8ebf",
+        "used_for": "medium-blue borders/highlight, e.g. around the DiT Block group"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light-blue fill shared by Token Embedding, Cross/Temporal/Full Attention boxes"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "light-gray fill for generic boxes such as DiT Block and Post Process and Reshape"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "near-white fill for background panel framing"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "lavender fill setting Spatial Attention apart from the blue-filled attention boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid borders (~0.4pt) on all boxes",
+    "font": "Helvetica sans-serif, 4.5-7.5pt, no bold",
+    "corners": "square",
+    "arrows": "thin solid connecting lines between pipeline stages, without prominent arrowheads at this size",
+    "icons": "a small number of vector glyphs (e.g. a grid-like icon on the latent-video input box); exact artwork not fully resolvable from the preview"
+  },
+  "encoding": {
+    "color_means": "light blue fills the shared cross-attention/temporal/full-attention boxes; a distinct lavender fill sets Spatial Attention apart within the spatial-temporal variant",
+    "line_style_means": "no dashed/solid distinction is used; all connecting lines are solid",
+    "emphasis": "panel (a)'s 'N x' loop label around the DiT Block emphasizes that the block repeats, while panels (b)/(c) place the two competing attention designs side by side for direct comparison",
+    "reusable_patterns": [
+      "repeated-block pipeline with an 'N x' multiplicity label",
+      "paired inset panels comparing two alternative internal designs (factorized vs. full attention)"
+    ],
+    "weaknesses": [
+      "panels (b) and (c) reuse the same box shapes and mostly the same color, which can make the spatial-vs-full-attention distinction easy to miss at a glance"
+    ]
+  },
+  "tags": [
+    "diffusion-transformer",
+    "video-generation",
+    "attention",
+    "gpu-training",
+    "dit"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.2)"
+    ],
+    "evidence": [
+      "the DiT model consists of multiple DiT blocks that process video tokens alongside conditional inputs",
+      "self-attention modules, which employ interleaved spatial and temporal attention or full attention",
+      "cross attention aligns the video with text prompts, ensuring consistency between modalities"
+    ]
+  },
+  "summary": "This figure illustrates the standard video Diffusion Transformer (DiT) training pipeline that motivates DSV. Panel (a) shows a latent noised video input (FxHxWxC) passing through token embedding, combined with conditioning from a diffusion timestep and a text prompt, into a stack of N DiT blocks; the output is post-processed and reshaped into a predicted noise/flow, whose difference from the input noise/flow forms the training loss. Panels (b) and (c) zoom into the self-attention design inside each DiT block: (b) interleaves Temporal Attention and Spatial Attention, each paired with Cross Attention to the text-prompt embeddings; (c) instead uses two rounds of 3D Full Attention, likewise paired with Cross Attention. The diagram uses flat light-blue boxes for shared modules and a distinct lavender box to set Spatial Attention apart, on a white background with square corners and thin solid connectors.",
+  "summary_zh": "该图展示视频 DiT 训练的标准流程：噪声视频隐变量经 Token 嵌入与时间步/文本提示条件化后，输入 N 个 DiT Block，再经后处理得到预测噪声并计算训练损失；(b)(c) 分别展示时空分离注意力与全注意力两种设计，均搭配交叉注意力对齐文本提示。",
+  "confidence": "high",
+  "notes": "system fields describe DSV, the paper's overall contribution, though this specific figure (in the Background section) depicts the generic/baseline video DiT architecture that DSV's sparsity techniques are later applied to, not a DSV-novel component.",
+  "venue": "ASPLOS26"
+}

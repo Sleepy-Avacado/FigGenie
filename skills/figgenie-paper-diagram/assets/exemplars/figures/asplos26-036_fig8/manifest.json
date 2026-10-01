@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-036_fig8",
+  "paper_id": "asplos26-036",
+  "fig": "8",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 8. Architecture overview of MuxWise.",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.61,
+  "n_components": 6,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-036/src/fig8_overview.svg",
+    "preview.png": "lab/extracted/asplos26-036/src/fig8_overview.png",
+    "print.png": "lab/extracted/asplos26-036/asplos26-036_fig8_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated triangular control loop: three subsystem boxes, each tagged with its paper section number, are joined by red arrows individually labeled with the action carried (Latency, Update, Plan, Compute) instead of a generic legend.",
+      "what_to_learn": "Name each control arrow with the verb it performs (Latency, Update, Plan, Compute) instead of a bare control/data label, tag each subsystem box with its own paper section number, and keep a tiny inline legend only for the one sub-panel (the timeline) that needs its own notation."
+    },
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Only the interesting phase gets lanes: the multiplex engine box alone expands into a two-row Gantt of PL and D micro-batches, with dashed sync lines and one Time arrow, inside an otherwise ordinary control-loop figure.",
+      "what_to_learn": "Expand only the one phase with interesting concurrency into a small lanes/Gantt device (rows for PL and D micro-batches, dashed sync lines, one Time arrow) nested inside a single box, rather than converting an entire control-loop figure into a timeline."
+    }
+  ]
+}

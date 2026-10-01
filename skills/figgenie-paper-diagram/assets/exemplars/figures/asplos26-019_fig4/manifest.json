@@ -1,0 +1,60 @@
+{
+  "id": "asplos26-019_fig4",
+  "paper_id": "asplos26-019",
+  "fig": "4",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 4. Overview of MoDM system design.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.43,
+  "n_components": 12,
+  "n_flows": 10,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-019/src/fig4_System_Overview.svg",
+    "preview.png": "lab/extracted/asplos26-019/src/fig4_System_Overview.png",
+    "print.png": "lab/extracted/asplos26-019/asplos26-019_fig4_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "Request Scheduler is drawn centrally as the hub with cache-hit/cache-miss queues fanning below it into a shared GPU worker pool, while a side Global Monitor closes a separate feedback loop into the same hub.",
+      "what_to_learn": "Route both the main dispatch path and a side monitoring loop through the same central hub, but budget more space around it than this exemplar does: its weakness is that many small labelled arrows crowd the scheduler and make the routing logic dense to trace."
+    },
+    {
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Two loops close on one spine: generated images feed back into the Image Cache to update future retrieval, while a side Global Monitor watches request/cache-hit rates and steers Model Allocation into the GPU workers.",
+      "what_to_learn": "When a design closes two different loops (a cache-update loop and a side monitor-and-steer loop), keep their arrows visually separated by routing the monitor's loop along one side rather than through the busy centre; thin out labels near the scheduler, since crowding many small labelled arrows there (as here) gets dense to trace."
+    },
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A modest fit: inside a scheduler-centric hub figure, the shared GPU worker pool itself is drawn as small repeated model icons with an ellipsis between two example diffusion models, standing in for an arbitrary-sized pool.",
+      "what_to_learn": "When the replicated pool is only one stop in a bigger routing figure, keep it compact: two small labeled icons plus an ellipsis inside the pool box is enough, leaving the visual weight on the scheduler's queues and the monitor's feedback loop that are the actual point."
+    },
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-9 exemplar: a teal Request Scheduler core nesting three submodules sits above a shared GPU worker pool as the hardware band, with a purple Global Monitor as a side column closing the allocation loop.",
+      "what_to_learn": "Put the routing decision box above the shared resource pool it feeds and give the side monitor its own feedback arrow back into that pool rather than into the core; the weakness here is too many small labelled arrows crowd the scheduler, so budget space for routing labels before adding a monitor loop."
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "paper_id": "nsdi26-095",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "EZ-SAVE",
+    "one_liner": "an evaluation of easy-to-deploy source address validation (SAV) policies, including BAR-SAV, against BGP spoofing and false positives",
+    "domain": [
+      "network security",
+      "BGP",
+      "source-address-validation"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how BAR-SAV correctly accepts a Direct-Server-Return response that naive SAV policies would wrongly drop as spoofed",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "4",
+        "kind": "node",
+        "role": "the SAV-enforcing AS deciding whether to drop AS2's returning DSR packet",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "5",
+        "kind": "node",
+        "role": "AS4's settlement-free peer, which forwards the announcement for 5.6/16 (path 5-3) to AS4",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "1",
+        "kind": "node",
+        "role": "customer AS of AS4, announces prefix 1.2/16, sends the initial Request",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "2",
+        "kind": "node",
+        "role": "the CDN edge server (customer of AS4), announces 3.4/16, receives the tunneled request and sends the Legitimate packets",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "3",
+        "kind": "node",
+        "role": "the CDN server (customer of AS5), announces 5.6/16, receives the Request and tunnels it onward to AS2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "BAR-SAV ✓",
+        "kind": "label",
+        "role": "the paper's SAV policy; a green checkmark shows it does not drop the legitimate packet",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "FP-uRPF",
+        "kind": "label",
+        "role": "a naive SAV policy shown in red that would wrongly drop the packet",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "EFP-A",
+        "kind": "label",
+        "role": "a naive SAV policy shown in red that would wrongly drop the packet",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "EFP-B",
+        "kind": "label",
+        "role": "a naive SAV policy shown in red that would wrongly drop the packet",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ROA for AS2 to originate 5.6/16",
+        "kind": "label",
+        "role": "annotation explaining why BAR-SAV trusts AS2's packet even though AS2 never announces 5.6/16 itself",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Legend",
+        "kind": "label",
+        "role": "key defining Provider/Customer and Peer-Peer link arrows, and the Announcement/Request/Legitimate-packets arrow colours",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "4",
+        "to": "1",
+        "what": "AS4 is transit provider for customer AS1",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "2",
+        "what": "AS4 is transit provider for customer AS2",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "3",
+        "what": "AS5 is transit provider for customer AS3",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "5",
+        "what": "AS4 and AS5 are settlement-free peers",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "4",
+        "what": "AS1 announces prefix 1.2/16, AS-path length 1",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "2",
+        "to": "4",
+        "what": "AS2 announces prefix 3.4/16, AS-path length 2",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "3",
+        "to": "5",
+        "what": "AS3 announces prefix 5.6/16, AS-path length 3",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "4",
+        "what": "AS5 forwards the announcement for 5.6/16 with AS-path 5-3",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "Request",
+        "at": "AS1 → AS3",
+        "what": "the user (AS1) sends a content request toward the CDN server (AS3)",
+        "carries": "request"
+      },
+      {
+        "marker": "Request (tunneled)",
+        "at": "AS3 → AS2",
+        "what": "AS3 tunnels the request onward to the CDN edge server AS2 that will actually serve it",
+        "carries": "tunneled request"
+      },
+      {
+        "marker": "Legitimate packets",
+        "at": "AS2 → AS4",
+        "what": "AS2 sends the response data packets (source IP 5.6.7.8, in prefix 5.6/16) toward AS4, which must decide whether to drop them",
+        "carries": "response packets, source 5.6.7.8"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Because AS2 holds a ROA for 5.6/16 even without announcing it, BAR-SAV correctly accepts its Direct-Server-Return response that naive SAV policies would wrongly drop as spoofed.",
+    "reading_order": "starts at the policy list top-left, follows Request from AS1 to AS3, the tunneled Request down to AS2, then Legitimate-packets up to AS4's verdict"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.83,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0070c0",
+        "used_for": "medium-blue BGP 'Announcement' labels/dashed arrows (prefix + AS-path length, e.g. '1.2.16, 1', '5.6/16, 5-3') around AS4/AS5"
+      },
+      {
+        "hex": "#00b0f0",
+        "used_for": "cyan 'Request' legend arrow and the two solid Request / Request(tunneled) arrows and labels from AS1 to AS3 to AS2"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "thin dashed 'Peer---Peer' legend connector and the AS4-AS5 peer link"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange 'Legitimate packets' legend arrow and the actual orange arrow/label '5.6.7.8' from AS2 up to AS4"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "pale blue-lavender fill of the five numbered AS node circles"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on node circles; dashed lines for BGP announcement and peer edges",
+    "corners": "round",
+    "arrows": "thin arrows in distinct colours per relation type (dashed blue announcements, solid cyan requests, solid orange legitimate packets, solid black provider/customer links)",
+    "font": "sans (Calibri), 5-7.5pt, small",
+    "icons": "none (a green check mark and red X are drawn near BAR-SAV / AS4 but fall outside the measured colour palette, see notes)"
+  },
+  "encoding": {
+    "color_means": "blue = BGP Announcement labels/edges; cyan = the Request/Request(tunneled) flow; orange = the Legitimate-packets response and its source IP; pale blue-lavender = the AS node circles",
+    "line_style_means": "solid black lines with a downward arrowhead show provider-customer links, dashed black shows the AS4-AS5 peer link; dashed coloured lines show BGP announcements, solid coloured lines show data/request traffic",
+    "state_means": "not applicable (a single scenario, not a before/after or alternatives figure); the accept-vs-drop outcome is instead told apart by a green check next to BAR-SAV versus a red X at AS4 and the red-labelled policy names",
+    "marker_means": "a green check mark means BAR-SAV does not drop the packet; a red X at AS4 and the red policy names (FP-uRPF, EFP-A, EFP-B) mean those policies would wrongly drop it",
+    "emphasis": "the red X sits exactly where the orange Legitimate-packets arrow reaches AS4, staging the false-positive drop that BAR-SAV alone avoids",
+    "reusable_patterns": [
+      "a small AS-level topology with provider/customer and peer edges plus a distinct arrow colour per traffic type (announcement, request, response), annotated with a pass/fail verdict at the decision point"
+    ],
+    "weaknesses": [
+      "small (~5pt) prefix/hop-count labels crowd the diagram",
+      "reusing similar line styles for both announcement propagation and the physical provider/customer edges can be hard to disentangle at a glance"
+    ]
+  },
+  "tags": [
+    "BGP",
+    "source-address-validation",
+    "SAV",
+    "DSR",
+    "spoofing",
+    "BAR-SAV",
+    "ROA",
+    "CDN"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 SAV Policies (p.7)",
+      "§7 Security Evaluation (p.10)"
+    ],
+    "evidence": [
+      "BAR-SAV can also avoid false positives when a customer AS uses Direct Server Return (DSR)",
+      "Fig. 3 shows an example. AS3 (hosting a CDN server) announces a prefix 5.6/16.",
+      "The DSR scenario (see illustration in Fig. 3) includes a CDN server, CDN edge server, and users."
+    ]
+  },
+  "summary": "This figure from EZ-SAVE's SAV Policies section walks through a Direct Server Return (DSR) scenario that BAR-SAV must classify as legitimate. A CDN server (AS3, announcing 5.6/16) receives a Request from a user (AS1, 1.2/16) and tunnels it onward to the CDN edge server that will actually respond (AS2, reachable only via 3.4/16). AS2's Legitimate packets (source IP 5.6.7.8) then travel up toward AS4, which must decide whether to drop them. Dashed blue BGP Announcement edges show AS4 only ever learns of prefix 5.6/16 through AS5's path via AS3, never through AS2, so naive filters (FP-uRPF, EFP-A, EFP-B, all in red) would wrongly drop the packet (red X). BAR-SAV instead checks that AS2 holds a ROA authorizing it to originate 5.6/16, even though AS2 never announces it, and correctly accepts the packet (green check).",
+  "summary_zh": "该图走读BAR-SAV如何正确处理一次DSR场景：用户请求经AS1到AS3再隧道转发至边缘服务器AS2；AS2发出的合法响应包(源地址5.6.7.8)到达AS4时，朴素SAV策略(FP-uRPF、EFP-A、EFP-B)会将其误丢弃，而BAR-SAV凭借AS2持有的5.6/16号段ROA证明其合法，正确放行(绿色对勾标出)。",
+  "confidence": "high",
+  "notes": "content.base and content.groups kept as prior (topology; walkthrough): the arrows are labelled with actions (Request, Request(tunneled), Legitimate packets) rather than drawn circled numbers, matching v3's 'step labels on arrows' walkthrough variant, so layout.step_markers is set to 'labelled-arrows' rather than 'circled-numbers'. style.palette uses exactly the 5 hex values in the index's measured-attributes histogram; a green check mark (BAR-SAV) and a red X / red policy names (FP-uRPF, EFP-A, EFP-B) are clearly visible in the source PNG but fall outside that top-5 list (likely small-area text/icon glyphs below the measurement's area cutoff), so they are described qualitatively in 'encoding' rather than given an asserted exact hex.",
+  "venue": "NSDI26"
+}

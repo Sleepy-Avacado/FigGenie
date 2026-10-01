@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-142_fig4",
+  "paper_id": "asplos26-142",
+  "fig": "4",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Fig. 4. (a) QCCD architecture of TIQC, which connects 1D traps with 4-way junctions. It supports ion shuttling and swap. (b-e) The collective ion swap between (1,3) and (2,4) using ion shuttling. (f) 2Q gates (CNOT) are performed on the qubits within the same trap.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.02,
+  "n_components": 4,
+  "n_flows": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "letters",
+  "panels": 6,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-142/src/fig4_QCCD.svg",
+    "preview.png": "lab/extracted/asplos26-142/src/fig4_QCCD.png",
+    "print.png": "lab/extracted/asplos26-142/asplos26-142_fig4_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Six-panel grid (a)-(f) with a shared six-entry legend below, and a dashed box grouping (b)-(e) as the expansion of (a).",
+      "what_to_learn": "A dashed box around a sub-grid says 'these panels expand that panel'; the shared legend below is defined once for all six. Note: the PDF-extracted print.png includes a line of surrounding body text; use preview.png for the clean figure."
+    },
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Panels (b)-(e) are near-identical small multiples of the same ion-trap grid, boxed in a dashed 2x2 group that zooms into the shuttle steps behind panel (a)'s single collective-swap overview, with orange arrows tracing each step.",
+      "what_to_learn": "When more than four panels are needed for a step-by-step breakdown, group the small-multiple steps into their own dashed 2x2 box rather than spreading all panels across one row, and keep every step's grid icon pixel-identical so only the orange shuttle arrow's position changes between them."
+    }
+  ]
+}

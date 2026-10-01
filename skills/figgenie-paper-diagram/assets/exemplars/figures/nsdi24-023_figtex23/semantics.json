@@ -1,0 +1,327 @@
+{
+  "paper_id": "nsdi24-023",
+  "fig": "tex23",
+  "kind": "mechanism",
+  "system": {
+    "name": "GRACE",
+    "one_liner": "a loss-resilient real-time video system built on a neural video codec jointly trained under packet losses",
+    "domain": [
+      "video",
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how Grace's encoder, congestion control, and decoder sub-blocks connect, including bitrate-control and fast-resync feedback loops",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Current frame",
+        "kind": "icon",
+        "role": "the raw input frame entering the sender",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Grace encoder (§3.2)",
+        "kind": "box",
+        "role": "main neural encoder producing the coded tensor from the current frame",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "I-patch (§4.1)",
+        "kind": "box",
+        "role": "intra-coded patch computed directly from the current frame",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Per-packet entropy coding (§3.3)",
+        "kind": "box",
+        "role": "entropy-codes the encoder output and the I-patch into packets",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bitrate control (§4.2)",
+        "kind": "box",
+        "role": "decides, from the congestion-control target bitrate, whether the residual must be re-encoded, feeding back into the encoder",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Fast re-sync (§4.1)",
+        "kind": "box",
+        "role": "sender-side handler that reacts to a receiver re-sync request by prompting the encoder",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Congestion control",
+        "kind": "box",
+        "role": "sender-side congestion control that sets the target bitrate and forwards packets over the network",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Target bitrate",
+        "kind": "label",
+        "role": "names the value sender-side congestion control reports to bitrate control",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Packets",
+        "kind": "icon",
+        "role": "the transmitted packets carried over the network between the two congestion-control blocks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Re-sync request",
+        "kind": "label",
+        "role": "names the message the receiver's fast re-sync sends back to the sender's fast re-sync",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Congestion control",
+        "kind": "box",
+        "role": "receiver-side congestion control that hands received packets to the decoder and to fast re-sync",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Fast re-sync",
+        "kind": "box",
+        "role": "receiver-side handler triggered when a frame is decoded without all of its packets",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Grace decoder",
+        "kind": "box",
+        "role": "main neural decoder producing the decoded frame from received packets",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Decoded frame",
+        "kind": "icon",
+        "role": "the reconstructed output frame",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Current frame",
+        "to": "Grace encoder (§3.2)",
+        "what": "raw frame fed to the main encoder",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Current frame",
+        "to": "I-patch (§4.1)",
+        "what": "raw frame also fed to the intra-patch path",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Grace encoder (§3.2)",
+        "to": "Per-packet entropy coding (§3.3)",
+        "what": "coded tensor entropy coded",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "I-patch (§4.1)",
+        "to": "Per-packet entropy coding (§3.3)",
+        "what": "I-patch entropy coded",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Per-packet entropy coding (§3.3)",
+        "to": "Bitrate control (§4.2)",
+        "what": "coded packet sizes reported for rate decisions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Per-packet entropy coding (§3.3)",
+        "to": "Congestion control",
+        "what": "entropy-coded packets handed to sender-side congestion control",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Congestion control",
+        "to": "Bitrate control (§4.2)",
+        "what": "Target bitrate",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Bitrate control (§4.2)",
+        "to": "Grace encoder (§3.2)",
+        "what": "feedback telling the encoder to re-encode the residual",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Fast re-sync (§4.1)",
+        "to": "Grace encoder (§3.2)",
+        "what": "feedback prompting the encoder to resynchronize",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Congestion control",
+        "to": "Packets",
+        "what": "packets sent over the network",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Packets",
+        "to": "Congestion control",
+        "what": "packets received over the network",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Congestion control",
+        "to": "Fast re-sync",
+        "what": "receiver-side congestion control feeds fast re-sync",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Congestion control",
+        "to": "Grace decoder",
+        "what": "received packets handed to the decoder",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fast re-sync",
+        "to": "Grace decoder",
+        "what": "re-sync handling feeds into decoding",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Fast re-sync",
+        "to": "Fast re-sync (§4.1)",
+        "what": "Re-sync request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Grace decoder",
+        "to": "Decoded frame",
+        "what": "decoder produces the decoded frame",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "GRACE's sender and receiver are each broken into named sub-blocks (encoder, entropy coding, bitrate/congestion control, fast re-sync) linked by a shared packet channel, with feedback loops letting rate control and re-sync requests adjust the encoder and decoder mid-session.",
+    "reading_order": "left to right: current frame through the encoder/entropy-coding/bitrate-control chain, down to congestion control and across the packet channel, then up through the receiver's congestion control, fast re-sync, and decoder to the decoded frame."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "",
+    "aspect": 2.06,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#97d2ff",
+        "used_for": "fill of the seven GRACE-specific sub-block boxes (Grace encoder, I-patch, per-packet entropy coding, bitrate control, both fast re-sync boxes, Grace decoder)"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "stroke/outline colour of those same blue sub-block boxes"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "fill of the two grey background containers grouping sender-side and receiver-side sub-blocks"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "fill of the two generic 'Congestion control' boxes"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "fill of the three small 'Packets' squares"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~1pt) black arrows and box outlines, blue-stroked sub-block boxes",
+    "corners": "rounded",
+    "arrows": "thin solid black arrows, including curved feedback arrows from bitrate control and fast re-sync back into the encoder, and from congestion control/fast re-sync up into the decoder",
+    "font": "Calibri / Calibri-Bold sans, large (~18pt) labels",
+    "icons": "raster filmstrip/play icons for the current and decoded frames; small square icons for packets"
+  },
+  "encoding": {
+    "color_means": "sky blue marks GRACE's own neural/algorithmic sub-blocks; grey marks generic external components (congestion control, and the two background containers); white marks the individual packet icons",
+    "line_style_means": "every relation is a plain solid black arrow; only direction and the two labelled arrows ('Target bitrate', 'Re-sync request') distinguish control feedback from the main data path",
+    "state_means": "not applicable; this is a single static snapshot of the system, not a before/after or multi-panel figure",
+    "marker_means": "no numbered markers; the two grey background rectangles simply group sender-side vs receiver-side sub-blocks",
+    "emphasis": "the shared blue fill across every GRACE-specific sub-block, against grey for generic congestion control, highlights which parts of the pipeline are the paper's own contribution",
+    "reusable_patterns": [
+      "two mirrored grey containers (sender/receiver) of blue algorithm sub-blocks, linked by a plain packet channel and closed by dedicated feedback arrows for rate and re-sync control"
+    ],
+    "weaknesses": [
+      "the two 'Congestion control' boxes and the two 'Fast re-sync' boxes reuse identical labels (one pair with a section reference, one without) for sender- and receiver-side instances, so the two sides can only be told apart by position",
+      "no legend states which arrows are feedback versus forward data flow"
+    ]
+  },
+  "tags": [
+    "neural-video-codec",
+    "end-to-end-pipeline",
+    "congestion-control",
+    "bitrate-control",
+    "fast-resync",
+    "GRACE"
+  ],
+  "provenance": {
+    "sections": [
+      "§Making GRACE trainable"
+    ],
+    "evidence": [
+      "How the different pieces of Grace work together.",
+      "During a video session, the trained NVC encodes and packetizes a frame using the per-packet entropy encoding",
+      "when a frame is decoded without all of its packets, it will trigger a fast re-sync"
+    ]
+  },
+  "summary": "Figure tex23 gives a whole-system view of how GRACE's sender and receiver sub-blocks connect during a video session. On the sender side (left grey box), the current frame feeds both the Grace encoder (§3.2) and an I-patch (§4.1) path; both outputs go to per-packet entropy coding (§3.3), which hands packets to congestion control and reports to bitrate control (§4.2), which in turn can tell the encoder to re-encode the residual. Congestion control sends packets across the network to the receiver's congestion control, which feeds the Grace decoder directly and can also trigger the receiver's fast re-sync block; if a frame is decoded without all its packets, that block sends a re-sync request back to the sender's own fast re-sync (§4.1), which prompts the encoder to recover synchronization. The Grace decoder finally produces the decoded frame.",
+  "summary_zh": "图展示GRACE发送端与接收端各子模块的连接：编码器与I-patch经逐包熵编码后交由拥塞控制发送；码率控制可反馈编码器重新编码；接收端拥塞控制驱动解码器，丢包时快速重同步请求送回发送端。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'architecture' (not a valid v3 base value) to 'component', since the figure opens up the system into named sub-blocks (component internals).",
+  "venue": "NSDI24"
+}

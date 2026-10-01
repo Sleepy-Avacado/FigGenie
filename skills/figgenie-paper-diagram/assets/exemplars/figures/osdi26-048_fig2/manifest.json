@@ -1,0 +1,55 @@
+{
+  "id": "osdi26-048_fig2",
+  "kind": "mechanism",
+  "paper_id": "osdi26-048",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: Overall system architecture of LITESWITCH. This figure illustrates the key components and workflow during a stall harvesting event for a multi-threaded program prog. When Thread A executes a load (rip = 0x9204) that L1 misses the cache, the memory controller",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "mixed",
+  "subject": "how LiteSwitch detects an L1 miss to CXL memory and swaps in a bundled thread via a same-address-space jump",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "callout",
+  "direction": "mixed",
+  "column": "double",
+  "aspect": 2.9,
+  "n_elements": 24,
+  "n_relations": 12,
+  "n_panels": 0,
+  "n_steps": 10,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-048/osdi26-048_fig2_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-048/osdi26-048_fig2_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "One incident traced across four colour-coded subsystem boxes on a single stall/continue timeline, each region keeping its own lettered step count (B, H, X, L) instead of one global sequence.",
+      "what_to_learn": "Give each subsystem its own colour and its own lettered step count (B/H/X/L) instead of one global number, and draw the causal jump as one arrow crossing straight from the stalled thread's timeline into the box that resolves it.",
+      "note_source": "agent"
+    }
+  ]
+}

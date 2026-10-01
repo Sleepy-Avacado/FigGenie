@@ -1,0 +1,323 @@
+{
+  "meta": {
+    "_purpose": "Spec-writing example only: it shows which fields exist and how they are filled for a real figure. It is not a style reference, so do not carry its fonts, palette, legend, numbering or node count into another figure. For style, look at the figure it was written from (assets/exemplars/figures/asplos25-100_fig5/, listed in assets/exemplars/control-data/index.json) and at the exemplars of your own template.",
+    "id": "cent-fig5",
+    "title": "CENT CXL device architecture",
+    "system": {
+      "name": "CENT",
+      "one_liner": "a CXL-enabled, GPU-free system for LLM inference using near-bank and near-memory processing units"
+    },
+    "figure_kind": "subsystem",
+    "venue_style": "acm",
+    "column": "single",
+    "width_pt": 246,
+    "max_height_pt": 141,
+    "template": "control-data",
+    "modifiers": [
+      "replicated-grid"
+    ],
+    "direction": "left-right",
+    "panels": 1,
+    "palette": "blue-orange",
+    "font": "times",
+    "step_markers": "none",
+    "language": "en",
+    "version": 1,
+    "caption_draft": "CXL Device Architecture. Host instructions arrive at the CXL port and land in a 2MB instruction buffer; the decoder turns them into micro-ops for the PNM units and for 16 PIM controllers, each driving its GDDR6-PIM channels. The inter-device communication controller and the 64KB shared buffer carry peer-to-peer traffic between devices.",
+    "open_questions": [
+      "Is the LD/ST unit part of the replicated per-channel column, or one shared unit per device?",
+      "Should the figure name the two PIM channels each controller manages, or is 'x16' enough?"
+    ],
+    "_source": "assets/exemplars/figures/asplos25-100_fig5",
+    "_notes": "Captured: the three-class flow legend that makes this the corpus's clearest control-data exemplar (black solid = inter-device data, blue solid = intra-device data, orange dashed = control), the x16 replication expressed once as a container multiplicity, and the two saturated blue buffers that are the only accent fills. Not captured as geometry: the ellipsis between the two drawn replicas, the exact left-to-right nesting of the PIM column pairs, and the 'PC' box's position above the decoder -- those are grid hints only. The buffers are semantically stores but the paper draws plain rectangles, so symbol='rect' overrides the cylinder default."
+  },
+  "containers": [
+    {
+      "id": "pim-channel",
+      "label": "",
+      "kind": "none",
+      "role": "novel",
+      "multiplicity": "x16",
+      "order": 3,
+      "note": "one PIM channel column; drawn as two concrete replicas plus an ellipsis, never 16 copies"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "cxl-port",
+      "label": "CXL Port",
+      "kind": "external",
+      "role": "existing",
+      "size_hint": "l",
+      "grid": { "row": 0, "col": 0, "rowspan": 3 },
+      "order": 0,
+      "note": "tall box on the left edge: the only link to the host and to peer devices"
+    },
+    {
+      "id": "inter-device-comm-controller",
+      "label": "Inter-device Communication Controller",
+      "kind": "module",
+      "role": "novel",
+      "size_hint": "l",
+      "grid": { "row": 0, "col": 1, "colspan": 3 },
+      "order": 1
+    },
+    {
+      "id": "instruction-buffer",
+      "label": "Instruction Buffer",
+      "sublabel": "2MB",
+      "kind": "store",
+      "role": "novel",
+      "emphasis": "accent",
+      "symbol": "rect",
+      "grid": { "row": 2, "col": 1 },
+      "order": 2,
+      "legend_ref": "intra-device-data"
+    },
+    {
+      "id": "pc",
+      "label": "PC",
+      "kind": "module",
+      "role": "existing",
+      "size_hint": "s",
+      "grid": { "row": 1, "col": 2 },
+      "order": 3
+    },
+    {
+      "id": "decoder",
+      "label": "Decoder",
+      "kind": "module",
+      "role": "novel",
+      "grid": { "row": 2, "col": 2 },
+      "order": 4
+    },
+    {
+      "id": "pnm-units",
+      "label": "PNM Units",
+      "kind": "compute",
+      "role": "novel",
+      "emphasis": "shaded",
+      "grid": { "row": 2, "col": 3 },
+      "order": 5,
+      "note": "accumulation, reduction and activation -- everything beyond MAC"
+    },
+    {
+      "id": "shared-buffer",
+      "label": "Shared Buffer",
+      "sublabel": "64KB",
+      "kind": "store",
+      "role": "novel",
+      "emphasis": "accent",
+      "symbol": "rect",
+      "size_hint": "l",
+      "grid": { "row": 0, "col": 4, "rowspan": 3 },
+      "order": 6
+    },
+    {
+      "id": "ld-st",
+      "label": "LD/ST",
+      "kind": "module",
+      "parent": "pim-channel",
+      "role": "existing",
+      "size_hint": "s",
+      "grid": { "row": 3, "col": 2 },
+      "order": 7
+    },
+    {
+      "id": "pim-ctrl",
+      "label": "PIM Ctrl",
+      "kind": "module",
+      "parent": "pim-channel",
+      "role": "novel",
+      "grid": { "row": 4, "col": 2 },
+      "order": 8,
+      "note": "converts micro-ops to DRAM commands; manages two PIM channels"
+    },
+    {
+      "id": "gddr6-pim",
+      "label": "GDDR6-PIM",
+      "kind": "compute",
+      "parent": "pim-channel",
+      "role": "novel",
+      "emphasis": "shaded",
+      "grid": { "row": 5, "col": 2 },
+      "order": 9
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-host-in",
+      "from": "cxl-port",
+      "to": "instruction-buffer",
+      "kind": "data",
+      "weight": "main",
+      "from_side": "right",
+      "to_side": "left",
+      "legend_ref": "inter-device-data",
+      "note": "instructions transmitted from the host"
+    },
+    {
+      "id": "e-peer",
+      "from": "inter-device-comm-controller",
+      "to": "cxl-port",
+      "kind": "data",
+      "head": "both",
+      "from_side": "left",
+      "to_side": "top",
+      "legend_ref": "inter-device-data",
+      "note": "peer-to-peer traffic leaves and arrives through the same port"
+    },
+    {
+      "id": "e-decode",
+      "from": "instruction-buffer",
+      "to": "decoder",
+      "kind": "data",
+      "from_side": "right",
+      "to_side": "left",
+      "legend_ref": "intra-device-data",
+      "note": "buffered instructions"
+    },
+    {
+      "id": "e-pc",
+      "from": "pc",
+      "to": "decoder",
+      "kind": "data",
+      "from_side": "bottom",
+      "to_side": "top",
+      "legend_ref": "intra-device-data",
+      "note": "program counter drives decoding"
+    },
+    {
+      "id": "e-uops-pnm",
+      "from": "decoder",
+      "to": "pnm-units",
+      "kind": "control",
+      "style": "dashed",
+      "from_side": "right",
+      "to_side": "left",
+      "legend_ref": "control-flow",
+      "note": "micro-ops beyond MAC"
+    },
+    {
+      "id": "e-uops-ldst",
+      "from": "decoder",
+      "to": "ld-st",
+      "kind": "control",
+      "style": "dashed",
+      "from_side": "bottom",
+      "to_side": "top",
+      "legend_ref": "control-flow",
+      "note": "micro-ops fanned out to all 16 channels"
+    },
+    {
+      "id": "e-ldst-pim",
+      "from": "ld-st",
+      "to": "pim-ctrl",
+      "kind": "data",
+      "head": "both",
+      "from_side": "bottom",
+      "to_side": "top",
+      "legend_ref": "intra-device-data"
+    },
+    {
+      "id": "e-dram-cmd",
+      "from": "pim-ctrl",
+      "to": "gddr6-pim",
+      "kind": "control",
+      "style": "dashed",
+      "from_side": "bottom",
+      "to_side": "top",
+      "legend_ref": "control-flow",
+      "note": "DRAM commands"
+    },
+    {
+      "id": "e-pnm-shared",
+      "from": "pnm-units",
+      "to": "shared-buffer",
+      "kind": "data",
+      "head": "both",
+      "from_side": "right",
+      "to_side": "left",
+      "legend_ref": "intra-device-data"
+    },
+    {
+      "id": "e-comm-shared",
+      "from": "inter-device-comm-controller",
+      "to": "shared-buffer",
+      "kind": "data",
+      "head": "both",
+      "from_side": "right",
+      "to_side": "top",
+      "legend_ref": "intra-device-data"
+    }
+  ],
+  "steps": [],
+  "legend": {
+    "mode": "explicit",
+    "placement": "inside",
+    "title": "Legends",
+    "items": [
+      {
+        "id": "inter-device-data",
+        "label": "Inter-Device Data Flow",
+        "swatch": { "kind": "line", "role": "stroke", "line_style": "solid", "head": "filled" }
+      },
+      {
+        "id": "intra-device-data",
+        "label": "Intra-Device Data Flow",
+        "swatch": { "kind": "line", "role": "module", "line_style": "solid", "head": "filled" }
+      },
+      {
+        "id": "control-flow",
+        "label": "Control Flow",
+        "swatch": { "kind": "line", "role": "accent", "line_style": "dashed", "head": "filled" }
+      }
+    ]
+  },
+  "annotations": [
+    {
+      "id": "x16",
+      "text": "x16",
+      "anchor": "pim-channel",
+      "leader": false,
+      "kind": "label",
+      "side": "right"
+    }
+  ],
+  "constraints": [
+    {
+      "kind": "same-row",
+      "targets": [
+        "instruction-buffer",
+        "decoder",
+        "pnm-units"
+      ],
+      "note": "the instruction path is one left-right row on a shared centreline"
+    },
+    {
+      "kind": "same-column",
+      "targets": [
+        "ld-st",
+        "pim-ctrl",
+        "gddr6-pim"
+      ],
+      "note": "one PIM channel is a vertical column"
+    },
+    {
+      "kind": "same-width",
+      "targets": [
+        "ld-st",
+        "pim-ctrl",
+        "gddr6-pim"
+      ]
+    },
+    {
+      "kind": "center-in-parent",
+      "targets": [
+        "inter-device-comm-controller"
+      ],
+      "note": "spans the top edge above the instruction path"
+    }
+  ],
+  "style_overrides": {}
+}

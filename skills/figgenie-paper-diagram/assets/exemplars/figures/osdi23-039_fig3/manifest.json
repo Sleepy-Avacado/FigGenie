@@ -1,0 +1,47 @@
+{
+  "id": "osdi23-039_fig3",
+  "paper_id": "osdi23-039",
+  "fig": "3",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 3: An overview of Perspect’s workﬂow",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.74,
+  "n_components": 16,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-039/osdi23-039_fig3_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-039/osdi23-039_fig3_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Star, high-confidence pipeline flanked by labelled Input and Output panels, with a dotted Perspect boundary separating the paper's own compute-filter-refine loop from off-the-shelf tools attached above and below the main line.",
+      "what_to_learn": "Bookend a pipeline with explicit Input/Output panels rather than bare arrows at the edges, attach third-party tool names as small boxes above or below the stage they instrument instead of putting them on the main line, and mark the contribution with a dotted boundary plus one internal feedback arrow."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A left-to-right analysis pipeline feeds a dotted-boundary Relational-debugger box whose own Compute-Filter-Refine loop is the only part with a feedback arrow, keeping external tools (Dyninst, RR, PIN) visually outside the system boundary.",
+      "what_to_learn": "Draw a dotted boundary around your own system's box to separate it from the off-the-shelf tools and inputs/outputs surrounding it, and confine the return arrow to the one internal stage that actually repeats (Refine back to Compute) rather than looping the whole pipeline."
+    }
+  ]
+}

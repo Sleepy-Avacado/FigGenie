@@ -1,0 +1,165 @@
+{
+  "paper_id": "osdi26-040",
+  "fig": "6",
+  "system": {
+    "name": "Soul",
+    "one_liner": "a full-system realization of GCP-based synchronization atop MIND, a disaggregated shared-memory platform, providing standard lock APIs across compute blades",
+    "domain": [
+      "disaggregated-memory",
+      "synchronization"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Applications",
+        "role": "user programs that call standard lock APIs",
+        "container": "User space",
+        "novel": false
+      },
+      {
+        "name": "Lock library (§4.4)",
+        "role": "user-space shim exposing standard lock APIs atop Soul's GCP implementation",
+        "container": "User space",
+        "novel": true
+      },
+      {
+        "name": "Lock manager (§4.5)",
+        "role": "in-kernel manager sitting between the lock library and the DRAM cache controller, allocating GCP cache resources",
+        "container": "OS kernel",
+        "novel": true
+      },
+      {
+        "name": "GCP-extended DRAM cache controller (§4.2, §4.3)",
+        "role": "kernel component implementing GCP's wait queue and shared memory lists over MIND's DRAM cache coherence",
+        "container": "OS kernel",
+        "novel": true
+      },
+      {
+        "name": "GCP-extended cache directory (§4.2, §4.3)",
+        "role": "switch-side counterpart implementing GCP's cache-coherence directory",
+        "container": "Data plane ASIC",
+        "novel": true
+      },
+      {
+        "name": "Control Plane",
+        "role": "control-plane band of the programmable switch, relaying GCP transactions to memory blades",
+        "container": "Programmable Switch",
+        "novel": false
+      },
+      {
+        "name": "Memory blades",
+        "role": "disaggregated memory reached over GCP transactions through the switch",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Applications",
+        "to": "Lock library (§4.4)",
+        "what": "Lock APIs",
+        "step": null
+      },
+      {
+        "from": "Lock library (§4.4)",
+        "to": "Lock manager (§4.5)",
+        "what": "GCP interfaces",
+        "step": null
+      },
+      {
+        "from": "Lock manager (§4.5)",
+        "to": "GCP-extended DRAM cache controller (§4.2, §4.3)",
+        "what": "GCP cache resource allocation",
+        "step": null
+      },
+      {
+        "from": "GCP-extended DRAM cache controller (§4.2, §4.3)",
+        "to": "GCP-extended cache directory (§4.2, §4.3)",
+        "what": "GCP Txns.",
+        "step": null
+      },
+      {
+        "from": "Control Plane",
+        "to": "Memory blades",
+        "what": "GCP Txns.",
+        "step": null
+      }
+    ],
+    "key_idea": "Soul places a GCP-extended DRAM cache controller in each compute blade's kernel, coordinated over GCP transactions with a GCP-extended cache directory inside a programmable switch's data-plane ASIC, which also relays transactions to memory blades.",
+    "reading_order": "Top-down within Compute blades (Applications to Lock library to Lock manager to cache controller), then left-right via GCP Txns. to the switch and up to Memory blades."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.85,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f9e5d6",
+        "used_for": "pale peach fill of the Applications box"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light gray fill of the Compute blades / Programmable Switch container backgrounds"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "pale blue fill of the GCP-related boxes (Lock library, Lock manager, DRAM cache controller, cache directory)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.0pt solid strokes on all boxes, no dashing",
+    "font": "Helvetica sans-serif, 5-6.5pt, italic for band labels (User space, OS kernel, Control Plane, Data plane ASIC)",
+    "corners": "square",
+    "arrows": "straight bidirectional arrows with triangular heads for GCP Txns.; simple downward arrows for Lock APIs / GCP interfaces",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue fill marks the GCP-extended synchronization components (Lock library, Lock manager, DRAM cache controller, cache directory); peach/gray mark generic surrounding context (Applications, band backgrounds)",
+    "line_style_means": null,
+    "emphasis": "matching '(§4.2, §4.3)' tags and the shared blue fill visually tie the DRAM cache controller to the cache directory across the compute-blade/switch boundary",
+    "reusable_patterns": [
+      "host (compute blade: user space over OS kernel) paired with a device (programmable switch: control plane over data-plane ASIC), connected by a labeled bidirectional transaction arrow"
+    ],
+    "weaknesses": [
+      "the Control Plane band has no labeled internal component, leaving its role in this figure implicit"
+    ]
+  },
+  "tags": [
+    "disaggregated-memory",
+    "cache-coherence",
+    "synchronization",
+    "programmable-switch",
+    "distributed-locking",
+    "lock-manager"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Soul: An Implementation of GCP (p.7)",
+      "4 Soul: An Implementation of GCP (p.9)",
+      "4 Soul: An Implementation of GCP (p.10)"
+    ],
+    "evidence": [
+      "Soul realizes GCP atop MIND's inter-blade DRAM cache coherence to facilitate inter-blade synchronization",
+      "Soul provides a lock library that serves as a shim atop its GCP implementation",
+      "Soul's in-kernel lock manager sits between the lock library and the GCP's DRAM cache controller"
+    ]
+  },
+  "summary": "This figure shows the full-system architecture of Soul, which realizes GCP-based cache-coherent synchronization atop the MIND disaggregated shared-memory platform. On each compute blade, applications call standard lock APIs into a user-space Lock library, which talks over GCP interfaces to an in-kernel Lock manager sitting atop a GCP-extended DRAM cache controller; that controller exchanges GCP transactions with a matching GCP-extended cache directory inside a programmable switch's data-plane ASIC, whose control plane in turn relays GCP transactions to memory blades. The diagram is a flat, square-cornered box diagram split into a host side (Compute blades: user space over OS kernel) and a device side (Programmable Switch: control plane over data-plane ASIC), with blue fill picking out the GCP-specific components on both sides of the transaction boundary.",
+  "summary_zh": "该图展示 Soul 系统架构：计算刀片上应用经用户态锁库、内核态锁管理器，调用 GCP 扩展 DRAM 缓存控制器；该控制器与可编程交换机数据面 ASIC 中的 GCP 扩展缓存目录交换 GCP 事务，交换机控制面再将事务转发给内存刀片。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

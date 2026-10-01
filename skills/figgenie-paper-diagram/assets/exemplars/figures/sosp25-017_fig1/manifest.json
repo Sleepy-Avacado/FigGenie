@@ -1,0 +1,41 @@
+{
+  "id": "sosp25-017_fig1",
+  "paper_id": "sosp25-017",
+  "fig": "1",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 1. I/O accelerating architectures across three deploy- ment models: (a) bare-metal with an exclusive NIC, (b) VMs with virtual NIC, and (c) VMs with SmartNICs.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.41,
+  "n_components": 19,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-017/sosp25-017_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-017/sosp25-017_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Named in the reference as the bare-metal/VM/SmartNIC-of-increasing-complexity exemplar: panels (b) and (c) reuse the VM0/VM1/QEMU-KVM/NICs skeleton from (a), adding only the SmartNIC internals plus two colour-coded numbered paths in (c).",
+      "what_to_learn": "Grow the panels by increasing complexity while reusing the prior panel's skeleton wholesale (VM boxes, QEMU/KVM, NICs) so only new hardware stands out, and overlay two independently coloured numbered paths (data-plane blue, control-plane red) on the final panel rather than adding a fourth; keep each path shorter than this figure's dense two-by-five overlay."
+    }
+  ]
+}

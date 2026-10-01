@@ -1,0 +1,209 @@
+{
+  "paper_id": "sosp25-060",
+  "fig": "5",
+  "system": {
+    "name": "JENGA",
+    "one_liner": "a two-level memory allocation framework for heterogeneous LLM layer embeddings that reduces fragmentation and enables layer-specific caching, built on vLLM",
+    "domain": [
+      "ml-systems",
+      "memory-management",
+      "llm-serving"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "request",
+        "role": "incoming request that enters the serving system",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Scheduler",
+        "role": "receives requests and coordinates work with the Workers and the memory manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Workers",
+        "role": "execute the request using memory allocated by Jenga's Memory Manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "LCM allocator",
+        "role": "first-level allocator using the least common multiple of embedding sizes to allocate pages compatible across all layer types",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "Prefix-subset evictor",
+        "role": "coordinates eviction among different layer types at the first level",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "LCM page",
+        "role": "compatible-size page unit produced by the LCM allocator",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "self-attn allocator",
+        "role": "second-level allocator specialized for self-attention layer page sizes",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "self-attn evictor",
+        "role": "second-level evictor customizing the eviction strategy for self-attention layers",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "mamba allocator",
+        "role": "second-level allocator specialized for mamba layer page sizes",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "mamba evictor",
+        "role": "second-level evictor customizing the eviction strategy for mamba layers",
+        "container": "Jenga's Memory Manager",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "request",
+        "to": "Scheduler",
+        "what": "incoming request",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Workers",
+        "what": "dispatched work",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Jenga's Memory Manager",
+        "what": "memory allocation requests/results",
+        "step": null
+      },
+      {
+        "from": "LCM allocator",
+        "to": "LCM page",
+        "what": "compatible pages produced from the LCM of embedding sizes",
+        "step": null
+      },
+      {
+        "from": "LCM page",
+        "to": "self-attn allocator",
+        "what": "compatible pages specialized for self-attention layers",
+        "step": null
+      },
+      {
+        "from": "LCM page",
+        "to": "mamba allocator",
+        "what": "compatible pages specialized for mamba layers",
+        "step": null
+      },
+      {
+        "from": "self-attn allocator",
+        "to": "Customized pages for the request",
+        "what": "self-attention pages allocated for the request",
+        "step": null
+      },
+      {
+        "from": "mamba allocator",
+        "to": "Customized pages for the request",
+        "what": "mamba pages allocated for the request",
+        "step": null
+      }
+    ],
+    "key_idea": "shows JENGA's two-level memory manager: a shared first-level LCM allocator/prefix-subset evictor produces LCM-compatible pages across layer types, which second-level customized allocators/evictors (e.g., self-attention vs. mamba) specialize into per-layer-type pages for a request",
+    "reading_order": "top to bottom: request enters the Scheduler/Workers, then down into Jenga's Memory Manager where the LCM allocator/evictor feed layer-specific allocators/evictors that produce customized pages at the bottom"
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.79,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe699",
+        "used_for": "LCM allocator"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "Prefix-subset evictor"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "self-attention allocator, evictor, and pages"
+      },
+      {
+        "hex": "#f8cbad",
+        "used_for": "mamba allocator, evictor, and pages"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "LCM page units"
+      },
+      {
+        "hex": "#f1d9ff",
+        "used_for": "Scheduler and Workers boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black plus gray (#434343, #a6a6a6), ~0.6pt, dashed outer boundary around the memory manager",
+    "font": "serif (Nimbus Roman / Times), 9.5-10.5pt",
+    "corners": "mixed",
+    "arrows": "solid black arrows, 11 arrowheads",
+    "icons": "small square icons for memory pages; the request is drawn as a labeled diamond icon"
+  },
+  "encoding": {
+    "color_means": "yellow/blue = shared first-level LCM allocator and prefix-subset evictor; green = self-attention-specific allocator/evictor/pages; orange = mamba-specific allocator/evictor/pages",
+    "line_style_means": "dashed rounded boundary groups all of Jenga's Memory Manager as one subsystem",
+    "emphasis": "side-by-side green (self-attn) and orange (mamba) columns under a shared yellow/blue LCM layer visually emphasize the two-level, per-layer-type specialization",
+    "reusable_patterns": [
+      "shared first-level allocator feeding parallel per-type second-level allocator/evictor columns"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-serving",
+    "memory-allocation",
+    "kv-cache",
+    "heterogeneous-models",
+    "mamba"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Two-level Memory Allocation (p.5)"
+    ],
+    "evidence": [
+      "JENGA, a two-level memory management system that allocates memory for different types of layers",
+      "JENGA introduces the LCM allocator to allocate pages with sizes compatible across all layer types",
+      "customized evictors to customize the eviction strategy of each type"
+    ]
+  },
+  "summary": "JENGA is a two-level memory allocation framework for LLM inference that handles heterogeneous per-layer embedding sizes (e.g., self-attention vs. Mamba) to reduce fragmentation and support layer-specific caching, implemented on top of vLLM. Figure 5 shows a request flowing from the Scheduler to Workers, coordinated with Jenga's Memory Manager (dashed box). Inside, a shared first-level LCM allocator and Prefix-subset evictor produce LCM pages (using the least common multiple of embedding sizes for compatibility across layer types); these feed two parallel second-level paths — a green self-attention allocator/evictor and an orange mamba allocator/evictor — each of which specializes the compatible pages into 'Customized pages for the request' shown at the bottom, one colored set per layer type.",
+  "summary_zh": "图5展示JENGA两级内存管理：调度器分发请求，内部由共享LCM分配器/驱逐器生成兼容页，再由自注意力与Mamba各自的二级分配器/驱逐器定制化，底部展示按类型区分的最终页面。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

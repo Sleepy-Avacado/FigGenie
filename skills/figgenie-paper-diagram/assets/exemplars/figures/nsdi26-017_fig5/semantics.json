@@ -1,0 +1,171 @@
+{
+  "paper_id": "nsdi26-017",
+  "fig": "5",
+  "system": {
+    "name": "FLARE",
+    "one_liner": "a diagnostic framework that traces and diagnoses hang errors and performance regressions in thousand-plus-GPU LLM training clusters",
+    "domain": [
+      "ml-systems",
+      "distributed-systems",
+      "observability"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Non-comm. Error",
+        "role": "left scenario: a non-communication error where rank-0 halts at a different call stack than other ranks",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Comm. Error",
+        "role": "right scenario: a communication error where all ranks halt at the same communication call stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Error GPU",
+        "role": "the GPU/rank identified as the faulty source of a non-communication hang",
+        "container": "Non-comm. Error",
+        "novel": true
+      },
+      {
+        "name": "Single-GPU operator",
+        "role": "an operator executed independently on a single GPU in the call stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Multi-GPU operator",
+        "role": "an operator requiring coordination across multiple GPUs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Hang operator",
+        "role": "the operator at which a rank's call stack is stuck/hung",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Follow-up operator",
+        "role": "operators that would execute after the hang point but do not run because the process is stuck",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Rank=0",
+        "role": "one training process rank whose call stack is shown",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rank=1",
+        "role": "one training process rank whose call stack is shown",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rank=N",
+        "role": "one training process rank whose call stack is shown",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Rank=0 call stack",
+        "to": "Hang operator (non-comm.)",
+        "what": "rank-0 halts earlier at a non-communication function, distinct from other ranks",
+        "step": null
+      },
+      {
+        "from": "Rank=1..N call stack",
+        "to": "Hang operator (comm., waiting on rank-0)",
+        "what": "other ranks continue and stop at a communication-related function depending on rank-0",
+        "step": null
+      },
+      {
+        "from": "Rank=0..N call stack",
+        "to": "Hang operator (comm. error)",
+        "what": "in the communication-error case, all ranks halt at the same communication function",
+        "step": null
+      }
+    ],
+    "key_idea": "Comparing where each rank's call stack halts reveals non-communication hang errors (one rank stops earlier, at a different operator, than the rest), but communication hangs cannot be identified this way since all ranks stop at the same call stack.",
+    "reading_order": "Left panel first (Non-comm. Error): compare rank-0's shorter, differently-terminated stack against Rank=1..N; then right panel (Comm. Error): all ranks terminate at the same hang operator; a legend on the right explains the four operator/box types."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 2,
+    "column": "single",
+    "aspect": 3.34,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fcccb2",
+        "used_for": "orange fill for single-GPU operator boxes"
+      },
+      {
+        "hex": "#c5e5e5",
+        "used_for": "light teal fill for multi-GPU operator boxes"
+      },
+      {
+        "hex": "#b1001c",
+        "used_for": "red diagonal hatch fill/outline marking the hang operator and the 'Error GPU' label"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black strokes on boxes, red hatched fill for the hang operator, white fill for follow-up operators",
+    "font": "Helvetica Neue and Helvetica Neue Bold sans-serif, very small (4pt)",
+    "corners": "square",
+    "arrows": "vertical stack connectors per rank column, one curved red arrow pointing to the Error GPU rank",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = single-GPU operator, teal = multi-GPU operator, red hatch = the hung operator (where a rank's stack is stuck), white = follow-up (not-yet-executed) operators",
+    "line_style_means": "not applicable beyond fill/hatch coding; box position (height of stack) encodes how far each rank's call stack progressed before hanging",
+    "emphasis": "the red hatched hang operator and the 'Error GPU' arrow in the left panel single out rank-0 as the fault source, while the right panel's uniform red row across all ranks visually shows why communication hangs are indistinguishable by this method alone",
+    "reusable_patterns": [
+      "side-by-side per-rank call-stack columns compared to localize a fault",
+      "explicit legend decoding box color/fill as operator type/state"
+    ],
+    "weaknesses": [
+      "very small 4pt text reduces standalone legibility without the legend"
+    ]
+  },
+  "tags": [
+    "hang error diagnosis",
+    "call stack analysis",
+    "distributed training",
+    "GPU cluster",
+    "fault localization",
+    "NCCL"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Anomaly Detection and Diagnosis (p.6)"
+    ],
+    "evidence": [
+      "Figure 5 illustrates an example of hang-error diagnosis via call stack analysis.",
+      "the training process of rank-0 crashes or is suspended due to a non-communication error, it halts at a call stack",
+      "the training processes of all ranks terminate at the same call stack of a communication function"
+    ]
+  },
+  "summary": "This figure compares two hang-error scenarios FLARE distinguishes via call-stack analysis. In the left panel (Non-communication Error), rank-0's call stack halts at a different, earlier operator than ranks 1..N, which continue until they reach a communication operator waiting on rank-0; the divergence lets FLARE flag rank-0's GPU as the error source. In the right panel (Communication Error), all ranks terminate at the identical communication-function call stack (e.g. allreduce/allgather), so this simple comparison cannot localize the fault, motivating the finer-grained intra-kernel inspection described elsewhere in the paper. A right-side legend decodes box colors: orange for single-GPU operators, teal for multi-GPU operators, red hatching for the hang operator, and white for follow-up operators not yet executed. The figure uses stacked per-rank columns of small boxes to make the comparison visually immediate.",
+  "summary_zh": "该图对比两种挂起错误场景：左侧非通信错误中，rank-0 的调用栈比其他 rank 更早停在不同算子处，从而被识别为故障源；右侧通信错误中，所有 rank 都停在同一个通信算子处，无法通过调用栈比较定位故障。图例说明单 GPU 算子、多 GPU 算子、挂起算子与后续算子四种方框含义。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

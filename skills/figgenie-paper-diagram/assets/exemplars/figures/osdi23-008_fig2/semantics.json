@@ -1,0 +1,200 @@
+{
+  "paper_id": "osdi23-008",
+  "fig": "2",
+  "system": {
+    "name": "Cilantro",
+    "one_liner": "a framework that allocates a single fungible resource among competing jobs by continuously learning each job's resource-to-performance mapping from live feedback",
+    "domain": [
+      "resource-allocation",
+      "distributed-systems",
+      "online-learning"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Shared Cluster",
+        "role": "holds the competing jobs that resources are allocated among",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Job 1",
+        "role": "one job running in the shared cluster",
+        "container": "Shared Cluster",
+        "novel": false
+      },
+      {
+        "name": "Job 2",
+        "role": "another job running in the shared cluster, competing for the same resource",
+        "container": "Shared Cluster",
+        "novel": false
+      },
+      {
+        "name": "Per-Job Feedback",
+        "role": "continuous live feedback from each job (e.g., its P95 SLO versus actual P95) used to learn performance mappings",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cilantro Scheduler",
+        "role": "groups the online learners and policy that together compute resource allocations",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Online Learners",
+        "role": "a pool of performance learners and load forecasters that estimate each job's resource-performance curve from live feedback",
+        "container": "Cilantro Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Performance Model (Job 1)",
+        "role": "learned resource-to-performance curve for Job 1",
+        "container": "Online Learners",
+        "novel": true
+      },
+      {
+        "name": "Performance Model (Job 2)",
+        "role": "learned resource-to-performance curve for Job 2",
+        "container": "Online Learners",
+        "novel": true
+      },
+      {
+        "name": "Policy",
+        "role": "scheduling policy, automatically derived from the user's objective, that uses the learned models to compute allocations",
+        "container": "Cilantro Scheduler",
+        "novel": true
+      },
+      {
+        "name": "User-defined Objective",
+        "role": "the end user's declared scheduling objective that instantiates the policy",
+        "container": "Policy",
+        "novel": true
+      },
+      {
+        "name": "Resource Allocations",
+        "role": "the computed per-job allocation amounts (e.g., Job 1: 40, Job 2: 60) applied to the cluster",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Shared Cluster",
+        "to": "Per-Job Feedback",
+        "what": "live feedback collected from each running job",
+        "step": null
+      },
+      {
+        "from": "Per-Job Feedback",
+        "to": "Online Learners",
+        "what": "continuous feedback used to learn resource-to-performance mappings and load shifts for each job",
+        "step": null
+      },
+      {
+        "from": "Online Learners",
+        "to": "Policy",
+        "what": "estimated performance models feed the allocation policy",
+        "step": null
+      },
+      {
+        "from": "User-defined Objective",
+        "to": "Policy",
+        "what": "the policy is automatically derived from the declared objective",
+        "step": null
+      },
+      {
+        "from": "Policy",
+        "to": "Resource Allocations",
+        "what": "policy computes per-job allocation amounts",
+        "step": null
+      },
+      {
+        "from": "Resource Allocations",
+        "to": "Shared Cluster",
+        "what": "computed allocations (e.g., Job 1: 40, Job 2: 60) applied to jobs in the cluster",
+        "step": null
+      }
+    ],
+    "key_idea": "Cilantro closes a feedback loop around a shared cluster: it continuously learns each job's resource-to-performance mapping from live per-job feedback, then uses a policy derived from the user's declared objective to turn those learned models into resource allocations, becoming more accurate and effective over time.",
+    "reading_order": "Left to right and back: jobs in the Shared Cluster emit per-job feedback that flows up into the Online Learners, whose performance models feed the Policy (instantiated for the user-defined objective), which sends resource allocations back down to the cluster."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.09,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red text highlighting the example P95_actual value exceeding its SLO"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "pale green fill for the Shared Cluster box"
+      },
+      {
+        "hex": "#d0e0e3",
+        "used_for": "pale teal fill for the Online Learners box"
+      },
+      {
+        "hex": "#274e13",
+        "used_for": "dark green border/text for the Per-Job Feedback callout"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for the Policy / User-defined Objective boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.3pt thin solid outlines, square corners",
+    "font": "Lato Bold / Consolas Bold, 4-9pt",
+    "corners": "square",
+    "arrows": "curved feedback-loop arrows plus straight allocation arrows, mixed curved and straight heads",
+    "icons": "hexagon icons for Job 1/Job 2 in the Shared Cluster; small line-chart icons inside the Performance Model boxes"
+  },
+  "encoding": {
+    "color_means": "green marks the shared cluster and feedback path, teal marks the learning component, yellow marks the policy/objective component",
+    "line_style_means": null,
+    "emphasis": "drawing feedback and allocation as a closed loop between the Shared Cluster and the Cilantro Scheduler foregrounds that allocations continuously adapt as the learned models improve",
+    "reusable_patterns": [
+      "closed feedback loop between an execution substrate and a learning-based controller",
+      "per-job performance models feeding a single policy instantiated from a user objective"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "resource-scheduling",
+    "online-learning",
+    "feedback-control",
+    "performance-modeling",
+    "multi-tenant"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.3)"
+    ],
+    "evidence": [
+      "a framework for performance-aware allocation of a single fungible resource type",
+      "a pool of performance learners and load forecasters analyzes live feedback from jobs",
+      "scheduling policies, which are automatically derived based on the users' objectives"
+    ]
+  },
+  "summary": "Figure 2 gives Cilantro's high-level architecture as a closed feedback loop. Jobs (Job 1, Job 2, ...) run in a Shared Cluster and emit Per-Job Feedback, illustrated with an example where a job's actual P95 latency (125ms) exceeds its 100ms SLO. This feedback continuously trains a pool of Online Learners, which maintain a Performance Model per job estimating its resource-to-performance curve. The Cilantro Scheduler's Policy, automatically instantiated for the end user's declared objective, consumes these learned models to compute Resource Allocations (e.g., Job 1: 40, Job 2: 60) that are applied back to the cluster. Because the loop runs continuously, Cilantro's allocations improve as its learned models become more accurate, without requiring an offline performance model ahead of time.",
+  "summary_zh": "图2展示Cilantro架构：共享集群中各作业产生反馈（如P95实际值超SLO），训练在线学习器得到资源-性能模型；调度器据用户目标计算资源分配（如Job1:40）并作用回集群，形成闭环，分配随之变优。",
+  "confidence": "high",
+  "notes": "layout-proposal: closed-loop scheduler — a Shared Cluster and a Cilantro Scheduler box connected by a feedback arrow (up) and an allocation arrow (down) forming a closed control loop; 'hub-spoke' is used as the closest named template with the scheduler as hub over per-job spokes, though the loop shape is not a classic radial hub-spoke.",
+  "venue": "OSDI23"
+}

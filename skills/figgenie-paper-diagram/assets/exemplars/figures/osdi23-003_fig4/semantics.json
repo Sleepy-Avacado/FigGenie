@@ -1,0 +1,164 @@
+{
+  "paper_id": "osdi23-003",
+  "fig": "4",
+  "system": {
+    "name": "Rowan",
+    "one_liner": "an RDMA-based abstraction that combines small writes from many senders into large PM writes to mitigate write amplification",
+    "domain": [
+      "storage",
+      "networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Senders",
+        "role": "issue SEND requests of varying sizes (32B, 56B, 384B) to the receiver",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "RNIC",
+        "role": "receiver-side NIC that lands SEND data into receive buffers and generates completion entries",
+        "container": "Receiver",
+        "novel": null
+      },
+      {
+        "name": "SRQ",
+        "role": "shared receive queue holding fixed 64B receive buffers, consumed in address order",
+        "container": "Receiver",
+        "novel": true
+      },
+      {
+        "name": "MP SRQ",
+        "role": "multi-packet shared receive queue with large (4MB) receive buffers and a 64B stride, allowing multiple SENDs per buffer",
+        "container": "Receiver",
+        "novel": true
+      },
+      {
+        "name": "CQ",
+        "role": "completion queue that receives generated completion entries",
+        "container": "Receiver",
+        "novel": null
+      },
+      {
+        "name": "control thread",
+        "role": "posts receive buffers into the (MP) SRQ and polls the CQ",
+        "container": "Receiver",
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Senders",
+        "to": "RNIC",
+        "what": "SEND requests (32B, 56B, 384B writes)",
+        "step": null
+      },
+      {
+        "from": "RNIC",
+        "to": "SRQ",
+        "what": "consume recv buf in order",
+        "step": null
+      },
+      {
+        "from": "RNIC",
+        "to": "CQ",
+        "what": "generate CE",
+        "step": null
+      },
+      {
+        "from": "control thread",
+        "to": "CQ",
+        "what": "poll CQ",
+        "step": null
+      },
+      {
+        "from": "control thread",
+        "to": "SRQ",
+        "what": "post 64B recv buf",
+        "step": null
+      },
+      {
+        "from": "control thread",
+        "to": "MP SRQ",
+        "what": "post 4MB recv buf",
+        "step": null
+      }
+    ],
+    "key_idea": "Using RDMA SEND/RECV with an address-ordered shared receive queue lets a receiver-side RNIC combine small writes from multiple senders into the same PM cacheline region without CPU involvement; a multi-packet SRQ (b) fixes the basic design's (a) inability to receive writes larger than the fixed buffer size.",
+    "reading_order": "left to right within each subfigure: senders at top issue writes into the RNIC, which lands data into the receive-buffer structure below and generates completions on the right; (a) then (b) compare the basic and multi-packet designs."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "double",
+    "aspect": 3.2,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill for the 32B write oval and highlighted receive-buffer segments"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red fill/stroke for the error mark on the 384B write and the multi-packet buffer's stride annotations"
+      },
+      {
+        "hex": "#44546a",
+        "used_for": "dark navy fill for the 56B write oval and CQ elements"
+      },
+      {
+        "hex": "#a5a5a5",
+        "used_for": "gray fill for the failed 384B write oval"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin dashed black borders around the Receiver box, colored arrows for data paths",
+    "font": "Calibri, 6-8pt",
+    "corners": "mixed",
+    "arrows": "orthogonal, filled and colored arrowheads",
+    "icons": "vector, depicting RNIC chip and a control-thread CPU icon"
+  },
+  "encoding": {
+    "color_means": "blue = 32B writes / their placement, dark navy = 56B writes, gray = failed oversized 384B write, red = error/stride markers",
+    "line_style_means": null,
+    "emphasis": "a red X over the 384B write in (a) highlights the basic design's limitation, contrasted with the working multi-packet buffer layout in (b)",
+    "reusable_patterns": [
+      "side-by-side subfigure comparison of a naive mechanism (a) versus its fix (b)"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "RDMA",
+    "persistent memory",
+    "write amplification",
+    "shared receive queue",
+    "NIC"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.6)"
+    ],
+    "evidence": [
+      "Figure 4(a) shows the basic architecture of Rowan implementation.",
+      "the 384B write cannot be handled",
+      "Figure 4 shows Rowan that uses MP SRQ"
+    ]
+  },
+  "summary": "Rowan is an RDMA-based write abstraction that lets a receiver-side RNIC combine small writes from many senders into the same persistent-memory cachelines, mitigating device-level write amplification (DLWA) without extra round trips or slow atomic verbs. Figure 4 shows how Rowan is realized on off-the-shelf RNICs using RDMA SEND/RECV. Subfigure (a) shows the basic architecture: senders issue 32B, 56B, and 384B writes to the receiver's RNIC, which lands data into fixed 64B receive buffers drawn from a shared receive queue (SRQ) in address order, generating completion entries (CE) into a completion queue (CQ) that a dedicated control thread polls; the 384B write fails because it exceeds the 64B buffer. Subfigure (b) fixes this using a multi-packet SRQ (MP SRQ) with large 4MB receive buffers and a 64B stride, so multiple sends of varying sizes can be appended into the same buffer. The two subfigures are drawn as parallel dashed-bordered receiver boxes with matching internal structure, using color (blue/navy/gray/red) to distinguish the sender writes and to flag the failure case.",
+  "summary_zh": "图4展示Rowan如何用现成RNIC实现：(a)基础架构用固定64B接收缓冲区的共享接收队列(SRQ)，384B写入因超出缓冲区大小而失败；(b)采用多包共享接收队列(MP SRQ)搭配64B步长的4MB大缓冲区，可容纳可变大小的写入，从而合并小写入以缓解持久内存写放大。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

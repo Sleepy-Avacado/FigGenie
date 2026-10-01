@@ -1,0 +1,211 @@
+{
+  "paper_id": "osdi26-060",
+  "fig": "8",
+  "system": {
+    "name": "BatchGen",
+    "one_liner": "a batch inference architecture that models sequence computation as fine-grained, event-driven coroutines",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "OpenAI Batch API-Compatible HTTP Server",
+        "role": "receives submitted batch jobs from users",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Master Node",
+        "role": "coordinates request/response queues, offline profiling, and plan optimization",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Request Queue",
+        "role": "holds submitted requests before batch split",
+        "container": "Master Node",
+        "novel": true
+      },
+      {
+        "name": "Response Queue",
+        "role": "holds results before merging back to the user",
+        "container": "Master Node",
+        "novel": true
+      },
+      {
+        "name": "Offline Profiler",
+        "role": "profiles workload characteristics offline",
+        "container": "Master Node",
+        "novel": true
+      },
+      {
+        "name": "Plan Optimizer",
+        "role": "computes an execution plan for batch splitting/scheduling",
+        "container": "Master Node",
+        "novel": true
+      },
+      {
+        "name": "Worker Node 0",
+        "role": "executes assigned requests using local coroutine runtime and GPUs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Local Controller",
+        "role": "coordinates the components within a worker node",
+        "container": "Worker Node 0",
+        "novel": true
+      },
+      {
+        "name": "Coroutine Runtime",
+        "role": "runs the batch-oriented inference engine and scheduler for this worker",
+        "container": "Worker Node 0",
+        "novel": true
+      },
+      {
+        "name": "Batch Oriented Inference Engine",
+        "role": "executes batched sequence computation",
+        "container": "Coroutine Runtime",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "dispatches sequence coroutines within the worker",
+        "container": "Coroutine Runtime",
+        "novel": true
+      },
+      {
+        "name": "GPU Pool",
+        "role": "GPU compute resources on the worker node",
+        "container": "Worker Node 0",
+        "novel": false
+      },
+      {
+        "name": "Health Monitor",
+        "role": "monitors worker node health",
+        "container": "Worker Node 0",
+        "novel": true
+      },
+      {
+        "name": "Model Weights Manager",
+        "role": "manages model weights on the worker node",
+        "container": "Worker Node 0",
+        "novel": true
+      },
+      {
+        "name": "KV-cache Manager",
+        "role": "manages KV-cache on the worker node",
+        "container": "Worker Node 0",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": null,
+        "to": "OpenAI Batch API-Compatible HTTP Server",
+        "what": "Submit (user batch job)",
+        "step": null
+      },
+      {
+        "from": "Master Node",
+        "to": "Worker Node 0",
+        "what": "Batch Split via Request Queue",
+        "step": null
+      },
+      {
+        "from": "Worker Node 0",
+        "to": "Master Node",
+        "what": "Results Merge via Response Queue",
+        "step": null
+      },
+      {
+        "from": "Local Controller",
+        "to": "Coroutine Runtime",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "BatchGen is organized as a master node that exposes an OpenAI Batch API-compatible endpoint, profiles and plans batch splits, and dispatches work to worker nodes running a local coroutine runtime, GPU pool, and state managers.",
+    "reading_order": "Top-down: a user submits a job to the HTTP server, which flows into the Master Node's request/response queues and offline profiler/plan optimizer, then down through a Local Controller into the Worker Node's coroutine runtime, GPU pool, and weight/cache managers."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.15,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#595959",
+        "used_for": "dark gray text and panel titles"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "medium gray icons (person icon, chip icons, health monitor icon)"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill highlighting Offline Profiler and Plan Optimizer boxes"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "gray fill for outer Master Node / Worker Node panels"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "gray fill for inner grouping boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt dark gray (#404040) borders",
+    "font": "HelveticaNeue sans, 7-7.5pt, bold for section titles",
+    "corners": "rounded",
+    "arrows": "thin gray orthogonal arrows with filled heads",
+    "icons": "vector: person icon for user submission, document icons for request/response queues, GPU chip icons, heart icon for Health Monitor"
+  },
+  "encoding": {
+    "color_means": "monochrome grayscale; darker gray shading distinguishes nested containers (Master Node vs. Worker Node vs. their internal components) without a novel/existing color code",
+    "line_style_means": null,
+    "emphasis": "the top-down layered layout separates control-plane (Master Node with profiler/optimizer) from data-plane (Worker Node with GPU pool and runtime), with Submit/Results Merge/Batch Split arrows tracing the request path",
+    "reusable_patterns": [
+      "master-worker layered architecture with a control plane on top and a repeated worker-node block below",
+      "request/response queues flanking a central planning component"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "batch-inference",
+    "system-architecture",
+    "master-worker",
+    "llm-serving",
+    "gpu-scheduling",
+    "deployment"
+  ],
+  "provenance": {
+    "sections": [
+      "5 System Design and Implementation (p.11)"
+    ],
+    "evidence": [
+      "Figure 8 shows the BatchGen system architecture for deployment at scale",
+      "control plane implemented on an industrially customized Ray"
+    ]
+  },
+  "summary": "This figure shows BatchGen's deployment-scale system architecture with a master-worker organization. Users submit jobs through an OpenAI Batch API-compatible HTTP server. The Master Node holds a Request Queue and Response Queue flanking an Offline Profiler and Plan Optimizer that together drive batch splitting and results merging. Below, one or more Worker Nodes (Worker Node 0 shown) each run a Local Controller coordinating a Coroutine Runtime (Batch Oriented Inference Engine plus Scheduler), a GPU Pool, a Health Monitor, a Model Weights Manager, and a KV-cache Manager. The grayscale, flat, top-down layered diagram separates the control-plane planning logic on top from the data-plane execution resources below, illustrating how BatchGen's control plane, built on a customized Ray, dispatches batched sequence coroutine work onto worker-node GPU pools.",
+  "summary_zh": "该图展示BatchGen大规模部署架构：用户通过兼容OpenAI Batch API的HTTP服务器提交任务，主节点含请求/响应队列及离线分析器与计划优化器，工作节点内本地控制器协调协程运行时、GPU池、健康监控、模型权重与KV缓存管理器。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

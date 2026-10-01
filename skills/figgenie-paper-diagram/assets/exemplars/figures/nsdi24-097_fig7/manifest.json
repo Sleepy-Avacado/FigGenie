@@ -1,0 +1,55 @@
+{
+  "id": "nsdi24-097_fig7",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-097",
+  "fig": "7",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 7: (a) At different initial positions, signal variations in- duced by respiration correspond to different BFM fragments.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "how a target's initial position shapes its BFM trajectory and thus the size of its respiration-induced amplitude/phase variation",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.54,
+  "n_elements": 5,
+  "n_relations": 2,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-097/nsdi24-097_fig7_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-097/nsdi24-097_fig7_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Pairs a shared-origin phase-plane trajectory comparison with stacked good/bad time-series panels on one time axis, showing why a good initial position gives a larger, more usable respiration signal.",
+      "what_to_learn": "Fan two trajectories from one shared origin in a phase-plane panel, then stack the matching good/bad time-series beneath shared dashed reference lines so amplitude differences line up visually — but (a)'s colours don't match (b)/(c)'s.",
+      "note_source": "agent"
+    }
+  ]
+}

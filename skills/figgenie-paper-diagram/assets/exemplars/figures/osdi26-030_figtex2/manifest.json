@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-030_figtex2",
+  "paper_id": "osdi26-030",
+  "fig": "tex2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Overview of Xkernel .",
+  "corpus_template": "layered",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 2.31,
+  "n_components": 8,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-030/src/texfig2_sysoverview-crop.svg",
+    "preview.png": "lab/extracted/osdi26-030/src/texfig2_sysoverview-crop.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar embedding a literal data-table object as one box and annotating command-line invocations on the flow arrows, split by one rule into a user-space band above and a kernel-space band below.",
+      "what_to_learn": "Draw a tier's artifact as a literal table, columns and all, rather than a plain box when the paper's contribution is the schema itself, and write command strings right on the arrow that triggers them; keep matching colour bands consistent between the table and the running-kernel bar they describe."
+    }
+  ]
+}

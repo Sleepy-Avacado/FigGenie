@@ -1,0 +1,48 @@
+{
+  "id": "nsdi24-086_fig22",
+  "paper_id": "nsdi24-086",
+  "fig": "22",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 22: NN-defined Wi-Fi modulator.",
+  "corpus_template": "pipeline",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.94,
+  "n_components": 5,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-086/src/fig22_WiFiModulator.svg",
+    "preview.png": "lab/extracted/nsdi24-086/src/fig22_WiFiModulator.png",
+    "print.png": "lab/extracted/nsdi24-086/nsdi24-086_fig22_p13_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence top-down pipeline for the fan-out/fan-in variant: 4 identical uniformly-styled boxes inside one outer container fan out from a single input and reconverge at a Concatenate stage, in only 5 components.",
+      "what_to_learn": "Give parallel same-role branches identical fill and shape so the eye reads them as one repeated unit, and reserve differently coloured dashed lines for the routing step, keeping solid black arrows for the shared input split and final concatenation."
+    },
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Reassigned from mirrored-pair by the note-writer: four identically styled NN-defined modulator boxes (STF, LTF, SIG, DATA) run in parallel and converge into one Concatenate box, a four-way replicated-grid fan-in, not a two-peer mirrored pair.",
+      "what_to_learn": "The transferable move is replicated-grid's: draw every parallel member with identical size and fill so the reader reads them as interchangeable instances of one type, route each input to its member with a distinctly coloured dashed line, then converge all outputs into a single named merge box."
+    }
+  ]
+}

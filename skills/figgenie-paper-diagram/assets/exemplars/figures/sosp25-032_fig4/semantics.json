@@ -1,0 +1,180 @@
+{
+  "paper_id": "sosp25-032",
+  "fig": "4",
+  "system": {
+    "name": "Dandelion",
+    "one_liner": "an elastic cloud-native platform that executes applications as DAGs of pure compute and communication functions in sandboxes that cold-start in hundreds of microseconds",
+    "domain": [
+      "serverless",
+      "cloud-computing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Frontend",
+        "role": "manages client communication, handles registration/invocation requests, forwards to the dispatcher",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Dispatcher",
+        "role": "orchestrates function execution, tracks resources and the DAG registry, schedules ready functions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Waiting Functions",
+        "role": "functions not yet ready because their input dependencies are unmet",
+        "container": "Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Function / DAG Registry",
+        "role": "registry of registered composition DAGs, function binaries, and metadata",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Task Queues",
+        "role": "type-specific queues (compute, communication) the dispatcher enqueues ready functions into",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Control Plane",
+        "role": "dynamically balances CPU resources between compute and communication engines using a PI controller",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Comp. Engines",
+        "role": "securely execute untrusted compute functions in isolated sandboxes, one task at a time per engine",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Comm. Engines",
+        "role": "handle interactions with external services (e.g., HTTP) using cooperative green threads, not sandboxed",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Context",
+        "role": "isolated memory context prepared per function for execution on an engine",
+        "container": "Comp. Engines / Comm. Engines",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Frontend",
+        "to": "Dispatcher",
+        "what": "client HTTP requests for composition/function registration and invocation",
+        "step": null
+      },
+      {
+        "from": "Dispatcher",
+        "to": "Task Queues",
+        "what": "ready functions enqueued for execution",
+        "step": null
+      },
+      {
+        "from": "Task Queues",
+        "to": "Comp. Engines",
+        "what": "compute tasks dequeued for isolated execution",
+        "step": null
+      },
+      {
+        "from": "Task Queues",
+        "to": "Comm. Engines",
+        "what": "communication tasks dequeued for external I/O",
+        "step": null
+      },
+      {
+        "from": "Control Plane",
+        "to": "Comp. Engines",
+        "what": "CPU core reassignment based on queue growth rates",
+        "step": null
+      }
+    ],
+    "key_idea": "shows how the dispatcher schedules ready functions from a DAG into typed compute or communication engine queues, while a control-plane PI controller dynamically rebalances CPU cores between the two engine types for elasticity",
+    "reading_order": "left to right: frontend receives requests, dispatcher schedules via task queues into compute/communication engines on the right; control plane sits below arbitrating resources"
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.67,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "Frontend"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "Dispatcher, Waiting Functions, and Function/DAG Registry"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "compute-engine task queue and Comp. Engines"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "communication-engine task queue and Comm. Engines"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "Control Plane and per-engine Context boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "borders colored to match each fill hue (orange, red, purple, gold, blue), ~0.72pt median",
+    "font": "Arial sans, 8-9.5pt",
+    "corners": "mixed",
+    "arrows": "solid black arrows, some curved, 15 arrowheads",
+    "icons": "vector cylinder icon for the Function/DAG Registry"
+  },
+  "encoding": {
+    "color_means": "blue = client-facing frontend, orange = dispatcher/scheduling components, pink/red = compute-engine path, purple = communication-engine path, yellow = control-plane and per-function memory contexts",
+    "line_style_means": null,
+    "emphasis": "separate colored paths for compute vs. communication engines make the two-engine-type design and the control plane's role in rebalancing between them visually explicit",
+    "reusable_patterns": [
+      "dispatcher-to-typed-queues-to-typed-engines topology with a control-plane feedback loop"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "serverless",
+    "faas",
+    "elasticity",
+    "dag-scheduling",
+    "sandboxing"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Dandelion Execution System (p.7)"
+    ],
+    "evidence": [
+      "Figure 4 shows the Dandelion worker node system architecture",
+      "the dispatcher schedules functions by tracking input/output dependencies",
+      "dynamically balances CPU resources between compute and communication engines"
+    ]
+  },
+  "summary": "Dandelion is an elastic cloud-native platform that executes applications as DAGs of pure compute and communication functions in sandboxes that cold-start in hundreds of microseconds. Figure 4 shows a Dandelion worker node's architecture: an HTTP Frontend forwards client requests to a Dispatcher, which tracks a Function/DAG Registry and each function's input/output dependencies in its Waiting Functions queue. Ready functions are enqueued into typed Task Queues and dequeued by Compute Engines (pink, executing untrusted code in isolated per-engine Contexts) or Communication Engines (purple, handling external I/O with green threads, not sandboxed). A Control Plane monitors queue growth rates and reassigns CPU cores between the compute and communication engine pools using a PI controller, drawn as a feedback loop beneath the two engine types. Distinct fill colors separate the frontend, scheduling, and the two engine paths.",
+  "summary_zh": "图4展示Dandelion工作节点架构：前端转发请求给调度器，按依赖关系将就绪函数送入计算/通信两类任务队列与引擎，控制平面通过PI控制器在两类引擎间动态调度CPU核心。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

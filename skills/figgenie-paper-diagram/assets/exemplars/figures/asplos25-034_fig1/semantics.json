@@ -1,0 +1,242 @@
+{
+  "paper_id": "asplos25-034",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "MetaSapiens",
+    "one_liner": "a point-based neural rendering system that delivers real-time, human-quality rendering on mobile devices via efficiency-aware pruning and foveated rendering",
+    "domain": [
+      "neural-rendering",
+      "computer-graphics",
+      "mobile-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a scene's 3D Gaussian ellipsoids are projected onto an image-plane tile as ellipses, sorted by depth, and combined to shade one pixel",
+    "base": "scene",
+    "elements": [
+      {
+        "name": "A",
+        "kind": "node",
+        "role": "one 3D Gaussian ellipsoid representing a scene point",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "node",
+        "role": "second ellipsoid; its projection lies outside the highlighted pixel tile",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "third ellipsoid, closest to the image plane so integrated first when shading the pixel",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "D",
+        "kind": "node",
+        "role": "fourth ellipsoid",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "E",
+        "kind": "node",
+        "role": "fifth ellipsoid",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Image plane",
+        "kind": "label",
+        "role": "the 2D surface all scene ellipsoids are projected (splatted) onto",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "2x2 tile",
+        "kind": "box",
+        "role": "one pixel tile on the image plane used to group intersecting ellipses for shading",
+        "container": "Image plane",
+        "highlighted": true
+      },
+      {
+        "name": "a",
+        "kind": "node",
+        "role": "projected ellipse of ellipsoid A on the image plane",
+        "container": "2x2 tile",
+        "highlighted": false
+      },
+      {
+        "name": "b",
+        "kind": "node",
+        "role": "projected ellipse of ellipsoid B, drawn outside the highlighted tile",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c",
+        "kind": "node",
+        "role": "projected ellipse of ellipsoid C, closest ellipse to the image plane",
+        "container": "2x2 tile",
+        "highlighted": true
+      },
+      {
+        "name": "d",
+        "kind": "node",
+        "role": "projected ellipse of ellipsoid D",
+        "container": "2x2 tile",
+        "highlighted": false
+      },
+      {
+        "name": "e",
+        "kind": "node",
+        "role": "projected ellipse of ellipsoid E",
+        "container": "2x2 tile",
+        "highlighted": false
+      },
+      {
+        "name": "Pixel p",
+        "kind": "label",
+        "role": "the specific pixel whose colour is computed from the intersecting ellipses a, c, d, e",
+        "container": "2x2 tile",
+        "highlighted": true
+      },
+      {
+        "name": "camera",
+        "kind": "icon",
+        "role": "viewpoint the scene is rendered from",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "A",
+        "to": "a",
+        "what": "ellipsoid A is projected/splatted to ellipse a on the image plane",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "b",
+        "what": "ellipsoid B is projected to ellipse b",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "c",
+        "what": "ellipsoid C is projected to ellipse c",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "D",
+        "to": "d",
+        "what": "ellipsoid D is projected to ellipse d",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "E",
+        "to": "e",
+        "what": "ellipsoid E is projected to ellipse e",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "2x2 tile",
+        "to": "Pixel p",
+        "what": "the intersecting ellipses (a, c, d, e) are blended front-to-back to shade pixel p",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "The general point-based neural rendering pipeline reduces to three per-tile steps: project each scene ellipsoid to an image-plane ellipse, sort the intersecting ellipses by depth, and blend their colours front-to-back to shade the pixel.",
+    "reading_order": "left to right: the cluster of labelled 3D Gaussian ellipsoids (A-E) in the shaded scene region, projected diagonally onto the Image plane, zooming into the 2x2 tile where ellipses a, c, d, e overlap at Pixel p, with the camera icon at bottom right marking the viewpoint"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": true,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.14,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cccccc",
+        "used_for": "grey radial-gradient background circle marking the 3D scene region"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium (~0.57pt) dashed grey strokes for each ellipsoid's axis line; thin black lines for the image-plane grid",
+    "corners": "rounded",
+    "arrows": "thin plain lines projecting from each ellipsoid through the image plane toward the camera, without arrowheads",
+    "font": "HelveticaNeue sans, 7-9.5pt, unbolded",
+    "icons": "about a dozen raster (bitmap) images render the soft-edged translucent ellipsoid blobs (roughly 59% of the figure area); a small vector camera glyph at bottom right"
+  },
+  "encoding": {
+    "color_means": "each ellipsoid/ellipse pair (A/a, B/b, C/c, D/d, E/e) is drawn in its own hue purely so the reader can match a 3D ellipsoid to its 2D projection; hue carries no other data",
+    "line_style_means": "dashed lines mark each ellipsoid's principal axis; thin solid lines are projection rays from ellipsoid centres through the image plane to the camera",
+    "state_means": "not applicable; a single static frame with no before/after state",
+    "marker_means": "no numbered markers; matching upper/lower-case letters (A to a, ..., E to e) are the only correspondence markers",
+    "emphasis": "zooming into the 2x2 tile isolates exactly the ellipses relevant to Pixel p, and an arrow into 'Pixel p' focuses attention on the one pixel the accompanying volume-rendering equation computes",
+    "reusable_patterns": [
+      "matching upper-case 3D objects to lower-case 2D projections via colour and a projection line, with a magnified tile inset showing pixel-level detail"
+    ],
+    "weaknesses": [
+      "colour is the only cue tying an ellipsoid to its projected ellipse, which would not reproduce in greyscale",
+      "ellipse b sits close to the highlighted 2x2 tile, which could be misread as intersecting it like a, c, d, e do"
+    ]
+  },
+  "tags": [
+    "neural-rendering",
+    "3D-Gaussian-splatting",
+    "point-based-rendering",
+    "rasterization",
+    "mobile-graphics",
+    "MetaSapiens"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background"
+    ],
+    "evidence": [
+      "Fig. 1 illustrates the general idea",
+      "the ellipsoids A–E in the scene are splatted to ellipses a–e on the image plane",
+      "N is the number of ellipses intersecting p (i.e., a, c, d, e in Fig. 1)"
+    ]
+  },
+  "summary": "This figure illustrates the general point-based neural rendering (PBNR) pipeline that MetaSapiens builds on, using 3D Gaussian Splatting as the running example. A scene is parameterized by discrete points, each carrying a 3D Gaussian distribution that gives rise to an ellipsoid (labelled A-E); five such ellipsoids are drawn clustered in a shaded circular scene region. Each ellipsoid is projected ('splatted') through a camera onto a 2D image plane, producing a matching lower-case ellipse (a-e). The figure zooms into one 2x2 pixel tile on the image plane, where ellipses a, c, d and e overlap and intersect a specific Pixel p (b lies just outside this tile); c, being closest to the camera, is integrated first. This illustrates the three-step online rendering pipeline the paper generalizes across all PBNR methods: projection, depth sorting, and rasterization, where a pixel's final colour blends the contributions of every intersecting ellipse from near to far.",
+  "summary_zh": "该图展示MetaSapiens所依赖的点基神经渲染(PBNR)通用流程：场景中的高斯点A-E对应椭球，经相机投影到成像平面得到椭圆a-e；放大的2x2像素块内a、c、d、e与像素p相交（b不在块内），按深度排序后混合得到该像素颜色，体现投影、排序、光栅化三步骤。",
+  "confidence": "high",
+  "notes": "style.palette reflects only the flat vector fill (#cccccc grey background circle) found in the source-SVG histogram; the vivid A-E/a-e ellipsoid colours are rendered as roughly a dozen embedded raster images (about 59% of the figure area per the measured attributes), not flat vector fills, so their hex values do not appear in the histogram.",
+  "venue": "ASPLOS25"
+}

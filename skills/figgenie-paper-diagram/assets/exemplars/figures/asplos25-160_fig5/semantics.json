@@ -1,0 +1,175 @@
+{
+  "paper_id": "asplos25-160",
+  "fig": "5",
+  "system": {
+    "name": "Gigaflow",
+    "one_liner": "a SmartNIC caching system that caches reusable sub-traversals of a vSwitch pipeline instead of whole flows",
+    "domain": [
+      "networking",
+      "smartnics",
+      "cloud"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Input Flow (F)",
+        "role": "the incoming packet's flow signature (header fields) that misses the LTM cache and is sent to the vSwitch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vSwitch",
+        "role": "software virtual switch whose userspace pipeline builds the traversal for a flow that misses the SmartNIC cache",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Userspace Forwarding Pipeline",
+        "role": "processes the flow signature through the vSwitch pipeline tables, producing the unrolled traversal (tables Ti, modified flow Fi, wildcard Wi)",
+        "container": "vSwitch",
+        "novel": false
+      },
+      {
+        "name": "Sub-Traversal Partition Generation",
+        "role": "divides the traversal into up to K disjoint sub-traversals, selecting the partitioning that maximizes disjointness",
+        "container": "vSwitch",
+        "novel": true
+      },
+      {
+        "name": "LTM Rule Creation & Installation",
+        "role": "converts sub-traversals into LTM rules (match predicate Mk, wildcard ωk, priority ρk, table tag τk, action αk) and installs them into the cache",
+        "container": "vSwitch",
+        "novel": true
+      },
+      {
+        "name": "SmartNIC",
+        "role": "hardware device hosting the Gigaflow LTM cache and processing matched packets at line rate",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GF1...GFK",
+        "role": "K feed-forward P4-programmable RMT lookup tables that together implement Longest Traversal Match (LTM) caching of installed sub-traversal rules",
+        "container": "SmartNIC",
+        "novel": true
+      },
+      {
+        "name": "Longest Traversal Match (LTM)",
+        "role": "the matching mechanism, implemented across GF1...GFK, that uses rule priority and table-tag metadata to select the correct cached sub-traversal path",
+        "container": "SmartNIC",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Flow (F)",
+        "to": "vSwitch",
+        "what": "flow signature entering the userspace forwarding pipeline on an LTM cache miss",
+        "step": null
+      },
+      {
+        "from": "Userspace Forwarding Pipeline",
+        "to": "Sub-Traversal Partition Generation",
+        "what": "the unrolled traversal (accessed tables Ti, modified flow Fi, wildcard Wi)",
+        "step": null
+      },
+      {
+        "from": "Sub-Traversal Partition Generation",
+        "to": "LTM Rule Creation & Installation",
+        "what": "up to K disjoint sub-traversals",
+        "step": null
+      },
+      {
+        "from": "LTM Rule Creation & Installation",
+        "to": "GF1...GFK",
+        "what": "K installed LTM rules",
+        "step": null
+      }
+    ],
+    "key_idea": "Gigaflow partitions each flow's vSwitch pipeline traversal into disjoint, shareable sub-traversals cached as prioritized, tagged LTM rules across K SmartNIC tables, and a worked example shows how missing priority or table-tag metadata causes incorrect matches or paths.",
+    "reading_order": "Left to right: input flow into the vSwitch pipeline, sub-traversal partitioning and rule installation, down into the SmartNIC's GF1...GFK caches; then the notation key and worked example on the right."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.3,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill on the Sub-Traversal Partition Generation step and the shared ETH/IP-24 path highlighted in the worked example"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "burnt-orange highlight on the divergent dTCP/IP-32 path and rule entries affected by missing priority/tag metadata"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple accents in the traversal/LTM notation panel"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray box borders, connecting lines and body text throughout"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "light-blue traversal-timeline nodes (T1...TN) and secondary highlight boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders (~0.2pt) on pipeline-step boxes, with a dashed outline delineating the vSwitch pipeline group",
+    "font": "mixed Cambria Math (equations/notation) and Open Sans Light sans-serif (labels), 3.5-8pt",
+    "corners": "rounded",
+    "arrows": "thin straight arrows with filled triangular heads linking pipeline stages and traversal steps",
+    "icons": "a small number of bitmap markers within the pipeline/traversal diagrams; exact artwork not resolvable from the preview"
+  },
+  "encoding": {
+    "color_means": "blue marks the partition-generation stage and one shared traversal path, orange marks the divergent path and rules affected by missing metadata; gray is used for structural elements",
+    "line_style_means": "a dashed boundary sets the vSwitch software pipeline apart from the SmartNIC hardware cache boxes",
+    "emphasis": "callout boxes in the rightmost panel spell out in words how omitting priority (ρ) or table tag (τ) breaks matching, directly next to the colored worked example",
+    "reusable_patterns": [
+      "software pipeline feeding a labeled hardware lookup-table cache",
+      "worked numeric example paired with a symbol-definition key"
+    ],
+    "weaknesses": [
+      "dense mixed math notation and diagram text at small size (3.5-8pt)",
+      "three conceptually different sub-panels (architecture, notation key, worked example) are merged into one wide figure without visible panel borders in the preview"
+    ]
+  },
+  "tags": [
+    "smartnic",
+    "vswitch",
+    "packet-caching",
+    "p4",
+    "rmt",
+    "flow-cache"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design of Gigaflow (p.5)",
+      "4 Design of Gigaflow (p.7)"
+    ],
+    "evidence": [
+      "Gigaflow's LTM cache in the SmartNIC consists of K feed-forward lookup tables based on the P4-programmable RMT architecture",
+      "Gigaflow divides the traversal into up to K disjoint sub-traversals",
+      "These sub-traversals are converted into LTM rules...installed into the LTM cache"
+    ]
+  },
+  "summary": "This figure presents Gigaflow's high-level architecture and a worked example of its caching mechanism. On the left, an incoming flow's signature is processed through the vSwitch's userspace forwarding pipeline to produce a traversal of accessed tables; Sub-Traversal Partition Generation splits this into up to K disjoint sub-traversals, and LTM Rule Creation & Installation converts them into rules (with a match predicate, wildcard, priority, table tag, and action) installed into K SmartNIC lookup tables, GF1 through GFK, that implement Longest Traversal Match (LTM) caching. A middle panel defines the traversal and rule notation, and a right panel walks through two example traversals sharing a prefix, showing with colored paths and callout text how omitting rule priority or table-tag metadata causes incorrect matches or paths. The figure mixes Office-blue/orange highlighted step boxes, math notation, and an annotated worked example in one dense, double-column-width layout.",
+  "summary_zh": "该图展示 Gigaflow 架构：流量经 vSwitch 用户态转发流水线生成遍历路径，经子遍历划分与 LTM 规则生成安装到 SmartNIC 的 GF1...GFK 缓存表中；右侧示例说明缺少优先级或表标签会导致匹配或路径错误。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

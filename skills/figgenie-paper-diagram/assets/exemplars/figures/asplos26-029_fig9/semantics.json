@@ -1,0 +1,212 @@
+{
+  "paper_id": "asplos26-029",
+  "fig": "9",
+  "system": {
+    "name": "M2XFP",
+    "one_liner": "a metadata-augmented microscaling data format with hardware co-design for accurate low-bit LLM quantization",
+    "domain": [
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Off-chip Memory (DRAM)",
+        "role": "stores model weights/activations off-chip",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Network on-chip",
+        "role": "interconnect distributing data between off-chip memory and replicated M2XFP Core tiles",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "M2XFP Core",
+        "role": "one of several replicated compute tiles integrating M2XFP quantization into a systolic dot-product pipeline",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Controller",
+        "role": "sequences core operations",
+        "container": "M2XFP Core",
+        "novel": false
+      },
+      {
+        "name": "DMA",
+        "role": "moves data between on-chip network and local core buffers",
+        "container": "M2XFP Core",
+        "novel": false
+      },
+      {
+        "name": "L1 cache",
+        "role": "on-chip cache local to the core",
+        "container": "M2XFP Core",
+        "novel": false
+      },
+      {
+        "name": "Compute Engine",
+        "role": "main systolic compute datapath, expanded in the zoomed detail panel",
+        "container": "M2XFP Core",
+        "novel": true
+      },
+      {
+        "name": "Vector Unit",
+        "role": "handles vector/elementwise operations alongside the compute engine",
+        "container": "M2XFP Core",
+        "novel": false
+      },
+      {
+        "name": "Activation Buffer",
+        "role": "buffers input activations feeding the dot product array",
+        "container": "Compute Engine",
+        "novel": false
+      },
+      {
+        "name": "Weight Buffer",
+        "role": "buffers weights feeding the dot product array",
+        "container": "Compute Engine",
+        "novel": false
+      },
+      {
+        "name": "Top-1 Decode Unit",
+        "role": "selects the dominant element per subgroup as part of M2XFP decoding",
+        "container": "Compute Engine",
+        "novel": true
+      },
+      {
+        "name": "Dot Product Unit Array",
+        "role": "array of MAC units performing the systolic dot-product computation",
+        "container": "Compute Engine",
+        "novel": false
+      },
+      {
+        "name": "Output Buffer",
+        "role": "buffers dot-product results",
+        "container": "Compute Engine",
+        "novel": false
+      },
+      {
+        "name": "Quantization Engine",
+        "role": "online-quantizes outputs into M2XFP format, containing an Encoding Unit and a Scaling & Normalize Unit",
+        "container": "Compute Engine",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Off-chip Memory (DRAM)",
+        "to": "Network on-chip",
+        "what": "weights/activations",
+        "step": null
+      },
+      {
+        "from": "Network on-chip",
+        "to": "M2XFP Core",
+        "what": "data distributed to each core tile",
+        "step": null
+      },
+      {
+        "from": "Activation Buffer",
+        "to": "Dot Product Unit Array",
+        "what": "input activations, via Top-1 Decode Unit",
+        "step": null
+      },
+      {
+        "from": "Weight Buffer",
+        "to": "Dot Product Unit Array",
+        "what": "weight values",
+        "step": null
+      },
+      {
+        "from": "Dot Product Unit Array",
+        "to": "Output Buffer",
+        "what": "partial-sum results",
+        "step": null
+      },
+      {
+        "from": "Output Buffer",
+        "to": "Quantization Engine",
+        "what": "results to be re-quantized to M2XFP format",
+        "step": null
+      }
+    ],
+    "key_idea": "M2XFP is integrated into a conventional systolic-array accelerator with lightweight modifications: a Top-1 Decode Unit and a Quantization Engine are added inline with the existing activation/weight buffers and dot-product array, without disrupting the systolic pipeline.",
+    "reading_order": "Left to right: off-chip DRAM and network-on-chip feed a stack of replicated M2XFP Core tiles; a dashed line zooms from one core's Compute Engine into its internal buffer-array-quantization pipeline on the right."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.52,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b4d7e8",
+        "used_for": "light blue fill marking the 'Compute Engine' block"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light gray fill for generic sub-blocks (Controller, DMA, L1 cache, buffers)"
+      },
+      {
+        "hex": "#4492c5",
+        "used_for": "blue label tags highlighting M2XFP-specific novel units (Top-1 Decode Unit, Encoding Unit, Scaling & Normalize Unit)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black lines (~0.35pt median), dashed line linking the Compute Engine box to its zoomed detail",
+    "font": "serif (Times New Roman), 4-6pt, bold for block titles",
+    "corners": "mixed",
+    "arrows": "thin double-headed arrows between memory/network/core levels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light blue fill marks the Compute Engine as the block of interest; blue label tags pick out the specific M2XFP-novel units inside it (Top-1 Decode Unit, Encoding Unit, Scaling & Normalize Unit)",
+    "line_style_means": "a dashed connector links the compact Compute Engine box on the left to its expanded internal pipeline on the right",
+    "emphasis": "the zoom-in callout foregrounds exactly where M2XFP's new logic sits inside an otherwise conventional systolic dot-product core",
+    "reusable_patterns": [
+      "replicated tile/core stack sharing an on-chip network",
+      "zoom callout expanding one block into its internal datapath"
+    ],
+    "weaknesses": [
+      "small text size for internal buffer/unit labels",
+      "replicated core stack drawn only with a partial outline, relying on the reader to infer repetition"
+    ]
+  },
+  "tags": [
+    "quantization",
+    "microscaling",
+    "hardware-accelerator",
+    "systolic-array",
+    "architecture-overview",
+    "dataflow"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Architecture (p.9)"
+    ],
+    "evidence": [
+      "Fig. 9 illustrates the overall compute core, which integrates M2XFP into a conventional systolic array pipeline with lightweight modifications.",
+      "Figure 9. Architecture Overview."
+    ]
+  },
+  "summary": "M2XFP is a metadata-augmented microscaling quantization format with an accompanying hardware unit integrated into an LLM accelerator. This figure gives the architecture overview: off-chip DRAM and an on-chip network feed a stack of replicated M2XFP Core tiles, each with a Controller, DMA, L1 cache, Compute Engine and Vector Unit. A dashed callout zooms into one core's Compute Engine, showing Activation and Weight Buffers feeding a Dot Product Unit Array through a Top-1 Decode Unit, with results flowing to an Output Buffer and then a Quantization Engine (an Encoding Unit and Scaling & Normalize Unit) that re-quantizes outputs into M2XFP format. Light blue highlights the Compute Engine block, while blue tags mark the specific new units M2XFP adds to an otherwise conventional systolic dot-product pipeline.",
+  "summary_zh": "该图展示M2XFP整体架构：片外DRAM经片上网络连接多个M2XFP计算核心，缩放视图展示计算引擎内部——激活/权重缓冲经Top-1解码单元送入点积阵列，输出经量化引擎（编码单元与缩放归一化单元）重新量化为M2XFP格式。",
+  "confidence": "medium",
+  "notes": "Paper text about this figure is a single brief sentence; component roles are inferred primarily from the figure's own labels plus general context from other M2XFP figures (Fig. 10/12) in the same paper.",
+  "venue": "ASPLOS26"
+}

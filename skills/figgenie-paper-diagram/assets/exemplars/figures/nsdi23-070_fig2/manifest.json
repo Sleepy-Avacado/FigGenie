@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-070_fig2",
+  "paper_id": "nsdi23-070",
+  "fig": "2",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 2: Conventional network processing stack architecture in a containerized Linux deployment.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.17,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-070/nsdi23-070_fig2_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-070/nsdi23-070_fig2_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "A clean floor-level pipeline exemplar: 9 plain blue-outlined stage boxes in one strict left-right row from App Containers to Wire, with gray funnel icons marking the two places where per-core queues fan in.",
+      "what_to_learn": "When the point is just that packets pass through these layers in order, skip numbering and legends entirely, and reuse one small funnel or trapezoid glyph wherever parallel per-core resources converge instead of drawing every core's queue."
+    }
+  ]
+}

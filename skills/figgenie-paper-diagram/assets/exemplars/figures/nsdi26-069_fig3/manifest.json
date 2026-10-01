@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-069_fig3",
+  "paper_id": "nsdi26-069",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 3: HydraServe system overview.",
+  "corpus_template": "layered",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.38,
+  "n_components": 15,
+  "n_flows": 12,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-069/src/fig3_overview.svg",
+    "preview.png": "lab/extracted/nsdi26-069/src/fig3_overview.png",
+    "print.png": "lab/extracted/nsdi26-069/nsdi26-069_fig3_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence, dense layered exemplar that partitions the whole architecture into three separately dashed-bordered quadrants rather than horizontal bands, colour-coding each quadrant's own role boxes across 15 components and 12 flows.",
+      "what_to_learn": "When a system's levels are conceptual rather than physically stacked, arrange them as separate dashed-bordered quadrants labelled by level name instead of forcing strict top-down bands, and show a before/after transition as two small boxes joined by one arrow inside its own quadrant."
+    }
+  ]
+}

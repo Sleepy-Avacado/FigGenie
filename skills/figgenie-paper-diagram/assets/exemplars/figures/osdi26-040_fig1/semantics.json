@@ -1,0 +1,198 @@
+{
+  "paper_id": "osdi26-040",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": null,
+    "one_liner": "a scalable synchronization design for disaggregated shared memory built on generalized cache coherence",
+    "domain": [
+      "disaggregated-memory",
+      "cache-coherence",
+      "synchronization"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how locks can be layered atop, bypass, or generalize cache coherence for disaggregated shared memory",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Applications",
+        "kind": "box",
+        "role": "top-level user application layer common to all three stacks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Lock API",
+        "kind": "box",
+        "role": "dashed interface box for lock operations, part of the application-facing interface",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Memory Access",
+        "kind": "box",
+        "role": "dashed interface box for direct memory operations, alongside Lock API",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Lock Impl.",
+        "kind": "box",
+        "role": "the layer implementing lock semantics",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Cache Coherence Protocols",
+        "kind": "box",
+        "role": "the layer implementing cache coherence across compute/memory blades",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Applications",
+        "to": "Lock API",
+        "what": "applications invoke lock operations through the Lock API",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Applications",
+        "to": "Memory Access",
+        "what": "applications also perform direct memory accesses",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Lock API",
+        "to": "Lock Impl.",
+        "what": "the Lock API is implemented by the Lock Impl. layer",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Lock Impl.",
+        "to": "Cache Coherence Protocols",
+        "what": "in the layered design, the lock implementation is built on top of the cache coherence protocol layer",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Memory Access",
+        "to": "Cache Coherence Protocols",
+        "what": "direct memory accesses go through the cache coherence protocol layer",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Lock Layered atop Cache Coherence",
+        "axis": "alternatives",
+        "differs": "template: Lock Impl. is stacked directly on top of, and built from, the Cache Coherence Protocols layer",
+        "verdict": "redundant coherence transactions"
+      },
+      {
+        "label": "Lock bypassing Cache Coherence",
+        "axis": "alternatives",
+        "differs": "Lock Impl. sits beside Cache Coherence Protocols as a separate, unconnected block that bypasses it entirely",
+        "verdict": "precludes key optimizations"
+      },
+      {
+        "label": "Lock via Generalized Cache Coherence",
+        "axis": "alternatives",
+        "differs": "Lock Impl. and Cache Coherence Protocols are merged into one generalized block, linked by a 'Generalization' arrow",
+        "verdict": "ours"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Locks for disaggregated shared memory can be layered on top of cache coherence (redundant transactions), bypass it entirely (losing optimizations), or, as proposed, generalize the same substrate to implement both, unifying the two layers.",
+    "reading_order": "Left to right across the three stacks, each read top-down from Applications through the Lock API/Memory Access interface to how Lock Impl. and Cache Coherence Protocols connect at bottom."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.23,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bdd7ee",
+        "used_for": "fill of the 'Lock Impl.' boxes (and the merged lock/coherence box in the third, generalized stack)"
+      },
+      {
+        "hex": "#f9e5d6",
+        "used_for": "fill of the 'Cache Coherence Protocols' boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "fill of the dashed 'Applications' / 'Lock API' / 'Memory Access' interface boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black box outlines (median ~0.36pt), dashed for the Lock API and Memory Access interface boxes",
+    "corners": "square",
+    "arrows": "one curved black arrow, labelled 'Generalization', linking Cache Coherence Protocols up into Lock Impl. in the third stack only",
+    "font": "sans (Helvetica, Helvetica-Bold for stack titles)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks the lock-implementation layer, peach marks the cache-coherence-protocol layer, and grey marks the application-facing interface boxes, consistently across all three stacks",
+    "line_style_means": "dashed boxes mark the interface layer (Lock API / Memory Access) that applications call into; a solid curved arrow in the third stack marks the new generalization relationship",
+    "state_means": "the three alternatives are told apart by how the Lock Impl. and Cache Coherence Protocols boxes relate: stacked (layered), side by side and disconnected (bypassing), or merged with a generalization arrow (proposed)",
+    "marker_means": "no numbered markers; the 'Generalization' arrow label names the one new relationship the third stack introduces",
+    "emphasis": "the third stack's merged Lock-Impl./Cache-Coherence box and its labelled Generalization arrow visually set the proposed approach apart from the first two",
+    "reusable_patterns": [
+      "three side-by-side software-stack panels sharing an identical Applications/interface template, differing only in how two lower layers are connected or merged"
+    ],
+    "weaknesses": [
+      "the figure gives each stack a full descriptive title rather than a short (a)/(b)/(c) tag, so the corpus's automated panel counter reads it as a single panel",
+      "the caption text supplied is cut off mid-sentence, so the exact wording of the third approach's trade-off is not fully available here"
+    ]
+  },
+  "tags": [
+    "cache-coherence",
+    "disaggregated-memory",
+    "synchronization",
+    "lock-design",
+    "software-stack-comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "§1 Introduction"
+    ],
+    "evidence": [
+      "Layered approaches (left) incur redundant coherence transactions while standalone approaches (middle) preclude key optimizations",
+      "lock services that bypass the cache coherence substrates altogether",
+      "degrading performance for real-world synchronization-heavy workloads by as much as 1000×"
+    ]
+  },
+  "summary": "Figure 1 lays out three ways to combine locking with cache coherence for disaggregated shared memory, each drawn as the same Applications/Lock-API/Memory-Access stack sitting on top of a Lock Impl. and a Cache Coherence Protocols layer. In the left stack, Lock Impl. is layered directly on Cache Coherence Protocols, the conventional multi-core design, which the caption says incurs redundant coherence transactions once ported to disaggregated memory's slower links. In the middle stack, Lock Impl. sits beside Cache Coherence Protocols as a separate block that bypasses it altogether, avoiding that overhead but precluding optimizations that a coherence substrate could offer. In the right stack, labelled Lock via Generalized Cache Coherence, the two layers are merged into a single block linked by a 'Generalization' arrow, reflecting the paper's insight that lock-based synchronization is itself a generalization of cache coherence.",
+  "summary_zh": "图1对比三种同步与缓存一致性结合方式：左侧锁实现叠加在一致性协议之上，导致冗余一致性事务；中间锁服务绕开一致性协议，却丧失关键优化；右侧为本文方案，将两层合并，通过Generalization箭头体现锁是缓存一致性在时空上的推广。",
+  "confidence": "high",
+  "notes": "corrected base from the prior 'architecture' (not a valid base value in this schema) to 'component', since each alternative is drawn as a small layered-box software stack rather than a system architecture diagram.",
+  "venue": "OSDI26"
+}

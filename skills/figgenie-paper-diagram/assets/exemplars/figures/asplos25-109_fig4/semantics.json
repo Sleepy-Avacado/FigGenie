@@ -1,0 +1,207 @@
+{
+  "paper_id": "asplos25-109",
+  "fig": "4",
+  "system": {
+    "name": "Virtuoso",
+    "one_liner": "a simulation framework coupling a lightweight userspace kernel (MimicOS) to architectural simulators for fast, accurate virtual-memory research",
+    "domain": [
+      "virtual-memory",
+      "simulation",
+      "os-kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "MimicOS",
+        "role": "lightweight userspace kernel that imitates the OS's virtual memory subsystem",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "OS Modules",
+        "role": "column of MimicOS's simulated OS functionality modules",
+        "container": "MimicOS",
+        "novel": false
+      },
+      {
+        "name": "Page Fault Handler",
+        "role": "MimicOS module that processes forwarded events such as page faults (step 3)",
+        "container": "OS Modules",
+        "novel": true
+      },
+      {
+        "name": "Instrumentation Tool",
+        "role": "dynamically instruments MimicOS's binary to extract disassembled instructions (step 4)",
+        "container": "MimicOS",
+        "novel": true
+      },
+      {
+        "name": "Communication Interface",
+        "role": "exchanges events and instructions between MimicOS and the architectural simulator",
+        "container": "MimicOS",
+        "novel": true
+      },
+      {
+        "name": "Architectural Simulator",
+        "role": "existing simulator that Virtuoso is coupled with",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Core Model",
+        "role": "models core execution; receives injected instructions and OS-overhead evaluation",
+        "container": "Architectural Simulator",
+        "novel": false
+      },
+      {
+        "name": "Memory Model",
+        "role": "models the memory subsystem; source of events such as page faults (step 1)",
+        "container": "Architectural Simulator",
+        "novel": false
+      },
+      {
+        "name": "Userspace Kernel Instructions",
+        "role": "disassembled MimicOS instructions injected into the instruction stream channel (step 5)",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Memory Model",
+        "to": "Communication Interface",
+        "what": "a page fault event requiring OS intervention",
+        "step": 1
+      },
+      {
+        "from": "Communication Interface",
+        "to": "Communication Interface",
+        "what": "forwards the event to MimicOS",
+        "step": 2
+      },
+      {
+        "from": "Page Fault Handler",
+        "to": "Instrumentation Tool",
+        "what": "dynamically instruments MimicOS's binary",
+        "step": 4
+      },
+      {
+        "from": "Instrumentation Tool",
+        "to": "Core Model",
+        "what": "injects MimicOS's disassembled instructions into the processor performance model",
+        "step": 5
+      },
+      {
+        "from": "Page Fault Handler",
+        "to": "Communication Interface",
+        "what": "signals the core to restart walking the page table",
+        "step": 6
+      },
+      {
+        "from": "Communication Interface",
+        "to": "Communication Interface",
+        "what": "returns the functional response to the architectural simulator",
+        "step": 7
+      }
+    ],
+    "key_idea": "Virtuoso couples a lightweight userspace kernel (MimicOS) to an architectural simulator via a shared communication interface, so simulator events like page faults are handled and timed by real OS-like code.",
+    "reading_order": "top-down: MimicOS's OS modules and instrumentation tool first, then through the communication interfaces down to the simulator's core and memory models"
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.72,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "red - Instrumentation Tool box/title and the Instruction Stream Channel arrows and label"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue - Functional Channel, Restart PTW, and Page fault arrows and labels"
+      },
+      {
+        "hex": "#002060",
+        "used_for": "dark navy - panel heading text ('Virtuoso's MimicOS...' and 'Architectural Simulator')"
+      },
+      {
+        "hex": "#404040",
+        "used_for": "dark gray - fill of the two Communication Interface boxes"
+      },
+      {
+        "hex": "#07823b",
+        "used_for": "green - italic benefit call-outs (Fast Simulation, Quick Development, OS Emulation, Detailed OS Overhead Evaluation)"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange - fill of the Core Model and Memory Model boxes"
+      },
+      {
+        "hex": "#843c0c",
+        "used_for": "brown - Architectural Simulator panel border and heading text"
+      },
+      {
+        "hex": "#2f5597",
+        "used_for": "blue-gray - fill of the Page Fault Handler box"
+      },
+      {
+        "hex": "#f8c5c9",
+        "used_for": "pink - fill of the Userspace Kernel Instructions box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.31pt) colored or dark strokes outlining each box, no dashed lines",
+    "font": "Corbel/Calibri sans, bold for labels and headings, roughly 4-7.5pt",
+    "corners": "rounded",
+    "arrows": "straight red or blue arrows with filled triangular heads, annotated with black filled circles containing white step numbers 1-7",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = functional/control channel and events (page fault, restart PTW), red = instruction-stream/instrumentation path, orange = the simulator's core and memory models, dark gray = communication interface boxes, green = qualitative benefit call-outs",
+    "line_style_means": "no dashed/solid distinction; all edges are solid, differentiated only by the blue (functional) vs red (instruction-stream) color coding",
+    "emphasis": "the 7 numbered steps trace one concrete request end-to-end, and the dual color coding separates the control path from the data/instruction path",
+    "reusable_patterns": [
+      "two-panel host/target diagram bridged by an identically-labeled 'Communication Interface' component in each panel",
+      "numbered steps overlaid on a control/data dual-channel diagram"
+    ],
+    "weaknesses": [
+      "the two differently-scoped boxes share the identical label 'Communication Interface', which can confuse readers matching steps to boxes"
+    ]
+  },
+  "tags": [
+    "operating-systems",
+    "virtual-memory",
+    "simulation",
+    "architectural-simulator",
+    "userspace-kernel",
+    "instrumentation"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Virtuoso: Overview (p.6)"
+    ],
+    "evidence": [
+      "Figure 4 illustrates a high-level overview of Virtuoso's components and workflow.",
+      "Virtuoso consists of two main components: (i) a lightweight userspace kernel, called MimicOS",
+      "MimicOS processes the event 3 and Virtuoso performs two operations."
+    ]
+  },
+  "summary": "Figure 4 is Virtuoso's own architecture overview, not a background diagram. Virtuoso couples a lightweight userspace kernel, MimicOS, with an existing architectural simulator through a shared 'Communication Interface' component drawn in both panels. MimicOS's OS Modules include a Page Fault Handler and an Instrumentation Tool; the simulator panel holds a Core Model and Memory Model. Seven numbered steps trace one request: a page fault in the Memory Model (1) is forwarded to MimicOS via the functional channel (2), the Page Fault Handler processes it (3), Virtuoso instruments MimicOS's binary (4) and injects disassembled instructions into the Core Model via the Instruction Stream Channel (5), then MimicOS signals a page-table-walk restart (6) and returns its functional response through the functional channel (7). Blue marks the functional path and red marks the instruction-stream path.",
+  "summary_zh": "图4展示Virtuoso架构:用户态内核MimicOS通过通信接口对接架构模拟器,7个编号步骤描绘从缺页发生、转发处理到注入指令并返回响应的完整流程,蓝色为功能通道,红色为指令流通道。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

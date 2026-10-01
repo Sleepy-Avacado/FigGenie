@@ -1,0 +1,241 @@
+{
+  "paper_id": "asplos26-053",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "Graphiti",
+    "one_liner": "a Lean 4 framework for defining, formally proving, and applying correctness-preserving rewrites to dataflow circuits, used to add out-of-order execution to dynamic HLS designs",
+    "domain": [
+      "compilers",
+      "formal-verification",
+      "hardware-accelerators"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how Graphiti parses a circuit into ExprHigh, matches and rewrites a subgraph via ExprLow, then iterates or outputs",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Dynamic HLS tool",
+        "kind": "actor",
+        "role": "external front-end that compiles programs into dataflow circuits and receives the optimized circuit back",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Dot graph",
+        "kind": "box",
+        "role": "the dataflow circuit exchanged with the HLS tool in the dot graph input language",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ExprHigh",
+        "kind": "box",
+        "role": "Graphiti's higher-level graph representation, parsed from the dot graph and re-emitted after each rewrite",
+        "container": "Graphiti",
+        "highlighted": false
+      },
+      {
+        "name": "matcher",
+        "kind": "node",
+        "role": "function that searches ExprHigh for a subgraph matching the selected rewrite's pattern",
+        "container": "Graphiti",
+        "highlighted": false
+      },
+      {
+        "name": "Subgraph",
+        "kind": "box",
+        "role": "the matched subgraph that the rewrite will replace",
+        "container": "Graphiti",
+        "highlighted": false
+      },
+      {
+        "name": "rewrite",
+        "kind": "node",
+        "role": "function that applies the rewrite to the matched subgraph on the lower-level representation",
+        "container": "Graphiti",
+        "highlighted": false
+      },
+      {
+        "name": "ExprLow",
+        "kind": "box",
+        "role": "Graphiti's inductively defined low-level graph representation, more suited to verification, produced by the rewrite",
+        "container": "Graphiti",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Dynamic HLS tool",
+        "to": "Dot graph",
+        "what": "the front-end's dataflow circuit is exchanged as a dot graph",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Dot graph",
+        "to": "ExprHigh",
+        "what": "Graphiti parses the dot graph into ExprHigh",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "ExprHigh",
+        "to": "matcher",
+        "what": "the matcher searches the current ExprHigh graph",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "matcher",
+        "to": "Subgraph",
+        "what": "the matcher returns the matched subgraph",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Subgraph",
+        "to": "rewrite",
+        "what": "the matched subgraph is passed to the rewrite function",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "ExprHigh",
+        "to": "ExprLow",
+        "what": "ExprHigh has a corresponding ExprLow representation used to carry out and verify the rewrite",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "rewrite",
+        "to": "ExprLow",
+        "what": "the rewrite is applied on ExprLow, which is more suited to verification",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "ExprLow",
+        "to": "ExprHigh",
+        "what": "the rewritten graph is lifted back up from ExprLow to ExprHigh",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "ExprHigh",
+        "to": "Dot graph",
+        "what": "Graphiti outputs the rewritten circuit back to the HLS tool, or loops back to rewrite it further",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Graphiti wraps a dataflow circuit in a verified rewrite loop: it parses the circuit into ExprHigh, matches a subgraph, rewrites it on the verification-friendly ExprLow representation, and lifts the result back up, iterating or emitting the optimized circuit.",
+    "reading_order": "Left to right from the external HLS tool and dot graph into the green Graphiti box, then down through ExprHigh, matcher, Subgraph and rewrite to ExprLow, looping back to ExprHigh."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.1,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fcc7c2",
+        "used_for": "fill of the two ExprHigh boxes"
+      },
+      {
+        "hex": "#c6daea",
+        "used_for": "fill of the two ExprLow boxes"
+      },
+      {
+        "hex": "#fee2bc",
+        "used_for": "fill of the matcher and rewrite ovals"
+      },
+      {
+        "hex": "#d9f0d3",
+        "used_for": "fill of the outer Graphiti / verified-region box"
+      },
+      {
+        "hex": "#e6d8eb",
+        "used_for": "fill of the Dot graph box"
+      },
+      {
+        "hex": "#ece2ce",
+        "used_for": "fill of the Dynamic HLS tool ellipse"
+      },
+      {
+        "hex": "#ffffd9",
+        "used_for": "fill of the Subgraph box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin outline in a darker shade of each box's own fill colour",
+    "font": "sans-serif (Libertinus Sans) body labels around 14pt, monospace (Inconsolata) for the matcher/rewrite function names",
+    "corners": "mixed",
+    "arrows": "thin solid black arrows with small filled triangular heads; a dashed light-green vertical line (not an arrow) marks the unverified/verified boundary",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each pipeline stage gets its own flat pastel fill (pink=ExprHigh, blue=ExprLow, tan=matcher/rewrite, purple=Dot graph, beige=Dynamic HLS tool, pale yellow=Subgraph); the outer green box marks Graphiti's verified region",
+    "line_style_means": "solid black arrows show data/control flow between stages; the dashed green line marks a region boundary, not a flow",
+    "state_means": "ExprHigh and ExprLow are each drawn twice (once per pass through the loop) to show the graph re-entering the rewrite cycle, rather than as separate labelled frames",
+    "marker_means": "no numbered or symbolic markers are used",
+    "emphasis": "the outer green rectangle and dashed boundary set off Graphiti's verified internals from the unverified front-end tool, with red-brown vs green caption text naming each side",
+    "reusable_patterns": [
+      "a colour-coded outer container box enclosing a small chained pipeline of differently-coloured stage boxes",
+      "a dashed boundary line separating a verified/unverified region pair with matching caption text"
+    ],
+    "weaknesses": [
+      "no arrow labels explain what 'matcher' and 'rewrite' consume/produce beyond the box name",
+      "the loop-back arrow for iterating further looks identical to the arrow for final output, so the two outcomes are not visually distinguished"
+    ]
+  },
+  "tags": [
+    "dataflow-rewriting",
+    "formal-verification",
+    "high-level-synthesis",
+    "graph-rewriting",
+    "lean4",
+    "tool-pipeline",
+    "compiler-ir"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction",
+      "3 Graph rewriting and its application"
+    ],
+    "evidence": [
+      "it accepts dataflow circuits, rewrites them using a verified rewriting framework, and can either continue iterating",
+      "A rewrite is selected and its matcher function is run to find a subgraph to be replaced",
+      "the resulting graph is lifted back up to ExprHigh, where it can be output or rewritten further"
+    ]
+  },
+  "summary": "Figure 1 gives a high-level overview of Graphiti's tool flow for verified dataflow-circuit rewriting. An external Dynamic HLS tool exchanges its circuit with Graphiti as a dot graph, which Graphiti parses into ExprHigh, its higher-level graph representation. A matcher function searches ExprHigh for a subgraph matching a selected rewrite's pattern; the rewrite is then carried out on ExprLow, an inductively defined lower-level representation better suited to formal verification. The resulting graph is lifted back up to ExprHigh, closing a loop that can either feed into another rewrite iteration or be emitted back to the HLS tool as the optimized circuit. A dashed boundary and colour separate Graphiti's formally verified internals (green) from the unverified front-end tool (red-brown), visually grounding the paper's claim that only the internal rewriting steps carry a correctness guarantee.",
+  "summary_zh": "该图展示Graphiti工具流程：动态HLS工具的点图被解析为ExprHigh，matcher匹配子图，在更适合验证的ExprLow上执行rewrite后提升回ExprHigh，可迭代或输出；虚线区分已验证与未验证区域。",
+  "confidence": "high",
+  "notes": "Prior label 'walkthrough' corrected to 'anatomy': the figure has no numbered/lettered markers or step labels on arrows anywhere (checked the full source SVG text), which the v3 spec requires for walkthrough; this is a single chained pipeline (component internals + datapath) shown once, with ExprHigh/ExprLow each drawn twice to depict the loop back for iteration.",
+  "venue": "ASPLOS26"
+}

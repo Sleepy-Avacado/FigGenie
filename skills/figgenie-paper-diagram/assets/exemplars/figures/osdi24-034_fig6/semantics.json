@@ -1,0 +1,224 @@
+{
+  "paper_id": "osdi24-034",
+  "fig": "6",
+  "system": {
+    "name": "NIC",
+    "one_liner": "custom NIC hardware that maps arriving packets directly to application buffers for zero-copy DMA via per-flow memory-segment tracking",
+    "domain": [
+      "networking",
+      "hardware-acceleration",
+      "zero-copy"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Transport Protocol Execution Environment",
+        "role": "host control-path software that processes headers forwarded from the NIC",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Application Buffers",
+        "role": "destination memory for zero-copy DMA of payload data (e.g. CPU user space or GPU device memory)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU HBM",
+        "role": "example application-buffer memory (GPU high-bandwidth memory)",
+        "container": "Application Buffers",
+        "novel": false
+      },
+      {
+        "name": "MR",
+        "role": "memory-region descriptor for a registered buffer",
+        "container": "GPU HBM",
+        "novel": true
+      },
+      {
+        "name": "DMA",
+        "role": "engines that copy payload to application memory and forward headers to the control path",
+        "container": "NIC",
+        "novel": true
+      },
+      {
+        "name": "TX Merge Unit",
+        "role": "merges header and payload to form an outgoing packet",
+        "container": "NIC",
+        "novel": true
+      },
+      {
+        "name": "RX Split Unit",
+        "role": "splits an accepted incoming packet into header and payload",
+        "container": "NIC",
+        "novel": true
+      },
+      {
+        "name": "MS List",
+        "role": "list of memory segments tracking payload placement for a flow",
+        "container": "NIC",
+        "novel": true
+      },
+      {
+        "name": "Flow Table",
+        "role": "tracks per-flow metadata (flow ID, flow cursor) used to index incoming packets",
+        "container": "NIC",
+        "novel": true
+      },
+      {
+        "name": "MR Table",
+        "role": null,
+        "container": "NIC",
+        "novel": true
+      },
+      {
+        "name": "net port",
+        "role": "physical network port where packets are sent and received",
+        "container": "NIC",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Transport Protocol Execution Environment",
+        "to": "DMA",
+        "what": "header",
+        "step": null
+      },
+      {
+        "from": "Application Buffers",
+        "to": "DMA",
+        "what": "payload",
+        "step": null
+      },
+      {
+        "from": "DMA",
+        "to": "TX Merge Unit",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "RX Split Unit",
+        "to": "DMA",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "TX Merge Unit",
+        "to": "net port",
+        "what": "payload (Sender)",
+        "step": null
+      },
+      {
+        "from": "net port",
+        "to": "RX Split Unit",
+        "what": "payload (Receiver)",
+        "step": null
+      },
+      {
+        "from": "RX Split Unit",
+        "to": "MS List",
+        "what": "management lookup",
+        "step": null
+      },
+      {
+        "from": "Flow Table",
+        "to": "MS List",
+        "what": "management",
+        "step": null
+      },
+      {
+        "from": "MS List",
+        "to": "MR Table",
+        "what": "management",
+        "step": null
+      }
+    ],
+    "key_idea": "Custom NIC hardware maps each incoming packet directly to its application buffer for zero-copy DMA by tracking per-flow memory segments (MS List) and cursors in a Flow Table, splitting/merging headers and payloads at the NIC boundary.",
+    "reading_order": "Top-down: host-side transport stack and application/GPU buffers connect through DMA engines into the NIC's TX/RX split-merge units, which consult the Flow Table and MS List, down to the net port."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.5,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4aa0e6",
+        "used_for": "the Sender data path (label and arrows)"
+      },
+      {
+        "hex": "#ad2e30",
+        "used_for": "the Receiver data path (label and arrows)"
+      },
+      {
+        "hex": "#262626",
+        "used_for": "box borders and body text"
+      },
+      {
+        "hex": "#ffc9b3",
+        "used_for": "the NIC's per-flow hardware data structures (MS List, Flow Table, MR Table) and the MR box"
+      },
+      {
+        "hex": "#fffdcd",
+        "used_for": "the GPU HBM box fill"
+      },
+      {
+        "hex": "#8b8b9c",
+        "used_for": "dashed borders of the host-side containers (Transport Protocol Execution Environment, Application Buffers/GPU HBM)"
+      }
+    ],
+    "background": "white",
+    "fill": "mixed",
+    "stroke": "~0.98pt black; dashed for host-side containers and management links, solid for hardware boxes and data-path arrows",
+    "font": "ArialMT sans, 8pt",
+    "corners": "mixed",
+    "arrows": "solid arrows for the data path (blue = sender/TX, red = receiver/RX), dotted double-headed arrows for management/lookup links",
+    "icons": "vector; small stacked-rectangle icons inside MR representing registered memory-region segments"
+  },
+  "encoding": {
+    "color_means": "peach/salmon marks the NIC's own per-flow hardware data structures (MS List, Flow Table, MR Table, MR); pale yellow marks GPU HBM application memory; blue marks the sender/transmit data path and red marks the receiver/receive data path",
+    "line_style_means": "dashed lines and boxes mark control-plane management links and host-side software containers; solid lines and boxes mark the hardware data path, matching an explicit Management/Data Path legend",
+    "emphasis": "a boxed legend explicitly decodes dashed vs. solid as management vs. data path, and blue/red color-code the two traffic directions at the net port",
+    "reusable_patterns": [
+      "explicit boxed legend decoding line style (management vs. data path)",
+      "host software (dashed) vs. on-chip hardware (solid) split bridged by DMA"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "nic",
+    "zero-copy",
+    "dma",
+    "networking-hardware",
+    "flow-table",
+    "rdma"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Performant and Flexible Host Networking (p.6)",
+      "3 Performant and Flexible Host Networking (p.8)"
+    ],
+    "evidence": [
+      "implements key data structures to split (merge) packets, transfer headers and payloads to (from) the control stack",
+      "The Flow Table tracks flow metadata used for incoming packets",
+      "it is passed to the Split/Merge unit shown in Figure 6, which splits the packet into header and payload"
+    ]
+  },
+  "summary": "This figure is a block diagram of the custom NIC hardware proposed for high-throughput, flexible host networking. Two dashed host-side boxes at the top, the Transport Protocol Execution Environment and Application Buffers (with GPU HBM and its MR descriptor as one example), connect through two DMA engines down into the solid NIC box below, illustrating a host/device split bridged by DMA. Inside the NIC, a TX Merge Unit and RX Split Unit merge or split packet headers and payloads at the net port, using blue for the sender path and red for the receiver path. A Flow Table indexes incoming packets by a header-derived tuple to find a flow's MS List, which tracks memory-segment placement so payloads can be zero-copied straight to the right application buffer; an MR Table is also linked into this per-flow bookkeeping. A boxed legend distinguishes dashed management links from solid data-path arrows.",
+  "summary_zh": "该图为 NIC 硬件框图：上方主机侧环境经 DMA 连接下方 NIC 内的 TX/RX 单元；Flow Table 索引每条流的 MS List 实现零拷贝，图例区分管理与数据路径。",
+  "confidence": "high",
+  "notes": "System has no distinct proper name in the retrieved text; 'NIC' is the paper's own term for the hardware shown here. The role of 'MR Table' is inferred by analogy to Flow Table/MS List since the excerpt does not define it directly.",
+  "venue": "OSDI24"
+}

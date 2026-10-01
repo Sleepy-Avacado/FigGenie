@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-056_fig3",
+  "paper_id": "asplos25-056",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Fig. 3. pulse Overview. Developers use pulse’s iterator interface (§3) to express pointer traversals, translated to pulse ISA by its dispatch engine (§4.1). During execution, pulse accelerator ensures energy efficiency (§4.2) and in-network design enable distributed traversals (§5).",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 5.73,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-056/asplos25-056_fig3_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-056/asplos25-056_fig3_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A thin pipeline where replication is confined to one tier: CPU Node and Memory Node repeat with an ellipsis while the developer layers, network, and accelerator stay singular; every stage carries its own section number.",
+      "what_to_learn": "Confine an ellipsis-based repeat to exactly one tier of an otherwise thin, single-file pipeline (CPU Node ... Memory Node here), and stamp each stage with the paper's own section number instead of a legend; avoid this figure's overly wide aspect ratio, which compresses every stage into a small strip."
+    }
+  ]
+}

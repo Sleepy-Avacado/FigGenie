@@ -1,0 +1,229 @@
+{
+  "paper_id": "osdi23-022",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "TxCheck",
+    "one_liner": "an approach that detects transactional bugs in DBMS engines by constructing statement-dependency graphs and comparing semantically equivalent schedules",
+    "domain": [
+      "databases",
+      "transaction-processing",
+      "bug-finding",
+      "testing"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how matching outputs of instrumented BWR/VSR reads across two transactions' statements are mapped to specific dependency-graph edges",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "Instrumented test case",
+        "kind": "box",
+        "role": "the SQL log from Figure 1(a) augmented with BWR/AWR/VSR instrumentation statements",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T0.S1.BWR",
+        "kind": "row",
+        "role": "Before-Write Read for T0.S1, output (1,20); colour-linked (blue) to the predicate-anti edge",
+        "container": "Instrumented test case",
+        "highlighted": true
+      },
+      {
+        "name": "T0.S2",
+        "kind": "row",
+        "role": "T0's select from t1, output (2,43,8),(3,43,58); colour-linked (red) to the item-anti edge",
+        "container": "Instrumented test case",
+        "highlighted": true
+      },
+      {
+        "name": "T1.S3.VSR0",
+        "kind": "row",
+        "role": "Version-Set Read for T1.S3, output (1,20); colour-linked (blue) to the predicate-anti edge",
+        "container": "Instrumented test case",
+        "highlighted": true
+      },
+      {
+        "name": "T1.S3.BWR",
+        "kind": "row",
+        "role": "Before-Write Read for T1.S3, output (2,43,8); colour-linked (red) to the item-anti edge",
+        "container": "Instrumented test case",
+        "highlighted": true
+      },
+      {
+        "name": "T1.S1",
+        "kind": "node",
+        "role": "graph node for T1's read of t0",
+        "container": "Statement-dependency graph",
+        "highlighted": false
+      },
+      {
+        "name": "T1.S2",
+        "kind": "node",
+        "role": "graph node for T1's predicate-guarded select from t1",
+        "container": "Statement-dependency graph",
+        "highlighted": false
+      },
+      {
+        "name": "T1.S3",
+        "kind": "node",
+        "role": "graph node for T1's update of t1",
+        "container": "Statement-dependency graph",
+        "highlighted": true
+      },
+      {
+        "name": "T0.S1",
+        "kind": "node",
+        "role": "graph node for T0's update of t0",
+        "container": "Statement-dependency graph",
+        "highlighted": false
+      },
+      {
+        "name": "T0.S2",
+        "kind": "node",
+        "role": "graph node for T0's select from t1",
+        "container": "Statement-dependency graph",
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "T1.S1",
+        "to": "T0.S1",
+        "what": "item-anti dependency",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T1.S2",
+        "to": "T0.S1",
+        "what": "predicate-anti dependency, highlighted blue, matching the BWR/VSR0 (1,20) overlap",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T1.S2",
+        "to": "T1.S3",
+        "what": "item-anti dependency",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T1.S3",
+        "to": "T0.S1",
+        "what": "predicate-anti dependency",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T0.S2",
+        "to": "T1.S3",
+        "what": "item-anti dependency, highlighted red, matching the BWR/select (2,43,8) overlap",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T0.S1.BWR",
+        "to": "T1.S2",
+        "what": "both instrumented reads return the overlapping item (1,20), evidencing the predicate-anti edge below",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "T0.S2",
+        "to": "T1.S3.BWR",
+        "what": "both instrumented reads return the overlapping item (2,43,8), evidencing the item-anti edge below",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Colour links two overlapping instrumented-read outputs, (1,20) and (2,43,8), directly to the predicate-anti and item-anti edges they produce in the inferred statement-dependency graph.",
+    "reading_order": "top-down through the instrumented test case's statements, following the blue and red highlighted lines down their dashed connectors into the matching coloured edges of the dependency graph below"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.92,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0070c0",
+        "used_for": "blue highlight on the BWR/VSR0 code-line boxes and the 'predicate-anti' edge, marking the (1,20) overlap"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red highlight on the T0.S2/T1.S3.BWR code-line boxes and the 'item-anti' edge (T0.S2→T1.S3), marking the (2,43,8) overlap"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the dependency-graph node boxes (T1.S1, T1.S2, T1.S3, T0.S1, T0.S2)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black box outlines and graph edges; dashed blue/red connector lines from code to graph",
+    "corners": "square",
+    "arrows": "thin black arrows for the dependency-graph edges, each labelled by dependency type",
+    "font": "sans (Calibri/Calibri-Italic), 5.5-8.5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks one pair of instrumented reads and the graph edge their overlap produces (predicate-anti); red marks a second such pair and edge (item-anti)",
+    "line_style_means": "dashed connector lines carry a highlight colour from a specific code line down to the matching graph edge; the graph's own edges are solid",
+    "state_means": "not applicable; a single static explanatory frame, not before/after or alternatives",
+    "marker_means": "no numbered markers; box outlines and edge-label colour do the work of pointing out which lines produced which edge",
+    "emphasis": "colour-matching a code-line box to a graph edge (rather than merely labelling the edge) lets the reader verify the dependency rule by eye, using concrete overlapping values",
+    "reusable_patterns": [
+      "a code listing stacked above the graph it produces, with colour-coded dashed connectors tying specific highlighted lines to the specific edges they justify"
+    ],
+    "weaknesses": [
+      "with many near-identical SQL lines above, spotting which two are colour-boxed (versus merely italicised as commentary) takes a careful look"
+    ]
+  },
+  "tags": [
+    "TxCheck",
+    "statement-dependency-graph",
+    "instrumentation",
+    "MySQL",
+    "anti-dependency",
+    "oracle-construction"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Approach (p.7)"
+    ],
+    "evidence": [
+      "Figure 6 shows how the inserted statements are used to infer statement dependencies for the test case in Figure 1.",
+      "The output of T0.S2 and the output of BWR of T1.S3 have an overlapping part (i.e., item (2, 43, 8))",
+      "Therefore, T0.S2 is (stmt-item-anti) depended on T1.S3."
+    ]
+  },
+  "summary": "This figure from TxCheck's approach section shows how statement dependencies are inferred for the Figure 1 test case using inserted BWR/AWR/VSR instrumentation statements. The top box lists the fully instrumented SQL log; two pairs of lines are highlighted where their outputs overlap: T0.S1.BWR and T1.S3.VSR0 both return item (1,20), shown in blue, while T0.S2 and T1.S3.BWR both return item (2,43,8), shown in red. Dashed connectors carry each highlighted colour down into the statement-dependency graph below, where the matching blue pair produces the predicate-anti edge from T1.S2/T1.S3 to T0.S1, and the matching red pair produces the item-anti edge from T0.S2 to T1.S3. The figure demonstrates, with concrete overlapping values, exactly how TxCheck's inference procedure turns instrumented-statement outputs into typed dependency edges.",
+  "summary_zh": "该图展示TxCheck如何利用BWR/AWR/VSR插桩语句为图1的测试用例推断语句依赖关系：T0.S1.BWR与T1.S3.VSR0均读到重叠值(1,20)(蓝色高亮)，对应下方依赖图中的predicate-anti边；T0.S2与T1.S3.BWR均读到重叠值(2,43,8)(红色高亮)，对应item-anti边，用具体数值演示了依赖推断的完整过程。",
+  "confidence": "high",
+  "notes": "Corrected content.base from prior 'code' to 'mixed': the figure equally emphasises a code listing (the instrumented test case) and a node-link graph (the statement-dependency graph), joined by colour-coded cross-representation mapping lines, rather than being purely a code artifact. Kept worked_example as prior False since the concrete (1,20)/(2,43,8) values here illustrate a general dependency-inference mechanism (the teaching point survives if different example numbers were substituted), unlike Figure 1/14's row-count-is-the-point framing in the same paper.",
+  "venue": "OSDI23"
+}

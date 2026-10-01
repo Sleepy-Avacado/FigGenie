@@ -1,0 +1,200 @@
+{
+  "template": "control-loop",
+  "n": 24,
+  "stars": 17,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-052_fig5",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Three identical vSSD/RL-agent columns each send an Actions arrow down and receive a labelled Reward arrow back from Admission Control, turning a replicated-grid of agents into a clean multi-instance control loop.",
+      "what_to_learn": "When N identical agents each close their own loop with a shared hub, label both arrow directions distinctly (Actions down, Reward up) on every column rather than drawing one generic pair and implying the rest, and use a dashed border for a logical/tracking structure like the ghost superblock manager that is not a hard component.",
+      "dir": "../figures/asplos25-052_fig5"
+    },
+    {
+      "id": "asplos25-131_fig2",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A vertical stage-band pipeline (DNN input to Draft to Verify to Momentum Adaptation) with a feedback arrow returning to the Tuning Scheduler, each band tagged with its paper section in a left gutter.",
+      "what_to_learn": "Put section numbers (Sec 3, 4.1...) in a left-margin gutter beside each stage band so the figure doubles as a map to the text, and give the return-to-scheduler arrow its own path along the right edge rather than overlapping the forward flow.",
+      "dir": "../figures/asplos25-131_fig2"
+    },
+    {
+      "id": "asplos26-028_fig2",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Double-column banner (aspect 4.82, nesting 1) where circled numbers 1-7 run forward along the top and back along the bottom.",
+      "what_to_learn": "At extreme width, run the forward path along the top edge and the backward path along the bottom edge of the same strip.",
+      "dir": "../figures/asplos26-028_fig2"
+    },
+    {
+      "id": "asplos26-080_fig5",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Three boxes (tracker / scheduler / execution engine) with numbered arrows 1-4 forming a closed triangle.",
+      "what_to_learn": "A three-box loop needs no ring: place the boxes at triangle corners and number the arrows so the traversal order is unambiguous.",
+      "dir": "../figures/asplos26-080_fig5"
+    },
+    {
+      "id": "asplos26-113_fig8",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Five numbered stages (5.1-5.5) snake across two rows and close with a return arrow to the SM Circuit, and green checks / red crosses on each change make the accept-reject decisions visible inline.",
+      "what_to_learn": "Arrange more than 3-4 loop stages in a serpentine two-row layout instead of forcing a single wide ring, numbering each box (5.1-5.5) in reading order, and mark automatic accept/reject decisions inline with a green check or red cross rather than a separate results table.",
+      "dir": "../figures/asplos26-113_fig8"
+    },
+    {
+      "id": "asplos26-132_fig6",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Named in the reference as the exemplar for separating one-time setup from a numbered loop: the Offline Partitioner sits in its own dashed box above, while only the Online Planner's four steps are circled 1-4.",
+      "what_to_learn": "Put one-time setup in its own dashed container above the repeating loop and number only the loop's steps (here 1-4), not the setup; give shared dependencies (the training simulator both stages use) a distinct dotted style, but make it heavier than this figure's, whose light dotted 'uses' lines are easy to miss.",
+      "dir": "../figures/asplos26-132_fig6"
+    },
+    {
+      "id": "nsdi23-025_fig4",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Two labelled red Drop points (before CPU processing, at mutex acquisition) merge into one dashed failure arrow, while a double-headed arrow closes a compact feedback loop driven by an inset throughput-vs-load chart.",
+      "what_to_learn": "Embed a small inset chart (throughput vs load) beside the arrow it drives so the feedback signal is visible, not just implied, and give every drop point its own icon; route each to its own arrow rather than merging two distinct drop points into one dashed line, which here can read as a single point.",
+      "dir": "../figures/nsdi23-025_fig4"
+    },
+    {
+      "id": "nsdi24-004_fig8",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Two nested loops span camera and backend: a local Approximation-models/Search-algorithm loop ranks orientations by colour, while a second Updated-weights arrow closes a longer loop from the backend's Approximation model trainer back into the camera.",
+      "what_to_learn": "Use small coloured squares as tokens for orientations so rank order and selection show through colour and position, not labelled boxes, and draw both the fast local loop and the slower cross-tier retraining loop as separate labelled arrows; enclose grouped tokens in a light box, since unboxed grouping here is easy to misread.",
+      "dir": "../figures/nsdi24-004_fig8"
+    },
+    {
+      "id": "nsdi24-043_fig1",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Five numbered lifecycle stages arranged around the frame with a separate gray curved arrow closing the loop.",
+      "what_to_learn": "Draw the cycle as a ring of boxes around the perimeter and give the return path its own distinct colour/weight so it does not read as another stage.",
+      "dir": "../figures/nsdi24-043_fig1"
+    },
+    {
+      "id": "nsdi24-095_fig2",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A left-to-right packet pipeline contains a nested GRU-Memory feedback loop drawn as a dashed curved arrow, with a below-figure legend spelling out STE (Straight-Through Estimator) so the binarization contribution is named, not just colored.",
+      "what_to_learn": "Draw an internal recurrent feedback loop (GRU to Memory and back) as a curved dashed arrow distinct from the straight solid feed-forward arrows around it, and put a legend below the figure naming any abbreviation (STE) the first time a coloured step appears.",
+      "dir": "../figures/nsdi24-095_fig2"
+    },
+    {
+      "id": "osdi23-008_fig2",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A clean two-box loop between Shared Cluster and the Cilantro Scheduler, where both arrows are labelled with what they carry (Per-Job Feedback up, Resource Allocations down) rather than left as bare lines.",
+      "what_to_learn": "Label both halves of a loop with what they carry, not just the fact of a return path: 'Per-Job Feedback' going one way and 'Resource Allocations' the other, so a two-box optimizer-beside-the-spine loop reads correctly without needing numbers.",
+      "dir": "../figures/osdi23-008_fig2"
+    },
+    {
+      "id": "osdi23-039_fig3",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A left-to-right analysis pipeline feeds a dotted-boundary Relational-debugger box whose own Compute-Filter-Refine loop is the only part with a feedback arrow, keeping external tools (Dyninst, RR, PIN) visually outside the system boundary.",
+      "what_to_learn": "Draw a dotted boundary around your own system's box to separate it from the off-the-shelf tools and inputs/outputs surrounding it, and confine the return arrow to the one internal stage that actually repeats (Refine back to Compute) rather than looping the whole pipeline.",
+      "dir": "../figures/osdi23-039_fig3"
+    },
+    {
+      "id": "osdi23-045_figtex1",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "System box with an external hardware platform and a red-highlighted optimizer closing the tuning loop back into the system.",
+      "what_to_learn": "Accent-colour only the box that closes the loop; the dashed system boundary then separates 'what we built' from the platform it runs on.",
+      "dir": "../figures/osdi23-045_figtex1"
+    },
+    {
+      "id": "sosp23-006_fig3",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A single concrete example (replicas 2 to 3, highlighted red) traces through the reconciliation chain, where small circular reload icons inside the Statefulset and Volume controllers stand in for repeating loops.",
+      "what_to_learn": "Trace one concrete input change (the red-highlighted replica diff) all the way through the system, and use a small self-loop icon inside a controller box to mean 'reconciles repeatedly' instead of a full drawn cycle; but this figure's ellipsis boxes elide most of the actual loop, so show at least one full traversal too.",
+      "dir": "../figures/sosp23-006_fig3"
+    },
+    {
+      "id": "sosp24-005_fig4",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Numbered steps 1-5 trace a full server-to-client-to-server cycle (profile, optimize, deliver schedule, straggler-notify back), with the two tiers colour-coded blue/green and the chosen schedule row picked out in orange.",
+      "what_to_learn": "Number every arrow in the server-client cycle in one continuous sequence, even where it re-enters the server (step 4's straggler notification), and colour the two tiers distinctly (blue server, green client) so the reader always knows which side owns each step.",
+      "dir": "../figures/sosp24-005_fig4"
+    },
+    {
+      "id": "sosp24-028_fig2",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A shaded grey box explicitly labelled 'feedback loop' bounds Explorer's iterative search, drawn in thin bright-blue arrows that visually contrast with the thick gray one-shot arrows carrying code, logs, and the final script.",
+      "what_to_learn": "Bound the repeating search region with a shaded grey box labelled 'feedback loop' in plain words rather than leaving the reader to infer it, and give the iterative arrows a distinct thin bright colour against thick grey one-shot data arrows so the two kinds of flow never get confused.",
+      "dir": "../figures/sosp24-028_fig2"
+    },
+    {
+      "id": "sosp25-032_fig4",
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A dispatcher-to-typed-queues-to-typed-engines spine has the Control Plane hanging underneath with double-headed arrows into the dispatcher and both engine columns, the 'optimizer beside the spine' shape rather than a drawn ring.",
+      "what_to_learn": "Split the spine into two colour-coded parallel paths (compute vs communication engines here) and hang the rebalancing controller underneath both, connected by double-headed arrows rather than a single looping line, when the feedback is continuous rebalancing rather than a discrete numbered cycle.",
+      "dir": "../figures/sosp25-032_fig4"
+    },
+    {
+      "id": "asplos26-019_fig4",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Two loops close on one spine: generated images feed back into the Image Cache to update future retrieval, while a side Global Monitor watches request/cache-hit rates and steers Model Allocation into the GPU workers.",
+      "what_to_learn": "When a design closes two different loops (a cache-update loop and a side monitor-and-steer loop), keep their arrows visually separated by routing the monitor's loop along one side rather than through the busy centre; thin out labels near the scheduler, since crowding many small labelled arrows there (as here) gets dense to trace.",
+      "dir": "../figures/asplos26-019_fig4"
+    },
+    {
+      "id": "asplos26-056_fig5",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "An open pipeline feeds a boxed TreeVQA Controller loop where cluster cards iterate and split, and a zoom callout below expands one cluster's Yes/No decision with a diamond box, the open-pipeline-into-boxed-loop shape.",
+      "what_to_learn": "Draw the repeating stage as one dashed boxed container (stacked cluster cards) fed by an open input pipeline, and pull the internal iterate/split decision out into a separate zoomed callout below with its own diamond Yes/No box rather than crowding it into the main diagram.",
+      "dir": "../figures/asplos26-056_fig5"
+    },
+    {
+      "id": "asplos26-152_fig5",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Four numbered stages left-to-right with a single long return arrow along the bottom labelled with what it carries.",
+      "what_to_learn": "The cheapest loop: a straight pipeline plus one labelled return arrow underneath - label it with the artefact ('the updated configuration'), not with 'loop'.",
+      "dir": "../figures/asplos26-152_fig5"
+    },
+    {
+      "id": "osdi23-022_fig2",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Four numbered stages funnel into one Transactional Oracle Construction box whose own Graph Decycling loop is the only part that repeats, and green check / red cross icons make the final equivalence verdict explicit.",
+      "what_to_learn": "Number the outer pipeline stages once, then nest the one part that actually iterates (graph decycling) inside its own sub-box with a circular refine icon rather than numbering it too; end the pipeline in a check/cross verdict pair so the payoff reads visually. Add a short legend for the icons, since this figure has none.",
+      "dir": "../figures/osdi23-022_fig2"
+    },
+    {
+      "id": "osdi23-033_fig10",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: single-frame numbered loop (six steps cycling Server Health Monitor to Diagnostics to Hyrax Inventory to VM Scheduler and back) with an online/offline split, not two contrasted panels; this is a control-loop figure, not baseline-vs-ours.",
+      "what_to_learn": "Use a gold/red border legend to separate modified-existing components from newly built ones, and number a closed loop 1-6 with the online portion tinted apart from the offline portion; label every icon on the path, since this figure's unexplained gear icon at step 3 breaks the walkthrough.",
+      "dir": "../figures/osdi23-033_fig10"
+    },
+    {
+      "id": "osdi24-014_fig2",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "A numbered four-step operator-preference-solver control loop sits above a dashed divider from the unnumbered, continuously running WFQ critical path, red arrows marking the two dynamic on-demand interactions against black for static configuration.",
+      "what_to_learn": "Stack a numbered, slower control/tuning loop above a dashed divider from the unnumbered, fast critical path it configures, and colour arrows by dynamism (red for on-demand interactions, black for static configuration exchange) rather than by which component they touch.",
+      "dir": "../figures/osdi24-014_fig2"
+    },
+    {
+      "id": "osdi26-046_fig8",
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: this is a 4-component control-loop diagram, EnvManager cycling Reset/Action with a self-loop arrow among Reward Worker, LLM Proxy, and Inference Worker; nothing sits along a time axis and there are no lanes.",
+      "what_to_learn": "Read this as a small control-loop or hub figure instead: a self-loop arrow on EnvManager marks its per-instance reset, and the stacked-rectangle icon reused on every box signals many parallel trajectory instances without needing a time axis or lane grid at all.",
+      "dir": "../figures/osdi26-046_fig8"
+    }
+  ]
+}

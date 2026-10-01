@@ -1,0 +1,56 @@
+{
+  "id": "nsdi24-086_fig7",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-086",
+  "fig": "7",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 7: Diagram of the template of NN-defined modulator. 0-weight connections are omitted in the fully-connected layer.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "the internal datapath of the NN-defined modulator template: a transposed convolutional layer feeding a sparse fully-connected layer",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.23,
+  "n_elements": 10,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "libreoffice",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-086/src/fig7_Template.svg",
+    "preview.png": "lab/extracted/nsdi24-086/src/fig7_Template.png",
+    "print.png": "lab/extracted/nsdi24-086/nsdi24-086_fig7_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "A neural-network layer template that draws only the connections which survive pruning, each with its literal weight, instead of a full dense mesh.",
+      "what_to_learn": "Chain two dashed-outline layer boxes left to right; draw only the fully-connected layer's surviving connections as individual weight-labelled arrows, skipping the dense mesh — but the same +1 label repeats across three arrows, so colour alone tells them apart.",
+      "note_source": "agent"
+    }
+  ]
+}

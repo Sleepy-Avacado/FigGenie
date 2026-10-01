@@ -1,0 +1,175 @@
+{
+  "paper_id": "asplos25-051",
+  "fig": "2",
+  "system": {
+    "name": "EDM",
+    "one_liner": "an ultra-low latency Ethernet fabric for memory disaggregation implemented within the Ethernet PHY",
+    "domain": [
+      "networking",
+      "memory disaggregation"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Processor",
+        "role": "compute-node endpoint generating/consuming memory traffic",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "Mem Controller",
+        "role": "memory-node endpoint serving memory traffic",
+        "container": "Memory Node",
+        "novel": false
+      },
+      {
+        "name": "TCP/IP or RDMA",
+        "role": "existing host protocol stack for remote memory access, implemented above the MAC layer",
+        "container": "Compute Node / Memory Node",
+        "novel": false
+      },
+      {
+        "name": "Ethernet MAC",
+        "role": "MAC layer; existing fabrics implement the memory protocol above it",
+        "container": "Compute Node / Ethernet Switch / Memory Node",
+        "novel": false
+      },
+      {
+        "name": "Ethernet PHY",
+        "role": "physical layer; EDM's memory-traffic data path runs here",
+        "container": "Compute Node / Ethernet Switch / Memory Node",
+        "novel": true
+      },
+      {
+        "name": "Central Scheduler",
+        "role": "EDM's in-network scheduler for memory traffic in the switch PHY",
+        "container": "Ethernet Switch",
+        "novel": true
+      },
+      {
+        "name": "L2 Forwarding",
+        "role": "existing switch forwarding path for non-memory traffic",
+        "container": "Ethernet Switch",
+        "novel": false
+      },
+      {
+        "name": "Compute Node",
+        "role": "host issuing memory requests",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Ethernet Switch",
+        "role": "intermediary switch carrying memory and non-memory traffic",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory Node",
+        "role": "host serving memory",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Processor",
+        "to": "Ethernet PHY",
+        "what": "EDM memory traffic (bypasses MAC)",
+        "step": null
+      },
+      {
+        "from": "Processor",
+        "to": "TCP/IP or RDMA",
+        "what": "existing-fabric memory traffic (through MAC)",
+        "step": null
+      },
+      {
+        "from": "Ethernet PHY",
+        "to": "Ethernet MAC",
+        "what": "non-memory traffic",
+        "step": null
+      }
+    ],
+    "key_idea": "EDM routes memory traffic directly through the Ethernet PHY instead of climbing the MAC/TCP/RDMA stack used by existing fabrics, while non-memory traffic still takes the normal MAC path.",
+    "reading_order": "Left-to-right across Compute Node, Ethernet Switch, Memory Node, tracing the colored data paths through the PHY vs. MAC layers."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.69,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b1001c",
+        "used_for": "EDM memory-traffic data path (solid red)"
+      },
+      {
+        "hex": "#00f900",
+        "used_for": "EDM non-memory-traffic data path (solid green)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "protocol-layer box fills (MAC, PHY)"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "secondary box fill / node border"
+      },
+      {
+        "hex": "#ffffbf",
+        "used_for": "highlight fill on the Central Scheduler box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed black lines for the existing-fabric path, solid colored lines (red/green) for EDM's paths, median ~1.27pt",
+    "font": "HelveticaNeue / HelveticaNeue-Italic sans, small",
+    "corners": "mixed",
+    "arrows": "solid arrowheads on the colored data-path lines",
+    "icons": "small bitmap icons (chip/board) for Processor and Mem Controller"
+  },
+  "encoding": {
+    "color_means": "black dashed = memory-traffic path in existing Ethernet fabrics, red solid = memory-traffic path in EDM, green solid = non-memory-traffic path in EDM",
+    "line_style_means": "dashed = existing fabric path, solid = EDM path",
+    "emphasis": "Central Scheduler box highlighted in yellow within the Ethernet Switch, marking EDM's new in-network scheduling component",
+    "reusable_patterns": [
+      "side-by-side protocol stack columns with colored path overlays contrasting old vs. new data paths"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "Ethernet PHY",
+    "memory disaggregation",
+    "in-network scheduling",
+    "RDMA",
+    "data path"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)",
+      "3 Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 2 shows the architecture of EDM and contrasts it with existing Ether- net fabrics",
+      "EDM overcomes the limitations of existing Ethernet fabrics",
+      "protocol stacks for remote memory access, such as TCP/IP and RDMA (RoCEv2)"
+    ]
+  },
+  "summary": "Figure 2 contrasts EDM's memory-traffic data path with that of existing Ethernet-based memory disaggregation fabrics. Three columns—Compute Node, Ethernet Switch, and Memory Node—each stack a Processor/Mem Controller, a TCP/IP-or-RDMA protocol box, Ethernet MAC, and Ethernet PHY. A dashed black line traces how existing fabrics route memory traffic up through MAC and the RDMA/TCP stack. A solid red line shows EDM's memory traffic instead entering directly at the Ethernet PHY, bypassing MAC processing, and being handled in the switch by a highlighted Central Scheduler rather than ordinary L2 forwarding. A green line marks non-memory traffic, which still passes through MAC as usual. The figure visually justifies EDM's PHY-layer redesign by showing it shortens the memory path relative to the conventional MAC-layer stack.",
+  "summary_zh": "该图对比 EDM 与传统以太网内存分离方案的数据路径：黑色虚线表示传统方案经 MAC 与 RDMA/TCP 栈传输内存流量；红色实线表示 EDM 直接在 PHY 层传输内存流量并由中心调度器处理；绿色表示非内存流量路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,352 @@
+{
+  "paper_id": "asplos26-057",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "PIPM",
+    "one_liner": "a hardware-based partial and incremental page migration scheme co-designed with CXL multi-host coherence for disaggregated shared memory",
+    "domain": [
+      "computer architecture",
+      "memory systems",
+      "CXL disaggregated memory"
+    ],
+    "abstraction": "hardware / cache-coherence protocol"
+  },
+  "content": {
+    "groups": [
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one protocol exchange",
+    "subject": "how PIPM's extra ME/I' states extend MSI coherence with host- and device-side migration transitions",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Inter-Rd/Wr/WB",
+        "kind": "label",
+        "role": "arrow label for inbound inter-host coherence requests",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Local-Rd/Wr/WB",
+        "kind": "label",
+        "role": "arrow label for inbound local host coherence requests",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Local Coherence Directory",
+        "kind": "box",
+        "role": "host-side directory tracking M/S/I/ME state per cache block",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "DRAM",
+        "kind": "box",
+        "role": "host DRAM holding migrated lines with a per-block in-memory bit (0/1)",
+        "container": "Local Coherence Directory",
+        "highlighted": false
+      },
+      {
+        "name": "Device Coherence Directory",
+        "kind": "box",
+        "role": "CXL device directory tracking M/S/I state per cache block",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "DRAM",
+        "kind": "box",
+        "role": "CXL device memory holding non-migrated lines with a per-block in-memory bit (0/1)",
+        "container": "Device Coherence Directory",
+        "highlighted": false
+      },
+      {
+        "name": "ME",
+        "kind": "state",
+        "role": "Migrated-Modified/Exclusive: migrated to local memory, exclusively cached in local cache",
+        "container": "Host Side State Transitions",
+        "highlighted": true
+      },
+      {
+        "name": "I'",
+        "kind": "state",
+        "role": "Migrated-Invalid: migrated to local memory, latest version not cached locally",
+        "container": "Host Side State Transitions",
+        "highlighted": true
+      },
+      {
+        "name": "I",
+        "kind": "state",
+        "role": "Invalid",
+        "container": "Host Side State Transitions",
+        "highlighted": false
+      },
+      {
+        "name": "S",
+        "kind": "state",
+        "role": "Shared",
+        "container": "Host Side State Transitions",
+        "highlighted": false
+      },
+      {
+        "name": "M",
+        "kind": "state",
+        "role": "Modified",
+        "container": "Host Side State Transitions",
+        "highlighted": false
+      },
+      {
+        "name": "I'",
+        "kind": "state",
+        "role": "Migrated-Invalid at the device coherence directory",
+        "container": "Device Side State Transitions",
+        "highlighted": true
+      },
+      {
+        "name": "S",
+        "kind": "state",
+        "role": "Shared",
+        "container": "Device Side State Transitions",
+        "highlighted": false
+      },
+      {
+        "name": "I",
+        "kind": "state",
+        "role": "Invalid",
+        "container": "Device Side State Transitions",
+        "highlighted": false
+      },
+      {
+        "name": "M",
+        "kind": "state",
+        "role": "Modified",
+        "container": "Device Side State Transitions",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Inter-Rd/Wr/WB",
+        "to": "Local Coherence Directory",
+        "what": "inbound inter-host request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Local-Rd/Wr/WB",
+        "to": "Local Coherence Directory",
+        "what": "inbound local request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "M",
+        "to": "I'",
+        "what": "cases 1, 2, 5 (device-side, bidirectional per figure)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "I'",
+        "to": "S",
+        "what": "case 6 (device-side)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "ME",
+        "to": "I'",
+        "what": "cases 3, 4 (host-side, bidirectional per figure)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "ME",
+        "to": "I",
+        "what": "case 5 (host-side)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "I'",
+        "to": "I",
+        "what": "case 2 (host-side)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "ME",
+        "to": "S",
+        "what": "case 6 (host-side)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "S",
+        "to": "I",
+        "what": "default MSI transition (dashed, unlabeled)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "I",
+        "to": "M",
+        "what": "default MSI transition (dashed, unlabeled)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "S",
+        "to": "M",
+        "what": "default MSI transition (dashed, unlabeled)",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "M",
+        "S",
+        "I",
+        "ME",
+        "I'"
+      ],
+      "transitions": [
+        {
+          "from": "M",
+          "to": "I'",
+          "guard": "cases 1, 2, 5 (device-side)"
+        },
+        {
+          "from": "I'",
+          "to": "S",
+          "guard": "case 6 (device-side)"
+        },
+        {
+          "from": "ME",
+          "to": "I'",
+          "guard": "cases 3, 4 (host-side)"
+        },
+        {
+          "from": "ME",
+          "to": "I",
+          "guard": "case 5 (host-side)"
+        },
+        {
+          "from": "I'",
+          "to": "I",
+          "guard": "case 2 (host-side)"
+        },
+        {
+          "from": "ME",
+          "to": "S",
+          "guard": "case 6 (host-side)"
+        },
+        {
+          "from": "S",
+          "to": "I",
+          "guard": null
+        },
+        {
+          "from": "I",
+          "to": "M",
+          "guard": null
+        },
+        {
+          "from": "S",
+          "to": "M",
+          "guard": null
+        }
+      ],
+      "decisions": [
+        {
+          "question": "is the per-cache-block in-memory bit set (0 or 1)?",
+          "branches": [
+            "0: Default coherence state (M/S/I)",
+            "1: Extra migrated state (ME/I' locally, I' at device)"
+          ]
+        }
+      ]
+    },
+    "values": {
+      "what": "Default vs Extra rows of Dir. State / Mem. State / PIPM State in both the local and device coherence tables",
+      "linked_by": "position (paired Default/Extra rows) and colour (red text for the new PIPM states)",
+      "result_cells": "the PIPM State column shows the combined encoding, e.g. ME/I' locally and I' at the device, in red"
+    },
+    "key_idea": "PIPM extends MSI cache coherence with two migration-aware states (ME, I') encoded via directory state plus an in-memory bit, adding six new host/device transitions.",
+    "reading_order": "Left to right: directory/DRAM block diagrams, then the two state-encoding tables, then the host-side and device-side numbered transition diagrams."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.21,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "highlighting the new ME/I' PIPM states and table cells introduced by this work"
+      }
+    ],
+    "background": "white",
+    "fill": "none (outlined boxes/tables/circles, no coloured fills)",
+    "stroke": "thin (~0.63pt) black lines; dashed arrows for Default transitions, solid for Extra transitions",
+    "font": "sans (HelicaNeue-like), 5.5-10pt, not bold",
+    "corners": "square",
+    "arrows": "thin arrows with solid triangular heads; small filled circled numbers (1-6) badge specific transitions",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red marks the new PIPM states (ME, I') and their table cells; black is used for the pre-existing M/S/I states",
+    "line_style_means": "dashed arrows are the default (pre-existing) MSI transitions; solid arrows are the six new Extra (migration-related) transitions",
+    "state_means": "new vs existing states are told apart by red vs black text/outline on the same circle-and-arrow diagram",
+    "marker_means": "small filled circles numbered 1-6 identify each of the six newly introduced host-side/device-side transitions",
+    "emphasis": "red is reserved exclusively for the new ME/I' states, repeated identically across both tables and both transition graphs",
+    "reusable_patterns": [
+      "a directory-state-plus-status-bit truth table paired with a circle-and-arrow state diagram sharing the same state names"
+    ],
+    "weaknesses": [
+      "the retrieved paragraph explains only case 1 in full before cutting off, so cases 2-6 are labelled only by number, not by triggering event"
+    ]
+  },
+  "tags": [
+    "cache coherence",
+    "CXL",
+    "page migration",
+    "disaggregated memory",
+    "state machine",
+    "directory protocol"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design"
+    ],
+    "evidence": [
+      "we introduce an additional per-cache-block in-memory bit in both local and CXL memory",
+      "local writeback operations (case 1) that initiate incremental migration from CXL memory to a host's local memory",
+      "By default, the in-memory bit is initialized to 0"
+    ]
+  },
+  "summary": "Figure 9 documents PIPM's extension to MSI cache coherence for multi-host CXL disaggregated shared memory. Stacked block diagrams on the left show the host's Local Coherence Directory and DRAM (tracking migrated lines) above the CXL Device Coherence Directory and DRAM (tracking non-migrated lines), gated by inter-host and local read/write/writeback requests. Two tables encode PIPM's new per-block in-memory bit alongside directory state: locally, Default (M/S/I, bit 0) versus Extra (ME/I', bit 1); at the device, Default (M/S/I, bit 0) versus Extra (I', bit 1), new states shown in red. On the right, two circle-and-arrow diagrams show host-side and device-side transitions among M, S, I, ME and I', with six newly introduced, numbered transitions added to the default dashed MSI triangle to support partial, incremental migration triggered by events such as a local writeback.",
+  "summary_zh": "图9展示PIPM如何在MSI协议上新增ME、I'两种迁移状态：左侧为主机与设备的一致性目录及DRAM结构，中间两张表给出按内存位区分的默认与迁移态编码，右侧用编号1到6的状态转换图分别展示主机侧和设备侧新增的迁移相关状态迁移。",
+  "confidence": "medium",
+  "notes": "No source-SVG colour histogram is present for this figure (fill:none, n:0 in the measured palette), so the red hex is an approximate reading from the PNG rather than an exact value. The retrieved paragraph only fully explains transition case 1; cases 2-6 are labelled by number from the figure but their exact triggering events are not confirmed by the (truncated) text.",
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,191 @@
+{
+  "paper_id": "nsdi26-042",
+  "fig": "8",
+  "system": {
+    "name": "EBS",
+    "one_liner": "Alibaba Cloud's disaggregated elastic block store, whose proxy applies a burst-aware, segment-level token-bucket rate limiter",
+    "domain": [
+      "storage",
+      "cloud"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Segment 1",
+        "container": null,
+        "role": "one monitored LBA segment generating I/O requests",
+        "novel": false
+      },
+      {
+        "name": "Segment 2",
+        "container": null,
+        "role": "another monitored segment",
+        "novel": false
+      },
+      {
+        "name": "Segment 3",
+        "container": null,
+        "role": "another monitored segment",
+        "novel": false
+      },
+      {
+        "name": "Rate Monitor",
+        "container": null,
+        "role": "segment-level I/O rate monitor that classifies each segment as hot or steady and tags steady-segment requests",
+        "novel": true
+      },
+      {
+        "name": "Tag for steady IO",
+        "container": null,
+        "role": "marker attached to requests from a segment classified as steady, allowing them to draw from the Cheque Bucket",
+        "novel": true
+      },
+      {
+        "name": "Token Update",
+        "container": null,
+        "role": "periodic process that replenishes tokens in the Main and Cheque Buckets based on estimated available bandwidth",
+        "novel": true
+      },
+      {
+        "name": "Main Bucket",
+        "container": null,
+        "role": "the ordinary token bucket bounding each segment's baseline I/O rate",
+        "novel": true
+      },
+      {
+        "name": "Cheque Bucket",
+        "container": null,
+        "role": "an overdraft token bucket that lets tagged steady segments borrow extra bandwidth during a burst",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Segment 1",
+        "to": "Rate Monitor",
+        "what": "I/O requests",
+        "step": null
+      },
+      {
+        "from": "Segment 2",
+        "to": "Rate Monitor",
+        "what": "I/O requests",
+        "step": null
+      },
+      {
+        "from": "Segment 3",
+        "to": "Rate Monitor",
+        "what": "I/O requests",
+        "step": null
+      },
+      {
+        "from": "Rate Monitor",
+        "to": "Tag for steady IO",
+        "what": "steady-segment classification",
+        "step": null
+      },
+      {
+        "from": "Token Update",
+        "to": "Main Bucket",
+        "what": "replenished tokens",
+        "step": null
+      },
+      {
+        "from": "Token Update",
+        "to": "Cheque Bucket",
+        "what": "replenished tokens",
+        "step": null
+      },
+      {
+        "from": "Tag for steady IO",
+        "to": "Cheque Bucket",
+        "what": "overdraw eligibility if tagged",
+        "step": null
+      }
+    ],
+    "key_idea": "A segment-level Rate Monitor tags steady segments; Token Update replenishes a Main Bucket and a Cheque Bucket, letting tagged steady segments borrow extra bandwidth during a burst without starving hot segments or the DFS.",
+    "reading_order": "Left-to-right: Segments 1-3 feed the Rate Monitor, which tags steady IOs; tagged requests plus Token Update drive the Main and Cheque Bucket gauges to produce the rate-limited output."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.6,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1982c4",
+        "used_for": "fill of the Segment 3 icon"
+      },
+      {
+        "hex": "#6a4c93",
+        "used_for": "fill of the Segment 2 icon"
+      },
+      {
+        "hex": "#f79256",
+        "used_for": "fill of the Segment 1 icon and the Tag for steady IO icon"
+      },
+      {
+        "hex": "#274c77",
+        "used_for": "text/border color for labels and the primary gauge outline"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "fill of the Main Bucket coin-stack icon and its gauge"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thick (~0.9pt) solid strokes, no dashed lines",
+    "font": "Times New Roman serif, 6.5-8pt, roughly a third of text bold",
+    "corners": "mixed",
+    "arrows": "six short filled arrowheads connecting the icon groups",
+    "icons": "seven vector icons: three colored segment-tag squares, a monitor/gear icon (Rate Monitor), two coin-stack icons (Main Bucket, Cheque Bucket), and two speedometer/gauge icons for the rate limiters"
+  },
+  "encoding": {
+    "color_means": "orange = Segment 1 and the steady-IO tag, purple = Segment 2, blue = Segment 3 and the Main Bucket's coin/gauge icon, dark navy = labels and the Token Update control box; a separate teal/green tone (not in the top palette) marks the Cheque Bucket and its gauge",
+    "line_style_means": null,
+    "emphasis": "placing Main Bucket and Cheque Bucket side by side, both fed by the same Token Update and both driving their own gauge, visually argues that the burst-aware limiter is an ordinary token bucket plus a second, conditional overdraft bucket gated by the steady-IO tag",
+    "reusable_patterns": [
+      "colored per-entity tag icons (segments) carried through a monitoring/queueing stage",
+      "twin token-bucket-and-gauge icons to depict a baseline vs. overdraft rate limiter"
+    ],
+    "weaknesses": [
+      "very low text density means several icons (gauges, coin stacks) rely on the reader already knowing token-bucket rate-limiter conventions",
+      "the exact condition on the 'if tagged' branch is shown only as an icon, not spelled out in words"
+    ]
+  },
+  "tags": [
+    "rate-limiting",
+    "token-bucket",
+    "burst-tolerance",
+    "segment-monitoring",
+    "tail-latency",
+    "EBS"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design (p.8)"
+    ],
+    "evidence": [
+      "build a segment-level monitor to identify hot segments",
+      "estimate the available bandwidth to determine how much can be overdrawn",
+      "allow steady segments to overdraw tokens, while maintaining sufficient resources for the DFS"
+    ]
+  },
+  "summary": "Figure 8 shows EBS's burst-aware rate limiter, which lets steady I/O segments temporarily borrow extra bandwidth during a burst. Segment 1, Segment 2, and Segment 3 send their I/O to a Rate Monitor, which classifies each segment as hot or steady over a fixed interval and attaches a Tag for steady IO to requests from steady segments. Separately, a Token Update process periodically replenishes two token buckets -- a Main Bucket for each segment's baseline allowance and a Cheque Bucket that tagged, steady-segment requests may additionally draw from -- each feeding its own gauge-style rate limiter before requests proceed. The design keeps headroom for the DFS and any hot segments while letting steady segments overdraw during the first window of a burst. The figure is icon-heavy and sparse on text, using color-coded segment tags and coin-stack/gauge icons rather than boxes and labels.",
+  "summary_zh": "该图展示EBS突发感知限速器：Rate Monitor按段监测I/O并标记稳定段；Token Update为Main Bucket与Cheque Bucket充值，标记请求可透支后者，同时为热点段与DFS保留资源。",
+  "confidence": "medium",
+  "notes": "the icon-level wiring (e.g., which gauge belongs to which bucket, the exact 'if tagged' branch) is read from the figure image; the retrieved text describes the mechanism in words but does not walk through each icon. layout-proposal: tag-and-replenish rate limiter — three colored segment inputs feed a Rate Monitor that tags steady IOs, while a separate Token Update replenishes two parallel token buckets (Main, Cheque) that gate the output via gauges; control-data approximates the monitor/bucket split but the figure has no explicit control-plane/data-plane labeling.",
+  "venue": "NSDI26"
+}

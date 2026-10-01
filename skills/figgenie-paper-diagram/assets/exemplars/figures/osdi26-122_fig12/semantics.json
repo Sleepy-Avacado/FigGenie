@@ -1,0 +1,280 @@
+{
+  "paper_id": "osdi26-122",
+  "fig": "12",
+  "kind": "mechanism",
+  "system": {
+    "name": "LifeLine",
+    "one_liner": "an object-page lifetime alignment garbage collector that minimizes memory copying for mobile devices",
+    "domain": [
+      "memory-management",
+      "garbage-collection",
+      "mobile-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how ZCGC picks between zero-copy page remapping and object copying for each page based on its survival ratio",
+    "base": "component",
+    "elements": [
+      {
+        "name": "User space",
+        "kind": "lane",
+        "role": "swim-lane label for the region holding to-space and from-space pages",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Kernel space",
+        "kind": "lane",
+        "role": "swim-lane label for the region where the movement decision and its execution happen",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "To space",
+        "kind": "box",
+        "role": "destination memory region that migrated/compacted pages are moved into",
+        "container": "User space",
+        "highlighted": false
+      },
+      {
+        "name": "Access",
+        "kind": "label",
+        "role": "annotates the arrow showing the mutator accessing a to-space page during migration",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "From space",
+        "kind": "box",
+        "role": "source memory region holding pages awaiting migration, split by survival ratio",
+        "container": "User space",
+        "highlighted": false
+      },
+      {
+        "name": "Low ratio",
+        "kind": "cell",
+        "role": "from-space pages with a low live-object survival ratio",
+        "container": "From space",
+        "highlighted": true
+      },
+      {
+        "name": "High ratio",
+        "kind": "cell",
+        "role": "from-space pages with a high live-object survival ratio",
+        "container": "From space",
+        "highlighted": true
+      },
+      {
+        "name": "Scheme planner",
+        "kind": "box",
+        "role": "estimates each page's survival ratio from marking-phase statistics and feeds the decision",
+        "container": "Kernel space",
+        "highlighted": false
+      },
+      {
+        "name": "Check page survival ratio",
+        "kind": "node",
+        "role": "decision point that routes a page to a movement strategy based on its survival ratio",
+        "container": "Kernel space",
+        "highlighted": true
+      },
+      {
+        "name": "Object Copying",
+        "kind": "box",
+        "role": "strategy for sparse/medium-density pages: copy only the surviving objects",
+        "container": "Kernel space",
+        "highlighted": false
+      },
+      {
+        "name": "Page Remapping",
+        "kind": "box",
+        "role": "strategy for dense pages: remap the whole page via userfaultfd without copying data",
+        "container": "Kernel space",
+        "highlighted": false
+      },
+      {
+        "name": "Per-page survival ratio",
+        "kind": "label",
+        "role": "y-axis of the accompanying curve, the metric the decision is based on",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Time",
+        "kind": "label",
+        "role": "x-axis of the accompanying curve",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Threshold",
+        "kind": "label",
+        "role": "marks the configurable survival-ratio cutoff that separates the two strategies",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Turning point",
+        "kind": "label",
+        "role": "marks the knee where the survival-ratio curve drops sharply, motivating where the threshold sits",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "From space",
+        "to": "Check page survival ratio",
+        "what": "from-space pages (low/high ratio) are read by the kernel-space decision",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Scheme planner",
+        "to": "Check page survival ratio",
+        "what": "supplies each page's estimated survival ratio to the decision",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Check page survival ratio",
+        "to": "Page Remapping",
+        "what": "high survival ratio (dense page) routes to remapping",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Check page survival ratio",
+        "to": "Object Copying",
+        "what": "low/medium survival ratio (sparse page) routes to copying",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Page Remapping",
+        "to": "To space",
+        "what": "remapped pages become to-space pages via page-table updates only",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Object Copying",
+        "to": "To space",
+        "what": "copied survivor objects are written into to-space",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Threshold",
+        "to": "Turning point",
+        "what": "the threshold is set near the curve's turning point, where remapping and copying costs cross",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "is the page's survival ratio above the high threshold (dense) or below it (sparse)?",
+          "branches": [
+            "high ratio -> Page Remapping (zero-copy page-table update)",
+            "low/medium ratio -> Object Copying (copy only surviving objects)"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "A single per-page survival-ratio threshold, set at the point where the cost curves of remapping and copying cross, is enough to route each page to whichever of the two movement strategies is cheaper.",
+    "reading_order": "top-down through User space (From space's Low/High ratio pages) into Kernel space's decision diamond, which fans out left to Object Copying and Page Remapping and back up into To space; the curve on the right explains where the threshold sits"
+  },
+  "layout": {
+    "arrangement": "inset",
+    "panel_count": 2,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": true,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.95,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dceaf7",
+        "used_for": "light-blue fill of the 'Low ratio' pages and the 'Object Copying' box (the copy-based strategy)"
+      },
+      {
+        "hex": "#ff9300",
+        "used_for": "orange fill of the 'High ratio' pages, the 'Page Remapping' box (the remap-based strategy), and the curve's 'Turning point' dot/guide line"
+      },
+      {
+        "hex": "#ffe181",
+        "used_for": "pale-yellow fill of the 'Check page survival ratio' decision diamond and the 'Scheme planner' box"
+      },
+      {
+        "hex": "#d7d6d6",
+        "used_for": "light-gray dashed borders of the User space / Kernel space / To space / From space containers, the 'To space' bar's fill, and the chart's gridlines"
+      }
+    ],
+    "background": "white",
+    "fill": "mixed",
+    "stroke": "thin (~0.57pt) dark outlines on boxes, the diamond and the curve line; dashed light-gray for the four container borders and the chart grid",
+    "corners": "mixed",
+    "arrows": "thin black orthogonal arrows with solid triangular heads (one curved), linking the space boxes to the decision diamond and its two strategy boxes",
+    "font": "Helvetica sans, ~5.5pt, bold for box/diamond labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light blue marks the copy-based path (Low ratio pages, Object Copying); orange marks the remap-based path (High ratio pages, Page Remapping) and the curve's turning point; pale yellow marks the decision-making components (survival-ratio check, scheme planner); gray marks the space containers and the to-space bar",
+    "line_style_means": "solid black arrows carry pages and decisions between boxes; dashed gray lines outline the four space containers and rule the chart's background grid; a dashed orange guide drops from the curve's turning point",
+    "state_means": "not a before/after comparison; low- vs high-survival pages are told apart purely by colour (blue vs orange) and by which strategy box they are routed to",
+    "marker_means": "no numbered markers; 'Threshold' and 'Turning point' callouts point at specific locations on the survival-ratio curve",
+    "emphasis": "the decision diamond sits at the visual center of kernel space with arrows fanning out to the two colour-matched strategy boxes, while the inset curve visually justifies the threshold at the curve's sharp bend",
+    "reusable_patterns": [
+      "a central decision diamond routing two colour-coded inputs to two colour-coded strategy boxes, paired with a small inset curve that motivates the decision threshold"
+    ],
+    "weaknesses": [
+      "the survival-ratio-vs-time curve has no numeric axis values, so 'Threshold' and 'Turning point' are only qualitatively located",
+      "the hatched segment inside the 'To space' bar is not explained by any legend"
+    ]
+  },
+  "tags": [
+    "garbage-collection",
+    "zero-copy",
+    "page-remapping",
+    "object-copying",
+    "survival-ratio",
+    "LifeLine"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Design and Implementation (p.10)"
+    ],
+    "evidence": [
+      "a movement planner cooperates with the OS to decide, on a per-page basis",
+      "Page remapping for dense pages.",
+      "The thresholds correspond to the turning point in Figure 12, where the costs of remapping and copying intersect"
+    ]
+  },
+  "summary": "Figure 12 explains LifeLine's near-zero-copy garbage collector (ZCGC), which decides per page whether to remap or copy during compaction. From-space pages are grouped by their live-object survival ratio: pages with a high ratio are dense and go to Page Remapping, which uses userfaultfd to retarget page-table entries into to-space without touching the data; pages with a low or medium ratio are sparse and go to Object Copying, which copies only the surviving objects. A Scheme planner supplies each page's estimated survival ratio, reused from the GC's marking pass, to a central decision diamond that routes pages to whichever strategy applies. The accompanying curve plots per-page survival ratio against time and marks a Turning point where the curve drops sharply, motivating where the remap/copy Threshold is set.",
+  "summary_zh": "该图示LifeLine零拷贝GC：按页存活率分流——高存活率走Page Remapping（重映射页表），低存活率走Object Copying（只拷贝存活对象）；曲线的Turning point说明Threshold取值依据。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'data-structure' to 'component': the figure is dominated by labelled component boxes (To/From space, Object Copying, Page Remapping, Scheme planner) plus one decision diamond, matching the prior pass's own note 'component internals'. A small inset survival-ratio-vs-time curve (arrangement 'inset', zoom_callout true) supports the decision but is not itself the base structure. Palette read from the source SVG's fill/stroke histogram, dropping the near-black #363535 default ink and white background per the standard convention.",
+  "venue": "OSDI26"
+}

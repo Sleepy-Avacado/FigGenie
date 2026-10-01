@@ -1,0 +1,167 @@
+{
+  "paper_id": "asplos26-021",
+  "fig": "6",
+  "system": {
+    "name": "DARTH-PUM",
+    "one_liner": "a general-purpose hybrid processing-using-memory (PUM) architecture combining analog and digital PUM",
+    "domain": [
+      "hardware accelerator",
+      "processing-in-memory",
+      "ml-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Digital PUM Ctrl",
+        "role": "control logic driving digital PUM (RACER/OSCAR-style) ReRAM memory arrays performing NOR operations",
+        "container": "(a) Digital PUM",
+        "novel": false
+      },
+      {
+        "name": "DAC",
+        "role": "digital-to-analog converter driving analog PUM memory array inputs",
+        "container": "(b) Analog PUM",
+        "novel": false
+      },
+      {
+        "name": "ADC",
+        "role": "analog-to-digital converter reading analog PUM memory array outputs",
+        "container": "(b) Analog PUM",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "4GHz 8-core Arm CPU with 256-bit vector extensions performing non-MVM operations for analog PUM",
+        "container": "(b) Analog PUM",
+        "novel": false
+      },
+      {
+        "name": "DDR5",
+        "role": "memory interconnect linking the analog PUM array to the CPU",
+        "container": "(b) Analog PUM",
+        "novel": false
+      },
+      {
+        "name": "DAC / ADC array block",
+        "role": "analog PUM sub-array for MVM operations in the naive hybrid design",
+        "container": "(c) Naive Hybrid PUM",
+        "novel": false
+      },
+      {
+        "name": "Digital PUM Ctrl array block",
+        "role": "digital PUM sub-array performing non-MVM operations in the naive hybrid design",
+        "container": "(c) Naive Hybrid PUM",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Digital PUM Ctrl",
+        "to": "Digital PUM Ctrl",
+        "what": "replicated digital PUM array tiles",
+        "step": null
+      },
+      {
+        "from": "DAC",
+        "to": "ADC",
+        "what": "analog MVM operation through the memory array",
+        "step": null
+      },
+      {
+        "from": "ADC",
+        "to": "CPU",
+        "what": "non-MVM operations routed to CPU via DDR5",
+        "step": null
+      },
+      {
+        "from": "DAC / ADC array block",
+        "to": "Digital PUM Ctrl array block",
+        "what": "naive combination of analog MVM results with digital non-MVM processing",
+        "step": null
+      }
+    ],
+    "key_idea": "Three baseline architectures are laid out side by side to motivate hybrid PUM: pure digital PUM (general but weak at MVM), pure analog PUM (fast MVM but relies on an off-chip CPU for non-MVM ops), and a naive hybrid that juxtaposes analog and digital PUM arrays without careful coordination between them.",
+    "reading_order": "Left to right across three side-by-side sub-figures: (a) Digital PUM, (b) Analog PUM, (c) Naive Hybrid PUM."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.4,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fac090",
+        "used_for": "light orange fill for analog PUM (DAC/ADC) blocks"
+      },
+      {
+        "hex": "#f79646",
+        "used_for": "darker orange fill/accent for analog PUM blocks"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue fill for digital PUM control/array blocks"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple fill for digital PUM control blocks"
+      },
+      {
+        "hex": "#00b050",
+        "used_for": "green fill for the DDR5 interconnect block"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.31pt) dark strokes, square-cornered boxes",
+    "font": "Calibri sans, 6.5-8pt",
+    "corners": "square",
+    "arrows": "many thin lines (620) forming crossbar/array grid patterns within each memory block, plus a few connecting arrows between blocks",
+    "icons": "vector crossbar-array icons (dotted grid pattern) representing memory arrays"
+  },
+  "encoding": {
+    "color_means": "orange = analog PUM components (DAC/ADC, analog arrays), blue/purple = digital PUM components, green = DDR5 interconnect",
+    "line_style_means": null,
+    "emphasis": "the three architectures are drawn at the same visual scale side by side so their structural differences (all-digital, all-analog-plus-CPU, or naively stacked hybrid) are directly comparable",
+    "reusable_patterns": [
+      "repeated crossbar-array icon reused across panels to represent the same physical memory-array building block in different roles"
+    ],
+    "weaknesses": [
+      "figure alone omits the performance/area data discussed in the surrounding text needed to judge the motivation"
+    ]
+  },
+  "tags": [
+    "processing-in-memory",
+    "PUM",
+    "ReRAM",
+    "analog compute",
+    "digital compute",
+    "hybrid architecture",
+    "motivation figure"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Motivation: The Potential of Hybrid PUM (p.5)"
+    ],
+    "evidence": [
+      "we compare three different architectures, as shown in Figure 6",
+      "digital PUM (D), a RACER pipelined microarchitecture that performs NOR operations using the OSCAR logic family",
+      "analog PUM (A), a ReRAM-based version of Xiao et al., where non-MVM operations are performed by a 4 GHz 8-core Arm CPU"
+    ]
+  },
+  "summary": "This motivation figure lays out three baseline PUM (processing-using-memory) architectures side by side. Panel (a) shows digital PUM: replicated ReRAM memory-array tiles under a Digital PUM Ctrl block, representing a RACER/OSCAR-style architecture that performs NOR-based bulk operations. Panel (b) shows analog PUM: memory arrays flanked by DAC/ADC converters for analog matrix-vector multiplication, connected over DDR5 to an off-chip CPU that handles non-MVM operations. Panel (c) shows a naively combined hybrid PUM, stacking an analog DAC/ADC array block on top of a digital PUM control/array block without further coordination. The three panels use the same crossbar-array icon and a consistent orange (analog) vs. blue/purple (digital) color scheme to let readers directly compare the architectures the paper argues need better integration.",
+  "summary_zh": "该图并排展示三种PUM基线架构：(a)数字PUM由数字PUM控制器驱动多个存储阵列；(b)模拟PUM通过DAC/ADC实现矩阵向量乘法，并经DDR5连接CPU处理非MVM运算；(c)朴素混合PUM简单堆叠模拟与数字PUM阵列，缺乏协调，以此引出论文的动机。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

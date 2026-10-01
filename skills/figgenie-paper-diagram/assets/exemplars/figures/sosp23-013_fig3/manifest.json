@@ -1,0 +1,54 @@
+{
+  "id": "sosp23-013_fig3",
+  "paper_id": "sosp23-013",
+  "fig": "3",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 3. Oobleck system overview.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.2,
+  "n_components": 9,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-013/src/fig3_overview.svg",
+    "preview.png": "lab/extracted/sosp23-013/src/fig3_overview.png",
+    "print.png": "lab/extracted/sosp23-013/sosp23-013_fig3_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Numbered end-to-end flow over a control/data box layout in which exactly one of the repeated nodes is recoloured red-dashed.",
+      "what_to_learn": "To show a failure or special case among N identical elements, restyle one instance (red dashed) instead of adding a callout."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar where the gray Oobleck box nests an Execution Engine box nesting a Pipeline Instantiator and Batch Distributor pair, while the Node Cluster nests repeated Agent groups, one picked out in red dashed.",
+      "what_to_learn": "Nest a sub-engine's own two named components one level inside it rather than listing them beside it, and mark the one instance under discussion, a failing node, by swapping only its border to a red dashed line while every other repeated group keeps a plain solid border."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Cited in the reference doc for both control-data and replicated-grid: repeated identical node boxes fill the Node Cluster, and exactly one is restyled red-dashed to mark the failing instance instead of adding a callout.",
+      "what_to_learn": "To show one failure among many identical peers, restyle just that single node red and dashed rather than adding a separate callout box or arrow; keep circled numbers 1-5 tracing the unrelated job-submission-to-recovery flow so the failure marker and the process flow do not compete."
+    }
+  ]
+}

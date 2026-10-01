@@ -1,0 +1,48 @@
+{
+  "id": "nsdi26-082_fig6",
+  "paper_id": "nsdi26-082",
+  "fig": "6",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 6: An overview of existing parameter-efficient finetuning (PEFT) methods. Green boxes show the operators of the backbone LLM, while blue boxes are the operators introduced by different PEFT methods. Arrows represent intermediate activations to be reserved and the dashed arrows demonstrate the",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "ghostscript",
+  "aspect": 1.92,
+  "n_components": 10,
+  "n_flows": 1,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-082/src/fig6_architecture2.svg",
+    "preview.png": "lab/extracted/nsdi26-082/src/fig6_architecture2.png",
+    "print.png": "lab/extracted/nsdi26-082/nsdi26-082_fig6_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence 2x2 matrix comparing four PEFT architectures against the same backbone pipeline, with one legend at the top shared across all four panels defining operator colour and reserved-versus-pruned arrow style.",
+      "what_to_learn": "Redraw the identical backbone pipeline in every cell and let only the small inserted operator boxes and the solid-versus-dashed activation arrows change between cells, with one shared legend above the whole grid rather than one per panel."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Four operator-chain variants sharing one backbone, with an inside legend and dashed edges for pruned activations.",
+      "what_to_learn": "For operator graphs, keep the backbone chain identical in every panel and colour only the inserted operators; dashed edges mark edges that do not exist at runtime."
+    }
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "paper_id": "sosp24-014",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "Caribou",
+    "one_liner": "a framework that dynamically offloads serverless workflow functions across geo-distributed regions to reduce cloud carbon emissions",
+    "domain": [
+      "serverless-computing",
+      "sustainability",
+      "cloud-computing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how Caribou's Deployment Manager decides, via a token-bucket check, whether and when to regenerate a workflow's deployment plan",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Deployment Manager",
+        "kind": "box",
+        "role": "orchestrates the self-adaptive process, iterating over all deployed workflows",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Deployed Applications",
+        "kind": "box",
+        "role": "store of currently deployed workflows that the Deployment Manager iterates over",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "New",
+        "kind": "node",
+        "role": "decision: is the current workflow newly deployed?",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Check Time Elapsed",
+        "kind": "node",
+        "role": "decision: for an existing workflow, has enough time passed to warrant a token check?",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Collect Metrics",
+        "kind": "box",
+        "role": "gathers the workflow's invocation counts and runtimes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Metrics",
+        "kind": "box",
+        "role": "stores the freshly collected workflow metrics",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Get Metrics",
+        "kind": "box",
+        "role": "reads stored metrics back out to feed the token calculation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Calculate Tokens",
+        "kind": "box",
+        "role": "computes the carbon-budget tokens earned from the workflow's metrics",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Tokens Sufficient",
+        "kind": "node",
+        "role": "decision: does the current token balance cover the estimated cost of generating a new deployment plan?",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Solve Deployment",
+        "kind": "box",
+        "role": "generates a new deployment plan (DP) when enough tokens are available",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "DP Staging Area",
+        "kind": "box",
+        "role": "stores the newly generated deployment plan",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Determine Check Time",
+        "kind": "box",
+        "role": "computes when to next check this workflow, whether or not a new DP was generated",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Continue with next",
+        "kind": "label",
+        "role": "names the feedback path that returns control to the Deployment Manager to process the next workflow",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Deployed Applications",
+        "to": "Deployment Manager",
+        "what": "the manager iterates over the store of currently deployed workflows",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Deployment Manager",
+        "to": "New",
+        "what": "the manager checks whether this deployed workflow is newly added",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "New",
+        "to": "Collect Metrics",
+        "what": "Y: a new workflow always has its metrics collected",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "New",
+        "to": "Check Time Elapsed",
+        "what": "N: an existing workflow is instead checked for whether a recheck is due",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Check Time Elapsed",
+        "to": "Collect Metrics",
+        "what": "Y: enough time has passed, so metrics are (re)collected",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Check Time Elapsed",
+        "to": "Deployment Manager",
+        "what": "N: not due yet; continue with the next workflow",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Collect Metrics",
+        "to": "Metrics",
+        "what": "update: freshly collected metrics are written to the metrics store",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Collect Metrics",
+        "to": "Calculate Tokens",
+        "what": "collected metrics feed the token calculation",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Metrics",
+        "to": "Get Metrics",
+        "what": "stored metrics are read back out",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Get Metrics",
+        "to": "Calculate Tokens",
+        "what": "retrieved historical metrics also feed the token calculation",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Calculate Tokens",
+        "to": "Tokens Sufficient",
+        "what": "the computed token balance is compared against the DP-generation cost",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Tokens Sufficient",
+        "to": "Solve Deployment",
+        "what": "Y: enough tokens are available, so a new deployment plan is solved",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Tokens Sufficient",
+        "to": "Determine Check Time",
+        "what": "N: insufficient tokens; skip deployment generation and just schedule the next check",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Solve Deployment",
+        "to": "DP Staging Area",
+        "what": "update: the newly generated deployment plan is written to staging",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Solve Deployment",
+        "to": "Determine Check Time",
+        "what": "after generating a plan, the next check time is still computed",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Determine Check Time",
+        "to": "Deployment Manager",
+        "what": "control returns to the manager to continue with the next workflow",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "Is this workflow new?",
+          "branches": [
+            "Y -> Collect Metrics",
+            "N -> Check Time Elapsed"
+          ]
+        },
+        {
+          "question": "Has enough time elapsed since the last check?",
+          "branches": [
+            "Y -> Collect Metrics",
+            "N -> continue with next workflow (back to Deployment Manager)"
+          ]
+        },
+        {
+          "question": "Are there sufficient carbon-budget tokens for the estimated DP-generation cost?",
+          "branches": [
+            "Y -> Solve Deployment",
+            "N -> Determine Check Time"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "A token-bucket check run for every deployed workflow decides whether to regenerate its deployment plan, only collecting metrics and solving a new plan when the workflow is new or due, and tokens suffice.",
+    "reading_order": "left to right along the main chain from Deployment Manager through the New/Check-Time-Elapsed diamonds into Collect Metrics, Calculate Tokens, the Tokens-Sufficient diamond, Solve Deployment and Determine Check Time, with two feedback arrows arcing back over the top to Deployment Manager and two database side-trips (Metrics, DP Staging Area) dropping below"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.37,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale-blue fill of the 'Deployment Manager' box, the one system-component box"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "blue border stroke of the 'Deployment Manager' box"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "pale-violet fill of the three decision diamonds (New, Check Time Elapsed, Tokens Sufficient)"
+      },
+      {
+        "hex": "#9673a6",
+        "used_for": "violet border stroke of the decision diamonds"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill of the five dashed action boxes (Collect Metrics, Calculate Tokens, Get Metrics, Solve Deployment, Determine Check Time)"
+      },
+      {
+        "hex": "#d6b656",
+        "used_for": "gold dashed-border colour of those same action boxes"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light-gray fill of the three database/store icons (Deployed Applications, Metrics, DP Staging Area)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black arrows and box outlines; dashed gold border specifically on the yellow action boxes; violet border on the decision diamonds; blue border on the Deployment Manager box; gray outlines on the database icons",
+    "corners": "rounded",
+    "arrows": "black arrows with solid heads, several curved, forming the left-to-right chain plus two feedback loops back to Deployment Manager",
+    "font": "Arial sans, bold labels throughout",
+    "icons": "gray 3D-cylinder database icons for the three data stores (Deployed Applications, Metrics, DP Staging Area)"
+  },
+  "encoding": {
+    "color_means": "blue marks the one system-component box (Deployment Manager); violet marks the three yes/no condition-check diamonds; yellow/gold dashed boxes mark actions the system performs; gray cylinder icons mark persistent data stores, outside the caption's colour legend",
+    "line_style_means": "solid arrows only, all black; dashed borders (not dashed lines) distinguish the action boxes from the solid-bordered component box and diamonds",
+    "state_means": "not applicable; this is a decision flowchart, not a before/after or alternatives comparison",
+    "marker_means": "no numbered markers; Y/N labels on the arrows leaving each diamond are the only symbolic markers, naming which branch of each condition check is taken",
+    "emphasis": "the two feedback arrows arcing back over the top of the figure into Deployment Manager visually close the loop, reinforcing that this is a continuously repeating per-workflow check rather than a one-shot procedure",
+    "reusable_patterns": [
+      "a colour-coded flowchart where the same three colours (component/condition/action) recur at every decision point, so a box's role is readable from its colour alone",
+      "side-car database icons hanging off the main chain via 'Update' write-arrows and separate read-arrows"
+    ],
+    "weaknesses": [
+      "the two feedback arrows to Deployment Manager (from 'Check Time Elapsed'=N and from 'Determine Check Time') run at very similar heights along the top edge, which could make them hard to tell apart",
+      "the caption's colour legend (blue/violet/yellow) is not repeated anywhere inside the figure itself"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "carbon-aware-computing",
+    "token-bucket",
+    "deployment-policy",
+    "geospatial-offloading",
+    "Caribou"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Policy (p.6)"
+    ],
+    "evidence": [
+      "Caribou dynamically determines the DP generation trigger frequency with a token bucket algorithm.",
+      "Blue signifies system components, violet condition checks, and yellow actions taken by the system.",
+      "If a workflow is new or an existing workflow DP requires a token check, workflow metrics will be collected."
+    ]
+  },
+  "summary": "Figure 6 is a colour-coded decision flowchart for Caribou's token-bucket policy, which decides how often to regenerate each workflow's deployment plan (DP). The Deployment Manager iterates over Deployed Applications; a New? check (or, for existing workflows, a Check-Time-Elapsed? check) decides whether to Collect Metrics now or loop back to continue with the next workflow. Collected metrics update the Metrics store and feed Calculate Tokens, alongside historical metrics pulled back via Get Metrics. A Tokens-Sufficient? check then compares the earned carbon-budget tokens against the estimated cost of generating a new plan: if sufficient, Solve Deployment produces a new DP and updates the DP Staging Area; either way, Determine Check Time schedules the next check before control returns to the Deployment Manager. Blue marks the one system component, violet marks the three condition checks, and yellow marks the five actions.",
+  "summary_zh": "该图为Caribou令牌桶决策流程：判断工作流是否新/到期以决定是否收集指标、算令牌，令牌够则求解新部署，最后定下次检查时间再循环。蓝=组件，紫=判断，黄=动作。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'graph' (not a valid v3 base value) to 'flowchart', matching the decision diamonds and Y/N branches. style.palette taken from the raw PDF-extracted SVG's fill/stroke attributes, cross-checked against the caption's own colour legend (blue=components, violet=condition checks, yellow=actions), since no separate author source SVG exists for this figure.",
+  "venue": "SOSP24"
+}

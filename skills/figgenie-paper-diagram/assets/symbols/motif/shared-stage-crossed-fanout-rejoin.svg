@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.87 62.312" width="87.87pt" height="62.312pt" data-symbol="shared-stage-crossed-fanout-rejoin" data-kind="motif" data-size-pt="87.87x62.312">
+  <title>shared-stage-crossed-fanout-rejoin</title>
+  <desc>a shared processing box fans out via crossing diagonal arrows to two parallel per-replica boxes (each starting a lane, ellipsis showing more lanes), the lanes run down two more shared/private stages and re-converge via crossing arrows into another shared box; green/pink background tint distinguishes shared (static) from per-replica (dynamic) rows | source: asplos25-065_fig7 (src/fig7_chunk-graph.svg) | candidate wave2:shared-stage-crossed-fanout-rejoin | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="shared-stage-crossed-fanout-rejoin" transform="scale(0.36433) translate(-422.4440,-14.6170)"><defs>
+<clipPath id="asplos25-065-fig7-shared-stage-crossed-fanout-rejoin-clip_1">
+<path transform="matrix(1,0,0,-1,0,307)" d="M0 .04000686H663.84V307H0Z"/>
+</clipPath>
+</defs>
+<path transform="matrix(1,0,0,-1,0,307)" d="M431.3769 243.7033H654.0631V191.7405H431.3769Z" fill="#ff0000" fill-opacity=".1098"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M432.0086 189.3069H654.6948V138.2867H432.0086Z" fill="#e2f0d9"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M431.6029 275.185H654.2891V247.6093H431.6029Z" fill="#e2f0d9"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M461.1288 270.9902H612.9456V253.025H461.1288Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,461.1288,36.009798)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1928073V228158H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 472.7447 357.36)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 36.98 70.313327 99.99999 122.393329 152.07999">Shared</tspan></text>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 521.2447 357.36)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 47.91333 95.82666">QKV</tspan></text>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 559.4547 357.36)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 40.62666 59.379995 92.71332 122.39999 152.08666">Linear</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M435.6543 213.2846H520.9146V197.0739H435.6543Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,435.6543,93.71539)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1082806V205876H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 447.972 414.24)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 47.91333 66.666667 85.42 115.10667 148.44 167.19333 185.94666 219.27999">Attention</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M460.7462 184.8339H612.5629V168.7691H460.7462Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,460.7462,122.16611)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1928072V204024H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 483.717 442.56)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 36.98 70.313327 99.99999 122.393329 152.07999 185.41332 202.07999">Shared O</tspan></text>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 547.717 442.56)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 40.62666 59.379995 92.71332 122.39999 152.08666">Linear</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M460.7462 160.4905H612.5629V144.4256H460.7462Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,460.7462,146.5095)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1928072V204024H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 497.7796 466.8)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 36.98 70.313327 99.99999 122.393329 152.07999 185.41332 202.07999 239.05998 276.03999">Shared FFN</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M478.8581 283.0266 532.2298 272.4524 532.0354 271.4714 478.6638 282.0457ZM531.7347 275.099 537.0372 270.9902 530.5686 269.2134Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M477.7846 223.015V218.2846H478.7846V223.015ZM475.2846 219.2846 478.2845 213.2846 481.2846 219.2845Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M478.3871 197.5633 531.8636 186.3495 531.6584 185.3707 478.1819 196.5846ZM531.398 189.0015 536.6546 184.8339 530.1666 183.1292Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M537.1546 168.7691V165.4905H536.1546V168.7691ZM539.6546 166.4905 536.6547 160.4905 533.6546 166.4904Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M559.4995 212.6839H644.7598V195.4379H559.4995Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,559.4995,94.3161)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1082806V219025H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 571.8171 415.2)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 47.91333 66.666667 85.42 115.10667 148.44 167.19333 185.94666 219.27999">Attention</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M601.7127 224.1815 601.6658 217.6874 602.6658 217.6802 602.7127 224.1743ZM599.1731 218.7055 602.1297 212.6839 605.1729 218.6621Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M602.05 195.9318 541.5106 186.1269 541.6705 185.1397 602.2099 194.9446ZM542.0981 188.7546 536.6549 184.8339 543.0573 182.8318Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M602.4383 283.4499 541.8659 272.3808 542.0456 271.3971 602.6181 282.4662ZM542.4002 275.0199 537.0372 270.9902 543.4788 269.1176Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M537.1546 144.4253V135.2831H536.1546V144.4253ZM539.6546 136.2832 536.6547 130.2831 533.6546 136.2831Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 529.0561 409.91999)" font-size="83.33333" font-family="TimesNewRomanPS-BoldMT, 'Times New Roman', Times, serif" font-weight="bold"><tspan y="-1279" x="0">…</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M435.6544 239.2257H520.9147V223.015H435.6544Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,435.6544,67.77431)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1082806V205875H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 444.9296 388.32)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 47.91333">KV</tspan></text>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 471.6396 388.32)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 44.27333 73.96 103.64667 136.98">Cache</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M536.9228 253.5117 483.0378 240.8557 483.2664 239.8822 537.1515 252.5382ZM483.4397 243.5182 478.2845 239.2257 484.8115 237.6771Z"/>
+<path transform="matrix(1,0,0,-1,0,307)" d="M559.5825 240.3885H644.8428V224.1779H559.5825Z" fill="#ffffff"/>
+<path transform="matrix(.00007874016,0,0,.00007874016,559.5825,66.611499)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#000000" d="M0 0H1082806V205875H0Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 568.8576 387.12)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 47.91333">KV</tspan></text>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 595.5677 387.12)" font-size="66.66666" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-1279" x="0 44.27333 73.96 103.64667 136.98">Cache</tspan></text>
+<path transform="matrix(1,0,0,-1,0,307)" d="M537.1324 253.5158 597.3993 241.8311 597.209 240.8494 536.9421 252.5341ZM596.8935 244.4758 602.2128 240.3886 595.7514 238.5855Z"/>
+<text xml:space="preserve" transform="matrix(.24 0 -0 .24 531.358 384.72)" font-size="83.33333" font-family="TimesNewRomanPS-BoldMT, 'Times New Roman', Times, serif" font-weight="bold"><tspan y="-1279" x="0">…</tspan></text>
+</g>
+</svg>

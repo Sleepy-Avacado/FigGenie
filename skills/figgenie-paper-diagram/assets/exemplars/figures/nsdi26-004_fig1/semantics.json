@@ -1,0 +1,143 @@
+{
+  "paper_id": "nsdi26-004",
+  "fig": "1",
+  "system": {
+    "name": "pre-UFA legacy architecture",
+    "one_liner": "Uber's dual-region active-active microservice architecture that predates the Uber Failover Architecture (UFA)",
+    "domain": [
+      "distributed-systems",
+      "reliability",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Edge Point of Presence (PoP)",
+        "role": "entry point that splits incoming client traffic across regions",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RegionA",
+        "role": "one of two geographically distributed active-active regions",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Trip Serving Canary Zone",
+        "role": "canary deployment zone within RegionA used for trip serving",
+        "container": "RegionA",
+        "novel": false
+      },
+      {
+        "name": "Zone1",
+        "role": "a stateless service zone within a region",
+        "container": "RegionA / RegionB",
+        "novel": false
+      },
+      {
+        "name": "Stateful",
+        "role": "stateful services within a region",
+        "container": "RegionA / RegionB",
+        "novel": false
+      },
+      {
+        "name": "RegionB",
+        "role": "the other of two geographically distributed active-active regions",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Edge Point of Presence (PoP)",
+        "to": "RegionA",
+        "what": "50% traffic",
+        "step": null
+      },
+      {
+        "from": "Edge Point of Presence (PoP)",
+        "to": "RegionB",
+        "what": "50% traffic",
+        "step": null
+      },
+      {
+        "from": "RegionA: Stateful",
+        "to": "RegionB: Stateful",
+        "what": "eventual consistency replication",
+        "step": null
+      }
+    ],
+    "key_idea": "Uber's legacy architecture splits client traffic 50/50 across two active-active regions, each independently over-provisioned to absorb the other's load on failover, with stateful data kept in sync via eventual consistency replication.",
+    "reading_order": "Top-down: traffic enters at the Edge Point of Presence, then splits left and right into RegionA and RegionB, each shown as a box containing Zone1 and Stateful sub-boxes linked by a bidirectional replication arrow."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.06,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dbe7f3",
+        "used_for": "light blue fill for PoP, Zone1, and Stateful boxes"
+      },
+      {
+        "hex": "#ffffbf",
+        "used_for": "light yellow fill highlighting the Trip Serving Canary Zone"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray strokes on rounded/square boxes",
+    "font": "Arial sans-serif with a Menlo monospace accent, sizes 5-15pt",
+    "corners": "mixed",
+    "arrows": "orthogonal, thin filled arrow heads, one bidirectional arrow for replication",
+    "icons": "none in the extracted vector; the source PNG additionally shows small app-icon thumbnails (Uber, Uber Eats, etc.) above the PoP not captured in the PDF-extracted version"
+  },
+  "encoding": {
+    "color_means": "blue = standard service/zone boxes, yellow = the canary trip-serving zone singled out for emphasis",
+    "line_style_means": "single-headed arrows show traffic split from the PoP; a double-headed arrow shows bidirectional eventual-consistency replication between regions' stateful stores",
+    "emphasis": "the yellow Trip Serving Canary Zone stands out against otherwise uniform blue boxes, and the symmetric 50%/50% split visually reinforces the active-active design",
+    "reusable_patterns": [
+      "symmetric dual-region deployment diagram with an edge entry point fanning out evenly",
+      "paired sibling boxes (Zone1/Stateful) repeated identically in each region for visual comparison"
+    ],
+    "weaknesses": [
+      "no legend for what the yellow highlight or box borders specifically denote"
+    ]
+  },
+  "tags": [
+    "failover",
+    "active-active",
+    "multi-region",
+    "microservices",
+    "replication",
+    "deployment architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Terminology (p.3)"
+    ],
+    "evidence": [
+      "Uber's platform is built on a dual-region active-active microservice architecture depicted in Figure 1.",
+      "each city's traffic is routed to exactly one region",
+      "each region is provisioned with twice the peak expected capacity"
+    ]
+  },
+  "summary": "This figure shows Uber's legacy (pre-UFA) dual-region active-active microservice architecture, used as background context for the paper's new Uber Failover Architecture (UFA). Client traffic arrives at an Edge Point of Presence and is split 50/50 between RegionA and RegionB, two geographically distributed active-active regions. Each region contains a Zone1 stateless-service box and a Stateful services box, with a bidirectional arrow between the two regions' Stateful boxes labeled 'Eventual Consistency Replication.' RegionA additionally highlights a yellow 'Trip Serving Canary Zone' box. The diagram is a simple top-down deployment diagram with light blue boxes for standard components and a yellow box calling out the canary zone, illustrating that each region must be provisioned with double capacity to absorb the other's traffic during a regional failure.",
+  "summary_zh": "该图展示 Uber 在 UFA 之前的传统双活多区域微服务架构：来自边缘接入点的流量按 50%/50% 分流到 RegionA 与 RegionB，每个区域包含 Zone1 与有状态服务，二者之间通过最终一致性复制同步，RegionA 中另有一个黄色标出的试运行金丝雀区。",
+  "confidence": "medium",
+  "notes": "The PDF-extracted vector omits the app-icon row (Uber, Uber Eats, etc.) visible above the PoP in the author's source PNG; measured style/palette above reflects only the PDF-extracted SVG.",
+  "venue": "NSDI26"
+}

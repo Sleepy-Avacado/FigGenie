@@ -1,0 +1,240 @@
+{
+  "paper_id": "nsdi26-028",
+  "fig": "2",
+  "system": {
+    "name": "vDUSE",
+    "one_liner": "a userspace vDPA device that implements a software-defined data path to expose virtio devices to a host server",
+    "domain": [
+      "virtualization",
+      "networking",
+      "storage"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "PaaS, SaaS, or FaaS",
+        "container": null,
+        "role": "higher-layer cloud services that share the host OS with IaaS tasks",
+        "novel": false
+      },
+      {
+        "name": "IaaS tasks",
+        "container": null,
+        "role": "storage/networking control- and data-plane tasks that vDUSE runs in the same OS as PaaS/SaaS/FaaS",
+        "novel": false
+      },
+      {
+        "name": "Control plane",
+        "container": "IaaS tasks",
+        "role": "IaaS control-plane logic",
+        "novel": false
+      },
+      {
+        "name": "Data plane (dpdk/spdk)",
+        "container": "IaaS tasks",
+        "role": "kernel-bypass storage/networking data path",
+        "novel": false
+      },
+      {
+        "name": "tasks",
+        "container": null,
+        "role": "userspace workload consuming virtio net/blk devices",
+        "novel": false
+      },
+      {
+        "name": "containers",
+        "container": null,
+        "role": "userspace workload consuming virtio net/blk devices",
+        "novel": false
+      },
+      {
+        "name": "VMs",
+        "container": null,
+        "role": "userspace workload consuming virtio net/blk devices",
+        "novel": false
+      },
+      {
+        "name": "net dev",
+        "container": null,
+        "role": "virtio network device interface exposed in userspace",
+        "novel": false
+      },
+      {
+        "name": "blk dev",
+        "container": null,
+        "role": "virtio block device interface exposed in userspace",
+        "novel": false
+      },
+      {
+        "name": "vDPA Framework",
+        "container": null,
+        "role": "kernel-space grouping of virtio devices and the virtio-vDPA Bus, bridged to userspace by the vDUSE Module",
+        "novel": false
+      },
+      {
+        "name": "virtio devices",
+        "container": "vDPA Framework",
+        "role": "virtio device abstraction exposed to the host via vDPA",
+        "novel": false
+      },
+      {
+        "name": "virtio-vDPA Bus",
+        "container": "vDPA Framework",
+        "role": "bus connecting virtio devices to the vDUSE module",
+        "novel": false
+      },
+      {
+        "name": "vDUSE Module",
+        "container": null,
+        "role": "userspace vDPA device implementing a software-defined data path to expose virtio devices to the host",
+        "novel": false
+      },
+      {
+        "name": "TCP/IP",
+        "container": null,
+        "role": "kernel network stack used by vDUSE's data path to reach the NIC",
+        "novel": false
+      },
+      {
+        "name": "NIC",
+        "container": null,
+        "role": "physical network interface connecting to the underlay network",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "IaaS tasks",
+        "to": "PaaS, SaaS, or FaaS",
+        "what": "coupling in one OS (limitation ①)",
+        "step": 1
+      },
+      {
+        "from": "net dev",
+        "to": "tasks",
+        "what": "overlay networking limitation (②)",
+        "step": 2
+      },
+      {
+        "from": "blk dev",
+        "to": "VMs",
+        "what": "no nvme support limitation (③)",
+        "step": 3
+      },
+      {
+        "from": "virtio devices",
+        "to": "net dev",
+        "what": "virtio network device",
+        "step": null
+      },
+      {
+        "from": "virtio devices",
+        "to": "blk dev",
+        "what": "virtio block device",
+        "step": null
+      },
+      {
+        "from": "virtio-vDPA Bus",
+        "to": "vDUSE Module",
+        "what": "vDPA control path",
+        "step": null
+      },
+      {
+        "from": "vDUSE Module",
+        "to": "TCP/IP",
+        "what": "data path (dpdk/spdk emulation)",
+        "step": null
+      },
+      {
+        "from": "TCP/IP",
+        "to": "NIC",
+        "what": "underlay traffic",
+        "step": null
+      }
+    ],
+    "key_idea": "vDUSE exposes virtio net/blk devices to host tasks/containers/VMs via a userspace vDPA module, but this ties IaaS tasks to the same OS as PaaS/SaaS/FaaS, forces overlay networking, and lacks NVMe support.",
+    "reading_order": "Top-down: the OS-coupling annotation at top, then userspace tasks/containers/VMs over net dev/blk dev, down through the vDPA framework and vDUSE Module to TCP/IP and the NIC."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.83,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e7e6e6",
+        "used_for": "fill of the Control plane box and outer background sections"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "fill of the tasks, containers, and VMs boxes"
+      },
+      {
+        "hex": "#92d050",
+        "used_for": "fill of the net dev and blk dev boxes"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "fill of the vDUSE Module box"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "fill of the TCP/IP and NIC boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.6pt) strokes, dashed outer boundary and a dashed userspace/kernel-space divider",
+    "font": "Arial-like sans, 6.5-7pt, bold-italic for circled-number annotations",
+    "corners": "square",
+    "arrows": "mostly straight arrows (6 heads) with circled-number call-outs",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray = IaaS control-plane box, pale blue = userspace task/device boxes, green = virtio net/blk device boxes, blue = the vDUSE Module, orange = TCP/IP and NIC boxes",
+    "line_style_means": "dashed horizontal divider separates userspace from kernel space; solid arrows and circled numbers (1-3) mark vDUSE's three limitations",
+    "emphasis": "circled red-italic annotations (coupling in one OS, overlay, no nvme) are overlaid directly on the architecture to call out vDUSE's three limitations",
+    "reusable_patterns": [
+      "userspace/kernel-space swimlane divider",
+      "numbered limitation call-outs overlaid on an existing-system diagram"
+    ],
+    "weaknesses": [
+      "the purple/lavender fill of the virtio devices box is not among the top palette colors, so its exact hex is not captured",
+      "circled numbers 2 and 3 point at a shared pair of arrows, making it slightly ambiguous which box each limitation attaches to"
+    ]
+  },
+  "tags": [
+    "vDPA",
+    "virtio",
+    "I/O-virtualization",
+    "OS-coupling",
+    "motivation",
+    "background"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Motivation (p.5)"
+    ],
+    "evidence": [
+      "The userspace vDPA device (vDUSE) implements a software-defined data path to expose virtio devices to the host server",
+      "several limitations impede its practical adoption in production environments",
+      "storage and networking tasks—being part of the IaaS layer—run in the same OS as higher-layer cloud services"
+    ]
+  },
+  "summary": "Figure 2 is a motivation diagram critiquing vDUSE, the userspace vDPA device that prior work uses to expose virtio devices to a host server. It shows PaaS/SaaS/FaaS tasks, containers, and VMs sharing userspace with net dev/blk dev interfaces backed by virtio devices over a virtio-vDPA Bus, bridged by the vDUSE Module down through a kernel-space TCP/IP stack to the NIC. Three red circled annotations overlay the architecture to mark vDUSE's limitations: coupling IaaS and PaaS/SaaS/FaaS tasks in one OS, forcing overlay networking, and lacking NVMe support. The figure uses a top-down layered layout with a dashed userspace/kernel-space divider, flat gray/blue/green/orange boxes, and circled numbers rather than a separate legend to key the three limitations directly onto the diagram.",
+  "summary_zh": "该图批判vDUSE局限：容器/VM经net/blk dev使用virtio设备，经vDUSE模块到内核态TCP/IP再到NIC；①②③标出与IaaS共用OS、依赖overlay、不支持NVMe三个限制。",
+  "confidence": "medium",
+  "notes": null,
+  "venue": "NSDI26"
+}

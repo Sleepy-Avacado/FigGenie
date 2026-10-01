@@ -1,0 +1,212 @@
+{
+  "paper_id": "asplos25-038",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "Dilu",
+    "one_liner": "a cross-layer serverless deep-learning system that provides fine-grained GPU resourcing-on-demand via introspective elasticity",
+    "domain": [
+      "serverless-computing",
+      "GPU-scheduling",
+      "deep-learning-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how exclusive, static, and resourcing-on-demand GPU allocation pack the same four training/inference requests onto different numbers of GPUs",
+    "base": "component",
+    "elements": [
+      {
+        "name": "training request",
+        "kind": "icon",
+        "role": "a hexagon icon representing one training request to be served",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "inference request",
+        "kind": "icon",
+        "role": "a laptop/computer icon representing one inference request to be served",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "f",
+        "kind": "icon",
+        "role": "a cube icon labelled f, the training/inference function instance assigned to a request",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU allocation bar",
+        "kind": "icon",
+        "role": "a small two-colour bar showing one GPU's memory/SM utilization percentage and fragmentation (white gap)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "R",
+        "kind": "label",
+        "role": "the function's compute resource request ratio on its GPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L",
+        "kind": "label",
+        "role": "the function's compute resource limit ratio on its GPU",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Occupied GPUs",
+        "kind": "label",
+        "role": "the tally of distinct GPUs used to serve all four requests under one policy",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "training request",
+        "to": "f",
+        "what": "a request is assigned a function instance",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "inference request",
+        "to": "f",
+        "what": "a request is assigned a function instance",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "f",
+        "to": "GPU allocation bar",
+        "what": "the function is placed on a GPU, consuming a request/limit (R/L) share of its memory and SM",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Exclusive Alloc.",
+        "axis": "alternatives",
+        "differs": "every function gets a whole dedicated GPU regardless of need (R:1/L:1 throughout)",
+        "verdict": "Occupied GPUs: 4"
+      },
+      {
+        "label": "Static Alloc.",
+        "axis": "alternatives",
+        "differs": "functions share GPUs at a fixed MPS-style quota with mismatched R/L pairs (e.g. R:0.65/L:0.65, R:0.4/L:1)",
+        "verdict": "Occupied GPUs: 3"
+      },
+      {
+        "label": "Resourcing-on-Demand",
+        "axis": "alternatives",
+        "differs": "functions with complementary R/L ratios (e.g. 0.3/0.6 paired with 0.6/0.9) are packed dynamically onto shared GPUs",
+        "verdict": "Occupied GPUs: 2"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the R (compute request) / L (compute limit) ratio pair for each of the four functions under each policy, and the resulting Occupied-GPUs tally (4, 3, 2)",
+      "linked_by": "position under each function's cube icon, and colour of the small memory/SM utilization bar",
+      "result_cells": "the 'Occupied GPUs: N' line under each panel"
+    },
+    "key_idea": "Moving from exclusive, to static, to on-demand GPU allocation packs the same four training/inference functions onto fewer GPUs (4 to 3 to 2) by matching each function's actual compute request/limit instead of over- or statically provisioning it.",
+    "reading_order": "read the icon legend at top first (requests, functions, GPU utilization bar, R/L meaning), then left to right across the three panels, top to bottom within each: requests, functions, GPU bars with R/L, then the Occupied-GPUs tally"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "badge",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.77,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff9300",
+        "used_for": "orange 'f' letter inside each function cube icon"
+      },
+      {
+        "hex": "#ff2600",
+        "used_for": "red cube outlines and the red (SM-utilization) portion of the GPU allocation bars"
+      },
+      {
+        "hex": "#6565ff",
+        "used_for": "lighter blue portion of the GPU allocation bars (memory utilization)"
+      },
+      {
+        "hex": "#1818ff",
+        "used_for": "darker blue accent portion of the GPU allocation bars"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light grey panel background behind each column of icons"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.3pt) mixed solid/dashed outlines on the hexagon and cube icons",
+    "corners": "mixed",
+    "arrows": "thin solid black arrows with a single small head, connecting each request icon down to its assigned function cube",
+    "font": "mixed Arial/Times sans-serif, 4.5-7pt, bold panel headers (Exclusive Alloc. / Static Alloc. / Resourcing-on-Demand)",
+    "icons": "hexagon and laptop glyph icons for training/inference requests, 3D cube glyphs labelled f for functions, small two-colour bars for each GPU's memory/SM occupancy"
+  },
+  "encoding": {
+    "color_means": "orange labels the function letter f; red vs blue portions of each small bar show SM vs memory utilization, with white gaps marking fragmentation",
+    "line_style_means": "not used to distinguish relation kinds; arrows are uniformly thin solid black",
+    "state_means": "the three panels are alternatives, not time steps, told apart by how many requests share one function/GPU and by the resulting R/L numbers and Occupied-GPUs tally",
+    "marker_means": "no numbered markers; 'R:'/'L:' labels report each GPU's compute request and limit ratios, and 'Occupied GPUs: N' scores each panel",
+    "emphasis": "the bold 'Occupied GPUs: N' line under each panel is the one number the reader compares across panels (4 to 3 to 2), rewarding the rightmost, most tightly packed layout",
+    "reusable_patterns": [
+      "a repeated request-to-function-to-GPU-bar icon chain, re-run under three allocation policies with only packing density and R/L numbers changing",
+      "a two-colour utilization bar with a white fragmentation gap as a compact per-GPU scorecard"
+    ],
+    "weaknesses": [
+      "fragmentation is shown only as an unlabelled white gap in the bar, easy to miss without reading the legend first",
+      "small 4.5-7pt numeric R/L labels are dense and easy to misread at this figure size"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "GPU-scheduling",
+    "resource-fragmentation",
+    "MPS",
+    "elasticity",
+    "Dilu"
+  ],
+  "provenance": {
+    "sections": [
+      "§1 Introduction"
+    ],
+    "evidence": [
+      "most systems adopt the exclusive GPU allocation method (left), resulting in a significant waste of GPU resources",
+      "allowing several instances to share a single GPU with a fixed resource quota (medium)",
+      "resourcing-on-demand GPU provisioning is the ideal status to improve GPU utilization"
+    ]
+  },
+  "summary": "This figure motivates Dilu by contrasting three GPU provisioning strategies for serverless deep-learning serving, each packing the same four training/inference requests (hexagon and laptop icons) into function instances (cube icons labelled f) placed on GPUs. Under Exclusive Allocation, every function gets its own whole GPU regardless of actual need (R:1/L:1 throughout), occupying 4 GPUs. Under Static Allocation, functions share GPUs at a fixed MPS-style quota (e.g. R:0.65/L:0.65, R:0.4/L:1), cutting usage to 3 GPUs but leaving mismatched, unadjustable shares. Under Resourcing-on-Demand, Dilu's target, functions with complementary compute request/limit ratios (e.g. 0.3/0.6 paired with 0.6/0.9) are packed dynamically onto the same GPU, occupying only 2 GPUs. Small two-colour bars under each function show GPU memory/SM utilization and fragmentation (white gaps), making the waste in exclusive and static allocation visible before Dilu's fine-grained, on-demand approach closes that gap.",
+  "summary_zh": "该图对比三种GPU分配策略：独占分配下4个函数各占一整块GPU（占用4块）；静态分配按固定配额共享（占用3块，仍有碎片）；按需分配（Dilu目标）动态匹配互补的计算请求/限制比例，仅占用2块GPU，柱状图空白部分表示资源碎片。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'data-structure' to 'component', since the figure is a chain of connected request/function/GPU icons rather than a formal data structure. layout.legend approximated as 'inside' since the icon-meaning key sits above the three panels within the same figure frame, a position the schema's enum (none/inside/below/right/per-panel) does not name exactly.",
+  "venue": "ASPLOS25"
+}

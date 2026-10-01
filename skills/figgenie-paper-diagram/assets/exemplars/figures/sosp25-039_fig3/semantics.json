@@ -1,0 +1,343 @@
+{
+  "paper_id": "sosp25-039",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "Votegral",
+    "one_liner": "a coercion-resistant e-voting architecture that lets voters register real and fake credentials in person and anonymously tallies only the real votes",
+    "domain": [
+      "e-voting",
+      "coercion-resistance",
+      "cryptographic-protocols"
+    ],
+    "abstraction": "protocol"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how a voter's real and fake credentials are registered, activated, used to sign encrypted ballots, then anonymized and tallied",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Register",
+        "kind": "label",
+        "role": "phase 1 heading: check-in and printing of the real and fake credentials",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Activate",
+        "kind": "label",
+        "role": "phase 2 heading: preparing each credential's key pair for signing",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Vote",
+        "kind": "label",
+        "role": "phase 3 heading: signing an encrypted ballot with a credential",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Tally",
+        "kind": "label",
+        "role": "phase 4 heading: shuffling, discarding mismatches, and counting real votes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Registration Log",
+        "kind": "box",
+        "role": "public ledger entry linking a voter's identity to their public tag R",
+        "container": "Ledger (Public Bulletin Board)",
+        "highlighted": false
+      },
+      {
+        "name": "Real Credential",
+        "kind": "box",
+        "role": "printed credential holding tag R, true key pair (R,r), and a true proof",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Fake Credential",
+        "kind": "box",
+        "role": "printed credential holding the same tag R but key pair (F,f) and a false proof",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Real Vote",
+        "kind": "box",
+        "role": "encrypted ballot signed by the real key pair (R,r)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Fake Vote",
+        "kind": "box",
+        "role": "encrypted ballot signed by the fake key pair (F,f)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Ballot Log",
+        "kind": "box",
+        "role": "public ledger of every signed ballot, real and fake alike, each tagged with R or F",
+        "container": "Ledger (Public Bulletin Board)",
+        "highlighted": false
+      },
+      {
+        "name": "Anonymized Registration Log",
+        "kind": "box",
+        "role": "the Registration Log after verifiable shuffle, holding only blinded credential tags",
+        "container": "Ledger (Public Bulletin Board)",
+        "highlighted": false
+      },
+      {
+        "name": "Anonymized Ballot Log",
+        "kind": "box",
+        "role": "the Ballot Log after verifiable shuffle; ballots are kept or struck out depending on tag match",
+        "container": "Ledger (Public Bulletin Board)",
+        "highlighted": true
+      },
+      {
+        "name": "Ledger (Public Bulletin Board)",
+        "kind": "box",
+        "role": "the shared public ledger holding all four logs",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "verifiable shuffle",
+        "kind": "icon",
+        "role": "the crossed-ribbon operation applied to both the registration and ballot logs before tallying",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "shuffle proofs",
+        "kind": "box",
+        "role": "cryptographic evidence that the shuffle was performed correctly",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Register",
+        "to": "Registration Log",
+        "what": "checking in writes the voter's identity-linked entry and public tag R to the Registration Log",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Register",
+        "to": "Real Credential",
+        "what": "printing the real credential embeds tag R with key pair (R,r) and a true proof",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Register",
+        "to": "Fake Credential",
+        "what": "printing the fake credential embeds tag R but key pair (F,f) with a false proof",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "Real Credential",
+        "to": "Real Vote",
+        "what": "activating the real credential lets the voter sign an encrypted ballot with (R,r)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fake Credential",
+        "to": "Fake Vote",
+        "what": "activating the fake credential lets the voter sign an encrypted ballot with (F,f)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Real Vote",
+        "to": "Ballot Log",
+        "what": "the signed real ballot is recorded in the public Ballot Log",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fake Vote",
+        "to": "Ballot Log",
+        "what": "the signed fake ballot is likewise recorded in the Ballot Log",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Registration Log",
+        "to": "Anonymized Registration Log",
+        "what": "a verifiable shuffle blinds and reorders credential tags",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "Ballot Log",
+        "to": "Anonymized Ballot Log",
+        "what": "the same verifiable shuffle reorders ballots, producing shuffle proofs",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "Anonymized Ballot Log",
+        "to": "Anonymized Ballot Log",
+        "what": "a ballot whose tag has no match in the anonymized registration log is struck out and discarded; a matching one is counted",
+        "kind": "control",
+        "step": "2"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Register (check in)",
+        "what": "the voter checks in, writing an identity-linked entry (ID, public tag R) to the Registration Log",
+        "carries": "voter identity, tag R"
+      },
+      {
+        "marker": "2",
+        "at": "Register (print real credential)",
+        "what": "a real credential is printed carrying tag R, true key pair (R,r), and a true proof",
+        "carries": "tag R, key pair (R,r)"
+      },
+      {
+        "marker": "3",
+        "at": "Register (print fake credential)",
+        "what": "a fake credential is printed carrying the same tag R but key pair (F,f) and a false proof",
+        "carries": "tag R, key pair (F,f)"
+      },
+      {
+        "marker": "4",
+        "at": "Register (check out)",
+        "what": "the voter checks out holding both credentials",
+        "carries": "real and fake credentials"
+      },
+      {
+        "marker": "1",
+        "at": "Tally (verifiable shuffle)",
+        "what": "the Registration Log and Ballot Log are both verifiably shuffled, blinding credential tags",
+        "carries": "credential tags, ballots, shuffle proofs"
+      },
+      {
+        "marker": "2",
+        "at": "Tally (discard mismatches)",
+        "what": "ballots whose tag has no match in the anonymized registration log are discarded",
+        "carries": "ballot/tag match result"
+      },
+      {
+        "marker": "3",
+        "at": "Tally (decrypt and count)",
+        "what": "only the remaining, tag-matched real votes are decrypted, counted, and the results published",
+        "carries": "decrypted real ballots"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A voter's single public tag anchors two credentials, real and fake, both used to sign otherwise-identical encrypted ballots; only at tally does a verifiable shuffle anonymize tags and ballots so only tag-matched real votes get decrypted and counted.",
+    "reading_order": "left to right through Register, Activate, Vote, Tally, dropping down into the Ledger boxes each phase writes to, then following the shuffle arrows into the two anonymized logs"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 4,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.32,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dde8cb",
+        "used_for": "pale green fill of proof boxes (true proof, false proof, shuffle proofs)"
+      },
+      {
+        "hex": "#fff5ce",
+        "used_for": "pale yellow fill of the secret-key cells (r, f)"
+      },
+      {
+        "hex": "#ffdbb6",
+        "used_for": "pale orange fill of the credential-tag/key cells (R, F) and the ballot cells"
+      },
+      {
+        "hex": "#dedce6",
+        "used_for": "pale lavender fill of the Real/Fake Credential and Real/Fake Vote container boxes"
+      },
+      {
+        "hex": "#dee6ef",
+        "used_for": "pale blue fill of the Ledger's log sub-boxes (Registration Log, Ballot Log, and their anonymized counterparts)"
+      },
+      {
+        "hex": "#e0c2cd",
+        "used_for": "pale pink shading marking the discarded (struck-out) ballot row in the Anonymized Ballot Log"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of the ID cell in the Registration Log"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black box outlines and arrows; a bright red strikethrough marks the one discarded ballot",
+    "corners": "square",
+    "arrows": "thin black arrows and dotted leader lines linking a credential's tag to its origin, plus bold gray block arrows marking the shuffle step",
+    "font": "sans-serif (Liberation Sans), bold for phase headers and log names, italic for numbered instructions and annotations",
+    "icons": "a person silhouette for check-in; crossed-ribbon shuffle icons for the verifiable shuffle; a red X strikethrough for a discarded ballot"
+  },
+  "encoding": {
+    "color_means": "green marks zero-knowledge proof boxes; pale orange marks the R/F credential tags, keys, and ballots; lavender marks the four credential/vote container boxes; pale blue marks the ledger's log sub-boxes; pink shades the one discarded ballot",
+    "line_style_means": "dotted lines trace a tag or ballot back to where it was produced; solid arrows show data being written into a log or carried to the next phase; bold gray block arrows mark the verifiable-shuffle step",
+    "state_means": "real vs fake is told apart purely by the letter inside an identically-styled orange cell (R vs F) and by which credential/vote box it sits in, not by a different colour",
+    "marker_means": "plain numbers under Register (1-4) and Tally (1-3) order each phase's sub-steps; a red X marks a ballot discarded for a non-matching tag",
+    "emphasis": "the red strikethrough on the unmatched ballot in the Anonymized Ballot Log visually singles out the discard case right where the tally decision happens",
+    "reusable_patterns": [
+      "parallel real/fake instances of the same box template (Credential, Vote) carried through matching Ledger logs, reunited only at a shuffle step drawn with a crossed-ribbon icon"
+    ],
+    "weaknesses": [
+      "real and fake items share the same orange cell colour and differ only by an R/F letter, so a reader skimming by colour alone could miss which ballot is genuine"
+    ]
+  },
+  "tags": [
+    "e-voting",
+    "coercion-resistance",
+    "zero-knowledge-proof",
+    "verifiable-shuffle",
+    "credential-signing",
+    "Votegral"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Registration and voting protocol design"
+    ],
+    "evidence": [
+      "Figure 3 presents an illustration of Votegral's overall protocol operation, omitting various details for clarity",
+      "focusing on a single voter, Alice, who creates one real and one fake credential",
+      "All TRIP credentials include a signature of the kiosk that produced them, not shown in Fig. 3"
+    ]
+  },
+  "summary": "Figure 3 summarizes Votegral's full protocol for one voter across four phases. In Register, checking in (1) writes an identity-linked entry to the public Registration Log, then printing a real credential (2) and a fake credential (3) both embed the same public tag but different key pairs, (R,r) with a true proof and (F,f) with a false proof, before checking out (4). In Activate and Vote, each credential signs an encrypted ballot with its own key pair, and both signed ballots land in the public Ballot Log. In Tally, a verifiable shuffle (1) blinds and reorders both the Registration Log's tags and the Ballot Log's ballots together with shuffle proofs; ballots whose tag has no match in the anonymized registration log are discarded (2); and only the remaining, tag-matched real votes are decrypted, counted, and published (3).",
+  "summary_zh": "该图示Votegral协议：Register签到并打印真假两枚凭证(同一tag，密钥对分别为(R,r)/(F,f))；各凭证签名选票存入Ballot Log；Tally将两日志洗牌，丢弃tag不匹配选票，仅解密计数真选票并公布结果。",
+  "confidence": "high",
+  "notes": "Corrected base from the prior pass's 'none' (not a valid value) to 'data-structure', since the figure's core content is the Registration/Ballot logs and their anonymized counterparts.",
+  "venue": "SOSP25"
+}

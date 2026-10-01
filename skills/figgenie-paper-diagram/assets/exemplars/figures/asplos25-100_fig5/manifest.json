@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-100_fig5",
+  "paper_id": "asplos25-100",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. CXL Device Architecture.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.74,
+  "n_components": 10,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-100/src/fig5_CXL_device.svg",
+    "preview.png": "lab/extracted/asplos25-100/src/fig5_CXL_device.png",
+    "print.png": "lab/extracted/asplos25-100/asplos25-100_fig5_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "The corpus's clearest flow-type legend: a 'Legends' block naming inter-device data (black solid), intra-device data (blue solid) and control (orange dashed).",
+      "what_to_learn": "Name every arrow class explicitly in an in-figure legend; three classes is the practical maximum and dashed should be reserved for control."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated, high-rank figure the reference doc itself cites as the canonical times-N annotation: 16 identical PIM Ctrl/GDDR6-PIM channels are drawn once, marked '×16', with an inside legend naming inter-device, intra-device, and control flow.",
+      "what_to_learn": "For a very large, fixed replica count, skip the ellipsis and just draw one instance with a bold '×16' label beside it; keep the flow-type legend (inter-device solid black, intra-device solid blue, control dashed orange) inside the frame since it is what makes the single-device diagram legible."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A PIM/CXL device floorplan: 16 identical PIM Ctrl/GDDR6-PIM compute-memory pairs sit in a row (the ×N rule this section borrows from replicated-grid) with an inside legend naming three traffic classes crossing the chip.",
+      "what_to_learn": "When one chip repeats the same compute-plus-memory pair many times, draw it once with a ×N label rather than a full grid, and legend the traffic classes crossing the chip (inter-device, intra-device, control) so the reader can tell a peer-to-peer hop from a local one."
+    }
+  ]
+}

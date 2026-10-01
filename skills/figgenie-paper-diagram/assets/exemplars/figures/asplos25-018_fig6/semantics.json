@@ -1,0 +1,236 @@
+{
+  "paper_id": "asplos25-018",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "Earth+",
+    "one_liner": "an on-board satellite imagery compression system that shares fresh reference images across a satellite constellation to shrink downlink usage",
+    "domain": [
+      "satellite-systems",
+      "remote-sensing",
+      "compression"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how picking reference images only from a satellite's own history versus from the whole constellation changes reference age and the fraction of tiles that must be downloaded",
+    "base": "scene",
+    "elements": [
+      {
+        "name": "Photo area",
+        "kind": "label",
+        "role": "the ground location all three satellites repeatedly photograph",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Earth",
+        "kind": "label",
+        "role": "the orbited body the constellation circles",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "satellite (blue)",
+        "kind": "icon",
+        "role": "one of three satellites in the constellation, capturing an image on its own colour-coded timeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "satellite (red)",
+        "kind": "icon",
+        "role": "second satellite in the constellation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "satellite (green)",
+        "kind": "icon",
+        "role": "third satellite in the constellation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ground station",
+        "kind": "icon",
+        "role": "receiver that downlinks the changed-tile delta for each day's image",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Day 1",
+        "kind": "label",
+        "role": "first timestamp on the shared day timeline (image captured, becomes an available reference)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Day 51",
+        "kind": "label",
+        "role": "last timestamp on the shared day timeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "time",
+        "kind": "label",
+        "role": "marks the left-to-right direction of the shared timeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Δ(Day X, Day Y)",
+        "kind": "label",
+        "role": "generic label on a dashed arrow naming which two days' images are differenced to produce the reference delta",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "% change",
+        "kind": "label",
+        "role": "worked percentage of tiles the ground station must download for that day, given the chosen reference",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Δ(Day X, Day Y)",
+        "to": "% change",
+        "what": "the delta between the current image and its chosen reference determines the changed-tile percentage",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "satellite (blue)",
+        "to": "ground station",
+        "what": "each day's captured image (or its delta) is downlinked to the ground station",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) three-satellite constellation",
+        "axis": "alternatives",
+        "differs": "sets up the scenario: three satellites in different colours orbit and photograph the same area; not itself a reference-selection strategy",
+        "verdict": null
+      },
+      {
+        "label": "(b) satellite-local reference",
+        "axis": "alternatives",
+        "differs": "each satellite may only reference its own past images, so by Day 31/41/51 the reference is up to 30 days old, leaving 55%/65%/45% of tiles changed",
+        "verdict": null
+      },
+      {
+        "label": "(c) constellation-wide reference",
+        "axis": "alternatives",
+        "differs": "each satellite may reference the freshest image from any satellite via cross-coloured dashed arrows, so the reference is at most 10 days old, leaving 35%/20%/0%/45%/0% of tiles changed",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the per-day percentage of changed tiles to re-download under each strategy (55/65/45% vs 35/20/0/45/0%) and the underlying reference ages (30 vs 10 days)",
+      "linked_by": "dashed arrows colour-matched to the source satellite, connecting a chosen reference image to the day it is compared against, positioned along the shared Day 1-51 timeline",
+      "result_cells": "boxed '% change' labels under each compared day, summarized by the orange 'many' vs blue 'much fewer' caption bars"
+    },
+    "key_idea": "Letting a satellite pick its freshest reference image from anywhere in the constellation, not just its own history, cuts the average reference age from 30 to 10 days and the re-downloaded tile fraction from about 55% to 15%.",
+    "reading_order": "panel (a) first for context, then left to right along the shared Day 1-51 timeline in (b) and (c), following the dashed arrows from each chosen reference image down to the ground station's % change boxes"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 3.33,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue satellite icon and its timeline/arrows"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red satellite icon and its timeline/arrows"
+      },
+      {
+        "hex": "#3d9a00",
+        "used_for": "green satellite icon and its timeline/arrows"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "grey background bar behind the panel-(b) caption"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue 'much fewer' emphasis text in the panel-(c) caption"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "orange 'many' emphasis text in the panel-(b) caption"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin coloured dash-dot lines forming each satellite's timeline; thin black curved dashed arrows linking reference images",
+    "corners": "mixed",
+    "arrows": "curved black dashed arrows tracing which image serves as reference; straight solid arrows, coloured by satellite, running down to the ground station",
+    "font": "Calibri sans, bold for day labels and panel captions",
+    "icons": "small raster daily photo thumbnails plus small satellite/Earth/ground-station glyph icons colour-coded per satellite"
+  },
+  "encoding": {
+    "color_means": "blue/red/green identify which of the three satellites captured or holds an image; orange 'many' vs blue 'much fewer' contrast the two captions' verdicts",
+    "line_style_means": "dashed curved arrows trace which past image is used as a reference; solid straight arrows carry an image down to the ground station",
+    "state_means": "the two strategies are told apart by which images the dashed reference arrows connect (same-colour only in (b) vs any colour in (c)) and by the resulting % change boxes",
+    "marker_means": "no numbered markers; percentage labels under each compared day report the worked change fraction, with white vs partly-filled boxes showing unchanged vs changed tiles",
+    "emphasis": "colour-coded 'many' (orange) vs 'much fewer' (blue) caption text under each panel drives home the improvement at a glance",
+    "reusable_patterns": [
+      "a shared day-by-day timeline repeated under two reference-selection policies, with dashed arrows and a %-change readout marking the only thing that differs"
+    ],
+    "weaknesses": [
+      "the small raster satellite/Earth icons in (a) carry no text labels, so the colour-to-satellite mapping must be inferred from (b)/(c)",
+      "the ground-station row itself is not explicitly labelled"
+    ]
+  },
+  "tags": [
+    "satellite-imagery",
+    "compression",
+    "reference-image-selection",
+    "downlink",
+    "constellation",
+    "Earth+"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Earth+: Constellation-Wide"
+    ],
+    "evidence": [
+      "Figure 6 gives an illustrative example of this contrast with a constellation of three satellites",
+      "the freshest reference is only ten days old rather than 30 days",
+      "reduces the age of reference images by 3× (30 days to 10 days)"
+    ]
+  },
+  "summary": "Figure 6 illustrates why Earth+ shares reference images across an entire satellite constellation instead of restricting each satellite to its own history. Panel (a) sets up three satellites, shown in different colours, that repeatedly photograph the same ground area while orbiting Earth. Panels (b) and (c) lay out the same Day 1-51 timeline twice: under satellite-local referencing (b), each satellite can only compare a new image against its own past images, so by Day 31/41/51 the reference is up to 30 days old and 55%/65%/45% of tiles have changed and must be downloaded; under constellation-wide referencing (c), dashed arrows instead pull the freshest available image from any of the three satellites, cutting the maximum reference age to 10 days and the changed-tile fraction to 35%/20%/0%/45%/0%. The colour-coded caption bars ('many' in orange versus 'much fewer' in blue) summarize the resulting fresher references and far smaller re-download volume.",
+  "summary_zh": "该图展示Earth+跨星座共享参考图像的机制：(a)三颗卫星拍摄同一区域；(b)仅用本星历史图像做参考，最长30天导致变化区域达55%-65%；(c)可用星座内任意卫星最新图像做参考，最长仅10天，变化区域降至0%-45%，需下载量大减。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

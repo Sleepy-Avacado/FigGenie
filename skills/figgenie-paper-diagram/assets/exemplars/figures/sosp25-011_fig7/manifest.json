@@ -1,0 +1,42 @@
+{
+  "id": "sosp25-011_fig7",
+  "paper_id": "sosp25-011",
+  "fig": "7",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 7. HeteroInfer partitions the weight tensor based on the row dimension, and dispatches computational loads to the different backends.",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.67,
+  "n_components": 13,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-011/src/fig7_row-cutting.svg",
+    "preview.png": "lab/extracted/sosp25-011/src/fig7_row-cutting.png",
+    "print.png": "lab/extracted/sosp25-011/sosp25-011_fig7_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Stacked (not side-by-side) two-panel: an abstract matrix row-split on top and its concrete fork-join execution graph below share one orange-NPU/blue-GPU colour code end to end, at 13 components and 9 flows.",
+      "what_to_learn": "Stack an abstract data-partition diagram above the concrete execution graph it produces, and carry one colour pair (orange/blue) through both so a reader can trace the same partition from the matrix down into the parallel sub-graphs."
+    }
+  ]
+}

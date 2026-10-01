@@ -1,0 +1,181 @@
+{
+  "paper_id": "sosp23-016",
+  "fig": "4",
+  "system": {
+    "name": "vLLM",
+    "one_liner": "an LLM serving system using PagedAttention for near-zero-waste, flexible KV cache management",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Scheduler",
+        "role": "centralized coordinator of distributed GPU workers",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "KV Cache Manager",
+        "role": "manages KV cache blocks in a paged fashion via block tables",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Block tables",
+        "role": "maps logical to physical KV cache blocks",
+        "container": "KV Cache Manager",
+        "novel": true
+      },
+      {
+        "name": "CPU Block Allocator",
+        "role": "manages physical blocks swapped to CPU RAM",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU Block Allocator",
+        "role": "manages physical KV cache blocks on GPU",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Worker 0",
+        "role": "executes model shard 0 with its cache engine",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cache Engine",
+        "role": "manages physical KV cache memory per worker",
+        "container": "Worker",
+        "novel": true
+      },
+      {
+        "name": "Model Shard 0",
+        "role": "holds a partition of the model for distributed execution",
+        "container": "Worker 0",
+        "novel": false
+      },
+      {
+        "name": "Worker N - 1",
+        "role": "additional distributed GPU worker",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Scheduler",
+        "to": "Worker 0",
+        "what": "control messages (input token IDs, block tables)",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Worker N - 1",
+        "what": "control messages (input token IDs, block tables)",
+        "step": null
+      },
+      {
+        "from": "KV Cache Manager",
+        "to": "CPU Block Allocator",
+        "what": "physical block allocation instructions",
+        "step": null
+      },
+      {
+        "from": "KV Cache Manager",
+        "to": "GPU Block Allocator",
+        "what": "physical block allocation instructions",
+        "step": null
+      }
+    ],
+    "key_idea": "A centralized scheduler with a paged KV cache manager coordinates multiple distributed GPU workers, each running a model shard and a local cache engine that share a common block mapping.",
+    "reading_order": "left to right: Scheduler and KV Cache Manager with its allocators on the left feed control messages to a vertical stack of Worker boxes on the right."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.71,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9ead3",
+        "used_for": "Scheduler box"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "KV Cache Manager box"
+      },
+      {
+        "hex": "#f4cccc",
+        "used_for": "block table cells"
+      },
+      {
+        "hex": "#fce5cd",
+        "used_for": "CPU Block Allocator box"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "GPU Block Allocator box"
+      },
+      {
+        "hex": "#c9daf8",
+        "used_for": "Worker boxes (distributed GPU workers)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black stroke (~0.32pt), square corners",
+    "font": "sans-serif, 5-10pt",
+    "corners": "square",
+    "arrows": "thin black connecting lines with minimal arrowheads",
+    "icons": "one small bitmap icon on the worker stack"
+  },
+  "encoding": {
+    "color_means": "green = scheduler, gray = KV cache manager, pink = block table, orange/yellow = CPU/GPU block allocators, blue = distributed GPU workers",
+    "line_style_means": null,
+    "emphasis": "color-coded boxes separate scheduler-side cache management from the repeated distributed worker units on the right",
+    "reusable_patterns": [
+      "centralized manager coordinating a stack of repeated worker units with an ellipsis"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-serving",
+    "kv-cache",
+    "paged-attention",
+    "memory-management",
+    "gpu",
+    "distributed-inference"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Method (p.5)",
+      "4 Method (p.8)",
+      "4 Method (p.9)"
+    ],
+    "evidence": [
+      "The architecture of vLLM is shown in Fig. 4.",
+      "vLLM adopts a centralized scheduler to coordinate the execution of distributed GPU workers.",
+      "vLLM includes a CPU block allocator to manage the physical blocks swapped to CPU RAM"
+    ]
+  },
+  "summary": "vLLM is an LLM serving system built around PagedAttention, an attention algorithm that manages the KV cache like paged virtual memory to eliminate fragmentation and enable memory sharing. Figure 4 gives the system overview: a centralized Scheduler coordinates a KV Cache Manager, which tracks logical-to-physical block mappings in block tables and delegates physical memory management to a GPU Block Allocator and a CPU Block Allocator (used for swapping evicted blocks to CPU RAM). The scheduler broadcasts control messages, including per-request block tables, to a set of distributed GPU workers (Worker 0 through Worker N-1), each pairing a local Cache Engine with a shard of the model. The diagram is a simple color-coded box layout with the scheduler-side components on the left and the repeated worker units stacked on the right.",
+  "summary_zh": "图4展示vLLM系统架构：绿色调度器（Scheduler）通过KV缓存管理器和CPU/GPU块分配器管理分页KV缓存，并向右侧多个分布式GPU Worker（各含缓存引擎和模型分片）广播控制消息。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP23"
+}

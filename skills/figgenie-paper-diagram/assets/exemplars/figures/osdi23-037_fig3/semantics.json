@@ -1,0 +1,245 @@
+{
+  "paper_id": "osdi23-037",
+  "fig": "3",
+  "system": {
+    "name": "eZNS",
+    "one_liner": "an elastic zoned-namespace layer that lets multiple tenants share a commodity ZNS SSD's active zone and bandwidth resources",
+    "domain": [
+      "storage",
+      "os-kernel"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Layer 1: Tenant",
+        "role": "co-located tenants, each running a storage application (e.g. blob store, F2FS, RocksDB)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Layer 2: Namespace",
+        "role": "a tenant exclusively owns one or several namespaces based on required capacity",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Layer 3: Logical zone",
+        "role": "independently configurable logical zones exposing a private logical block address space",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Layer 4: Physical zone",
+        "role": "several physical zones compose a logical zone; physical zones are not shared across logical zones",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Layer 5: SSD ch./die",
+        "role": "a physical zone is placed on one channel/die per the device specification",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Applications",
+        "role": "tenant storage applications issuing I/O",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Zoned block device layer",
+        "role": "central component abstracting away architectural details of a ZNS SSD: namespace/logical-zone management, logical-to-physical zone mapping, and I/O scheduling",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NVMe driver",
+        "role": "host-side driver submitting NVMe commands to the device",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host CPU",
+        "role": "issues read (rd), write (wr) and reset requests to the controller",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Controller CPU",
+        "role": "SSD controller CPU relaying rd/wr/reset requests to zone mapping",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Zone Mapping",
+        "role": "orchestrates logical-to-physical zone mapping; completes zone resets by invalidating the mapping, with NAND blocks erased lazily afterward",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Write Cache",
+        "role": "buffers reads/writes and flushes write data to NAND flash asynchronously",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NAND Flash",
+        "role": "physical flash storage receiving reads directly and writes/erases asynchronously",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Layer 1: Tenant",
+        "to": "Layer 2: Namespace",
+        "what": "a tenant owns one or more namespaces",
+        "step": null
+      },
+      {
+        "from": "Layer 2: Namespace",
+        "to": "Layer 3: Logical zone",
+        "what": "a namespace exposes independently configurable logical zones",
+        "step": null
+      },
+      {
+        "from": "Layer 3: Logical zone",
+        "to": "Layer 4: Physical zone",
+        "what": "a logical zone comprises several physical zones",
+        "step": null
+      },
+      {
+        "from": "Layer 4: Physical zone",
+        "to": "Layer 5: SSD ch./die",
+        "what": "a physical zone is placed on one channel/die",
+        "step": null
+      },
+      {
+        "from": "Applications",
+        "to": "Zoned block device layer",
+        "what": "application I/O requests",
+        "step": null
+      },
+      {
+        "from": "Zoned block device layer",
+        "to": "NVMe driver",
+        "what": "translated commands submitted via the NVMe driver",
+        "step": null
+      },
+      {
+        "from": "Host CPU",
+        "to": "Controller CPU",
+        "what": "read (rd), write (wr), and reset requests/responses",
+        "step": null
+      },
+      {
+        "from": "Controller CPU",
+        "to": "Zone Mapping",
+        "what": "read (rd), write (wr), and reset requests/responses",
+        "step": null
+      },
+      {
+        "from": "Zone Mapping",
+        "to": "Write Cache",
+        "what": "read (rd) and write (wr) requests/responses only; resets do not reach the write cache",
+        "step": null
+      },
+      {
+        "from": "Write Cache",
+        "to": "NAND Flash",
+        "what": "read (rd) pass-through plus an asynchronous write-cache flush (gray)",
+        "step": null
+      },
+      {
+        "from": "Zone Mapping",
+        "to": "NAND Flash",
+        "what": "lazy NAND block erase completing a zone reset after the mapping is invalidated (gray, bypassing the write cache)",
+        "step": null
+      }
+    ],
+    "key_idea": "A multi-tenant ZNS SSD deployment nests five layers (tenant to namespace to logical zone to physical zone to channel/die), with reads, writes, and resets following partly divergent I/O paths to NAND flash.",
+    "reading_order": "Three panels left to right: layered containment view, then the matching software stack, then the I/O path with colored read/write/reset arrows down to NAND flash."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.14,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d6d6d6",
+        "used_for": "Layer 1: Tenant band (lightest)"
+      },
+      {
+        "hex": "#c0c0c0",
+        "used_for": "Layer 2: Namespace band"
+      },
+      {
+        "hex": "#a9a9a9",
+        "used_for": "Layer 3: Logical zone band"
+      },
+      {
+        "hex": "#929292",
+        "used_for": "Layer 4: Physical zone band"
+      },
+      {
+        "hex": "#797979",
+        "used_for": "Layer 5: SSD ch./die band (darkest)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.8pt) black borders, solid throughout",
+    "font": "Helvetica Neue sans-serif, 8pt, non-bold throughout",
+    "corners": "rounded",
+    "arrows": "many thin paired up/down arrows; black in the layered/stack panels, colored (blue=rd, red=wr, green=reset, gray=asynchronous/lazy operations) in the I/O path panel",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "panel (a)'s five layers darken from light gray (Layer 1: Tenant) to dark gray (Layer 5: SSD ch./die) purely to show nesting depth, not a semantic category; in panel (c), blue arrows are reads (rd), red are writes (wr), green are resets, and gray arrows mark asynchronous/lazy operations (write-cache flush, lazy block erase after a reset)",
+    "line_style_means": "paired up/down arrows between each layer show request/response traffic in each direction; a long gray arrow skipping from Zone Mapping directly to NAND Flash shows the lazy erase completing after a reset, bypassing the Write Cache",
+    "emphasis": "aligning three panels side by side lets the same five conceptual layers be read as a containment hierarchy, a software stack, and a concrete colored I/O path all at once",
+    "reusable_patterns": [
+      "progressively shaded stacked boxes to show a containment hierarchy",
+      "three side-by-side panels re-explaining the same layers as structure, software, and data path",
+      "color-coded request types (read/write/reset) with a separate color for asynchronous/background operations"
+    ],
+    "weaknesses": [
+      "no explicit legend box for the rd/wr/reset colors, only inline colored text at the top of panel (c)",
+      "panel (a)'s gray shades are only distinguishable layer-to-layer and would not reproduce well in grayscale print or for colorblind readers"
+    ]
+  },
+  "tags": [
+    "ZNS-SSD",
+    "multi-tenancy",
+    "I/O-path",
+    "software-stack",
+    "background-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Performance Characterization of a ZNS SSD (p.5)"
+    ],
+    "evidence": [
+      "We consider a typical system setup with a five-layered view to facilitate the understanding of a multi-tenant ZNS SSD deployment",
+      "The write cache flushes data to the NAND flash asynchronously.",
+      "Zone resets are completed after invalidating the mapping layer, where NAND blocks are erased lazily."
+    ]
+  },
+  "summary": "This figure presents the multi-tenant ZNS SSD system model that motivates eZNS, in three aligned panels. Panel (a) shows a five-layer containment view, progressively shaded from light to dark: Tenant, Namespace, Logical zone, Physical zone, and SSD channel/die, each layer owning or configuring the one below it. Panel (b) shows the matching software stack: Applications submit I/O to the Zoned block device layer, which is submitted through the NVMe driver. Panel (c) traces the I/O path through Host CPU, Controller CPU, Zone Mapping, Write Cache, and NAND Flash, with colored arrows distinguishing read (blue), write (red), and reset (green) traffic; resets stop at Zone Mapping, and gray arrows show the write cache's asynchronous flush and the lazy NAND block erase that completes a reset after the mapping layer is invalidated.",
+  "summary_zh": "该图以三面板展示多租户ZNS SSD模型：(a)五层包含关系，颜色由浅到深；(b)软件栈；(c)I/O路径中蓝=读、红=写、绿=重置，灰色箭头表示异步落盘与惰性擦除。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

@@ -1,0 +1,198 @@
+{
+  "paper_id": "nsdi24-062",
+  "fig": "5",
+  "system": {
+    "name": "Harmonic",
+    "one_liner": "a hardware-assisted system that enforces per-tenant RDMA performance isolation in public clouds using an FPGA-based PCIe switch",
+    "domain": [
+      "networking",
+      "cloud"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "RNIC",
+        "role": "issues the DMA read/write TLPs that PIPS inspects",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PCIe Switch (M2)",
+        "role": "routes TLPs at line rate to their corresponding destinations",
+        "container": "FPGA",
+        "novel": true
+      },
+      {
+        "name": "Host-PIPS Comm. Interface (M3)",
+        "role": "handles synchronization of address-to-object/tenant mappings between host and PIPS",
+        "container": "FPGA",
+        "novel": true
+      },
+      {
+        "name": "Mapping Manager (M4)",
+        "role": "handles synchronization of address-to-object/tenant mappings between host and PIPS",
+        "container": "FPGA",
+        "novel": true
+      },
+      {
+        "name": "Statistics",
+        "role": "collects per-tenant RDMA traffic statistics",
+        "container": "FPGA",
+        "novel": true
+      },
+      {
+        "name": "TLP Analyzer (M5)",
+        "role": "inspects TLP headers of RNIC-initiated DMA read/write requests and matches them to tenant mappings",
+        "container": "FPGA",
+        "novel": true
+      },
+      {
+        "name": "PCIe PHY",
+        "role": "physical-layer transceivers on the upstream and downstream PCIe ports",
+        "container": "FPGA",
+        "novel": false
+      },
+      {
+        "name": "Host",
+        "role": "server whose memory is targeted by RNIC DMA and that runs the kernel driver",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Kernel Driver (M1)",
+        "role": "maintains the latest address-to-object/tenant mappings",
+        "container": "Host",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "RNIC",
+        "to": "PCIe Switch (M2)",
+        "what": "PCIe TLPs via the downstream port",
+        "step": null
+      },
+      {
+        "from": "PCIe Switch (M2)",
+        "to": "TLP Analyzer (M5)",
+        "what": "mirrored TLP headers for asynchronous inspection",
+        "step": 1
+      },
+      {
+        "from": "TLP Analyzer (M5)",
+        "to": "Mapping Manager (M4)",
+        "what": "matched object/tenant identification",
+        "step": 2
+      },
+      {
+        "from": "Mapping Manager (M4)",
+        "to": "Kernel Driver (M1)",
+        "what": "synchronized address-to-object/tenant mappings",
+        "step": 3
+      },
+      {
+        "from": "Host-PIPS Comm. Interface (M3)",
+        "to": "Kernel Driver (M1)",
+        "what": "host-PIPS mapping synchronization",
+        "step": null
+      },
+      {
+        "from": "Statistics",
+        "to": "Kernel Driver (M1)",
+        "what": "RDMA traffic statistics",
+        "step": null
+      },
+      {
+        "from": "PCIe Switch (M2)",
+        "to": "Host",
+        "what": "PCIe TLPs via the upstream port (main forwarding path)",
+        "step": null
+      }
+    ],
+    "key_idea": "PIPS uses five FPGA-resident modules to forward PCIe TLPs at line rate while asynchronously mirroring and matching them against tenant mappings, decoupling analysis from the switch's forwarding path.",
+    "reading_order": "Top to bottom from the RNIC into the FPGA's PCIe Switch and its four sibling modules, then sideways to the Host's Kernel Driver."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.48,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff9933",
+        "used_for": "dashed RNIC-to-Host arrows and the asynchronous TLP-analysis path"
+      },
+      {
+        "hex": "#3366ff",
+        "used_for": "Host-to-RNIC arrow per the legend"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "fill of the FPGA/PIPS module boxes (M2-M5, Statistics)"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "hatched PCIe PHY strips and the dashed FPGA boundary"
+      },
+      {
+        "hex": "#163a6e",
+        "used_for": "fill of the Host / Kernel Driver (M1) box"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.75pt borders, mostly solid with dashing on the FPGA boundary and the RNIC-to-Host analysis path",
+    "font": "Calibri sans-serif, 6-9pt, mostly regular weight with module labels (M1-M5) set apart",
+    "corners": "square",
+    "arrows": "orthogonal arrows with filled triangular heads; dashed orange arrows carry plain (non-circled) digit labels 1-3, solid black double arrows link FPGA modules to the Kernel Driver",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange dashed = RNIC-to-Host asynchronous analysis path, blue = Host-to-RNIC, black double arrows = bidirectional Host-PIPS synchronization; navy vs. light-green fill separates the Host side from the FPGA/PIPS side",
+    "line_style_means": "dashing marks the asynchronous TLP-analysis path that the caption says is decoupled from the PCIe switch's main forwarding path",
+    "emphasis": "the five PIPS modules are grouped inside a dashed FPGA boundary, visually separating the novel hardware from the existing RNIC and Host",
+    "reusable_patterns": [
+      "host-device split with a color-coded arrow legend",
+      "numbered path overlaid on a modular hardware block diagram"
+    ],
+    "weaknesses": [
+      "module, port, and legend labels are dense and small at this size",
+      "physical port topology and logical module dataflow are interleaved in one diagram"
+    ]
+  },
+  "tags": [
+    "RDMA",
+    "PCIe",
+    "FPGA",
+    "performance-isolation",
+    "hardware-offload",
+    "public-cloud"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Programmable Intelligent PCIe Switch (p.7)",
+      "4 Programmable Intelligent PCIe Switch (p.8)"
+    ],
+    "evidence": [
+      "PIPS has five Modules (Figure 5): (M1) kernel driver, (M2) PCIe switch",
+      "The PCIe switch (M2) is the key component of Harmonic.",
+      "the upstream port is directly connected to the host using the PCIe edge connecter"
+    ]
+  },
+  "summary": "This figure shows the internal architecture of the Programmable Intelligent PCIe Switch (PIPS), the FPGA-based hardware component that lets Harmonic monitor tenant RDMA behavior through PCIe. PIPS comprises five modules housed in a dashed FPGA boundary: a PCIe Switch (M2) that forwards TLPs at line rate between an upstream port to the Host and a downstream port to the RNIC; a TLP Analyzer (M5) that inspects RNIC-issued DMA read/write TLP headers; a Mapping Manager (M4) and Host-PIPS Comm. Interface (M3) that synchronize address-to-object/tenant mappings with the Host's Kernel Driver (M1); and a Statistics block collecting traffic counts. Orange dashed arrows trace the asynchronous TLP-analysis path, explicitly decoupled per the caption from the switch's solid forwarding path, while solid black double arrows show Host-PIPS synchronization.",
+  "summary_zh": "该图展示了 Harmonic 中可编程智能 PCIe 交换机（PIPS）的内部架构：PCIe 交换机负责转发 TLP，TLP 分析器异步检测并匹配租户映射，映射管理器与主机内核驱动同步，虚线表示与转发路径解耦的异步分析路径。",
+  "confidence": "medium",
+  "notes": "The exact endpoints of the plain-digit step labels (1/2/3) along the dashed path are inferred from the caption and module roles rather than spelled out step-by-step in the text.",
+  "venue": "NSDI24"
+}

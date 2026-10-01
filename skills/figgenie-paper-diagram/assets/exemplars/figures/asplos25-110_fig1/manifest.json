@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-110_fig1",
+  "paper_id": "asplos25-110",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "overview of  a  today s gpu architecture with tightly coupled integration of ten",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "illustrator",
+  "aspect": 1.27,
+  "n_components": 18,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-110/src/fig1_fig-cluster-overview.svg",
+    "preview.png": "lab/extracted/asplos25-110/src/fig1_fig-cluster-overview.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "(a) baseline cluster / (b) proposed cluster with identical bottom anchor box (Shared LLC) so the delta is structural.",
+      "what_to_learn": "Keep one component identical and in the same place in both panels; it becomes the fixed point the reader measures the change against."
+    }
+  ]
+}

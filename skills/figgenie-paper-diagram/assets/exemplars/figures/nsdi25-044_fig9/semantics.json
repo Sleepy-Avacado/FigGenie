@@ -1,0 +1,448 @@
+{
+  "paper_id": "nsdi25-044",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "ADR",
+    "one_liner": "an adaptive fail-slow detection library that tracks value and update-frequency history to flag slow faults",
+    "domain": [
+      "distributed systems",
+      "fault tolerance",
+      "reliability"
+    ],
+    "abstraction": "runtime library"
+  },
+  "content": {
+    "groups": [
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how ADR updates value/frequency state from a traced variable and decides slow, fatal, or reset",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "WAL.java",
+        "kind": "label",
+        "role": "names the source file whose execution produces the traced variable X",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "X",
+        "kind": "label",
+        "role": "traced variable in the code's threshold check, highlighted in the snippet",
+        "container": "WAL.java",
+        "highlighted": true
+      },
+      {
+        "name": "X_new",
+        "kind": "label",
+        "role": "newest sampled value of the traced variable, feeding both update paths",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "① Update value",
+        "kind": "label",
+        "role": "first stage: refresh value and value-state history from X_new",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Value",
+        "kind": "label",
+        "role": "header for the value-history stack",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "X_new > T",
+        "kind": "box",
+        "role": "compares the newest value to fixed threshold T",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "saturated?",
+        "kind": "label",
+        "role": "decision on whether the value history has enough samples",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "X_new > X_p99",
+        "kind": "box",
+        "role": "compares the newest value to its own p99 history once saturated",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "&",
+        "kind": "icon",
+        "role": "AND gate combining the saturated p99 check into the Slow signal",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "Slow",
+        "kind": "label",
+        "role": "output flag raised when a value threshold or p99 check trips",
+        "container": "① Update value",
+        "highlighted": true
+      },
+      {
+        "name": "Value state",
+        "kind": "label",
+        "role": "header for the value-state history",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "S, N, …, N",
+        "kind": "row",
+        "role": "recent history of value states",
+        "container": "① Update value",
+        "highlighted": false
+      },
+      {
+        "name": "② Update frequency",
+        "kind": "label",
+        "role": "second stage: refresh update-frequency history from timestamps",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Time_new − Time_latest",
+        "kind": "box",
+        "role": "computes the gap since the variable's last update",
+        "container": "② Update frequency",
+        "highlighted": false
+      },
+      {
+        "name": "Frequency",
+        "kind": "label",
+        "role": "header for the update-frequency history",
+        "container": "② Update frequency",
+        "highlighted": false
+      },
+      {
+        "name": "F_1, …, F_new",
+        "kind": "row",
+        "role": "recent history of update-frequency samples",
+        "container": "② Update frequency",
+        "highlighted": false
+      },
+      {
+        "name": "Frequency state",
+        "kind": "label",
+        "role": "header for the frequency-state comparison",
+        "container": "② Update frequency",
+        "highlighted": false
+      },
+      {
+        "name": "F_new > F_upp",
+        "kind": "box",
+        "role": "detects a sudden increase in update frequency",
+        "container": "② Update frequency",
+        "highlighted": false
+      },
+      {
+        "name": "F_new < F_low",
+        "kind": "box",
+        "role": "detects a drop in update frequency",
+        "container": "② Update frequency",
+        "highlighted": false
+      },
+      {
+        "name": "③ Check fatal",
+        "kind": "label",
+        "role": "third stage: combine frequency/value states into Reset, Slow, or Fatal",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Frequency state checker",
+        "kind": "box",
+        "role": "decides higher vs lower frequency state",
+        "container": "③ Check fatal",
+        "highlighted": false
+      },
+      {
+        "name": "Reset",
+        "kind": "label",
+        "role": "action resetting sliding windows on a workload change",
+        "container": "③ Check fatal",
+        "highlighted": true
+      },
+      {
+        "name": "Value state checker",
+        "kind": "box",
+        "role": "decides whether a value slowdown is sustained",
+        "container": "③ Check fatal",
+        "highlighted": false
+      },
+      {
+        "name": "Fatal",
+        "kind": "label",
+        "role": "terminal slowness level identifying a confirmed slow fault",
+        "container": "③ Check fatal",
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "X",
+        "to": "X_new",
+        "what": "code execution produces the sampled value",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "X_new",
+        "to": "Value",
+        "what": "pushed onto the value history",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "X_new",
+        "to": "Time_new − Time_latest",
+        "what": "each update is timestamped",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "X_new > T",
+        "to": "Slow",
+        "what": "threshold exceeded",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "saturated?",
+        "to": "X_new > X_p99",
+        "what": "yes: history is saturated",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "saturated?",
+        "to": "X_new > T",
+        "what": "no: use fixed threshold T",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "X_new > X_p99",
+        "to": "&",
+        "what": "p99 exceeded",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "&",
+        "to": "Slow",
+        "what": "combined condition true",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Slow",
+        "to": "Value state checker",
+        "what": "slow signal feeds the fatal check",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Time_new − Time_latest",
+        "to": "Frequency",
+        "what": "gap recorded into frequency history",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Frequency",
+        "to": "Frequency state",
+        "what": "history compared against bounds",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Frequency state",
+        "to": "Frequency state checker",
+        "what": "higher/lower classification",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Frequency state checker",
+        "to": "Reset",
+        "what": "higher: workload increase, reset windows",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Frequency state checker",
+        "to": "Value state checker",
+        "what": "lower: check whether the slowdown is real",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Value state checker",
+        "to": "Fatal",
+        "what": "slower: sustained slowdown confirmed",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Value state checker",
+        "to": "Reset",
+        "what": "normal: adapt to lighter workload",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Slow",
+        "Fatal",
+        "Reset"
+      ],
+      "transitions": [
+        {
+          "from": "Frequency state checker",
+          "to": "Reset",
+          "guard": "higher (sudden increase in update frequency)"
+        },
+        {
+          "from": "Frequency state checker",
+          "to": "Value state checker",
+          "guard": "lower (update frequency drops)"
+        },
+        {
+          "from": "Value state checker",
+          "to": "Fatal",
+          "guard": "slower (sustained slowdown in value)"
+        },
+        {
+          "from": "Value state checker",
+          "to": "Reset",
+          "guard": "normal (adapts to lighter workload)"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "did the update frequency increase or decrease?",
+          "branches": [
+            "higher: Reset (heavier workload)",
+            "lower: check Value state checker"
+          ]
+        },
+        {
+          "question": "is the value slowdown sustained (Value state checker)?",
+          "branches": [
+            "slower: Fatal",
+            "normal: Reset"
+          ]
+        },
+        {
+          "question": "does X_new exceed its threshold (T or p99)?",
+          "branches": [
+            "yes: Slow",
+            "no: continue"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "ADR raises value/frequency history into two state checkers, using a frequency-increase signal to reset windows and a sustained value slowdown to declare a fatal fail-slow event.",
+    "reading_order": "Top-left code snippet produces X_new, flowing right into ① Update value and down into ② Update frequency, both feeding ③ Check fatal."
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.78,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae3f3",
+        "used_for": "background fill of the '① Update value' zone"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "background fill of the '② Update frequency' zone"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "background fill of the '③ Check fatal' zone"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "the '① Update value' header banner and blue-highlighted text/boxes (X_new, X)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "fill of neutral boxes such as the checkers and the code snippet"
+      }
+    ],
+    "background": "white, with pastel-tinted stage zones",
+    "fill": "flat",
+    "stroke": "thin (~0.38pt) dark outlines; mostly solid arrows, with a dashed execution arrow and a dashed asynchronous connector",
+    "font": "mixed sans/math (Calibri-Bold, CambriaMath), 5-7.5pt, partly bold",
+    "corners": "rounded",
+    "arrows": "many straight arrowheads (21) for the decision branches; no curved arrows",
+    "icons": "none (the '&' AND-gate is a text glyph, not an icon)"
+  },
+  "encoding": {
+    "color_means": "blue/peach/green zone tints separate the three numbered stages (update value, update frequency, check fatal); red text marks the Slow/Fatal/Reset outputs",
+    "line_style_means": "solid arrows are synchronous calls; dashed arrows are asynchronous, per the bottom legend, e.g. the code's execution arrow into X_new",
+    "state_means": "the three colour-tinted zones distinguish the three numbered processing stages, not before/after states",
+    "marker_means": "circled ①②③ number the three stages; red text marks the three possible decision outcomes (Slow, Reset, Fatal)",
+    "emphasis": "red bold text isolates the three decision outcomes (Slow, Fatal, Reset) against the otherwise black-and-pastel diagram",
+    "reusable_patterns": [
+      "a traced value/frequency history feeding a small state checker with red terminal outcomes, repeated for value and frequency"
+    ],
+    "weaknesses": [
+      "the two 'Slow' outputs and their downstream wiring into the Value state checker are visually dense and easy to misread"
+    ]
+  },
+  "tags": [
+    "fail-slow detection",
+    "decision logic",
+    "sliding window",
+    "adaptive threshold",
+    "state checker"
+  ],
+  "provenance": {
+    "sections": [
+      "6 An Adaptive Fail-Slow Detection Library"
+    ],
+    "evidence": [
+      "ADR monitors both the value and the update frequency of some tracing variables defined in the system code",
+      "It employs two state checkers to make decisions, which either trigger internal actions (reset windows)",
+      "if they show a sustained slowdown, ADR identifies a slow fault and triggers a fatal action"
+    ]
+  },
+  "summary": "Figure 9 gives an overview of ADR, the fail-slow detection library, as three colour-coded numbered stages. A WAL.java code snippet shows the traced variable X being sampled into X_new at each execution. Stage (1) Update value pushes X_new onto a value history, checks it against a fixed threshold T or, once the saturated history allows it, against its own p99, producing a red 'Slow' signal and an updated value state. Stage (2) Update frequency records the time gap since the last update into a frequency history and classifies it against upper/lower bounds. Stage (3) Check fatal chains a Frequency state checker (higher resets the sliding windows as a workload change; lower proceeds) into a Value state checker (slower yields a red 'Fatal' action, normal yields Reset).",
+  "summary_zh": "图9为ADR总览：代码采样出X_new，①更新数值（比较阈值T或p99，得到Slow），②更新频率（比较时间间隔与上下界），③检查致命——频率变高则重置窗口，变低则看数值状态，持续变慢判Fatal，否则重置。",
+  "confidence": "high",
+  "notes": "Corrected base from the prior pass's 'code' to 'mixed': only the top-left WAL.java snippet is code; the rest of the figure is a flowchart of threshold comparisons and state-checker boxes.",
+  "venue": "NSDI25"
+}

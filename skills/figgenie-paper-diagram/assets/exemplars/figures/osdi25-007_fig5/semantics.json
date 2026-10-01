@@ -1,0 +1,218 @@
+{
+  "paper_id": "osdi25-007",
+  "fig": "5",
+  "system": {
+    "name": "EMT",
+    "one_liner": "an OS framework that lets Linux kernels support new, experimental hardware memory-translation architectures",
+    "domain": [
+      "os-kernel",
+      "memory-management",
+      "computer-architecture"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Vanilla Linux",
+        "role": "baseline column showing today's tightly-coupled memory-management stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "EMT-Linux",
+        "role": "column showing Linux extended with the new EMT interface layer",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "VFS Interface",
+        "role": "reference column showing the analogous, already-accepted file-system interface layer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory Mgmt.",
+        "role": "generic, hardware-neutral memory-management code (linux/mm/)",
+        "container": "Vanilla Linux",
+        "novel": false
+      },
+      {
+        "name": "Page Table Mgmt.",
+        "role": "hardware-specific page-table code (linux/arch/*/mm/) directly coupled to Memory Mgmt. with no interface between them",
+        "container": "Vanilla Linux",
+        "novel": false
+      },
+      {
+        "name": "MMU Hardware",
+        "role": "the underlying hardware MMU a page-table implementation targets",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "EMT",
+        "role": "the new proposed generic interface layer decoupling memory management from MMU-specific drivers",
+        "container": "EMT-Linux",
+        "novel": true
+      },
+      {
+        "name": "MMU Driver",
+        "role": "hardware-specific driver implementing a given MMU design (Radix, ECPT, FPT, Hybrid) behind the EMT interface",
+        "container": "EMT-Linux",
+        "novel": true
+      },
+      {
+        "name": "System Calls",
+        "role": "generic file-system system calls (read, fsync) that are hardware/format-neutral",
+        "container": "VFS Interface",
+        "novel": false
+      },
+      {
+        "name": "VFS",
+        "role": "the existing generic file-system interface layer, drawn as the analogy for EMT",
+        "container": "VFS Interface",
+        "novel": false
+      },
+      {
+        "name": "File System",
+        "role": "on-disk-format-specific file system implementation (Ext4, Btrfs) behind VFS",
+        "container": "VFS Interface",
+        "novel": false
+      },
+      {
+        "name": "On-disk",
+        "role": "on-disk data structures (Extent, B-tree) underlying a file system, the hardware-row analogy for MMU Hardware",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Radix",
+        "role": "the conventional radix-tree page-table format, the only option under vanilla Linux and one pluggable option under EMT",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ECPT",
+        "role": "the elastic cuckoo page table format, pluggable under EMT's MMU Driver",
+        "container": "MMU Driver",
+        "novel": false
+      },
+      {
+        "name": "FPT",
+        "role": "another pluggable page-table format under EMT's MMU Driver",
+        "container": "MMU Driver",
+        "novel": false
+      },
+      {
+        "name": "Hybrid",
+        "role": "a fourth pluggable page-table format under EMT's MMU Driver",
+        "container": "MMU Driver",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Memory Mgmt.",
+        "to": "Page Table Mgmt.",
+        "what": "direct coupling with no interface in between",
+        "step": null
+      },
+      {
+        "from": "EMT",
+        "to": "MMU Driver",
+        "what": "generic interface calls dispatched to the selected MMU driver",
+        "step": null
+      },
+      {
+        "from": "System Calls",
+        "to": "VFS",
+        "what": "generic file-system calls",
+        "step": null
+      },
+      {
+        "from": "VFS",
+        "to": "File System",
+        "what": "dispatched to the mounted on-disk format",
+        "step": null
+      }
+    ],
+    "key_idea": "EMT inserts a generic interface layer, analogous to VFS in the file-system stack, between Linux's hardware-neutral memory-management code and hardware-specific MMU drivers, replacing vanilla Linux's tight, interface-less coupling with a pluggable Radix/ECPT/FPT/Hybrid driver model.",
+    "reading_order": "Left to right across three columns (Vanilla Linux, EMT-Linux, VFS Interface), top to bottom within each column from the OS-level generic interface down to the hardware-specific driver and the hardware itself."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.9,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f4b183",
+        "used_for": "orange highlight fill of the EMT box, marking the paper's proposed interface layer"
+      },
+      {
+        "hex": "#2e75b6",
+        "used_for": "blue annotation text/arrows labeling 'Coupled' and 'Proposed layer'"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill of neutral structural boxes (e.g. Memory Mgmt., MMU Hardware)"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "light gray background banding for row/column groups"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.37pt, dashed border around the 'No Interface' box marking the missing layer in vanilla Linux",
+    "font": "Times New Roman serif with Courier New for path names (linux/mm/, linux/arch/*/mm/), 5.5-9pt",
+    "corners": "mixed",
+    "arrows": "very few plain connector lines; the comparison is conveyed mostly by matrix position, not arrows",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange highlights EMT, the paper's proposed interface layer; blue callout text/lines label the 'Coupled' vanilla relationship versus EMT's 'Proposed layer'; gray is the neutral fill for unremarkable boxes",
+    "line_style_means": "a dashed box marks the absent interface ('No Interface') in vanilla Linux, contrasting with EMT's solid, named interface box",
+    "emphasis": "positioning EMT in the same row/role as the well-established VFS interface argues by analogy that a generic MMU interface is just as natural as a generic file-system interface",
+    "reusable_patterns": [
+      "three-column analogy matrix: proposed system, baseline system, and an accepted precedent from a different subsystem, aligned row by row",
+      "dashed box used to represent a structural absence (no interface) rather than an actual component"
+    ],
+    "weaknesses": [
+      "packing three full column stacks plus row labels into one aspect-1.9 figure makes individual cell text small",
+      "the VFS analogy column reuses file-system terms (File System, Ext4, Btrfs) that need translation back to the memory-management terms in the other two columns"
+    ]
+  },
+  "tags": [
+    "memory-translation",
+    "kernel-interface",
+    "vfs-analogy",
+    "mmu-driver",
+    "extensibility",
+    "os-framework"
+  ],
+  "provenance": {
+    "sections": [
+      "4 EMT Design (p.5)"
+    ],
+    "evidence": [
+      "Extensible Memory Translation (EMT) is an OS framework built atop Linux",
+      "Figure 5 gives a high- level overview of EMT",
+      "EMT currently focuses on supporting new memory translation architectures in the OS kernel"
+    ]
+  },
+  "summary": "This figure gives EMT's high-level design by comparing three column stacks: Vanilla Linux, EMT-Linux, and an analogous VFS Interface. In vanilla Linux, hardware-neutral Memory Mgmt. code is directly, tightly coupled ('No Interface') to hardware-specific Page Table Mgmt. code that only understands the Radix format running on MMU Hardware. EMT-Linux inserts a new generic EMT interface between Memory Mgmt. and a pluggable MMU Driver, letting Radix, ECPT, FPT, or Hybrid drivers sit underneath without changing the memory-management code above. The third column shows this is not a new idea: System Calls (read, fsync) already sit above the generic VFS interface, which itself sits above pluggable File System implementations (Ext4, Btrfs) over on-disk formats. The figure argues, by direct structural analogy, that EMT does for MMUs what VFS already does for file systems.",
+  "summary_zh": "该图以三列对比展示EMT设计：Vanilla Linux内存管理与页表代码直接耦合；EMT-Linux插入通用接口，下接可插拔驱动；VFS列作类比。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

@@ -1,0 +1,47 @@
+{
+  "id": "asplos25-096_figtex5",
+  "paper_id": "asplos25-096",
+  "fig": "tex5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Revizor overview. Generate a test case, then generate the contract and traces for that test case.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.64,
+  "n_components": 14,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-096/src/texfig5_overview_4.svg",
+    "preview.png": "lab/extracted/asplos25-096/src/texfig5_overview_4.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar on its left half: an outer frame nests Generator, Leakage Model and Executor regions that each nest a Test Case or trace box, four levels deep, at 14 components and 10 flows.",
+      "what_to_learn": "Nest a shared Test Case object one level inside the Generator region that produced it so both consumers can be drawn pulling from the same box; the record's weakness warns that leaving two halves adjacent without a connecting arrow can hide how they relate, so add one even when space is tight."
+    },
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from block-floorplan by the note-writer: this is a software test-generation pipeline feeding a paired-trace equality/inequality comparison that concludes in a Violation Found ellipse; there is no hardware vocabulary, chip boundary, or physical placement anywhere.",
+      "what_to_learn": "Treat this as a generator/model/executor pipeline instead: fork one test case into a Leakage Model and an Executor that each produce a trace, then join the traces with a visual == / != gate feeding an AND into a bold Violation Found result; draw the missing arrow linking the two halves."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-039_fig7",
+  "paper_id": "nsdi23-039",
+  "fig": "7",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 7: ModelKeeper relies on dynamic programming-like heuristics to measure graph-level model architectural similarity.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.73,
+  "n_components": 7,
+  "n_flows": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-039/nsdi23-039_fig7_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-039/nsdi23-039_fig7_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Medium-confidence matrix exemplar that indexes a dynamic-programming grid with small node-link graphs as its row and column headers, then overlays coloured arrows and text directly on cells to walk through each transition type.",
+      "what_to_learn": "Use miniature diagrams, not just text, as row and column headers when the axes are themselves structured objects, and annotate individual cells with a coloured arrow for each rule the table encodes rather than a separate explanation, ending on one highlighted result cell."
+    }
+  ]
+}

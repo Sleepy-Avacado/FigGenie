@@ -1,0 +1,56 @@
+{
+  "id": "osdi23-049_fig10",
+  "kind": "mechanism",
+  "paper_id": "osdi23-049",
+  "fig": "10",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 10. An illustration of multi-hops remote fork.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "code",
+  "subject": "how a 3-function chain forks itself across machines, tracking page ownership via RDMA and per-hop page tables",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.18,
+  "n_elements": 9,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "zoom_callout": false,
+  "tool": "omnigraffle",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-049/src/fig10_mfork.svg",
+    "preview.png": "lab/extracted/osdi23-049/src/fig10_mfork.png",
+    "print.png": "lab/extracted/osdi23-049/osdi23-049_fig10_p10_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Tracing example code through its multi-hop remote-fork execution shows how each forked function reads the prior hop's output over RDMA from a different machine's DRAM.",
+      "what_to_learn": "code listing paired label-for-label with an adjacent node chain, with per-hop memory boxes drawn beneath the link they belong to",
+      "note_source": "record"
+    }
+  ]
+}

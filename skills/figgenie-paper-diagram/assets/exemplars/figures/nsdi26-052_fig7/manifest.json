@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-052_fig7",
+  "paper_id": "nsdi26-052",
+  "fig": "7",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 7: Frame-level transmission status tracking for trans- parent RTS QoE estimation in RAN, utilizing frame identi- fication from packet metadata and direct link transmission observability.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "matplotlib",
+  "aspect": 1.94,
+  "n_components": 3,
+  "n_flows": 4,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-052/nsdi26-052_fig7_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-052/nsdi26-052_fig7_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "A table-as-lanes variant: each Frame ID is a row and Arrival/Departure time are phase columns in a status table, the oldest incomplete row flagged by an 'Earliest' arrow, paired with a plain device relay diagram.",
+      "what_to_learn": "A phase-lanes device does not need boxes: a literal table works too, with each tracked item as a row (a lane) and each event time as a column (a phase); highlight the one row that matters (here, the earliest still-incomplete frame) instead of adding a separate callout."
+    }
+  ]
+}

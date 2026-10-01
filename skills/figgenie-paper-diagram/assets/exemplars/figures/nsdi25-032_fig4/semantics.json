@@ -1,0 +1,349 @@
+{
+  "paper_id": "nsdi25-032",
+  "fig": "4",
+  "system": {
+    "name": "ntprof",
+    "one_liner": "a profiling system for NVMe-over-TCP that models the storage substrate as a multi-stage Clos-like network of software switches and attaches programmable profiling agents to each modeled queue",
+    "domain": [
+      "storage",
+      "observability",
+      "networking"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Programmer",
+        "role": "defines the profiling task and specifies its configuration",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Profiling Task Specification",
+        "role": "specifications are translated into profiling rules and installed into the corresponding profiling agents",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Workload Specification",
+        "role": "type, size, etc.",
+        "container": "Profiling Task Specification",
+        "novel": true
+      },
+      {
+        "name": "Execution Specification",
+        "role": "application setup",
+        "container": "Profiling Task Specification",
+        "novel": true
+      },
+      {
+        "name": "Profiler Specification",
+        "role": "sample frequency, etc.",
+        "container": "Profiling Task Specification",
+        "novel": true
+      },
+      {
+        "name": "Report Specification",
+        "role": "analyzing statistics, etc.",
+        "container": "Profiling Task Specification",
+        "novel": true
+      },
+      {
+        "name": "initiator",
+        "role": "host issuing I/O submissions, modeled as stages S1-S3",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "S1: blk_mq",
+        "role": "block-layer multi-queue stage",
+        "container": "initiator",
+        "novel": false
+      },
+      {
+        "name": "S2: NVMe/TCP Transport",
+        "role": "NVMe/TCP transport stage",
+        "container": "initiator",
+        "novel": false
+      },
+      {
+        "name": "S3: TCP/IP NStack",
+        "role": "TCP/IP network-stack stage",
+        "container": "initiator",
+        "novel": false
+      },
+      {
+        "name": "S4: Network",
+        "role": "the network switch/fabric between initiator and target",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "target",
+        "role": "host serving I/O, modeled as stages S5-S9",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "S5: TCP/IP NStack",
+        "role": "TCP/IP network-stack stage",
+        "container": "target",
+        "novel": false
+      },
+      {
+        "name": "S6: NVMe/TCP Transport",
+        "role": "NVMe/TCP transport stage",
+        "container": "target",
+        "novel": false
+      },
+      {
+        "name": "S7: blk_mq",
+        "role": "block-layer multi-queue stage",
+        "container": "target",
+        "novel": false
+      },
+      {
+        "name": "S8: NVMe/PCIe",
+        "role": "NVMe/PCIe stage",
+        "container": "target",
+        "novel": false
+      },
+      {
+        "name": "S9: SSD",
+        "role": "physical NVMe drive",
+        "container": "target",
+        "novel": false
+      },
+      {
+        "name": "app1",
+        "role": "example application whose I/O path is traced in red; overlaps with app2 at Stage 2 because both are mapped to the same queue",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "app2",
+        "role": "example application whose I/O path is traced in orange; overlaps with app1 at Stage 2 because both are mapped to the same queue",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "app3",
+        "role": "example application whose I/O path is traced in teal/green",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "app4",
+        "role": "example application whose I/O path is traced in blue",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Modeled Switching Queue",
+        "role": "per-stage queue instance modeling that stage's buffering in the Clos-like software-switch substrate",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Profiling Agent",
+        "role": "Programmable Profiling Agent (PA) attached to each modeled switching queue, running installed profiling rules to collect statistics",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Profiling Analyzer",
+        "role": "reconstructs the entire I/O running profile and performs stipulated analyses",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Analyzing Framework",
+        "role": null,
+        "container": "Profiling Analyzer",
+        "novel": true
+      },
+      {
+        "name": "Profiling Record Collection",
+        "role": null,
+        "container": "Profiling Analyzer",
+        "novel": true
+      },
+      {
+        "name": "Profiling Query",
+        "role": null,
+        "container": "Profiling Analyzer",
+        "novel": true
+      },
+      {
+        "name": "Profiling Report",
+        "role": "the reconstructed profiling report delivered back to the programmer",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Programmer",
+        "to": "Profiling Task Specification",
+        "what": "defines the profiling task and configuration",
+        "step": null
+      },
+      {
+        "from": "Profiling Task Specification",
+        "to": "Profiling Agent",
+        "what": "translated profiling rules installed into agents co-located with modeled switching components",
+        "step": null
+      },
+      {
+        "from": "app1",
+        "to": "S1: blk_mq",
+        "what": "I/O submission path (red)",
+        "step": null
+      },
+      {
+        "from": "app2",
+        "to": "S1: blk_mq",
+        "what": "I/O submission path (orange), merging with app1's path from Stage 2 onward",
+        "step": null
+      },
+      {
+        "from": "app3",
+        "to": "S1: blk_mq",
+        "what": "I/O submission path (teal/green)",
+        "step": null
+      },
+      {
+        "from": "app4",
+        "to": "S1: blk_mq",
+        "what": "I/O submission path (blue)",
+        "step": null
+      },
+      {
+        "from": "S3: TCP/IP NStack",
+        "to": "S4: Network",
+        "what": "submission and completion path crossing between initiator and target",
+        "step": null
+      },
+      {
+        "from": "S4: Network",
+        "to": "S5: TCP/IP NStack",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Profiling Agent",
+        "to": "Profiling Analyzer",
+        "what": "collected profiling records/statistics",
+        "step": null
+      },
+      {
+        "from": "Profiling Analyzer",
+        "to": "Profiling Report",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "ntprof profiles NVMe/TCP by modeling the initiator-target I/O path as 9 pipeline stages (a Clos-like network of software switches), attaching a Profiling Agent to each stage's modeled queue to collect per-app statistics reconstructed into a report.",
+    "reading_order": "Left to right: Programmer configures a Profiling Task Specification that installs Profiling Agents across the initiator (S1-S3)/Network (S4)/target (S5-S9) stage matrix; four apps' colored paths trace through it to the Profiling Analyzer and Report."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.08,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e5b9b5",
+        "used_for": "pink fill of app1's (red-path) modeled-switching-queue icons"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "gold/orange fill of app2's (orange-path) queue icons"
+      },
+      {
+        "hex": "#9dbb61",
+        "used_for": "green fill of app3's (teal-path) queue icons"
+      },
+      {
+        "hex": "#bdd6e8",
+        "used_for": "light-blue fill of app4's (blue-path) queue icons"
+      },
+      {
+        "hex": "#d8d8d8",
+        "used_for": "gray fill of the stage column band backgrounds"
+      },
+      {
+        "hex": "#c05046",
+        "used_for": "app1's red path line (stroke)"
+      },
+      {
+        "hex": "#f59d56",
+        "used_for": "app2's orange path line (stroke)"
+      },
+      {
+        "hex": "#006666",
+        "used_for": "app3's teal path line (stroke)"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "app4's blue path line (stroke)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.49pt default outlines; dashed border around the legend box; each app's path drawn as a distinctly colored line",
+    "corners": "rounded",
+    "arrows": "short black arrows link the control-flow boxes on the left (Programmer to Task Specification, Analyzer to Report); the matrix itself uses colored lines without arrowheads to trace each app's path",
+    "font": "Times New Roman / serif, about 6.5-9pt",
+    "icons": "small CPU/chip-like glyphs for the modeled switching queues, a stacked-disk glyph for the SSD, a person glyph for the Programmer, and document glyphs for the Task Specification/Report boxes"
+  },
+  "encoding": {
+    "color_means": "each app keeps one consistent color across its entire path and queue icons: app1 = red/pink, app2 = orange/gold, app3 = teal/green, app4 = blue; gray bands group stages, white cells mark queues an app does not use",
+    "line_style_means": "a colored line traces each app's specific route through the stage matrix; a shared cell (as at Stage 2 for app1/app2) shows apps mapped to the same physical queue",
+    "emphasis": "renders ntprof's full multi-stage queueing model as an explicit grid so that four example apps' distinct and overlapping I/O paths become directly visible, motivating per-app, per-stage profiling agents",
+    "reusable_patterns": [
+      "apps-by-pipeline-stages matrix with a modeled-queue-plus-agent icon in every used cell",
+      "consistent per-item color coding carried through both path lines and cell fills",
+      "a small control/reporting pipeline attached beside a much larger instrumented data-path matrix"
+    ],
+    "weaknesses": [
+      "at this density (over 300 text boxes) individual queue cells are extremely small and hard to distinguish without zooming",
+      "the text explaining why app1 and app2's paths merge at Stage 2 is cut off ('both are mapped to the...')"
+    ]
+  },
+  "tags": [
+    "NVMe-over-TCP",
+    "profiling",
+    "telemetry",
+    "Clos-network",
+    "queueing-model",
+    "observability",
+    "programmable-agent"
+  ],
+  "provenance": {
+    "sections": [
+      "3 ntprof: An NVMe-over-TCP Profiler (p.6)",
+      "3 ntprof: An NVMe-over-TCP Profiler (p.7)"
+    ],
+    "evidence": [
+      "Figure 4 presents the overall system architecture of ntprof.",
+      "We model the NVMe/TCP-based storage substrate as a multi-stage Clos network [36,88]",
+      "PA refers to the Programmable Profiling Agent, attached to each switching queue."
+    ]
+  },
+  "summary": "ntprof is a profiling system for NVMe-over-TCP that models the initiator-target storage substrate as a multi-stage, Clos-network-like chain of buffered software switches. Figure 4 gives its system overview: a Programmer defines a Profiling Task Specification (workload, execution, profiler, and report settings), translated into rules installed on Profiling Agents (PA) co-located with every Modeled Switching Queue. The right side lays out this queueing model as a matrix of nine pipeline stages, S1-S3 on the initiator (blk_mq, NVMe/TCP Transport, TCP/IP NStack), S4 the Network, and S5-S9 on the target (TCP/IP NStack, NVMe/TCP Transport, blk_mq, NVMe/PCIe, SSD), against four example applications (app1-app4), each drawn as a distinctly colored path through the queues it uses; app1 and app2's paths overlap at Stage 2 because both map to the same queue. Collected agent statistics flow to a Profiling Analyzer that reconstructs the I/O profile into a Profiling Report.",
+  "summary_zh": "该图展示ntprof系统概览：程序员配置的规则装入各队列旁的Profiling Agent；右侧以九阶段矩阵展示四个应用的彩色I/O路径，统计数据经分析器汇总为报告。",
+  "confidence": "high",
+  "notes": "Given the figure's extreme density (over 300 text boxes across a 4-app x 9-stage matrix), components are described at the level of one representative queue/agent per stage rather than enumerating every individual cell; the exact queue-sharing pattern for stages beyond S2 is read from the figure's colors/lines since the caption's explanation is cut off.",
+  "venue": "NSDI25"
+}

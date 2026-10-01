@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-012_fig2",
+  "paper_id": "asplos25-012",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Architecture of a Mixture of Experts in Large Language Models.",
+  "corpus_template": "layered",
+  "direction": "bottom-up",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.48,
+  "n_components": 12,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-012/src/fig2_moe_architecture.svg",
+    "preview.png": "lab/extracted/asplos25-012/src/fig2_moe_architecture.png",
+    "print.png": "lab/extracted/asplos25-012/asplos25-012_fig2_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, medium-confidence layered exemplar of the rare bottom-up direction, stacking a Transformer block from Input Token through self-attention into a Mixture-of-Experts block whose router fans dashed arrows to every expert but bolds the taken path.",
+      "what_to_learn": "When the tiers are literally computation layers of one repeated block, read them bottom-up with input at the floor and output at the ceiling, show repetition with a few offset background rectangles rather than N boxes, and distinguish a router's considered-but-not-taken paths, dashed, from its actual path, bold solid, in one colour."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Medium-confidence nested-stack exemplar reading bottom-up: an outer Transformer box nests the Mixture-of-Experts feed-forward block, which itself nests a Router and its expert FFN boxes, three levels deep, with a stacked background implying repetition.",
+      "what_to_learn": "Nest a sparse sub-block, router plus experts, one level inside the standard block it replaces so the substitution is visible as containment, and show which inner sibling was actually chosen with a bold solid arrow while untaken siblings keep only a dashed candidate arrow."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Two nested replication devices in one block: FFN 1, FFN 2, ellipsis, FFN N sit inside the MoE layer, while pale-yellow shaded layers stacked behind the whole block imply N repeated Transformer layers.",
+      "what_to_learn": "Nest two replication scales in one figure: an in-line ellipsis row (FFN 1, FFN 2, ..., FFN N) for experts inside a layer, and a background shadow stack for the layer itself repeating N times, then use dashed-vs-bold arrows from the router to show which single expert one example token actually takes."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "nsdi25-054_fig2",
+  "paper_id": "nsdi25-054",
+  "fig": "2",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 2: GRANNY architecture (Application code, cross-compiled to WebAssembly, can make calls, via control points, to different backends. The GRANNY core maintains relevant runtime system state and defers to OS system calls when necessary.)",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.42,
+  "n_components": 13,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-054/nsdi25-054_fig2_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-054/nsdi25-054_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar of the parallel-backend variant: three colour-coded backend boxes sit side by side over one shared dashed core-state box, sandwiched between labelled Control-point and System-call arrows, across 13 components.",
+      "what_to_learn": "Split a middle tier into parallel same-size backend boxes, each its own colour, all resting on one shared dashed core box beneath them, and label the two interception arrows above and below that middle tier by name instead of leaving them bare, making the tier's two boundaries explicit."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar at depth 3: a dashed Granule box wraps a sandbox box around the application code, while below it a dashed Granny core box nests three named state structures beneath three colour-coded backends.",
+      "what_to_learn": "Use a dashed wrapper box to show an isolation boundary around the code it contains, and let a second dashed box one tier down hold the shared internal state that every parallel sibling box above it depends on, keeping padding consistent at both nesting points."
+    }
+  ]
+}

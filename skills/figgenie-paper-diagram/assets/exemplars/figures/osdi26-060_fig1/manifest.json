@@ -1,0 +1,48 @@
+{
+  "id": "osdi26-060_fig1",
+  "paper_id": "osdi26-060",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: New system design goals for batch inference.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 2.95,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-060/src/fig1_batch_vs_interactive.svg",
+    "preview.png": "lab/extracted/osdi26-060/src/fig1_batch_vs_interactive.png",
+    "print.png": "lab/extracted/osdi26-060/osdi26-060_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two labelled sub-figures (a)/(b) share one time-axis convention and bracket-arrow style to define four latency metrics (BCT, SCT, TTFT, TPOT), showing how a two-panel figure can do definitional work rather than just showing structure.",
+      "what_to_learn": "For a metric-definition figure, draw one shared time axis and mark each interval with a double-headed bracket labelled by its acronym, keeping the two panels' visual grammar (grid squares for done work, light shading for elapsed time) identical."
+    },
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Clean two-panel timeline pair: batch inference's long BCT bracket spans completed sub-batches while shorter SCT brackets mark each one, against interactive inference's TTFT/TPOT brackets over a single token sequence on the same time axis.",
+      "what_to_learn": "Use double-headed brackets to name and measure intervals directly on the time axis (BCT spanning the whole batch, SCT per sub-batch, TTFT/TPOT per token) instead of describing durations in prose, and give each contrasting regime its own panel on the same axis style."
+    }
+  ]
+}

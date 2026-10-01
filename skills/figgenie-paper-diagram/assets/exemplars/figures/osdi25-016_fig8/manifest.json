@@ -1,0 +1,42 @@
+{
+  "id": "osdi25-016_fig8",
+  "paper_id": "osdi25-016",
+  "fig": "8",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 8: Memory management of the region-based tool",
+  "corpus_template": "layered",
+  "direction": "bottom-up",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 2.02,
+  "n_components": 14,
+  "n_flows": 4,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-016/src/fig8_design.svg",
+    "preview.png": "lab/extracted/osdi25-016/src/fig8_design.png",
+    "print.png": "lab/extracted/osdi25-016/osdi25-016_fig8_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Deepest clean nesting in the corpus (nesting_depth 4): global memory over computing units over buffers over per-warp regions.",
+      "what_to_learn": "Four levels only stay readable if each level changes exactly one visual property (fill tint, border dash, padding) and text shrinks by at most one step per level."
+    }
+  ]
+}

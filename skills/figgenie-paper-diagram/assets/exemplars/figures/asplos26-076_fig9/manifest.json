@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-076_fig9",
+  "kind": "mechanism",
+  "paper_id": "asplos26-076",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 9. Fault Tolerance Scheme Based on Remapping.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "topology",
+  "subject": "how Ouroboros remaps tasks and evicts a KV cache along a replacement chain from a failed core to nearest KV core",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "identical",
+  "delta_marking": "badge",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 3.51,
+  "n_elements": 7,
+  "n_relations": 7,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "inkscape",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-076/src/fig9_fault.svg",
+    "preview.png": "lab/extracted/asplos26-076/src/fig9_fault.png",
+    "print.png": "lab/extracted/asplos26-076/asplos26-076_fig9_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "When a core fails, Ouroboros forms a replacement chain to the nearest KV-storing core: each core's weights shift one hop toward the fault, evicting that KV cache, covering the failure without full remapping optimization.",
+      "what_to_learn": "A key panel (the task graph) beside a before/after grid pair; the delta is one red X and the shifted cell contents",
+      "note_source": "doc"
+    }
+  ]
+}

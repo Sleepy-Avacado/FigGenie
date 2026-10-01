@@ -1,0 +1,184 @@
+{
+  "paper_id": "asplos25-031",
+  "fig": "9",
+  "system": {
+    "name": "Plaid",
+    "one_liner": "a CGRA architecture and compiler that aligns compute and communication resources by exploiting recurring dataflow-graph motifs",
+    "domain": [
+      "hardware-accelerators",
+      "compilers"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "LD",
+        "role": "load node in the dataflow graph; part of a motif executed on the collective unit",
+        "container": "Hierarchical DFG with multiple motifs (a)",
+        "novel": null
+      },
+      {
+        "name": "ST",
+        "role": "store node in the dataflow graph, executed on the ALSU",
+        "container": "Hierarchical DFG with multiple motifs (a)",
+        "novel": null
+      },
+      {
+        "name": "motifs",
+        "role": "dashed outlines marking recurring three-node communication patterns identified by Plaid's compiler",
+        "container": "Hierarchical DFG with multiple motifs (a)",
+        "novel": true
+      },
+      {
+        "name": "Plaid Collective Unit (PCU)",
+        "role": "per-tile compute unit that executes a full three-node motif and routes its data dependencies together",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "ALU",
+        "role": "16-bit compute unit supporting ADD, MUL, SHIFT and bit-wise operations (15 ops total); three per PCU",
+        "container": "Plaid Collective Unit (PCU)",
+        "novel": true
+      },
+      {
+        "name": "ALSU",
+        "role": "additional arithmetic/load-store unit in the PCU",
+        "container": "Plaid Collective Unit (PCU)",
+        "novel": true
+      },
+      {
+        "name": "Local Router (8x8)",
+        "role": "delivers inputs to and collects outputs from the three ALUs each cycle, with virtual bypass paths between ALUs to shorten routing",
+        "container": "Plaid Collective Unit (PCU)",
+        "novel": true
+      },
+      {
+        "name": "Global Router (7x9)",
+        "role": "connects the PCU to neighboring tiles via N/S/E/W ports, with optional register buffering on the datapath",
+        "container": "Plaid Collective Unit (PCU)",
+        "novel": true
+      },
+      {
+        "name": "CONFIG",
+        "role": "configuration input to the PCU",
+        "container": "Plaid Collective Unit (PCU)",
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Hierarchical DFG with multiple motifs (a)",
+        "to": "Plaid Collective Unit (PCU)",
+        "what": "motif nodes mapped onto PCU compute and routing resources",
+        "step": null
+      },
+      {
+        "from": "Local Router (8x8)",
+        "to": "ALU",
+        "what": "operand delivery each cycle",
+        "step": null
+      },
+      {
+        "from": "ALU",
+        "to": "Local Router (8x8)",
+        "what": "collected ALU outputs",
+        "step": null
+      },
+      {
+        "from": "Global Router (7x9)",
+        "to": "Local Router (8x8)",
+        "what": "inter-tile data via N/S/E/W ports",
+        "step": null
+      }
+    ],
+    "key_idea": "A dataflow graph decomposes into recurring three-node motifs; Plaid's Collective Processing Unit executes a whole motif at once via ALUs tightly coupled to a local router.",
+    "reading_order": "Left to right: (a) an annotated dataflow graph with motifs outlined, (b) the tiled array they map onto, (c) one Plaid Collective Unit zoomed in."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.16,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4672c4",
+        "used_for": "blue ALU/ALSU boxes in the PCU (panel c) and blue accents in the tile icons (panel b)"
+      },
+      {
+        "hex": "#fb8072",
+        "used_for": "salmon Local Router and Global Router boxes (panel c) and the LD/ST nodes in the dataflow graph (panel a)"
+      },
+      {
+        "hex": "#bebada",
+        "used_for": "lavender CONFIG box (panel c)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "very light gray shading inside tile icons (panel b)"
+      },
+      {
+        "hex": "#a5a5a5",
+        "used_for": "gray shift-operator node fill (panel a)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark-red dashed leader lines linking callouts (Global Router, Three ALU exec, Executed on ALSU) to the dataflow graph"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.57pt black strokes on most shapes; dark-red strokes for annotation leader lines",
+    "corners": "rounded",
+    "arrows": "many straight orthogonal connector lines forming the tile-to-tile grid interconnect; dashed red leader lines link callouts to the graph",
+    "font": "Calibri sans-serif, ~5-7pt labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = ALU/compute resources; salmon = routers and load/store graph nodes; lavender = configuration; dark red = leader lines annotating the hardware mapping",
+    "line_style_means": "dashed red leader lines map dataflow-graph nodes/regions in panel (a) to the hardware resource in panel (c) that executes them; solid lines are the router interconnect",
+    "emphasis": "colour-coded correspondence between the dataflow-graph motif (a) and the physical PCU resources (c) that execute it, tied together with red leader lines",
+    "reusable_patterns": [
+      "graph-to-hardware colour and leader-line mapping",
+      "grid-of-tiles overview with one tile zoomed into a detailed block diagram"
+    ],
+    "weaknesses": [
+      "three different diagram styles (graph, grid, block diagram) packed into one figure adds visual complexity",
+      "leader lines cross panel (b), which is not their direct target"
+    ]
+  },
+  "tags": [
+    "CGRA",
+    "reconfigurable-accelerator",
+    "dataflow-graph",
+    "compiler",
+    "interconnect",
+    "motif"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Hierarchical Execution with Motifs (p.6)",
+      "4 Plaid Architecture (p.6-7)"
+    ],
+    "evidence": [
+      "featuring three ALUs (motif compute unit) connected to a local router",
+      "The local router delivers inputs to each of the three ALUs per cycle",
+      "we add virtual bypass paths between the ALUs"
+    ]
+  },
+  "summary": "Plaid is a CGRA architecture and compiler that aligns compute and communication resources by identifying recurring three-node communication patterns, called motifs, in an application's dataflow graph. This three-panel figure connects that idea to hardware: panel (a) shows a hierarchical dataflow graph with LD, arithmetic, and ST nodes, where dashed outlines group nodes into motifs, and red leader lines annotate which hardware resource (global router, three ALUs, local router/bypass path, ALSU) executes each part. Panel (b) shows the Plaid architecture as a grid of tiles connected by a 16-bit global-router interconnect. Panel (c) zooms into one Plaid Collective Unit (PCU), the tile's core: three blue ALUs and an ALSU surround a local router (8x8) that feeds and collects their operands every cycle, and a global router (7x9) links the tile to its north/south/east/west neighbors, with a CONFIG input controlling the unit's behavior.",
+  "summary_zh": "该图分三部分展示Plaid：(a)数据流图中虚线圈出三节点通信模体，红色引线标注对应硬件；(b)瓦片阵列构成的Plaid架构；(c)放大的PCU，三个ALU与ALSU围绕本地路由器，经全局路由器连相邻瓦片。",
+  "confidence": "high",
+  "notes": "Palette is taken from the author source SVG's colour histogram (fig9_Plaid_p11.svg), which was also used for the closer visual inspection alongside the PDF-extracted preview.",
+  "venue": "ASPLOS25"
+}

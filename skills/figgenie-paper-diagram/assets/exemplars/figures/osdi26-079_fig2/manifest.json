@@ -1,0 +1,47 @@
+{
+  "id": "osdi26-079_fig2",
+  "paper_id": "osdi26-079",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: NVIDIA BlueField-3 architecture configured in NIC mode, allowing DMA access to host memory.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.04,
+  "n_components": 8,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-079/osdi26-079_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-079/osdi26-079_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "High-confidence layered background exemplar at floor size, 8 components and 3 flows, stacking host, PCIe band, hardware package and network fabric tiers, with one labelled DMA arrow crossing the boundary.",
+      "what_to_learn": "For a hardware-background figure, draw the bus itself as a distinct shaded band between tiers rather than an arrow, and add only the one cross-boundary arrow the text actually needs instead of wiring every block to every other block."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A minimal floorplan nested in a background stack figure: the BlueField-3 boundary places DPA compute next to its own NIC DRAM and a separate off-path ARM control core, with one DMA arrow crossing PCIe above.",
+      "what_to_learn": "Even a small background/context figure can carry a mini floorplan: place a chip's compute (DPA) directly beside the memory it actually touches (NIC DRAM), keep the separate off-path control core (ARM) at arm's length, and mark the one crossing that matters, direct host DMA, with a single labeled arrow."
+    }
+  ]
+}

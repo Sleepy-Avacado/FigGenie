@@ -1,0 +1,42 @@
+{
+  "id": "osdi24-009_fig6",
+  "paper_id": "osdi24-009",
+  "fig": "6",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 6: Cross-cloud deployment summary.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.37,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-009/src/fig6_deployment-crop.svg",
+    "preview.png": "lab/extracted/osdi24-009/src/fig6_deployment-crop.png",
+    "print.png": "lab/extracted/osdi24-009/osdi24-009_fig6_p11_vector.png"
+  },
+  "templates": [
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: this is a nested-containment deployment diagram, AWS containing continent containing region, not a coordinator with fanning spokes; the record itself calls it a nested containment diagram.",
+      "what_to_learn": "The transferable move is nested-stack's, not hub-spoke's: colour each containment level a different dashed hue (orange AWS, gray continent, green region) so the geographic scope reads at a glance, then attach the small node-type boxes (Clients, Brokers, Servers) with plain bidirectional arrows inside the innermost box."
+    }
+  ]
+}

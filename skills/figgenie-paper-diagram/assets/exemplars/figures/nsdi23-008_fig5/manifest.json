@@ -1,0 +1,63 @@
+{
+  "id": "nsdi23-008_fig5",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-008",
+  "fig": "5",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 5: Intra-server LEMON migration. C1 andC2 are cores, P1–P3 are three packet classes, and M1–M3 are three identical LEMONs dedicated for P1–P3. hypervisor ﬁrst issues a new rule to the NIC (or modiﬁes the global RSS table [16]), which directs the NIC to tag and send P2 to the queue binding to ",
+  "groups_in_record": [
+    "evolution",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how a new NIC rule migrates one packet class's traffic and LEMON state from core C1 to C2",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.85,
+  "n_elements": 9,
+  "n_relations": 8,
+  "n_panels": 1,
+  "n_steps": 4,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-008/nsdi23-008_fig5_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-008/nsdi23-008_fig5_p10_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "One static frame overlays old and new core bindings for a single packet class, using a red dashed arrow for the change and four numbered callouts to narrate order.",
+      "what_to_learn": "Draw the old binding in plain solid lines, overlay just the changed link as one accent dashed arrow in the same frame, and number callouts 1-4 for rule-change, reroute, drop, pickup — but it only reads right in that order.",
+      "note_source": "agent"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "One static frame overlays old and new core bindings for a single packet class, using a red dashed arrow for the change and four numbered callouts to narrate order.",
+      "what_to_learn": "Draw the old binding in plain solid lines, overlay just the changed link as one accent dashed arrow in the same frame, and number callouts 1-4 for rule-change, reroute, drop, pickup — but it only reads right in that order.",
+      "note_source": "agent"
+    }
+  ]
+}

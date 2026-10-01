@@ -1,0 +1,55 @@
+{
+  "id": "osdi24-051_fig4",
+  "kind": "mechanism",
+  "paper_id": "osdi24-051",
+  "fig": "4",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 4: Safe memory access under concurrency",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "state-machine",
+  "subject": "the states a memory range moves through, locked/unlocked, private/shared, trusted/unknown, and which transitions between them are safe",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.4,
+  "n_elements": 12,
+  "n_relations": 9,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-051/osdi24-051_fig4_p11_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-051/osdi24-051_fig4_p11_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Only memory that is Locked, VMPL0-private and content-verified may be treated as memory-safe; sharing, copying or writing are the sole safe ways to move between the five permission states.",
+      "what_to_learn": "small badge-icon pairs (trust glyph + lock glyph) attached to each named state of an access-permission state machine",
+      "note_source": "record"
+    }
+  ]
+}

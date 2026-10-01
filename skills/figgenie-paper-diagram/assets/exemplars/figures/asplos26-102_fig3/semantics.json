@@ -1,0 +1,266 @@
+{
+  "paper_id": "asplos26-102",
+  "fig": "3",
+  "system": {
+    "name": "FlashMem",
+    "one_liner": "a memory-streaming framework that reduces memory use and latency for large-scale and multi-DNN inference on mobile GPUs",
+    "domain": [
+      "mobile-systems",
+      "ml-systems",
+      "memory-management"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Input Model",
+        "role": "the DNN model parsed to identify each layer's structure",
+        "container": "Offline Stage",
+        "novel": false
+      },
+      {
+        "name": "Profiler",
+        "role": "parses the model and, via capacity-based predictions, estimates how much additional data each layer can load without significant slowdown",
+        "container": "Offline Stage",
+        "novel": true
+      },
+      {
+        "name": "Weights Slicer",
+        "role": "slices model weights for streaming",
+        "container": "Offline Stage",
+        "novel": true
+      },
+      {
+        "name": "LC-OPG Solver",
+        "role": "the CP-SAT solver that produces an overlap plan scheduling weight-loading tasks, unfusing large fused operators when global constraints (C0-C4) fail",
+        "container": "Offline Stage",
+        "novel": true
+      },
+      {
+        "name": "XGBoost",
+        "role": "learned model supplying capacity-based (memory/latency) predictions used by the solver's tuning",
+        "container": "Offline Stage",
+        "novel": true
+      },
+      {
+        "name": "Kernel Info",
+        "role": "kernel information fed back into the Profiler",
+        "container": "Offline Stage",
+        "novel": true
+      },
+      {
+        "name": "Weights Reorg.",
+        "role": "the weight-reorganization output of the Offline Stage passed to Online Execution",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Overlap Plan",
+        "role": "the schedule of weight-loading tasks produced by the LC-OPG Solver, passed to Online Execution",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Pipeline Loading",
+        "role": "loads weights in a pipelined manner during online execution",
+        "container": "Online Execution",
+        "novel": true
+      },
+      {
+        "name": "Preload & Transform",
+        "role": "preloads and transforms weight data into texture layout",
+        "container": "Online Execution",
+        "novel": true
+      },
+      {
+        "name": "Texture Data",
+        "role": "weight data laid out in 2.5D texture memory tiles",
+        "container": "Online Execution",
+        "novel": true
+      },
+      {
+        "name": "UM Data",
+        "role": "data resident in unified memory during online execution",
+        "container": "Online Execution",
+        "novel": true
+      },
+      {
+        "name": "Kernel Rewriting",
+        "role": "rewrites each GPU kernel to embed data-loading operations within its computation, per the overlap plan",
+        "container": "Online Execution",
+        "novel": true
+      },
+      {
+        "name": "Dynamic Offloading",
+        "role": "dynamically offloads work during execution",
+        "container": "Online Execution",
+        "novel": true
+      },
+      {
+        "name": "Overlap Execution",
+        "role": "interleaves arithmetic operations with continuous, vectorized data reads to maximize GPU utilization",
+        "container": "Online Execution",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Model",
+        "to": "Profiler",
+        "what": "model parsed to identify layer structure",
+        "step": null
+      },
+      {
+        "from": "Kernel Info",
+        "to": "Profiler",
+        "what": "kernel information feedback",
+        "step": null
+      },
+      {
+        "from": "Profiler",
+        "to": "Weights Slicer",
+        "what": "capacity-based predictions",
+        "step": null
+      },
+      {
+        "from": "Weights Slicer",
+        "to": "LC-OPG Solver",
+        "what": "sliced weight layers",
+        "step": null
+      },
+      {
+        "from": "XGBoost",
+        "to": "LC-OPG Solver",
+        "what": "learned capacity (memory/latency) estimates",
+        "step": null
+      },
+      {
+        "from": "LC-OPG Solver",
+        "to": "Weights Reorg.",
+        "what": "weight reorganization decisions, unfusing operators if constraints fail",
+        "step": null
+      },
+      {
+        "from": "LC-OPG Solver",
+        "to": "Overlap Plan",
+        "what": "schedule of weight-loading tasks",
+        "step": null
+      },
+      {
+        "from": "Weights Reorg.",
+        "to": "Pipeline Loading",
+        "what": "reorganized weights",
+        "step": null
+      },
+      {
+        "from": "Overlap Plan",
+        "to": "Kernel Rewriting",
+        "what": "overlap schedule to embed into kernels",
+        "step": null
+      },
+      {
+        "from": "Pipeline Loading",
+        "to": "Preload & Transform",
+        "what": "streamed weight data",
+        "step": null
+      },
+      {
+        "from": "Preload & Transform",
+        "to": "Texture Data",
+        "what": "transformed texture layout",
+        "step": null
+      },
+      {
+        "from": "Kernel Rewriting",
+        "to": "Dynamic Offloading",
+        "what": "rewritten kernels",
+        "step": null
+      },
+      {
+        "from": "Dynamic Offloading",
+        "to": "Overlap Execution",
+        "what": "offloaded work",
+        "step": null
+      }
+    ],
+    "key_idea": "FlashMem splits into an offline stage that profiles a model and uses a CP-SAT (LC-OPG) solver, aided by an XGBoost capacity predictor, to produce a weight-loading overlap plan, and an online stage that streams weights into texture memory and rewrites kernels to interleave computation with data loading according to that plan.",
+    "reading_order": "left to right: Offline Stage (green) from Input Model through the LC-OPG Solver to its Weights Reorg./Overlap Plan outputs, then into the Online Execution (blue) pipeline on the right"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.75,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ddeb9d",
+        "used_for": "Offline Stage background and boxes (green)"
+      },
+      {
+        "hex": "#61cbf4",
+        "used_for": "Online Execution background and boxes (blue)"
+      },
+      {
+        "hex": "#e4efb0",
+        "used_for": "secondary Offline Stage component fills"
+      },
+      {
+        "hex": "#80d5f6",
+        "used_for": "secondary Online Execution component fills"
+      },
+      {
+        "hex": "#2c2c2c",
+        "used_for": "Texture Data grid icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "very thin (~0.15pt) strokes, dashed lines for feedback/data connectors",
+    "font": "Times New Roman serif, 6-8pt",
+    "corners": "rounded",
+    "arrows": "thin orthogonal arrows with filled heads linking the two stages",
+    "icons": "vector icons for the XGBoost model, an adaptive-fusion tuning figure, and a memory/latency gauge inside the LC-OPG Solver"
+  },
+  "encoding": {
+    "color_means": "green = Offline Stage components, blue = Online Execution components",
+    "line_style_means": "dashed arrows mark feedback/data-passing connections such as Kernel Info back to the Profiler",
+    "emphasis": "the two large green/blue background panels visually split offline planning from online execution, with the LC-OPG Solver's icons calling out its use of an ML cost model and tunable fusion",
+    "reusable_patterns": [
+      "offline profiling-and-solver stage handing a schedule to an online streaming-execution stage"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "mobile-gpu",
+    "memory-streaming",
+    "kernel-scheduling",
+    "dnn-deployment",
+    "texture-memory",
+    "cp-sat"
+  ],
+  "provenance": {
+    "sections": [
+      "System Overview of FlashMem"
+    ],
+    "evidence": [
+      "use capacity-based predictions to estimate how much additional data each layer can load without causing significant slowdown",
+      "The CP-SAT solver described in previous section then produces an overlap plan that schedules weight-loading tasks",
+      "we rewrite each GPU kernel to embed data loading operations within its computation"
+    ]
+  },
+  "summary": "Figure 3 gives the overall system overview of FlashMem, a memory-streaming framework for large-scale and multi-DNN inference on mobile GPUs, built on the SmartMem execution framework. The diagram splits into a green Offline Stage and a blue Online Execution stage. Offline, an Input Model is parsed by a Profiler that uses capacity-based predictions (aided by an XGBoost model) to estimate how much extra data each layer can load without slowdown; a Weights Slicer prepares weight layers for the LC-OPG Solver, a CP-SAT solver that produces an Overlap Plan scheduling weight-loading tasks and, when global constraints fail, selectively unfuses large fused operators via its Tuning/Adaptive Fusion step, yielding a Weights Reorg. plan. Online, these outputs drive Pipeline Loading and Preload & Transform into Texture Data, while Kernel Rewriting embeds data-loading operations directly into each GPU kernel's computation per the overlap plan, enabling Dynamic Offloading and Overlap Execution that interleaves arithmetic with vectorized data reads.",
+  "summary_zh": "该图展示 FlashMem 系统总览，分为绿色离线阶段与蓝色在线执行阶段：离线阶段解析输入模型、用 XGBoost 辅助的容量预测切分权重，由 CP-SAT（LC-OPG）求解器生成重叠加载计划并在约束失败时拆分算子；在线阶段据此进行流水加载、纹理数据预处理，并将数据加载嵌入内核重写以实现重叠执行。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

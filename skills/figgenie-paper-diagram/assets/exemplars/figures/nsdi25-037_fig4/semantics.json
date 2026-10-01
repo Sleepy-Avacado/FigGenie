@@ -1,0 +1,245 @@
+{
+  "paper_id": "nsdi25-037",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "NDD",
+    "one_liner": "a decision-diagram data structure for network verification that decouples fields into per-field BDDs and layers a network decision diagram on top to avoid redundant nodes",
+    "domain": [
+      "network-verification",
+      "formal-methods",
+      "data-structures"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how per-field decoupling and a network decision diagram avoid the node redundancy that plain BDDs suffer from",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "A→B→D",
+        "kind": "label",
+        "role": "names the first of three packet-forwarding paths whose reachable-packet set is being encoded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A→C→D",
+        "kind": "label",
+        "role": "names the second forwarding path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A→D",
+        "kind": "label",
+        "role": "names the third, direct forwarding path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "srcIP",
+        "kind": "label",
+        "role": "left-margin field label spanning variable levels x1-x4",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "srcPort",
+        "kind": "label",
+        "role": "left-margin field label spanning variable levels x5-x6",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "dstIP",
+        "kind": "label",
+        "role": "left-margin field label spanning variable levels x7-x8",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "dstPort",
+        "kind": "label",
+        "role": "left-margin field label spanning variable levels x9-x10",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b1",
+        "kind": "node",
+        "role": "root of the common 14-node srcIP/srcPort sub-structure inside the A→B→D BDD",
+        "container": "A→B→D",
+        "highlighted": true
+      },
+      {
+        "name": "b2",
+        "kind": "node",
+        "role": "the same redundant sub-structure repeated inside the A→C→D BDD",
+        "container": "A→C→D",
+        "highlighted": true
+      },
+      {
+        "name": "b3",
+        "kind": "node",
+        "role": "the same redundant sub-structure repeated inside the A→D BDD",
+        "container": "A→D",
+        "highlighted": true
+      },
+      {
+        "name": "true",
+        "kind": "state",
+        "role": "terminal node reached by every satisfying assignment; edges to the false terminal are omitted for simplicity",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "A→B→D",
+        "to": "b1",
+        "what": "this path's BDD contains the redundant 14-node srcIP/srcPort sub-structure",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A→C→D",
+        "to": "b2",
+        "what": "this path's BDD contains the same redundant sub-structure again",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A→D",
+        "to": "b3",
+        "what": "this path's BDD contains the same redundant sub-structure a third time",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "b1",
+        "to": "true",
+        "what": "edges through the dstIP/dstPort variables reach the shared true terminal",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b2",
+        "to": "true",
+        "what": "edges through the dstIP/dstPort variables reach the shared true terminal",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b3",
+        "to": "true",
+        "what": "edges through the dstIP/dstPort variables reach the shared true terminal",
+        "kind": "pointer",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) BDDs",
+        "axis": "alternatives",
+        "differs": "template: one full binary decision diagram per path; the 14-node srcIP/srcPort sub-structure (b1/b2/b3, red box) is duplicated once per path because nodes encoding x6 point to different x7 successors, giving 50 nodes total",
+        "verdict": "baseline"
+      },
+      {
+        "label": "(b) Per-field BDDs",
+        "axis": "alternatives",
+        "differs": "each field (srcIP, srcPort, dstIP, dstPort) gets its own small reduced BDD in a separate namespace, cutting the total to 11+5+5+3=24 nodes, but the three paths' field values are no longer distinguished on their own",
+        "verdict": null
+      },
+      {
+        "label": "(c) NDDs",
+        "axis": "alternatives",
+        "differs": "an extra layer of decision-diagram nodes (n1/n2/n3, red box) sits above the per-field BDDs, each edge labelled with a field value, so only one copy of each per-field BDD is created while still distinguishing the three paths; still 24 nodes total but only 4 NDD nodes per path copy instead of 14",
+        "verdict": "ours"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "concrete bit-string values for each field across the three paths, e.g. srcIP/srcPort patterns like 0000/1010/0101 and dstIP/dstPort patterns like 00/1*/01/0*",
+      "linked_by": "position (each field's bits are read top-to-bottom as tree levels) and the shared 'true' terminal all three paths converge on",
+      "result_cells": "there is no separate result cell; reaching the 'true' terminal along a path of edges is itself the result, i.e. a satisfying assignment for that forwarding path"
+    },
+    "key_idea": "Plain BDDs (a) duplicate a 14-node srcIP/srcPort sub-structure once per forwarding path because interleaved field variables cannot be merged; decoupling each field into its own reduced BDD (b) cuts this to 24 nodes but cannot alone represent multiple packet sets; layering a Network Decision Diagram (c) on top of the per-field BDDs keeps the 24-node count while needing only 4, not 14, nodes per path copy, and enables much faster logical operations.",
+    "reading_order": "left to right across the three lettered panels (a) BDDs, (b) Per-field BDDs, (c) NDDs, each read top-down from the srcIP root variable to the true terminal, with red boxes calling out the corresponding sub-structure in each panel"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "callout",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.46,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red dashed/solid highlight boxes marking the compared redundant (a) or merged (c) sub-structures (b1/b2/b3 and n1/n2/n3)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~2pt edges, mostly solid (true branches); dashed edges mark a false branch that leads to another internal node rather than being omitted",
+    "corners": "square",
+    "arrows": "thin edges without arrowheads (implicit top-down direction); solid = true branch, dashed = false branch, per the caption",
+    "font": "Times New Roman serif, small (~5.5-8.5pt), for the level labels (x1...x10), field names, and node/terminal labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red is the only accent colour, boxing the specific redundant (a) or merged (c) sub-structure the text is discussing; everything else is black line art on white",
+    "line_style_means": "per the caption, solid = true and dashed = false, and edges to the false terminal are omitted entirely",
+    "state_means": "the three alternatives are told apart by being drawn as three separate lettered panels (a)/(b)/(c), each redrawing the same three forwarding paths with a different decision-diagram structure",
+    "marker_means": "no numbered markers; small subscripted node labels (b1/b2/b3, n1/n2/n3) name the specific nodes the accompanying text discusses",
+    "emphasis": "the red box around the repeated or merged sub-structure is the figure's strongest cue, directly matching the text's node-count argument",
+    "reusable_patterns": [
+      "the same worked example (three named paths, ten bit-variables) redrawn as three different decision-diagram encodings so node counts can be compared directly"
+    ],
+    "weaknesses": [
+      "extremely dense (over 1500 vector shapes across a double-column figure) with many small unlabelled internal nodes, so the reader must rely heavily on the caption/text to know exactly which nodes the red boxes refer to"
+    ]
+  },
+  "tags": [
+    "network-verification",
+    "binary-decision-diagram",
+    "decision-diagram",
+    "BDD",
+    "NDD",
+    "worked-example"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Motivation (p.4)",
+      "3 Introducing NDD (p.5)",
+      "3 Introducing NDD (p.6)"
+    ],
+    "evidence": [
+      "These three BDDs have a common sub-structure consisting of 14 nodes",
+      "there are only 11, 5, 5 and 3 BDD nodes, respectively",
+      "NDD only creates one copy of per-field BDD nodes in (b)"
+    ]
+  },
+  "summary": "Figure 4 of the NDD paper compares three encodings of the packets reachable via three forwarding paths (A→B→D, A→C→D, A→D) over bit-variables x1-x10 spanning srcIP, srcPort, dstIP and dstPort. Panel (a) shows plain BDDs: a red box marks a 14-node srcIP/srcPort sub-structure (b1/b2/b3) duplicated identically in all three trees, since diverging successors prevent merging, giving 50 nodes total. Panel (b) decouples each field into its own reduced BDD, cutting the count to 24 nodes but losing the ability to represent the three packet sets on its own. Panel (c) shows the paper's Network Decision Diagram (NDD), layering extra nodes (n1/n2/n3, red box) over the per-field BDDs: still 24 nodes total, but only 4 NDD nodes per path copy instead of 14, and much faster logical operations.",
+  "summary_zh": "该图对比三种可达包集合编码：(a)BDD因变量交织产生14节点冗余子结构，共50节点；(b)按字段解耦为独立BDD减至24节点但无法单独区分路径；(c)NDD叠加节点层，仍24节点但每份子结构仅4节点，运算更快。",
+  "confidence": "high",
+  "notes": "content.elements/relations describe panel (a) as the template at a coarse level (paths, field labels, the red-boxed b1/b2/b3 sub-structure, and the shared true terminal); exact node-by-node edge connectivity within each decision diagram is approximated since the source text describes counts and merging rules rather than every edge. Panel verdicts: (a) baseline inefficient design, (b) an intermediate per-field decoupling that alone cannot represent multiple packet sets, (c) ours (NDD).",
+  "venue": "NSDI25"
+}

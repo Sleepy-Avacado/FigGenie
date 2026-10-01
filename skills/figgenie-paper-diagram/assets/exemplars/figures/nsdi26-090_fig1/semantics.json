@@ -1,0 +1,168 @@
+{
+  "paper_id": "nsdi26-090",
+  "fig": "1",
+  "system": {
+    "name": "Cortex",
+    "one_liner": "a semantic-aware caching system that reduces the latency and cost of LLM agents' remote data retrieval",
+    "domain": [
+      "ml-systems",
+      "caching"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Users",
+        "role": "issue requests that drive the agentic LLM's think-act-observe loop",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Agentic LLM",
+        "role": "reasons and issues tool-call actions over MCP to remote data sources",
+        "container": "Region A",
+        "novel": false
+      },
+      {
+        "name": "Search Engine",
+        "role": "external remote data source queried via a tool call",
+        "container": "Remote Knowledge / Region B",
+        "novel": false
+      },
+      {
+        "name": "Private RAG",
+        "role": "external remote data source queried via a tool call",
+        "container": "Remote Knowledge / Region B",
+        "novel": false
+      },
+      {
+        "name": "Data Lake",
+        "role": "external remote data source queried via a tool call",
+        "container": "Remote Knowledge / Region B",
+        "novel": false
+      },
+      {
+        "name": "LLM Thinking Process",
+        "role": "worked Search-R1 example showing the think/search/info/answer tag sequence",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Remote Data",
+        "role": "external data source queried by the search tag in the Search-R1 example",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Users",
+        "to": "Agentic LLM",
+        "what": "query",
+        "step": null
+      },
+      {
+        "from": "Agentic LLM",
+        "to": "Remote Knowledge",
+        "what": "tool-call action dispatched over MCP",
+        "step": 2
+      },
+      {
+        "from": "LLM Thinking Process",
+        "to": "Remote Data",
+        "what": "search query",
+        "step": null
+      },
+      {
+        "from": "Remote Data",
+        "to": "LLM Thinking Process",
+        "what": "info result",
+        "step": null
+      }
+    ],
+    "key_idea": "An agentic LLM's think-act-observe loop repeatedly dispatches tool calls across a region boundary to remote knowledge sources, and measured on Search-R1/H100 this remote data retrieval consumes 40-50% of total execution time.",
+    "reading_order": "left to right across three panels: (a) abstract agent-to-remote-knowledge loop, (b) a concrete Search-R1 trace, (c) a stacked bar chart of per-step inference vs. retrieval latency"
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "double",
+    "aspect": 3.98,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e97132",
+        "used_for": "Inference bars in the step-time breakdown chart (panel c)"
+      },
+      {
+        "hex": "#0f9ed5",
+        "used_for": "Data Retrieval bars in the step-time breakdown chart (panel c)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "Search Engine / Private RAG / Data Lake boxes (panel a)"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Remote Knowledge container fill (panel a)"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "search-tag text accent (panel b)"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "info-tag text accent (panel b)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black/navy ~0.35pt, dashed divider between Region A and Region B",
+    "font": "Arial-Bold/Arial-Italic sans, 5.5-9pt",
+    "corners": "mixed",
+    "arrows": "double-headed circled-number arrows for think/action and MCP steps; single arrows for search/info retrieval; plain bars for the chart",
+    "icons": "vector user-group silhouette, thought-cloud bubble, database cylinder"
+  },
+  "encoding": {
+    "color_means": "orange vs. blue distinguishes local Inference time from remote Data Retrieval time in the latency breakdown chart",
+    "line_style_means": "a dashed horizontal line separates Region A (agent) from Region B (remote data) to emphasize cross-region latency",
+    "emphasis": "panel (c) quantifies that data retrieval is comparable to or larger than inference time, motivating the paper's caching system",
+    "reusable_patterns": [
+      "three-panel motivation figure combining an abstract loop diagram, a concrete trace example, and a measured latency breakdown"
+    ],
+    "weaknesses": [
+      "mixes three different visual languages (box diagram, annotated text trace, bar chart) in one figure"
+    ]
+  },
+  "tags": [
+    "LLM agents",
+    "tool calling",
+    "MCP",
+    "latency breakdown",
+    "remote data access"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "this process begins with a reasoning phase (①, think), where the",
+      "running Search-R1 on a single H100, external data retrieval constitutes around 40%-50% of the total execution time.",
+      "Each search and info pair represents a single, costly round trip to an external data source."
+    ]
+  },
+  "summary": "Figure 1 motivates Cortex by illustrating the agentic LLM workflow and its cost. Panel (a) shows Users interacting with an Agentic LLM that runs an iterative think-act loop, dispatching tool-call actions over MCP to remote Search Engine, Private RAG, and Data Lake services that typically sit in a different region. Panel (b) walks through a concrete Search-R1 example, showing the think/search/info/answer tag sequence used to look up who painted the Mona Lisa from Remote Data. Panel (c) is a stacked bar chart breaking down per-step latency of Search-R1 on an H100 GPU into Inference (orange) versus Data Retrieval (blue) time across reasoning steps, showing retrieval consumes roughly 40-50% of total execution time. Together the three panels establish that remote data access is a first-class latency and cost bottleneck for agentic LLM serving.",
+  "summary_zh": "图1展示智能体LLM的工作流与代价：(a)智能体通过MCP向跨区域的远程数据源发起think-act调用；(b)以Search-R1为例展示think/search/info/answer标签序列；(c)柱状图显示数据检索时间占比达40%-50%，凸显远程访问是延迟瓶颈。",
+  "confidence": "high",
+  "notes": "figure combines three distinct sub-panels (architecture, worked example, and a bar chart); the component/flow list covers panels a and b only.",
+  "venue": "NSDI26"
+}

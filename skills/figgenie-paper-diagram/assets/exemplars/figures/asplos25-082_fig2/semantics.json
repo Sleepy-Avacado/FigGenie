@@ -1,0 +1,243 @@
+{
+  "paper_id": "asplos25-082",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "MoC-System",
+    "one_liner": "a checkpointing system that reduces fault-tolerance overhead for sparse Mixture-of-Experts model training via partial-experts checkpointing",
+    "domain": [
+      "distributed-training",
+      "fault-tolerance",
+      "mixture-of-experts"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how periodic checkpoints accumulate along the iteration timeline and how a fault triggers recovery from the most recent complete checkpoint",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Expert",
+        "kind": "label",
+        "role": "legend colour key for expert-related saved state",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Non-Expert",
+        "kind": "label",
+        "role": "legend colour key for non-expert-related saved state",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Checkpoint",
+        "kind": "box",
+        "role": "breakdown legend showing what one checkpoint contains",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Parameters",
+        "kind": "label",
+        "role": "smaller portion of a checkpoint's saved state, split into expert/non-expert",
+        "container": "Checkpoint",
+        "highlighted": false
+      },
+      {
+        "name": "Optimizer States",
+        "kind": "label",
+        "role": "larger portion of a checkpoint's saved state, split into expert/non-expert",
+        "container": "Checkpoint",
+        "highlighted": false
+      },
+      {
+        "name": "I_ckpt",
+        "kind": "label",
+        "role": "the fixed checkpointing interval (10 iterations) between checkpoints",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ckpt 1",
+        "kind": "box",
+        "role": "first completed checkpoint on the timeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ckpt 2",
+        "kind": "box",
+        "role": "second completed checkpoint; later reloaded after the fault, re-drawn in blue",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Fault",
+        "kind": "icon",
+        "role": "marks the point after iteration 30 where a fault occurs, before the third checkpoint completes",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "I_total",
+        "kind": "label",
+        "role": "cumulative iteration-count ticks along the top of the timeline",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "O_save",
+        "kind": "label",
+        "role": "span/overhead of one checkpoint-saving operation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "O_lost",
+        "kind": "label",
+        "role": "span of training progress lost between the last complete checkpoint and the fault",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "O_restart",
+        "kind": "label",
+        "role": "span/overhead of restarting and reloading state after the fault",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "ckpt 1",
+        "to": "ckpt 2",
+        "what": "checkpoints are taken periodically every I_ckpt = 10 iterations",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "ckpt 2",
+        "to": "Fault",
+        "what": "training continues toward a third, incomplete checkpoint when the fault strikes",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Fault",
+        "to": "ckpt 2",
+        "what": "recovery loads the latest complete checkpoint (ckpt 2) to resume training",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "single timeline (before/after fault)",
+        "axis": "time",
+        "differs": "ckpt 1 and ckpt 2 complete normally every I_ckpt, a third checkpoint is interrupted (dashed, lost) by the Fault, and recovery reloads ckpt 2 (re-drawn in blue) to resume",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "concrete iteration numbers (I_ckpt=10, fault after iteration 30) and the percentage breakdown of a checkpoint's contents (12% expert params, 2% non-expert params, 74% expert optimizer states, 12% non-expert optimizer states, under 1% other state)",
+      "linked_by": "colour (tan=expert, blue=non-expert) linking the Checkpoint breakdown legend to the same-coloured Parameters/Optimizer States bands",
+      "result_cells": "the O_save / O_lost / O_restart bracket labels quantifying each phase's duration on the timeline"
+    },
+    "key_idea": "Checkpointing trades periodic save overhead (O_save) for bounded recovery: when a fault strikes before a checkpoint completes, only the progress since the last complete checkpoint (O_lost) is lost, and recovery reloads exactly that last complete checkpoint (O_restart).",
+    "reading_order": "left legend first (Expert/Non-Expert colour key and the Checkpoint parameter/optimizer-state breakdown), then left to right along the iteration timeline: ckpt 1, ckpt 2, the interrupted third checkpoint, the Fault bolt, and the curved recovery arrow back to reloading ckpt 2, with O_save/O_lost/O_restart brackets below"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": "identical",
+    "delta_marking": "dashed-ghost",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.13,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a7c8bb",
+        "used_for": "muted green fill of completed checkpoint boxes (ckpt 1, ckpt 2) on the timeline"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "gold/yellow fill of the 'Optimizer States' band in the Checkpoint breakdown legend"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "medium blue fill of the reloaded ckpt 2 box during recovery"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "orange/tan 'Expert' legend swatch and the expert portion of the checkpoint breakdown"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red 'Fault' lightning-bolt icon and its label"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "light blue 'Non-Expert' legend swatch"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium (~0.5pt, some heavier) strokes, dashed for the interrupted checkpoint and the O_save/O_lost/O_restart span arrows",
+    "corners": "square",
+    "arrows": "thin black arrows plus one curved arrow labelled 'Load the latest complete checkpoint for recovery' pointing from the Fault back to ckpt 2",
+    "font": "Tw Cen MT / Cambria Math sans, 5.5-7.5pt",
+    "icons": "a red lightning-bolt icon marking the Fault; a small nested breakdown box (Checkpoint) at the left showing Parameters/Optimizer States split by Expert/Non-Expert"
+  },
+  "encoding": {
+    "color_means": "tan/orange = Expert-related parameters or optimizer state; blue = Non-Expert-related state; green = a completed checkpoint on the timeline; the reloaded checkpoint is re-drawn in a distinct blue to mark it as the recovery source",
+    "line_style_means": "dashed outline marks the interrupted, lost checkpoint attempt; solid outlines mark completed checkpoints; dashed double-headed arrows measure the O_save/O_lost/O_restart spans",
+    "state_means": "before (normal periodic checkpointing) vs after (fault and recovery) is told apart by the dashed hollow box for the lost checkpoint and by re-drawing ckpt 2 in blue once it is reloaded",
+    "marker_means": "the red lightning bolt marks exactly when the fault occurs; labelled double-headed arrows (O_save, O_lost, O_restart) quantify each phase's duration rather than numbering discrete steps",
+    "emphasis": "placing the red Fault bolt directly after the dashed, incomplete third checkpoint, with a curved arrow back to ckpt 2, emphasizes that recovery falls back exactly one checkpoint at the cost of the O_lost span",
+    "reusable_patterns": [
+      "a Gantt-style iteration timeline with periodic checkpoint boxes, a dashed box for a lost/incomplete one, and bracketed spans quantifying save/lost/restart overhead"
+    ],
+    "weaknesses": [
+      "the small nested Checkpoint breakdown legend on the left reuses the main timeline's colour palette for a different purpose (composition of one checkpoint vs which checkpoint completed), which could be conflated at a glance"
+    ]
+  },
+  "tags": [
+    "fault-tolerance",
+    "checkpointing",
+    "mixture-of-experts",
+    "distributed-training",
+    "MoC-System"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background & Related Work"
+    ],
+    "evidence": [
+      "A fault arises following the 30th iteration, before the completion of the third checkpoint",
+      "the most recent completed checkpoint (ckpt2)",
+      "aggregating the overhead of a checkpointing process (saving model states) Osave ... Orestart and lost training progress Olost"
+    ]
+  },
+  "summary": "This figure illustrates MoC-System's fault-tolerant checkpointing mechanism along an iteration timeline, with a checkpointing interval I_ckpt of 10 iterations. Checkpoints ckpt1 and ckpt2 complete normally, but a fault (red lightning bolt) strikes just after iteration 30, before a third checkpoint finishes, so that in-progress checkpoint is drawn as a dashed, incomplete box representing lost work. Recovery reloads the most recent complete checkpoint, ckpt2 (re-drawn in blue), to resume training. Labelled spans quantify the resulting overheads: O_save for the cost of taking a checkpoint, O_lost for the training progress discarded between ckpt2 and the fault, and O_restart for the cost of reloading and resuming. A small breakdown legend on the left shows what a checkpoint actually contains: mostly optimizer states and parameters, split between Expert (12%/74%) and Non-Expert (2%/12%) portions, motivating why checkpointing sparse MoE models is so much more expensive than dense ones.",
+  "summary_zh": "该图展示MoC-System的容错检查点机制：按I_ckpt=10次迭代周期性生成ckpt1、ckpt2，第30次迭代后发生故障（红色闪电），第三个检查点未完成（虚线框表示丢失），恢复时重新加载最近完整的ckpt2（蓝色），并标出O_save、O_lost、O_restart三段开销；左侧图例说明检查点内容按专家/非专家拆分的参数与优化器状态占比。",
+  "confidence": "high",
+  "notes": "content.panels collapsed into one entry describing the whole before/after-fault sequence within the single continuous timeline, matching the figure's single-frame Gantt-style layout rather than discrete side-by-side panels.",
+  "venue": "ASPLOS25"
+}

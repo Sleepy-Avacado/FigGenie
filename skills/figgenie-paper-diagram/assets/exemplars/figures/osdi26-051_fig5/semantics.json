@@ -1,0 +1,239 @@
+{
+  "paper_id": "osdi26-051",
+  "fig": "5",
+  "system": {
+    "name": "Espresso",
+    "one_liner": "constructs a cost-efficient CXL-based JBOF by sharing computing resources across SSDs",
+    "domain": [
+      "storage",
+      "ssd"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Espresso Host",
+        "role": "host machine that issues NVMe I/O and runs the modified NVMe driver",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NVMe Driver",
+        "role": "host-side driver modified to redirect I/O commands and load-balance across SSDs",
+        "container": "Espresso Host",
+        "novel": true
+      },
+      {
+        "name": "Espresso SSD",
+        "role": "disaggregated SSD unit that can act as a Borrower or Lender of idle compute/DRAM resources",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Compute-End",
+        "role": "holds the SSD's processor and DRAM at moderate capacity; source/sink of harvested compute resources",
+        "container": "Espresso SSD",
+        "novel": true
+      },
+      {
+        "name": "Processor",
+        "role": "onboard SSD processor, reserved at moderate strength to keep BOM cost low",
+        "container": "Compute-End",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "onboard SSD memory, reserved at moderate size to keep BOM cost low",
+        "container": "Compute-End",
+        "novel": false
+      },
+      {
+        "name": "Data-End",
+        "role": "encloses flash resources and handles data transfer and flash I/O",
+        "container": "Espresso SSD",
+        "novel": false
+      },
+      {
+        "name": "DMA",
+        "role": "engine that transfers data directly between host and flash backbone",
+        "container": "Data-End",
+        "novel": false
+      },
+      {
+        "name": "Flash",
+        "role": "flash backbone storing data",
+        "container": "Data-End",
+        "novel": false
+      },
+      {
+        "name": "Borrower",
+        "role": "SSD short on compute resources that harvests idle resources from a lender",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Lender",
+        "role": "idle SSD that announces and lends spare compute/DRAM resources",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Global Coherent Memory Space",
+        "role": "CXL-exposed DRAM shared coherently across all SSDs, enabling inter-SSD communication",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Lendable DRAM",
+        "role": "the portion of each SSD's DRAM exposed as lendable via CXL",
+        "container": "Global Coherent Memory Space",
+        "novel": true
+      },
+      {
+        "name": "Idle Resource Descriptor",
+        "role": "records which compute/DRAM resources an SSD currently has idle for harvesting",
+        "container": "Global Coherent Memory Space",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Espresso SSD",
+        "to": "Global Coherent Memory Space",
+        "what": "exposes onboard DRAM via CXL to form a global coherent memory space",
+        "step": 1
+      },
+      {
+        "from": "Lender",
+        "to": "Idle Resource Descriptor",
+        "what": "writes idle resource descriptors announcing lendable processor and DRAM",
+        "step": 2
+      },
+      {
+        "from": "Borrower",
+        "to": "Idle Resource Descriptor",
+        "what": "searches other SSDs' idle resource descriptors and chooses a lender",
+        "step": 3
+      },
+      {
+        "from": "NVMe Driver",
+        "to": "Lender",
+        "what": "redirects portions of NVMe I/O commands originally targeting the borrower to the lender",
+        "step": 4
+      },
+      {
+        "from": "Lender",
+        "to": "Borrower",
+        "what": "lender's idle processor helps serve I/O commands by operating the borrower's metadata",
+        "step": 5
+      },
+      {
+        "from": "Lender",
+        "to": "Borrower",
+        "what": "lender sends DMA and flash operations to the borrower's DMA engine and flash controller",
+        "step": 6
+      },
+      {
+        "from": "Borrower",
+        "to": "Espresso Host",
+        "what": "borrower transfers data directly between host and its own flash backbone, bypassing the lender",
+        "step": 7
+      },
+      {
+        "from": "Borrower",
+        "to": "Lendable DRAM",
+        "what": "borrower caches part of its mapping table in the lender's DRAM (DRAM harvesting)",
+        "step": 8
+      }
+    ],
+    "key_idea": "Idle SSDs (lenders) advertise spare processor and DRAM over a CXL-shared coherent memory space so busy SSDs (borrowers) can harvest that compute/memory for I/O bursts, redirected transparently by a modified host NVMe driver.",
+    "reading_order": "Top-down: Espresso Host and its NVMe driver first, then the row of Espresso SSDs (Borrower/Lender) with numbered arrows, ending at the shared memory space at the bottom."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ed7d31",
+        "used_for": "'Control' flow-legend text and arrows"
+      },
+      {
+        "hex": "#41719c",
+        "used_for": "'Command/Operation' flow-legend text and arrows"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "'Data' flow-legend text and arrows"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "'Data-End' sub-label text inside each SSD"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "fill of the numbered circular step badges (1-8)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "bold italic emphasis text (e.g. 'Moderate')"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for background panels (Idle Resource Descriptor, Lendable DRAM)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.68pt dark strokes, dashed for some connectors, mixed corner styles",
+    "font": "Calibri sans, 7.5-8pt, italic for annotations, light bold use",
+    "corners": "mixed",
+    "arrows": "thin orthogonal arrows with filled heads, color-coded by message type",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = Control messages, blue = Command/Operation, green = Data, purple = the Data-End label, red = numbered harvesting steps",
+    "line_style_means": "dashed vs solid arrow styles distinguish the four message types (Control/Command-Operation/Data/Metadata) named in the top legend",
+    "emphasis": "a red-numbered 1-8 sequence overlaid on the Borrower/Lender SSD boxes walks the reader through the resource-harvesting protocol step by step",
+    "reusable_patterns": [
+      "numbered request/response path overlaid on repeated peer nodes (Borrower/Lender) sharing a coherent memory space"
+    ],
+    "weaknesses": [
+      "the four-color flow legend sits at the top, far from the numbered steps it must be cross-referenced against"
+    ]
+  },
+  "tags": [
+    "cxl",
+    "ssd",
+    "jbof",
+    "resource-harvesting",
+    "disaggregation",
+    "nvme"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design and Implementation (p.6)"
+    ],
+    "evidence": [
+      "Figure 5 illustrates the overview of Espresso.",
+      "each SSD exposes portions of its onboard DRAM via CXL interconnections",
+      "the host NVMe driver redirects portions of NVMe I/O commands"
+    ]
+  },
+  "summary": "Espresso is a cost-efficient CXL-based JBOF that lets SSDs share onboard compute and DRAM instead of over-provisioning each drive. Figure 5 gives the system overview: an Espresso Host runs a lightly modified NVMe driver that redirects I/O and load-balances across a row of Espresso SSDs, each split into a Compute-End (a moderate processor and DRAM) and a Data-End (DMA engine and flash). All SSDs expose part of their DRAM into a Global Coherent Memory Space over CXL. A numbered 1-8 sequence traces the protocol: SSDs register lendable DRAM, an idle SSD (Lender) advertises spare resources via an Idle Resource Descriptor, a busy SSD (Borrower) picks a lender and has its I/O and metadata operations serviced remotely while data still moves directly between host and its own flash. A four-color legend distinguishes Control, Command/Operation, Data and Metadata messages.",
+  "summary_zh": "图5展示Espresso架构:主机NVMe驱动重定向并负载均衡I/O至各SSD;每SSD含计算端(处理器/DRAM)与数据端(DMA/闪存),经CXL共享一致内存;编号1-8步骤示借用方向空闲方借调计算与DRAM资源。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

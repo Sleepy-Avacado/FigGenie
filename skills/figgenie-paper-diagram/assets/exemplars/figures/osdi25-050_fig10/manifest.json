@@ -1,0 +1,56 @@
+{
+  "id": "osdi25-050_fig10",
+  "kind": "mechanism",
+  "paper_id": "osdi25-050",
+  "fig": "10",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 10: An illustration of how BLITZSCALE models the network.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "topology",
+  "subject": "how BlitzScale models cluster GPU connectivity as scale-up NVLink groups atop a scale-out leaf-spine RDMA network",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "callout",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 2.17,
+  "n_elements": 14,
+  "n_relations": 8,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": true,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-050/src/fig10_netwk-topo-v1.svg",
+    "preview.png": "lab/extracted/osdi25-050/src/fig10_netwk-topo-v1.png",
+    "print.png": "lab/extracted/osdi25-050/osdi25-050_fig10_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "BlitzScale models cluster networking at two levels: a leaf-to-spine RDMA topology for scale-out traffic between nodes, and a full-mesh NVLink group for scale-up traffic between the GPUs inside one node/cluster.",
+      "what_to_learn": "a cloud-to-switch-to-node network hierarchy with one node zoomed into its NIC/accelerator/interconnect internals",
+      "note_source": "record"
+    }
+  ]
+}

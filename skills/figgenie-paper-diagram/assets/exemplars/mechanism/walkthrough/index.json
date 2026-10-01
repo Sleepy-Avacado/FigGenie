@@ -1,0 +1,395 @@
+{
+  "group": "walkthrough",
+  "n": 43,
+  "stars": 13,
+  "how_to_read": "open ../../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see; these are references to strengthen a layout derived from your figure's own needs -- borrow the device that serves it, never the layout wholesale",
+  "exemplars": [
+    {
+      "id": "asplos25-033_fig4",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A transaction's updates are first persisted in a firmware write log tagged by TxID, a separate compact TxLog then records the commit order, and only afterward does log cleaning flush the committed data to flash in that recorded order.",
+      "what_to_learn": "Colour-tag the object being followed so it stays identifiable in every structure it passes through",
+      "note_source": "doc",
+      "dir": "../../figures/asplos25-033_fig4"
+    },
+    {
+      "id": "asplos25-046_fig16",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Turns a provisioning formula into a picture: PA-demand stacks (sums) while VA-demand overlaps (multiplexes/maxes), with small numbered sub-segments literally carried from the per-window source bars into the combined bar.",
+      "what_to_learn": "Encode 'sum' as stacked blocks and 'take-the-max' as overlaid/multiplexed blocks in the same bar, so the arithmetic operator is legible from the drawing; carry each numbered sub-segment from the source bars into the same spot in the combined bar.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos25-046_fig16"
+    },
+    {
+      "id": "asplos25-142_fig6",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "One primitive-level dataflow graph, colour-coded by operation type, gets a second independent overlay — dashed purple boxes labelled Pass N — marking exactly which subgraph each optimizer rewrite touched.",
+      "what_to_learn": "Keep one fixed colour per primitive type across the graph, overlay a second layer of dashed pass-labelled boxes to narrate which rewrite touched which subgraph — but repeating the same Pass-3 label three times leaves 'why the same pass' unanswered.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos25-142_fig6"
+    },
+    {
+      "id": "nsdi26-037_fig3",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A branch-and-bound search tree with real H/M/Rank values in every node, colour-coded terminals labelled by exactly why they stopped (Learned / Dedupe / Non-minimal), walked by circled numerals.",
+      "what_to_learn": "Colour every terminal node the same blue but caption each with the specific reason it stopped (Learned, Dedupe, Non-minimal), and collapse a proven-bounded subtree into a flat labelled shelf instead of drawing its boxes.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi26-037_fig3"
+    },
+    {
+      "id": "nsdi26-075_fig11",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A three-step rate-control pipeline (predict, clamp, budget-check) where step 2 draws the value literally boxed inside two labelled rails (max_ratio/min_ratio) instead of a text inequality.",
+      "what_to_learn": "Merge labelled inputs into one prediction box with a single bracket, then draw the next step's bound as two horizontal rails (max_ratio, min_ratio) with the value's box nested between them — but the two outcome labels differ only by capitalization.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi26-075_fig11"
+    },
+    {
+      "id": "osdi24-024_fig9",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A three-stage strip: full heatmap collapses to a one-row column-sum, then Top-K distills that into a literal index list, which becomes the column headers of a differently-coloured output matrix.",
+      "what_to_learn": "Reduce the full heatmap to one colour-matching summary row inside the process box, hand off Top-K as a literal dashed 'Selected Idx' box, then reuse those exact numbers as column headers on a new, differently-coloured matrix.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi24-024_fig9"
+    },
+    {
+      "id": "osdi25-031_fig8",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "DecDEC approximates global top-K selection by splitting the input into independent chunks and, within each chunk, scattering elements into magnitude buckets, then gathering from low buckets and randomly filling any boundary bucket.",
+      "what_to_learn": "A dashed zoom callout from one element of the overview into the numbered sub-steps that happen inside it",
+      "note_source": "doc",
+      "dir": "../../figures/osdi25-031_fig8"
+    },
+    {
+      "id": "osdi26-048_fig2",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "One incident traced across four colour-coded subsystem boxes on a single stall/continue timeline, each region keeping its own lettered step count (B, H, X, L) instead of one global sequence.",
+      "what_to_learn": "Give each subsystem its own colour and its own lettered step count (B/H/X/L) instead of one global number, and draw the causal jump as one arrow crossing straight from the stalled thread's timeline into the box that resolves it.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi26-048_fig2"
+    },
+    {
+      "id": "osdi26-082_fig3",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Best-first search repeatedly pops the nearest unexpanded node from a sorted candidate pool, traverses its edges to discover new neighbors, and inserts them back into the pool by distance until every pooled node has been expanded.",
+      "what_to_learn": "Pair the walked structure with a small table that spells out the state after each step; corner legend; ❶/❷ used for roles, not order",
+      "note_source": "doc",
+      "dir": "../../figures/osdi26-082_fig3"
+    },
+    {
+      "id": "sosp23-030_fig8",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "One numbered path threads across two dashed side-by-side phase boxes, with only the two decision points — victim pick, miss key — picked out in saturated colour.",
+      "what_to_learn": "Run one numbered step-path across both dashed phase boxes without renumbering at the boundary, saturate the decision boxes' colour, and fold the weight-feedback loop into the victim-pick step's arrow instead of its own number — easy to miss that dependency.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp23-030_fig8"
+    },
+    {
+      "id": "sosp25-008_fig3",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Three parties can jointly compute a boolean AND on XOR-secret-shared inputs by each locally combining its two known share-pairs, masking the result with a pre-shared zero, and sending that single masked value once around a ring.",
+      "what_to_learn": "Definitions column, per-party identical computation boxes, message-order ring; one worked numeric example highlighted throughout",
+      "note_source": "doc",
+      "dir": "../../figures/sosp25-008_fig3"
+    },
+    {
+      "id": "sosp25-042_fig3",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Stacks a concrete worked routing example directly above the abstract pipeline that computes it, letting the reader match each component box to the exact job/table it produced.",
+      "what_to_learn": "Draw the worked example (jobs routed to lettered on-prem/cloud nodes) directly above the component diagram that generates those routes, marking only the pipeline stages with red 'Step 1/2a/2b' labels, distinct from the small circled job-ID numbers.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp25-042_fig3"
+    },
+    {
+      "id": "sosp25-053_fig5",
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A single numbered pipeline escalates a training failure from cheap real-time checks through machine eviction, reattempt, rollback, and dual-phase replay, ending in a diagnosis or human escalation.",
+      "what_to_learn": "Nine numbered guarded edges across a wide double-column strip; shape + fill as a role code, declared in a dashed legend box",
+      "note_source": "doc",
+      "dir": "../../figures/sosp25-053_fig5"
+    },
+    {
+      "id": "asplos26-021_fig1",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "An analog crossbar reproduces a matrix-vector multiply physically: matrix values become programmed conductances, input-vector values become row voltages, Ohm's law multiplies them at each junction, and Kirchhoff's current law accumulates the products down each column into the result.",
+      "what_to_learn": "a plain arithmetic panel paired with a physically-realized circuit panel computing the same worked example; consistent per-value colour coding carried from a circuit diagram into the arithmetic equations that verify it; circled step numbers overlaid on a crossbar to narrate program -> multiply -> accumulate -> result",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-021_fig1"
+    },
+    {
+      "id": "asplos26-026_fig10",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Capturing one CUDAGraph per strategy wastes memory linearly with strategy count; bucketing batch sizes, disaggregating target/draft capture, and merging strategies that share parameters keeps memory nearly flat while still gaining the throughput of many adaptive strategies.",
+      "what_to_learn": "A two-line check/cross scorecard under every alternative; roman numerals for the sub-steps that build the winner",
+      "note_source": "doc",
+      "dir": "../../figures/asplos26-026_fig10"
+    },
+    {
+      "id": "asplos26-030_fig9",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "AlphaSyndrome represents a syndrome-measurement schedule as a tick-divided circuit: each tick performs at most one Pauli check per qubit (Z-check via a plain CNOT, X-check via a Hadamard-CNOT-Hadamard sandwich) or leaves the ancilla explicitly idling, ending in a Z-basis measurement.",
+      "what_to_learn": "a standard quantum-circuit timeline with dashed vertical rules marking discrete scheduling ticks; a text callout with an arrow picking out one specific gate instance for discussion; reuse of a Hadamard-CNOT-Hadamard sandwich (established in an earlier figure) as a single compound 'X-check' unit",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-030_fig9"
+    },
+    {
+      "id": "asplos26-047_fig7",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Two Toffoli gates sharing one control qubit would normally run sequentially; decomposing each into T-gates and then using commutation rules to push matching-control CNOTs together turns them into parallel Fanout gates, cutting circuit depth without changing the T-depth.",
+      "what_to_learn": "consistent two-colour shading tracking which of two originally-sequential operations a gate belongs to, carried across multiple panels of a derivation; a small 'rule' panel of equivalent circuit fragments used to justify a reordering applied in a following panel; a numbered step axis over a quantum circuit to make parallel execution explicit",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-047_fig7"
+    },
+    {
+      "id": "asplos26-057_fig9",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "PIPM extends MSI cache coherence with two migration-aware states (ME, I') encoded via directory state plus an in-memory bit, adding six new host/device transitions.",
+      "what_to_learn": "a directory-state-plus-status-bit truth table paired with a circle-and-arrow state diagram sharing the same state names",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-057_fig9"
+    },
+    {
+      "id": "asplos26-067_fig5",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Four-panel figure where a numbered synthesis pipeline (with a feedback loop) sits beside the resulting protocol trace and the two original protocols it fuses, using one shared sequence-diagram notation throughout.",
+      "what_to_learn": "Draw the synthesized protocol and both source protocols with the same lifeline-plus-boxed-state notation so states and messages line up panel to panel, and carry one two-colour domain tint through every panel.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos26-067_fig5"
+    },
+    {
+      "id": "asplos26-094_fig3",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Computing exp() from a LUT is split into two temporal subscriptions: the mantissa selects which row of consecutive values to fetch (shared across inputs needing that row), and the exponent then picks the value from that row.",
+      "what_to_learn": "building a two-step (row, then element) addressing scheme across several small panels before showing the circuit that implements it; pairing a circuit/dataflow panel with an adjacent cycle-by-cycle timing diagram, linked by dashed zoom-callout lines; colour-coded rows/lanes so a shared resource (one LUT row) can be traced to every input that reuses it",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-094_fig3"
+    },
+    {
+      "id": "nsdi23-003_fig7",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Sorting message records by private label makes same-label pairs adjacent so they can be detected, patched and swapped into complete sender/receiver pairs, then re-sorting by entry_id restores each enclave's original slots without ever revealing who talked to whom.",
+      "what_to_learn": "a grid of small record-tables repeated in successive columns to show a multi-pass sort/transform pipeline; colour- and value-linking a handful of tracked records across frames whose row/column position is not stable; numbered stage-name boxes placed between columns rather than inside them",
+      "note_source": "record",
+      "dir": "../../figures/nsdi23-003_fig7"
+    },
+    {
+      "id": "nsdi23-008_fig5",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "One static frame overlays old and new core bindings for a single packet class, using a red dashed arrow for the change and four numbered callouts to narrate order.",
+      "what_to_learn": "Draw the old binding in plain solid lines, overlay just the changed link as one accent dashed arrow in the same frame, and number callouts 1-4 for rule-change, reroute, drop, pickup — but it only reads right in that order.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi23-008_fig5"
+    },
+    {
+      "id": "nsdi23-073_fig4",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "One hub state radiates three numbered guarded transitions to peer actions and back to itself; the same hub-and-spoke shape reappears, smaller, nested inside one peer state as its own sub-loop.",
+      "what_to_learn": "Put the shared hub state at the centre with peer actions fanning out on numbered, guarded arrows that all loop back to it; draw one action's internal loop as a smaller copy of that exact hub-and-spoke shape inside its box.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi23-073_fig4"
+    },
+    {
+      "id": "nsdi23-089_fig1",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A typical tracing framework tags a request once but then reports every span it generates immediately and unconditionally to the backend, win or lose, before it is even known whether the trace will matter.",
+      "what_to_learn": "A bold wavy line as the request's own path; circled numbers along it; a second, dotted channel and a grey band for the backend — all at 333 px wide",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi23-089_fig1"
+    },
+    {
+      "id": "nsdi23-089_fig2",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Instead of reporting every span immediately, Hindsight buffers locally and only pulls a request's spans, backward through its breadcrumb trail, once a trigger flags that request as worth the cost.",
+      "what_to_learn": "the same base topology as a sibling figure, redrawn with one new colour-coded mechanism layered on top; paired zoom-in callouts opening two components' internals from specific points on a main path",
+      "note_source": "record",
+      "dir": "../../figures/nsdi23-089_fig2"
+    },
+    {
+      "id": "nsdi24-018_fig4",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "One packet's metrics and, when needed, one signed route update both travel the same round trip across the public Internet, verified at every hop before any route table is trusted enough to change.",
+      "what_to_learn": "two colour-coded horizontal bands (control plane above, data plane below) with vertical feed arrows from control-plane inputs down into the numbered data-plane pipeline; a shared cloud icon that two different packet types both dotted-line through, reused instead of drawn twice",
+      "note_source": "record",
+      "dir": "../../figures/nsdi24-018_fig4"
+    },
+    {
+      "id": "nsdi25-027_fig1",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "CCF extends Raft's Follower/Candidate/Leader state machine with a Joiner bootstrapping state and two protocol extensions, CheckQuorum (a leader steps down without a quorum) and ProposeVote (a retiring leader fast-tracks a successor), drawn as dashed additions over Raft's solid original states and transitions.",
+      "what_to_learn": "Solid = the known protocol, dashed = this paper's addition, for both nodes and edges; circle only the transitions the text discusses",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi25-027_fig1"
+    },
+    {
+      "id": "nsdi25-034_fig6",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "When a client detects that the returned key does not match the requested key (a hash collision), it sends a correction request that the switch forwards untouched, bypassing its cache logic, to the storage server, which returns the correct value in a 4-step round trip.",
+      "what_to_learn": "Three boxes, four numbered arrows alternating direction, message name in italic beside each number, one highlighted row in a key table hung off the source",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi25-034_fig6"
+    },
+    {
+      "id": "nsdi25-035_fig1",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Same coloured step-blocks reused in both panels so the reader sees which steps (thread switching, context save) vanish moving from synchronous to asynchronous.",
+      "what_to_learn": "Colour-code each step type once (orange = context ops, blue = request/poll) and reuse those colours in both panels, then bracket the idle span the async version fills with useful work instead of a thread switch.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi25-035_fig1"
+    },
+    {
+      "id": "nsdi25-044_fig9",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Numbers three pipeline stages that repeat one 'history feeds a state-checker with a red terminal outcome' template for value and for frequency, then merges both verdicts in the third stage.",
+      "what_to_learn": "Repeat one small template, a running history feeding a state-checker box with a red terminal outcome, once for the traced value and once for its frequency; number both ①② and combine their verdicts in a third numbered checker.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi25-044_fig9"
+    },
+    {
+      "id": "nsdi26-043_figtex18",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A client can pipeline a causally-dependent second transaction immediately after a speculative outcome for the first, without waiting for finality; if the process later reports that speculation was stale, the client resubmits at a later round instead of stalling on every request.",
+      "what_to_learn": "a two-lane (server/client) swimlane with round-indexed sub-phase boxes on one lane, crossed by numbered, differently-coloured arrows tracing a speculate-then-correct message exchange",
+      "note_source": "record",
+      "dir": "../../figures/nsdi26-043_figtex18"
+    },
+    {
+      "id": "nsdi26-095_fig3",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Because AS2 holds a ROA for 5.6/16 even without announcing it, BAR-SAV correctly accepts its Direct-Server-Return response that naive SAV policies would wrongly drop as spoofed.",
+      "what_to_learn": "a small AS-level topology with provider/customer and peer edges plus a distinct arrow colour per traffic type (announcement, request, response), annotated with a pass/fail verdict at the decision point",
+      "note_source": "record",
+      "dir": "../../figures/nsdi26-095_fig3"
+    },
+    {
+      "id": "osdi23-020_fig9",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "As Thread 2 executes one $7 transfer under separate A/B locks, the physical balances update first and the ghost (specification) values catch up atomically in one instantaneous step that exactly matches the GSM's single global transition.",
+      "what_to_learn": "a swimlane timeline where a specification-level (ghost) copy and an implementation-level (physical) copy of the same value are drawn as paired boxes that travel together, with one isolated instant where the ghost jumps to re-sync",
+      "note_source": "record",
+      "dir": "../../figures/osdi23-020_fig9"
+    },
+    {
+      "id": "osdi23-032_fig8",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Read-delegation and write-combining share one twin-diamond decision skeleton; a green 'Time Window' bracket marks the one real memory round-trip that queued duplicate requests reuse instead of repeating it.",
+      "what_to_learn": "Bracket the delegate's one memory round-trip as a 'Time Window,' with dashed arrows fanning back to queued duplicate requests instead of repeating the trip; draw the bypass path looping visibly under every memory-side phase box.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi23-032_fig8"
+    },
+    {
+      "id": "osdi23-049_fig10",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Tracing example code through its multi-hop remote-fork execution shows how each forked function reads the prior hop's output over RDMA from a different machine's DRAM.",
+      "what_to_learn": "code listing paired label-for-label with an adjacent node chain, with per-hop memory boxes drawn beneath the link they belong to",
+      "note_source": "record",
+      "dir": "../../figures/osdi23-049_fig10"
+    },
+    {
+      "id": "osdi24-020_fig4",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Flock's Relay authenticates each serverless instance separately (teal S2R) before downgrading and re-forwarding their sockets so the instances complete a direct mTLS handshake (green S2S) end-to-end.",
+      "what_to_learn": "A lifeline walkthrough with no numbers at all: top-down order plus two phase colours",
+      "note_source": "doc",
+      "dir": "../../figures/osdi24-020_fig4"
+    },
+    {
+      "id": "osdi25-010_fig7",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Two identical page-state-machine templates side by side (state spine + numbered steps + linked epoch-phase column), differing only by one extra intermediate state and its numbering.",
+      "what_to_learn": "Draw each variant as an identical spine of numbered states with a phase column linked by short cross-arrows and a return loop on the left; give the busier variant one extra spine state and renumber after it.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi25-010_fig7"
+    },
+    {
+      "id": "osdi25-016_fig6",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Because KPerfIR keeps IR structure available at profiling time, it can correlate code directly with per-iteration timelines, critical-path traces across warp groups, and program-object memory-access patterns.",
+      "what_to_learn": "compiler IR snippet on the left with curved 'Correspond' arrows into a coloured timeline or grid on the right, closed off by a small reusable legend",
+      "note_source": "record",
+      "dir": "../../figures/osdi25-016_fig6"
+    },
+    {
+      "id": "osdi26-037_fig5",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A shadow pointer created by the first check_ptr call remembers an object's pseudo- and real-address bases; a later check_ptr call reuses that record to translate a new pseudo-pointer offset into the correct real memory address.",
+      "what_to_learn": "a vertical code-flow arrow linking numbered code snippets to a shared side annotation box and a memory-layout table",
+      "note_source": "record",
+      "dir": "../../figures/osdi26-037_fig5"
+    },
+    {
+      "id": "osdi26-079_fig6",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A five-step lock/copy/stitch/unlock protocol merges NIC-buffered entries into new tree nodes and, frame by frame, repeats itself one level higher up the host tree until the update reaches the root.",
+      "what_to_learn": "One numbered 1–5 recipe listed in a side legend and replayed identically at each of three tree levels",
+      "note_source": "doc",
+      "dir": "../../figures/osdi26-079_fig6"
+    },
+    {
+      "id": "sosp24-035_fig2",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Same CPU-Mem/CPU/GPU/GPU-Mem template with a PCIe bar reused for both offloading designs; circled numbered arrows trace which layer or result crosses the bus and when.",
+      "what_to_learn": "Reuse one CPU-Mem/CPU-icon/GPU-icon/GPU-Mem template over a PCIe bar for both designs, numbering each cross-bus arrow in order, and show idle vs busy compute by icon fill density alone — but that convention has no legend.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp24-035_fig2"
+    },
+    {
+      "id": "sosp25-039_fig3",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A voter's single public tag anchors two credentials, real and fake, both used to sign otherwise-identical encrypted ballots; only at tally does a verifiable shuffle anonymize tags and ballots so only tag-matched real votes get decrypted and counted.",
+      "what_to_learn": "parallel real/fake instances of the same box template (Credential, Vote) carried through matching Ledger logs, reunited only at a shuffle step drawn with a crossed-ribbon icon",
+      "note_source": "record",
+      "dir": "../../figures/sosp25-039_fig3"
+    },
+    {
+      "id": "sosp25-047_fig14",
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Chains four representations of the same schedule (symbolic graph, formal constraints, solved graph, generated code) into one numbered pipeline so the same dependency structure visibly survives each transform.",
+      "what_to_learn": "Draw the same two-row dependency graph twice, logical-time then execution-time, and make the ILP's solution visible as a literal geometric skew (angle θ) between the two layouts; number the pipeline 1-4, flanked by the formal constraints and the emitted code.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp25-047_fig14"
+    }
+  ]
+}

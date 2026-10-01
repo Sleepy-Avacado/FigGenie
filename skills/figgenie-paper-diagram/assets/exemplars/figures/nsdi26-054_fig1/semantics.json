@@ -1,0 +1,164 @@
+{
+  "paper_id": "nsdi26-054",
+  "fig": "1",
+  "system": {
+    "name": "FAST",
+    "one_liner": "an efficient online scheduler for the all-to-all (alltoallv) GPU communication that MoE training relies on",
+    "domain": [
+      "ml-systems",
+      "networking",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Dense Layer",
+        "role": "a standard transformer layer preceding/following an MoE layer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MoE Layer",
+        "role": "a Mixture-of-Experts layer that invokes alltoallv twice to dispatch tokens and gather expert outputs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU 0",
+        "role": "a GPU holding one shard of experts, running gating, compute, and sum",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "GPU 1",
+        "role": "a GPU holding one shard of experts, running gating, compute, and sum",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "GPU 2",
+        "role": "a GPU holding one shard of experts, running gating, compute, and sum",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "Gating",
+        "role": "gating function that selects experts for each token",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "AlltoAllv",
+        "role": "all-to-all communication step that dispatches/gathers tokens across GPUs",
+        "container": "MoE Layer",
+        "novel": false
+      },
+      {
+        "name": "Compute",
+        "role": "expert feed-forward computation on dispatched tokens",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "Sum",
+        "role": "aggregation of expert outputs after the second alltoallv",
+        "container": "GPU",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Dense Layer",
+        "to": "MoE Layer",
+        "what": "activations passed between layers in the pipeline",
+        "step": null
+      },
+      {
+        "from": "Gating",
+        "to": "Compute",
+        "what": "tokens dispatched to selected experts via alltoallv",
+        "step": 1
+      },
+      {
+        "from": "Compute",
+        "to": "Sum",
+        "what": "expert outputs gathered back via alltoallv",
+        "step": 2
+      }
+    ],
+    "key_idea": "Each MoE layer invokes the all-to-all (alltoallv) communication primitive twice, once to dispatch tokens to experts across GPUs and once to gather their outputs, making it a critical and frequent communication bottleneck.",
+    "reading_order": "Left to right along the top row of alternating Dense and MoE layers, then down into one MoE layer to see the per-GPU gating, two alltoallv exchanges, compute, and sum stages."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.01,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d1d1d1",
+        "used_for": "gray fill for the Dense Layer and MoE Layer boxes in the top pipeline row"
+      },
+      {
+        "hex": "#c1e5f5",
+        "used_for": "light blue fill for the background panel containing the per-GPU rows"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red fill/arrows marking the two AlltoAllv communication steps"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.65pt) black outlines, square corners",
+    "font": "Calibri/Aptos sans-serif, ~5-8pt",
+    "corners": "square",
+    "arrows": "straight arrows with filled heads (24 heads) connecting layer and stage boxes",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray = layer-level pipeline boxes, light blue = per-GPU MoE layer detail panel, red = the alltoallv communication step being highlighted as the paper's focus",
+    "line_style_means": null,
+    "emphasis": "red coloring on both AlltoAllv arrows singles out the communication primitive as the critical, frequently-invoked operation motivating the paper",
+    "reusable_patterns": [
+      "zoom-in from a layer-level pipeline into per-GPU detail of one layer",
+      "highlighted communication step between compute stages"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "all-to-all",
+    "MoE",
+    "GPU-communication",
+    "scheduling",
+    "expert-parallelism",
+    "motivation-figure"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "2 Motivation (p.3)"
+    ],
+    "evidence": [
+      "Figure 1: MoE models invoke alltoallv twice per MoE layer, making it a critical communication primitive.",
+      "each MoE layer invokes alltoallv twice, and MoE layers often constitute a large fraction of the model",
+      "alltoallv can account for 30-56% of training time"
+    ]
+  },
+  "summary": "This background/motivation figure illustrates why all-to-all (alltoallv) communication is critical in Mixture-of-Experts (MoE) training. The top row shows a pipeline alternating Dense Layer and MoE Layer boxes. A zoomed-in view of one MoE Layer shows three parallel GPU rows (GPU 0-2), each running a Gating function, followed by a red-highlighted AlltoAllv exchange that dispatches tokens to the selected experts on other GPUs, a Compute stage running the expert feed-forward network, a second red AlltoAllv exchange that gathers the expert outputs back, and a final Sum stage, with 'Input from previous layer' and 'Output to next layer' labels marking the layer boundaries. The two red AlltoAllv arrows visually emphasize that every MoE layer invokes this communication primitive twice, motivating the paper's focus on scheduling it efficiently.",
+  "summary_zh": "该图说明 MoE 模型中 alltoallv 通信的关键性：顶部为稠密层与 MoE 层交替的流水线，下方放大展示单个 MoE 层内三块 GPU 并行执行门控、经两次红色标出的 alltoallv 通信（分发到专家、再汇总结果）与求和，凸显该通信原语每层调用两次。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

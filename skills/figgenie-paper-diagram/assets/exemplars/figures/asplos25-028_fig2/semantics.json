@@ -1,0 +1,213 @@
+{
+  "paper_id": "asplos25-028",
+  "fig": "2",
+  "system": {
+    "name": "ZRAID",
+    "one_liner": "a software ZNS RAID layer that uses the Zone Random Write Area (ZRWA) to eliminate the partial-parity tax of ZNS RAID",
+    "domain": [
+      "storage",
+      "kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Single ZNS Device",
+        "role": "single logical ZNS device abstraction exposed to the application",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Device Mapper",
+        "role": "maps the logical ZNS device onto the ZRAID driver",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "ZRAID Driver",
+        "role": "kernel-space driver implementing ZRAID's partial-parity and ZRWA management",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Stripe Buffer",
+        "role": "in-memory cache of data chunks in an incomplete stripe, used to generate partial and full parity chunks",
+        "container": "ZRAID Driver",
+        "novel": true
+      },
+      {
+        "name": "WP States",
+        "role": "in-memory write-pointer states read by the Completion Handler and updated after each WP advancement",
+        "container": "ZRAID Driver",
+        "novel": true
+      },
+      {
+        "name": "ZRWA Block Bitmap",
+        "role": "one bit per logical block in the ZRWA, tracking completion progress within the data area",
+        "container": "ZRAID Driver",
+        "novel": true
+      },
+      {
+        "name": "I/O Submitter",
+        "role": "generates sub-I/Os from host requests and submits them simultaneously to the I/O devices, gated by WP states",
+        "container": "ZRAID Driver",
+        "novel": true
+      },
+      {
+        "name": "Completion Handler",
+        "role": "aggregates sub-I/O completions, returns completion to the host, and updates the ZRWA block bitmap",
+        "container": "ZRAID Driver",
+        "novel": true
+      },
+      {
+        "name": "ZRWA Manager",
+        "role": "tracks ZRWA completion via the block bitmap and issues WP advancement via an explicit ZRWA flush command",
+        "container": "ZRAID Driver",
+        "novel": true
+      },
+      {
+        "name": "I/O devices",
+        "role": "underlying ZNS SSDs that receive sub-I/Os and WP-advance commands and raise completion interrupts",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Dev 0",
+        "role": "one physical ZNS device zone, showing its ZRWA/Durable/Semi-durable/PP/Empty regions by ascending PBA",
+        "container": "I/O devices",
+        "novel": false
+      },
+      {
+        "name": "Dev 1",
+        "role": "a second physical ZNS device with the same zone layout as Dev 0",
+        "container": "I/O devices",
+        "novel": false
+      },
+      {
+        "name": "Dev 2",
+        "role": "a third physical ZNS device with the same zone layout as Dev 0",
+        "container": "I/O devices",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "I/O Submitter",
+        "to": "Stripe Buffer",
+        "what": "cached data chunks of an incomplete stripe (read/write)",
+        "step": null
+      },
+      {
+        "from": "Completion Handler",
+        "to": "WP States",
+        "what": "write-pointer state (read)",
+        "step": null
+      },
+      {
+        "from": "ZRWA Manager",
+        "to": "ZRWA Block Bitmap",
+        "what": "block-completion bitmap update / read / reset",
+        "step": null
+      },
+      {
+        "from": "I/O Submitter",
+        "to": "I/O devices",
+        "what": "submitted sub-I/Os (data, parity, metadata)",
+        "step": null
+      },
+      {
+        "from": "I/O devices",
+        "to": "Completion Handler",
+        "what": "I/O completion interrupts",
+        "step": null
+      },
+      {
+        "from": "ZRWA Manager",
+        "to": "I/O devices",
+        "what": "WP advance via ZRWA flush command",
+        "step": null
+      }
+    ],
+    "key_idea": "ZRAID's kernel driver temporarily stores partial parity inside each data zone's Zone Random Write Area, distributing parity writes across zones instead of dedicated log zones.",
+    "reading_order": "Top-down: application through the device mapper into the ZRAID driver's functional and state components, then down to the physical ZNS devices and their zone layout."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.13,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#21507a",
+        "used_for": "dark-blue header bar of 'Single ZNS Device' and the tier tags (Application/Kernel-space/I/O devices)"
+      },
+      {
+        "hex": "#bcd6ed",
+        "used_for": "light-blue fill of the Dev0-Dev2 boxes and the ZRWA/Durable zone segments"
+      },
+      {
+        "hex": "#bebebe",
+        "used_for": "gray fill of the in-memory structure boxes (Stripe Buffer, WP States, ZRWA Block Bitmap) and the Empty zone segment"
+      },
+      {
+        "hex": "#1f3763",
+        "used_for": "dark-navy border/text accents"
+      },
+      {
+        "hex": "#7e7e7e",
+        "used_for": "Semi-durable/PP zone-segment fills and secondary text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.65pt, mix of solid and dashed borders (dashed lines separate the application/kernel/device layers)",
+    "corners": "square",
+    "arrows": "orthogonal lines with filled triangular heads, several bidirectional between components and their state",
+    "font": "Roboto Bold/Medium sans-serif, ~4-6.5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "white boxes represent core ZRAID functional components; gray boxes represent the in-memory data structures those components use",
+    "line_style_means": "dashed horizontal boundaries separate the application, device-mapper, kernel-space driver, and device layers; solid arrows show read/write and I/O flows",
+    "emphasis": "separates functional logic (white) from in-memory state (gray) inside the ZRAID driver, and draws the zone layout only once (Dev 0) since Dev 1/Dev 2 repeat it",
+    "reusable_patterns": [
+      "layered software stack from application down to physical devices",
+      "white-vs-gray box coding distinguishing logic components from state"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "ZNS",
+    "SSD",
+    "RAID",
+    "zoned-storage",
+    "parity",
+    "kernel-driver",
+    "storage"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design (p.6)"
+    ],
+    "evidence": [
+      "The white boxes within the ZRAID driver represent core functional components of ZRAID.",
+      "The grey boxes signify the key in-memory structures utilized by those components.",
+      "For simplicity, only one of the multiple physical zones in each device is depicted."
+    ]
+  },
+  "summary": "ZRAID is a software ZNS RAID layer that uses the Zone Random Write Area (ZRWA) feature to store partial parity near each data zone's write pointer, avoiding the throughput and write-amplification costs of dedicated parity-log zones. This figure shows ZRAID's layered architecture: an application accesses a single logical ZNS device through a device mapper, which routes requests into the kernel-space ZRAID driver. Inside the driver, white boxes (I/O Submitter, Completion Handler, ZRWA Manager) are core functional components, while gray boxes (Stripe Buffer, WP States, ZRWA Block Bitmap) are the in-memory state they read and update, connected by labelled Read/Write, Read, Update and Read/Reset arrows. At the bottom, the driver submits sub-I/Os and WP-advance commands to, and receives interrupts from, the I/O devices; only Dev 0 shows its internal zone layout (ZRWA, Durable, Semi-durable, PP, Empty regions by ascending block address), since Dev 1 and Dev 2 mirror it.",
+  "summary_zh": "该图展示ZRAID的分层架构：应用经设备映射器进入内核态ZRAID驱动，白色框为核心功能组件（I/O提交器、完成处理器、ZRWA管理器），灰色框为其使用的内存状态；底部驱动向物理ZNS设备提交子I/O并接收中断，仅Dev 0展示区域布局。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

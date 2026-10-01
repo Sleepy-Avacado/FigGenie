@@ -1,0 +1,41 @@
+{
+  "id": "osdi24-032_fig9",
+  "paper_id": "osdi24-032",
+  "fig": "9",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 9: BurstCBS overview.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.13,
+  "n_components": 7,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-032/osdi24-032_fig9_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-032/osdi24-032_fig9_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Clean 7-component, 4-flow control/data split: an FPGA data plane with four SA Control Threads fans dashed lines into a single control-plane box stacking exactly three named components, avoiding a legend entirely.",
+      "what_to_learn": "Stack the control plane's three components vertically in one box, label each with its paper section number instead of a legend, and fan dashed lines from every data-plane unit into that shared box rather than drawing one arrow per component."
+    }
+  ]
+}

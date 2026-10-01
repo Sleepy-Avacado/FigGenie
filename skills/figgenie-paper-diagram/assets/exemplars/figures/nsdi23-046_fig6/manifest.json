@@ -1,0 +1,47 @@
+{
+  "id": "nsdi23-046_fig6",
+  "paper_id": "nsdi23-046",
+  "fig": "6",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 6: On-NIC Request Scheduler",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.34,
+  "n_components": 8,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-046/nsdi23-046_fig6_p8_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-046/nsdi23-046_fig6_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: a plain microarchitecture block diagram (its own corpus label pipeline), storage feeding a scheduler, with an inline eligibility-mask icon, but no magnified callout connected by dashed leaders.",
+      "what_to_learn": "The transferable move is pipeline's: draw the concrete bit pattern (1-1-1-0) the mechanism evaluates right next to the step that reads it, but connect it with a line to the specific queue slots it filters and vary the shade of same-coloured boxes, since near-identical orange boxes here need label-reading to tell apart."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-25 microarchitecture floorplan: a blue on-chip storage block sits above the orange scheduler and load-balancer cluster, with a worked 1-1-1-0 eligibility mask drawn directly on the FEO block instead of only in prose.",
+      "what_to_learn": "Annotate a worked example value, like an eligibility bitmask, directly on the block that consumes it rather than leaving it only in prose, and colour the storage box and scheduler sub-blocks by role; draw an explicit line from the mask digits to the queue slots they filter, which this figure leaves implicit."
+    }
+  ]
+}

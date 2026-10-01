@@ -1,0 +1,133 @@
+{
+  "paper_id": "nsdi25-035",
+  "fig": "3",
+  "system": {
+    "name": "Beehive",
+    "one_liner": "an asynchronous disaggregated-memory runtime that lets multithreaded Rust programs run efficiently over RDMA without rewriting for asynchrony",
+    "domain": [
+      "memory-disaggregation",
+      "distributed-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Applications",
+        "role": "user programs written in conventional multithreaded style",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Beehive Programming Interfaces",
+        "role": "programming abstractions exposed to applications: RemPtr, RemRef, DerefScope, Ownership",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Beehive Rust Compiler",
+        "role": "compiles Beehive programs via program dependency analysis and pararoutine generation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Beehive Runtime",
+        "role": "runtime library handling runtime barriers, pararoutine frame management, pararoutine scheduling, and the evacuator; shown on both the local host and a remote server",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Remote server",
+        "role": "a remote machine running its own Beehive Runtime instance that the local host communicates with",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "OS & Drivers",
+        "role": "bottom layer providing RDMA communication libraries and InfiniBand drivers",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "Beehive is a top-down layered stack (interfaces, compiler, runtime, OS/drivers) whose runtime layer is mirrored on a remote server, communicating over RDMA.",
+    "reading_order": "top to bottom through Applications, Programming Interfaces, Rust Compiler, and Runtime, with a matching Runtime box for a Remote server to the side and OS & Drivers underneath"
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.94,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9d9",
+        "used_for": "Applications box background"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "Beehive Programming Interfaces box"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "Beehive Rust Compiler box"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Beehive Runtime boxes (local and remote)"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "OS & Drivers box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black/dark gray, ~0.45pt",
+    "font": "serif (Times New Roman, bold titles), 6.5-8pt",
+    "corners": "square",
+    "arrows": "none (static layered stack; a plain connector links the two Runtime boxes)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each layer of the Beehive stack (interfaces, compiler, runtime, OS/drivers) gets its own flat fill color; the runtime's color is reused for its remote-server copy to show it is the same component",
+    "line_style_means": null,
+    "emphasis": "the runtime layer's box is the largest and most detailed (four bullet items), and its color is echoed in a smaller remote copy to show the same runtime runs on both sides of the link",
+    "reusable_patterns": [
+      "top-down layered software stack (interfaces / compiler / runtime / OS) with a small side box showing the same runtime layer replicated on a remote peer"
+    ],
+    "weaknesses": [
+      "the connector between the local and remote runtime boxes is unlabeled, so the exact communication mechanism is only inferable from the OS & Drivers layer below"
+    ]
+  },
+  "tags": [
+    "memory-disaggregation",
+    "rust",
+    "asynchronous-runtime",
+    "rdma",
+    "pararoutine"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design and Implementation (p.5)"
+    ],
+    "evidence": [
+      "Design overview of the Beehive",
+      "Beehive is an asynchronous framework built for applications running on the memory-disaggregated platform",
+      "contains three layers, pro- gramming interfaces (§ 4.2), a Rust compiler (§ 4.3) and the associated runtime"
+    ]
+  },
+  "summary": "Beehive is an asynchronous runtime for applications on memory-disaggregated platforms, letting programmers write conventional multithreaded Rust code that Beehive's compiler transforms into efficient asynchronous execution. Figure 3 gives a top-down layered overview of the design: Applications sit above the Beehive Programming Interfaces layer (RemPtr, RemRef, DerefScope, Ownership), which sits above the Beehive Rust Compiler (program dependency analysis, pararoutine generation), which sits above the Beehive Runtime (runtime barriers, pararoutine frame management, pararoutine scheduling, evacuator). A smaller matching Beehive Runtime box is drawn to the side on a Remote server, and an OS & Drivers layer (RDMA communication libraries, InfiniBand drivers) underlies the whole stack, showing that the runtime's disaggregated-memory operations ultimately ride over RDMA between local and remote machines.",
+  "summary_zh": "图3自上而下展示Beehive分层设计：应用层之下是编程接口层、Rust编译器层与运行时层，右侧同款运行时框代表远程服务器，底层为RDMA/InfiniBand驱动支撑整个栈。",
+  "confidence": "medium",
+  "notes": "the 'Remote server' box and the 'OS & Drivers' layer (RDMA/InfiniBand) are read from the figure only; the provided paragraph names just the three main layers (interfaces, compiler, runtime).",
+  "venue": "NSDI25"
+}

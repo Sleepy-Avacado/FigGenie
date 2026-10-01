@@ -1,0 +1,344 @@
+{
+  "paper_id": "osdi25-003",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "WLB-LLM",
+    "one_liner": "a workload-balanced 4D parallelism scheme for LLM training that combines data, pipeline, context, and tensor parallelism",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "why packing long/short documents together (PP level) and sharding a packed sequence (CP level) both create uneven GPU workload",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "Data Loader",
+        "kind": "box",
+        "role": "shared component feeding input documents into both DP workers' global batches",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Global Batch",
+        "kind": "box",
+        "role": "dashed container holding the input documents to be packed for one DP worker",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Input Documents",
+        "kind": "label",
+        "role": "the variable-length documents that get packed into fixed-length micro-batches",
+        "container": "Global Batch",
+        "highlighted": false
+      },
+      {
+        "name": "Packing",
+        "kind": "box",
+        "role": "step that packs documents into fixed-length rows for a micro-batch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Heavy Workload Micro-batch",
+        "kind": "row",
+        "role": "a packed row dominated by one long document, giving it a heavier compute load",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Light Workload Micro-batch",
+        "kind": "row",
+        "role": "a packed row made of several short documents, giving it a lighter compute load",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Pipeline Training",
+        "kind": "label",
+        "role": "the packed micro-batches are fed into pipeline-parallel training stages",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PP-0",
+        "kind": "box",
+        "role": "first pipeline-parallel stage that processes the packed micro-batch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PP-1",
+        "kind": "box",
+        "role": "second pipeline-parallel stage, downstream of PP-0",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "DP-0",
+        "kind": "lane",
+        "role": "one data-parallel worker/replica, shown packing the heavy micro-batch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "DP-1",
+        "kind": "lane",
+        "role": "another data-parallel worker/replica, shown packing the light micro-batch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Packed Docs",
+        "kind": "row",
+        "role": "a sequence made of concatenated documents (Doc-0, Doc-1) before being sharded across context-parallel workers",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Doc-0",
+        "kind": "cell",
+        "role": "first, longer document occupying most of the packed sequence",
+        "container": "Packed Docs",
+        "highlighted": false
+      },
+      {
+        "name": "Doc-1",
+        "kind": "cell",
+        "role": "second, shorter document appended after Doc-0",
+        "container": "Packed Docs",
+        "highlighted": false
+      },
+      {
+        "name": "Sharding",
+        "kind": "label",
+        "role": "step that divides the packed sequence into equal-length chunks assigned round-robin to CP workers",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CP-0",
+        "kind": "cell",
+        "role": "a context-parallel worker assigned the outer (shorter, cheaper) attention chunks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CP-1",
+        "kind": "cell",
+        "role": "the context-parallel worker assigned the inner chunks that fall entirely inside Doc-0's long causal-attention span",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Attention Mask",
+        "kind": "cell",
+        "role": "triangular causal-attention mask whose area under each CP worker's rows determines its compute load",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Much Larger Workload on CP-1",
+        "kind": "label",
+        "role": "callout marking that CP-1's masked region is far larger than the other workers', because Doc-0 spans it entirely",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Data Loader",
+        "to": "Global Batch",
+        "what": "distributes input documents into each DP worker's global batch",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Global Batch",
+        "to": "Packing",
+        "what": "documents in the global batch are packed into fixed-length micro-batches",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Packing",
+        "to": "Heavy Workload Micro-batch",
+        "what": "produces a row dominated by one long document",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Packing",
+        "to": "Light Workload Micro-batch",
+        "what": "produces a row made of several short documents",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Heavy Workload Micro-batch",
+        "to": "PP-0",
+        "what": "the heavy micro-batch enters pipeline training on DP-0",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "PP-0",
+        "to": "PP-1",
+        "what": "activations flow to the next pipeline stage",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Packed Docs",
+        "to": "Sharding",
+        "what": "the packed sequence is divided into equal-length chunks",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Sharding",
+        "to": "CP-0",
+        "what": "assigns an outer chunk pair to CP-0",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "Sharding",
+        "to": "CP-1",
+        "what": "assigns the inner chunk pair, which falls inside Doc-0's span, to CP-1",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "CP-1",
+        "to": "Attention Mask",
+        "what": "CP-1's assigned rows cover a much larger unmasked region of the causal mask",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "DP-0 (heavy)",
+        "axis": "alternatives",
+        "differs": "packs a micro-batch containing one long document, highlighted red as the Heavy Workload Micro-batch",
+        "verdict": "heavier workload"
+      },
+      {
+        "label": "DP-1 (light)",
+        "axis": "alternatives",
+        "differs": "packs a micro-batch of several short documents, highlighted green as the Light Workload Micro-batch",
+        "verdict": "lighter workload"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "A single long document dominates whichever packed micro-batch and whichever context-parallel chunk it lands in, so both document packing and sequence sharding create workload imbalance, not just one.",
+    "reading_order": "left sub-figure (1): Data Loader down through DP-0/DP-1 packing to Pipeline Training; right sub-figure (2): Packed Docs down through Sharding to the Attention Mask"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.02,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of most boxes: Data Loader, Global Batch documents, PP-0/PP-1, and the unhighlighted Packed-Docs/CP cells"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red, the Heavy Workload Micro-batch row and the 'Much Larger Workload on CP-1' callout arrow/text"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale green fill of the Light Workload Micro-batch row"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "dark green text/arrow labelling the Light Workload Micro-batch"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "light blue fill of the PP-0/PP-1 pipeline-stage boxes"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "pale yellow fill of the unmasked (active attention) region of the Attention Mask triangle"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "gold/amber highlight on the CP-1 chunk boundary"
+      },
+      {
+        "hex": "#404040",
+        "used_for": "dark gray section headings '(1)'/'(2)' and body text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.5pt strokes, mostly solid black box outlines with a dashed divider separating sub-figures (1) and (2), and dashed borders on the Global Batch containers",
+    "corners": "mixed",
+    "arrows": "solid black arrows with triangular heads chain Data Loader to Packing to Pipeline Training, and Packed Docs to Sharding to the Attention Mask",
+    "font": "Arial sans, 14-24pt, bold for stage/box titles",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red = the heavy, long-document micro-batch / the CP-1 overload callout; green = the light, short-document micro-batch; blue = pipeline-parallel stage boxes; yellow/gold = the active attention-mask region",
+    "line_style_means": "solid arrows chain each stage of the pipeline left to right; a dashed vertical rule separates the PP-level packing sub-figure (1) from the CP-level sharding sub-figure (2)",
+    "state_means": "DP-0 vs DP-1 (heavy vs light workload) are told apart purely by which packed row is coloured red or green; the two sub-figures are told apart by the dashed divider and their (1)/(2) captions",
+    "marker_means": "'(1)' and '(2)' number the two sub-mechanisms; the CP-0/CP-1 labels and matching mask-row highlight identify which worker owns which attention-mask rows",
+    "emphasis": "red fill and a red arrow both single out the one heavy micro-batch and the one overloaded CP-1 worker as the root causes of the imbalance the paper measured",
+    "reusable_patterns": [
+      "two identically-shaped DP-worker pipelines coloured red/green to contrast a heavy vs a light packed micro-batch",
+      "a document-packing bar mapped directly onto the rows of a triangular causal-attention mask to show which worker's chunk falls inside a long document's span"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "4D-parallelism",
+    "workload-imbalance",
+    "document-packing",
+    "context-parallelism",
+    "sequence-sharding",
+    "WLB-LLM"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Motivation (p.5)"
+    ],
+    "evidence": [
+      "a micro-batch containing only a single long document (highlighted in red) has larger workload",
+      "if the sequence is packed with multiple documents, it may lead to significant workload imbalances across CP workers",
+      "input documents are packed into sequences (micro-batches) of equal length"
+    ]
+  },
+  "summary": "WLB-LLM balances workload across a 4D-parallel LLM training job that otherwise suffers from pipeline (PP) and context-parallel (CP) imbalance. This figure's two schematics show where each imbalance comes from. On the left, (1) two data-parallel workers (DP-0, DP-1) pack the same Data Loader's documents into fixed-length micro-batches for pipeline training; DP-0 happens to pack one long document into a Heavy Workload Micro-batch (red) while DP-1 packs several short documents into a Light Workload Micro-batch (green), so identically-shaped PP-0/PP-1 pipelines end up processing very different amounts of work. On the right, (2) a packed sequence of two documents is sharded into equal-length chunks and mapped onto CP-0 and CP-1; because Doc-0's causal attention span happens to fall entirely inside CP-1's assigned chunks, the triangular attention mask shows CP-1 carrying a 'Much Larger Workload' than the other worker despite each chunk having the same token count.",
+  "summary_zh": "该图展示WLB-LLM训练不均衡的来源：左图DP-0打包长文档为Heavy微批（红），DP-1打包短文档为Light微批（绿），负载不同；右图序列分片后Doc-0落入CP-1区块，注意力掩码显示其负载明显更大。",
+  "confidence": "high",
+  "notes": "base corrected from prior 'none' (not a valid v3 base value) to 'mixed', since the image mixes a component/box packing diagram with a matrix-style attention-mask diagram; groups expanded to add 'comparison' as primary (the DP-0 vs DP-1 packing boxes are an identical-template side-by-side alternative) alongside the prior 'anatomy' for the CP-sharding/mask half. This record describes only the given preview (fig4b, the packing/sharding schematic), not the separate scatter-plot half (fig4a) of the paper's full Figure 4.",
+  "venue": "OSDI25"
+}

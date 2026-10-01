@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-124_fig4",
+  "paper_id": "nsdi26-124",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Fig. 4: Architecture of SLOWPOKE. SLOWPOKE runs on the con- trol plane and orchestrates profiling experiments on microservice applications deployed on Kubernetes. Each microservice runs in a pod alongside a POKER process. Services interact through instru- mented communication libraries via a data ch",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.66,
+  "n_components": 10,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-124/nsdi26-124_fig4_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-124/nsdi26-124_fig4_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated: a dashed horizontal divider cleanly separates three data-plane pods above from a two-phase control plane below, with lettered (a)/(b)/(c) callouts tying each crossing arrow to body-text explanation instead of an in-figure legend.",
+      "what_to_learn": "Use one dashed rule as the entire plane boundary, then letter (not number) the arrows that cross it when their meaning needs the body text rather than a self-contained legend; color the two control-plane phases (orange pre-profiling, green slowdown) so their converging arrows read as one pipeline."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: three Pod boxes are simultaneous identical peers in one system, not alternative designs or moments, and the lettered (a)(b)(c) tags label arrow types within one diagram, not separate panels; this is replicated-grid, not n-panel-comparison.",
+      "what_to_learn": "Reserve lettered (a)(b)(c) tags for distinct panels, not for naming different arrow or relationship types inside one diagram, which just needs a legend instead; draw N simultaneous identical peers (here three pods) as a repeated unit feeding one shared control plane below a dashed divider, replicated-grid's job, not a panel-by-panel comparison."
+    }
+  ]
+}

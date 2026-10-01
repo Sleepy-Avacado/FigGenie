@@ -1,0 +1,55 @@
+{
+  "id": "sosp24-011_figtex2",
+  "kind": "mechanism",
+  "paper_id": "sosp24-011",
+  "fig": "tex2",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Adaptive pipelining when \\(W_1 2\\) fails. The micro-batches from worker \\(W_1 1\\), originally intended for \\(W_1 2\\), are dynamically re-routed to workers \\(W_0 2\\) and \\(W_2 2\\), ensuring that the training process continues without interruption.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "topology",
+  "subject": "how Adaptive Pipelining reroutes worker W1_2's micro-batches to peer workers W0_2 and W2_2 when W1_2 fails",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "badge",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 2.52,
+  "n_elements": 13,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-011/src/texfig2_Adaptive-Pipeline.svg",
+    "preview.png": "lab/extracted/sosp24-011/src/texfig2_Adaptive-Pipeline.png",
+    "print.png": null
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "Because data-parallel peer workers at the same pipeline stage hold identical parameters, a failed worker's incoming micro-batches can be split across its healthy peers, which forward the extra output to the failed worker's original downstream successor.",
+      "what_to_learn": "A grid coloured on two independent axes, a red X for the failure, fork-then-merge arrows for the reroute, a taught-once legend",
+      "note_source": "doc"
+    }
+  ]
+}

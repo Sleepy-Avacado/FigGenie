@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-025_fig2",
+  "paper_id": "osdi26-025",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: Detailed walkthrough of the internals of multiple try invocations. A detailed walkthrough of these invocations is presented in §4.4. From top to bottom: try’s invocation, component effects, try internal state, and host filesystem state. From left to right: different try invocations on diff",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 2.99,
+  "n_components": 7,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "digits",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-025/osdi26-025_fig2_p9_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-025/osdi26-025_fig2_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of four invocation columns sharing identical invocation, effects, overlay-state and filesystem rows, with the final column greyed out to separate a commit phase from the three live invocations.",
+      "what_to_learn": "Repeat the same row categories down every example column, and grey out an entire column to mark a later, separate phase rather than drawing it as a different diagram; label small isolation-dimension tabs consistently across all columns."
+    }
+  ]
+}

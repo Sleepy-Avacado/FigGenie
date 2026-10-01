@@ -1,0 +1,53 @@
+{
+  "id": "osdi23-040_fig6",
+  "paper_id": "osdi23-040",
+  "fig": "6",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 6: NIC RX Datapath. the transfer goes around the Ens¯o Pipe boundary and auto- matically partitions it into several transfers, each of which is smaller than the overall buffer size.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.88,
+  "n_components": 8,
+  "n_flows": 9,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-040/osdi23-040_fig6_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-040/osdi23-040_fig6_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline in the fan-out/fan-in variant: a trapezoid connector splits Metadata across 16 identical Pipe Manager boxes elided with a vertical ellipsis, while a separate lower lane carries bulk Data to the same DMA Engine.",
+      "what_to_learn": "Use trapezoid connectors, not sixteen arrows, to fan data to and from N identical replicated boxes, elide the middle instances with a vertical ellipsis, and keep the bulk-data lane physically separate from the control lane; draw side-channel control inputs thinner so they are not mistaken for the main dataflow."
+    },
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Canonical fan-in coordinator-over-replicas: 16 identical RX Pipe Manager trapezoids, elided with a vertical ellipsis, converge into one Notification Buffer Manager, while a separate parallel lane keeps the bulk Data FIFO independent of that metadata fan-in.",
+      "what_to_learn": "Fan-in works the same as fan-out: converge 16 elided, identical processing units into one shared manager using trapezoid connectors, and route a second kind of payload (bulk data) through its own separate, differently-shaped lane so the two never look like the same pipeline."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-22 pick for the times-N rule: sixteen identical RX pipe-manager boxes are elided to two with a vertical ellipsis between them, and bulk data runs in its own FIFO lane beside the metadata path.",
+      "what_to_learn": "Draw only the first and last of a large identical bank, two of sixteen pipe managers, linked by a vertical ellipsis instead of drawing every copy, and give bulk data its own narrow FIFO lane beside the control path; this figure blurs MMIO control arrows with dataflow arrows, so mark control inputs distinctly."
+    }
+  ]
+}

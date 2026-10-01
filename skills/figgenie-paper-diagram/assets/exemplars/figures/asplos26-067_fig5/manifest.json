@@ -1,0 +1,71 @@
+{
+  "id": "asplos26-067_fig5",
+  "kind": "mechanism",
+  "paper_id": "asplos26-067",
+  "fig": "5",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 5. (a) The bridge synthesis process. Step 1 : detection of translation rules. Steps 2 - 4 : fusion of FSM graphs. (b) Sample synthesized transaction flow for a MESI-CXL bridge: store miss from a shared state. (c), (d) Original LP and GP transaction flows.",
+  "groups_in_record": [
+    "comparison",
+    "logic",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "state-machine",
+  "subject": "how a synthesized MESI-CXL bridge handles a store-miss-from-shared transaction, compared against the original MESI and CXL.mem flows",
+  "arrangement": "panels-row",
+  "panel_count": 4,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "double",
+  "aspect": 5.09,
+  "n_elements": 7,
+  "n_relations": 5,
+  "n_panels": 3,
+  "n_steps": 4,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-067/asplos26-067_fig5_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-067/asplos26-067_fig5_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Four-panel figure where a numbered synthesis pipeline (with a feedback loop) sits beside the resulting protocol trace and the two original protocols it fuses, using one shared sequence-diagram notation throughout.",
+      "what_to_learn": "Draw the synthesized protocol and both source protocols with the same lifeline-plus-boxed-state notation so states and messages line up panel to panel, and carry one two-colour domain tint through every panel.",
+      "note_source": "agent"
+    },
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Four-panel figure where a numbered synthesis pipeline (with a feedback loop) sits beside the resulting protocol trace and the two original protocols it fuses, using one shared sequence-diagram notation throughout.",
+      "what_to_learn": "Draw the synthesized protocol and both source protocols with the same lifeline-plus-boxed-state notation so states and messages line up panel to panel, and carry one two-colour domain tint through every panel.",
+      "note_source": "agent"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Four-panel figure where a numbered synthesis pipeline (with a feedback loop) sits beside the resulting protocol trace and the two original protocols it fuses, using one shared sequence-diagram notation throughout.",
+      "what_to_learn": "Draw the synthesized protocol and both source protocols with the same lifeline-plus-boxed-state notation so states and messages line up panel to panel, and carry one two-colour domain tint through every panel.",
+      "note_source": "agent"
+    }
+  ]
+}

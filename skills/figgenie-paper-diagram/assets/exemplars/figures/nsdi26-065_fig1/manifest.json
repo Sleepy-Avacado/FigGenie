@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-065_fig1",
+  "paper_id": "nsdi26-065",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: Various scenarios in which same context is shared by multiple LLMs. DroidSpeak brings down the computation latency by up to 3.1×, increases throughput by 4×.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.35,
+  "n_components": 8,
+  "n_flows": 7,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-065/nsdi26-065_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-065/nsdi26-065_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Three motivating vignettes (A multi-agent workflows, B multiple fine-tuned models, C personalized agents) reuse one visual grammar, a shared source fanning into separate purple/green boxes, each needlessly reprocessing the same content.",
+      "what_to_learn": "Repeat one simple visual grammar (a shared input fanning into separate coloured boxes) across several real-world vignettes to argue a problem is general, even when each vignette's icons differ; but label what the colours mean on the first panel, since leaving it unstated across all three forces the reader to guess."
+    }
+  ]
+}

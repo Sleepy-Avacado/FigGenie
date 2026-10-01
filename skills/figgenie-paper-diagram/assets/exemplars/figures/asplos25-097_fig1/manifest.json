@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-097_fig1",
+  "paper_id": "asplos25-097",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. tnic system overview.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.0,
+  "n_components": 8,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-097/asplos25-097_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-097/asplos25-097_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence three-layer stack where each band is boxed in its own accent colour and explicitly named, with the dashed dividers themselves labelled as named interfaces and a bottom legend defining solid-versus-dashed line meaning.",
+      "what_to_learn": "Name the dashed boundary line itself instead of leaving it a bare rule, give each of the 3-4 tiers its own accent colour tied to the tier's own name, and put a small solid/dashed legend below the figure when line style carries a data-versus-control meaning."
+    }
+  ]
+}

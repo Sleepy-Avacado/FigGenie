@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-017_fig5",
+  "paper_id": "nsdi26-017",
+  "fig": "5",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 5: Diagnosing hang errors via call stack analysis.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 3.34,
+  "n_components": 10,
+  "n_flows": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "circled-numbers",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-017/src/fig5_4-hang-stack.svg",
+    "preview.png": "lab/extracted/nsdi26-017/src/fig5_4-hang-stack.png",
+    "print.png": "lab/extracted/nsdi26-017/nsdi26-017_fig5_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Flat (nesting 1) side-by-side comparison with a right-hand legend decoding box fill as operator type/state.",
+      "what_to_learn": "When box fill encodes state rather than identity, the legend belongs in a right-hand column and the panels stay pure grid."
+    }
+  ]
+}

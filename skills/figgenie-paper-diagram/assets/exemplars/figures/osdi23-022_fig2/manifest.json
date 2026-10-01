@@ -1,0 +1,47 @@
+{
+  "id": "osdi23-022_fig2",
+  "paper_id": "osdi23-022",
+  "fig": "2",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 2: Approach overview.",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.05,
+  "n_components": 17,
+  "n_flows": 15,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-022/osdi23-022_fig2_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-022/osdi23-022_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence double-column pipeline with 15 flows, near the template's high end, that nests a fourth numbered stage into a much larger sub-pipeline box, ending in a highlighted test case and a check/cross verdict.",
+      "what_to_learn": "Let the last numbered stage expand into its own multi-step boxed sub-pipeline with its own internal feedback loop rather than forcing every step to the same size, and close a two-execution comparison with a check/cross icon pair; the record's weakness warns to add a legend once icons and dashed groups get this dense."
+    },
+    {
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Four numbered stages funnel into one Transactional Oracle Construction box whose own Graph Decycling loop is the only part that repeats, and green check / red cross icons make the final equivalence verdict explicit.",
+      "what_to_learn": "Number the outer pipeline stages once, then nest the one part that actually iterates (graph decycling) inside its own sub-box with a circular refine icon rather than numbering it too; end the pipeline in a check/cross verdict pair so the payoff reads visually. Add a short legend for the icons, since this figure has none."
+    }
+  ]
+}

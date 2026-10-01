@@ -1,0 +1,220 @@
+{
+  "paper_id": "sosp24-020",
+  "fig": "3",
+  "system": {
+    "name": "Skyloft",
+    "one_liner": "a general, high-efficiency user-space scheduling framework that uses user-mode interrupts for microsecond-scale preemption",
+    "domain": [
+      "os-kernel",
+      "scheduling",
+      "user-space systems"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Skyloft LibOS",
+        "role": "user-space library OS providing kernel-bypass scheduling with POSIX-compatible APIs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "I/O stack",
+        "role": "handles I/O interrupts in user space and feeds events into Uthread scheduling",
+        "container": "Skyloft LibOS",
+        "novel": true
+      },
+      {
+        "name": "Shared runqueues",
+        "role": "hold runnable user threads, color-coded per application",
+        "container": "Skyloft LibOS",
+        "novel": true
+      },
+      {
+        "name": "UINTR handler",
+        "role": "handles user-mode (UINTR) interrupts and feeds events into Uthread scheduling",
+        "container": "Skyloft LibOS",
+        "novel": true
+      },
+      {
+        "name": "Uthread scheduling",
+        "role": "core user-thread scheduler that selects and switches runnable uthreads",
+        "container": "Skyloft LibOS",
+        "novel": true
+      },
+      {
+        "name": "Scheduling Policy",
+        "role": "pluggable scheduling interface (task_enqueue/dequeue/block/wakeup) invoked by Uthread scheduling",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Skyloft Kernel Module",
+        "role": "kernel-space module managing kthread switching between applications and other privileged operations",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Timer source",
+        "role": "hardware timer whose interrupts are delivered directly to user space via UINTR",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "I/O device",
+        "role": "physical I/O device whose interrupts are delivered directly to the I/O stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "isolated core (shown twice) running one active kernel thread for one application while holding another application's thread inactive",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Scheduling Policy",
+        "to": "Uthread scheduling",
+        "what": "scheduling interface calls (task_enqueue/dequeue/block/wakeup)",
+        "step": 1
+      },
+      {
+        "from": "Uthread scheduling",
+        "to": "Shared runqueues",
+        "what": "uthread switch",
+        "step": 2
+      },
+      {
+        "from": "Uthread scheduling",
+        "to": "Skyloft Kernel Module",
+        "what": "kthread switch",
+        "step": 3
+      },
+      {
+        "from": "Timer source",
+        "to": "UINTR handler",
+        "what": "timer interrupt delivered via UINTR",
+        "step": 4
+      },
+      {
+        "from": "I/O device",
+        "to": "I/O stack",
+        "what": "I/O interrupt delivered directly to user space",
+        "step": 5
+      },
+      {
+        "from": "UINTR handler",
+        "to": "Uthread scheduling",
+        "what": "interrupt event",
+        "step": null
+      },
+      {
+        "from": "I/O stack",
+        "to": "Uthread scheduling",
+        "what": "I/O event",
+        "step": null
+      },
+      {
+        "from": "Skyloft Kernel Module",
+        "to": "Timer source",
+        "what": "timer setup",
+        "step": null
+      }
+    ],
+    "key_idea": "Skyloft splits scheduling into a user-space LibOS (uthread scheduling, shared runqueues, I/O stack, UINTR handling) and a minimal kernel module, using user-mode interrupts and isolated cores so each app's active kernel thread runs without kernel-scheduler interference.",
+    "reading_order": "Follow circled steps 1-5: Scheduling Policy into Uthread scheduling, out to Shared runqueues and Skyloft Kernel Module, then Timer source and I/O device up into UINTR handler and I/O stack."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.12,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue fill for App 1's active-thread cell and its Shared runqueues slot"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "blue stroke/text for the App 1 label and its box borders"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green fill for App 2's active-thread cell and its Shared runqueues slot"
+      },
+      {
+        "hex": "#82b366",
+        "used_for": "green stroke/text for the App 2 label and its box borders"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light gray fill for LibOS component boxes and the Scheduling Policy cards"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "medium gray for secondary text and the dotted user/kernel-space boundary"
+      },
+      {
+        "hex": "#333333",
+        "used_for": "dark gray for bold titles such as Skyloft LibOS and Skyloft Kernel Module"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.7pt) gray strokes; dashed rounded outlines for the Skyloft LibOS and Skyloft Kernel Module boundaries, solid outlines for the inner component boxes, icons, and CPU cards",
+    "font": "Helvetica, italic for component labels and bold for section titles, about 5.5-8pt",
+    "corners": "mixed",
+    "arrows": "mostly short straight orthogonal arrows plus two long curved arrows on the left, thin dark strokes with small filled triangular heads",
+    "icons": "vector: clock (Timer source), circuit-board chip (I/O device), stacked document cards (Scheduling Policy), and a loop/refresh glyph inside Uthread scheduling"
+  },
+  "encoding": {
+    "color_means": "blue = App 1's thread/queue slot, green = App 2's thread/queue slot, gray = generic LibOS/kernel components not tied to a specific application",
+    "line_style_means": "dashed rounded boundaries group the Skyloft LibOS and Skyloft Kernel Module as logical components; a dotted horizontal line separates user space from kernel space; solid vs. dashed fill on a CPU's thread cell distinguishes an application's active from inactive kernel thread on that core",
+    "emphasis": "circled step numbers 1-5 trace the scheduling call path from the Scheduling Policy interface through uthread/kthread switches down to the kernel module and hardware, guiding the reader through Skyloft's control flow",
+    "reusable_patterns": [
+      "user-space/kernel-space layered split with a dotted privilege boundary",
+      "numbered circles tracing a control-flow path through nested library-OS components",
+      "color-coded per-application highlighting reused across a shared data structure (runqueues) and physical resources (CPUs)"
+    ],
+    "weaknesses": [
+      "the five circled steps are not one strict linear sequence (2/3 branch from the scheduler while 4/5 arrive from hardware), so the numbering reads as separate labeled paths rather than a single flow"
+    ]
+  },
+  "tags": [
+    "user-space scheduling",
+    "kernel bypass",
+    "thread scheduling",
+    "user interrupts",
+    "CPU isolation",
+    "runqueue",
+    "OS design"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.4)",
+      "3 Design (p.6)"
+    ],
+    "evidence": [
+      "Skyloft consists of two primary components (Figure 3): the Skyloft Library OS",
+      "Single Binding Rule: No two or more active kernel threads may be bound to the same isolated core simultaneously.",
+      "every application has one active kernel thread occupying distinct isolated cores"
+    ]
+  },
+  "summary": "Skyloft is a general, high-efficiency user-space scheduling framework that uses user-mode interrupts (UINTR) to deliver hardware timer and I/O events directly to user space, enabling microsecond-scale preemption. Figure 3 splits Skyloft into two components: the Skyloft LibOS in user space, bundling an I/O stack, a UINTR handler, Shared runqueues, and a central Uthread scheduling module driven by a pluggable Scheduling Policy interface; and the Skyloft Kernel Module in kernel space, which performs privileged kthread switches. Five circled numbers trace the control flow: policy calls into the scheduler (1), uthread and kthread switches to the runqueues and kernel module (2, 3), and timer/I/O interrupts into the UINTR handler and I/O stack (4, 5). Two CPU boxes below use blue and green to show each isolated core running one active thread for App 1 or App 2, with the other's thread inactive, illustrating the Single Binding Rule.",
+  "summary_zh": "图3示Skyloft架构：用户空间LibOS含I/O栈、UINTR处理器、共享运行队列与Uthread调度，由调度策略驱动；内核空间模块负责kthread切换。底部CPU用蓝绿区分App1、App2的活跃线程。",
+  "confidence": "high",
+  "notes": "layout-proposal: hub-and-layered — a central Uthread scheduling hub wired to five surrounding LibOS components (I/O stack, UINTR handler, runqueues, scheduling policy, kernel module), itself sitting atop a user-space/kernel-space layered split down to timer/I/O hardware and CPUs; named template 'layered' captures the privilege-level stack but not the hub-like wiring around Uthread scheduling.",
+  "venue": "SOSP24"
+}

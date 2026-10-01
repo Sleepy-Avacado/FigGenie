@@ -1,0 +1,174 @@
+{
+  "paper_id": "sosp25-007",
+  "fig": "2",
+  "system": {
+    "name": "CHERIoT",
+    "one_liner": "a memory-safe, compartmentalized embedded RTOS whose trusted computing base is limited to four narrowly-privileged components",
+    "domain": [
+      "embedded systems",
+      "security",
+      "os-kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Loader",
+        "role": "fully-trusted TCB component (badge 1) that runs once at boot to populate all initial capabilities from the firmware image",
+        "container": "Boot Time",
+        "novel": true
+      },
+      {
+        "name": "Switcher",
+        "role": "TCB component trusted only for isolation (badge 2); performs compartment switches and has mutual runtime dependencies with the Scheduler",
+        "container": "Run Time",
+        "novel": true
+      },
+      {
+        "name": "Allocator",
+        "role": "TCB component trusted only for heap memory safety (badge 3); depends on the Scheduler at runtime",
+        "container": "Run Time",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "TCB component trusted only for scheduling (badge 4); the most-depended-on runtime component, relied on by Switcher, Allocator, and Microvium",
+        "container": "Run Time",
+        "novel": true
+      },
+      {
+        "name": "Microvium",
+        "role": "the JavaScript engine compartment, explicitly outside the TCB, that depends at runtime on the Switcher, Scheduler, and Allocator",
+        "container": "Run Time",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Switcher",
+        "to": "Scheduler",
+        "what": "runtime dependency",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Switcher",
+        "what": "runtime dependency",
+        "step": null
+      },
+      {
+        "from": "Allocator",
+        "to": "Scheduler",
+        "what": "runtime dependency",
+        "step": null
+      },
+      {
+        "from": "Microvium",
+        "to": "Switcher",
+        "what": "runtime dependency",
+        "step": null
+      },
+      {
+        "from": "Microvium",
+        "to": "Scheduler",
+        "what": "runtime dependency",
+        "step": null
+      },
+      {
+        "from": "Microvium",
+        "to": "Allocator",
+        "what": "runtime dependency",
+        "step": null
+      }
+    ],
+    "key_idea": "CHERIoT's trusted computing base is limited to four components (Loader, Switcher, Allocator, Scheduler), each trusted only for one narrow property, while ordinary compartments like the Microvium JavaScript engine sit outside the TCB and merely depend on it at runtime.",
+    "reading_order": "Boot Time shows the fully-trusted Loader alone; Run Time shows Switcher, Allocator, and Scheduler wired together and depended on by the non-TCB Microvium compartment, explained by the trust legend below."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.36,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#808080",
+        "used_for": "dark-gray fill for the Loader box (fully trusted)"
+      },
+      {
+        "hex": "#b4c7dc",
+        "used_for": "light-blue fill for the Switcher box (trusted only for isolation)"
+      },
+      {
+        "hex": "#afd095",
+        "used_for": "green fill for the Allocator box (trusted only for heap memory safety)"
+      },
+      {
+        "hex": "#ffe994",
+        "used_for": "yellow fill for the Scheduler box (trusted only for scheduling)"
+      },
+      {
+        "hex": "#dddddd",
+        "used_for": "light-gray shading used for legend swatches and secondary accents"
+      },
+      {
+        "hex": "#fffbcc",
+        "used_for": "very pale fill for the Microvium box, the non-TCB compartment"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.57pt) uniform dark strokes on all boxes, no dashing",
+    "font": "Linux Biolinum serif, about 5-8pt, regular weight with bold section headers (Boot Time, Run Time)",
+    "corners": "square",
+    "arrows": "thin black arrows, some straight (direct dependencies) and some curved (Microvium's reach to Switcher and Allocator), with a bidirectional pair between Switcher and Scheduler",
+    "icons": "vector: small square and arrow glyphs in the legend denoting compartment boundary and runtime dependency"
+  },
+  "encoding": {
+    "color_means": "gray = fully trusted (Loader), blue = trusted only for isolation (Switcher), green = trusted only for heap memory safety (Allocator), yellow = trusted only for scheduling (Scheduler), pale/plain = outside the TCB (Microvium)",
+    "line_style_means": "plain arrows denote a runtime dependency between compartments; there is no dashed/solid distinction, only arrow direction and curvature",
+    "emphasis": "each TCB component is color- and number-coded to a specific, narrow trust property in the bottom legend, visually arguing that no component other than the boot-only Loader holds full system privilege, per the principle of least privilege",
+    "reusable_patterns": [
+      "small dependency graph of trusted components color-coded by their specific narrow privilege, with an explicit trust legend below",
+      "boot-time vs. run-time split via a simple vertical divider rather than nested boxes",
+      "a non-trusted example compartment (Microvium) included to show how untrusted code depends on the TCB at runtime"
+    ],
+    "weaknesses": [
+      "the Switcher-Scheduler link is bidirectional while the Allocator-Scheduler link is drawn one-directional, and the text does not explain this asymmetry",
+      "the caption notes 'some non-TCB compartments are omitted,' so Microvium's dependencies are illustrative, not exhaustive"
+    ]
+  },
+  "tags": [
+    "trusted computing base",
+    "CHERI capabilities",
+    "compartmentalization",
+    "embedded RTOS",
+    "least privilege",
+    "memory safety"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design of the CHERIoT RTOS (p.4)",
+      "3.1 OS Architecture Overview (p.4)"
+    ],
+    "evidence": [
+      "The TCB of the OS includes only four components: the loader, the switcher, the allocator, and the scheduler",
+      "no runtime component, even in the TCB, runs with all privileges, e.g., none can access all of the memory.",
+      "Overview of the TCB when running a JavaScript program (some non-TCB compartments are omitted)."
+    ]
+  },
+  "summary": "CHERIoT is a memory-safe, compartmentalized embedded RTOS whose trusted computing base (TCB) is deliberately minimal. Figure 2 shows this TCB while a JavaScript program runs, split into a Boot Time zone (the fully-trusted Loader, gray, which only runs once at startup) and a Run Time zone with three narrowly-trusted components: the Switcher (blue, trusted only for isolation), the Allocator (green, trusted only for heap memory safety), and the Scheduler (yellow, trusted only for scheduling). Arrows mark runtime dependencies: Switcher and Scheduler depend on each other, Allocator depends on the Scheduler, and the plain Microvium box (the JavaScript engine, explicitly outside the TCB) depends on all three. A bottom legend maps each color and circled number to its specific trust property, illustrating the paper's least-privilege design.",
+  "summary_zh": "图2示CHERIoT的TCB（运行JS程序时）：启动期仅Loader完全可信；运行期含仅信任隔离的Switcher、仅信任堆安全的Allocator、仅信任调度的Scheduler，与非TCB的Microvium间箭头标注运行时依赖。",
+  "confidence": "high",
+  "notes": "layout-proposal: trust-tiered dependency graph — Scheduler is the most-connected node (a near-hub) but Switcher also carries a mutual edge and Microvium fans out to three targets, so this is not a clean single-hub star; 'hub-spoke' is the closest named template, centered on Scheduler. The circled numbers 1-4 are trust-category reference tags keyed to the bottom legend, not an execution sequence, even though layout.step_markers records them as circled-numbers.",
+  "venue": "SOSP25"
+}

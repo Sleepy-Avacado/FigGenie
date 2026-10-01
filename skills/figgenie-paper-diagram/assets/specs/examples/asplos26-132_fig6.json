@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "_purpose": "Spec-writing example only: it shows which fields exist and how they are filled for a real figure. It is not a style reference, so do not carry its fonts, palette, legend, numbering or node count into another figure. For style, look at the figure it was written from (assets/exemplars/figures/asplos26-132_fig6/, listed in assets/exemplars/pipeline/index.json) and at the exemplars of your own template.",
+    "id": "dip-fig6",
+    "title": "DIP overall workflow",
+    "system": {
+      "name": "DIP",
+      "one_liner": "a dynamic, modality-aware pipeline scheduling framework for large multimodal model training"
+    },
+    "figure_kind": "whole-system",
+    "venue_style": "acm",
+    "column": "single",
+    "width_pt": 246,
+    "max_height_pt": 208,
+    "template": "pipeline",
+    "modifiers": ["control-loop"],
+    "direction": "top-down",
+    "panels": 1,
+    "palette": "blue-orange",
+    "font": "calibri",
+    "step_markers": "circled-numbers",
+    "language": "en",
+    "version": 1,
+    "caption_draft": "The overall workflow of DIP. Before training, the LMM model is partitioned into model chunks by the model chunk partitioner. During each training iteration, DIP asynchronously executes a four-stage online planning process: (1) prefetch batch metadata, (2) split microbatches into modality-specific sub-microbatches, (3) search candidate pipeline schedules, (4) deploy the chosen schedule to the GPU training workers.",
+    "open_questions": [
+      "The offline phase runs once and the online phase runs per iteration -- should the two dashed groups be labelled with their cadence ('once' / 'per iteration')?",
+      "The shared simulator is used by two components; is 'uses' the right word, or does the paper call it a query?"
+    ],
+    "_source": "assets/exemplars/figures/asplos26-132_fig6",
+    "_notes": "Captured: the two dashed phase groups, the four circled steps on the online loop only, the self-loop on the schedule searcher, the dotted 'uses' links to the shared simulator, and the fact that the batch/worker row sits BETWEEN the two dashed boxes (the source SVG's dashed rects span y 0-51 and y 99-177 of 178, so neither encloses that row -- semantics.json puts 'Training batches' inside Online Planner, which the drawing does not). Not captured: the three raster icons (LMM cube, batch thumbnail strip, GPU chip) are recorded as kind=icon plus a symbol description; the drawer substitutes a vector symbol or draws its own. The four pastel tints inside the model-chunk stack (one per destination GPU) collapse into multiplicity + a note."
+  },
+  "containers": [
+    {
+      "id": "offline-partitioner",
+      "label": "Offline Partitioner",
+      "kind": "dashed",
+      "title_position": "top-left",
+      "role": "novel",
+      "order": 0,
+      "note": "runs once before training"
+    },
+    {
+      "id": "online-planner",
+      "label": "Online Planner",
+      "kind": "dashed",
+      "title_position": "bottom-left",
+      "role": "novel",
+      "order": 2,
+      "note": "runs every iteration; the title sits bottom-left because the top edge is crowded"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "lmm-model",
+      "label": "LMM model",
+      "kind": "icon",
+      "parent": "offline-partitioner",
+      "role": "existing",
+      "symbol": "3d-cube",
+      "size_hint": "s",
+      "grid": { "row": 0, "col": 0 },
+      "order": 0
+    },
+    {
+      "id": "model-chunk-partitioner",
+      "label": "Model Chunk Partitioner",
+      "kind": "module",
+      "parent": "offline-partitioner",
+      "role": "novel",
+      "size_hint": "m",
+      "grid": { "row": 0, "col": 1 },
+      "order": 1
+    },
+    {
+      "id": "model-chunks",
+      "label": "Model chunks",
+      "kind": "icon",
+      "parent": "offline-partitioner",
+      "role": "novel",
+      "symbol": "stacked-rects",
+      "multiplicity": "one per destination GPU",
+      "size_hint": "s",
+      "grid": { "row": 0, "col": 2 },
+      "order": 2,
+      "note": "four offset tinted rectangles; the tints distinguish chunks, they are not a colour code"
+    },
+    {
+      "id": "training-batches",
+      "label": "Training batches",
+      "kind": "icon",
+      "role": "existing",
+      "symbol": "thumbnail-strip",
+      "size_hint": "s",
+      "grid": { "row": 1, "col": 0 },
+      "order": 3,
+      "note": "sits between the two dashed groups, in neither"
+    },
+    {
+      "id": "gpu-training-workers",
+      "label": "GPU Training Workers",
+      "kind": "compute",
+      "role": "existing",
+      "symbol": "gpu-chip",
+      "size_hint": "m",
+      "grid": { "row": 1, "col": 1, "colspan": 2 },
+      "order": 4
+    },
+    {
+      "id": "sub-microbatch-partitioner",
+      "label": "Sub-Microbatch Partitioner",
+      "kind": "module",
+      "parent": "online-planner",
+      "role": "novel",
+      "size_hint": "m",
+      "grid": { "row": 2, "col": 0 },
+      "order": 5
+    },
+    {
+      "id": "pipeline-schedule-searcher",
+      "label": "Pipeline Schedule Searcher",
+      "kind": "module",
+      "parent": "online-planner",
+      "role": "novel",
+      "size_hint": "m",
+      "grid": { "row": 2, "col": 1 },
+      "order": 6
+    },
+    {
+      "id": "multimodal-training-simulator",
+      "label": "Multimodal Training Simulator",
+      "kind": "module",
+      "parent": "online-planner",
+      "role": "novel",
+      "size_hint": "m",
+      "grid": { "row": 3, "col": 0, "colspan": 2 },
+      "order": 7,
+      "note": "shared by the two boxes above it; centred under them"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-partition-in",
+      "from": "lmm-model",
+      "to": "model-chunk-partitioner",
+      "label": "model to be partitioned",
+      "kind": "data",
+      "from_side": "right",
+      "to_side": "left"
+    },
+    {
+      "id": "e-partition-out",
+      "from": "model-chunk-partitioner",
+      "to": "model-chunks",
+      "label": "partitioned chunks",
+      "kind": "data",
+      "from_side": "right",
+      "to_side": "left"
+    },
+    {
+      "id": "e-prefetch",
+      "from": "training-batches",
+      "to": "sub-microbatch-partitioner",
+      "label": "prefetch metadata",
+      "kind": "data",
+      "weight": "main",
+      "step": 1,
+      "from_side": "bottom",
+      "to_side": "top"
+    },
+    {
+      "id": "e-submicrobatch",
+      "from": "sub-microbatch-partitioner",
+      "to": "pipeline-schedule-searcher",
+      "label": "partition microbatches",
+      "kind": "data",
+      "weight": "main",
+      "step": 2,
+      "from_side": "right",
+      "to_side": "left"
+    },
+    {
+      "id": "e-explore",
+      "from": "pipeline-schedule-searcher",
+      "to": "pipeline-schedule-searcher",
+      "label": "explore pipeline schedules",
+      "kind": "feedback",
+      "route": "curved",
+      "weight": "normal",
+      "step": 3,
+      "from_side": "right",
+      "to_side": "right",
+      "route_hint": "small self-loop off the right edge, outside the group box"
+    },
+    {
+      "id": "e-deploy",
+      "from": "pipeline-schedule-searcher",
+      "to": "gpu-training-workers",
+      "label": "deploy schedules",
+      "kind": "control",
+      "weight": "main",
+      "step": 4,
+      "from_side": "top",
+      "to_side": "right",
+      "route_hint": "up the right margin, so it does not cross the searcher-simulator link"
+    },
+    {
+      "id": "e-uses-partitioner",
+      "from": "sub-microbatch-partitioner",
+      "to": "multimodal-training-simulator",
+      "label": "uses",
+      "kind": "dependency",
+      "style": "dotted",
+      "head": "none",
+      "from_side": "bottom",
+      "to_side": "left"
+    },
+    {
+      "id": "e-uses-searcher",
+      "from": "pipeline-schedule-searcher",
+      "to": "multimodal-training-simulator",
+      "label": "uses",
+      "kind": "dependency",
+      "style": "dotted",
+      "head": "none",
+      "from_side": "bottom",
+      "to_side": "right"
+    }
+  ],
+  "steps": [
+    { "n": 1, "attached_to": "e-prefetch", "text": "prefetch metadata for the next batch" },
+    { "n": 2, "attached_to": "e-submicrobatch", "text": "partition microbatches into modality-specific sub-microbatches" },
+    { "n": 3, "attached_to": "e-explore", "text": "explore candidate pipeline schedules" },
+    { "n": 4, "attached_to": "e-deploy", "text": "deploy the schedule to the GPU training workers" }
+  ],
+  "legend": { "mode": "none" },
+  "annotations": [],
+  "constraints": [
+    { "kind": "same-row", "targets": ["lmm-model", "model-chunk-partitioner", "model-chunks"], "note": "the offline phase is one left-right row" },
+    { "kind": "same-row", "targets": ["sub-microbatch-partitioner", "pipeline-schedule-searcher"], "note": "steps 2 and 3 read left to right" },
+    { "kind": "center-in-parent", "targets": ["multimodal-training-simulator"], "note": "shared resource, centred under its two users" },
+    { "kind": "same-width", "targets": ["sub-microbatch-partitioner", "pipeline-schedule-searcher", "multimodal-training-simulator"] }
+  ],
+  "style_overrides": {}
+}

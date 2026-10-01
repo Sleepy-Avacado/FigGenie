@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-126_fig8",
+  "paper_id": "nsdi26-126",
+  "fig": "8",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Fig. 8: Concurrent request merging overview.",
+  "corpus_template": "pipeline",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.54,
+  "n_components": 6,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-126/src/fig8_metadata-server-overview.svg",
+    "preview.png": "lab/extracted/nsdi26-126/src/fig8_metadata-server-overview.png",
+    "print.png": "lab/extracted/nsdi26-126/nsdi26-126_fig8_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "A six-component top-down pipeline that illustrates a mechanism (prefix coalescing) rather than a whole system.",
+      "what_to_learn": "A dashed box around the one step that changed is the cheapest way to say 'this is the optimisation' inside an otherwise ordinary queue-worker-commit pipeline."
+    }
+  ]
+}

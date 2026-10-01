@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-035_fig3",
+  "paper_id": "nsdi25-035",
+  "fig": "3",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 3: Design overview of the Beehive.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 0.94,
+  "n_components": 6,
+  "n_flows": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-035/nsdi25-035_fig3_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-035/nsdi25-035_fig3_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: this is a plain top-down layered software stack (interfaces, compiler, runtime, OS/drivers) with zero drawn flows and a small mirrored remote-runtime box; there is no time axis, no lane gutter, nothing resembling a phase.",
+      "what_to_learn": "Treat this as a layered template figure instead: stack the five tiers top-down, each one depending only on the one below, and echo the same fill color on the small remote-runtime box to show it is a copy of the local runtime tier, not a different component."
+    }
+  ]
+}

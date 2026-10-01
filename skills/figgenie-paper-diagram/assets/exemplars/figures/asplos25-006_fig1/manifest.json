@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-006_fig1",
+  "kind": "mechanism",
+  "paper_id": "asplos25-006",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. Top: batch parallelism, the gradients are AllRe- duced to update the parameters. Bottom: Z3/FSDP, note the parameters are sharded and only AllGathered before their use, highlighted in thick blue bars in the figure. The gradi- ents are ReducedScattered before updating the parameters.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how batch parallelism's full AllReduce of gradients contrasts with Z3/FSDP's sharded AllGather of parameters and ReduceScatter of gradients",
+  "arrangement": "panels-column",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.12,
+  "n_elements": 11,
+  "n_relations": 10,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "google-slides",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-006/src/fig1_batch_vs_z3.svg",
+    "preview.png": "lab/extracted/asplos25-006/src/fig1_batch_vs_z3.png",
+    "print.png": "lab/extracted/asplos25-006/asplos25-006_fig1_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Contrasting batch parallelism's full-parameter AllReduce of gradients with Z3/FSDP's sharded design, which AllGathers parameters just-in-time and ReduceScatters gradients, trading extra communication for lower peak memory.",
+      "what_to_learn": "Stack the alternatives when the template is a wide left-to-right chain; let an added element (thick blue bars) plus renamed labels be the entire delta",
+      "note_source": "doc"
+    }
+  ]
+}

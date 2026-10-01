@@ -1,0 +1,56 @@
+{
+  "id": "osdi25-031_fig11",
+  "kind": "mechanism",
+  "paper_id": "osdi25-031",
+  "fig": "11",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 11: Parameter tuning process for DecDEC, assuming a total of 56 SMs and a target slowdown rate of 10%.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "table",
+  "subject": "how DecDEC's tuner searches n_tb then k_chunk per layer, step by step, to hit a 10% target slowdown on a 56-SM GPU",
+  "arrangement": "panels-grid",
+  "panel_count": 3,
+  "frame_template": "free",
+  "delta_marking": "badge",
+  "direction": "mixed",
+  "column": "double",
+  "aspect": 2.15,
+  "n_elements": 11,
+  "n_relations": 5,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": true,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-031/src/fig11_tuner.svg",
+    "preview.png": "lab/extracted/osdi25-031/src/fig11_tuner.png",
+    "print.png": "lab/extracted/osdi25-031/osdi25-031_fig11_p9_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "A coarse, uniform-across-layers k_chunk search first picks the best n_tb^max by counting how many steps fit under the target slowdown, then a fine-grained per-layer search refines k_chunk further.",
+      "what_to_learn": "a per-layer table replayed step by step with a running Sum row and a checkmark/cross verdict against a fixed target, zoomed from a coarse uniform version into a fine per-layer version",
+      "note_source": "record"
+    }
+  ]
+}

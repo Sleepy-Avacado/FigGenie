@@ -1,0 +1,48 @@
+{
+  "id": "sosp23-016_fig4",
+  "paper_id": "sosp23-016",
+  "fig": "4",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 4. vLLM system overview.",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "google-slides",
+  "aspect": 1.71,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-016/src/fig4_system-overview.svg",
+    "preview.png": "lab/extracted/sosp23-016/src/fig4_system-overview.png",
+    "print.png": "lab/extracted/sosp23-016/sosp23-016_fig4_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "The canonical scheduler-to-N-workers figure: one hub on the left, Worker 0 / Worker 1 / ... / Worker N-1 stacked on the right.",
+      "what_to_learn": "Draw the first two spokes in full, then an ellipsis row, then the last one labelled N-1; never draw more than three concrete replicas."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "A textbook match for the indexing rule: the coordinator (Scheduler plus KV Cache Manager) sits at left, and Worker 0, Worker 1, ellipsis, Worker N-1 stack at right, each an identical Cache-Engine-plus-Model-Shard card.",
+      "what_to_learn": "Index replicas from 0 and label the last one N-1 exactly as this figure does (Worker 0, Worker 1, ..., Worker N-1), stack them vertically to one side, and let a single coordinator box on the other side hold every piece of shared state (cache manager, block tables, allocators) so no worker box repeats it."
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-031_fig9",
+  "paper_id": "asplos25-031",
+  "fig": "9",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 9. (a) Hierarchical DFG with multiple motifs. (b) Plaid architecture overview (c) Plaid Collective Unit",
+  "corpus_template": "matrix",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "tikz",
+  "aspect": 2.16,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-031/src/fig9_Plaid_p11.svg",
+    "preview.png": "lab/extracted/asplos25-031/src/fig9_Plaid_p11.png",
+    "print.png": "lab/extracted/asplos25-031/asplos25-031_fig9_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar combining a lettered 3-panel layout with one inside legend: one panel is a tile-array resource map, and leader lines carry one colour vocabulary from an annotated graph into a zoomed tile.",
+      "what_to_learn": "Use one consistent colour-and-shape legend across a graph panel, a physical tile-grid panel, and a zoomed detail panel so a single leader line walks the reader from an abstract motif to the exact hardware block executing it; keep leader lines from crossing an unrelated middle panel, a flaw the record flags here."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "Panel (a) draws a genuine hierarchical DAG, LD/XOR/add nodes grouped by dashed motif outlines, and links it with red leader lines straight to the ALU, router and ALSU that execute it in panel (c).",
+      "what_to_learn": "Group recurring three-node motifs in the dataflow graph with dashed outlines, then draw red leader lines from each motif straight to the physical ALU, router or ALSU tile that executes it, so the graph-to-hardware mapping needs no separate legend."
+    }
+  ]
+}

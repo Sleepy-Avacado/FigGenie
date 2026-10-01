@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-087_fig3",
+  "paper_id": "nsdi26-087",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 3: Phantora architecture. Components in light green are unmodiﬁed, components in green are minimally modiﬁed, and components in blue are constructed by Phantora.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.05,
+  "n_components": 11,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-087/src/fig3_overview.svg",
+    "preview.png": "lab/extracted/nsdi26-087/src/fig3_overview.png",
+    "print.png": "lab/extracted/nsdi26-087/nsdi26-087_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Real-system side vs simulator side with a four-entry legend across the top encoding event type by arrow colour.",
+      "what_to_learn": "When the two sides exchange several kinds of event, encode the kind in arrow colour and put the legend above the whole figure."
+    }
+  ]
+}

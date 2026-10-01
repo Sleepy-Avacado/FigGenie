@@ -1,0 +1,290 @@
+{
+  "paper_id": "sosp24-017",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "TrEnv",
+    "one_liner": "a serverless platform that shares repurposable execution-environment sandboxes across functions and nodes using CXL/RDMA-based remote memory",
+    "domain": [
+      "serverless-computing",
+      "operating-systems",
+      "sandbox-isolation"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "anatomy",
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how a shared base rootfs (dev/sys/lib/bin) is reused across apps while each app's own overlay is mounted at /home/app",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "/",
+        "kind": "node",
+        "role": "root of the base filesystem tree, a reused mountpoint",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "/dev/null",
+        "kind": "node",
+        "role": "reused special-device mountpoint",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "char dev",
+        "kind": "node",
+        "role": "backing character-device implementation for /dev/null",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "/sys/",
+        "kind": "node",
+        "role": "reused mountpoint for kernel/system information",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "sysfs",
+        "kind": "node",
+        "role": "backing sysfs implementation for /sys/",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "/lib/ and /bin/",
+        "kind": "node",
+        "role": "shared library/binary directories under the base overlay",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Base Overlay FS",
+        "kind": "box",
+        "role": "shared read-only overlay holding the common /lib, /bin file content, reused by every app",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Reuse",
+        "kind": "label",
+        "role": "brace calling out that /dev/null, /sys/, and Base Overlay FS are shared across apps, not duplicated",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "/home/app/",
+        "kind": "node",
+        "role": "the one mountpoint that gets reconfigured per app",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "App X Overlay FS",
+        "kind": "box",
+        "role": "App X's private overlay filesystem, holding its own home/app content",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "App Y Overlay FS",
+        "kind": "box",
+        "role": "App Y's private overlay filesystem, holding its own home/app content",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "On Host",
+        "kind": "box",
+        "role": "shows the actual host-side layer composition backing each app's /home/app view",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "modification",
+        "kind": "box",
+        "role": "an app's private read/write change layer, unioned with the shared base to form its /home/app view",
+        "container": "On Host",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "/",
+        "to": "/lib/ and /bin/",
+        "what": "root branches into the shared library/binary directories",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "/dev/null",
+        "to": "char dev",
+        "what": "the /dev/null mountpoint is backed by a character-device implementation",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "/sys/",
+        "to": "sysfs",
+        "what": "the /sys/ mountpoint is backed by sysfs",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "/lib/ and /bin/",
+        "to": "Base Overlay FS",
+        "what": "the shared directories are backed by files in the base overlay",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "App X Overlay FS",
+        "to": "/home/app/",
+        "what": "App X's overlay is mounted at /home/app/ while X runs in this sandbox",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "App Y Overlay FS",
+        "to": "/home/app/",
+        "what": "App Y's overlay can instead be mounted at /home/app/, reconfiguring the same sandbox for Y",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "App X Overlay FS",
+        "to": "On Host",
+        "what": "App X's logical /home/app view equals its private modification layer unioned with the shared /home/app base",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "App Y Overlay FS",
+        "to": "On Host",
+        "what": "App Y's logical /home/app view equals its own modification layer unioned with the same shared base",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "App X",
+        "axis": "alternatives",
+        "differs": "App X's overlay FS and its on-host layer stack, coloured orange",
+        "verdict": null
+      },
+      {
+        "label": "App Y",
+        "axis": "alternatives",
+        "differs": "App Y's overlay FS and its on-host layer stack, coloured blue, with the modification layer drawn above the shared base",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "TrEnv's sandboxes share one base rootfs (dev/sys/lib/bin) across every function, and reconfigure only the /home/app mountpoint to swap in whichever app's private overlay (base plus that app's own modification layer) is currently needed.",
+    "reading_order": "left to right: the reused base tree (/, /dev/null, /sys/, Base Overlay FS) under the 'Reuse' brace, then the red /home/app/ mountpoint, then its two possible overlays (App X, App Y) and how each equals a base-plus-modification stack On Host"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.58,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e74c3c",
+        "used_for": "red fill/stroke of the four mountpoint boxes (/, /dev/null, /sys/, /home/app/) and the two arrows pointing into /home/app/"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale-orange fill of 'App X Overlay FS' and its On-Host layer boxes"
+      },
+      {
+        "hex": "#f39c12",
+        "used_for": "saturated-orange accents on App X's file icons"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale-blue fill of 'App Y Overlay FS' and its On-Host layer boxes"
+      },
+      {
+        "hex": "#1296db",
+        "used_for": "saturated-blue accents on App Y's file icons"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "dark-gray fill of the generic (uncoloured) file icons under the shared Base Overlay FS"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "dark-gold dashed-border accent on the App X overlay box"
+      },
+      {
+        "hex": "#6c8ebf",
+        "used_for": "muted blue-gray border stroke on the plain black-text boxes (/lib/, /bin/, char dev, sysfs, Base Overlay FS container)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black outlines on plain boxes; red outlines specifically on the four mountpoint boxes; dotted borders on the reused/backing-store boxes and on each app's overlay-FS box",
+    "corners": "square",
+    "arrows": "a few solid black connector lines in the reuse tree; two red arrows converging on the /home/app/ mountpoint from the two candidate overlay boxes",
+    "font": "Helvetica sans, uniform small size",
+    "icons": "small folded-page 'file' icons, gray under the shared Base Overlay FS and colour-tinted (orange for X, blue for Y) under each app's overlay; a stacked-paper effect represents each 'On Host' layer"
+  },
+  "encoding": {
+    "color_means": "red marks a mountpoint (the caption's own legend); orange marks everything belonging to App X's overlay and its host-side layers; blue marks the equivalent for App Y; plain black/gray marks the shared, reused base filesystem",
+    "line_style_means": "dotted borders mark a backing overlay filesystem (Base Overlay FS, App X/Y Overlay FS) as opposed to a plain mountpoint box; solid red arrows show which overlay is currently mounted at /home/app/",
+    "state_means": "App X and App Y are told apart purely by colour (orange vs blue) and by which overlay box currently has a red arrow into /home/app/; both use the identical box+icon+stack template",
+    "marker_means": "no numbered markers; the '=' and '+' signs on the right are the only symbolic notation, spelling out that a logical overlay equals a shared base layer plus a private modification layer",
+    "emphasis": "the curly 'Reuse' brace under the left three elements, and the red mountpoint boxes singled out by the caption, are the two devices drawing attention to what TrEnv shares versus what it reconfigures",
+    "reusable_patterns": [
+      "a shared/reused sub-tree set apart by a labelled brace, contrasted with a single reconfigurable mountpoint that different colour-coded overlays can be swapped into",
+      "an overlay-equals-base-plus-modification equation illustrated with a stacked-paper icon for each layer"
+    ],
+    "weaknesses": [
+      "no paragraph of body text discusses this figure directly, so the specific meaning of the 'char dev'/'sysfs' backing boxes and the stack order in 'On Host' are inferred from the image and general filesystem/overlay conventions, not confirmed by the paper's own words",
+      "App X's stack is drawn base-then-modification while App Y's is drawn modification-then-base, and it is unclear whether this ordering is meaningful or incidental"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "overlay-filesystem",
+    "rootfs",
+    "sandbox-reuse",
+    "container-mountpoint",
+    "TrEnv"
+  ],
+  "provenance": {
+    "sections": [],
+    "evidence": [
+      "An example of rootfs reconfiguration.",
+      "The red box indicates the mountpoint.",
+      "TrEnv introduces repurposable sandboxes, which can be shared across different functions"
+    ]
+  },
+  "summary": "Figure 9 illustrates an example rootfs reconfiguration in TrEnv's repurposable sandboxes. On the left, a base filesystem tree, rooted at /, is shared and reused (bracketed 'Reuse') across apps: /dev/null backed by a character device, /sys/ backed by sysfs, and /lib//bin/ backed by a common Base Overlay FS of generic files. The one mountpoint that changes per app is /home/app/ (all four mountpoints drawn in red, per the caption). Two red arrows show that either App X's Overlay FS or App Y's Overlay FS can be mounted there. On the host, each app's logical /home/app view equals its own private 'modification' layer combined with the shared /home/app base layer, drawn as small stacked-paper icons in that app's colour (orange for X, blue for Y). No paragraph of body text was found describing this specific figure, so several structural details are read from the image alone.",
+  "summary_zh": "该图示TrEnv rootfs重配置：基础文件树跨应用复用(Reuse)；唯一可变挂载点/home/app/(红框)切换挂载App X或Y的Overlay FS，二者=共享base层+各自modification层。无正文段落描述此图。",
+  "confidence": "low",
+  "notes": "No paragraph text mentioning this figure was found in the source paper (context file explicitly notes none); the description relies on the caption, the general abstract, and close reading of the image itself, so confidence is set to low. content.groups extended with a secondary 'comparison' group (prior listed only 'anatomy') because App X and App Y are drawn as two parallel instances of an identical overlay-plus-host-stack template; anatomy is kept as primary since most of the figure (the reused base tree) is not part of that comparison. content.base corrected from 'tree' to 'mixed' since only the left portion is a true parent-child tree; the right portion (overlay boxes, '=', stacked layers) is composition, not branching.",
+  "venue": "SOSP24"
+}

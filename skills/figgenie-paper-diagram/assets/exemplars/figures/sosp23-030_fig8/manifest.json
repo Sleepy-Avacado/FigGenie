@@ -1,0 +1,56 @@
+{
+  "id": "sosp23-030_fig8",
+  "kind": "mechanism",
+  "paper_id": "sosp23-030",
+  "fig": "8",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 8. Adaptive caching on monolithic servers.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how adaptive caching picks an eviction victim from expert candidates and updates expert weights after a cache-miss regret signal",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.68,
+  "n_elements": 9,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 5,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "chrome",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-030/src/fig8_monolithic-adaptive.svg",
+    "preview.png": "lab/extracted/sosp23-030/src/fig8_monolithic-adaptive.png",
+    "print.png": "lab/extracted/sosp23-030/sosp23-030_fig8_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "One numbered path threads across two dashed side-by-side phase boxes, with only the two decision points — victim pick, miss key — picked out in saturated colour.",
+      "what_to_learn": "Run one numbered step-path across both dashed phase boxes without renumbering at the boundary, saturate the decision boxes' colour, and fold the weight-feedback loop into the victim-pick step's arrow instead of its own number — easy to miss that dependency.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "paper_id": "asplos25-092",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "ElasticMiter",
+    "one_liner": "a formally verified framework for equivalence-checking and rewriting latency-insensitive dataflow circuits",
+    "domain": [
+      "formal-verification",
+      "dataflow-circuits",
+      "high-level-synthesis"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how bounding the input token sequence length still reaches all 7 states of a dataflow circuit's full (unbounded) state space",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Source0",
+        "kind": "box",
+        "role": "token generator for one input stream, bounded to N tokens or unbounded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Source1",
+        "kind": "box",
+        "role": "token generator for the other input stream",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ND0",
+        "kind": "box",
+        "role": "non-deterministic delay modeling arbitrary latency on Source0's path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ND1",
+        "kind": "box",
+        "role": "non-deterministic delay modeling arbitrary latency on Source1's path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Buf1",
+        "kind": "box",
+        "role": "the buffer under test (from Figure 4's LHS) whose reachable states are being enumerated",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Branch",
+        "kind": "node",
+        "role": "the branch/merge component whose token configuration defines each of the circuit's 7 states",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Sink0",
+        "kind": "box",
+        "role": "consumer of one output token stream",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Sink1",
+        "kind": "box",
+        "role": "consumer of the other output token stream",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "0",
+        "kind": "label",
+        "role": "a token holding value 0 occupying one of Branch's slots in a given state",
+        "container": "Branch",
+        "highlighted": false
+      },
+      {
+        "name": "1",
+        "kind": "label",
+        "role": "a token holding value 1 occupying one of Branch's slots in a given state",
+        "container": "Branch",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Source0",
+        "to": "ND0",
+        "what": "Source0's token sequence passes through a non-deterministic delay",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "ND0",
+        "to": "Buf1",
+        "what": "delayed tokens enter the buffer under test",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Buf1",
+        "to": "Branch",
+        "what": "buffered tokens reach the shared branch component",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Branch",
+        "to": "Sink0",
+        "what": "branch outputs feed one sink via further non-deterministic delay",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "state space (N=1)",
+        "to": "state space (N=2, equiv. N=∞)",
+        "what": "the states reachable with only 1 token per source (5,6,7) are a strict subset of all states reachable with 2 or unbounded tokens (1-7)",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "state 1",
+        "axis": "time",
+        "differs": "Branch holds a two-token configuration only reachable once N reaches 2 (or is unbounded)",
+        "verdict": null
+      },
+      {
+        "label": "state 2",
+        "axis": "time",
+        "differs": "a different two-token configuration in Branch, only reachable at N=2/unbounded",
+        "verdict": null
+      },
+      {
+        "label": "state 3",
+        "axis": "time",
+        "differs": "another two-token configuration in Branch, only reachable at N=2/unbounded",
+        "verdict": null
+      },
+      {
+        "label": "state 4",
+        "axis": "time",
+        "differs": "another two-token configuration in Branch, only reachable at N=2/unbounded",
+        "verdict": null
+      },
+      {
+        "label": "state 5",
+        "axis": "time",
+        "differs": "a single-token configuration in Branch, already reachable when N=1",
+        "verdict": "reachable at N=1"
+      },
+      {
+        "label": "state 6",
+        "axis": "time",
+        "differs": "a single-token configuration in Branch, already reachable when N=1",
+        "verdict": "reachable at N=1"
+      },
+      {
+        "label": "state 7",
+        "axis": "time",
+        "differs": "a single-token configuration in Branch, already reachable when N=1",
+        "verdict": "reachable at N=1"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the specific 0/1 token contents of the Branch component across all 7 enumerated reachable states",
+      "linked_by": "position (each state is its own numbered box) and colour (brown token ovals within a blue Branch slot)",
+      "result_cells": "the 7 numbered state boxes, grouped by whether they fall inside the inner red (N=1) or only the outer blue (N=2/unbounded) boundary"
+    },
+    "key_idea": "Although a dataflow circuit's full state space is formally defined using unbounded input sequences, a small bounded sequence length (here N=2) already reaches every one of the circuit's 7 states, so finite test sequences suffice for exhaustive equivalence checking.",
+    "reading_order": "panel (a) first: Source0/Source1 through ND0/ND1, Buf1, Branch, to Sink0/Sink1; then panel (b): read the 7 numbered state boxes, noting which fall inside the inner red 'N=1' boundary (5-7) versus needing the full outer blue 'N=2/unbounded' boundary (1-7)"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 7,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 0.87,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "pale green fill of the Buf1 box (the buffer under test)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale blue fill of every 'Branch' box, repeated across the circuit and all 7 state frames"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pale red/pink fill of the ND0-ND3 non-deterministic-delay boxes"
+      },
+      {
+        "hex": "#994c00",
+        "used_for": "dark brown/orange fill of the token-value ovals/digits (0 or 1) inside Branch slots"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "light grey fill of the Source0/Source1 and Sink0/Sink1 boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium-thick (~1.27pt) solid black box borders; heavier blue and red rounded borders group the state-space boxes",
+    "corners": "square",
+    "arrows": "many thin black arrows connecting circuit components in panel (a) and the Branch label within each of the 7 state boxes in panel (b)",
+    "font": "Arial sans, 7-10.5pt, moderately bold",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = the Branch component whose token configuration is enumerated; pink = non-deterministic delay (ND) elements; green = the buffer under test (Buf1); brown ovals = individual token values (0 or 1) in a Branch slot",
+    "line_style_means": "not used to distinguish relation kinds within the circuit; a heavy blue border groups all 7 states reachable at N=2/unbounded, a heavy red border nested inside groups only the 3 states reachable at N=1",
+    "state_means": "each of the 7 numbered boxes is a distinct reachable state, told apart by which slot(s) of Branch hold a token and what value (0 or 1) it carries",
+    "marker_means": "plain numbers 1-7 label each distinct reachable state; the nested red-in-blue boundary boxes mark which states a bounded (N=1) input sequence can and cannot reach",
+    "emphasis": "nesting the red 'N=1' boundary inside the blue 'N=2/unbounded' boundary visually proves that N=1 covers only a subset (5-7) while N=2 already covers everything (1-7)",
+    "reusable_patterns": [
+      "an identical small sub-diagram (Branch plus its token slots) repeated once per enumerated state, grouped by nested coloured boundary boxes standing for different bounds on an input parameter"
+    ],
+    "weaknesses": [
+      "the correspondence between the abstract circuit in (a) and the concrete states enumerated in (b) is not explicitly drawn with arrows",
+      "dense small (7-8.5pt) labels inside each of the 7 compact state boxes make fine details hard to read without zooming in"
+    ]
+  },
+  "tags": [
+    "dataflow-circuits",
+    "equivalence-verification",
+    "state-space-enumeration",
+    "latency-insensitive-design",
+    "high-level-synthesis",
+    "ElasticMiter"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 ElasticMiter: A General Framework for"
+    ],
+    "evidence": [
+      "Figure 5b reports all 7 states of the circuit (in the blue box)",
+      "When each Source produces sequences with N = 1, the states framed with a red box (states 5–7) are all the reachable states",
+      "When each Source produces sequences with N = 2, the computed state space is the same as the one using infinite token sequence length"
+    ]
+  },
+  "summary": "This figure justifies why ElasticMiter can use bounded, finite input sequences instead of unbounded ones when computing a dataflow circuit's full state space. Panel (a) shows the test circuit: two Sources (each emitting a token sequence, optionally bounded to N tokens) feed non-deterministic delays (ND0, ND1), one of which passes through a Buffer (Buf1, the component under test from Figure 4's LHS) before reaching a shared Branch component, then more delays (ND2, ND3) to two Sinks. Panel (b) enumerates all 7 states this circuit can reach, one small numbered box per state, each showing the same Branch template with different token contents (0 or 1) occupying its slots. A blue outer boundary marks that all 7 states are reached once each Source's sequence length N reaches 2 (equivalent to unbounded, N=infinity); a nested red boundary shows that bounding N to 1 reaches only states 5-7, missing states 1-4. This nesting demonstrates that a sufficiently large but still finite N (here 2) already covers the entire reachable state space, so ElasticMiter's Buffers can be sized to a finite, determined length rather than needing unbounded sequences.",
+  "summary_zh": "该图说明为何ElasticMiter可用有限长度的输入序列代替无限序列：(a)电路含两个Source经不确定延迟ND0/ND1、缓冲器Buf1，汇入Branch后经ND2/ND3到两个Sink；(b)枚举该电路全部7个可达状态，每个状态框显示Branch上0/1令牌的不同占位；蓝色外框表示N=2（等价于N=∞）已覆盖全部7个状态，内层红框表示N=1仅能到达状态5-7，说明有限长度足以覆盖完整状态空间。",
+  "confidence": "high",
+  "notes": "style.palette uses the measured-attributes palette (from the PDF-extracted SVG) since this figure has no separate author source-SVG histogram in the context file. content.panels enumerates the 7 individual reachable-state frames (the figure's evolution unit) rather than the 2 lettered sub-figures (a)/(b); layout.panels/column/aspect instead mirror the index's (a)/(b) count of 2, per the schema's instruction to take that field from the index.",
+  "venue": "ASPLOS25"
+}

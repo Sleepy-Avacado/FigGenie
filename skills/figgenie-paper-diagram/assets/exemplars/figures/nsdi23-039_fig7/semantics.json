@@ -1,0 +1,162 @@
+{
+  "paper_id": "nsdi23-039",
+  "fig": "7",
+  "system": {
+    "name": "ModelKeeper",
+    "one_liner": "a system that accelerates DNN training by warming up new training jobs with weights transformed from previously trained zoo models",
+    "domain": [
+      "ml-systems",
+      "dnn-training",
+      "graph-algorithms"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Query Model",
+        "role": "small dataflow-graph example whose tensor nodes index the columns of the similarity table",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Parent Model",
+        "role": "small dataflow-graph example (a zoo model) whose tensor nodes index the rows of the similarity table",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "M(|gp|+1)x(|gq|+1)",
+        "role": "dynamic-programming similarity table recording the best matching score after aligning prefixes of the parent and query models",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SKIP_PARENT",
+        "role": "table transition that skips the current parent-model node without matching it",
+        "container": "M(|gp|+1)x(|gq|+1)",
+        "novel": true
+      },
+      {
+        "name": "SKIP_CHILD",
+        "role": "table transition that skips the current query-model node without matching it",
+        "container": "M(|gp|+1)x(|gq|+1)",
+        "novel": true
+      },
+      {
+        "name": "MATCH",
+        "role": "table transition that matches a parent-model node to a query-model node, highlighted as the transition achieving the maximum score",
+        "container": "M(|gp|+1)x(|gq|+1)",
+        "novel": true
+      },
+      {
+        "name": "End-to-end similarity",
+        "role": "final bottom-right cell of the table giving the overall similarity between the full parent and query models",
+        "container": "M(|gp|+1)x(|gq|+1)",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Query Model",
+        "to": "M(|gp|+1)x(|gq|+1)",
+        "what": "query-model node indices used as column headers",
+        "step": null
+      },
+      {
+        "from": "Parent Model",
+        "to": "M(|gp|+1)x(|gq|+1)",
+        "what": "parent-model node indices used as row headers",
+        "step": null
+      },
+      {
+        "from": "M(|gp|+1)x(|gq|+1)",
+        "to": "End-to-end similarity",
+        "what": "topological traversal of the table accumulating the best match score",
+        "step": null
+      }
+    ],
+    "key_idea": "ModelKeeper measures graph-level model similarity with a DP table over parent/query tensor pairs, choosing at each cell the best of matching the pair, skipping the parent node, or skipping the query node.",
+    "reading_order": "From the small Query Model and Parent Model graphs at top and left, into the DP grid they index, following the color-coded SKIP_PARENT, SKIP_CHILD, and MATCH annotations toward the End-to-end similarity cell at bottom-right."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.73,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f7f7f7",
+        "used_for": "light gray fill of the DP-matrix cells"
+      },
+      {
+        "hex": "#5e5e5e",
+        "used_for": "dark gray text for matrix values and grid labels"
+      },
+      {
+        "hex": "#f6f7f7",
+        "used_for": "near-white alternate cell fill in the matrix grid"
+      },
+      {
+        "hex": "#942192",
+        "used_for": "magenta text and arrow for the SKIP_CHILD annotation"
+      },
+      {
+        "hex": "#0f67bd",
+        "used_for": "blue text and column highlight for the SKIP_PARENT annotation"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid gray grid lines (~0.5pt) with one column shaded blue to highlight a transition",
+    "font": "mixed serif/sans, Times New Roman body text with GillSans-SemiBold labels, 4-6.5pt with some 12pt emphasis text",
+    "corners": "square",
+    "arrows": "many curved and straight colored arrows annotating specific matrix transitions and the small DAG edges",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = SKIP_PARENT transition, magenta = SKIP_CHILD transition, green = the MATCH transition achieving the maximum score, orange = the end-to-end similarity result cell",
+    "line_style_means": "arrows trace specific transitions through the DP table (skip-parent moves along one axis, skip-child along the other, match moves diagonally), overlaid on the small Query/Parent Model graphs whose circled nodes index the table",
+    "emphasis": "colored text and arrows pick out one example cell/transition of each of the three DP operations directly on the table, plus a highlighted final cell for the end-to-end similarity score",
+    "reusable_patterns": [
+      "dynamic-programming table walkthrough with color-coded example transitions",
+      "small node-link diagrams used as row/column headers indexing a matrix"
+    ],
+    "weaknesses": [
+      "dense grid of numeric values in small fonts may be hard to read at reduced size",
+      "several overlapping colored annotations require careful visual disentangling"
+    ]
+  },
+  "tags": [
+    "dynamic-programming",
+    "graph-similarity",
+    "model-matching",
+    "dnn-training",
+    "transfer-learning",
+    "algorithm-visualization"
+  ],
+  "provenance": {
+    "sections": [
+      "4 ModelKeeper Design (p.6)"
+    ],
+    "evidence": [
+      "ModelKeeper relies on dynamic programming-like heuristics to measure graph-level model architectural similarity.",
+      "Figure 7 shows the execution of our structure-aware matching algorithm.",
+      "branch ( 2 →3 ) and ( 4 →5 ) may both be matched to ( 2 →3 )"
+    ]
+  },
+  "summary": "This figure illustrates ModelKeeper's structure-aware pairwise model matching, the dynamic-programming heuristic used to measure graph-level architectural similarity between a Query Model being trained and a Parent Model from ModelKeeper's zoo. Small dataflow graphs of each model, with circled tensor-node indices, index the rows (Parent Model) and columns (Query Model) of a similarity table M(|gp|+1)x(|gq|+1) that records the best similarity after matching prefixes of the two graphs. Color-coded annotations on the grid mark the three transitions considered when filling each cell: SKIP_PARENT (blue) skips a parent node, SKIP_CHILD (magenta) skips a query node, and MATCH (green) pairs specific nodes, here shown as the transition achieving the maximum score. An orange annotation marks the End-to-end similarity result in the table's final cell. The figure is a dense grid of numeric values with curved, colored arrows overlaying both the small model graphs and the table itself.",
+  "summary_zh": "该图展示ModelKeeper的结构感知模型匹配算法：用动态规划相似度表比较父模型与查询模型的张量图，蓝色SKIP_PARENT、品红SKIP_CHILD、绿色MATCH标注具体转移，橙色标出端到端相似度结果格。",
+  "confidence": "medium",
+  "notes": "The exact node indices in the figure's small 'MATCH(...)' annotation were not fully legible at the rendered resolution, so the record describes the MATCH/SKIP_PARENT/SKIP_CHILD operations generally rather than asserting specific numbers, beyond the paragraph's own (2→3)-to-(2→3) branch-matching example near table position (6,6).",
+  "venue": "NSDI23"
+}

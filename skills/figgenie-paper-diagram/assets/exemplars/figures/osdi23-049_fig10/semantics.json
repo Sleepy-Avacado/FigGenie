@@ -1,0 +1,234 @@
+{
+  "paper_id": "osdi23-049",
+  "fig": "10",
+  "kind": "mechanism",
+  "system": {
+    "name": "MITOSIS",
+    "one_liner": "an RDMA-codesigned remote-fork mechanism giving serverless functions fast, provisioning-free concurrency by forking process state across machines",
+    "domain": [
+      "serverless",
+      "distributed-systems",
+      "rdma"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a 3-function chain forks itself across machines, tracking page ownership via RDMA and per-hop page tables",
+    "base": "code",
+    "elements": [
+      {
+        "name": "data",
+        "kind": "label",
+        "role": "list shared across all forked functions via fork, appended to by each function",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "func0",
+        "kind": "actor",
+        "role": "first function in the chain; the initial process before any fork",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "func1",
+        "kind": "actor",
+        "role": "forked child that reads data[0] from func0 and appends a new derived value",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "func2",
+        "kind": "actor",
+        "role": "second-hop forked child that reads data[1] from func1 and returns the final result",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "data[0]",
+        "kind": "label",
+        "role": "value produced by func0 and consumed by func1, carried by the first fork",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "data[1]",
+        "kind": "label",
+        "role": "value produced by func1 and consumed by func2, carried by the second fork",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "DRAM",
+        "kind": "box",
+        "role": "per-hop memory holding the forked process's pages, referenced via RDMA from the previous hop",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Page Table",
+        "kind": "box",
+        "role": "per-hop page table tracking ownership of remote pages for that hop's memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "RDMA",
+        "kind": "label",
+        "role": "labels the remote-memory-access link fetching pages across a fork hop",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "func0",
+        "to": "func1",
+        "what": "fork carrying data[0]",
+        "kind": "control",
+        "step": 1
+      },
+      {
+        "from": "func1",
+        "to": "func2",
+        "what": "fork carrying data[1]",
+        "kind": "control",
+        "step": 2
+      },
+      {
+        "from": "func1",
+        "to": "DRAM",
+        "what": "RDMA read of the remote page/page table across the first hop",
+        "kind": "data",
+        "step": 1
+      },
+      {
+        "from": "func2",
+        "to": "DRAM",
+        "what": "RDMA read of the remote page/page table across the second hop",
+        "kind": "data",
+        "step": 2
+      },
+      {
+        "from": "DRAM",
+        "to": "Page Table",
+        "what": "each hop's page table tracks ownership of that hop's DRAM pages",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "func0",
+        "at": "func0",
+        "what": "runs first and appends to the shared data list",
+        "carries": "data (initial list)"
+      },
+      {
+        "marker": "func1",
+        "at": "func1",
+        "what": "forked from func0; reads data[0] over RDMA from func0's machine and appends its derived value",
+        "carries": "data[0]"
+      },
+      {
+        "marker": "func2",
+        "at": "func2",
+        "what": "forked from func1; reads data[1] over RDMA from func1's machine and returns the result",
+        "carries": "data[1]"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Tracing example code through its multi-hop remote-fork execution shows how each forked function reads the prior hop's output over RDMA from a different machine's DRAM.",
+    "reading_order": "left code listing top-to-bottom, matched by the func0/func1/func2 tags to the chain diagram on the right, then down to each hop's RDMA/DRAM/page-table pair"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.18,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the code-listing box and the DRAM/Page Table boxes"
+      },
+      {
+        "hex": "#0433ff",
+        "used_for": "blue used for the fork robot icons, func labels and the data[0]/data[1] hop arrows"
+      },
+      {
+        "hex": "#f8e9dc",
+        "used_for": "pale peach fill of the DRAM boxes"
+      },
+      {
+        "hex": "#deecf3",
+        "used_for": "pale blue fill of the Page Table boxes"
+      },
+      {
+        "hex": "#1a726d",
+        "used_for": "small teal accent, likely a minor icon detail"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.11pt) black outlines on boxes; a few blue accent strokes on icons/arrows, not dashed",
+    "corners": "mixed",
+    "arrows": "mostly plain thin black connector lines chaining code to diagram to RDMA hops, with a few curved wavy strands for the RDMA links and minimal visible arrowheads",
+    "font": "mixed monospace Consolas for the code listing and sans PingFangSC-Semibold for labels, 4.5-6.5pt, over half bold",
+    "icons": "one small robot/drone bitmap icon (denoting a forked function instance) reused for func0/func1/func2"
+  },
+  "encoding": {
+    "color_means": "blue = fork icons, function labels and the data[0]/data[1] hop arrows; pale peach = DRAM boxes; pale blue = Page Table boxes",
+    "line_style_means": "solid black lines connect code to diagram and diagram nodes in sequence; wavy strands denote the RDMA link fetching a hop's remote pages",
+    "state_means": "each hop is a separate icon labelled func0/1/2, so sequence position and label distinguish the hops rather than colour",
+    "marker_means": "the func0/func1/func2 oval tags identify which code definition maps to which chain node; 'fork' and data[0]/data[1] labels on the connecting arrows name the operation and payload of each hop",
+    "emphasis": "blue highlighting on the fork icons and hop arrows draws the eye along the chain from code to the underlying RDMA/DRAM hop for each fork",
+    "reusable_patterns": [
+      "code listing paired label-for-label with an adjacent node chain, with per-hop memory boxes drawn beneath the link they belong to"
+    ],
+    "weaknesses": [
+      "small (4.5-6.5pt) labels and overlapping wavy RDMA strands make the per-hop DRAM/page-table correspondence hard to trace"
+    ]
+  },
+  "tags": [
+    "remote-fork",
+    "RDMA",
+    "serverless",
+    "page-table",
+    "MITOSIS",
+    "multi-hop"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Design and Implementation (p.10)"
+    ],
+    "evidence": [
+      "MITOSIS supports multi-hops fork: a child can be forked again with its children",
+      "the pages behind data[1] and data[0] resides on two different machines",
+      "we dedicate 4 bits in the PTE’s ignored bits to encode the remote page machine"
+    ]
+  },
+  "summary": "MITOSIS gives serverless functions fast remote fork without pre-provisioned concurrency, letting a child process be forked again on a third machine to build a multi-hop fork chain. This figure traces one concrete 3-function example (func0, func1, func2) from its Python source, where each function reads a shared 'data' list, to the resulting execution chain: func0 forks func1 across data[0], and func1 forks func2 across data[1]. Matching oval labels tie each code definition to its node in the chain diagram. Beneath the chain, per-hop DRAM and Page Table boxes linked by RDMA show that each fork hop's memory lives on a different machine, and MITOSIS must track page ownership across hops (via 4 bits it dedicates in each PTE) rather than maintaining a separate ownership map, keeping the mechanism's memory overhead low.",
+  "summary_zh": "该图展示MITOSIS的多跳远程fork机制：以func0→func1→func2三函数示例，用椭圆标签把代码与调用链节点对应，并在每一跳下方画出DRAM与页表，说明通过RDMA跨机器追踪页所有权，仅用PTE中4位编码，无需额外映射表。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

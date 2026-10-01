@@ -1,0 +1,55 @@
+{
+  "id": "nsdi25-044_fig7",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-044",
+  "fig": "7",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 7: Summary of the common slow detection logic in all studied systems.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "flowchart",
+  "subject": "the common two-staged warning/fatal threshold logic used across distributed systems to detect and escalate a slow metric",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.03,
+  "n_elements": 5,
+  "n_relations": 3,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-044/nsdi25-044_fig7_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-044/nsdi25-044_fig7_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "All studied systems detect slowness the same two-staged way: a monitored metric first crosses a warning threshold, triggering a warning action, and only reaches a fatal action either by exceeding a separate, higher fatal threshold directly, or by accumulating enough warnings (the warning count) over time.",
+      "what_to_learn": "a two-threshold decision flowchart generalized from many concrete systems' logic, with a small reference table of real threshold values alongside it",
+      "note_source": "record"
+    }
+  ]
+}

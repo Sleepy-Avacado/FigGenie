@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-041_fig12",
+  "paper_id": "nsdi24-041",
+  "fig": "12",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 12: We consider a small deployment with two host servers and two remote chassis, connected via an external PCIe switch. (a) and (b) present in-fabric traffic sharing scenarios. (c) shows the generic architecture of a communication port. RC=Root Complex.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 5.47,
+  "n_components": 20,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-041/nsdi24-041_fig12_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-041/nsdi24-041_fig12_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (a) and (b) repeat the identical Server-Switch-Chassis topology with only the highlighted flow pattern (interleaved vs orthogonal) changed, while a smaller inset (c) supplies the generic port architecture referenced by both.",
+      "what_to_learn": "Draw the same topology twice and change only which flow colours are highlighted to isolate one variable (interleaved vs orthogonal sharing), and attach a smaller generic-component inset for shared internals rather than repeating it inside each main panel; label every flow's endpoints directly, since this figure leaves them to be inferred from the text."
+    }
+  ]
+}

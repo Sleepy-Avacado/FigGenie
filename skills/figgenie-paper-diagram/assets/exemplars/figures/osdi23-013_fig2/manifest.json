@@ -1,0 +1,42 @@
+{
+  "id": "osdi23-013_fig2",
+  "paper_id": "osdi23-013",
+  "fig": "2",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 2: Larch security goals.",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "keynote",
+  "aspect": 5.68,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "low",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-013/src/fig2_sec-goals.svg",
+    "preview.png": "lab/extracted/osdi23-013/src/fig2_sec-goals.png",
+    "print.png": "lab/extracted/osdi23-013/osdi23-013_fig2_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Three goal panels separated by dotted lines reuse the same bank/Client/Log icon trio, changing only which actor is tinted red as untrusted, a small-multiples pattern the ranking script flagged low confidence despite the clean fit.",
+      "what_to_learn": "Separate small-multiple goal panels with a plain dotted vertical line rather than a full frame, and keep the same three actor icons (bank, client, database) in every panel, changing only which one is coloured red to mark the untrusted party; label each panel's goal in words, not a letter, when the goal is the title."
+    }
+  ]
+}

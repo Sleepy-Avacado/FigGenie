@@ -1,0 +1,169 @@
+{
+  "paper_id": "osdi26-054",
+  "fig": "9",
+  "system": {
+    "name": "JANUS",
+    "one_liner": "a cross-world, cooperative nested-virtualization hypervisor design that secures containers with efficient three-level address translation",
+    "domain": [
+      "virtualization",
+      "security",
+      "containers"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "L2",
+        "role": "guest whose access to an unmapped GPA_L2 triggers the fault",
+        "container": "L1 (non-root mode ring3)",
+        "novel": false
+      },
+      {
+        "name": "v_ring3",
+        "role": "L2's virtualized ring3 execution context",
+        "container": "L1 (non-root mode ring3)",
+        "novel": false
+      },
+      {
+        "name": "v_ring0",
+        "role": "L2's virtualized ring0 (kernel) execution context, containing the #PF handler",
+        "container": "L1 (non-root mode ring3)",
+        "novel": false
+      },
+      {
+        "name": "#PF Handler",
+        "role": "L2's own page-fault handler, invoked once L0 has fixed the mapping",
+        "container": "v_ring0",
+        "novel": false
+      },
+      {
+        "name": "GPT_L1",
+        "role": "page table for the L1 hypervisor's own address space",
+        "container": "v_ring0",
+        "novel": false
+      },
+      {
+        "name": "#VE Handler",
+        "role": "L1's virtualization-exception handler, which receives the #VE raised when GPA_L2 lacks a mapping in EPT0→2",
+        "container": "L1 (non-root mode ring0)",
+        "novel": true
+      },
+      {
+        "name": "#HC Handler",
+        "role": "L0's hypercall handler, which receives the JANUS_MAP mapping request from L1",
+        "container": "L0 (root mode ring0)",
+        "novel": true
+      },
+      {
+        "name": "EPT0→2",
+        "role": "the single EPT that L0 fixes with the new GPA_L2-to-HPA mapping",
+        "container": "L0 (root mode ring0)",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "L2",
+        "to": "#VE Handler",
+        "what": "#VE exception (VM exit): GPA_L2 lacks a valid mapping in EPT0→2",
+        "step": 1
+      },
+      {
+        "from": "#VE Handler",
+        "to": "#HC Handler",
+        "what": "L1 walks GPT_L1 and issues a KVM_HC_JANUS_OPS hypercall carrying GPA_L1 and GPA_L2",
+        "step": 2
+      },
+      {
+        "from": "#HC Handler",
+        "to": "EPT0→2",
+        "what": "L0 locates the host physical address for GPA_L1 and fixes EPT0→2 for GPA_L2",
+        "step": 3
+      },
+      {
+        "from": "#HC Handler",
+        "to": "#VE Handler",
+        "what": "resume L1 after the mapping is installed",
+        "step": 4
+      },
+      {
+        "from": "#VE Handler",
+        "to": "L2",
+        "what": "resume L2 via VM entry now that the fault is resolved",
+        "step": 5
+      }
+    ],
+    "key_idea": "A GPA_L2 fault raises a lightweight #VE straight to L1, which resolves the mapping and asks L0 to fix EPT0→2 via one hypercall, costing only two exits instead of a full nested VM-exit chain.",
+    "reading_order": "Top-down through three bands (L2, L1 ring0, L0 ring0), following circled steps 1-5 down from L2's fault through the #VE/#HC handlers to the EPT fix, then back up."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.75,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae3f3",
+        "used_for": "fill for the v_ring3/v_ring0 guest-context boxes"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "fill for the #PF / #VE / #HC handler boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "fill for the GPT_L1 and EPT0→2 table boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.72pt solid outlines, square corners",
+    "font": "Times New Roman serif, 6.5pt, math symbols in Cambria Math",
+    "corners": "square",
+    "arrows": "thin orthogonal arrows with filled heads and 5 circled step numbers",
+    "icons": "bitmap: a handful of icons covering over half the figure area"
+  },
+  "encoding": {
+    "color_means": "peach marks the three fault/exception handlers (#PF, #VE, #HC) that do the fault-resolution work; blue marks guest execution contexts; gray marks the raw page-table/EPT data structures being read or fixed",
+    "line_style_means": null,
+    "emphasis": "a circled 1-5 sequence forms a down-then-up loop through the three privilege bands, emphasizing that only two exits (to L1, then to L0) are needed to resolve the fault",
+    "reusable_patterns": [
+      "numbered down-and-back-up exception path through stacked privilege layers"
+    ],
+    "weaknesses": [
+      "heavy use of bitmap icons for over half the figure area limits how much can be verified from vector text alone"
+    ]
+  },
+  "tags": [
+    "nested-virtualization",
+    "ept",
+    "page-fault",
+    "hypercall",
+    "virtualization-exception"
+  ],
+  "provenance": {
+    "sections": [
+      "4 JANUS: Design and Implementation (p.10)"
+    ],
+    "evidence": [
+      "when a GPAL2 lacks a valid mapping in EPT0→2 (Figure 9), a #VE is raised and delivered to L1",
+      "issues a KVM_HC_JANUS_OPS hypercall with JANUS_MAP operation",
+      "requires only a single lightweight exit to L1 followed by one exit to L0"
+    ]
+  },
+  "summary": "Figure 9 traces JANUS's EPT-fault handling path end to end. When L2 accesses a GPA_L2 with no mapping in EPT0→2, a hardware #VE (not a full VM exit) is delivered straight to L1's #VE Handler (step 1). The handler inspects the faulting address, walks its own GPT_L1 page table to resolve the matching GPA_L1, and issues a KVM_HC_JANUS_OPS hypercall carrying both addresses to L0's #HC Handler (step 2). L0 looks up the host physical address for GPA_L1 and fixes EPT0→2 for GPA_L2 (step 3), then execution resumes at L1 (step 4) and finally back at L2 via VM entry (step 5), where L2's own #PF Handler can proceed. The three privilege bands (L2/v_ring, L1 ring0, L0 ring0) are drawn as stacked boxes with peach-filled handler boxes and a numbered down-and-up arrow path.",
+  "summary_zh": "图9展示JANUS的EPT缺页处理:L2访问未映射GPA_L2触发#VE直达L1(步骤1);L1查表得GPA_L1并向L0发hypercall(步骤2);L0修复EPT0→2(步骤3);再依次恢复L1(4)与L2(5),仅需两次退出。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

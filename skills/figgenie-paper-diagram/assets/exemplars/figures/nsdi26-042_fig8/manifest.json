@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-042_fig8",
+  "paper_id": "nsdi26-042",
+  "fig": "8",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 8: Burst-aware rate limiter overview.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.6,
+  "n_components": 8,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-042/nsdi26-042_fig8_p8_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-042/nsdi26-042_fig8_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: a single left-to-right mechanism diagram (segments to Rate Monitor to Token Update driving Main and Cheque Bucket gauges) draws one system, not two designs side by side; this is control-data, not baseline-vs-ours.",
+      "what_to_learn": "When two mechanisms coexist in one system rather than replacing each other, draw them as parallel sibling boxes (Main Bucket beside Cheque Bucket) fed by one control box with matching gauge icons, and spell the branch condition in words, since this figure's 'if tagged' icon needs the caption."
+    }
+  ]
+}

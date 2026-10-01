@@ -1,0 +1,244 @@
+{
+  "paper_id": "nsdi26-082",
+  "fig": "2",
+  "system": {
+    "name": "FlexLLM",
+    "one_liner": "co-serves LLM inference and PEFT finetuning requests at token granularity on shared GPUs with SLO guarantees",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "PEFT Model Hub",
+        "role": "stores the backbone LLM (Base Model) and all finetuned PEFT variants",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Finetuning Datasets",
+        "role": "user-supplied data for a finetuning request",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Inference Prompts",
+        "role": "user-supplied prompts for an inference request",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PEFT-as-a-Service Interface",
+        "role": "unified programming interface through which users submit finetuning and inference requests and receive responses",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Static Compilation (§5)",
+        "role": "generates and optimizes the parallel computation graph for a finetuning request before execution",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Hardware",
+        "role": "target hardware description used to compile the computation graph",
+        "container": "Static Compilation (§5)",
+        "novel": false
+      },
+      {
+        "name": "Model",
+        "role": "PEFT model description used to compile the computation graph",
+        "container": "Static Compilation (§5)",
+        "novel": false
+      },
+      {
+        "name": "Computation Graph",
+        "role": "the parallel computation graph generated for the finetuning job",
+        "container": "Static Compilation (§5)",
+        "novel": true
+      },
+      {
+        "name": "Dependent Parallelization (§5.1)",
+        "role": "parallelization strategy generation for the computation graph",
+        "container": "Static Compilation (§5)",
+        "novel": true
+      },
+      {
+        "name": "Graph Pruning (§5.2)",
+        "role": "prunes the computation graph to optimize execution",
+        "container": "Static Compilation (§5)",
+        "novel": true
+      },
+      {
+        "name": "Dynamic Scheduling (§6)",
+        "role": "schedules finetuning and inference tokens together at runtime to meet SLOs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Token-level Finetuning (§6.1)",
+        "role": "runs finetuning backward passes at token granularity over a sliding window of previous tokens",
+        "container": "Dynamic Scheduling (§6)",
+        "novel": true
+      },
+      {
+        "name": "Hybrid Token Scheduler (§6.2)",
+        "role": "iteratively schedules a mix of inference and finetuning tokens each round",
+        "container": "Dynamic Scheduling (§6)",
+        "novel": true
+      },
+      {
+        "name": "Distributed Co-serving Runtime (§7)",
+        "role": "executes the scheduled co-serving workload across distributed GPUs",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "PEFT Model Hub",
+        "to": "PEFT-as-a-Service Interface",
+        "what": "PEFT model",
+        "step": null
+      },
+      {
+        "from": "Finetuning Datasets",
+        "to": "PEFT-as-a-Service Interface",
+        "what": "finetuning requests",
+        "step": null
+      },
+      {
+        "from": "Inference Prompts",
+        "to": "PEFT-as-a-Service Interface",
+        "what": "inference requests",
+        "step": null
+      },
+      {
+        "from": "PEFT-as-a-Service Interface",
+        "to": "Static Compilation (§5)",
+        "what": "PEFT model",
+        "step": null
+      },
+      {
+        "from": "PEFT-as-a-Service Interface",
+        "to": "Dynamic Scheduling (§6)",
+        "what": "requests",
+        "step": null
+      },
+      {
+        "from": "Distributed Co-serving Runtime (§7)",
+        "to": "PEFT-as-a-Service Interface",
+        "what": "responses",
+        "step": null
+      },
+      {
+        "from": "Hardware",
+        "to": "Computation Graph",
+        "what": "hardware description input to compilation",
+        "step": null
+      },
+      {
+        "from": "Model",
+        "to": "Computation Graph",
+        "what": "model description input to compilation",
+        "step": null
+      },
+      {
+        "from": "Computation Graph",
+        "to": "Dependent Parallelization (§5.1)",
+        "what": "graph to parallelize",
+        "step": null
+      },
+      {
+        "from": "Computation Graph",
+        "to": "Graph Pruning (§5.2)",
+        "what": "graph to prune",
+        "step": null
+      }
+    ],
+    "key_idea": "FlexLLM unifies inference and PEFT finetuning behind one PEFT-as-a-Service interface, statically compiling and pruning a finetuning job's computation graph, then dynamically scheduling inference and finetuning tokens together at token granularity for co-serving on a distributed runtime.",
+    "reading_order": "Top-down: PEFT Model Hub and user requests (finetuning datasets, inference prompts) feed into the PEFT-as-a-Service Interface, which connects to the three main components below it — Static Compilation, Dynamic Scheduling, and Distributed Co-serving Runtime."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray fill for the PEFT Model Hub box and llama-shaped model icons"
+      },
+      {
+        "hex": "#ef7d2f",
+        "used_for": "orange fill for the Static Compilation box and the Inference Prompts speech bubble"
+      },
+      {
+        "hex": "#5c9bd4",
+        "used_for": "blue fill for the Dynamic Scheduling box and the Finetuning Datasets speech bubble"
+      },
+      {
+        "hex": "#70ae47",
+        "used_for": "green fill for icons within Static Compilation (e.g., graph pruning) and scheduler bar-chart elements"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "light gray fill for the PEFT-as-a-Service Interface bar"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin (~0.45pt) black outlines, dashed borders around sub-component groups",
+    "font": "Arial-BoldMT / Calibri-Italic sans-serif, small sizes (~2.5-7.5pt)",
+    "corners": "mixed",
+    "arrows": "mix of straight and curved arrows with filled heads, bidirectional arrows between the interface and its three components",
+    "icons": "vector llama icons for base/PEFT models, chat-bubble icons for datasets/prompts, small graph and bar-chart icons for computation graph and scheduler"
+  },
+  "encoding": {
+    "color_means": "gray = model hub/model icons, orange = static compilation and inference-side elements, blue = dynamic scheduling and finetuning-side elements, green = graph-pruning/scheduling detail icons",
+    "line_style_means": "bidirectional arrows between the PEFT-as-a-Service Interface and each of the three components (labeled PEFT model / requests / responses) show the interface mediating both directions of data flow",
+    "emphasis": "the central PEFT-as-a-Service Interface bar, with labeled bidirectional arrows to all three subsystems, visually asserts that a single unified interface mediates both inference and finetuning traffic",
+    "reusable_patterns": [
+      "central interface bar mediating multiple backend subsystems",
+      "labeled bidirectional arrows naming the data exchanged in each direction"
+    ],
+    "weaknesses": [
+      "dense icon-heavy layout with many small sub-boxes packed into a roughly square figure"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "PEFT",
+    "finetuning",
+    "co-serving",
+    "SLO",
+    "token-level-scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "4 System Overview (p.5)"
+    ],
+    "evidence": [
+      "Figure 2 shows an overview of FlexLLM, which co-serves both PEFT and inference requests for LLMs",
+      "The programming interface for both inference and finetuning requests is unified through a PEFT-as-a-Service (PaaS) interface",
+      "FlexLLM comprises three main components. First, for finetuning requests that execute in parallel across multiple GPUs, the static compilation module (§5) generates a parallel computation graph"
+    ]
+  },
+  "summary": "This figure shows the system overview of FlexLLM, which co-serves LLM inference and parameter-efficient finetuning (PEFT) requests on shared GPUs. Users draw on a PEFT Model Hub (a base model plus multiple finetuned PEFT variants) and submit Finetuning Datasets or Inference Prompts through a unified PEFT-as-a-Service Interface, which exchanges the PEFT model, requests, and responses with three main components. The Static Compilation (§5) component takes hardware and model descriptions to generate a parallel Computation Graph, optimized via Dependent Parallelization (§5.1) and Graph Pruning (§5.2). The Dynamic Scheduling (§6) component performs Token-level Finetuning (§6.1), running backward passes over a sliding window of previous tokens, coordinated by a Hybrid Token Scheduler (§6.2) that iteratively interleaves inference and finetuning tokens. A Distributed Co-serving Runtime (§7) executes the scheduled workload and returns responses through the interface. The figure uses orange for compilation/inference-oriented elements, blue for scheduling/finetuning-oriented elements, and llama and chat-bubble icons to depict models and requests, with labeled bidirectional arrows showing the interface mediating all data exchange.",
+  "summary_zh": "该图展示 FlexLLM 系统总览：用户通过统一的 PEFT-as-a-Service 接口提交微调数据或推理提示，模型来自 PEFT 模型中心；接口连接静态编译模块（生成并剪枝计算图）、动态调度模块（按 token 粒度交织微调反向传播与混合调度）以及分布式协同服务运行时，三者共同实现推理与微调的 token 级共同服务。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

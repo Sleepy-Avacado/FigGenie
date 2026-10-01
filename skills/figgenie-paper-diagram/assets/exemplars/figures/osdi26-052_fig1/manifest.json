@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-052_fig1",
+  "paper_id": "osdi26-052",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: Memory access latencies in different architectures.",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 3.18,
+  "n_components": 6,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-052/osdi26-052_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-052/osdi26-052_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "The floor case for two-panel: just 6 components and 2 flows, monochrome except two red latency numbers (10-100ns vs 250-2000ns), proving a single colour contrast can carry the entire argument.",
+      "what_to_learn": "Keep both panels identical in structure (CPU/cache stack over memory) and spend your only colour on the one number that changes: the access latency in red beside the arrow it labels."
+    }
+  ]
+}

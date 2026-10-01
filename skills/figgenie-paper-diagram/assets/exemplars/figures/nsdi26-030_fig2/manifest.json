@@ -1,0 +1,42 @@
+{
+  "id": "nsdi26-030_fig2",
+  "paper_id": "nsdi26-030",
+  "fig": "2",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 2: An overview of LMT performance issues.",
+  "corpus_template": "matrix",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.88,
+  "n_components": 12,
+  "n_flows": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-030/src/fig2_performance_issues.svg",
+    "preview.png": "lab/extracted/nsdi26-030/src/fig2_performance_issues.png",
+    "print.png": "lab/extracted/nsdi26-030/nsdi26-030_fig2_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Three-column taxonomy (Type / Issues / Diagnosis) with percentages and colour carried consistently across columns.",
+      "what_to_learn": "For a measurement taxonomy, use column headers as the schema and keep row colour constant across columns so categories track visually."
+    }
+  ]
+}

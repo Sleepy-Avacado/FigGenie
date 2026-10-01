@@ -1,0 +1,55 @@
+{
+  "id": "nsdi24-018_fig4",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-018",
+  "fig": "4",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 4: TANGO is a hybrid control and data-plane approach to performant routing over the public Internet, informed by fine-grained, trustworthy telemetry. TANGO relies on cooperation: both edge networks share secret keys and per-class performance objectives.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "the life cycle of one packet through TANGO's monitor, reroute, and control-plane modules from sender to receiver",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "double",
+  "aspect": 2.9,
+  "n_elements": 21,
+  "n_relations": 20,
+  "n_panels": 0,
+  "n_steps": 10,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-018/nsdi24-018_fig4_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-018/nsdi24-018_fig4_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "One packet's metrics and, when needed, one signed route update both travel the same round trip across the public Internet, verified at every hop before any route table is trusted enough to change.",
+      "what_to_learn": "two colour-coded horizontal bands (control plane above, data plane below) with vertical feed arrows from control-plane inputs down into the numbered data-plane pipeline; a shared cloud icon that two different packet types both dotted-line through, reused instead of drawn twice",
+      "note_source": "record"
+    }
+  ]
+}

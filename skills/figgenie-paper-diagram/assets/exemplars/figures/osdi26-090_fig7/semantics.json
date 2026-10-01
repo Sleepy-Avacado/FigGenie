@@ -1,0 +1,182 @@
+{
+  "paper_id": "osdi26-090",
+  "fig": "7",
+  "system": {
+    "name": "M3U",
+    "one_liner": "a kernel MMU plugin that scales post-copy live migration of high-end VMs via parallel, lock-reduced page-table updates",
+    "domain": [
+      "virtualization",
+      "os-kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "HPT Update Operations",
+        "role": "queued HPT update operations mixed across threads, color-coded by target address region",
+        "container": "Lock Space Partitioning",
+        "novel": null
+      },
+      {
+        "name": "Lock Space Partitioning",
+        "role": "splits operations by HVA so each falls within a single pmd and is assigned to an independent worker thread (t1-t4)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "HPT Update w/o Lock Contention",
+        "role": "kernel-side page-table walk (pgd to pud to pmd) that applies each thread's updates without cross-thread lock contention",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "pgd",
+        "role": "page global directory walked to reach the pud",
+        "container": "HPT Update w/o Lock Contention",
+        "novel": null
+      },
+      {
+        "name": "pud",
+        "role": "page upper directory holding per-thread, color-coded entries that fan out to separate pmd tables",
+        "container": "HPT Update w/o Lock Contention",
+        "novel": null
+      },
+      {
+        "name": "pmd",
+        "role": "page middle directory entries locked and updated independently per thread",
+        "container": "HPT Update w/o Lock Contention",
+        "novel": true
+      },
+      {
+        "name": "Page Flagging",
+        "role": "lightweight flagging mechanism that marks pmd entries as updated per thread instead of a full unmap/remap",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Redundancy Refinement",
+        "role": "merges the per-thread completion signals and eliminates redundant per-thread TLB flush and EPT callback into one refined flush",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "TLB flush",
+        "role": "single aggregated TLB flush performed once all per-thread updates are done",
+        "container": "Redundancy Refinement",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "HPT Update Operations",
+        "to": "pgd",
+        "what": "per-thread partitioned operations crossing from user to kernel space",
+        "step": null
+      },
+      {
+        "from": "pgd",
+        "to": "pud",
+        "what": "page-table walk descending to the upper directory",
+        "step": null
+      },
+      {
+        "from": "pud",
+        "to": "pmd",
+        "what": "per-thread, color-coded entries fanned out to separate pmd tables",
+        "step": null
+      },
+      {
+        "from": "pmd",
+        "to": "Redundancy Refinement",
+        "what": "per-thread 'Done' signals after page flagging",
+        "step": null
+      },
+      {
+        "from": "Redundancy Refinement",
+        "to": "TLB flush",
+        "what": "aggregated completion triggering one refined TLB flush and EPT callback",
+        "step": null
+      }
+    ],
+    "key_idea": "Partitioning HPT update operations across independent pmd regions and replacing per-thread unmap/TLB-flush/EPT-callback with lightweight page flagging and one aggregated flush lets M3U parallelize dirty-page registration without lock contention.",
+    "reading_order": "Left to right: raw HPT update operations are partitioned by address region and thread (t1-t4), cross the user/kernel boundary, walk pgd/pud/pmd with page flagging per thread, then converge into one refined TLB flush."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.29,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#666666",
+        "used_for": "dark-gray body text and box strokes"
+      },
+      {
+        "hex": "#994c00",
+        "used_for": "dark-orange italic annotation text explaining the HVA rule and the refined TLB flush"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "orange dashed outline highlighting the worked t4 example through every stage"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pale-red fill of one thread's operation blocks and pmd box"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale-orange fill of another thread's operation blocks and pmd box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.38pt mostly solid lines; the three stage containers and the t4 highlight use dashed rounded borders, with a dashed vertical line marking the user/kernel boundary",
+    "corners": "mixed",
+    "arrows": "thin black lines with small chevron arrowheads; lines converge to fan per-thread paths into pud and to merge completion signals into one TLB flush",
+    "icons": "small vector lock icons marking per-thread, per-pmd exclusive access"
+  },
+  "encoding": {
+    "color_means": "four colors tag which of the four worker threads (t1-t4) owns a given operation, lock, or pmd entry, tracked consistently from the raw operation queue through the pud/pmd tables",
+    "line_style_means": "dashed rounded boxes group the three pipeline stages and highlight the single worked example (t4) called out by the orange annotations; a dashed vertical line marks the user/kernel boundary",
+    "emphasis": "one thread's path (t4, dashed outline) is traced end-to-end through every stage as a worked example, with orange italic call-outs explaining the HVA-partitioning rule and the refined TLB-flush/EPT-callback behavior",
+    "reusable_patterns": [
+      "color-coded per-thread tokens traced through a shared data structure to show lock-free partitioning",
+      "many-to-one convergence diagram showing redundant per-item work merged into a single aggregated operation"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "live-migration",
+    "lock-free",
+    "page-table",
+    "parallelism",
+    "kernel",
+    "dirty-page-tracking"
+  ],
+  "provenance": {
+    "sections": [
+      "4 M3U Detailed Design (p.7)",
+      "4 M3U Detailed Design (p.8)"
+    ],
+    "evidence": [
+      "M3U partitions the entire HVA space into disjoint 1 GB regions",
+      "the refined HPT update operation in M3U fully eliminates contention caused by redundant locks",
+      "Once flagged as non-present, a page becomes inaccessible to the guest VM"
+    ]
+  },
+  "summary": "M3U reduces lock contention during parallel dirty-page registration for post-copy VM migration. This figure traces HPT update operations through three left-to-right stages. First, Lock Space Partitioning splits operations by HVA so each falls within a single pmd and is handed to an independent worker thread (t1-t4, color-coded); the dashed t4 group is used as the running example. Crossing the user/kernel boundary, operations walk the page-table hierarchy (pgd to pud to pmd); Page Flagging then marks each thread's pmd entries as updated with a lightweight lock instead of a full unmap, so the PUD/PMD locks required are independent per 1 GB region. Finally, Redundancy Refinement merges the four threads' 'Done' signals so only one aggregated TLB flush and EPT callback is performed, instead of one per thread.",
+  "summary_zh": "图示按HVA将HPT更新操作划分给线程t1-t4，经pgd/pud/pmd做轻量页标记（Page Flagging），最后合并各线程完成信号为一次精简TLB刷新与EPT回调，从而降低脏页注册的锁竞争。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

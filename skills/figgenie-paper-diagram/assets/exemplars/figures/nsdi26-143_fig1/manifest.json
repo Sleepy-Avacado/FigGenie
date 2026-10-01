@@ -1,0 +1,48 @@
+{
+  "id": "nsdi26-143_fig1",
+  "paper_id": "nsdi26-143",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: High-level view of (a) a fully-connected MPD pod, (b) a CXL switch pod, and (c) an Octopus pod with six islands (96 servers (“S”) and 192 MPDs (“P”)). Within each Octopus island, servers use a subset of CXL ports to connect to island-specific MPDs, guaranteeing pairwise MPD overlap for low",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.71,
+  "n_components": 9,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-143/src/fig1_cxl-topo.svg",
+    "preview.png": "lab/extracted/nsdi26-143/src/fig1_cxl-topo.png",
+    "print.png": "lab/extracted/nsdi26-143/nsdi26-143_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "(a)/(b) baselines drawn small next to a larger, more detailed (c) proposal, using one node vocabulary throughout.",
+      "what_to_learn": "Panel size is an argument: keep baselines schematic and give the contribution the detail budget."
+    },
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Explicitly cited in the reference as the matrix-filed baseline-vs-ours exemplar: two small prior topologies stacked left, the larger 3-island Octopus design right, no arrows needed to make the contrast.",
+      "what_to_learn": "Stack the baseline variants smaller on one side and draw the proposed design larger on the other; use two named link colors (brown for intra-island, navy for inter-island) labelled directly on the drawing instead of a separate legend."
+    }
+  ]
+}

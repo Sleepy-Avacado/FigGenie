@@ -1,0 +1,56 @@
+{
+  "id": "sosp25-053_fig5",
+  "kind": "mechanism",
+  "paper_id": "sosp25-053",
+  "fig": "5",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 5. The automated fault tolerance mechanism of ByteRobust.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "state-machine",
+  "subject": "how ByteRobust escalates a suspected failure from real-time checks through eviction, rollback, and replay to a diagnosis",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 4.54,
+  "n_elements": 10,
+  "n_relations": 16,
+  "n_panels": 0,
+  "n_steps": 9,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-053/src/fig5_recovery_workflow.svg",
+    "preview.png": "lab/extracted/sosp25-053/src/fig5_recovery_workflow.png",
+    "print.png": "lab/extracted/sosp25-053/sosp25-053_fig5_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A single numbered pipeline escalates a training failure from cheap real-time checks through machine eviction, reattempt, rollback, and dual-phase replay, ending in a diagnosis or human escalation.",
+      "what_to_learn": "Nine numbered guarded edges across a wide double-column strip; shape + fill as a role code, declared in a dashed legend box",
+      "note_source": "doc"
+    }
+  ]
+}

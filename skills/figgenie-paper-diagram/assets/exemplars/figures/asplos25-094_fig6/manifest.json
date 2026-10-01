@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-094_fig6",
+  "paper_id": "asplos25-094",
+  "fig": "6",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 6. System overview of Klotski. Comp. refers to Compute, Corr. refers to Correlation, and Infer. refers to Inference. The blue, purple, and yellow graphics represent the expert, gate, and attention layers, respectively. The dotted line in the pipeline indicates that the computations within the",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.54,
+  "n_components": 12,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-094/src/fig6_overview_6_25.svg",
+    "preview.png": "lab/extracted/asplos25-094/src/fig6_overview_6_25.png",
+    "print.png": "lab/extracted/asplos25-094/asplos25-094_fig6_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Offline/online phase boxes on top with the execution pipeline expanded into IO-thread and inference-thread lanes below.",
+      "what_to_learn": "Expand only the phase that has interesting concurrency into lanes; the others stay as plain boxes."
+    }
+  ]
+}

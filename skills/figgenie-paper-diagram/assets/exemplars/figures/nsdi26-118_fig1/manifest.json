@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-118_fig1",
+  "paper_id": "nsdi26-118",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: (a) Physical layout of a datacenter (in elevation view) comparing the deployment footprint of SmartSwitch (SS) and Sirius. (b) Logical diagram of the architecture of DPU-centric appliance (Sirius) and SONiC DASH SmartSwitch.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 3.2,
+  "n_components": 32,
+  "n_flows": 5,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-118/nsdi26-118_fig1_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-118/nsdi26-118_fig1_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Panel (a) uses a literal red X on Sirius's placement versus a green check on SmartSwitch's, and panel (b) contrasts Sirius's multi-hop topology against the SmartSwitch's layered stack, all in one dense 32-component double-column figure.",
+      "what_to_learn": "Use a literal red X for a rejected placement and a green check for the accepted one to make a physical-fit argument at a glance; if a second panel packs two different diagrams together, split them into their own lettered sub-panels rather than one shared label, since merging them (as here) hides the second diagram."
+    }
+  ]
+}

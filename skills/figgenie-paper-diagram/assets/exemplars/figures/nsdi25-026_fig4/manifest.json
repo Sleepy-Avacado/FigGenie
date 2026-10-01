@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-026_fig4",
+  "paper_id": "nsdi25-026",
+  "fig": "4",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 4: Overview of OTTER",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.99,
+  "n_components": 12,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-026/nsdi25-026_fig4_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-026/nsdi25-026_fig4_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Reassigned from multi-tier by the note-writer: a control pipeline (top) is split from a two-cloud WAN topology (bottom) by function, not by stacked machine tiers; this is a control-data split with one bridging arrow, matching its own corpus_template.",
+      "what_to_learn": "When a figure's real split is control-plane pipeline above versus data-plane topology below, bridge them with one clearly labelled vertical arrow rather than several, and reach for stacked tier rows only when boxes represent different machines, not different concerns; name the bridging arrow's endpoint, since this figure leaves it unlabelled."
+    }
+  ]
+}

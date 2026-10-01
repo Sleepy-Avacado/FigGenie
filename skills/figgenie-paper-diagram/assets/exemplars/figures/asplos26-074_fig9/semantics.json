@@ -1,0 +1,180 @@
+{
+  "paper_id": "asplos26-074",
+  "fig": "9",
+  "system": {
+    "name": "HNLPU",
+    "one_liner": "a Hardwired-Neuron Language Processing Unit that physically hardwires LLM weights into the chip fabric for extreme inference efficiency",
+    "domain": [
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "chip (r,c)",
+        "role": "one of 16 compute modules arranged in a 4x4 logical row-column fully-connected fabric",
+        "container": "system-level topology",
+        "novel": true
+      },
+      {
+        "name": "Control Unit",
+        "role": "manages on-chip scheduling and inter-layer pipelining for multi-batch scenarios",
+        "container": "single chip",
+        "novel": true
+      },
+      {
+        "name": "HN Array",
+        "role": "dedicated unit performing computation on fixed, pre-trained hardwired weights",
+        "container": "single chip",
+        "novel": true
+      },
+      {
+        "name": "VEX",
+        "role": "Vector Execution Unit computing attention scores, nonlinear activations, residual additions and output sampling",
+        "container": "single chip",
+        "novel": true
+      },
+      {
+        "name": "Inter. Engine",
+        "role": "Interconnect Engine facilitating inter-chip communication and collective operations (broadcast, reduce, scatter, gather)",
+        "container": "single chip",
+        "novel": true
+      },
+      {
+        "name": "Buffer",
+        "role": "on-chip Attention Buffer serving as the KV Cache",
+        "container": "single chip",
+        "novel": true
+      },
+      {
+        "name": "HBM",
+        "role": "off-chip high-bandwidth memory storing KV cache and embedding tables",
+        "container": "single chip",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "chip (r,c)",
+        "to": "chip (r,c')",
+        "what": "row-wise point-to-point link (broadcast/reduce)",
+        "step": null
+      },
+      {
+        "from": "chip (r,c)",
+        "to": "chip (r',c)",
+        "what": "column-wise point-to-point link (scatter/broadcast/reduce/gather)",
+        "step": null
+      },
+      {
+        "from": "Inter. Engine",
+        "to": "HN Array",
+        "what": "queries/activations for computation",
+        "step": null
+      },
+      {
+        "from": "HN Array",
+        "to": "Inter. Engine",
+        "what": "partial sums for aggregation across chips",
+        "step": null
+      },
+      {
+        "from": "VEX",
+        "to": "Buffer",
+        "what": "keys/values read for attention computation",
+        "step": null
+      },
+      {
+        "from": "HBM",
+        "to": "Control Unit",
+        "what": "weight/KV data path (bottom bus)",
+        "step": null
+      }
+    ],
+    "key_idea": "HNLPU is built from 16 identical compute modules connected by a router-less, fully-connected row-column fabric, and each module packages an HN Array, VEX, on-chip buffer, control unit and interconnect engine around a shared HBM.",
+    "reading_order": "Left panel (a) first: 4x4 grid of interconnected chips forming the system topology; then right panel (b): zoomed single-chip block diagram showing Control Unit, HN Array, VEX, Buffer and Interconnect Engine stacked over HBM."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.45,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for background/inactive chip cells"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "mid-gray fill for chip cells and secondary blocks"
+      },
+      {
+        "hex": "#d8d8d8",
+        "used_for": "gray fill for module sub-blocks (VEX, Interconnect Engine)"
+      },
+      {
+        "hex": "#923931",
+        "used_for": "dark red fill highlighting the Buffer/HBM blocks"
+      },
+      {
+        "hex": "#3f3f3f",
+        "used_for": "dark gray outline/fill accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black and light-gray lines, dashed interconnect links",
+    "font": "Cambria/Calibri serif-sans mix, 6-10.5pt",
+    "corners": "square",
+    "arrows": "orthogonal lines with filled arrowheads for data paths, curved lines for the row-column mesh",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray shades differentiate control/compute sub-blocks; dark red marks the memory/buffer components (Buffer, HBM)",
+    "line_style_means": "dashed lines represent the logical row-column interconnect mesh between chips in panel (a)",
+    "emphasis": "panel (b) enlarges a single chip out of the 4x4 grid via a dashed connector, drawing attention from system topology down to internal chip architecture",
+    "reusable_patterns": [
+      "NxN fully-connected mesh topology diagram paired with a zoomed single-node block diagram",
+      "shared HBM bar spanning the bottom of an on-chip module diagram"
+    ],
+    "weaknesses": [
+      "module labels inside panel (b) are abbreviated (Inter. Engine) which may be ambiguous without the caption"
+    ]
+  },
+  "tags": [
+    "hardware-accelerator",
+    "LLM-inference",
+    "interconnect-topology",
+    "chip-architecture",
+    "MoE",
+    "KV-cache",
+    "hardwired-weights"
+  ],
+  "provenance": {
+    "sections": [
+      "? (p.6)",
+      "? (p.7)"
+    ],
+    "evidence": [
+      "a logical 4x4 row-column fully-connected fabric to interconnect its 16 modules",
+      "each chip in HNLPU is composed of five primary modules",
+      "This design creates a router-less, low-latency network"
+    ]
+  },
+  "summary": "This figure presents the overall architecture of the HNLPU system in two panels. Panel (a) shows the system-level topology: 16 compute modules (chip (0,0) through chip (3,3)) arranged in a 4x4 grid, each directly linked to every other module in its row and column via a router-less, fully-connected mesh that supports collective operations like AllReduce. Panel (b) zooms into a single compute module's chip architecture, showing five primary blocks: a Control Unit managing scheduling and pipelining, an HN Array performing hardwired-weight computation, a VEX unit handling attention and nonlinear operations, an on-chip Attention Buffer acting as KV cache, and an Interconnect Engine for inter-chip communication, all sitting above a shared HBM for KV cache and embedding storage. The figure conveys a top-down view from system interconnect down to single-chip microarchitecture.",
+  "summary_zh": "该图展示HNLPU系统的整体架构：(a)16个计算模块以4x4行列全连接拓扑互联，支持AllReduce等集合通信；(b)放大展示单个计算模块内部结构，包含控制单元、HN阵列（硬连线权重计算）、VEX向量执行单元、片上注意力缓存和互联引擎，底部共享HBM存储KV缓存与嵌入表。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

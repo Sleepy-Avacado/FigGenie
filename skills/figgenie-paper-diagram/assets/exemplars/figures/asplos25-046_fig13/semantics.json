@@ -1,0 +1,282 @@
+{
+  "paper_id": "asplos25-046",
+  "fig": "13",
+  "system": {
+    "name": "Coach",
+    "one_liner": "a cloud platform system that exploits temporal patterns for all-resource oversubscription using long-term prediction and VM scheduling",
+    "domain": [
+      "cloud",
+      "resource-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Cluster Manager",
+        "role": "converts a VM request into resource requirements and oversubscription rates using a prediction model",
+        "container": "Cluster",
+        "novel": true
+      },
+      {
+        "name": "Prediction Model",
+        "role": "decides oversubscription rates for each resource per time window",
+        "container": "Cluster Manager",
+        "novel": true
+      },
+      {
+        "name": "Cluster Scheduler",
+        "role": "assigns the VM to a server using the computed rates and a scheduling policy",
+        "container": "Cluster",
+        "novel": true
+      },
+      {
+        "name": "Scheduling Policy",
+        "role": "policy used by the Cluster Scheduler to place the VM on a server",
+        "container": "Cluster Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Server Manager",
+        "role": "per-server component running the Oversubscription Agent",
+        "container": "Server",
+        "novel": true
+      },
+      {
+        "name": "Oversubscription Agent",
+        "role": "local agent that manages resources on the server and adjusts guaranteed/oversubscribed portions",
+        "container": "Server Manager",
+        "novel": true
+      },
+      {
+        "name": "Monitoring",
+        "role": "monitors oversubscribed resources on the server to detect contention",
+        "container": "Oversubscription Agent",
+        "novel": true
+      },
+      {
+        "name": "Prediction",
+        "role": "predicts resource needs to inform mitigation actions",
+        "container": "Oversubscription Agent",
+        "novel": true
+      },
+      {
+        "name": "Mitigation",
+        "role": "mitigates detected contention via reactive and proactive actions",
+        "container": "Oversubscription Agent",
+        "novel": true
+      },
+      {
+        "name": "Reactive",
+        "role": "reactive mitigation strategy triggered by detected contention",
+        "container": "Mitigation",
+        "novel": true
+      },
+      {
+        "name": "Proactive",
+        "role": "proactive mitigation strategy anticipating contention",
+        "container": "Mitigation",
+        "novel": true
+      },
+      {
+        "name": "Action",
+        "role": "mitigation action taken to adjust resource allocation, derived from Reactive/Proactive strategies",
+        "container": "Mitigation",
+        "novel": true
+      },
+      {
+        "name": "Backing Store",
+        "role": "cold memory storage backing oversubscribed memory on the server",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Memory",
+        "role": "server memory divided into Guaranteed and Oversubscribed regions across VMs",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Guaranteed",
+        "role": "portion of memory guaranteed to each VM (GPVM1, CVM2, CVM3)",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "Oversubscribed",
+        "role": "portion of memory oversubscribed and shared/unallocated across CVMs",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "General Purpose VM 1",
+        "role": "a standard VM with only a guaranteed memory allocation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CoachVM 2",
+        "role": "a CoachVM with both guaranteed and oversubscribed memory portions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CoachVM 3",
+        "role": "a CoachVM with both guaranteed and oversubscribed memory portions",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "VM Requests",
+        "to": "Cluster Manager",
+        "what": "incoming VM creation request",
+        "step": null
+      },
+      {
+        "from": "Cluster Manager",
+        "to": "Cluster Scheduler",
+        "what": "resource requirements and oversubscription rates",
+        "step": null
+      },
+      {
+        "from": "Cluster Scheduler",
+        "to": "Server Manager",
+        "what": "VM Allocations",
+        "step": null
+      },
+      {
+        "from": "Server Manager",
+        "to": "Cluster Manager",
+        "what": "VM Utilization",
+        "step": null
+      },
+      {
+        "from": "Monitoring",
+        "to": "Memory",
+        "what": "Monitor (contention detection)",
+        "step": null
+      },
+      {
+        "from": "Oversubscription Agent",
+        "to": "Memory",
+        "what": "Manage (adjust guaranteed/oversubscribed portions)",
+        "step": null
+      },
+      {
+        "from": "Reactive",
+        "to": "Action",
+        "what": "reactive mitigation trigger",
+        "step": null
+      },
+      {
+        "from": "Proactive",
+        "to": "Action",
+        "what": "proactive mitigation trigger",
+        "step": null
+      },
+      {
+        "from": "Prediction",
+        "to": "Mitigation",
+        "what": "predicted resource needs",
+        "step": null
+      },
+      {
+        "from": "Backing Store",
+        "to": "Memory",
+        "what": "cold memory swapped for oversubscribed portions",
+        "step": null
+      }
+    ],
+    "key_idea": "Coach splits into a cluster-level manager/scheduler that predicts oversubscription rates and places CoachVMs, and a per-server oversubscription agent that monitors, predicts, and mitigates contention while dynamically partitioning each VM's memory into guaranteed and oversubscribed portions.",
+    "reading_order": "Top-down: Cluster layer (Cluster Manager/Prediction Model to Cluster Scheduler/Scheduling Policy) above, connected via VM Utilization/VM Allocations arrows to the Server layer (Server Manager/Oversubscription Agent managing Memory), with example VM memory partitions shown at the bottom."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 4,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.1,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue fill for the Cluster Manager and Cluster Scheduler boxes"
+      },
+      {
+        "hex": "#b1ddf0",
+        "used_for": "blue fill for the Oversubscription Agent panel"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pink fill for the Prediction Model box and oversubscribed memory portions"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "yellow fill for the Backing Store (cold memory) cylinder"
+      },
+      {
+        "hex": "#005900",
+        "used_for": "dark green fill for General Purpose VM 1's guaranteed memory"
+      },
+      {
+        "hex": "#97d077",
+        "used_for": "medium green fill for CoachVM guaranteed memory portions"
+      },
+      {
+        "hex": "#fad9d5",
+        "used_for": "light pink fill for CoachVM oversubscribed memory portions"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders, dashed borders delimiting the Cluster and Server outer regions",
+    "font": "Arimo sans-serif, 5-8.5pt, bold for component titles",
+    "corners": "square",
+    "arrows": "solid black arrows for control/data flow (VM Requests, VM Utilization, VM Allocations, Manage, Monitor)",
+    "icons": "a cylinder icon for Backing Store"
+  },
+  "encoding": {
+    "color_means": "blue = cluster/control-plane and monitoring/prediction components, green shades = guaranteed memory allocations (darker = plain VM, lighter = CoachVM guaranteed share), pink/red shades = oversubscribed memory allocations, yellow = cold backing store",
+    "line_style_means": "dashed rectangles delimit the Cluster and Server as separate logical/physical regions; solid arrows show request, utilization, allocation, and management/monitoring flows",
+    "emphasis": "the colored Memory bar at the bottom, split into Guaranteed and Oversubscribed bands and mapped to concrete example VMs, makes Coach's core resource-partitioning idea directly visible",
+    "reusable_patterns": [
+      "two-tier control (cluster) plus local-agent (server) architecture",
+      "a segmented resource bar mapped to labeled example VM instances to explain a memory-partitioning scheme"
+    ],
+    "weaknesses": [
+      "color coding for guaranteed vs. oversubscribed regions is inferred from box labels rather than an explicit legend"
+    ]
+  },
+  "tags": [
+    "oversubscription",
+    "cloud-platform",
+    "memory-management",
+    "vm-scheduling",
+    "resource-prediction",
+    "cluster-management"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Temporal pattern-based oversubscription (p.6)"
+    ],
+    "evidence": [
+      "We present the design overview of Coach in Figure 13, including the common workflow to create and operate oversubscribed VMs.",
+      "It comprises a logically centralized cluster management layer and a local component for each server.",
+      "The local oversubscription agent manages the resources on each server and adjusts the guaranteed"
+    ]
+  },
+  "summary": "This figure presents the design overview of Coach, a system for temporal-pattern-based all-resource oversubscription in cloud platforms. At the cluster level, a Cluster Manager uses a Prediction Model to convert incoming VM Requests into resource requirements and per-time-window oversubscription rates, which a Cluster Scheduler (via its Scheduling Policy) uses to allocate the VM to a server; the server reports VM Utilization back to the Cluster Manager. At the server level, a Server Manager runs an Oversubscription Agent combining Monitoring, Prediction, and Mitigation (with Reactive and Proactive strategies feeding an Action) to manage the server's Memory, partitioned into Guaranteed and Oversubscribed bands, backed by a Backing Store for cold memory. A bottom strip maps this scheme onto concrete VM instances: a General Purpose VM with only guaranteed memory, and two CoachVMs each split into guaranteed and oversubscribed portions. Dashed boxes separate the Cluster and Server regions, and color-coded bars visualize the guaranteed/oversubscribed memory split per VM.",
+  "summary_zh": "该图展示 Coach 系统设计概览：集群层的集群管理器（预测模型）与集群调度器负责按需求和超订率分配虚拟机；服务器层的过订代理通过监控、预测与缓解机制管理内存的保证与超订部分，底部展示不同 VM 的内存划分示例。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

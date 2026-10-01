@@ -1,0 +1,227 @@
+{
+  "paper_id": "osdi26-065",
+  "fig": "2",
+  "system": {
+    "name": "Quota Marketplace",
+    "one_liner": "a dynamic-pricing marketplace that allocates ML training accelerator resources across teams and pools",
+    "domain": [
+      "resource-management",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "pool 1",
+        "role": "one resource pool containing multiple teams competing for supply",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "pool 2",
+        "role": "a second resource pool, structurally identical to pool 1",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "pool N",
+        "role": "the Nth resource pool, structurally identical to the others",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "team i",
+        "role": "a team within pool 1 submitting workloads, credit info, and demand/bids",
+        "container": "pool 1",
+        "novel": true
+      },
+      {
+        "name": "team j",
+        "role": "a team within pool 2",
+        "container": "pool 2",
+        "novel": true
+      },
+      {
+        "name": "team k",
+        "role": "a team within pool N",
+        "container": "pool N",
+        "novel": true
+      },
+      {
+        "name": "workloads",
+        "role": "the team's jobs requiring resources",
+        "container": "team i",
+        "novel": false
+      },
+      {
+        "name": "Credit Info",
+        "role": "the team's budget/credit standing used in bidding",
+        "container": "team i",
+        "novel": true
+      },
+      {
+        "name": "Demand + Bids",
+        "role": "the team's resource demand and bid submitted to the market",
+        "container": "team i",
+        "novel": true
+      },
+      {
+        "name": "pool supply",
+        "role": "resources previously purchased and owned by a specific pool, with preferential access",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Market Clearance",
+        "role": "the mechanism that combines pool supply and shared supply to clear the market and set prices",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "shared supply",
+        "role": "resources shared across all pools and managed centrally by the marketplace",
+        "container": "Market Clearance",
+        "novel": true
+      },
+      {
+        "name": "pool 1 price",
+        "role": "the price cleared for pool 1",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "pool 2 price",
+        "role": "the price cleared for pool 2",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "pool N price",
+        "role": "the price cleared for pool N",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "team i",
+        "to": "pool supply",
+        "what": "demand and bids",
+        "step": null
+      },
+      {
+        "from": "pool supply",
+        "to": "Market Clearance",
+        "what": "pool-specific supply",
+        "step": null
+      },
+      {
+        "from": "Market Clearance",
+        "to": "pool 1 price",
+        "what": "cleared price",
+        "step": null
+      },
+      {
+        "from": "Market Clearance",
+        "to": "pool 2 price",
+        "what": "cleared price",
+        "step": null
+      },
+      {
+        "from": "Market Clearance",
+        "to": "pool N price",
+        "what": "cleared price",
+        "step": null
+      }
+    ],
+    "key_idea": "Multiple pools, each containing teams that bid for resources with their credit and demand, feed into a market clearance mechanism that jointly considers pool-specific supply and shared supply to set a price per pool.",
+    "reading_order": "Left to right across N repeated pool columns, each with teams and their workloads/credit/demand-bids stacked above a pool-supply box, all feeding down into a shared Market Clearance band, which outputs a price per pool at the bottom."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.23,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cfe2f3",
+        "used_for": "light blue fill for team boxes and pool supply boxes"
+      },
+      {
+        "hex": "#f4cccc",
+        "used_for": "light red/pink fill for workloads boxes"
+      },
+      {
+        "hex": "#d0e0e3",
+        "used_for": "light cyan fill for Credit Info boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow fill for pool-price boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "gray fill for Demand + Bids boxes"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "light green accents"
+      },
+      {
+        "hex": "#f1c232",
+        "used_for": "gold/yellow accent on pool-price boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.4pt black borders, dashed border around the Market Clearance band",
+    "font": "ArialMT/Arial-BoldMT sans, 2.5-6pt, bold for pool/team/component titles",
+    "corners": "square",
+    "arrows": "thin black lines connecting stacked boxes vertically within and across columns",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pastel fill distinguishes component types repeated across pools: blue = team/pool-supply boxes, pink = workloads, cyan = credit info, gray = demand+bids, yellow/gold = cleared price - the same color always marks the same role in every pool column",
+    "line_style_means": "a dashed black border isolates the Market Clearance band from the per-pool columns above and below it",
+    "emphasis": "repeating identical column structure across pools 1..N emphasizes that the same per-pool mechanics feed into one shared Market Clearance step that unifies pool-specific and shared supply",
+    "reusable_patterns": [
+      "N repeated identical columns feeding into one shared horizontal clearance band",
+      "layered team -> pool supply -> shared clearance -> price structure"
+    ],
+    "weaknesses": [
+      "very dense small text (2.5-6pt) across 60 text boxes may be hard to read at print size"
+    ]
+  },
+  "tags": [
+    "resource-allocation",
+    "market-mechanism",
+    "dynamic-pricing",
+    "ml-training",
+    "cloud-resources",
+    "multi-tenant"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Quota Marketplace System (p.6)"
+    ],
+    "evidence": [
+      "Figure 2 shows that market clearance takes into account both pool supply and shared supply",
+      "supply previously purchased and owned by each business unit to which this unit has preferential access"
+    ]
+  },
+  "summary": "This figure gives the high-level concept of the Quota Marketplace (QM) system as a matrix of repeated pool columns feeding a shared clearance mechanism. Each of pool 1, pool 2, ..., pool N contains one or more teams (team i, team j, team k), each with workloads, Credit Info, and Demand + Bids stacked in a pastel-colored card. Below each pool's teams sits a pool supply box, representing resources previously purchased by that business unit with preferential access. All pool-supply boxes flow into a dashed-bordered Market Clearance band that also contains a shared supply resource pool spanning all pools. Market Clearance outputs a price per pool (pool 1 price, pool 2 price, pool N price) at the bottom. The repeated column structure across pools, unified through one shared clearance step, visually conveys that QM balances both pool-specific and marketplace-wide shared accelerator supply when setting prices.",
+  "summary_zh": "该图展示Quota Marketplace的高层概念：多个资源池(pool 1..N)各自包含多个团队及其工作负载、信用信息与需求出价，团队之上叠加各池专属供给，统一汇入带虚线边框的市场出清模块(内含跨池共享供给)，最终为每个池输出一个价格。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

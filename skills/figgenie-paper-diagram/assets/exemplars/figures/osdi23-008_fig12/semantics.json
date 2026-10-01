@@ -1,0 +1,325 @@
+{
+  "paper_id": "osdi23-008",
+  "fig": "12",
+  "system": {
+    "name": "Cilantro",
+    "one_liner": "a performance-aware resource allocator that uses online feedback to learn resource-to-performance mappings and allocate a shared resource among interdependent microservices",
+    "domain": [
+      "resource-allocation",
+      "microservices",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Queries",
+        "role": "user search, recommendation, rating, account-management, and geolocation requests entering the application",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Consul Mesh",
+        "role": "service mesh the microservices run on (networking service)",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Jaeger",
+        "role": "distributed tracing infrastructure (networking service)",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Frontend",
+        "role": "entry-point microservice that receives queries and routes them to backend microservices",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Geo",
+        "role": "geolocation business-logic microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Profile",
+        "role": "profile business-logic microservice, backed by a memcached cache",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Search",
+        "role": "search business-logic microservice composing results from Geo, Rate, and Profile",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Reserve",
+        "role": "reservation business-logic microservice, backed by MongoDB",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Rate",
+        "role": "rating business-logic microservice, backed by a memcached cache",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "User",
+        "role": "user-account business-logic microservice, backed by MongoDB",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Recommend",
+        "role": "recommendation business-logic microservice, backed by MongoDB",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Geo MongoDB",
+        "role": "database backing the Geo microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Profile memcached",
+        "role": "cache backing the Profile microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Rate memcached",
+        "role": "cache backing the Rate microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Reserve MongoDB",
+        "role": "database backing the Reserve microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "User MongoDB",
+        "role": "database backing the User microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Recommend MongoDB",
+        "role": "database backing the Recommend microservice",
+        "container": "Left",
+        "novel": false
+      },
+      {
+        "name": "Resource-Fair",
+        "role": "baseline allocation policy compared in the Center/Right plots",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ε-greedy",
+        "role": "baseline allocation policy compared in the Center/Right plots",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "EvoAlg",
+        "role": "evolutionary-algorithm baseline compared in the Center/Right plots",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cilantro",
+        "role": "the paper's own allocation policy compared in the Center/Right plots",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Queries",
+        "to": "Frontend",
+        "what": "search, recommendation, rating, account management, and geolocation queries",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "Geo",
+        "what": "request routed to the Geo microservice",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "Profile",
+        "what": "request routed to the Profile microservice",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "Search",
+        "what": "request routed to the Search microservice",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "Reserve",
+        "what": "request routed to the Reserve microservice",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "User",
+        "what": "request routed to the User microservice",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "Recommend",
+        "what": "request routed to the Recommend microservice",
+        "step": null
+      },
+      {
+        "from": "Search",
+        "to": "Geo",
+        "what": "search composes geolocation results",
+        "step": null
+      },
+      {
+        "from": "Search",
+        "to": "Rate",
+        "what": "search composes rating results",
+        "step": null
+      },
+      {
+        "from": "Search",
+        "to": "Profile",
+        "what": "search composes profile results",
+        "step": null
+      },
+      {
+        "from": "Geo",
+        "to": "Geo MongoDB",
+        "what": "geolocation data lookup",
+        "step": null
+      },
+      {
+        "from": "Profile",
+        "to": "Profile memcached",
+        "what": "profile data cache lookup",
+        "step": null
+      },
+      {
+        "from": "Rate",
+        "to": "Rate memcached",
+        "what": "rating data cache lookup",
+        "step": null
+      },
+      {
+        "from": "Reserve",
+        "to": "Reserve MongoDB",
+        "what": "reservation data lookup",
+        "step": null
+      },
+      {
+        "from": "User",
+        "to": "User MongoDB",
+        "what": "user account data lookup",
+        "step": null
+      },
+      {
+        "from": "Recommend",
+        "to": "Recommend MongoDB",
+        "what": "recommendation data lookup",
+        "step": null
+      }
+    ],
+    "key_idea": "The complex dependency graph of a real microservice application (Left) motivates Cilantro's ability to optimize an end-to-end objective like P99 latency directly, and the accompanying plots (Center, Right) show Cilantro converging to lower, more stable P99 latency than Resource-Fair, ε-greedy, and EvoAlg baselines as it allocates a shared 160-CPU cluster among the application's microservices.",
+    "reading_order": "Left: queries enter the Frontend and fan out through business-logic microservices to their caches/databases, illustrating a complex dependency graph. Center: raw P99 latency over time for four methods. Right: the same methods' time-averaged P99 latency, showing Cilantro converging lowest."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.64,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#111111",
+        "used_for": "black dotted line/markers for the Resource-Fair baseline in the Center/Right plots"
+      },
+      {
+        "hex": "#ff4136",
+        "used_for": "red triangle markers/dashed line for the ε-greedy baseline"
+      },
+      {
+        "hex": "#006400",
+        "used_for": "dark green diamond markers/dashed line for the EvoAlg baseline"
+      },
+      {
+        "hex": "#0074d9",
+        "used_for": "blue circle markers/solid line for Cilantro"
+      },
+      {
+        "hex": "#cfe2f3",
+        "used_for": "pale blue fill for architecture boxes in the Left panel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.79pt, dashed grid/reference lines in the Center/Right plots",
+    "font": "Lato Bold/Regular, 3.5-6pt",
+    "corners": "rounded",
+    "arrows": "thin straight connectors in the Left architecture diagram; marker-and-line series in the Center/Right plots",
+    "icons": "small marker glyphs (triangle, diamond, circle) distinguishing methods in the Center/Right legends"
+  },
+  "encoding": {
+    "color_means": "Left panel (per caption): blue = business logic, red = caching services, yellow = databases, purple = networking services; Center/Right panels: black = Resource-Fair, red = ε-greedy, green = EvoAlg, blue = Cilantro",
+    "line_style_means": "in the Center/Right plots, dotted/dashed lines mark baseline methods while Cilantro is drawn with a solid line",
+    "emphasis": "placing the tangled microservice dependency graph next to Cilantro's smoothly converging latency curve visually argues that Cilantro handles this complexity better than simpler baselines",
+    "reusable_patterns": [
+      "color-coded microservice dependency diagram by architectural role",
+      "time-series comparison of a learned policy against fixed/heuristic baselines on raw and smoothed metrics side by side"
+    ],
+    "weaknesses": [
+      "two unrelated color-coding schemes (architectural role in Left, method identity in Center/Right) share the same figure, which could confuse a reader skimming only the colors"
+    ]
+  },
+  "tags": [
+    "microservices",
+    "resource-allocation",
+    "p99-latency",
+    "online-learning",
+    "benchmark-comparison",
+    "dependency-graph"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Policies (p.9)",
+      "7 Evaluation (p.13)",
+      "7 Evaluation (p.14)"
+    ],
+    "evidence": [
+      "microservices within an application may have complex dependency graphs (see Figure 12-Left)",
+      "It has 19 microservices, including 6 MongoDB databases, 3 memcached kv-stores and a nginx webserver",
+      "Both Cilantro and EvoAlg explore early on (Fig. 12-Center)"
+    ]
+  },
+  "summary": "Figure 12 combines a microservices architecture diagram with an evaluation comparison. The Left panel shows the DeathStarBench Hotel Reservation application: user queries enter a Frontend and fan out to business-logic microservices (Geo, Profile, Search, Reserve, Rate, User, Recommend, color-coded blue) running on a Consul service mesh with Jaeger tracing (purple), backed by MongoDB databases (yellow) and memcached caches (red); Search additionally composes results from Geo, Rate, and Profile. The Center and Right panels use this application's full 160-CPU cluster to compare Cilantro against Resource-Fair, ε-greedy, and EvoAlg allocation policies: Center plots raw P99 latency over time (all methods explore early on), and Right plots the time-averaged P99 latency, where Cilantro converges to the lowest, most stable latency. The figure argues that Cilantro's ability to optimize an end-to-end objective directly handles this kind of complex microservice dependency graph better than the baselines.",
+  "summary_zh": "图12左侧为酒店预订微服务架构（业务逻辑、缓存、数据库、网络服务按颜色区分，Search综合Geo/Rate/Profile结果）；中右两图在160核集群上比较Cilantro与三种基线方法的P99时延，Cilantro最优。",
+  "confidence": "medium",
+  "notes": "layout-proposal: architecture-plus-results triptych — a microservices dependency diagram (Left) placed beside two time-series comparison plots (Center, Right) for the same experiment; no single named template covers a diagram-plus-charts figure like this. The measured index reports panels=1 (the three regions are one combined image); some Left-panel dependency edges (e.g., Search's links to Geo/Rate/Profile) are read from the figure rather than spelled out in the available prose.",
+  "venue": "OSDI23"
+}

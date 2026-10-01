@@ -1,0 +1,155 @@
+{
+  "paper_id": "asplos25-157",
+  "fig": "2",
+  "system": {
+    "name": "CMSwitch",
+    "one_liner": "a compiler that optimizes resource allocation for computing-in-memory accelerators with dynamic compute/memory mode switching",
+    "domain": [
+      "hardware-accelerators",
+      "compiler"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "CIM core",
+        "role": "top-level hierarchical unit comprising a CIM array plus its peripheral buffer and control circuitry",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "buffer",
+        "role": "buffers data for the CIM core",
+        "container": "CIM core",
+        "novel": false
+      },
+      {
+        "name": "Ctrl.",
+        "role": "control unit for the CIM core / CIM array",
+        "container": "CIM core",
+        "novel": false
+      },
+      {
+        "name": "CIM array",
+        "role": "array of CIM cells performing in-memory computation",
+        "container": "CIM core",
+        "novel": false
+      },
+      {
+        "name": "Function unit",
+        "role": "peripheral function unit supporting the CIM array's outputs",
+        "container": "CIM core",
+        "novel": false
+      },
+      {
+        "name": "Driver",
+        "role": "drives the CIM array's rows/columns for read, write, or compute",
+        "container": "CIM array",
+        "novel": false
+      },
+      {
+        "name": "Memory circuits",
+        "role": "memory-cell circuits forming the CIM array",
+        "container": "CIM array",
+        "novel": false
+      },
+      {
+        "name": "Data IO / PSUM",
+        "role": "data input/output and partial-sum output path of the CIM array",
+        "container": "CIM array",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "CIM core",
+        "to": "CIM array",
+        "what": "zoom-in detail",
+        "step": null
+      },
+      {
+        "from": "CIM array",
+        "to": "Memory circuits",
+        "what": "zoom-in detail",
+        "step": null
+      }
+    ],
+    "key_idea": "CIM-based DNN accelerators are organized hierarchically from a CIM core down to a single CIM array of memory circuits with drivers and data-IO/PSUM paths, motivating why mode-switch overhead must be modeled at the array level.",
+    "reading_order": "Left to right through three zoom-in panels labelled (a), (b), (c): from the whole CIM core, into a single CIM array with its control/buffer/function-unit periphery, into the memory-circuit and driver detail of one array."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.37,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#deebf7",
+        "used_for": "array/memory-cell background fill"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "buffer bar fill"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "highlighted selected row/column dots"
+      },
+      {
+        "hex": "#8497b0",
+        "used_for": "control/driver bar fill"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "function unit / secondary gray fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders with dashed callout lines connecting the zoom-in panels",
+    "font": "Nimbus Sans / Arial, 6.5-7.5pt",
+    "corners": "square",
+    "arrows": "none (dashed zoom-in connector lines instead of arrows)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = buffer bars, gray-blue = control/driver bars, light blue = array/memory cells, yellow dots = the selected row/column illustrating an access pattern",
+    "line_style_means": "dashed lines connect each panel to the zoomed-in region of the previous panel",
+    "emphasis": "successive zoom-in callouts from the whole CIM core down to a single CIM array make explicit the hierarchical structure that CMSwitch's hardware abstraction must model",
+    "reusable_patterns": [
+      "nested zoom-in panels revealing hardware hierarchy from core to array to cell"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "computing-in-memory",
+    "CIM accelerator",
+    "hardware architecture",
+    "DNN accelerator",
+    "hierarchical design"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "independent CIM-based DNN accelerators are typically structured as hierarchical architecture comprising multiple CIM cores",
+      "Each core integrates a CIM array along with its peripheral buffer and circuitry"
+    ]
+  },
+  "summary": "This figure establishes the background hierarchical structure of CIM-based DNN accelerators that CMSwitch's compiler targets. It uses three zoom-in panels: (a) a CIM core containing a grid CIM array with top buffer and left Ctrl. bars, with one cell highlighted; (b) a single CIM array shown with its Ctrl., buffer, and Function unit periphery; and (c) the internal detail of a CIM array showing Driver, Memory circuits (a grid of memory cells), and a Data IO / PSUM output path. The progressively deeper callouts, connected by dashed lines, walk the reader from a whole accelerator core down to the individual memory-circuit array that performs the actual multiply-accumulate computation, setting up the paper's later discussion of mode-switching at the array/driver level.",
+  "summary_zh": "该图通过三层放大展示 CIM 加速器的层级结构：(a) 由多个 CIM 阵列及外围电路组成的 CIM 核心，(b) 单个 CIM 阵列及其控制/缓冲/功能单元，(c) 阵列内部的驱动器、存储电路与数据输出/PSUM 通路。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

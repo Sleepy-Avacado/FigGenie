@@ -1,0 +1,234 @@
+{
+  "paper_id": "asplos25-132",
+  "fig": "6",
+  "system": {
+    "name": "PICACHU",
+    "one_liner": "a plug-in coarse-grained reconfigurable accelerator (CGRA) that offloads nonlinear operations in LLM inference",
+    "domain": [
+      "ml-systems",
+      "compiler"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "ML Models",
+        "role": "input models (e.g. PyTorch/ONNX) fed into the compiler",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Translating to MLIR",
+        "role": "lowers the input model into MLIR Linalg/Affine dialects",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Pattern Matching",
+        "role": "identifies nonlinear-operation patterns (e.g. GELU) in the MLIR and marks them for CGRA offload",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Offloading",
+        "role": "converts matched patterns into CGRA function calls in FP or INT versions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Lowering to LLVM IR",
+        "role": "lowers the offloaded CGRA calls into LLVM IR using predefined kernel code",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Loop Transformation",
+        "role": "unrolls and vectorizes the kernel loops",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Unrolled loops",
+        "role": "loop-unrolling sub-stage",
+        "container": "Loop Transformation",
+        "novel": true
+      },
+      {
+        "name": "Vectorized loops",
+        "role": "loop-vectorization sub-stage",
+        "container": "Loop Transformation",
+        "novel": true
+      },
+      {
+        "name": "DFG Manipulation",
+        "role": "generates, tunes and maps the dataflow graph for the CGRA",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "DFG Generation",
+        "role": "builds one DFG node per LLVM IR instruction, converting control flow to data flow",
+        "container": "DFG Manipulation",
+        "novel": true
+      },
+      {
+        "name": "DFG Tuning",
+        "role": "fuses common instruction patterns into single DFG nodes",
+        "container": "DFG Manipulation",
+        "novel": true
+      },
+      {
+        "name": "DFG Mapping",
+        "role": "maps the DFG onto the CGRA's Modulo Routing Resource Graph across cycles",
+        "container": "DFG Manipulation",
+        "novel": true
+      },
+      {
+        "name": "Evaluation",
+        "role": "uses an RTL framework to measure power, area, and other metrics",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "ML Models",
+        "to": "Translating to MLIR",
+        "what": "PyTorch/ONNX model lowered to MLIR",
+        "step": 1
+      },
+      {
+        "from": "Translating to MLIR",
+        "to": "Pattern Matching",
+        "what": "MLIR in Linalg/Affine dialects",
+        "step": 2
+      },
+      {
+        "from": "Pattern Matching",
+        "to": "Offloading",
+        "what": "matched nonlinear pattern (e.g. GELU) tagged for offload",
+        "step": 3
+      },
+      {
+        "from": "Offloading",
+        "to": "Lowering to LLVM IR",
+        "what": "CGRA function call in FP or INT version",
+        "step": 4
+      },
+      {
+        "from": "Lowering to LLVM IR",
+        "to": "Loop Transformation",
+        "what": "predefined kernel code in LLVM IR",
+        "step": null
+      },
+      {
+        "from": "Loop Transformation",
+        "to": "DFG Manipulation",
+        "what": "unrolled and vectorized kernel code",
+        "step": null
+      },
+      {
+        "from": "DFG Generation",
+        "to": "DFG Tuning",
+        "what": "per-instruction DFG nodes to be fused",
+        "step": null
+      },
+      {
+        "from": "DFG Tuning",
+        "to": "DFG Mapping",
+        "what": "fused DFG mapped across CGRA cycles",
+        "step": null
+      },
+      {
+        "from": "DFG Manipulation",
+        "to": "Evaluation",
+        "what": "mapped DFG passed to the RTL framework",
+        "step": null
+      }
+    ],
+    "key_idea": "PICACHU's compiler lowers models to MLIR, pattern-matches nonlinear operations for CGRA offload, then progressively transforms the resulting kernel into a tuned, cycle-mapped dataflow graph for RTL evaluation.",
+    "reading_order": "Left to right along the top row of five pipeline-stage boxes, then down into each stage's code/IR snippet, and into the Loop Transformation / DFG Manipulation detail below."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.36,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#010000",
+        "used_for": "text labels and box borders"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "background fill of the top pipeline-stage boxes"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "darker gray accents on code/detail panels"
+      },
+      {
+        "hex": "#f9f9f9",
+        "used_for": "near-white background of the code-snippet panels"
+      },
+      {
+        "hex": "#efefef",
+        "used_for": "fill of the Loop Transformation and DFG Manipulation sub-boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders, dashed around each pipeline stage's code/detail panel",
+    "font": "monospace (JetBrains Mono) for code snippets, Arial sans-serif for box titles, roughly 4.5-7.5pt",
+    "corners": "mixed",
+    "arrows": "bold black arrows chaining the five pipeline stages, plus smaller arrows inside the DFG insets",
+    "icons": "small vector icons (a pencil for the user-annotation callout, buffer/array icons for loop transformation, power/area icons for evaluation)"
+  },
+  "encoding": {
+    "color_means": "blue text distinguishes FP vs. INT kernel versions in the Offloading snippet; DFG node colors distinguish operation types (e.g. add vs. mul) inside the DFG insets",
+    "line_style_means": "dashed panels group each pipeline stage's example code/diagram beneath its title; solid black arrows show the compiler pipeline order",
+    "emphasis": "the five-stage title bar is reinforced by a concrete code/diagram snippet under each stage, all tracking the same running GELU example",
+    "reusable_patterns": [
+      "pipeline stage titles each paired with a concrete code/IR snippet beneath them",
+      "zoomed inset showing one DFG evolving through generation, tuning and cycle-mapped scheduling"
+    ],
+    "weaknesses": [
+      "very small monospace code snippets are hard to read at reduced size",
+      "the Loop Transformation / DFG Manipulation sub-pipeline at the bottom is visually detached from the top pipeline bar"
+    ]
+  },
+  "tags": [
+    "compiler",
+    "mlir",
+    "dataflow-graph",
+    "cgra",
+    "code-generation",
+    "llm-inference"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Methodology (p.8)",
+      "4 Methodology (p.9)"
+    ],
+    "evidence": [
+      "this framework takes the models as inputs, lowering them to MLIR in Linalg/Affine dialects",
+      "Nonlinear operations are identified through predefined patterns and converted into specific tasks for offloading to the CGRA",
+      "a GeLU operation is translated into five separate instructions, as illustrated in Figure 6"
+    ]
+  },
+  "summary": "This figure lays out PICACHU's compiler toolchain as a five-stage pipeline: ML Models are translated to MLIR in the Linalg/Affine dialects, Pattern Matching locates nonlinear-operation patterns (illustrated with a GeLU example split into its five constituent instructions), Offloading converts matches into CGRA function calls in FP or INT versions, and the result is Lowered to LLVM IR using predefined kernel code. Each stage box is paired with a concrete code or IR snippet showing exactly what it does to the running example. Below the main pipeline, a Loop Transformation stage unrolls and vectorizes the kernel, and a DFG Manipulation stage generates, tunes (fusing common instruction patterns) and cycle-maps the dataflow graph onto the CGRA's routing resource graph, feeding an Evaluation stage that reports power, area and other metrics via an RTL framework.",
+  "summary_zh": "该图展示 PICACHU 编译器五阶段流水线：模型转为 MLIR，匹配非线性算子（如 GELU）后卸载为 FP/INT 版 CGRA 调用并降为 LLVM IR；下方做循环展开/向量化与 DFG 生成、调优、映射，最终评估功耗与面积。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

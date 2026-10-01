@@ -1,0 +1,207 @@
+{
+  "paper_id": "nsdi24-061",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "CAPA",
+    "one_liner": "an architecture for operating cluster networks with high availability, orchestrating capacity changes through a regulation layer of concurrency-controlled APIs",
+    "domain": [
+      "networking",
+      "cluster-networks",
+      "sdn"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "the sequence of steps CAPA's capacity-augment workflow follows, looping to drain/config/undrain each FBR SDN domain",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Request network model",
+        "kind": "box",
+        "role": "first step: requests the target network model for the capacity augmentation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Orchestrate purchase orders",
+        "kind": "box",
+        "role": "orchestrates purchase orders for the new capacity",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Orchestrate installation instructions",
+        "kind": "box",
+        "role": "orchestrates physical installation instructions for the new capacity",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Invoke Qual() on newly connected links",
+        "kind": "box",
+        "role": "qualifies newly connected links before they are put into service",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Drain() single FBR SDN control domain",
+        "kind": "box",
+        "role": "invokes the Drain() API on one FBR SDN control domain in the regulation layer, subject to permission and rate-limit checks",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Config() single FBR SDN control domain",
+        "kind": "box",
+        "role": "configures the drained domain",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Undrain() single FBR SDN control domain",
+        "kind": "box",
+        "role": "returns the configured domain to service",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "While FBR SDN control domains remain",
+        "kind": "label",
+        "role": "loop-back guard that repeats the drain/config/undrain cycle for each remaining domain",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Request network model",
+        "to": "Orchestrate purchase orders",
+        "what": "sequential handoff",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Orchestrate purchase orders",
+        "to": "Orchestrate installation instructions",
+        "what": "sequential handoff",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Orchestrate installation instructions",
+        "to": "Invoke Qual() on newly connected links",
+        "what": "sequential handoff",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Invoke Qual() on newly connected links",
+        "to": "Drain() single FBR SDN control domain",
+        "what": "hands off into the per-domain loop",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Drain() single FBR SDN control domain",
+        "to": "Config() single FBR SDN control domain",
+        "what": "sequential handoff",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Config() single FBR SDN control domain",
+        "to": "Undrain() single FBR SDN control domain",
+        "what": "sequential handoff",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Undrain() single FBR SDN control domain",
+        "to": "Drain() single FBR SDN control domain",
+        "what": "While FBR SDN control domains remain",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "CAPA's capacity-augment workflow is a fixed pipeline of four one-time orchestration/qualification steps followed by a per-domain Drain/Config/Undrain loop that repeats until every FBR SDN control domain has been processed.",
+    "reading_order": "left to right along the top row (Request network model through Invoke Qual()), then along the bottom row (Drain/Config/Undrain), following the loop-back arrow back to Drain() while domains remain."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.61,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#999999",
+        "used_for": "box outlines, connecting arrows, and text in this monochrome flowchart"
+      }
+    ],
+    "background": "white",
+    "fill": "flat (white box interiors, no colour fill)",
+    "stroke": "thin (~0.57pt) grey/black outlines and arrows",
+    "corners": "rounded",
+    "arrows": "thin solid arrows chaining each box to the next, plus one loop-back arrow returning from the last bottom-row box to the first, labelled with its repeat condition",
+    "font": "Times New Roman serif",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "the figure is monochrome; no colour encodes any distinction",
+    "line_style_means": "all edges are plain solid arrows; the loop-back arrow is distinguished only by its position (running under the bottom row) and its text label",
+    "state_means": "not applicable; there are no alternative states or panels, just one fixed sequence with a loop",
+    "marker_means": "no numbered or symbolic markers; the loop-back condition is spelled out in plain text ('While FBR SDN control domains remain')",
+    "emphasis": "placing the three repeated per-domain steps (Drain/Config/Undrain) on their own row, closed by a visible loop-back arrow, separates the one-time setup steps above from the per-domain loop below",
+    "reusable_patterns": [
+      "a one-time setup chain feeding into a labelled while-loop of three repeated steps"
+    ],
+    "weaknesses": [
+      "captioned as a 'state machine' even though it is drawn as a two-row sequential flowchart with a single loop, not named states with event-triggered transitions",
+      "the loop-back condition text runs along the bottom edge of the figure rather than beside its arrowhead, so it takes a moment to associate it with the Undrain()→Drain() arrow"
+    ]
+  },
+  "tags": [
+    "capacity-augmentation",
+    "SDN",
+    "orchestration-workflow",
+    "drain-config-undrain",
+    "cluster-networking",
+    "CAPA"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 CAPA architecture Overview (p.6)"
+    ],
+    "evidence": [
+      "The capacity expansion workflow invokes the Drain() API on the SDN proxy in the regulation layer",
+      "The workflow repeatedly invokes APIs in the regulation layer, which are enumerated in Table 2.",
+      "Concurrency control and rate limits reduce the scope of temporally correlated failures"
+    ]
+  },
+  "summary": "Figure 3 lays out CAPA's capacity-augment workflow as a two-row sequential procedure, despite being captioned a state machine. The top row runs once: Request network model, then Orchestrate purchase orders, Orchestrate installation instructions, and Invoke Qual() on newly connected links to validate them before use. Control then drops to the bottom row, which loops once per FBR SDN control domain still needing attention: Drain() takes a single domain out of service (checked for permission and fleetwide rate limits by the SDN proxy), Config() applies the change, and Undrain() restores it, after which the loop condition 'While FBR SDN control domains remain' sends control back to Drain() for the next domain. Every call in the loop goes through the regulation layer's rate-limited, concurrency-controlled APIs.",
+  "summary_zh": "图3展示CAPA容量扩容工作流：先请求网络模型、编排采购与安装指令、校验新链路；随后对每个FBR SDN域循环执行Drain/Config/Undrain，直至所有域处理完毕。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'state-machine' to 'flowchart': the boxes are imperative process/API-call steps chained by plain control-flow arrows with a single labelled loop-back, not named states with event-triggered transitions, consistent with the earlier pass's own note that the figure is captioned a state machine but drawn as a looped orchestration-stage pipeline.",
+  "venue": "NSDI24"
+}

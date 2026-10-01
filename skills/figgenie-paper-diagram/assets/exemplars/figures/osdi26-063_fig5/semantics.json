@@ -1,0 +1,167 @@
+{
+  "paper_id": "osdi26-063",
+  "fig": "5",
+  "system": {
+    "name": "Kareus",
+    "one_liner": "a system that jointly reduces dynamic and static energy in large model training by overlapping communication and computation",
+    "domain": [
+      "ml-systems",
+      "energy-efficiency"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Training iteration",
+        "role": "one training iteration under the 1F1B pipeline schedule, showing forward (F) and backward (B) microbatches per stage",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Partitioned overlap execution",
+        "role": "shows Transformer block i partitioned into Attn/AR and MLP/AR groups executed with tensor parallelism across two nanobatches",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Attn",
+        "role": "attention sub-kernel of a Transformer block",
+        "container": "Partitioned overlap execution",
+        "novel": false
+      },
+      {
+        "name": "AR",
+        "role": "AllReduce communication kernel overlapped with computation kernels in a partition",
+        "container": "Partitioned overlap execution",
+        "novel": true
+      },
+      {
+        "name": "MLP",
+        "role": "MLP sub-kernel of a Transformer block",
+        "container": "Partitioned overlap execution",
+        "novel": false
+      },
+      {
+        "name": "Partition execution schedule",
+        "role": "shows one partition's kernel sequence (Norm, Linear 1, RoPE, FlashAttention, Linear 2, AllReduce) with SM allocation, frequency, and launch timing choices",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "AllReduce",
+        "role": "communication kernel scheduled to overlap with the computation kernels above it",
+        "container": "Partition execution schedule",
+        "novel": true
+      },
+      {
+        "name": "Partition-level frontiers from multi-objective Bayesian optimization",
+        "role": "time-energy Pareto frontier per partition type (Attn-AR and MLP-AR), each point an efficient execution schedule",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Training iteration",
+        "to": "Partitioned overlap execution",
+        "what": "one microbatch's partition pattern (orange-highlighted region) expanded",
+        "step": null
+      },
+      {
+        "from": "Partitioned overlap execution",
+        "to": "Partition execution schedule",
+        "what": "the AR partition's kernel schedule expanded",
+        "step": null
+      },
+      {
+        "from": "Partition execution schedule",
+        "to": "Partition-level frontiers from multi-objective Bayesian optimization",
+        "what": "this schedule corresponds to one point on the Attn-AR time-energy frontier",
+        "step": null
+      }
+    ],
+    "key_idea": "Kareus identifies repeating attention-AllReduce and MLP-AllReduce partitions in a pipeline-parallel training iteration, and for each partition type finds a time-energy Pareto frontier of overlapping computation/communication schedules via multi-objective Bayesian optimization.",
+    "reading_order": "Top to bottom: the full training iteration's 1F1B pipeline schedule, zooming into one Transformer block's partitioned overlap execution across two nanobatches, then into a single partition's detailed kernel execution schedule, and finally the time-energy Pareto frontiers each schedule is chosen from."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.11,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff9300",
+        "used_for": "orange fill marking Attention-AllReduce partitions and forward/backward microbatch blocks"
+      },
+      {
+        "hex": "#0096ff",
+        "used_for": "blue fill marking MLP-AllReduce partitions"
+      },
+      {
+        "hex": "#fbcfb7",
+        "used_for": "light orange fill for less-emphasized forward microbatch blocks"
+      },
+      {
+        "hex": "#f9c4a9",
+        "used_for": "light orange fill variant for backward microbatch blocks"
+      },
+      {
+        "hex": "#f5a947",
+        "used_for": "orange arrow/connector lines linking rows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt black borders, dashed separators between rows",
+    "font": "ArialMT/HelveticaNeue sans, 5.5-6.5pt",
+    "corners": "square",
+    "arrows": "curved orange arrows connecting a highlighted block in one row to its zoomed-in detail in the row below",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = Attention-AllReduce partitions (and forward/backward microbatch timeline blocks), blue = MLP-AllReduce partitions; consistent orange/blue coding links the same partition type across all four rows",
+    "line_style_means": "dashed horizontal separators divide the figure into four conceptual rows/zoom levels; curved arrows show which highlighted region is expanded in the row below",
+    "emphasis": "curved arrows and consistent orange/blue coloring guide the eye from the coarse pipeline schedule down to a single partition's fine-grained kernel schedule and its position on the energy-time frontier",
+    "reusable_patterns": [
+      "four-row drill-down figure zooming from full pipeline schedule to a single partition's kernel-level schedule to its Pareto frontier point",
+      "repeating identically-colored partition types to show a pattern occurs across all Transformer blocks"
+    ],
+    "weaknesses": [
+      "dense, multi-row layout requires the reader to track color coding and curved arrows across four different levels of abstraction"
+    ]
+  },
+  "tags": [
+    "energy-efficiency",
+    "pipeline-parallelism",
+    "tensor-parallelism",
+    "communication-overlap",
+    "bayesian-optimization",
+    "large-model-training"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Algorithm Design (p.7)",
+      "18 return GetFrontier(D) (p.9)"
+    ],
+    "evidence": [
+      "The two orange boxes (Attention-AllReduce partition) are identical, as are the two blue boxes",
+      "Kareus's optimizer first characterizes the time-energy frontier of each partition",
+      "Iteration time is the sum of microbatch latencies along the critical path"
+    ]
+  },
+  "summary": "This figure gives Kareus's execution and optimization overview across four stacked rows. The top row shows one training iteration under the 1F1B pipeline schedule, with forward (F) and backward (B) microbatches per stage. The second row zooms into a Transformer block's partitioned overlap execution across two nanobatches, showing repeating orange Attention-AllReduce and blue MLP-AllReduce partitions - kernels with no data dependency that can overlap. The third row expands one partition into its detailed kernel execution schedule (Norm, Linear 1, RoPE, FlashAttention, Linear 2 computation kernels overlapped with an AllReduce communication kernel), annotated with the SM allocation, frequency, and launch-timing knobs Kareus tunes. The bottom row shows the time-energy Pareto frontier that Kareus's multi-objective Bayesian optimizer computes for each partition type, with the schedule from row three marked as one point on the Attn-AR frontier. Curved arrows and consistent orange/blue coloring tie the four zoom levels together.",
+  "summary_zh": "该图分四行自上而下展示Kareus的执行与优化流程：整体训练迭代的1F1B流水线调度、Transformer块内重复出现的橙色Attn-AllReduce与蓝色MLP-AllReduce分区重叠执行、单个分区的详细内核调度方案，以及各分区类型通过多目标贝叶斯优化得到的时间-能耗帕累托前沿。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

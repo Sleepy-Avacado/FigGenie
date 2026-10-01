@@ -1,0 +1,162 @@
+{
+  "paper_id": "osdi24-050",
+  "fig": "6",
+  "system": {
+    "name": "DistServe",
+    "one_liner": "an LLM serving system that disaggregates prefill and decoding onto separate instances to optimize goodput",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Controller",
+        "role": "centralized FCFS controller that dispatches requests to the shortest-queue prefill instance, then to the least-loaded decoding instance",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Prefill Instance",
+        "role": "runs the prefill phase of an LLM request",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Decoding Instance",
+        "role": "runs the decoding phase of an LLM request after receiving its KV cache",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LLM Model",
+        "role": "the model definition served by each instance",
+        "container": "Prefill Instance",
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "compute devices executing the parallel runtime for an instance",
+        "container": "Parallel Runtime",
+        "novel": false
+      },
+      {
+        "name": "Parallel Runtime",
+        "role": "the parallel execution runtime (spanning multiple GPUs) backing each instance",
+        "container": "Prefill Instance",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Requests",
+        "to": "Controller",
+        "what": "incoming requests",
+        "step": null
+      },
+      {
+        "from": "Controller",
+        "to": "Prefill Instance",
+        "what": "dispatched request",
+        "step": null
+      },
+      {
+        "from": "Controller",
+        "to": "Decoding Instance",
+        "what": "dispatched request",
+        "step": null
+      },
+      {
+        "from": "Prefill Instance",
+        "to": "Decoding Instance",
+        "what": "KV Cache Transfer",
+        "step": null
+      }
+    ],
+    "key_idea": "Prefill and decoding are served by physically separate, independently parallelized instance pools, with a central controller dispatching by queue length/load and a dedicated KV cache transfer step handing state from prefill to decoding.",
+    "reading_order": "Left to right: Requests enter the Controller at top, which dispatches down into the Prefill Instance stack on the left, whose KV cache is transferred rightward into the Decoding Instance stack."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.65,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f4cccc",
+        "used_for": "light red/pink fill of the Controller box"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow fill of the LLM Model box"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "light green fill of the GPU boxes"
+      },
+      {
+        "hex": "#cfe2f3",
+        "used_for": "light blue fill of the Parallel Runtime box"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "light gray fill of the outer Prefill/Decoding Instance stack backgrounds"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "dark gray text labels and box strokes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark-gray borders, square corners, stacked/offset boxes suggesting multiple parallel instances",
+    "font": "ArialMT sans, small (~6pt)",
+    "corners": "square",
+    "arrows": "thin black arrows for dispatch and KV cache transfer",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red = the central controller, yellow = the model, green = GPUs, blue = the parallel runtime, gray = instance boundary/stack",
+    "line_style_means": "not specified beyond plain solid arrows",
+    "emphasis": "the visual gap and explicit KV Cache Transfer arrow between the Prefill and Decoding Instance stacks foregrounds the paper's core prefill/decode disaggregation idea",
+    "reusable_patterns": [
+      "stacked/offset boxes to denote a pool of homogeneous instances",
+      "symmetric two-instance-type pipeline joined by one labeled transfer arrow"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-serving",
+    "disaggregation",
+    "prefill-decode",
+    "kv-cache",
+    "scheduling",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Method (p.9)"
+    ],
+    "evidence": [
+      "The runtime architecture of DistServe is shown in Figure 6",
+      "All incoming requests arrive at a centralized controller",
+      "dispatched to the prefill instance with the shortest queue"
+    ]
+  },
+  "summary": "This figure depicts the runtime architecture of DistServe, an LLM serving system that disaggregates prefill and decoding computation onto separate instance pools. Incoming requests first reach a centralized Controller, which uses simple FCFS dispatch: it routes each request to the Prefill Instance with the shortest queue, and after prefill, to the least-loaded Decoding Instance. Each instance (shown as a stack of offset boxes to indicate a pool of several instances) contains an LLM Model, a set of GPUs, and a Parallel Runtime that together execute that phase. A KV Cache Transfer arrow connects the Prefill Instance stack to the Decoding Instance stack, representing the hand-off of attention state between the two disaggregated phases. The diagram is a compact, flat-filled boxes-and-arrows architecture drawn with a pastel red/yellow/green/blue palette and square corners.",
+  "summary_zh": "该图展示 DistServe 的运行时架构：请求先到达中心化控制器，按 FCFS 策略分派给排队最短的预填充实例，再分派给负载最低的解码实例，二者之间通过 KV Cache Transfer 传递缓存，每个实例包含模型、GPU 与并行运行时。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

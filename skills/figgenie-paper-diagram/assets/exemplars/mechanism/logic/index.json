@@ -1,0 +1,287 @@
+{
+  "group": "logic",
+  "n": 31,
+  "stars": 11,
+  "how_to_read": "open ../../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see; these are references to strengthen a layout derived from your figure's own needs -- borrow the device that serves it, never the layout wholesale",
+  "exemplars": [
+    {
+      "id": "nsdi23-073_fig4",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "One hub state radiates three numbered guarded transitions to peer actions and back to itself; the same hub-and-spoke shape reappears, smaller, nested inside one peer state as its own sub-loop.",
+      "what_to_learn": "Put the shared hub state at the centre with peer actions fanning out on numbered, guarded arrows that all loop back to it; draw one action's internal loop as a smaller copy of that exact hub-and-spoke shape inside its box.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi23-073_fig4"
+    },
+    {
+      "id": "nsdi23-079_fig7",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Splitting the cold-page state in two, with and without a remembered swap-entry, lets Canvas make repeated swap-outs lock-free instead of reallocating an entry every time.",
+      "what_to_learn": "Keep the node small (a digit), put the state's name outside it as a heading, guards in italic on curved arrows",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi23-079_fig7"
+    },
+    {
+      "id": "nsdi24-105_fig5",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "A start/end pseudo-state pair brackets three parallel classify-then-act branches, so a control loop with three different action paths still reads as one left-to-right pass.",
+      "what_to_learn": "Bracket the loop with dashed start/end pseudo-states; fan out from start into parallel same-shaped classification branches, one per case, each running its own action box before rejoining the end state and looping back to start.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi24-105_fig5"
+    },
+    {
+      "id": "nsdi25-027_fig1",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "CCF extends Raft's Follower/Candidate/Leader state machine with a Joiner bootstrapping state and two protocol extensions, CheckQuorum (a leader steps down without a quorum) and ProposeVote (a retiring leader fast-tracks a successor), drawn as dashed additions over Raft's solid original states and transitions.",
+      "what_to_learn": "Solid = the known protocol, dashed = this paper's addition, for both nodes and edges; circle only the transitions the text discusses",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi25-027_fig1"
+    },
+    {
+      "id": "nsdi25-044_fig9",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Numbers three pipeline stages that repeat one 'history feeds a state-checker with a red terminal outcome' template for value and for frequency, then merges both verdicts in the third stage.",
+      "what_to_learn": "Repeat one small template, a running history feeding a state-checker box with a red terminal outcome, once for the traced value and once for its frequency; number both ①② and combine their verdicts in a third numbered checker.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi25-044_fig9"
+    },
+    {
+      "id": "nsdi26-022_fig4",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Two stacked yes/no diamonds whose NO branches both dead-end in one shared fallback box, while YES keeps narrowing to a specific pick — logic collapsed to its actual branch count.",
+      "what_to_learn": "Chain the diamonds vertically and route every NO arrow into one shared fallback box instead of a separate box per branch, then tie the flowchart to the candidate-pool icon cluster with a single bracket leader line, not repeated arrows.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi26-022_fig4"
+    },
+    {
+      "id": "nsdi26-030_fig8",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "A monitoring-loop flowchart where each stage box shows its own literal example buffer (coloured D/O event tiles) feeding a yes/no gate that self-loops until enough events accumulate.",
+      "what_to_learn": "Put a real buffer of coloured event tiles inside each box, and loop its gate diamond back into that box on 'no' but forward to the next box on 'yes' — but three stacked diamonds stay dense to trace.",
+      "note_source": "agent",
+      "dir": "../../figures/nsdi26-030_fig8"
+    },
+    {
+      "id": "osdi23-032_fig8",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Read-delegation and write-combining share one twin-diamond decision skeleton; a green 'Time Window' bracket marks the one real memory round-trip that queued duplicate requests reuse instead of repeating it.",
+      "what_to_learn": "Bracket the delegate's one memory round-trip as a 'Time Window,' with dashed arrows fanning back to queued duplicate requests instead of repeating the trip; draw the bypass path looping visibly under every memory-side phase box.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi23-032_fig8"
+    },
+    {
+      "id": "osdi24-003_fig11",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "One inconsistency verdict, computed once at a Handler node, is re-stamped with the same two accent colours and Prioritize/Abort labels at three completely different scheduler layers below.",
+      "what_to_learn": "Compute the verdict once at the top and re-draw its two accent colours plus Prioritize/Abort text at every layer below, even as each layer's queue icon changes shape — but reused bare letters force reading by position, not name.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi24-003_fig11"
+    },
+    {
+      "id": "sosp24-014_fig6",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "A token-bucket flowchart where every box's role (component / condition / action) is readable from one shared shape+colour code alone, with database cylinders hanging off the chain as side-cars.",
+      "what_to_learn": "Give every box one of three shape+colour roles (blue rounded = component, violet diamond = condition, tan dashed = action), and feed each side-car database with a dashed 'Update' arrow kept separate from its plain read arrow.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp24-014_fig6"
+    },
+    {
+      "id": "sosp25-017_fig8",
+      "group": "logic",
+      "star": true,
+      "why_chosen": "A registration timeline sets up vCPU-as-CPU, then one decision-diamond template — with the same little CPU-state lookup table inside — is reused twice for source and destination routing.",
+      "what_to_learn": "Embed the literal small state-lookup table inside the decision diamond itself, reuse that exact diamond+table shape for both the source and destination check, and bracket the two halves in one accent colour to name the phases.",
+      "note_source": "agent",
+      "dir": "../../figures/sosp25-017_fig8"
+    },
+    {
+      "id": "asplos26-041_fig7",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "STRAW tracks a read counter per block and per wordline; every interval it checks each wordline's accumulated disturbance against a threshold, relocates the valid pages of any heavily-disturbed wordline, and erases the block once nothing valid remains.",
+      "what_to_learn": "One fill colour per functional stage; `Y`/`N` on every branch; a labelled loop box containing its own decision",
+      "note_source": "doc",
+      "dir": "../../figures/asplos26-041_fig7"
+    },
+    {
+      "id": "asplos26-057_fig9",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "PIPM extends MSI cache coherence with two migration-aware states (ME, I') encoded via directory state plus an in-memory bit, adding six new host/device transitions.",
+      "what_to_learn": "a directory-state-plus-status-bit truth table paired with a circle-and-arrow state diagram sharing the same state names",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-057_fig9"
+    },
+    {
+      "id": "asplos26-067_fig5",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Four-panel figure where a numbered synthesis pipeline (with a feedback loop) sits beside the resulting protocol trace and the two original protocols it fuses, using one shared sequence-diagram notation throughout.",
+      "what_to_learn": "Draw the synthesized protocol and both source protocols with the same lifeline-plus-boxed-state notation so states and messages line up panel to panel, and carry one two-colour domain tint through every panel.",
+      "note_source": "agent",
+      "dir": "../../figures/asplos26-067_fig5"
+    },
+    {
+      "id": "asplos26-091_fig2",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A CPU-triggered write to DATA is checked by hardware against STATUS::FULL to decide whether the queue moves to Busy or QueueFull; RESET forces Idle from anywhere, and CONFIG may only be touched while Idle.",
+      "what_to_learn": "a two-colour solid/dashed arrow convention distinguishing software-triggered from hardware-triggered transitions; a nested dotted substate box inside a solid superstate box to show refinement without adding a new top-level state; a small legend box inside the diagram itself explaining the arrow-colour convention",
+      "note_source": "record",
+      "dir": "../../figures/asplos26-091_fig2"
+    },
+    {
+      "id": "nsdi23-042_fig13",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Reaching a later chunk of video 2 requires surviving one independent swipe-away decision at every intervening chunk, each with its own probability.",
+      "what_to_learn": "a repeating continue-or-branch-off decision unit chained left to right to build a recursive probability model",
+      "note_source": "record",
+      "dir": "../../figures/nsdi23-042_fig13"
+    },
+    {
+      "id": "nsdi23-079_fig1",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A page fault takes one of three shortcuts depending on cache and memory state, but every path converges on the same metadata-update and PTE-install finish, with only two steps needing locks.",
+      "what_to_learn": "Long bypass arrows over the top for fast paths; an icon + fill + legend marking the steps that need locks",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi23-079_fig1"
+    },
+    {
+      "id": "nsdi24-031_fig9",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "RAPID's blocking mode is a 4-state FSM (Run, Wait, Suspend, Schedule) driven by the packet buffer PB: a flow is suspended whenever PB is non-empty and only returns to normal Run processing once a timeout finds PB empty after scheduling.",
+      "what_to_learn": "a small colour-coded finite-state machine with one accent colour per state and its adjoining transitions",
+      "note_source": "record",
+      "dir": "../../figures/nsdi24-031_fig9"
+    },
+    {
+      "id": "nsdi24-067_fig5",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "MetaOpt avoids needlessly rewriting an inner problem: if aligned with the outer objective or merely a feasibility problem, its constraints are merged in as is; otherwise a convex problem gets a primal-dual/KKT rewrite, and anything else is marked NA.",
+      "what_to_learn": "A left-to-right diamond cascade: `Y` drops to a terminal box, `N` continues right, so the unhandled case lands last",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi24-067_fig5"
+    },
+    {
+      "id": "nsdi24-068_fig5",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Practitioners can pick a suitable max-min fair allocator with two questions: whether a strict fairness guarantee is required (routing to GB), and if not, which pair of properties they prioritize, each routing to a different named allocator and parameter.",
+      "what_to_learn": "Colour only the leaves; leave decision nodes unfilled; write branch conditions as full words on the edge",
+      "note_source": "doc",
+      "dir": "../../figures/nsdi24-068_fig5"
+    },
+    {
+      "id": "nsdi24-079_fig7",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "To build a positive test case exercising DFA state 5, MESSI concatenates two paths: P1 (1→3→5) from the start to the target state, and P2 (5→7→9→10) from the target onward to an accepting state.",
+      "what_to_learn": "a plain state-machine diagram with two differently-styled highlighted paths stitched together at a shared target state to build one worked example",
+      "note_source": "record",
+      "dir": "../../figures/nsdi24-079_fig7"
+    },
+    {
+      "id": "nsdi25-016_fig7",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A single decision tree, split into four subsystem lanes, cascades Z-score threshold checks so the metrics closest to the root are the ones most sensitive to a faulty machine.",
+      "what_to_learn": "repeated check-node cascade (low: next check, high: verdict leaf), grouped into lanes by subsystem",
+      "note_source": "record",
+      "dir": "../../figures/nsdi25-016_fig7"
+    },
+    {
+      "id": "nsdi25-044_fig7",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "All studied systems detect slowness the same two-staged way: a monitored metric first crosses a warning threshold, triggering a warning action, and only reaches a fatal action either by exceeding a separate, higher fatal threshold directly, or by accumulating enough warnings (the warning count) over time.",
+      "what_to_learn": "a two-threshold decision flowchart generalized from many concrete systems' logic, with a small reference table of real threshold values alongside it",
+      "note_source": "record",
+      "dir": "../../figures/nsdi25-044_fig7"
+    },
+    {
+      "id": "osdi23-031_figtex1",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "The same two naturally-consistent transactions that dOCC's locking validation falsely aborts under contention are both committed by NCC's timestamp pre-assignment, refinement, and safeguard check, with a middle panel showing how per-version timestamps get refined.",
+      "what_to_learn": "swimlane timelines for two clients and the keys they touch, with per-client colour coding kept consistent across a 'before' and 'after' panel to highlight a protocol fix",
+      "note_source": "record",
+      "dir": "../../figures/osdi23-031_figtex1"
+    },
+    {
+      "id": "osdi24-051_fig4",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Only memory that is Locked, VMPL0-private and content-verified may be treated as memory-safe; sharing, copying or writing are the sole safe ways to move between the five permission states.",
+      "what_to_learn": "small badge-icon pairs (trust glyph + lock glyph) attached to each named state of an access-permission state machine",
+      "note_source": "record",
+      "dir": "../../figures/osdi24-051_fig4"
+    },
+    {
+      "id": "osdi25-010_fig7",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Two identical page-state-machine templates side by side (state spine + numbered steps + linked epoch-phase column), differing only by one extra intermediate state and its numbering.",
+      "what_to_learn": "Draw each variant as an identical spine of numbered states with a phase column linked by short cross-arrows and a return loop on the left; give the busier variant one extra spine state and renumber after it.",
+      "note_source": "agent",
+      "dir": "../../figures/osdi25-010_fig7"
+    },
+    {
+      "id": "osdi25-038_fig9",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "Two per-slot flags, occupied and complete, define four states - clean, being filled, valid, and invalidated-while-filling - and the Fill/Lock/Invalidate/Evict transitions between them let Scalio detect the race where a slot is invalidated while still being filled.",
+      "what_to_learn": "Four states as one repeated record layout in a 2×2 grid; the flag bits inside are what distinguishes them",
+      "note_source": "doc",
+      "dir": "../../figures/osdi25-038_fig9"
+    },
+    {
+      "id": "osdi26-076_fig8",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A cache block's Inactive/Semiactive/Active state, driven purely by whether its CET index and thread reference map (rmap) are set, lets CaM manage concurrent access without locking or unnecessary cache replacement.",
+      "what_to_learn": "The concrete data structure and the abstract machine side by side, sharing one colour key",
+      "note_source": "doc",
+      "dir": "../../figures/osdi26-076_fig8"
+    },
+    {
+      "id": "osdi26-122_fig12",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A single per-page survival-ratio threshold, set at the point where the cost curves of remapping and copying cross, is enough to route each page to whichever of the two movement strategies is cheaper.",
+      "what_to_learn": "a central decision diamond routing two colour-coded inputs to two colour-coded strategy boxes, paired with a small inset curve that motivates the decision threshold",
+      "note_source": "record",
+      "dir": "../../figures/osdi26-122_fig12"
+    },
+    {
+      "id": "osdi26-136_fig7",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "RT builds a squeeze transducer for one concrete input DFA by taking their automaton product state by state, then projects that product onto its output symbols alone to get the result NFA.",
+      "what_to_learn": "small automaton diagrams whose accepting states are drawn as double circles and whose transitions are labelled input/output pairs; a 2x2 progression from two small input automata to their product and then to a simplified result automaton",
+      "note_source": "record",
+      "dir": "../../figures/osdi26-136_fig7"
+    },
+    {
+      "id": "sosp25-063_fig2",
+      "group": "logic",
+      "star": false,
+      "why_chosen": "A low-level state sequence L0..L6 and a high-level sequence H0..H4 run in parallel, with dashed arrows showing each L state's corresponding H state under refinement.",
+      "what_to_learn": "two parallel horizontal state chains at different abstraction levels linked by dashed many-to-one refinement arrows",
+      "note_source": "record",
+      "dir": "../../figures/sosp25-063_fig2"
+    }
+  ]
+}

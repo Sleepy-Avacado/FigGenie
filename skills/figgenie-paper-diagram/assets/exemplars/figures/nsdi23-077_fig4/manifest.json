@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-077_fig4",
+  "paper_id": "nsdi23-077",
+  "fig": "4",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 4: SRNIC architecture.",
+  "corpus_template": "host-device",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 0.8,
+  "n_components": 17,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-077/nsdi23-077_fig4_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-077/nsdi23-077_fig4_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Medium-confidence top-down variant: three vertical colored paths (Outbound blue, Inbound-Fast solid red, Inbound-Slow dashed red) run through both sides of an explicit PCIe boundary, making solid-vs-dashed red read directly as hardware-vs-software retransmission.",
+      "what_to_learn": "Run each named path, labeled inline at the top instead of a legend box, as one vertical colored line from the software layer through the PCIe boundary into the matching hardware block, and use solid versus dashed on the same color to split a fast hardware path from its slow software fallback."
+    }
+  ]
+}

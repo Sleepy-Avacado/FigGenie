@@ -1,0 +1,148 @@
+{
+  "paper_id": "asplos26-139",
+  "fig": "11",
+  "system": {
+    "name": "Nemo",
+    "one_liner": "a set-associative flash cache for tiny objects that reduces write amplification via SG-level batching, bloom-filter indexing, and hybrid hotness tracking",
+    "domain": [
+      "storage",
+      "flash",
+      "caching"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Index Cache",
+        "role": "holds the currently cached PBFGs (0, 1, 4), indicating their sets are recently active",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "PBFG",
+        "role": "cached parallel bloom filter groups, three of which (0, 1, 4) are shown resident",
+        "container": "Index Cache",
+        "novel": false
+      },
+      {
+        "name": "Index Pool",
+        "role": "on-flash pool holding all index groups, only some of whose PBFGs are cached",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Index Group 0 / Index Group 1",
+        "role": "on-flash groups of bloom filters backing the Index Pool",
+        "container": "Index Pool",
+        "novel": false
+      },
+      {
+        "name": "An SG's Access Counters",
+        "role": "single-bit-per-object bitmap tracking object access frequency within the Set-Group",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Index Cache",
+        "to": "An SG's Access Counters",
+        "what": "Retain Hotness: bits for sets with cached PBFGs (0, 1, 4) are checked/retained",
+        "step": null
+      },
+      {
+        "from": "An SG's Access Counters",
+        "to": "An SG's Access Counters",
+        "what": "Cooling Down!: periodic reset clears bits for sets without a cached PBFG",
+        "step": null
+      }
+    ],
+    "key_idea": "Nemo infers object hotness by combining which sets currently have a cached PBFG (indicating recent activity) with per-object access-counter bits, retaining bits for those cached sets while periodically cooling down (clearing) the rest to keep hotness tracking cheap and current.",
+    "reading_order": "Left side shows the Index Cache holding PBFG 0, 1, and 4 backed by the on-flash Index Pool (Index Group 0/1); a red 'Retain Hotness' path leads to the right-side Access Counters bitmap, where a blue 'Cooling Down!' path shows periodic clearing of bits for sets not currently cached."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.35,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "red 'Retain Hotness' arrows/label and highlighted PBFG(0,1,4)/retained-bit cells"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue 'Cooling Down!' arrows/label and cleared-bit cells"
+      },
+      {
+        "hex": "#2e54a1",
+        "used_for": "dark blue fill of the Index Cache and Index Pool container boxes"
+      },
+      {
+        "hex": "#75bd42",
+        "used_for": "green fill of the Index Group 0/1 boxes"
+      },
+      {
+        "hex": "#a6ddea",
+        "used_for": "light cyan fill of unset access-counter bitmap cells"
+      },
+      {
+        "hex": "#fee695",
+        "used_for": "pale yellow highlight on the labeled PBFG cells (0, 1, 4)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark strokes on bitmap cells, dashed boundaries around Index Cache/Index Pool and Access Counter groupings",
+    "font": "GillSansMT/GillSansMT-Italic sans, 6.5-8pt, non-bold",
+    "corners": "mixed",
+    "arrows": "orthogonal, filled triangular heads, colored red for retain and blue for cool-down paths",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red = 'Retain Hotness' path marking cached PBFGs (0,1,4) and their corresponding retained access-counter bits, blue = 'Cooling Down!' path marking bits that get periodically reset, dark blue = Index Cache/Index Pool containers, green = Index Group boxes",
+    "line_style_means": "dashed = grouping boundary around the Index Cache/Pool and Access Counter blocks; solid colored arrows = the retain (red) and cooling (blue) data paths",
+    "emphasis": "the two contrasting arrow colors and labels ('Retain Hotness' in red vs. 'Cooling Down!' in blue) directly visualize the two opposing effects of the hybrid hotness mechanism on the same bitmap",
+    "reusable_patterns": [
+      "before/after bitmap diagram showing which bits are retained vs. cleared by a periodic process",
+      "cache-state-to-counter mapping diagram linking a small cached set (PBFG 0,1,4) to a larger tracking structure"
+    ],
+    "weaknesses": [
+      "the two access-counter bitmaps (retain vs. cooling) are visually similar and rely on the red/blue arrow color to distinguish their meaning"
+    ]
+  },
+  "tags": [
+    "flash-cache",
+    "hotness-tracking",
+    "access-counter",
+    "eviction",
+    "bloom-filter",
+    "bitmap"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Nemo Design (p.9)",
+      "4 Nemo Design (p.10)"
+    ],
+    "evidence": [
+      "As shown in Figure 11, when PBFG 0, 1, and 4 are cached",
+      "the corresponding bits in the access counter are checked to determine if the associated objects are truly",
+      "bits for sets with cached PBFGs (e.g., 0, 1, 4) are retained, while others are cleared"
+    ]
+  },
+  "summary": "This figure illustrates Nemo's hybrid object-hotness tracking within a Set-Group. When PBFGs 0, 1, and 4 are cached in the Index Cache (indicating those sets are recently active), the corresponding bits in the SG's single-bit access-counter bitmap are checked and retained (red 'Retain Hotness' path) to determine whether associated objects are truly hot, combining recency (cached PBFG) with frequency (access counter). The Index Pool, backed by on-flash Index Group 0 and Index Group 1, supplies PBFGs that are not currently cached. A periodic cooling mechanism (blue 'Cooling Down!' path) then resets all access-counter bits except those for sets with a currently cached PBFG, ensuring hotness tracking reflects only recency-backed information and keeping memory overhead low. Flat-filled dark blue, green, cyan, and pale-yellow boxes represent the cache/pool structures and bitmap cells, with red/blue arrows distinguishing the retain and cooling effects.",
+  "summary_zh": "该图展示Nemo在一个SG内的混合热度跟踪机制：索引缓存中PBFG 0、1、4被缓存(表示对应集合近期活跃)，通过红色'Retain Hotness'路径保留其在访问计数器位图中对应的位，结合频率信息判断对象是否真正'热'；索引池由索引组0、1在闪存上支撑；蓝色'Cooling Down!'路径周期性地清除未缓存PBFG对应的位，仅保留近期活跃集合的位，从而以低内存开销维持热度跟踪。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

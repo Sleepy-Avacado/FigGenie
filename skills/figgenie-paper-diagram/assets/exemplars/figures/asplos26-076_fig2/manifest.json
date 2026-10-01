@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-076_fig2",
+  "paper_id": "asplos26-076",
+  "fig": "2",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 2. Hierarchical Architecture of Ouroboros.",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "inkscape",
+  "aspect": 2.22,
+  "n_components": 14,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-076/src/fig2_overall_architecture.svg",
+    "preview.png": "lab/extracted/asplos26-076/src/fig2_overall_architecture.png",
+    "print.png": "lab/extracted/asplos26-076/asplos26-076_fig2_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: three successively magnified panels, wafer to die to core, is overview-with-inset's own named 3-level chained (a)-(b)-(c) sequence, not a hub dispatching to interchangeable spokes.",
+      "what_to_learn": "For a hardware hierarchy with 3+ magnification levels, chain (a)(b)(c) panels left to right instead of one hub-spoke drawing, carry one highlight device across the boundary (the red X marking a bypassed core in (b), traced to a blue-outlined core in (c)), and let the mesh inside one panel, not radiating spokes, show replication."
+    }
+  ]
+}

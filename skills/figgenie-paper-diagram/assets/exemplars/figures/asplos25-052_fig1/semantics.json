@@ -1,0 +1,166 @@
+{
+  "paper_id": "asplos25-052",
+  "fig": "1",
+  "system": {
+    "name": "FleetIO",
+    "one_liner": "a learning-based storage virtualization framework that uses multi-agent reinforcement learning to balance performance isolation and utilization for shared SSDs",
+    "domain": [
+      "storage",
+      "virtualization"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "vSSD",
+        "role": "virtual SSD instance exposed to applications or VMs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SSD Virtualization",
+        "role": "layer that maps vSSDs to the underlying flash channels and chips",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Channel 0",
+        "role": "flash channel that can issue I/O commands independently, containing a flash controller and flash chips",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Flash Controller",
+        "role": "issues I/O commands independently per channel",
+        "container": "Channel 0",
+        "novel": false
+      },
+      {
+        "name": "Flash Chip",
+        "role": "physical flash chip within a channel, multiple per channel",
+        "container": "Channel 0",
+        "novel": false
+      },
+      {
+        "name": "vSSD-1",
+        "role": "software-isolated vSSD sharing flash channels with vSSD-2 via I/O throttling",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vSSD-2",
+        "role": "software-isolated vSSD sharing flash channels with vSSD-1 via I/O throttling",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vSSD-3",
+        "role": "hardware-isolated vSSD that fully owns its dedicated flash channels",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vSSD-4",
+        "role": "hardware-isolated vSSD that fully owns its dedicated flash channels",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "vSSD",
+        "to": "SSD Virtualization",
+        "what": "virtual I/O requests",
+        "step": null
+      },
+      {
+        "from": "SSD Virtualization",
+        "to": "Channel 0",
+        "what": "I/O mapped to flash channels and chips",
+        "step": null
+      }
+    ],
+    "key_idea": "Software-defined flash lets an SSD's channels and chips be virtualized into vSSDs, shareable with weak but high-utilization software isolation or dedicated with strong but low-utilization hardware isolation.",
+    "reading_order": "Left panel shows how vSSDs map onto channels and flash chips; right panel contrasts vSSDs sharing a channel (software-isolated) with vSSDs that each own one (hardware-isolated)."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.0,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d4e1f5",
+        "used_for": "pale-blue fill of Flash Controller/Flash Chip boxes and software-isolated vSSD-1/vSSD-2"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "light-gray fill of the vSSD boxes at the top and channel outlines"
+      },
+      {
+        "hex": "#ffe599",
+        "used_for": "pale-yellow fill highlighting the hardware-isolated vSSD-3/vSSD-4"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "light-purple fill of the SSD Virtualization bar"
+      },
+      {
+        "hex": "#c3abd0",
+        "used_for": "purple accent shading of the SSD Virtualization bar"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.39pt thin solid black borders",
+    "corners": "square",
+    "arrows": "thin orthogonal arrows with small triangular heads connecting vSSDs down to channels",
+    "font": "Arial sans-serif, 4.5-13pt (larger for the (a)/(b) panel captions)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow highlights the hardware-isolated vSSDs, each with dedicated channels, versus plain/blue fill for software-isolated vSSDs sharing channels",
+    "line_style_means": null,
+    "emphasis": "panel (b) uses labelled brackets and highlighted fill to visually contrast a channel shared by two vSSDs against channels each owned by one vSSD",
+    "reusable_patterns": [
+      "two-panel background/motivation comparison: a generic architecture panel followed by a contrasting-approaches panel"
+    ],
+    "weaknesses": [
+      "no legend explaining the colour difference between vSSD-1/2 and vSSD-3/4"
+    ]
+  },
+  "tags": [
+    "SSD",
+    "storage-virtualization",
+    "isolation",
+    "flash",
+    "cloud-storage",
+    "background"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.1)",
+      "2 Background and Motivation (p.2-3)"
+    ],
+    "evidence": [
+      "maps each vSSD to the flash channels by utilizing the internal parallelism of SSDs (Figure 1)",
+      "vSSD-1 and vSSD-2 are software-isolated vSSDs, they are mapped to the same flash channels",
+      "vSSD-3 and vSSD-4 in Figure 1 (b), fully own the flash channels"
+    ]
+  },
+  "summary": "FleetIO is a learning-based storage virtualization framework that uses reinforcement learning to manage virtualized SSDs, aiming to achieve both performance isolation and high utilization on shared flash storage. This background figure, not FleetIO's own design, motivates the problem: panel (a) shows SSD virtualization with software-defined flash (SDF), where multiple vSSDs sit above an SSD Virtualization layer that maps them onto flash channels, each channel containing a flash controller and several flash chips capable of issuing I/O independently. Panel (b) contrasts the two existing isolation approaches collocating vSSDs on a shared SSD: vSSD-1 and vSSD-2 are software-isolated, mapped to the same flash channels and separated only by I/O throttling, which maximizes utilization but offers weak isolation; vSSD-3 and vSSD-4 are hardware-isolated, each fully owning its own dedicated channels for strong isolation at the cost of utilization. This isolation-versus-utilization tension motivates FleetIO's RL-based design shown in later figures.",
+  "summary_zh": "该背景图展示SSD虚拟化与隔离方式：(a)多个vSSD经虚拟化层映射到闪存通道与芯片；(b)对比软件隔离(共享通道，靠限流隔离，利用率高但弱隔离)与硬件隔离(独占通道，强隔离但利用率低)。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

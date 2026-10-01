@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-114_fig5",
+  "paper_id": "asplos25-114",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. The design overview of the COMET-W4Ax kernel. (a) illustrates the tile-based GEMM computing with mixed- precision encoding. (b) presents the computing procedure when issuing W4A4 and W4A8 GEMM instructions simultaneously. (c) shows that we can effectively hide the overhead by software pipe",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.96,
+  "n_components": 16,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-114/asplos25-114_fig5_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-114/asplos25-114_fig5_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: three diagram kinds, a tile/tensor layout, a circuit-style instruction-issue diagram, and a buffer-by-iteration timeline grid, explain one design from three angles rather than repeating one drawing under different designs; this is composite-figure, not n-panel-comparison.",
+      "what_to_learn": "When three panels each use a different diagram type (a data-layout grid, a circuit diagram, a scheduling timeline) to explain complementary aspects of one system, file the figure as composite-figure with a dominant panel, not n-panel-comparison, which needs one shared drawing style repeated across the panels."
+    }
+  ]
+}

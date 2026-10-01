@@ -1,0 +1,42 @@
+{
+  "id": "sosp24-007_fig7",
+  "paper_id": "sosp24-007",
+  "fig": "7",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 7. Apparate only injects ramps that make full use of available data flows at that part of the model. management (§3.2-3.3). Apparate runs a separate controller per model replica (as decided by the serving platform) on a CPU, with GPUs streaming per-ramp/batch profiling in- formation in a non-",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.77,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-007/src/fig7_cut_vertices.svg",
+    "preview.png": "lab/extracted/sosp24-007/src/fig7_cut_vertices.png",
+    "print.png": "lab/extracted/sosp24-007/sosp24-007_fig7_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Small multiples: three model stacks side by side annotated with the same check/cross vocabulary at every layer boundary.",
+      "what_to_learn": "Small multiples work when the annotation vocabulary is fixed across panels; the reader compares mark positions, not shapes."
+    }
+  ]
+}

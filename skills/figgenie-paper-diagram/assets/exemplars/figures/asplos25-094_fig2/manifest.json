@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-094_fig2",
+  "paper_id": "asplos25-094",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. Architecture and inference process of MoE models.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 2.07,
+  "n_components": 11,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-094/src/fig2_moe_1110.svg",
+    "preview.png": "lab/extracted/asplos25-094/src/fig2_moe_1110.png",
+    "print.png": "lab/extracted/asplos25-094/asplos25-094_fig2_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Pairs one fully expanded MoE Block on the left with a tiled timeline of the same block repeated on the right, contrasting a one-shot Prefill pass against per-token Decoding steps at dense text density.",
+      "what_to_learn": "Expand the repeated unit once on one side (the MoE Block's internals) and tile the collapsed version across a timeline on the other side, so structure and repetition-over-time each get their own half instead of competing in one drawing."
+    },
+    {
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Reassigned from block-floorplan by the note-writer: this is a neural-network block diagram (one MoE Block's internals) paired with a stacked timeline of repeated block invocations across prefill and decoding; nothing is hardware, and there is no chip or bus.",
+      "what_to_learn": "Read this as a phase-lanes or replicated-grid figure instead: expand one MoE Block fully on the left, then tile the same block repeatedly along a timeline on the right, one wide invocation for the whole prefill prompt and one narrow invocation per decoded token."
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "paper_id": "asplos26-047",
+  "fig": "tex2",
+  "kind": "mechanism",
+  "system": {
+    "name": "COMPAS",
+    "one_liner": "an architecture for multivariate trace estimation across networked quantum processors via a distributed multi-party SWAP test",
+    "domain": [
+      "quantum-computing",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how four multi-party SWAP-test circuit variants trade off GHZ width against circuit depth",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "GHZ-⌈k/2⌉",
+        "kind": "box",
+        "role": "prepares a ⌈k/2⌉-qubit GHZ state that serves as control qubits for the SWAP test",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ρ1–ρ8",
+        "kind": "lane",
+        "role": "eight data qubits (one-qubit states) permuted by controlled-SWAP gates",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "× (SWAP)",
+        "kind": "icon",
+        "role": "controlled-SWAP gate between two data qubits, controlled by one GHZ qubit",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "H",
+        "kind": "icon",
+        "role": "Hadamard gate applied to each GHZ control qubit before it is measured",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "measurement gauge",
+        "kind": "icon",
+        "role": "measures each GHZ control qubit in the X or Y basis to yield the SWAP-test outcome",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "GHZ-⌈k/2⌉",
+        "to": "× (SWAP)",
+        "what": "each GHZ qubit controls two rounds of SWAPs between the data qubits",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "× (SWAP)",
+        "to": "H",
+        "what": "after both SWAP rounds the GHZ qubits proceed to the Hadamard gate",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "H",
+        "to": "measurement gauge",
+        "what": "each GHZ qubit is measured to extract the SWAP-test estimate",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) 1-qubit states",
+        "axis": "alternatives",
+        "differs": "baseline scheme for one-qubit states: GHZ width ⌈k/2⌉, depth 2",
+        "verdict": "baseline"
+      },
+      {
+        "label": "(b) deeper circuit",
+        "axis": "alternatives",
+        "differs": "generalizes to n-qubit states by repeating the SWAP rounds n times, keeping GHZ width ⌈k/2⌉ but growing depth to 2n",
+        "verdict": "prior work, depth trade-off"
+      },
+      {
+        "label": "(c) wider GHZ",
+        "axis": "alternatives",
+        "differs": "generalizes to n-qubit states by widening the GHZ state to ⌈k/2⌉n qubits, keeping depth at 2",
+        "verdict": "prior work, width trade-off"
+      },
+      {
+        "label": "(d) parallel Toffoli via Fanout",
+        "axis": "alternatives",
+        "differs": "replaces the SWAP rounds with a parallel-Toffoli block built from Fanout gates, keeping GHZ width ⌈k/2⌉ and depth O(1)",
+        "verdict": "ours, optimal in both depth and width"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Four circuit designs for the multi-party SWAP test trade GHZ-state width against circuit depth when scaling to n-qubit states; the paper's scheme (d) uses parallel Toffoli-via-Fanout gates to get both optimal depth and width.",
+    "reading_order": "Left to right within each panel along the qubit wires from GHZ preparation to measurement; the four dashed panels are compared left to right as (a) through (d)."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "",
+    "aspect": 2.74,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#235a8d",
+        "used_for": "dashed panel borders and the GHZ-width/depth caption text below each panel"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "highlights the added n or kn/2 factor that changes when generalizing from one-qubit to n-qubit states"
+      },
+      {
+        "hex": "#fac5c6",
+        "used_for": "fill of the 'Parallel Toffoli via Fanout' block in panel (d), the paper's proposed circuit"
+      },
+      {
+        "hex": "#ff6e6e",
+        "used_for": "outline stroke of the pink Toffoli block in panel (d)"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "fill of the GHZ-prep, Hadamard, and measurement gate boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black qubit wires and box borders; dashed blue rounded rectangles delimit each of the four panels",
+    "font": "sans-serif (Calibri / Cambria Math mix), 8–11pt body text, larger 18pt for panel headings",
+    "corners": "mixed",
+    "arrows": "no arrowheads; plain straight wire lines with vertical control connectors",
+    "icons": "small vector arc-and-needle glyphs marking the measurement gates"
+  },
+  "encoding": {
+    "color_means": "blue = panel framing and the derived depth/width captions; red = the extra factor (n) that appears only in the generalized n-qubit schemes; pink = the paper's new Toffoli-via-Fanout block",
+    "line_style_means": "dashed rounded rectangles group each of the four scheme panels; solid lines are qubit wires and gate connections",
+    "state_means": "each panel is a separate circuit design (alternative), not a time sequence; differences are shown by altered wire structure and a red-highlighted formula term",
+    "marker_means": "a filled dot paired with an X is a controlled-SWAP gate; the boxed H is a Hadamard gate; the meter glyph is a basis measurement",
+    "emphasis": "the paper's own scheme (d) is set apart by replacing the crossing SWAP wires with a single solid pink block labelled 'Parallel Toffoli via Fanout', visually simpler than (a)-(c)",
+    "reusable_patterns": [
+      "four aligned circuit-diagram panels compared side by side with a swapped-in replacement block for one datapath",
+      "per-panel derived-cost caption (depth, GHZ width) below each design variant"
+    ],
+    "weaknesses": [
+      "no in-figure legend for the standard gate symbols (dot, cross, H, meter)",
+      "why panel (c) needs a wider GHZ state is explained only in the surrounding text, not visually"
+    ]
+  },
+  "tags": [
+    "quantum-computing",
+    "swap-test",
+    "circuit-comparison",
+    "ghz-state",
+    "distributed-qpu",
+    "toffoli-gate"
+  ],
+  "provenance": {
+    "sections": [
+      "Multi-Party SWAP Test",
+      "Implementation for Multi-Qubit States"
+    ],
+    "evidence": [
+      "Unlike other schemes, which must choose between asymptotic optimality in circuit depth or GHZ width, COMPAS achieves both at once.",
+      "using a deeper circuit or increasing the width of the GHZ state",
+      "maintains both the optimal depth and width of the circuit"
+    ]
+  },
+  "summary": "This figure from the COMPAS paper compares four circuit implementations of the multi-party SWAP test, the subroutine COMPAS distributes across networked quantum processors. Each of the four dashed panels follows the same template: a GHZ-state preparation box supplies control qubits for two rounds of controlled-SWAP gates over data qubits labelled rho_1 through rho_8, followed by Hadamard gates and basis measurement. Panel (a) is the baseline one-qubit-state scheme, with GHZ width ceil(k/2) and depth 2. Panels (b) and (c) generalize to n-qubit states by either repeating the SWAP rounds n times, growing depth to 2n, or widening the GHZ state by a factor of n, with the added n term highlighted in red. Panel (d), COMPAS's own scheme, replaces the SWAP rounds with parallel Toffoli gates via Fanout, drawn as a single pink block, achieving constant O(1) depth while keeping the GHZ width at ceil(k/2).",
+  "summary_zh": "该图比较COMPAS论文中多方SWAP测试的四种电路：(a)单比特基线；(b)(c)加深电路或加宽GHZ态推广到n比特，红色标出新增n因子；(d)为本文方案，用Fanout并行Toffoli门（粉色）同时达到O(1)深度和最优GHZ宽度。",
+  "confidence": "high",
+  "notes": "Prior 'base: circuit' isn't in the mechanism base enum; mapped to 'timeline' (one lane per qubit, time left-to-right). Prior worked_example=true reconsidered as false: the depth/GHZ-width captions are annotations below each panel template, not concrete values that are themselves the content. Index panel count (3) undercounts the figure, which clearly draws four labelled panels (a)-(d); kept as-is in layout.panels (from the index) while layout.panel_count and content.panels reflect the actual four.",
+  "venue": "ASPLOS26"
+}

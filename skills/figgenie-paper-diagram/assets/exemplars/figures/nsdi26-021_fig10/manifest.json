@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-021_fig10",
+  "paper_id": "nsdi26-021",
+  "fig": "10",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 10: BIFROST overview.",
+  "corpus_template": "host-device",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 3.52,
+  "n_components": 14,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-021/nsdi26-021_fig10_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-021/nsdi26-021_fig10_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated: sender and receiver CIPU diagrams mirror each other with their two offload sub-boxes swapped in order, keying nine circled steps to a middle panel that also draws the packet as colored header segments.",
+      "what_to_learn": "Mirror sender and receiver by swapping the internal order of their shared sub-boxes (Bifrost/AVS becomes AVS/Bifrost) so the drawing itself shows the protocol is symmetric, and key numbered steps to named optimizations plus a packet-format strip in one shared middle panel, accepting the reader must glance away from both diagrams to read it."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Sender and Receiver diagrams mirror the same VMs-over-CIPU-Hardware-Accelerator-over-Software stack with swapped internal box order, and nine circled numbers keyed to a shared middle legend trace one spray-reorder-ACK round trip across both.",
+      "what_to_learn": "Swap the internal stacking order of the mirrored receiver relative to the sender, hardware-then-software becomes software-then-hardware, so the eye still reads top-to-bottom as protocol flow on both sides, and key every circled step number to one shared legend panel placed between the two mirrored diagrams rather than beside either one."
+    }
+  ]
+}

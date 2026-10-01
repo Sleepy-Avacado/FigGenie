@@ -1,0 +1,56 @@
+{
+  "id": "nsdi25-040_fig10",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-040",
+  "fig": "10",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 10: The changes of a container packet forwarded by ONCache with the rewriting-based tunneling protocol. (a) The original packet from containers. (b) The masqueraded packet. (c) The restored packet.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "data-structure",
+  "subject": "how a container packet's IP/MAC header fields are rewritten to host addresses on egress and restored on ingress",
+  "arrangement": "frames-row",
+  "panel_count": 3,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.1,
+  "n_elements": 9,
+  "n_relations": 2,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "chrome",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-040/src/fig10_packet_changing.svg",
+    "preview.png": "lab/extracted/nsdi25-040/src/fig10_packet_changing.png",
+    "print.png": "lab/extracted/nsdi25-040/nsdi25-040_fig10_p20_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "The rewriting-based tunneling protocol substitutes traditional outer-header encapsulation with in-place rewriting of the container's own IP/MAC header fields to host addresses (plus a restore key) on egress, then rewrites them back to the original container addresses on ingress at the destination.",
+      "what_to_learn": "Three identical frames; the operation name rides the arrow between them; only the text inside the fixed coloured rows changes",
+      "note_source": "doc"
+    }
+  ]
+}

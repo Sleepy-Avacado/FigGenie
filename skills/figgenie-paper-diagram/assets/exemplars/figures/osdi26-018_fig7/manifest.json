@@ -1,0 +1,42 @@
+{
+  "id": "osdi26-018_fig7",
+  "paper_id": "osdi26-018",
+  "fig": "7",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 7: Communication backend selection. (a) Communica- tion issued by the copy engine with global-memory signaling. (b) Dedicated SMs drive transfer. (c) Communication is co- located with compute on the same SM.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.35,
+  "n_components": 12,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-018/src/fig7_communication_backend.svg",
+    "preview.png": "lab/extracted/osdi26-018/src/fig7_communication_backend.png",
+    "print.png": "lab/extracted/osdi26-018/osdi26-018_fig7_p10_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Named in the reference as the three-panels/one-varying-mechanism exemplar: identical SM-roster-to-Tile-to-RS layout stacked as three wide rows, changing only which hardware resource, copy engine, specialized SM, or co-located SM, drives communication.",
+      "what_to_learn": "Stack comparison panels as full-width rows, not side-by-side columns, when each panel is itself a wide strip, and keep the tile-to-signal-to-RS-unit layout pixel-identical across rows so only the swapped hardware resource (copy engine, specialized SM, co-located SM) catches the eye."
+    }
+  ]
+}

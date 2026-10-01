@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-062_fig5",
+  "paper_id": "nsdi24-062",
+  "fig": "5",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 5: Programmable Intelligent PCIe Switch (PIPS) internal architecture. The dash line indicates asynchronous TLP analysis, decoupled with PCIe switch forwarding path.",
+  "corpus_template": "host-device",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.48,
+  "n_components": 9,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-062/nsdi24-062_fig5_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-062/nsdi24-062_fig5_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Medium-confidence but star-rated: five FPGA-resident modules (M1-M5) sit inside one dashed FPGA boundary between RNIC and Host, with an inside legend naming three arrow classes and three numbered circles marking the asynchronous analysis path.",
+      "what_to_learn": "Number every module consistently (M1-M5) so prose and figure cross-reference cleanly, dash exactly the one path the text calls asynchronous while keeping the main forwarding path's arrows solid, and put the two-or-three-color arrow legend inside the boundary box it explains rather than off to the side."
+    }
+  ]
+}

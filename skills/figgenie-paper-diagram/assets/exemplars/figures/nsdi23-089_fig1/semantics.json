@@ -1,0 +1,224 @@
+{
+  "paper_id": "nsdi23-089",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "Hindsight",
+    "one_liner": "a distributed tracing system that retroactively and lazily assembles detailed traces only for requests that later prove interesting",
+    "domain": [
+      "distributed tracing",
+      "observability",
+      "distributed systems"
+    ],
+    "abstraction": "tracing framework"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how a typical (eager) distributed tracing framework tags, propagates, and immediately reports one request's trace data",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "traceId / sampled",
+        "kind": "label",
+        "role": "the request-scoped ID and flag assigned at the origin and propagated with every hop",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "traced process",
+        "kind": "box",
+        "role": "one of several processes the request visits; each records spans as small blue dots",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "untouched process",
+        "kind": "box",
+        "role": "a process in the system that this particular request does not visit, drawn for topological context",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Backend Trace Collectors",
+        "kind": "box",
+        "role": "shared backend that ingests span data reported from every process",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Σ",
+        "kind": "icon",
+        "role": "aggregation step that gathers the eagerly-reported spans belonging to one trace",
+        "container": "Backend Trace Collectors",
+        "highlighted": false
+      },
+      {
+        "name": "database",
+        "kind": "icon",
+        "role": "persistent store holding the finished end-to-end trace objects",
+        "container": "Backend Trace Collectors",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "traced process",
+        "to": "traced process",
+        "what": "the request continues hop to hop, carrying traceId and the sampled flag",
+        "kind": "timeline-message",
+        "step": "2"
+      },
+      {
+        "from": "traced process",
+        "to": "Backend Trace Collectors",
+        "what": "eager trace reporting: every process reports its recorded spans immediately",
+        "kind": "data",
+        "step": "5"
+      },
+      {
+        "from": "Σ",
+        "to": "database",
+        "what": "aggregated spans are joined into one end-to-end trace object and stored",
+        "kind": "data",
+        "step": "6"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "first traced process",
+        "what": "a new request arrives and is assigned a traceId and a sampled flag",
+        "carries": "traceId, sampled flag"
+      },
+      {
+        "marker": "2",
+        "at": "second traced process",
+        "what": "the traceId and sampled flag propagate with the request across inter-process communication",
+        "carries": "traceId, sampled flag"
+      },
+      {
+        "marker": "3",
+        "at": "second traced process",
+        "what": "a component generates trace data (a span), annotated with the traceId",
+        "carries": "span data"
+      },
+      {
+        "marker": "4",
+        "at": "beneath the traced processes",
+        "what": "recorded span data is pulled out toward the reporting channel",
+        "carries": "span data"
+      },
+      {
+        "marker": "5",
+        "at": "edge of Backend Trace Collectors",
+        "what": "eager trace reporting sends every recorded span immediately to the backend",
+        "carries": "span data"
+      },
+      {
+        "marker": "6",
+        "at": "Backend Trace Collectors",
+        "what": "spans belonging to the same trace are aggregated and joined into one end-to-end trace object",
+        "carries": "assembled trace object"
+      },
+      {
+        "marker": "7",
+        "at": "database",
+        "what": "the finished trace object is stored",
+        "carries": "trace object"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A typical tracing framework tags a request once but then reports every span it generates immediately and unconditionally to the backend, win or lose, before it is even known whether the trace will matter.",
+    "reading_order": "left to right along the wavy solid request path through numbered steps 1-3, then down the dotted lines through steps 4-5 into the Backend Trace Collectors for steps 6-7"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.22,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3366dd",
+        "used_for": "blue fill of the many small span-dot icons along the request path and beneath each traced process"
+      },
+      {
+        "hex": "#1122aa",
+        "used_for": "dark-blue dotted connector strokes linking span dots down to the reporting row, and related accents"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the process boxes the request visits"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "light-gray fill of the untouched-process boxes and/or the Backend Trace Collectors region"
+      },
+      {
+        "hex": "#404040",
+        "used_for": "dark-gray text labels and numbered-circle outlines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid black for the main request path, thin dotted blue for the span-reporting lines",
+    "corners": "mixed",
+    "arrows": "a thin black arrowhead ending the main request path; thin dotted blue lines carrying spans down to the reporting area; one thicker blue arrow for the eager-report action",
+    "font": "serif (STIXGeneral) for labels, monospace (Nimbus Mono L) for code-like tokens such as traceId",
+    "icons": "small blue circular dot icons marking each recorded span, a Σ aggregation glyph, a small tree/join icon, and a database cylinder icon"
+  },
+  "encoding": {
+    "color_means": "blue marks recorded span data and the reporting channel; white vs. light-gray distinguishes a visited process box from an untouched one; dark gray labels the Backend Trace Collectors region",
+    "line_style_means": "the solid black wavy line is the request's own path through processes; dotted blue lines carry span data down out of each process toward reporting, a channel distinct from the request path itself",
+    "state_means": "not applicable; this is a one-shot walkthrough, not a before/after figure",
+    "marker_means": "circled numbers 1-7 order the steps of tagging, propagating, generating, extracting, reporting, assembling, and storing trace data",
+    "emphasis": "the solid black request path stays visually dominant while thinner dotted blue lines and small dot icons quietly show the constant trickle of eagerly-reported span data running underneath every hop",
+    "reusable_patterns": [
+      "a wavy solid line threading through boxes to represent one request's path through a distributed system, with small dot icons marking recorded data at each hop",
+      "numbered circles pacing a multi-stage pipeline from data capture through aggregation to storage"
+    ],
+    "weaknesses": [
+      "steps 4-7 are not directly narrated in the given paragraph excerpts, so their exact meaning is inferred mainly from the caption and the figure itself"
+    ]
+  },
+  "tags": [
+    "distributed-tracing",
+    "observability",
+    "spans",
+    "eager-reporting",
+    "trace-collector",
+    "Hindsight"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Motivation"
+    ],
+    "evidence": [
+      "Any component that handles the request can generate trace data (e.g. spans, events) using the tracing framework's client library",
+      "trace data is only generated ifsampled is set",
+      "Applications initiate trace collection by invoking trigger, which writes the traceId, triggerId and zero or more lateralTraceIds"
+    ]
+  },
+  "summary": "This figure walks through how a typical (eager) distributed tracing framework instruments one request. Numbered markers trace a request's wavy path through several system processes, shown as boxes containing rows of small blue dot icons for the spans recorded there, while other, untouched processes are drawn as empty gray boxes for context. At step 1 the request is assigned a traceId and a sampled flag; at step 2 these propagate with the request across inter-process communication; at step 3 a component generates trace data annotated with the traceId. Steps 4 and 5 pull each process's recorded spans out immediately ('eager trace reporting') into the Backend Trace Collectors, where step 6 aggregates and joins spans into one end-to-end trace object and step 7 stores it in a database. The paper contrasts this constant, eager per-span reporting with Hindsight's own lazy alternative, shown in the next figure.",
+  "summary_zh": "该图走读急切型追踪框架处理请求：①分配traceId/sampled→②随请求跨进程传播→③生成带traceId的span→④⑤各进程立即上报span给后端收集器→⑥聚合拼接为trace对象→⑦存入数据库，与Hindsight惰性方案对比。",
+  "confidence": "medium",
+  "notes": "The given paragraph excerpts describe steps 1-3 in detail (traceId assignment, propagation, span generation) but do not narrate steps 4-7 explicitly; those are inferred from the caption ('eagerly ingested ... constructed ... processed, and stored') and the figure's own icons (Σ, join glyph, database cylinder). Process boxes are generic/unlabelled beyond their dot content, so they are described by role (traced vs. untouched) rather than individual names.",
+  "venue": "NSDI23"
+}

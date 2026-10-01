@@ -1,0 +1,186 @@
+{
+  "paper_id": "sosp25-001",
+  "fig": "12",
+  "kind": "mechanism",
+  "system": {
+    "name": "DCP",
+    "one_liner": "a dynamic context-parallel training framework that partitions attention data and computation into fine-grained blocks flexibly mapped to devices",
+    "domain": [
+      "distributed-training",
+      "long-context-LLM",
+      "context-parallelism"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how attention data and computation blocks are represented as weighted vertices linked by per-block hyperedges in DCP's hypergraph model",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Q",
+        "kind": "node",
+        "role": "query-block vertex, weighted [0, s_Qi] by its data size; one per row (Q1, Q2, Q3)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "computation-block vertex, weighted [f_Ci, 0] by its FLOPs cost function; produced from Q/KV pairs (C1..C5)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "KV",
+        "kind": "node",
+        "role": "key-value-block vertex, weighted [0, s_KVj] by its data size; drawn along the bottom row (KV1, KV2, KV3)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "O",
+        "kind": "node",
+        "role": "output-block vertex, weighted [0, s_Oi] by its data size; one per row (O1, O2, O3)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Vertex",
+        "kind": "label",
+        "role": "legend entry: a circle denotes one vertex of the hypergraph",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Vertex weights",
+        "kind": "label",
+        "role": "legend entry: the bracketed pair [w1, w2] below a vertex gives its 2-D weight (computation load, data size)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Hyperedges",
+        "kind": "label",
+        "role": "legend entry: the three hatch colours/patterns denote hyperedges grouping a data block with the computation blocks that read or write it",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Q",
+        "to": "C",
+        "what": "a pink hyperedge groups each query block with the computation blocks in its row (e.g. Q2 with C2 and C3)",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "O",
+        "what": "a green hyperedge groups each output block with the computation blocks that produce it (e.g. C4 and C5 with O3)",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "KV",
+        "to": "C",
+        "what": "a blue hyperedge groups each key-value block with every computation block that consumes it, spanning multiple rows (e.g. KV1 with C1, C2, and C4)",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "DCP formalizes an attention computation as a hypergraph whose vertices are query, key-value, output, and computation blocks, each carrying a 2-D compute/data-size weight, and whose hyperedges tie every data block to the computation blocks that read or write it.",
+    "reading_order": "top to bottom through the three query rows, each read left to right from Q through its C blocks to O, then down the KV row and its vertical hyperedges"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.79,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d80073",
+        "used_for": "bright magenta fill of the hyperedges connecting each query block to its row's computation blocks"
+      },
+      {
+        "hex": "#2d7600",
+        "used_for": "green hatch strokes of the hyperedges connecting each row's computation blocks to its output block"
+      },
+      {
+        "hex": "#001dbc",
+        "used_for": "blue hatch strokes of the hyperedges connecting each key-value block to the computation blocks that use it"
+      },
+      {
+        "hex": "#a50040",
+        "used_for": "dark magenta border stroke outlining the pink hyperedge regions"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the vertex circles and the plain background"
+      }
+    ],
+    "background": "white",
+    "fill": "flat with diagonal hatch patterns for two of the three hyperedge types",
+    "stroke": "colour-matched strokes forming hatch fills for the green and blue hyperedges; solid magenta fill with a darker border for pink hyperedges; thin black circle outlines for vertices",
+    "corners": "rounded",
+    "arrows": "none; hyperedges are shown as overlapping translucent rounded regions, not directed arrows",
+    "font": "italic serif math font for vertex labels and weight formulas; bold sans-serif for legend captions",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pink marks the hyperedge tying a query block to its row's computation blocks; green marks the hyperedge tying those computation blocks to their output block; blue marks the hyperedge tying a key-value block to every computation block that reads it, spanning multiple rows",
+    "line_style_means": "hatch direction/colour (wavy green vs straight blue) distinguishes the output- and key-value-hyperedges where their translucent regions overlap the solid pink query-hyperedges",
+    "state_means": null,
+    "marker_means": "bracketed [w1, w2] pairs under each vertex give its weight; a 0 in the first slot marks a data block (query/KV/output) sized by data volume, while a 0 in the second slot marks a computation block costed by a FLOPs function f",
+    "emphasis": "overlapping translucent hyperedge regions let one computation-block vertex visibly belong to three different hyperedges at once (its query's, its output's, and its key-value's), making the many-to-many structure legible",
+    "reusable_patterns": [
+      "a small worked hypergraph (3 query rows, 5 computation blocks, 3 key-value columns) used to define a formal vertex/hyperedge/weight notation before it is applied at scale"
+    ],
+    "weaknesses": [
+      "with three overlapping translucent hyperedges per computation block, colours blend (e.g. pink+blue) and can be hard to tell apart without the legend"
+    ]
+  },
+  "tags": [
+    "hypergraph",
+    "context-parallelism",
+    "attention-masking",
+    "load-balancing",
+    "DCP"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Dynamic Context Parallelism"
+    ],
+    "evidence": [
+      "Fig. 12 illustrates the formulated hypergraph of Fig. 9a",
+      "Nine hyperedges are built in total, connecting each data block to its associated computation blocks",
+      "Each vertex is associated with a 2-dimensional weight"
+    ]
+  },
+  "summary": "Figure 12 shows the hypergraph DCP builds to formalize a masked attention computation (the example from Fig. 9a/10). Circular vertices represent three kinds of blocks: query (Q1-Q3), computation (C1-C5), key-value (KV1-KV3), and output (O1-O3), each carrying a 2-D weight [w1, w2] that is either a data size s or a FLOPs cost function f. Three colour-coded hyperedges connect each data block to its associated computation blocks: pink ties each query to the computation blocks in its row (e.g. Q2 to C2 and C3), green ties those computation blocks to their row's output (e.g. C4 and C5 to O3), and blue ties each key-value block to every computation block that reads it, spanning multiple rows (e.g. KV1 to C1, C2, and C4). This hypergraph is the structure DCP's balanced partitioning algorithm operates on.",
+  "summary_zh": "该图展示DCP为掩码注意力构建的超图：圆圈为Q/C/KV/O四类顶点，各带二维权重(数据量或计算量函数)；粉色超边连接每个Q与其行内C块，绿色连接C块与对应O，蓝色跨行连接每个KV与使用它的所有C块，供后续均衡划分。",
+  "confidence": "high",
+  "notes": "Prior pass marked worked_example true, but the shown weights (s_Qi, s_KVj, s_Oi, f_Ci) are symbolic placeholders rather than concrete numbers/strings to check, so no worked-example marker is applied here; corrected to false.",
+  "venue": "SOSP25"
+}

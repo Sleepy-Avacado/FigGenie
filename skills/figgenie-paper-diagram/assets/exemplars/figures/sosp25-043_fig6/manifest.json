@@ -1,0 +1,42 @@
+{
+  "id": "sosp25-043_fig6",
+  "paper_id": "sosp25-043",
+  "fig": "6",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 6. Schematic of the traffic sniffer design with the filter as service and vFPGA-backed application logic.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.81,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-043/src/fig6_traffic-sniffer.svg",
+    "preview.png": "lab/extracted/sosp25-043/src/fig6_traffic-sniffer.png",
+    "print.png": "lab/extracted/sosp25-043/sosp25-043_fig6_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star exemplar of the plain dashed-divider variant (panels=1): Application Layer and Dynamic Layer sit either side of one vertical dashed rule, with red/green lines giving RX/TX its own small inside legend.",
+      "what_to_learn": "Divide the canvas with one plain vertical dashed rule instead of two boxed panels, bold the two side titles above it, and reserve colour (red RX, green TX) for the one distinction the case study is about."
+    }
+  ]
+}

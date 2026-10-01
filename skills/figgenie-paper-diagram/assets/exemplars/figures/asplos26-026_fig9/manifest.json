@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-026_fig9",
+  "kind": "mechanism",
+  "paper_id": "asplos26-026",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 9. Example of Tree Decoding. We set topK=2, Draft_Depth=4, and Tokens_to_Verify=8 in this example. Prob. denotes token probability given by the draft model.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "tree",
+  "subject": "how tree-based speculative drafting branches topK candidate tokens by probability and selects the top 8 to verify",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.26,
+  "n_elements": 6,
+  "n_relations": 4,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "keynote",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-026/src/fig9_tree_decoding.svg",
+    "preview.png": "lab/extracted/asplos26-026/src/fig9_tree_decoding.png",
+    "print.png": "lab/extracted/asplos26-026/asplos26-026_fig9_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Starting from a prompt, the draft model branches topK candidate tokens at each of Draft_Depth levels, building a probability-scored tree; only the Tokens_to_Verify highest-confidence tokens in that tree (highlighted blue) are ultimately sent to the target model for verification.",
+      "what_to_learn": "a branching probability tree with a coloured highlight marking the subset actually used downstream; column headers naming each depth/step level of a search or drafting procedure; an inline legend distinguishing two arrow colours by role rather than a separate colour-swatch key",
+      "note_source": "record"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-035_fig3",
+  "paper_id": "nsdi23-035",
+  "fig": "3",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 3: ExoPlane Overview: Green boxes represent inputs and yellow and blue boxes indicate key modules.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.37,
+  "n_components": 14,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-035/nsdi23-035_fig3_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-035/nsdi23-035_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar with an explicit three-row colour legend inside the frame tying 14 components to three roles, feeding from operator and developer inputs through a planning tier into a jointly labelled hardware-plus-runtime tier.",
+      "what_to_learn": "When more than two colours carry role meaning, put a compact legend inside a free corner rather than relying on labels alone, and let one hardware box be jointly annotated by two different functional tiers, a long-term planner's output above and a short-term runtime's control below, to show both act on the same resource."
+    }
+  ]
+}

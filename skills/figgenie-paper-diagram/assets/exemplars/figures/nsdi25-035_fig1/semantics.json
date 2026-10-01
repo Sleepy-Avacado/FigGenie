@@ -1,0 +1,244 @@
+{
+  "paper_id": "nsdi25-035",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "Beehive",
+    "one_liner": "an asynchronous runtime for memory-disaggregated servers that runs each application thread to completion via coroutine-based (pararoutine) execution instead of thread switching",
+    "domain": [
+      "disaggregated-memory",
+      "distributed-systems",
+      "os-runtime"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how synchronous thread-switching hides remote-memory latency compared to asynchronous coroutine execution on one thread",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Thread 1",
+        "kind": "lane",
+        "role": "the thread that issues the remote memory access and later resumes on the fetched value",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Thread 2",
+        "kind": "lane",
+        "role": "a second thread scheduled onto the CPU while Thread 1 is blocked on its remote access",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "deref grid value",
+        "kind": "box",
+        "role": "thread dereferences a grid-point pointer, triggering a remote memory access",
+        "container": "Thread 1",
+        "highlighted": false
+      },
+      {
+        "name": "post request",
+        "kind": "box",
+        "role": "thread posts the remote-memory read request",
+        "container": "Thread 1",
+        "highlighted": false
+      },
+      {
+        "name": "save context",
+        "kind": "box",
+        "role": "runtime saves the blocked thread's context before switching away",
+        "container": "Thread 1",
+        "highlighted": false
+      },
+      {
+        "name": "thread switching",
+        "kind": "box",
+        "role": "the CPU switches from the blocked thread to another ready thread",
+        "container": "Thread 1",
+        "highlighted": true
+      },
+      {
+        "name": "in remote memory",
+        "kind": "label",
+        "role": "annotates the latency window during which the requested grid value is being fetched from remote memory",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "poll request",
+        "kind": "box",
+        "role": "the other thread polls for completion of its own outstanding request",
+        "container": "Thread 2",
+        "highlighted": false
+      },
+      {
+        "name": "restore context",
+        "kind": "box",
+        "role": "runtime restores the original thread's context once its remote data has arrived",
+        "container": "Thread 1",
+        "highlighted": false
+      },
+      {
+        "name": "compute on grid value",
+        "kind": "box",
+        "role": "thread resumes and computes on the now-available grid value",
+        "container": "Thread 1",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "deref grid value",
+        "to": "post request",
+        "what": "sequential execution within the thread",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "post request",
+        "to": "save context",
+        "what": "sequential execution before yielding the CPU",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "save context",
+        "to": "thread switching",
+        "what": "context is saved just before switching threads",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "thread switching",
+        "to": "poll request",
+        "what": "CPU is handed to Thread 2, which polls its own pending request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "in remote memory",
+        "to": "restore context",
+        "what": "once the remote fetch completes, Thread 1's context is restored",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "restore context",
+        "to": "compute on grid value",
+        "what": "thread resumes and computes on the fetched value",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Synchronous execution",
+        "axis": "alternatives",
+        "differs": "template: two threads take turns on the CPU; the blocked thread's context is saved, another ready thread (Thread 2) is switched in while the remote access is outstanding, then context is restored to resume",
+        "verdict": null
+      },
+      {
+        "label": "(b) Asynchronous execution",
+        "axis": "alternatives",
+        "differs": "a single thread never switches out; it registers a callback continuation and keeps executing the next pararoutine's code, later polling events and restoring the continuation once the remote access finishes, overlapping the wait with useful work on the same thread",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Synchronous execution hides remote-memory latency by switching the CPU to a second thread, at the cost of saving/restoring context, while asynchronous execution keeps one thread running by registering a continuation and executing other coroutines' code, then resuming once the remote access completes.",
+    "reading_order": "top to bottom within each panel; left panel (a) alternates between the Thread 1 and Thread 2 columns, right panel (b) reads straight down Thread 1's single column with the 'overlapping period' bracket at its centre"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "callout",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.74,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1f4e79",
+        "used_for": "dark blue fill of the request/poll boxes ('post request', 'poll request', 'poll events')"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "orange fill of the context/continuation boxes ('save context', 'thread switching', 'restore context', 'register callback continuation', 'restore continuation')"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill of the compute boxes ('deref grid value', 'compute on grid value', 'continue to next pararoutines')"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "light blue background band behind each thread's column"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "darker orange accent, likely bold callout borders/text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "no visible box outlines reported; blocks are distinguished by flat fill colour alone",
+    "corners": "mixed",
+    "arrows": "thin orthogonal arrows/brackets linking context-switch boxes across the two thread columns; a dashed bracket labelled 'overlapping period' in panel (b)",
+    "font": "Times New Roman serif, mostly 6-6.5pt with an 11.5pt panel caption, italic for variable-like terms",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = compute/dereference steps; blue = request/poll steps; orange = context-save/restore and continuation steps; a separate callout names the remote-memory latency window",
+    "line_style_means": "a dashed bracket marks the 'overlapping period' unique to the asynchronous panel; solid thin arrows link matching context-switch steps across columns",
+    "state_means": "the two execution models are told apart by being drawn as separate side-by-side panels (a)/(b), each with its own thread column(s) and step colours",
+    "marker_means": "no numbered markers; the shared colour+label vocabulary (green/blue/orange boxes) is reused across both panels so matching steps are easy to spot",
+    "emphasis": "the 'overlapping period' dashed bracket in panel (b) is the only annotation of its kind, drawing attention to the CPU time the asynchronous model reclaims during the remote-access wait",
+    "reusable_patterns": [
+      "two side-by-side vertical step-pipelines, coloured identically, contrasting a blocking two-thread pattern with a non-blocking single-thread pattern"
+    ],
+    "weaknesses": [
+      "the ellipses marking repeated cycles are easy to overlook, and the hand-off arrows between Thread 1 and Thread 2 in panel (a) are thin against the pale background bands"
+    ]
+  },
+  "tags": [
+    "disaggregated-memory",
+    "coroutines",
+    "asynchronous-execution",
+    "thread-scheduling",
+    "remote-memory-access"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "1 Introduction (p.3)",
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "the thread will block on the I/O call site until the remote access completes",
+      "schedules another ready thread to preempt the CPU to alleviate the I/O stall",
+      "the thread can skip the related code that may access the data being fetched and continue executing the subsequent code"
+    ]
+  },
+  "summary": "Figure 1 of Beehive's background section contrasts synchronous and asynchronous ways to hide microsecond-scale remote-memory latency in multithreaded programs, using a Multi-Grid PDE traversal as the running example. Panel (a) shows synchronous execution: Thread 1 dereferences a grid value and posts a remote request, then saves its context and undergoes a thread switch so Thread 2 can run (polling its own request, saving context, switching again) while Thread 1's data is 'in remote memory'; once it returns, Thread 1's context is restored and it computes on the value. Panel (b) shows asynchronous execution: a single Thread 1 instead registers a callback continuation and continues executing the next pararoutine's code, later polling events and restoring the continuation once the access completes, so the wait overlaps with useful work on the same thread without ever switching threads. Colour-coded green/blue/orange boxes mark matching step types across both panels.",
+  "summary_zh": "该图对比同步与异步执行隐藏远程内存延迟：(a)线程1请求后保存上下文切换给线程2运行，返回后再切回；(b)单线程1注册回调续体后继续执行协程代码，轮询后恢复续体，等待与计算重叠。",
+  "confidence": "high",
+  "notes": "prior base 'none' is not a valid v3 value; corrected to 'component' since the figure is a pipeline of labelled processing-stage boxes. content.panels' verdict is left null for both: the excerpted §2 Background text contrasts the two models generically, and only §1 Introduction reveals that Beehive itself adopts the asynchronous coroutine model shown in (b), so no explicit 'ours/baseline' framing is stated for this figure specifically.",
+  "venue": "NSDI25"
+}

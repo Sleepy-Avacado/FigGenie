@@ -1,0 +1,176 @@
+{
+  "template": "n-panel-comparison",
+  "n": 21,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-069_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Six panels share one legend on the right: the top row frames the code-versus-hardware connectivity gap with a red 'Gap!' arrow, and the bottom row redraws the identical four-qubit circuit to compare swapping against bridging.",
+      "what_to_learn": "When more than four panels are needed, arrange them as a labelled grid (here 2 rows of 3) with one qubit-colour legend on the side covering every panel, and let a bold callout arrow (the red 'Gap!') point between two panels to name the specific mismatch the rest of the figure resolves.",
+      "dir": "../figures/asplos25-069_fig1"
+    },
+    {
+      "id": "asplos25-101_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (b) serial, (c) batched-parallel, and (d) speculative-parallel decoding reuse the same Decoding-block-plus-token-square vocabulary to isolate what changes, while panel (a) above supplies the architecture the tokens flow through.",
+      "what_to_learn": "Keep the comparison panels (here serial vs batched vs speculative decoding) at one shared scale and icon set even when an unlike architecture panel sits above them; but size and align comparison panels consistently, since this figure's four differently sized sub-panels are flagged as visually busy.",
+      "dir": "../figures/asplos25-101_fig1"
+    },
+    {
+      "id": "asplos26-002_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (b) and (c) repeat an identical four-stage Cross-Attention/Attention/Cross-Attention/Attention stack, swapping only Spatial+Temporal for Full+Full attention, while panel (a) shows the same DiT Block repeated N times around them.",
+      "what_to_learn": "Keep every box in the exact same position across the compared panels and change only the swapped-in stage's label and colour (here Spatial+Temporal versus Full attention); give the two swapped stages more distinct colours than a shared light-blue fill, since this figure's near-identical palette makes the difference easy to miss.",
+      "dir": "../figures/asplos26-002_fig1"
+    },
+    {
+      "id": "asplos26-021_fig6",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Three same-scale baseline architectures (Digital PUM, Analog PUM, Naive Hybrid PUM) reuse one crossbar-array icon throughout so structural differences, an off-chip CPU link versus stacked on-chip controllers, are directly comparable panel to panel.",
+      "what_to_learn": "Reuse the identical crossbar-array icon at the same visual scale across every alternative-design panel so the eye compares structure, not icon style, and letter the panels (a)(b)(c) with short claim titles naming each design; pair the figure with the performance numbers it motivates, since the panels alone (a listed weakness) omit that data.",
+      "dir": "../figures/asplos26-021_fig6"
+    },
+    {
+      "id": "asplos26-102_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (b) and (c) reuse an identical DNN-icon-pool skeleton to contrast preemptible against FIFO multi-DNN scheduling, stacked beside numbered step markers 1-3 in panel (a) that trace the costly weight path each scheduling choice repeats.",
+      "what_to_learn": "Stack a small pair of identical-skeleton scheduling-strategy panels (preemptible vs FIFO) beside a larger numbered hardware-path diagram so the reader sees both what the cost is and how scheduling choice repeats it; keep the hierarchy labels larger, since this figure's high shape density is a listed weakness.",
+      "dir": "../figures/asplos26-102_fig1"
+    },
+    {
+      "id": "nsdi24-041_fig12",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (a) and (b) repeat the identical Server-Switch-Chassis topology with only the highlighted flow pattern (interleaved vs orthogonal) changed, while a smaller inset (c) supplies the generic port architecture referenced by both.",
+      "what_to_learn": "Draw the same topology twice and change only which flow colours are highlighted to isolate one variable (interleaved vs orthogonal sharing), and attach a smaller generic-component inset for shared internals rather than repeating it inside each main panel; label every flow's endpoints directly, since this figure leaves them to be inferred from the text.",
+      "dir": "../figures/nsdi24-041_fig12"
+    },
+    {
+      "id": "nsdi25-054_fig4",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "A single numbered thread (circled steps 1 through 12) runs continuously across all three panels (Normal execution, Barrier control point, Migration), unlike figures that restart numbering each panel, tying one scenario together end to end.",
+      "what_to_learn": "When three panels show one continuous scenario, number the steps once across all of them instead of restarting per panel, and reuse the same backend colour coding (red MPI, green POSIX) from the architecture figure so panels cross-reference cleanly; budget more room per step than this figure's dense twelve-step layout.",
+      "dir": "../figures/nsdi25-054_fig4"
+    },
+    {
+      "id": "nsdi26-065_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Three motivating vignettes (A multi-agent workflows, B multiple fine-tuned models, C personalized agents) reuse one visual grammar, a shared source fanning into separate purple/green boxes, each needlessly reprocessing the same content.",
+      "what_to_learn": "Repeat one simple visual grammar (a shared input fanning into separate coloured boxes) across several real-world vignettes to argue a problem is general, even when each vignette's icons differ; but label what the colours mean on the first panel, since leaving it unstated across all three forces the reader to guess.",
+      "dir": "../figures/nsdi26-065_fig1"
+    },
+    {
+      "id": "nsdi26-120_fig7",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Named in the reference as the three-temporal-states-stacked exemplar: online recording, offline buffering, and replay restoration reuse the identical R1/R3-Shim-R2 skeleton, changing only which structure, log or buffer, and which call is highlighted.",
+      "what_to_learn": "Stack temporal-state panels top to bottom with an identical endpoint-shim-plane skeleton in each, changing only the buffer/log structure and the highlighted system call; number each panel's own steps locally if they are truly separate states, but say so, since this figure's reused 1-6 numbering across panels (a weakness) can look like one global sequence.",
+      "dir": "../figures/nsdi26-120_fig7"
+    },
+    {
+      "id": "osdi23-048_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Three side-by-side NIC architectures (RNIC, on-path SmartNIC, off-path SmartNIC) reuse the same NIC-cores/PCIe/Host-DRAM skeleton at growing complexity, with circled path numbers kept consistent across all three so the paper can cite them the same way.",
+      "what_to_learn": "Reuse the same numbered path labels (here 1-4) across every panel of a growing-complexity comparison so the numbers become the paper's stable vocabulary for referring back to specific communication paths later, and grow the skeleton by adding new boxes (the SoC) rather than redrawing it.",
+      "dir": "../figures/osdi23-048_fig1"
+    },
+    {
+      "id": "osdi23-053_fig3",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "All three panels are three-step (i)-(iii) before/after derivations using the same tensor-cube glyphs and red-eOperator-vs-tan-predefined-operator colour code, letting EinNet's own Matmul+OffsetReduce rewrite in (b) be compared directly against classic im2col in (c).",
+      "what_to_learn": "Give every panel the same internal (i)/(ii)/(iii) numbering and one colour code (red for the paper's new operators, tan for predefined ones) so a novel rewrite and a textbook baseline sit side by side and compare step for step; qualify reused names per panel, since repeated labels (DLT, Matmul) without qualification is a listed weakness.",
+      "dir": "../figures/osdi23-053_fig3"
+    },
+    {
+      "id": "osdi26-018_fig7",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Named in the reference as the three-panels/one-varying-mechanism exemplar: identical SM-roster-to-Tile-to-RS layout stacked as three wide rows, changing only which hardware resource, copy engine, specialized SM, or co-located SM, drives communication.",
+      "what_to_learn": "Stack comparison panels as full-width rows, not side-by-side columns, when each panel is itself a wide strip, and keep the tile-to-signal-to-RS-unit layout pixel-identical across rows so only the swapped hardware resource (copy engine, specialized SM, co-located SM) catches the eye.",
+      "dir": "../figures/osdi26-018_fig7"
+    },
+    {
+      "id": "osdi26-094_fig1",
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Named in the reference as the NoDG/FuDG/PaDG exemplar: all three strategies reuse the same Scheduler-Instance-LLM-Model vocabulary and green/blue Prefill/Decode legend, and the ours panel (c) comes last with the extra inter-instance scheduling arrow.",
+      "what_to_learn": "Put the paper's own design last with one extra visible element (the dashed inter-instance scheduling arrow) beyond the baseline panels, while keeping the Scheduler-Instance-Model vocabulary and colour legend identical across all panels; place the legend next to the panel where colour matters most, since here it sits far from panel (c).",
+      "dir": "../figures/osdi26-094_fig1"
+    },
+    {
+      "id": "asplos26-142_fig4",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Panels (b)-(e) are near-identical small multiples of the same ion-trap grid, boxed in a dashed 2x2 group that zooms into the shuttle steps behind panel (a)'s single collective-swap overview, with orange arrows tracing each step.",
+      "what_to_learn": "When more than four panels are needed for a step-by-step breakdown, group the small-multiple steps into their own dashed 2x2 box rather than spreading all panels across one row, and keep every step's grid icon pixel-identical so only the orange shuttle arrow's position changes between them.",
+      "dir": "../figures/asplos26-142_fig4"
+    },
+    {
+      "id": "nsdi25-036_fig19",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Three architecture rows (MCG-X, Google Android Emulator, DroidCloud) are stacked as wide strips sharing one downstream Host pipeline, with red VSync markers and per-hop latency numbers annotated on each row instead of a data table.",
+      "what_to_learn": "Stack architecture rows as wide strips that converge into one shared downstream pipeline on the right, and annotate per-hop timing numbers directly on the arrows in red rather than a separate table; still add a legend for what red text and dashed VM/Container boundaries mean, since this figure has none despite using both.",
+      "dir": "../figures/nsdi25-036_fig19"
+    },
+    {
+      "id": "nsdi26-053_fig1",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Named in the reference as the three-data-centre-networks exemplar with one legend row: (a) static tree, (b) reconfigurable OCS graph, and (c) the OCS's own time-varying state share one cyan/gray/gold icon set spanning all three panels.",
+      "what_to_learn": "Put one legend row above all three panels rather than repeating it per panel, and let a third panel depart from the first two's topology style to show internal behavior over time, as long as it reuses the same colour vocabulary; keep legend icons visually distinct, since similar small icons here need close reading.",
+      "dir": "../figures/nsdi26-053_fig1"
+    },
+    {
+      "id": "nsdi26-142_fig3",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Panels (a) and (b) repeat an identical VM/Host-Software/SmartNIC/Disk stack to contrast two data paths, then (c) duplicates that same stack across source and destination hosts linked by one dotted copy arrow, under one shared legend.",
+      "what_to_learn": "Reuse two copies of the same vertical stack side by side to depict a migration protocol (source host, destination host) rather than inventing new geometry, and put one legend to the right covering every line style (solid double-headed, red dashed, black dotted) used across all panels.",
+      "dir": "../figures/nsdi26-142_fig3"
+    },
+    {
+      "id": "osdi23-013_fig2",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Three goal panels separated by dotted lines reuse the same bank/Client/Log icon trio, changing only which actor is tinted red as untrusted, a small-multiples pattern the ranking script flagged low confidence despite the clean fit.",
+      "what_to_learn": "Separate small-multiple goal panels with a plain dotted vertical line rather than a full frame, and keep the same three actor icons (bank, client, database) in every panel, changing only which one is coloured red to mark the untrusted party; label each panel's goal in words, not a letter, when the goal is the title.",
+      "dir": "../figures/osdi23-013_fig2"
+    },
+    {
+      "id": "osdi23-037_fig3",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Three panels re-explain the identical five-layer hierarchy three ways, as a shaded containment stack, a matching software stack, and a colour-coded read/write/reset I/O path, so a reader maps one layer across all three views.",
+      "what_to_learn": "Re-draw the same N-layer hierarchy as three complementary views (a shaded containment stack, a software stack, a coloured data-path diagram) with layers aligned row by row so a reader traces one layer left to right; add a real legend box for the colours instead of inline coloured text, a listed weakness here.",
+      "dir": "../figures/osdi23-037_fig3"
+    },
+    {
+      "id": "osdi24-022_fig7",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Named in the reference as the three-lettered-mini-pipelines exemplar: (A) compression, (B) single-chunk prefetch, and (C) scattered prefetch each reuse the identical guest-memory-bar and file icons so the reader compares how each restores memory.",
+      "what_to_learn": "Give each lettered mini-pipeline its own identical anchor icon (the segmented guest-memory bar) so a reader can diff panels purely by which cells fill or how arrows route into it; box the hardware-stage names as real components rather than plain arrow labels, since leaving them as labels, a listed weakness, blurs component from operation.",
+      "dir": "../figures/osdi24-022_fig7"
+    },
+    {
+      "id": "sosp25-017_fig1",
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Named in the reference as the bare-metal/VM/SmartNIC-of-increasing-complexity exemplar: panels (b) and (c) reuse the VM0/VM1/QEMU-KVM/NICs skeleton from (a), adding only the SmartNIC internals plus two colour-coded numbered paths in (c).",
+      "what_to_learn": "Grow the panels by increasing complexity while reusing the prior panel's skeleton wholesale (VM boxes, QEMU/KVM, NICs) so only new hardware stands out, and overlay two independently coloured numbered paths (data-plane blue, control-plane red) on the final panel rather than adding a fourth; keep each path shorter than this figure's dense two-by-five overlay.",
+      "dir": "../figures/sosp25-017_fig1"
+    }
+  ]
+}

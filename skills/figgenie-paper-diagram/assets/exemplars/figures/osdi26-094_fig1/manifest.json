@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-094_fig1",
+  "paper_id": "osdi26-094",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: The NoDG, FuDG, and PaDG strategies.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.45,
+  "n_components": 6,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-094/osdi26-094_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-094/osdi26-094_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Named in the reference as the NoDG/FuDG/PaDG exemplar: all three strategies reuse the same Scheduler-Instance-LLM-Model vocabulary and green/blue Prefill/Decode legend, and the ours panel (c) comes last with the extra inter-instance scheduling arrow.",
+      "what_to_learn": "Put the paper's own design last with one extra visible element (the dashed inter-instance scheduling arrow) beyond the baseline panels, while keeping the Scheduler-Instance-Model vocabulary and colour legend identical across all panels; place the legend next to the panel where colour matters most, since here it sits far from panel (c)."
+    }
+  ]
+}

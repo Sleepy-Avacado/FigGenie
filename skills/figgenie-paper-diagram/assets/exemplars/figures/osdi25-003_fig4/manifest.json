@@ -1,0 +1,63 @@
+{
+  "id": "osdi25-003_fig4",
+  "kind": "mechanism",
+  "paper_id": "osdi25-003",
+  "fig": "4",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "the workload imbalance comes from the pp level document packing and cp level seq",
+  "groups_in_record": [
+    "comparison",
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "mixed",
+  "subject": "why packing long/short documents together (PP level) and sharding a packed sequence (CP level) both create uneven GPU workload",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.02,
+  "n_elements": 19,
+  "n_relations": 10,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "matplotlib",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-003/src/fig4b_packing_sharding.svg",
+    "preview.png": "lab/extracted/osdi25-003/src/fig4b_packing_sharding.png",
+    "print.png": null
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same worker pipeline drawn twice, coloured red vs green, making an abstract 'imbalance' concrete as one heavier micro-batch; the other panel maps a chunk onto the mask rows it touches.",
+      "what_to_learn": "Draw the same worker pipeline twice, colouring only the rows that differ (red = heavy micro-batch, green = light) to make 'imbalance' visible at a glance; elsewhere, map a chunk's label directly onto the mask rows it occupies.",
+      "note_source": "agent"
+    },
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Same worker pipeline drawn twice, coloured red vs green, making an abstract 'imbalance' concrete as one heavier micro-batch; the other panel maps a chunk onto the mask rows it touches.",
+      "what_to_learn": "Draw the same worker pipeline twice, colouring only the rows that differ (red = heavy micro-batch, green = light) to make 'imbalance' visible at a glance; elsewhere, map a chunk's label directly onto the mask rows it occupies.",
+      "note_source": "agent"
+    }
+  ]
+}

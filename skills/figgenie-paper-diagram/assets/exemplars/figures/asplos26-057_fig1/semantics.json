@@ -1,0 +1,177 @@
+{
+  "paper_id": "asplos26-057",
+  "fig": "1",
+  "system": {
+    "name": "PIPM",
+    "one_liner": "a hardware-based partial and incremental page migration scheme for multi-host CXL disaggregated shared memory",
+    "domain": [
+      "memory-disaggregation",
+      "hardware-architecture",
+      "cxl"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Compute node (host)",
+        "role": "a compute host attached to the shared CXL memory node; stacked boxes (host 0, 1, ...) indicate multiple hosts",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU 0",
+        "role": "processor inside a compute node",
+        "container": "Compute node (host)",
+        "novel": false
+      },
+      {
+        "name": "CXL/PCIe root complex",
+        "role": "host-side interface that issues and receives CXL/PCIe messages",
+        "container": "Compute node (host)",
+        "novel": false
+      },
+      {
+        "name": "Mem. ctrl.",
+        "role": "host-side memory controller for local DRAM",
+        "container": "Compute node (host)",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "host-side local memory",
+        "container": "Compute node (host)",
+        "novel": false
+      },
+      {
+        "name": "CXL Links",
+        "role": "interconnect carrying CXL protocol messages between hosts and the memory node",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CXL disaggregated shared memory node",
+        "role": "shared memory device attached to and cache-coherently accessed by all hosts",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CXL/PCIe root complex",
+        "role": "memory-node-side interface that issues and receives CXL/PCIe messages",
+        "container": "CXL disaggregated shared memory node",
+        "novel": false
+      },
+      {
+        "name": "CXL controller",
+        "role": "manages connections and access to the attached memory",
+        "container": "CXL disaggregated shared memory node",
+        "novel": false
+      },
+      {
+        "name": "Mem. ctrl.",
+        "role": "memory-node-side memory controller",
+        "container": "CXL disaggregated shared memory node",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "physical memory attached to the CXL memory node",
+        "container": "CXL disaggregated shared memory node",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Compute node (host)",
+        "to": "CXL disaggregated shared memory node",
+        "what": "CXL/PCIe protocol messages over CXL Links",
+        "step": null
+      }
+    ],
+    "key_idea": "Any number of hosts, each with local CPU/DRAM behind a CXL/PCIe root complex, attach over CXL Links to one shared CXL memory node for cache-coherent access.",
+    "reading_order": "Left to right: the stacked host boxes, then the CXL Links arrow, then the CXL memory node on the right."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.18,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bfffbf",
+        "used_for": "fill of the stacked Compute node (host) boxes"
+      },
+      {
+        "hex": "#ffffbf",
+        "used_for": "fill of the CXL/PCIe root complex and Mem. ctrl. boxes on both host and memory node"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "fill of the DRAM boxes"
+      },
+      {
+        "hex": "#bfffff",
+        "used_for": "fill of the CPU 0 box"
+      },
+      {
+        "hex": "#bfbfff",
+        "used_for": "fill of the CXL disaggregated shared memory node outer box"
+      },
+      {
+        "hex": "#3a8eed",
+        "used_for": "fill of the CXL Links double-headed arrow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.45pt dark borders on all boxes, solid (no dashed lines)",
+    "font": "Helvetica-like sans, 6-7.5pt, ~49% of text bold (box titles)",
+    "corners": "square",
+    "arrows": "one bold block-style double-headed arrow (CXL Links) between the host stack and the memory node; no other arrows",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = host boxes, yellow = root-complex/memory-controller logic, cyan = CPU, gray = DRAM, purple = the CXL memory-node boundary",
+    "line_style_means": null,
+    "emphasis": "shadow-stacked host boxes imply an arbitrary number of hosts, drawn symmetrically against a single memory-node box to foreground the host-vs-device split",
+    "reusable_patterns": [
+      "shadow-stacked boxes to denote N repeated hosts",
+      "symmetric host/device box pair joined by one labeled interconnect arrow"
+    ],
+    "weaknesses": [
+      "the number of hosts (N) is not indicated",
+      "the CXL Links arrow does not distinguish request from response traffic"
+    ]
+  },
+  "tags": [
+    "cxl",
+    "disaggregated-memory",
+    "multi-host",
+    "cache-coherence",
+    "hardware-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.2)"
+    ],
+    "evidence": [
+      "Figure 1 illustrates a multi-host CXL-DSM architecture comprising multiple compute nodes (hosts) connected to a CXL memory node.",
+      "By allowing multiple hosts to attach concurrently, CXL-DSM enables cache-coherent data sharing and collaborative computation across hosts.",
+      "The CXL controller manages connections and access to the attached memory."
+    ]
+  },
+  "summary": "Figure 1 lays out the multi-host CXL-DSM background that PIPM builds on. One or more compute-node hosts (drawn as a stack of shadowed boxes to show that the count is arbitrary) each contain a CPU, a memory controller, local DRAM, and a CXL/PCIe root complex. Every host attaches over CXL Links to a single CXL disaggregated shared memory node, which mirrors the same internal structure: its own root complex, a CXL controller that manages access to the attached memory, a memory controller, and DRAM. The drawing is a plain, symmetric host-versus-device pair joined by one bold double-headed arrow standing in for the whole CXL link fabric; no coherence logic or data flow is shown yet, since this figure only establishes the hardware topology that later figures overlay with directories and PIPM's remapping tables.",
+  "summary_zh": "该图展示PIPM所依托的多主机CXL-DSM背景架构：多台主机（以叠放方框表示数量任意）各含CPU、内存控制器和DRAM，通过CXL Links连接到内部结构对称的CXL共享内存节点，节点侧同样含控制器与DRAM。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

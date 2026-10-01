@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-115_fig2",
+  "paper_id": "nsdi26-115",
+  "fig": "2",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 2: HyperEdge architecture overview. The figure shows the main components of HyperEdge and its two primary work- flows - video downloading and content distribution.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.68,
+  "n_components": 10,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-115/nsdi26-115_fig2_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-115/nsdi26-115_fig2_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "A numbered, dual-workflow hub-spoke where colour distinguishes download from distribution steps, though the record itself flags the Client-to-HyperEdge-Device shortcut arrow as breaking a clean hub-and-spoke shape.",
+      "what_to_learn": "Overlay two workflows on one architecture with a two-line colour legend (blue download, orange distribution) reusing the same three boxes for both; this exemplar's own weakness is a direct Client-Device link that bypasses the Tracker hub, and numbering that restarts per workflow."
+    }
+  ]
+}

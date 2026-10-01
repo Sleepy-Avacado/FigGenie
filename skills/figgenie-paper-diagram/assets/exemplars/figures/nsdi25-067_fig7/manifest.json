@@ -1,0 +1,47 @@
+{
+  "id": "nsdi25-067_fig7",
+  "paper_id": "nsdi25-067",
+  "fig": "7",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 7: (a) provides an overview of MegaStation. (b)/(c) depict the details of the instruction unit and scoreboarding.",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 6.08,
+  "n_components": 22,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-067/nsdi25-067_fig7_p8_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-067/nsdi25-067_fig7_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Panel (b) traces read-after-write dependencies with curved orange lines from an instruction stream into a small branching DAG of latency-annotated nodes, one of three dense panels at 22 components total.",
+      "what_to_learn": "Build the DAG panel directly from a labelled instruction stream by drawing curved dependency lines from each entry to its node, in a colour distinct from the architecture diagram's plain arrows, and pair it with a schema panel of the tables that track per-node state; keep node labels specific, not generic."
+    },
+    {
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Panel (a)'s labeled architecture (Instruction Unit, Pipeline Schedulers, Scoreboarding over a GPU pool) is followed by two independent zooms, an instruction-to-DAG translation and a three-table scoreboard schema, the archetypal overview-plus-unlike-details split.",
+      "what_to_learn": "Let one architecture panel own the palette (gray boundaries, busy-slot shading) and name every subsystem directly on it, then let each detail panel use its own visual language, a dependency DAG with curved orange edges, a table with bracketed column groups in dark-red italics; keep font size well above this figure's dense, small-print floor."
+    }
+  ]
+}

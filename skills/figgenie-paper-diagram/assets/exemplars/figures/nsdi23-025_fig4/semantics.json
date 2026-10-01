@@ -1,0 +1,217 @@
+{
+  "paper_id": "nsdi23-025",
+  "fig": "4",
+  "system": {
+    "name": "Protego",
+    "one_liner": "an overload-control system that combines credit-based admission control with active synchronization queue management for RPC servers with unpredictable lock contention",
+    "domain": [
+      "distributed-systems",
+      "overload-control",
+      "concurrency"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "request",
+        "role": "incoming RPC request arriving at the server",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RPC Server",
+        "role": "the example server (using a global mutex) that Protego is combined with",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Blocking Queue Management",
+        "role": "manages the two queues around CPU processing and mutex acquisition, dropping requests that wait too long",
+        "container": "RPC Server",
+        "novel": true
+      },
+      {
+        "name": "CPU",
+        "role": "processes a dequeued request up to the point where it needs the mutex",
+        "container": "Blocking Queue Management",
+        "novel": false
+      },
+      {
+        "name": "mutex",
+        "role": "the global lock guarding the contended critical section",
+        "container": "Blocking Queue Management",
+        "novel": false
+      },
+      {
+        "name": "Admission control",
+        "role": "decides how many requests to admit using a credit-based scheme informed by observed throughput",
+        "container": "RPC Server",
+        "novel": true
+      },
+      {
+        "name": "Throughput / Incoming Load chart",
+        "role": "shows how measured throughput responds to incoming load, the signal Protego observes to judge its admission rate",
+        "container": "Admission control",
+        "novel": true
+      },
+      {
+        "name": "Credit pool",
+        "role": "the pool of available credits issued to clients to control admitted load",
+        "container": "Admission control",
+        "novel": true
+      },
+      {
+        "name": "failure",
+        "role": "output reporting a request dropped by either queue",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "response",
+        "role": "output for a request that completed successfully",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "credit",
+        "role": "output token issued to the client controlling how much further load it may send",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "request",
+        "to": "Blocking Queue Management",
+        "what": "incoming RPC request enters the first queue",
+        "step": null
+      },
+      {
+        "from": "Blocking Queue Management",
+        "to": "failure",
+        "what": "request dropped after waiting too long before CPU processing",
+        "step": null
+      },
+      {
+        "from": "Blocking Queue Management",
+        "to": "CPU",
+        "what": "request dequeued for CPU processing",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "mutex",
+        "what": "request queued again waiting to acquire the mutex",
+        "step": null
+      },
+      {
+        "from": "Blocking Queue Management",
+        "to": "failure",
+        "what": "request dropped at lock-acquisition time (ASQM) to avoid excessive blocking on the critical section",
+        "step": null
+      },
+      {
+        "from": "mutex",
+        "to": "response",
+        "what": "successfully completed request returns a response",
+        "step": null
+      },
+      {
+        "from": "Credit pool",
+        "to": "credit",
+        "what": "credits issued to the client",
+        "step": null
+      },
+      {
+        "from": "Throughput / Incoming Load chart",
+        "to": "Credit pool",
+        "what": "observed throughput impact used to raise or lower the number of available credits",
+        "step": null
+      }
+    ],
+    "key_idea": "Protego wraps an RPC server with two mechanisms: Blocking Queue Management drops requests that wait too long before CPU processing or mutex acquisition, while Admission control adjusts a credit pool by observing how admission rate affects measured throughput.",
+    "reading_order": "Left to right: a request passes through two drop-capable queues around the CPU and mutex; Admission control's credit pool gates load and reports back."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.78,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffc000",
+        "used_for": "Credit pool tokens and the mutex padlock icon"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "request/queue rectangle icons"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "failure output icon fill"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "'Drop' text and the dashed failure arrow"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "background fill of the RPC Server box and its sub-panels"
+      }
+    ],
+    "background": "white outside the RPC Server box; RPC Server and its two sub-panels use light gray/blue-gray fills",
+    "fill": "flat",
+    "stroke": "thin strokes of varying weight; a dashed red arrow marks the failure/drop path",
+    "font": "Times New Roman serif, 6-7.5pt, bold for panel titles (Blocking Queue Management, Admission control, RPC Server)",
+    "corners": "mixed",
+    "arrows": "solid black arrows for the request/response/credit data path; a dashed red arrow for dropped/failed requests; a double-headed arrow linking the throughput chart to the credit pool",
+    "icons": "vector icons throughout: a clock for queueing/timeout, a rectangle for a request/response unit, a chip for the CPU, a padlock for the mutex, and stacked coins for the credit pool"
+  },
+  "encoding": {
+    "color_means": "red = dropped requests and the failure path; gold = credits and the mutex lock icon; light blue = request/queue units; the small throughput-vs-load chart visualizes the signal Admission control reacts to",
+    "line_style_means": "solid black arrows carry requests, responses, and credits; a dashed red arrow carries dropped/failed requests out of the server; a double-headed arrow shows the feedback loop adjusting the credit pool from observed throughput",
+    "emphasis": "two labeled drop points (both marked in red 'Drop') make visually explicit that Protego can shed load both before CPU processing and at mutex/lock acquisition time, the paper's core ASQM contribution",
+    "reusable_patterns": [
+      "two-panel decomposition of one system into a data-handling module and a control/feedback module",
+      "small inset chart embedded in an architecture diagram to show the control signal driving a decision",
+      "icons (clock, lock, chip, coin) standing in for abstract resources"
+    ],
+    "weaknesses": [
+      "no legend explains the icons (clock, coin, padlock) directly in the figure",
+      "the two 'Drop' paths merging into one dashed 'failure' arrow could be misread as a single drop point"
+    ]
+  },
+  "tags": [
+    "overload-control",
+    "admission-control",
+    "lock-contention",
+    "queue-management",
+    "rpc",
+    "credit-based-scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "3 System Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 4 illustrates an overview of Protego combined with a simple RPC server that uses a global mutex.",
+      "Protego is composed of two main components: an admission controller and an AQM mechanism.",
+      "a novel form of AQM that drops requests at lock acquisition time to prevent blocking on a critical section"
+    ]
+  },
+  "summary": "This figure gives an overview of Protego, an overload-control mechanism shown combined with a simple RPC server that serializes access to a global mutex. Requests enter a 'Blocking Queue Management' panel that queues them before CPU processing and again before mutex acquisition; either queue can time out and drop the request (shown in red), producing a 'failure' output, while requests that complete produce a 'response'. Beside it, an 'Admission control' panel implements a credit-based scheme: it watches a Throughput-vs-Incoming-Load curve to see how its current admission rate affects system performance, then raises or lowers the number of credits in a 'Credit pool' accordingly. Those credits are returned to the client to control how much further load it may send, closing the loop between observed performance and admitted load without relying on any specific overload signal.",
+  "summary_zh": "该图展示 Protego 概览：请求在排队管理中于 CPU 前、获取 mutex 前均可能因超时被丢弃（failure），准入控制模块依据吞吐-负载曲线动态调整 Credit pool，向客户端发放信用额度。",
+  "confidence": "high",
+  "notes": "The small chart's title is not written in the figure; it is identified only via its axis labels ('Throughput', 'Incoming Load').",
+  "venue": "NSDI23"
+}

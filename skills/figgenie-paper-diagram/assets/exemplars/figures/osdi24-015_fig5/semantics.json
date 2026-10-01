@@ -1,0 +1,201 @@
+{
+  "paper_id": "osdi24-015",
+  "fig": "5",
+  "system": {
+    "name": "ServerlessLLM",
+    "one_liner": "a low-latency serverless inference system for large language models that optimizes checkpoint loading, live migration and scheduling",
+    "domain": [
+      "ml-systems",
+      "cloud",
+      "serverless"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Controller",
+        "role": "top-level cluster scheduler orchestrating request routing and model loading scheduling",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Request Router",
+        "role": "routes inference requests to servers and reports inference status to the scheduler",
+        "container": "Controller",
+        "novel": null
+      },
+      {
+        "name": "ServerlessLLM Model Loading Scheduler",
+        "role": "assigns model loading tasks to servers using time estimators",
+        "container": "Controller",
+        "novel": true
+      },
+      {
+        "name": "Model Loading Time Estimator",
+        "role": "assesses loading times from various storage media",
+        "container": "ServerlessLLM Model Loading Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Model Migration Time Estimator",
+        "role": "estimates times for necessary model migrations",
+        "container": "ServerlessLLM Model Loading Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Model Loading Task Queues",
+        "role": "queues holding pending loading tasks per server",
+        "container": "ServerlessLLM Model Loading Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Server Task Queue",
+        "role": "per-server queue of loading tasks",
+        "container": "Model Loading Task Queues",
+        "novel": true
+      },
+      {
+        "name": "Reliable Key-Value Store",
+        "role": "stores server, GPU, DRAM and SSD status used by the controller",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Server 1",
+        "role": "server holding Model C on GPU and Model B in DRAM",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Server 2",
+        "role": "server holding Model A on GPU/DRAM and Model B on SSD",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Server 3",
+        "role": "server holding Model A on SSD only",
+        "container": null,
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Inference Request",
+        "to": "Request Router",
+        "what": "inference request",
+        "step": null
+      },
+      {
+        "from": "Request Router",
+        "to": "ServerlessLLM Model Loading Scheduler",
+        "what": "start-up request / inference status",
+        "step": null
+      },
+      {
+        "from": "ServerlessLLM Model Loading Scheduler",
+        "to": "Server 1",
+        "what": "loading task",
+        "step": null
+      },
+      {
+        "from": "ServerlessLLM Model Loading Scheduler",
+        "to": "Server 2",
+        "what": "loading task",
+        "step": null
+      },
+      {
+        "from": "ServerlessLLM Model Loading Scheduler",
+        "to": "Server 3",
+        "what": "loading task",
+        "step": null
+      },
+      {
+        "from": "Server 1",
+        "to": "ServerlessLLM Model Loading Scheduler",
+        "what": "loading results",
+        "step": null
+      },
+      {
+        "from": "Reliable Key-Value Store",
+        "to": "Controller",
+        "what": "server status, GPU status, DRAM & SSD status",
+        "step": null
+      },
+      {
+        "from": "Inference Request",
+        "to": "Server 1",
+        "what": "direct inference request",
+        "step": null
+      },
+      {
+        "from": "Server 2",
+        "to": "Server 1",
+        "what": "estimated time to load Model A",
+        "step": null
+      }
+    ],
+    "key_idea": "The controller's model loading scheduler uses loading- and migration-time estimators over live server/GPU/storage status (from a reliable key-value store) to decide, for a request needing a model already cached at some tier on another server, whether to load or migrate it, minimizing startup time.",
+    "reading_order": "left to right: an inference request enters the Controller's Request Router and Model Loading Scheduler on the left, which issues loading tasks to and receives results/status from the three servers on the right, each shown with the tiers (GPU/DRAM/SSD) holding different models."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.14,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#deebf7",
+        "used_for": "light blue fill highlighting the ServerlessLLM Model Loading Scheduler box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders around all boxes",
+    "font": "Arial (regular/bold), 6pt",
+    "corners": "mixed",
+    "arrows": "orthogonal, filled arrowheads, bidirectional between Controller and servers/KV store",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light blue highlights the novel ServerlessLLM Model Loading Scheduler component against otherwise white/unfilled boxes",
+    "line_style_means": null,
+    "emphasis": "the light-blue-filled scheduler box, with its two named estimator sub-components, is the visual and conceptual centerpiece surrounded by the generic controller/server/storage boxes",
+    "reusable_patterns": [
+      "hub controller box connected to multiple peer server boxes each showing a tiered storage stack (GPU/DRAM/SSD) with example model placements"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "scheduling",
+    "model migration",
+    "serverless",
+    "LLM inference",
+    "cluster management"
+  ],
+  "provenance": {
+    "sections": [
+      "6 Startup-Time-Optimized Model Scheduling (p.9-10)"
+    ],
+    "evidence": [
+      "we describe the design of the startup-time-optimized model scheduling implemented in Serverless-LLM's cluster scheduler",
+      "the scheduler calculates the time to load Model A (indicated by A ) from",
+      "the scheduler queries the local request router for the inference status of a model"
+    ]
+  },
+  "summary": "This figure shows the design of ServerlessLLM's startup-time-optimized model loading scheduler, which lives inside the cluster Controller alongside the Request Router. The scheduler contains a Model Loading Time Estimator (assessing load times from different storage media) and a Model Migration Time Estimator (estimating migration times), feeding per-server Model Loading Task Queues. The Controller exchanges loading tasks and results with three example servers, each depicted with a GPU/DRAM/SSD stack showing where models A, B and C currently reside (e.g., Model A on Server 2's GPU/DRAM versus only on Server 3's SSD), illustrating the scheduler's decision of whether to load or migrate a model. A Reliable Key-Value Store supplies the controller with live server, GPU, DRAM and SSD status. The diagram is a flat, left-to-right hub-and-spoke box diagram with the scheduler box highlighted in light blue and letter markers (A, B) tying specific model instances to the text's worked example.",
+  "summary_zh": "图5展示ServerlessLLM启动时间优化的模型加载调度器设计：控制器内的调度器包含模型加载时间估计器与模型迁移时间估计器，依据可靠键值存储提供的服务器/GPU/DRAM/SSD状态，向各服务器下发加载任务；图中以字母标记(A、B)示例说明模型A在不同服务器不同存储层级的分布，用于估算加载与迁移耗时。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

@@ -1,0 +1,240 @@
+{
+  "template": "matrix",
+  "n": 29,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-004_figtex9",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar of a design-space table: four stacked policy rows share the identical CPU-to-GPU column structure, with an inside legend defining buffer-location colours and solid-versus-dashed arrow meaning.",
+      "what_to_learn": "Stack design-space alternatives as rows sharing one identical column skeleton so only the boxes that differ stand out, and put a compact legend inside the frame when colour marks buffer location and line style marks timing; the record warns that reusing one generic label for different colours invites confusion.",
+      "dir": "../figures/asplos25-004_figtex9"
+    },
+    {
+      "id": "asplos25-031_fig9",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar combining a lettered 3-panel layout with one inside legend: one panel is a tile-array resource map, and leader lines carry one colour vocabulary from an annotated graph into a zoomed tile.",
+      "what_to_learn": "Use one consistent colour-and-shape legend across a graph panel, a physical tile-grid panel, and a zoomed detail panel so a single leader line walks the reader from an abstract motif to the exact hardware block executing it; keep leader lines from crossing an unrelated middle panel, a flaw the record flags here.",
+      "dir": "../figures/asplos25-031_fig9"
+    },
+    {
+      "id": "asplos25-046_fig14",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Pure cell-grid figure (6 components, 0 flows) with the legend inside above the grid and a highlighted cell in the summary table.",
+      "what_to_learn": "A matrix can have zero arrows: cells carry the state, the legend above defines cell colours, and one highlighted cell carries the point.",
+      "dir": "../figures/asplos25-046_fig14"
+    },
+    {
+      "id": "asplos25-069_fig1",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence double-column matrix with 6 lettered panels sharing one legend on the right: a top row frames a connectivity gap with a bold red arrow and a bottom row compares two solution families.",
+      "what_to_learn": "Arrange a problem-then-solutions matrix as a top row stating the mismatch and a bottom row of lettered panels comparing candidate fixes, define component colours once in a shared legend at the right edge, and let one bold callout arrow, not a whole panel, carry the gap argument.",
+      "dir": "../figures/asplos25-069_fig1"
+    },
+    {
+      "id": "asplos25-082_fig1",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar cited in the template's variant list: a rank-by-rank grid with zero flows where green cells mark layers replicated across three ranks and orange cells mark the part unique to each rank.",
+      "what_to_learn": "When the point is which state is shared and which is per-instance, drop arrows entirely and let identical fill colour across a row say replicated while a distinct colour per row says unique per instance, repeating the same row layout in a second panel for a related kind of state.",
+      "dir": "../figures/asplos25-082_fig1"
+    },
+    {
+      "id": "asplos25-132_fig5",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar with a genuine 2-by-3 grid, two cases against three rounds, tracing coloured numbered arrows through identically laid-out cells, with a legend below defining buffer-segment and arrow colours.",
+      "what_to_learn": "Build the grid so every cell keeps the identical buffer sketch and only the highlighted arrow colour and an enable/disable label change between cells, and put the one legend below the whole grid rather than repeating it per cell; six dense cells plus a separate schematic is already a lot, so keep individual cells sparse.",
+      "dir": "../figures/asplos25-132_fig5"
+    },
+    {
+      "id": "asplos26-021_fig8",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar reading as a physical resource map: identical Hybrid Compute Tile cells surround one central Front End, with a callout zooming from one grid cell into its stacked analog-over-digital internal structure.",
+      "what_to_learn": "Use a matrix of identical tile cells to depict physical placement of replicated hardware around one shared control block, and zoom from a single selected cell into an exploded detail panel rather than expanding every cell, keeping the grid itself uncluttered.",
+      "dir": "../figures/asplos26-021_fig8"
+    },
+    {
+      "id": "nsdi26-030_fig2",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Three-column taxonomy (Type / Issues / Diagnosis) with percentages and colour carried consistently across columns.",
+      "what_to_learn": "For a measurement taxonomy, use column headers as the schema and keep row colour constant across columns so categories track visually.",
+      "dir": "../figures/nsdi26-030_fig2"
+    },
+    {
+      "id": "nsdi26-143_fig1",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "(a)/(b) baselines drawn small next to a larger, more detailed (c) proposal, using one node vocabulary throughout.",
+      "what_to_learn": "Panel size is an argument: keep baselines schematic and give the contribution the detail budget.",
+      "dir": "../figures/nsdi26-143_fig1"
+    },
+    {
+      "id": "osdi25-007_fig5",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar of a three-column analogy: two baseline systems and the proposed one share four row labels in a left gutter, with a dashed box standing for a structural absence, not a component.",
+      "what_to_learn": "Put the row categories once in a left-hand gutter shared by every column, use a dashed empty box to mean no interface exists here rather than omitting the cell, and recolour only the one column that is the paper's contribution to argue its analogy to an accepted precedent.",
+      "dir": "../figures/osdi25-007_fig5"
+    },
+    {
+      "id": "osdi26-065_fig2",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "N repeated identical columns (pool 1 / pool 2 / pool N) feeding one shared horizontal band, nesting depth 3.",
+      "what_to_learn": "Column-per-instance over a full-width shared band is the layout for 'per-X mechanics feeding one global step'; the dashed band border marks where they merge.",
+      "dir": "../figures/osdi26-065_fig2"
+    },
+    {
+      "id": "sosp23-037_fig2",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, medium-confidence matrix exemplar comparing three systems in three columns against shared row labels in a left gutter, with the contribution's column visibly simpler, one merged box instead of split caches.",
+      "what_to_learn": "Keep row labels in one left gutter shared by every column so structural simplification reads at a glance from box count alone; the record warns that a highlight colour used on only two small icons is easy to miss, so give an important cue more than a token-sized swatch.",
+      "dir": "../figures/sosp23-037_fig2"
+    },
+    {
+      "id": "sosp24-024_fig4",
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, medium-confidence matrix exemplar of a 2x2 quadrant grid, each quadrant colour-coded and tied to one paper subsection number, read clockwise from the DNN model through plan-selection tradeoffs to generated device code.",
+      "what_to_learn": "Assign each quadrant of a 2x2 grid its own colour family and its own subsection number so the reading order is announced by the numbers rather than position alone; many similar pastel colours without a legend get hard to tell apart at this density, so keep quadrant palettes visibly distinct.",
+      "dir": "../figures/sosp24-024_fig4"
+    },
+    {
+      "id": "asplos25-101_fig5",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar whose grid element is one labelled panel, a worked RLP/TLP/Reschedule/RESULT decision table walking through the scheduler token by token, attached beside a system diagram and two internal zoom-in panels.",
+      "what_to_learn": "When a design-space matrix is only part of a larger figure, give it its own labelled panel with named row headers and step through one concrete worked example column by column, rather than describing the decision rule in prose.",
+      "dir": "../figures/asplos25-101_fig5"
+    },
+    {
+      "id": "asplos26-019_fig1",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Three rows - Baseline / Prior Work / This Work - each an identical prompt-to-image mini-pipeline, with the bottom row on a shaded ground.",
+      "what_to_learn": "The row-per-approach matrix: same left-to-right skeleton per row, dashed row separators, and a shaded background on the row that is yours.",
+      "dir": "../figures/asplos26-019_fig1"
+    },
+    {
+      "id": "asplos26-129_fig5",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of small multiples: the same retrieval-head-to-LLM gather diagram is redrawn across four attention-mechanism panels, beside a pruned-architecture panel with two accompanying bar charts.",
+      "what_to_learn": "Repeat one gather diagram unchanged across attention-mechanism variants and change only the internal grouping step; the record flags that reusing pruned and selected colour coding across five panels without one shared legend is a real risk, so add the legend once even at this density.",
+      "dir": "../figures/asplos26-129_fig5"
+    },
+    {
+      "id": "asplos26-142_fig4",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Six-panel grid (a)-(f) with a shared six-entry legend below, and a dashed box grouping (b)-(e) as the expansion of (a).",
+      "what_to_learn": "A dashed box around a sub-grid says 'these panels expand that panel'; the shared legend below is defined once for all six. Note: the PDF-extracted print.png includes a line of surrounding body text; use preview.png for the clean figure.",
+      "dir": "../figures/asplos26-142_fig4"
+    },
+    {
+      "id": "nsdi23-039_fig7",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Medium-confidence matrix exemplar that indexes a dynamic-programming grid with small node-link graphs as its row and column headers, then overlays coloured arrows and text directly on cells to walk through each transition type.",
+      "what_to_learn": "Use miniature diagrams, not just text, as row and column headers when the axes are themselves structured objects, and annotate individual cells with a coloured arrow for each rule the table encodes rather than a separate explanation, ending on one highlighted result cell.",
+      "dir": "../figures/nsdi23-039_fig7"
+    },
+    {
+      "id": "nsdi24-003_fig1",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar at floor size, 8 components and 6 flows, with the row-equals-layer, column-equals-core-replica grid drawn literally: three identical Core columns each stack Driver, Application and Monitoring bands feeding one shared Aggregator.",
+      "what_to_learn": "Draw each replica as one column and each shared concern as one row so both axes carry meaning, keep every column's internal band colours identical, and route many-to-one aggregation as curved arrows into a single box at the margin instead of drawing every core's own output stage.",
+      "dir": "../figures/nsdi24-003_fig1"
+    },
+    {
+      "id": "nsdi24-062_fig2",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of four numbered Tenant/Host/NIC mini-stacks sharing one ownership-colour legend on the right, showing exactly which layer intercepts control verbs in each virtualization scheme.",
+      "what_to_learn": "Repeat the identical three-row stack across numbered variants and colour every box by a fixed ownership vocabulary so the eye compares roles, not shapes; the weakness here warns that without a visible border between variants, the layout can misread as one crowded panel instead of four.",
+      "dir": "../figures/nsdi24-062_fig2"
+    },
+    {
+      "id": "nsdi25-032_fig4",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar built as a 9-stage-by-4-app grid, far denser than this template's usual floor, where each app keeps one colour across its path line and the queue cells it touches.",
+      "what_to_learn": "When several items' paths overlap on some grid cells and diverge on others, give every item one consistent colour for both its route line and its cell icons; the weakness here warns this pattern breaks down once cell count passes a few hundred, so cap the grid before density hides the comparison.",
+      "dir": "../figures/nsdi25-032_fig4"
+    },
+    {
+      "id": "nsdi25-073_fig5",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Low-confidence, flawed matrix exemplar: four numbered panels repeat a layered stack split into Local/Remote columns to show where GPU disaggregation cuts the stack, but one panel breaks the two-column pattern the others share.",
+      "what_to_learn": "Repeat one layered stack across numbered panels and move only the Local/Remote boundary and its link type between panels; keep every panel's column structure identical, since dropping the split in just one panel, and never mapping fill colours to layer names elsewhere, breaks the comparison's consistency.",
+      "dir": "../figures/nsdi25-073_fig5"
+    },
+    {
+      "id": "nsdi26-082_fig6",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence 2x2 matrix comparing four PEFT architectures against the same backbone pipeline, with one legend at the top shared across all four panels defining operator colour and reserved-versus-pruned arrow style.",
+      "what_to_learn": "Redraw the identical backbone pipeline in every cell and let only the small inserted operator boxes and the solid-versus-dashed activation arrows change between cells, with one shared legend above the whole grid rather than one per panel.",
+      "dir": "../figures/nsdi26-082_fig6"
+    },
+    {
+      "id": "osdi23-010_fig1",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Medium-confidence matrix exemplar of four lettered panels arranged left to right to show a historical progression, each a swimlane stack of privilege-mode rows, with one legend at the top shared by all four.",
+      "what_to_learn": "When variants show an evolution rather than a static comparison, order the lettered panels left to right to match that history, encode privilege or execution mode as horizontal lanes inside every panel, and keep the arrow-meaning legend at the top since it applies to every panel below it.",
+      "dir": "../figures/osdi23-010_fig1"
+    },
+    {
+      "id": "osdi23-048_fig1",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Double-column three-panel hardware comparison (aspect 4.84) with a shared right-hand numbered legend and 0 weaknesses.",
+      "what_to_learn": "Give the panel you actually care about more width than its baselines, and put the shared path numbering in a right-hand legend column reused by the whole paper.",
+      "dir": "../figures/osdi23-048_fig1"
+    },
+    {
+      "id": "osdi24-052_fig6",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of six numbered self-contained panels read column by column, each a mini-diagram of one compiler stage, tied together by one shared node-colour legend and one running worked example.",
+      "what_to_learn": "When a pipeline has too many stages for one row, fold it into a numbered grid read column by column, and keep one running worked example visible in every cell; a legend placed only at the bottom is far from the panels that need it first, so place it near the top instead.",
+      "dir": "../figures/osdi24-052_fig6"
+    },
+    {
+      "id": "osdi26-025_fig2",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of four invocation columns sharing identical invocation, effects, overlay-state and filesystem rows, with the final column greyed out to separate a commit phase from the three live invocations.",
+      "what_to_learn": "Repeat the same row categories down every example column, and grey out an entire column to mark a later, separate phase rather than drawing it as a different diagram; label small isolation-dimension tabs consistently across all columns.",
+      "dir": "../figures/osdi26-025_fig2"
+    },
+    {
+      "id": "osdi26-054_fig7",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of two mirrored page-table rows, a guest chain above and a shadow chain below, cross-linked column by column by vertical arrows, with a dashed rule separating read-write region from read-only one.",
+      "what_to_learn": "Line up two parallel same-depth chains, real versus shadow or baseline versus protected, as two rows sharing identical column headers, and connect them with one vertical arrow per column instead of a tangle of diagonal lines, using one dashed rule to mark which side is mutable.",
+      "dir": "../figures/osdi26-054_fig7"
+    },
+    {
+      "id": "sosp24-007_fig7",
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Small multiples: three model stacks side by side annotated with the same check/cross vocabulary at every layer boundary.",
+      "what_to_learn": "Small multiples work when the annotation vocabulary is fixed across panels; the reader compares mark positions, not shapes.",
+      "dir": "../figures/sosp24-007_fig7"
+    }
+  ]
+}

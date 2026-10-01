@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-013_fig8",
+  "kind": "mechanism",
+  "paper_id": "asplos26-013",
+  "fig": "8",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 8. Details of Gaussian contribution-aware mapping.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "mixed",
+  "subject": "how AGS designates key vs non-key frames and skips low-contribution Gaussians in mapping using recorded pixel counts",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.22,
+  "n_elements": 9,
+  "n_relations": 6,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "visio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-013/src/fig8_Mapping.svg",
+    "preview.png": "lab/extracted/asplos26-013/src/fig8_Mapping.png",
+    "print.png": "lab/extracted/asplos26-013/asplos26-013_fig8_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "A key frame runs full 3DGS mapping and records each Gaussian's non-contributory pixel count; as long as covisibility stays high, later non-key frames reuse that record to skip the same low-contribution Gaussians, until falling covisibility forces a fresh key frame.",
+      "what_to_learn": "three time-ordered columns sharing one template (photo -> mapping arrow -> annotated scene -> data table); a small worked data table whose flagged rows are cross-referenced by colour into the diagram above it; a feedback arrow carrying one frame's recorded values into the next frame's decision",
+      "note_source": "record"
+    }
+  ]
+}

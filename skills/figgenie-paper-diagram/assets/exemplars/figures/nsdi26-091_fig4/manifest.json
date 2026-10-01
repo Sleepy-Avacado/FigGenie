@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-091_fig4",
+  "paper_id": "nsdi26-091",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: The overall architecture of Libra features unified GPU instances executing partitioned micro-requests, guided by a two-level scheduling for improved SLO attainment and resource utilization. Orange and blue colors denote the prefill and decode stages of each request, respectively.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.44,
+  "n_components": 6,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-091/nsdi26-091_fig4_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-091/nsdi26-091_fig4_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Two Local Scheduler lanes, each a colored Gantt of micro-request segments (orange prefill, blue decode) on a shared Time axis, sit beneath one Global Scheduler whose circled steps 1-7 close a partition-predict-route-feedback loop.",
+      "what_to_learn": "Split one long request bar into colored sub-segments (prefill orange, decode blue) at the exact token position it was partitioned, lay two such lanes side by side under one Time axis labeled Unified Instances, and close a feedback loop back to the scheduler above with performance metrics rather than leaving the loop implied."
+    }
+  ]
+}

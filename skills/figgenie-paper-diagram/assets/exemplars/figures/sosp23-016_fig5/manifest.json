@@ -1,0 +1,56 @@
+{
+  "id": "sosp23-016_fig5",
+  "kind": "mechanism",
+  "paper_id": "sosp23-016",
+  "fig": "5",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 5. Illustration of the PagedAttention algorithm, where the attention key and values vectors are stored as non-contiguous blocks in the memory.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "data-structure",
+  "subject": "how one query token's key/value vectors are spread across three fixed-size blocks stored non-contiguously in physical memory",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.36,
+  "n_elements": 7,
+  "n_relations": 3,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "google-slides",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-016/src/fig5_pagedattention.svg",
+    "preview.png": "lab/extracted/sosp23-016/src/fig5_pagedattention.png",
+    "print.png": "lab/extracted/sosp23-016/sosp23-016_fig5_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "One request's key/value vectors are split into fixed-size blocks (4 tokens each) that PagedAttention stores in whatever physical block-table slots are free, so logically adjacent blocks need not be physically contiguous.",
+      "what_to_learn": "Draw the container bigger than the data when the *absence* is the point; fan-out arrows to the occupied rows only",
+      "note_source": "doc"
+    }
+  ]
+}

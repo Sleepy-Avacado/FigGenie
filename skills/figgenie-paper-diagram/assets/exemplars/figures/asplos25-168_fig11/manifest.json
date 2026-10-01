@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-168_fig11",
+  "paper_id": "asplos25-168",
+  "fig": "11",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 11. Mapping and Rendering Analysis for Architecture Optimization.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "tikz",
+  "aspect": 4.23,
+  "n_components": 3,
+  "n_flows": 2,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "letters",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-168/src/fig11_architecture-moti.svg",
+    "preview.png": "lab/extracted/asplos25-168/src/fig11_architecture-moti.png",
+    "print.png": "lab/extracted/asplos25-168/asplos25-168_fig11_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three unlike panel kinds sit together, a hash-mapping diagram (a), a rendered 3D voxel illustration (b), and a sad-face/happy-face pros-cons box pair, all sharing the yellow-cell storage-icon vocabulary from the technical panels.",
+      "what_to_learn": "Pair a technical diagram with a small icon-based pros/cons box (a sad face for the limited baseline, a happy face for the improved design) placed right beside it, reusing the same cell-shading vocabulary so the emotional icon reads as a direct verdict on the adjacent architecture rather than a separate aside."
+    }
+  ]
+}

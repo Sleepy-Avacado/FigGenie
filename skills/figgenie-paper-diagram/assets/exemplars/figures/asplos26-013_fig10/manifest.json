@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-013_fig10",
+  "paper_id": "asplos26-013",
+  "fig": "10",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 10. Overview of AGS Architecture.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "double",
+  "tool": "visio",
+  "aspect": 2.92,
+  "n_components": 13,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-013/src/fig10_Architecture_overview.svg",
+    "preview.png": "lab/extracted/asplos26-013/src/fig10_Architecture_overview.png",
+    "print.png": "lab/extracted/asplos26-013/asplos26-013_fig10_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "One of only 3 double-column layered figures in the corpus; a shared DRAM bus at the top feeds parallel engines below, tagged A-I.",
+      "what_to_learn": "At double column a layered hardware figure becomes bus-on-top with engines hanging below; lettered callouts (A-I) index the prose instead of ordering a flow."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "Canonical floorplan: a full-width DRAM bus feeds parallel engines below, a pink FC Detection Engine occupies its own vertical band between tracking and mapping engines, and letters A-I key every block to the text.",
+      "what_to_learn": "Draw one shared bus as a full-width bar at the top of the chip boundary, place a distinct control engine in its own vertical band between the two functional engines it coordinates, and letter every block (A-I) to key it to the prose instead of writing long labels in place."
+    }
+  ]
+}

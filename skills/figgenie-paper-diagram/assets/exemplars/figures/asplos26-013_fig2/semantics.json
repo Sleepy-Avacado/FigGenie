@@ -1,0 +1,233 @@
+{
+  "paper_id": "asplos26-013",
+  "fig": "2",
+  "system": {
+    "name": "3DGS-SLAM",
+    "one_liner": "background diagram explaining 3D Gaussian Splatting rendering and how it is used inside SLAM tracking/mapping loops",
+    "domain": [
+      "ml-systems",
+      "robotics/SLAM",
+      "computer graphics"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "3D Gaussians",
+        "role": "anisotropic Gaussian ellipsoids representing the scene, each with position/shape/color attributes",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "2D Gaussian Splats",
+        "role": "Gaussians projected from 3D space onto the 2D imaging plane",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Gaussian Tables",
+        "role": "per-tile table recording indexes and depth order of related Gaussians after sorting",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rendering",
+        "role": "computes pixel colors from Gaussian tables using per-tile Gaussian features",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Pixels in each tile",
+        "role": "rendered output compared against ground truth",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Loss & Gradients",
+        "role": "computes loss between rendered pixels and ground truth color, derives gradients",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Update Gaussians",
+        "role": "updates Gaussian parameters using computed gradients",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Input Frame_t",
+        "role": "current camera frame fed into tracking",
+        "container": "3DGS-SLAM",
+        "novel": false
+      },
+      {
+        "name": "Previous Pose",
+        "role": "camera pose from the previous frame used to initialize tracking",
+        "container": "3DGS-SLAM tracking",
+        "novel": false
+      },
+      {
+        "name": "3DGS",
+        "role": "3D Gaussian Splatting rendering used inside both the tracking and mapping loops",
+        "container": "3DGS-SLAM",
+        "novel": false
+      },
+      {
+        "name": "Output Image",
+        "role": "rendered image compared against ground truth to derive the loss",
+        "container": "3DGS-SLAM",
+        "novel": false
+      },
+      {
+        "name": "Ground Truth Image_t",
+        "role": "reference image for computing loss",
+        "container": "3DGS-SLAM",
+        "novel": false
+      },
+      {
+        "name": "Loss",
+        "role": "drives either pose update (tracking) or Gaussian update (mapping)",
+        "container": "3DGS-SLAM",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "3D Gaussians",
+        "to": "2D Gaussian Splats",
+        "what": "projection to image plane",
+        "step": 1
+      },
+      {
+        "from": "2D Gaussian Splats",
+        "to": "Gaussian Tables",
+        "what": "per-tile depth sorting",
+        "step": 2
+      },
+      {
+        "from": "Gaussian Tables",
+        "to": "Rendering",
+        "what": "guidance for computing pixel colors",
+        "step": 3
+      },
+      {
+        "from": "Rendering",
+        "to": "Loss & Gradients",
+        "what": "rendered pixels compared with ground truth color",
+        "step": 4
+      },
+      {
+        "from": "Loss & Gradients",
+        "to": "Update Gaussians",
+        "what": "gradients",
+        "step": 5
+      },
+      {
+        "from": "Input Frame_t",
+        "to": "3DGS",
+        "what": "frame with previous pose",
+        "step": 1
+      },
+      {
+        "from": "3DGS",
+        "to": "Loss",
+        "what": "output image vs ground truth image",
+        "step": 2
+      },
+      {
+        "from": "Loss",
+        "to": "Previous Pose",
+        "what": "pose update over N_T tracking iterations",
+        "step": 3
+      }
+    ],
+    "key_idea": "3D Gaussian Splatting renders a scene by projecting, sorting, and rasterizing Gaussians per tile, then backpropagating pixel loss; SLAM reuses this same per-frame rendering loop to alternately refine camera pose (tracking) and the Gaussian map (mapping).",
+    "reading_order": "Top row (a) left to right through 5 numbered steps of 3DGS training; bottom row (b) two side-by-side sub-flows, tracking then mapping, each left to right."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 2,
+    "column": "double",
+    "aspect": 2.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e76254",
+        "used_for": "red/orange highlight for an example Gaussian and loss-related elements"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray panel/background fills"
+      },
+      {
+        "hex": "#4672c4",
+        "used_for": "blue fill for tile grid / rendering-related boxes"
+      },
+      {
+        "hex": "#a7c0de",
+        "used_for": "light blue fill for secondary boxes"
+      },
+      {
+        "hex": "#fcfeed",
+        "used_for": "near-white cream fill, likely camera/frame icon background"
+      },
+      {
+        "hex": "#ffd06f",
+        "used_for": "yellow/gold fill for tile or Gaussian table cells"
+      },
+      {
+        "hex": "#bfb1d0",
+        "used_for": "purple accent fill"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "medium (~0.66pt) strokes, some dashed panel borders",
+    "font": "Calibri sans, 3.5-7.5pt, heavily bold (0.91)",
+    "corners": "mixed",
+    "arrows": "orthogonal arrows with circled step numbers",
+    "icons": "vector icons depicting a camera/robot frame and 3D Gaussian ellipsoids"
+  },
+  "encoding": {
+    "color_means": "orange/red highlights the example Gaussian and its tile intersections; blue marks the tile grid and rendering path",
+    "line_style_means": null,
+    "emphasis": "circled step numbers walk the reader through the training pipeline in order, then the same numbering repeats for tracking and mapping to show they reuse it",
+    "reusable_patterns": [
+      "numbered pipeline explained once, then reused as a sub-block inside two parallel loops"
+    ],
+    "weaknesses": [
+      "small font size (3.5-7.5pt) and dense icon reuse across two stacked panels increase visual load"
+    ]
+  },
+  "tags": [
+    "3D Gaussian Splatting",
+    "SLAM",
+    "background/preliminaries",
+    "rendering pipeline",
+    "tracking and mapping"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "step 1 performs preprocessing to project visible Gaussians from 3D space to the 2D imaging plane",
+      "the orange Gaussian intersects with tile 3 and tile 4 and thus will be included",
+      "tracking first performs step 1 to step 4 in 2.1 with the pose from the previous frame"
+    ]
+  },
+  "summary": "This background figure has two stacked panels. Panel (a) walks through one iteration of 3D Gaussian Splatting training in five numbered steps: projecting 3D Gaussians to 2D splats, sorting them per image tile into Gaussian tables, rendering pixel colors per tile, comparing against ground truth to get loss and gradients, and updating the Gaussians. Panel (b) shows how 3DGS-SLAM reuses this rendering loop twice per frame: a tracking sub-flow that holds Gaussians fixed and updates the camera pose from loss against the previous frame, and a mapping sub-flow that holds the pose fixed and updates the Gaussians. The figure uses flat/hatched colored boxes, small vector icons of a camera frame and Gaussian ellipsoids, and circled step numbers to guide reading order.",
+  "summary_zh": "该图为背景介绍图，分两部分：(a)以五个编号步骤展示3D高斯泼溅训练流程（投影、排序、渲染、计算损失与梯度、更新高斯）；(b)展示3DGS-SLAM如何复用该渲染流程分别完成位姿跟踪与建图两个子循环。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-082_fig2",
+  "kind": "mechanism",
+  "paper_id": "asplos25-082",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. An illustration of fault tolerance in model training through checkpoint mechanism. The checkpointing inter- val 𝐼𝑐𝑘𝑝𝑡is set to 10 iterations. A fault arises following the 30th iteration, before the completion of the third checkpoint. Therefore, the most recent completed checkpoint (ckpt2) ",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "timeline",
+  "subject": "how periodic checkpoints accumulate along the iteration timeline and how a fault triggers recovery from the most recent complete checkpoint",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": "identical",
+  "delta_marking": "dashed-ghost",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 3.13,
+  "n_elements": 13,
+  "n_relations": 3,
+  "n_panels": 1,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "labelled-arrows",
+  "zoom_callout": false,
+  "tool": "tikz",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-082/src/fig2_FT_Process.svg",
+    "preview.png": "lab/extracted/asplos25-082/src/fig2_FT_Process.png",
+    "print.png": "lab/extracted/asplos25-082/asplos25-082_fig2_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "Checkpointing trades periodic save overhead (O_save) for bounded recovery: when a fault strikes before a checkpoint completes, only the progress since the last complete checkpoint (O_lost) is lost, and recovery reloads exactly that last complete checkpoint (O_restart).",
+      "what_to_learn": "a Gantt-style iteration timeline with periodic checkpoint boxes, a dashed box for a lost/incomplete one, and bracketed spans quantifying save/lost/restart overhead",
+      "note_source": "record"
+    }
+  ]
+}

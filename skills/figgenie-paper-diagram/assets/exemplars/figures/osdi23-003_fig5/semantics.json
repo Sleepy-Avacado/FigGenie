@@ -1,0 +1,199 @@
+{
+  "paper_id": "osdi23-003",
+  "fig": "5",
+  "system": {
+    "name": "Rowan-KV",
+    "one_liner": "a persistent-memory key-value store that uses Rowan's one-sided RDMA abstraction for low-DLWA primary-backup replication",
+    "domain": [
+      "storage",
+      "databases"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Clients",
+        "role": "issue GET and PUT/DEL requests via RPC to the primary of the targeted shard",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "CM",
+        "role": "configuration manager that maintains shard-to-server distribution, cached by servers and clients",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "per-shard hash indexes",
+        "role": "DRAM-resident hash tables indexing objects in t-logs or the b-log for every shard the server manages",
+        "container": "Server 1",
+        "novel": true
+      },
+      {
+        "name": "backup log",
+        "role": "single PM log per server (b-log) that receives replication writes from primaries via Rowan, divided into 4MB segments",
+        "container": "Server 1",
+        "novel": true
+      },
+      {
+        "name": "per-thread logs",
+        "role": "per-worker-thread PM logs (t-logs) storing PUT/DEL objects, divided into 4MB segments",
+        "container": "Server 1",
+        "novel": true
+      },
+      {
+        "name": "RDMA",
+        "role": "network transport connecting servers for replication and client RPCs",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "backup log",
+        "role": "receives replication writes from Server 1 as a backup",
+        "container": "Server 2",
+        "novel": true
+      },
+      {
+        "name": "per-thread logs",
+        "role": "worker logs on the backup server",
+        "container": "Server 2",
+        "novel": true
+      },
+      {
+        "name": "backup log",
+        "role": "receives replication writes from Server 1 as a backup",
+        "container": "Server 3",
+        "novel": true
+      },
+      {
+        "name": "per-thread logs",
+        "role": "worker logs on the backup server",
+        "container": "Server 3",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Clients",
+        "to": "Server 1",
+        "what": "GET/PUT/DEL requests via RPC",
+        "step": null
+      },
+      {
+        "from": "Server 1",
+        "to": "per-thread logs",
+        "what": "persistently append log entry (ntstore)",
+        "step": 1
+      },
+      {
+        "from": "Server 1",
+        "to": "backup log",
+        "what": "replication write via one-sided Rowan",
+        "step": 2
+      },
+      {
+        "from": "Server 1",
+        "to": "Server 2",
+        "what": "replication write via RDMA",
+        "step": null
+      },
+      {
+        "from": "Server 1",
+        "to": "Server 3",
+        "what": "replication write via RDMA",
+        "step": null
+      },
+      {
+        "from": "Server 1",
+        "to": "per-shard hash indexes",
+        "what": "update index after all backup ACKs received",
+        "step": 3
+      }
+    ],
+    "key_idea": "Rowan-KV shards and replicates key-value data across servers, using local per-thread logs for client writes and a single shared backup log per server (written one-sidedly over RDMA via Rowan) to minimize the number of PM write streams and thus write amplification.",
+    "reading_order": "top-down/left-right: Clients issue requests through the CM-managed shard map to Server 1, which appends locally (t-logs), indexes in DRAM, and replicates over RDMA to the backup logs of Server 2 and Server 3."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.64,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae3f3",
+        "used_for": "light blue fill for per-thread log boxes"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "light gray fill for background/server panel"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue accents, GET arrow and per-thread log triangles"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill for backup log boxes"
+      },
+      {
+        "hex": "#203864",
+        "used_for": "dark navy for text and strong borders"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red PUT/DEL arrow and replication-write annotations"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed borders around Server boxes, solid arrows for data paths",
+    "font": "Calibri, 6-9.5pt",
+    "corners": "square",
+    "arrows": "orthogonal and curved, filled arrowheads, colored by request type",
+    "icons": "vector triangles/squares representing log entries and hash-index buckets"
+  },
+  "encoding": {
+    "color_means": "blue = GET path and per-thread logs, red = PUT/DEL path, green = backup log",
+    "line_style_means": "dashed borders group each server's PM/DRAM components; solid colored arrows show read/write/replication paths",
+    "emphasis": "circled step numbers on Server 1 walk the reader through the write path (local append, replication, index update)",
+    "reusable_patterns": [
+      "numbered request path over a sharded replicated architecture with a shared table (CM) at top"
+    ],
+    "weaknesses": [
+      "dense layout with many small labeled shapes packed into a single-column figure"
+    ]
+  },
+  "tags": [
+    "persistent memory",
+    "key-value store",
+    "RDMA",
+    "replication",
+    "sharding",
+    "write amplification"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.7)"
+    ],
+    "evidence": [
+      "Figure 5 shows the architecture of Rowan-KV.",
+      "the worker thread issues replication write for every backup via one-sided Rowan",
+      "The t-logs and b-log are divided into 4MB segments."
+    ]
+  },
+  "summary": "Rowan-KV is a persistent-memory key-value store built on the Rowan RDMA abstraction to achieve low-latency, low-write-amplification primary-backup replication. Figure 5 shows its architecture: clients send RPCs to the primary server of a shard (tracked by a configuration manager, CM); each server keeps per-thread logs (t-logs) in PM for local PUT/DEL appends, a single backup log (b-log) in PM that receives replication writes from primaries via one-sided Rowan, and DRAM-resident per-shard hash indexes. The figure depicts Server 1 as primary replicating to Server 2 and Server 3 as backups over RDMA, with circled step numbers marking the local log append, the replication write, and the index update. The diagram uses a light blue/green/gray flat palette with dashed server boundaries, colored GET (blue) and PUT/DEL (red) arrows, and a small table representing the CM's shard-to-server mapping at the top.",
+  "summary_zh": "图5展示Rowan-KV架构：客户端通过RPC访问由配置管理器(CM)维护分片映射的主副本服务器；每台服务器有按线程记录的t-log与单一备份日志b-log(通过Rowan单边RDMA接收复制写入)，以及DRAM中的分片哈希索引，图中以带圈数字标出本地写入、复制写入与索引更新步骤。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

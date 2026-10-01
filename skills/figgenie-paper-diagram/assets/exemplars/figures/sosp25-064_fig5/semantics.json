@@ -1,0 +1,165 @@
+{
+  "paper_id": "sosp25-064",
+  "fig": "5",
+  "system": {
+    "name": "Oasis",
+    "one_liner": "a system that pools PCIe devices such as NICs and SSDs across hosts in software over CXL memory pools",
+    "domain": [
+      "hardware",
+      "networking",
+      "resource-pooling"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Pod-Wide Allocator",
+        "role": "the Oasis control plane that maps PCIe devices to instances within a pod and manages load balancing and failover",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Logical SSD Pool",
+        "role": "tracks free, allocated, and failed SSDs available to the pod",
+        "container": "Pod-Wide Allocator",
+        "novel": true
+      },
+      {
+        "name": "Logical NIC Pool",
+        "role": "tracks free, allocated, and failed NICs available to the pod",
+        "container": "Pod-Wide Allocator",
+        "novel": true
+      },
+      {
+        "name": "Instance",
+        "role": "a compute instance that the allocator maps to specific SSD/NIC devices via instance-to-device mapping",
+        "container": "Pod-Wide Allocator",
+        "novel": false
+      },
+      {
+        "name": "Host 1",
+        "role": "a host running an instance and engine connected to a pooled device",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host N",
+        "role": "another host, illustrating that the same control path scales to N hosts",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Engine",
+        "role": "the per-device-class Oasis engine on a host that connects the local instance to the pooled device",
+        "container": "Host 1",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Logical SSD Pool",
+        "to": "Instance",
+        "what": "instance-to-device mapping allocating an SSD to the instance",
+        "step": null
+      },
+      {
+        "from": "Logical NIC Pool",
+        "to": "Instance",
+        "what": "instance-to-device mapping allocating a NIC to the instance",
+        "step": null
+      },
+      {
+        "from": "Pod-Wide Allocator",
+        "to": "Host 1",
+        "what": "control path managing device assignment, load balancing, and failover",
+        "step": null
+      },
+      {
+        "from": "Pod-Wide Allocator",
+        "to": "Host N",
+        "what": "control path managing device assignment, load balancing, and failover",
+        "step": null
+      }
+    ],
+    "key_idea": "A single pod-wide allocator tracks free, allocated, and failed SSDs and NICs and maps them to instances across many hosts, centralizing load balancing and failover.",
+    "reading_order": "Top-down: the allocator's SSD and NIC pools feed an instance-to-device mapping, whose control path then reaches down to each host's instance and engine."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.37,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#156082",
+        "used_for": "dark teal fill for NIC icons and the 'Logical NIC Pool' heading"
+      },
+      {
+        "hex": "#e97132",
+        "used_for": "orange fill for SSD icons, the 'Logical SSD Pool' heading, and the SSD tag on each host"
+      },
+      {
+        "hex": "#f7fbfd",
+        "used_for": "near-white pale-blue background fill of the outer Pod-Wide Allocator region"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red 'Control Path' labels and arrows linking the allocator to each host"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "pale blue fill for the Logical NIC Pool panel and the host boxes' background"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid outlines on inner boxes, a dashed border around the Pod-Wide Allocator region",
+    "font": "Aptos sans-serif, 8-13.5pt (larger 'Pod-Wide Allocator' title), moderate bold use",
+    "corners": "rounded",
+    "arrows": "thin open-headed arrows: orange for SSD mapping, teal for NIC mapping, bold red double-headed arrows for the control path to each host",
+    "icons": "vector - stacked-rectangle icons for pooled SSD/NIC devices, a lightning-bolt icon marking failed devices"
+  },
+  "encoding": {
+    "color_means": "orange = SSD-related pools/labels, teal/dark-blue = NIC-related pools/labels, red = the control path connecting the allocator to hosts",
+    "line_style_means": null,
+    "emphasis": "the bold red 'Control Path' arrows and the dashed allocator boundary separate the pod-wide control plane from the structurally identical per-host boxes below it",
+    "reusable_patterns": [
+      "a resource-class-colored pool (free/allocated/failed) repeated once per device type",
+      "one coordinator box with control-path arrows fanning out to N structurally identical host boxes"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "pcie-pooling",
+    "cxl",
+    "resource-allocation",
+    "load-balancing",
+    "failover",
+    "control-plane"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Oasis: Pooling PCIe in Software (p.6)"
+    ],
+    "evidence": [
+      "The Oasis control plane, which we call the pod-wide allo- cator, is responsible for mapping PCIe devices to instances",
+      "The allocator tracks the usage of each device and assigns resources to newly created instances",
+      "It can also dynamically migrate instances to other devices for load balancing or failover"
+    ]
+  },
+  "summary": "Figure 5 shows the pod-wide allocator, the control-plane component of Oasis that pools PCIe devices such as SSDs and NICs over CXL. Inside the allocator, a Logical SSD Pool and a Logical NIC Pool each track devices as Free, Allocated, or Failed; an Instance-to-Dev Mapping step assigns pooled devices to a requesting Instance. The allocator then exercises a Control Path down to each host in the pod, Host 1 through Host N, where a local Instance and Engine actually use the assigned SSD or NIC. The accompanying text explains that the allocator also tracks device usage, assigns resources to new instances, and can migrate instances between devices for load balancing or failover, applying both static policies (e.g., instance types) and dynamic policies (e.g., prioritizing instances under load).",
+  "summary_zh": "图5展示Oasis控制面组件pod级分配器：逻辑SSD池与NIC池跟踪空闲、已分配与故障设备，经映射分配给Instance；分配器经控制路径下达至各主机，主机上的Instance与Engine使用被分配设备，支持负载均衡与故障切换。",
+  "confidence": "high",
+  "notes": "layout-proposal: pool-allocator hub over replica hosts — the hub itself contains its own two-pool sub-diagram (Logical SSD/NIC pools, Instance-to-Dev Mapping) before its Control Path fans out to N structurally identical hosts drawn in a row, a looser fit than a simple radial hub-spoke.",
+  "venue": "SOSP25"
+}

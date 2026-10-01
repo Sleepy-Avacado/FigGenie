@@ -1,0 +1,267 @@
+{
+  "paper_id": "sosp25-060",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "JENGA",
+    "one_liner": "A memory allocation framework that manages heterogeneous KV-cache embeddings in LLM serving via a two-level allocator and layer-specific caching APIs.",
+    "domain": [
+      "LLM serving",
+      "GPU memory management",
+      "systems for ML"
+    ],
+    "abstraction": "memory allocator"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "comparing imbalanced, unaligned, and balanced-aligned KV-cache eviction policies across two heterogeneous layer types",
+    "base": "table",
+    "elements": [
+      {
+        "name": "Current cache",
+        "kind": "label",
+        "role": "heading for the starting KV-cache state shared by all three branches",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "self attn.",
+        "kind": "row",
+        "role": "cache row for the self-attention layer type",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Hello",
+        "kind": "cell",
+        "role": "cached token in the self-attention row, initial state",
+        "container": "self attn.",
+        "highlighted": false
+      },
+      {
+        "name": "World",
+        "kind": "cell",
+        "role": "cached token in the self-attention row, initial state",
+        "container": "self attn.",
+        "highlighted": false
+      },
+      {
+        "name": "window",
+        "kind": "row",
+        "role": "cache row for the sliding-window layer type",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Hello",
+        "kind": "cell",
+        "role": "cached token in the window row, initial state",
+        "container": "window",
+        "highlighted": false
+      },
+      {
+        "name": "World",
+        "kind": "cell",
+        "role": "cached token in the window row, initial state",
+        "container": "window",
+        "highlighted": false
+      },
+      {
+        "name": "Hello",
+        "kind": "cell",
+        "role": "token surviving eviction in the self-attention row of branch (a)",
+        "container": "self attn.",
+        "highlighted": false
+      },
+      {
+        "name": "World",
+        "kind": "cell",
+        "role": "token surviving eviction in the self-attention row of branch (a)",
+        "container": "self attn.",
+        "highlighted": false
+      },
+      {
+        "name": "No hit",
+        "kind": "label",
+        "role": "outcome text when the new request misses the resulting cache",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Evict two pages due to other requests",
+        "kind": "label",
+        "role": "explains why two pages must be evicted in every branch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "New request: Hello World",
+        "kind": "label",
+        "role": "the incoming request each branch's resulting cache is tested against",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "frowning face",
+        "kind": "icon",
+        "role": "marks a failed cache lookup (No hit) in branch (a)",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Current cache",
+        "to": "Hello",
+        "what": "(a) imbalanced (only evict sliding window)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Evict two pages due to other requests",
+        "to": "Hello",
+        "what": "external eviction pressure forces this branch's eviction choice",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "New request: Hello World",
+        "to": "frowning face",
+        "what": "lookup tested against the resulting cache",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "frowning face",
+        "to": "No hit",
+        "what": "verdict",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) imbalanced (only evict sliding window)",
+        "axis": "alternatives",
+        "differs": "only the sliding-window layer's cache is evicted, so both its tokens are blank while self-attention keeps Hello and World",
+        "verdict": "wrong"
+      },
+      {
+        "label": "(b) unaligned (evicted tokens are different)",
+        "axis": "alternatives",
+        "differs": "each layer evicts one token but a different one (self-attention evicts World, window evicts Hello), so no complete prefix survives in all layers",
+        "verdict": "wrong"
+      },
+      {
+        "label": "(c) balanced & aligned",
+        "axis": "alternatives",
+        "differs": "both layers evict the same token, World, in equal number, leaving Hello present and aligned across every layer",
+        "verdict": "correct"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Only evicting the same tokens in balanced numbers across both layer types keeps their caches aligned, so a later request can still hit; imbalanced or unaligned eviction breaks the hit.",
+    "reading_order": "Left to right from the shared current cache, then top to bottom through branches (a), (b), (c) to each outcome icon."
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.72,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f8cbad",
+        "used_for": "self-attention layer's cache cells (Hello/World)"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "sliding-window layer's cache cells (Hello/World)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "evicted/empty cache cells"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "the two rounded callout boxes (eviction-pressure note and new-request note)"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "amber frowning-face icon for a failed lookup (No hit)"
+      },
+      {
+        "hex": "#cd9a00",
+        "used_for": "accent shading/outline detail on the frowning-face icons"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "green smiling-face icon for a successful lookup (Hit: Hello)"
+      },
+      {
+        "hex": "#5a8b39",
+        "used_for": "darker green accent/outline detail on the smiling-face icon"
+      }
+    ],
+    "background": "#ffffff",
+    "fill": "flat",
+    "stroke": "black ~1pt grid/arrow lines; warm gold-brown (#bc8c00) borders on filled orange/yellow cells; green (#507e32) border on the happy-face icon",
+    "font": "Nimbus Roman serif, ~8pt, not bold",
+    "corners": "mixed",
+    "arrows": "solid black arrowheads on straight connecting lines, one per branch label and one from the new-request box to each outcome",
+    "icons": "hand-drawn circular face glyphs: amber frowning faces for the two No-hit outcomes, one green smiling face for the Hit outcome"
+  },
+  "encoding": {
+    "color_means": "warm orange/yellow shades identify which layer type a cache cell belongs to (self-attention vs sliding-window); grey marks an evicted/empty cell; amber vs green marks a failed vs successful cache lookup",
+    "line_style_means": "plain solid arrows connect the starting cache to each alternative's resulting cache and outcome; no dashed lines are used",
+    "state_means": "before/after eviction is told apart by cell fill: a filled, coloured cell still holds its token, a blank grey cell has been evicted",
+    "marker_means": "letters (a)/(b)/(c) identify the three eviction strategies compared; face icons and 'Hit'/'No hit' text mark the resulting verdict",
+    "emphasis": "only the bottom (c) branch ends in a green smiling face and an explicit 'Hit: Hello', visually singling out the balanced-and-aligned policy as the one that works",
+    "reusable_patterns": [
+      "one shared starting state fanning out into lettered alternative branches, each ending in a pass/fail face icon"
+    ],
+    "weaknesses": [
+      "the 'Hello' and 'World' cell labels repeat across rows and panels, so the semantic record cannot key each surviving/evicted cell by name alone; row and column position disambiguate instead"
+    ]
+  },
+  "tags": [
+    "KV-cache",
+    "cache-eviction",
+    "LLM-serving",
+    "memory-management",
+    "JENGA",
+    "heterogeneous-layers"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Heterogeneous LLMs and Challenges"
+    ],
+    "evidence": [
+      "Balanced and aligned cache eviction policy can improve hit rate.",
+      "It is important to balance the number of evicted tokens across different layer types.",
+      "Eviction policies across layers must be aligned to ensure that similar sets of tokens are evicted."
+    ]
+  },
+  "summary": "This single tikz drawing compares three cache-eviction strategies for LLM serving with heterogeneous layer types. Starting from one shared cache holding Hello and World tokens in both a self-attention row and a sliding-window row, three lettered branches show what happens when two pages must be evicted. In (a), only the window layer is evicted, leaving the layers imbalanced; in (b), each layer evicts a different token, leaving them unaligned; in (c), both layers evict the same token, World, keeping them balanced and aligned. A new request for 'Hello World' is then checked against each resulting cache: (a) and (b) both miss, shown with amber frowning faces and 'No hit', while only the balanced-and-aligned (c) branch hits, shown with a green smiling face and 'Hit: Hello'.",
+  "summary_zh": "图中一份共享初始缓存按三种策略驱逐两页：(a)只驱逐滑动窗口层导致不均衡，(b)两层驱逐了不同token导致不对齐，(c)两层驱逐相同token（World）实现均衡且对齐；新请求命中测试中只有(c)命中，(a)(b)均未命中。",
+  "confidence": "high",
+  "notes": "Kept prior 'comparison' grouping and 'table' base. The index's measured 'panels' value (1) counts this as one drawn image; layout.panel_count is set to 3 for the three lettered alternatives actually compared inside it.",
+  "venue": "SOSP25"
+}

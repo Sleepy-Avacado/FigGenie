@@ -1,0 +1,161 @@
+{
+  "paper_id": "nsdi23-045",
+  "fig": "2",
+  "system": {
+    "name": "RF-CHORD",
+    "one_liner": "a deployable RFID localization system for logistics networks based on wideband active sniffing and kernel-based localization",
+    "domain": [
+      "wireless-sensing",
+      "localization"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Impinj Tx",
+        "role": "commodity ISM-band reader transmitter that activates and coordinates access to EPC Gen II tags",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Impinj reader",
+        "role": "off-the-shelf reader that activates tags; exchanges no explicit information with the sniffer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Active sniffer",
+        "role": "custom RF frontend + FPGA that emits a low-power wideband multi-sine signal and receives tag responses across 8 antennas and 16 frequencies",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Demodulator",
+        "role": "demodulates received channel samples into channel estimates",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Kernel-layer based localization",
+        "role": "computes a direct-path-enhanced location estimate from channel estimation and ROI info",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "ROI info",
+        "role": "region-of-interest prior information supplied to the localization stage",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Impinj Tx",
+        "to": null,
+        "what": "high power ISM signal that activates tags",
+        "step": 1
+      },
+      {
+        "from": null,
+        "to": "Active sniffer",
+        "what": "low power wideband multisine tag response signal",
+        "step": 2
+      },
+      {
+        "from": "Active sniffer",
+        "to": "Demodulator",
+        "what": "channel samples from high-dynamic-range A/Ds and digital channelization into 16 channels",
+        "step": 3
+      },
+      {
+        "from": "Demodulator",
+        "to": "Kernel-layer based localization",
+        "what": "channel estimation, refined by full packet matching",
+        "step": 5
+      },
+      {
+        "from": "ROI info",
+        "to": "Kernel-layer based localization",
+        "what": "prior region-of-interest information",
+        "step": null
+      },
+      {
+        "from": "Kernel-layer based localization",
+        "to": null,
+        "what": "direct-path enhanced localization result",
+        "step": 7
+      }
+    ],
+    "key_idea": "RF-CHORD passively sniffs the wideband multi-sine response of commodity RFID tags with a multi-antenna active sniffer, then digitally channelizes, packet-matches, and kernel-localizes the direct path using prior region-of-interest information to achieve accurate, long-range localization without exchanging information with the reader.",
+    "reading_order": "left to right following seven numbered stages: high-power activation, low-power multisine response, high-dynamic-range sampling, digital channelization, full packet matching/demodulation, ROI-aided kernel localization, and the resulting direct-path-enhanced heatmap."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.22,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bfbfbf",
+        "used_for": "main pipeline box fill (gray)"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange annotation text and sub-step callout labels"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue accents, including the final localization heatmap and highlight arrow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on boxes; dashed gray lines linking numbered stages to their callout details below",
+    "font": "Arial sans, 5-9pt",
+    "corners": "square",
+    "arrows": "thin black arrows between pipeline stages",
+    "icons": "vector: antenna symbols, waveform sketches, spectrum bar icons, and a heatmap grid"
+  },
+  "encoding": {
+    "color_means": "gray = the main hardware/processing pipeline boxes, orange = explanatory annotation labels for sub-steps, blue = the final direct-path-enhanced localization heatmap",
+    "line_style_means": "dashed gray leader lines connect numbered pipeline stages to expanded callout boxes below explaining that stage in detail",
+    "emphasis": "circled numbers 1-7 and orange callout text guide the reader through each stage of the RF sensing chain from signal emission to final localization",
+    "reusable_patterns": [
+      "numbered end-to-end signal-processing pipeline with expanded callout details below each stage",
+      "a final heatmap thumbnail used to show the concrete output of the pipeline"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "RFID",
+    "localization",
+    "wideband-sniffing",
+    "channel-estimation",
+    "signal-processing-pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "2 RF-CHORD's System Overview (p.4)"
+    ],
+    "evidence": [
+      "A high level operational flow of RF-CHORD is shown in Fig. 2",
+      "Active sniffer reader observes tags by emitting a low power (-15 dBm) wideband multi-sine waveform to pick up tag responses over a wide frequency band",
+      "RF-CHORD achieve independent decoding and channel estimation by us- ing dynamic range optimization, digital channelization in hardware, and a real-time full packet matching in soft-"
+    ]
+  },
+  "summary": "This figure gives the end-to-end operational flow of RF-CHORD. A commodity Impinj reader/Tx emits a high-power ISM signal to activate EPC Gen II tags (step 1); tags respond with a low-power wideband multi-sine signal (step 2) captured by an active sniffer's multiple receive antennas and high-dynamic-range A/Ds (step 3), which digitally channelizes the signal into 16 frequency channels (step 4). A demodulator applies full packet matching to estimate the channel (step 5), and a kernel-layer localization stage combines this channel estimation with region-of-interest prior information to determine the direct path and suppress multipath/leakage (step 6), producing a direct-path-enhanced localization heatmap (step 7). Dashed callout boxes below the main pipeline expand on the multisine waveform, channelization, packet matching, and localization sub-steps.",
+  "summary_zh": "该图展示RF-CHORD从Impinj阅读器激活标签、低功率宽带多正弦响应被有源探测器多天线捕获、数字信道化、全包匹配估计信道，到结合ROI信息的核方法定位，最终输出直达路径增强定位热力图的完整流程。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

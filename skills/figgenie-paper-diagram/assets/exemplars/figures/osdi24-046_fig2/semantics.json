@@ -1,0 +1,228 @@
+{
+  "paper_id": "osdi24-046",
+  "fig": "2",
+  "system": {
+    "name": "Fisslock",
+    "one_liner": "an in-network lock management system that scales using a technique called lock fission",
+    "domain": [
+      "networking",
+      "distributed-systems",
+      "concurrency-control"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Match-Action Unit (MAU)",
+        "role": "one pipeline stage that matches packet header fields against tables and executes the selected action; shown exploded here and recurring in both the ingress and egress pipelines",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ALUs",
+        "role": "arithmetic-logic units that execute the action selected by a match",
+        "container": "Match-Action Unit (MAU)",
+        "novel": false
+      },
+      {
+        "name": "Match-Action Tables",
+        "role": "map header field values to actions; split into stateless and stateful tables",
+        "container": "Match-Action Unit (MAU)",
+        "novel": false
+      },
+      {
+        "name": "Register Arrays",
+        "role": "per-stage stateful memory that is read and updated by the ALUs",
+        "container": "Match-Action Unit (MAU)",
+        "novel": false
+      },
+      {
+        "name": "Packet Headers",
+        "role": "input header fields entering the pipeline",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Modified Packet Headers",
+        "role": "output header fields leaving the pipeline",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Programmable Switch (PS)",
+        "role": "the switch that hosts the control-plane CPU/DRAM and the data-plane packet-processing pipeline",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "runs the Linux-based control-plane operating system",
+        "container": "Control Plane",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "memory attached to the control-plane CPU",
+        "container": "Control Plane",
+        "novel": false
+      },
+      {
+        "name": "Parser",
+        "role": "extracts packet header fields for the ingress pipeline",
+        "container": "Data Plane",
+        "novel": false
+      },
+      {
+        "name": "Traffic Mgr.",
+        "role": "switches packets between the ingress and egress pipelines, replicating for multicast",
+        "container": "Data Plane",
+        "novel": false
+      },
+      {
+        "name": "Deparser",
+        "role": "reassembles header fields after the egress pipeline",
+        "container": "Data Plane",
+        "novel": false
+      },
+      {
+        "name": "Ingress Ports",
+        "role": "physical ports where packets enter the switch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Egress Ports",
+        "role": "physical ports where packets leave the switch, possibly replicated",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Packet Headers",
+        "to": "Match-Action Unit (MAU)",
+        "what": "incoming packet header fields entering the exploded pipeline stage",
+        "step": null
+      },
+      {
+        "from": "Parser",
+        "to": "Match-Action Unit (MAU)",
+        "what": "parsed headers entering the ingress pipeline",
+        "step": null
+      },
+      {
+        "from": "Match-Action Unit (MAU)",
+        "to": "Traffic Mgr.",
+        "what": "packet after ingress-pipeline processing",
+        "step": null
+      },
+      {
+        "from": "Traffic Mgr.",
+        "to": "Match-Action Unit (MAU)",
+        "what": "packet forwarded into the egress pipeline",
+        "step": null
+      },
+      {
+        "from": "Match-Action Unit (MAU)",
+        "to": "Deparser",
+        "what": "packet after egress-pipeline processing",
+        "step": null
+      },
+      {
+        "from": "Deparser",
+        "to": "Modified Packet Headers",
+        "what": "reassembled output header fields",
+        "step": null
+      },
+      {
+        "from": "ALUs",
+        "to": "Register Arrays",
+        "what": "read and update via match-action tables",
+        "step": null
+      }
+    ],
+    "key_idea": "A programmable switch splits into a CPU/DRAM control plane and an ASIC data plane whose match-action-unit pipeline stages hold register arrays that ALUs read and update under table-selected actions.",
+    "reading_order": "Left to right: the exploded Match-Action Unit at left showing ALUs/tables/register arrays, then the Programmable Switch box at right showing the control plane above the parser-MAU-traffic-manager-MAU-deparser data plane."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.28,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3f3f3f",
+        "used_for": "text labels and box outlines"
+      },
+      {
+        "hex": "#fff2f0",
+        "used_for": "light pink fill of Match-Action Unit boxes in the pipeline"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill of the outer Programmable Switch panel and MAU sub-block backgrounds"
+      },
+      {
+        "hex": "#e1ebf3",
+        "used_for": "light blue fill of the Control Plane / CPU+DRAM area"
+      },
+      {
+        "hex": "#ffbcb3",
+        "used_for": "darker pink fill accenting Match-Action Unit boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.4pt dark gray, dashed for the MAU zoom-in outline and its connection to the pipeline",
+    "font": "SegoeUILight sans-serif, ~5-6.5pt",
+    "corners": "square",
+    "arrows": "thin straight/orthogonal connector lines, mostly without arrowheads in the extracted vector data",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pink fill highlights Match-Action Unit blocks, light blue marks the control-plane CPU/DRAM area, gray is the neutral background/outline color",
+    "line_style_means": "dashed lines/outlines group the zoomed Match-Action Unit detail and tie it to its recurring role inside the pipeline; solid lines are plain structural connectors",
+    "emphasis": "the MAU block is drawn twice, once zoomed into its ALU/table/register-array internals and once as a repeated pipeline stage, to explain the per-stage memory structure that later motivates Fisslock's lock-fission design",
+    "reusable_patterns": [
+      "zoomed component detail placed beside the full pipeline where that component recurs",
+      "control-plane-over-data-plane host/device split inside one box"
+    ],
+    "weaknesses": [
+      "no arrowheads on the connecting lines makes data direction ambiguous without reading the caption",
+      "no legend for the two shades of pink used on the Match-Action Unit boxes"
+    ]
+  },
+  "tags": [
+    "programmable-switch",
+    "match-action-unit",
+    "p4",
+    "switch-architecture",
+    "in-network-computing",
+    "background-figure"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "packet processing is realized as pipelines of match-action units (MAUs), which perform pre-deﬁned packet modiﬁcations",
+      "Each MAU reads and updates user-deﬁned data stored in register arrays",
+      "modern programmable switches have a general-purpose CPU with DRAM"
+    ]
+  },
+  "summary": "This figure supplies background on the programmable-switch hardware that Fisslock, an in-network lock-fission system, later builds on. The right-hand Programmable Switch (PS) box stacks a control plane, a general-purpose CPU with DRAM running Linux, above a data-plane pipeline: incoming packet headers pass through a Parser into ingress Match-Action Units, are steered by a Traffic Mgr. that can replicate packets for multicast, continue through egress Match-Action Units, and leave through a Deparser as modified packet headers. The left-hand panel explodes a single Match-Action Unit (MAU) to show its internals: ALUs execute actions chosen from stateless and stateful Match-Action Tables, which read and update per-stage Register Arrays. No lock-specific components appear; the figure only establishes switch pipeline stages and per-MAU memory limits.",
+  "summary_zh": "该图介绍可编程交换机背景架构：控制平面(CPU+DRAM)之上是数据平面流水线；左侧展开单个匹配动作单元的ALU、匹配动作表与寄存器数组，为Fisslock设计铺垫。",
+  "confidence": "high",
+  "notes": "layout-proposal: exploded-stage-beside-pipeline — a single Match-Action Unit's internals (ALUs, tables, register arrays) are exploded on the left, wired via a shared Packet-Headers arrow into the right panel's full switch pipeline (control-plane CPU/DRAM over a parser-MAU-traffic-manager-MAU-deparser data plane), where that same stage recurs twice.",
+  "venue": "OSDI24"
+}

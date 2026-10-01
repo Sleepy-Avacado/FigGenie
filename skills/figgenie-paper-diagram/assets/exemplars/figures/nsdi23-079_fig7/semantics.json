@@ -1,0 +1,299 @@
+{
+  "paper_id": "nsdi23-079",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "Canvas",
+    "one_liner": "isolates and adaptively swaps remote memory for multiple co-located applications",
+    "domain": [
+      "operating systems",
+      "remote memory",
+      "RDMA"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how a page cycles between hot, cold, and swapped-out states, and when it keeps or releases its swap-entry reservation",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "1",
+        "kind": "state",
+        "role": "Init: newly allocated page, before it is classified hot or cold",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3",
+        "kind": "state",
+        "role": "Hot Page: accessed frequently; carries no reserved swap-entry to manage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "2",
+        "kind": "state",
+        "role": "Cold Page without a reserved swap-entry; swapping it out uses the normal allocation path",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "4",
+        "kind": "state",
+        "role": "Swapped-out Page: the page's data currently lives in remote memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "5",
+        "kind": "state",
+        "role": "Cold Page that still remembers its swap-entry ID from a previous swap-out",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "1",
+        "to": "3",
+        "what": "not labelled in the figure; a new page found to be accessed immediately becomes hot",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "2",
+        "what": "a brand new page that has never been swapped out",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "2",
+        "to": "3",
+        "what": "not labelled in the figure; a cold page that is accessed becomes hot",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "3",
+        "to": "2",
+        "what": "previously a hot page but has not been accessed for long",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "2",
+        "to": "4",
+        "what": "swap-out; allocate swap-entry",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "5",
+        "what": "swap-in; the page keeps the swap-entry ID it already has",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "4",
+        "what": "lock-free swap-out, reusing the already-reserved entry",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "3",
+        "what": "frequent access; remove swap-entry and release the reservation",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "1: Init (newly allocated Page)",
+        "3: Hot Page",
+        "2: Cold Page (no swap-entry)",
+        "4: Swapped-out Page",
+        "5: Cold Page (with swap-entry)"
+      ],
+      "transitions": [
+        {
+          "from": "1",
+          "to": "3",
+          "guard": "unlabelled"
+        },
+        {
+          "from": "1",
+          "to": "2",
+          "guard": "brand new page, never swapped out"
+        },
+        {
+          "from": "2",
+          "to": "3",
+          "guard": "unlabelled"
+        },
+        {
+          "from": "3",
+          "to": "2",
+          "guard": "not accessed for long"
+        },
+        {
+          "from": "2",
+          "to": "4",
+          "guard": "swap-out; allocate swap-entry"
+        },
+        {
+          "from": "4",
+          "to": "5",
+          "guard": "swap-in"
+        },
+        {
+          "from": "5",
+          "to": "4",
+          "guard": "lock-free swap-out"
+        },
+        {
+          "from": "5",
+          "to": "3",
+          "guard": "frequent access; remove swap-entry"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "does a cold page already have a reserved swap-entry?",
+          "branches": [
+            "no (state 2) -> normal allocation on swap-out",
+            "yes (state 5) -> lock-free swap-out"
+          ]
+        },
+        {
+          "question": "is the page currently being accessed frequently?",
+          "branches": [
+            "yes -> Hot Page (state 3)",
+            "no, for a while -> Cold Page (state 2)"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "Splitting the cold-page state in two, with and without a remembered swap-entry, lets Canvas make repeated swap-outs lock-free instead of reallocating an entry every time.",
+    "reading_order": "starts at state 1 (Init), branches to 3 (Hot) or 2 (Cold), then follows 2 to 4 (Swapped-out), 4 to 5 (Cold with entry), and 5 back to either 4 (lock-free swap-out) or 3 (becomes hot)"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.76,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c55a11",
+        "used_for": "orange main-face fill of the 'Hot Page' state box (3)"
+      },
+      {
+        "hex": "#9e480e",
+        "used_for": "darker bevelled-side shading of the 'Hot Page' box (3)"
+      },
+      {
+        "hex": "#2e75b6",
+        "used_for": "medium-blue main-face fill of both 'Cold Page' state boxes (2 and 5)"
+      },
+      {
+        "hex": "#255e92",
+        "used_for": "darker bevelled-side shading of the 'Cold Page' boxes (2 and 5)"
+      },
+      {
+        "hex": "#1f4e79",
+        "used_for": "dark-navy 'Cold Page' heading text (both instances) and box top edges"
+      },
+      {
+        "hex": "#3b3838",
+        "used_for": "charcoal main-face fill of the 'Swapped-out Page' state box (4)"
+      },
+      {
+        "hex": "#2f2d2d",
+        "used_for": "darker bevelled-side shading of the 'Swapped-out Page' box (4)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red 'Hot Page' heading text"
+      },
+      {
+        "hex": "#cdcdcd",
+        "used_for": "small light-gray marker strip atop state 5's box, flagging its reserved swap-entry"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "subtle highlight shading on the folded-corner 'Init' note box (1)"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white main fill of the 'Init: newly allocated Page' box (1)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines and arrows, with a beveled/3-D look on each state box",
+    "corners": "mixed",
+    "arrows": "thin black solid arrows, some straight and diagonal, some long curves carrying italic guard/action text",
+    "font": "sans (Calibri, bold/bold-italic), bold digits inside each state box, italic guard text on transitions",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange marks the Hot Page state, blue marks the two Cold Page states, near-black marks the Swapped-out Page state, and white marks the initial newly-allocated state; red and dark-navy text label the Hot/Cold headings",
+    "line_style_means": "not used; all transitions are plain solid arrows distinguished only by their guard-text labels and endpoints",
+    "state_means": "each of the five page states has its own fill colour (white/orange/blue/near-black), so hot vs. cold vs. swapped-out is told apart by colour alone, independent of the swap-entry bookkeeping",
+    "marker_means": "the small light-gray strip on top of state 5's box is the only marker, flagging that this cold page still carries a reserved swap-entry, unlike state 2",
+    "emphasis": "the two blue 'Cold Page' boxes bracket the figure while every labelled transition curves toward or away from them, matching the text's focus on how a page acquires and gives up its swap-entry while cold",
+    "reusable_patterns": [
+      "colour-coded state boxes for a small FSM, with curved arrows carrying guard/action text between non-adjacent states",
+      "the same descriptive category label (e.g. 'Cold Page') repeated on two state boxes that share a role but differ in one bookkeeping detail"
+    ],
+    "weaknesses": [
+      "the diagonal 1->3 and 1->2 arrows and the vertical 2<->3 arrow carry no guard text, so the figure alone does not say what triggers them"
+    ]
+  },
+  "tags": [
+    "page-management",
+    "state-machine",
+    "swap-entry",
+    "remote-memory",
+    "lock-free",
+    "Canvas"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Isolation-Enabled Swap Optimizations"
+    ],
+    "evidence": [
+      "A cold page (to be evicted) can be in one of the two states: state 2 and state 5.",
+      "The next swap-out will directly use this entry and be lock-free.",
+      "If the page becomes hot (from state 5 to 3), Canvas removes the entry ID"
+    ]
+  },
+  "summary": "This figure is the finite state machine Canvas uses to manage a page's swap-entry reservation under remote-memory pressure. A newly allocated page (state 1) can become a Hot Page (state 3) or a Cold Page (state 2); a hot page unaccessed for a while also cools into state 2. A cold page in state 2 has no reserved swap entry, so swapping it out goes through normal allocation into the Swapped-out Page state (state 4). When later swapped back in, the page keeps its swap-entry ID, entering a second cold state, state 5, whose next swap-out skips allocation and is lock-free, returning to state 4. If a state-5 page becomes hot again, Canvas removes its swap-entry ID and frees the reservation, moving to state 3. Distinguishing state 2 from state 5 lets Canvas reuse swap entries instead of reallocating on every swap-out.",
+  "summary_zh": "该图是Canvas页面状态机：新页(1)变热(3)或变冷(2)，热页久未访问转为2；2态无entry，换出后进入已换出态(4)；换入后记住entry进入5态，再换出可无锁复用回到4；5态变热则释放entry回到3，复用条目而非每次重分配。",
+  "confidence": "high",
+  "notes": "Diagonal arrows 1->3 and 1->2, and the vertical 2<->3 arrow, carry no guard text in the figure and are not directly described in the given paragraph (which focuses on states 2, 4, and 5); they are included since they are visibly drawn, with 'what' noting the lack of an explicit label rather than inventing one. Palette hex values are grouped by visual role from the source-SVG histogram; each state box has two close shades (main face + bevelled side).",
+  "venue": "NSDI23"
+}

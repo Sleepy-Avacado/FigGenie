@@ -1,0 +1,60 @@
+{
+  "id": "asplos25-107_fig6",
+  "paper_id": "asplos25-107",
+  "fig": "6",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 6: System-level overview of CIPHERMATCH.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.71,
+  "n_components": 14,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-107/src/fig6_overview.svg",
+    "preview.png": "lab/extracted/asplos25-107/src/fig6_overview.png",
+    "print.png": "lab/extracted/asplos25-107/asplos25-107_fig6_p10_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Client | server with an inset that zooms the SSD internals, and 6 circled numbers spanning both levels.",
+      "what_to_learn": "Numbering may cross the zoom boundary: steps 1-6 run through both the top-level machines and the zoomed SSD, tying the levels together."
+    },
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar reaching four levels: Server Machine nests Storage, which nests the SSD Controller and NAND Flash Memory, which themselves nest Internal DRAM plus three named units and a grid of Flash Chips.",
+      "what_to_learn": "Let a physical enclosure nest its real sub-components exactly as they are physically contained, machine over storage over controller over unit, and reserve a distinct accent colour for the one innermost box, encrypted data, that is the paper's actual security claim."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A star format-inset exemplar: the six-step client-to-SSD pipeline is grounded by a bottom callout box unpacking the bop_add pseudocode, the new hardware command the whole paper is about.",
+      "what_to_learn": "Put the new instruction's pseudocode in its own framed inset below the architecture rather than inline in a box, connect it to the component that executes it, and keep the six circled step numbers running through both the main flow and the client/server/SSD colour bands."
+    },
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Six numbered steps cross three tiers (Client Machine, Server Machine, and the SSD's own internal controller plus NAND flash), with a red 'Encrypted Data' label inside NAND Flash Memory showing matching runs entirely on ciphertext.",
+      "what_to_learn": "Nest a third tier inside the second (the SSD's controller and flash chips inside the Server Machine box) when the real system has a storage device with its own internal architecture, and number every cross-tier hop 1 through 6 so the client-to-flash-and-back round trip reads as one continuous path."
+    }
+  ]
+}

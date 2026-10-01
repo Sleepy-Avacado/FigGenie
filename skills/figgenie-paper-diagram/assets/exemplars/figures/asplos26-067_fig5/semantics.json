@@ -1,0 +1,276 @@
+{
+  "paper_id": "asplos26-067",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "vCXLGen",
+    "one_liner": "a system that automatically synthesizes and formally verifies CXL bridges reconciling different cache-coherence protocols and memory consistency models between hosts",
+    "domain": [
+      "cache-coherence",
+      "memory-systems",
+      "formal-verification"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how a synthesized MESI-CXL bridge handles a store-miss-from-shared transaction, compared against the original MESI and CXL.mem flows",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Lp CC",
+        "kind": "lane",
+        "role": "local-protocol (MESI) requester cache issuing the store",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Br",
+        "kind": "lane",
+        "role": "the bridge FSM tracking a compound (LP,GP) state pair for the cache line",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Gp Dir",
+        "kind": "lane",
+        "role": "global-protocol (CXL.mem) directory serving the bridge's memory requests",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "S, S",
+        "kind": "state",
+        "role": "initial bridge state: line Shared in both the local directory and the global cache",
+        "container": "Br",
+        "highlighted": false
+      },
+      {
+        "name": "S, SM",
+        "kind": "state",
+        "role": "transient state after GetM is forwarded, waiting for the global upgrade",
+        "container": "Br",
+        "highlighted": false
+      },
+      {
+        "name": "S, SM^D",
+        "kind": "state",
+        "role": "transient state waiting for data after the global completion arrives",
+        "container": "Br",
+        "highlighted": false
+      },
+      {
+        "name": "M, M",
+        "kind": "state",
+        "role": "final bridge state: line Modified in both protocols once the store completes",
+        "container": "Br",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Lp CC",
+        "to": "Br",
+        "what": "local store (st) triggers a GetM request",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Br",
+        "to": "Gp Dir",
+        "what": "MemRd_A propagates the request into the global CXL.mem domain",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Gp Dir",
+        "to": "Br",
+        "what": "Cmp-E completes the global upgrade",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Gp Dir",
+        "to": "Br",
+        "what": "Data delivers the cache line",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Br",
+        "to": "Lp CC",
+        "what": "Ack grants write permission, completing the local store as a hit",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(b) Br-MESI-CXL",
+        "axis": "alternatives",
+        "differs": "the paper's synthesized bridge: a compound (LP,GP) FSM forwarding the local GetM into a global MemRd_A/Cmp-E/Data exchange before acking the store",
+        "verdict": "ours, synthesized"
+      },
+      {
+        "label": "(c) MESI",
+        "axis": "alternatives",
+        "differs": "the original local MESI protocol alone: requester sends GetM, the directory invalidates the other sharer (Inv/InvAck) and acks the requester, no bridge involved",
+        "verdict": "original LP flow"
+      },
+      {
+        "label": "(d) CXL.mem",
+        "axis": "alternatives",
+        "differs": "the original global CXL.mem protocol alone: the requester's MemRd_A triggers a back-invalidate snoop (BISnpInv/BIRsp-I) on the peer cache before Cmp-E/Data complete the upgrade",
+        "verdict": "original GP flow"
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Flow Translation",
+        "what": "statically analyze the input GP and LP FSMs in isolation to detect and infer translation rules between domains",
+        "carries": "GP TLT / LP TLT translation tables"
+      },
+      {
+        "marker": "2",
+        "at": "State Space Gen.",
+        "what": "generate the bridge's compound stable state space as the Cartesian product of LP and GP states",
+        "carries": "compound (LP,GP) states"
+      },
+      {
+        "marker": "3",
+        "at": "Flow Propagation",
+        "what": "detect transactions that must be propagated and translated, populating LP and GP transitions in the bridge FSM using the rules from step 1",
+        "carries": "LP/GP transitions"
+      },
+      {
+        "marker": "4",
+        "at": "Flow Nesting",
+        "what": "for every propagated transaction, nest the matched remote flow graphs into the bridge transitions",
+        "carries": "nested remote flow graphs"
+      }
+    ],
+    "logic": {
+      "states": [
+        "S, S",
+        "S, SM",
+        "S, SM^D",
+        "M, M"
+      ],
+      "transitions": [
+        {
+          "from": "S, S",
+          "to": "S, SM",
+          "guard": "local GetM caused by a store"
+        },
+        {
+          "from": "S, SM",
+          "to": "S, SM^D",
+          "guard": "global Cmp-E received"
+        },
+        {
+          "from": "S, SM^D",
+          "to": "M, M",
+          "guard": "global Data received, then local Ack sent"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "Panel (a)'s pipeline infers translation rules and fuses two protocol FSMs into one bridge FSM; (b) shows the synthesized bridge relaying a store-miss-from-shared request, matching the original MESI (c) and CXL.mem (d) flows it combines.",
+    "reading_order": "Left panel (a) reads top-to-bottom through steps 1-4; the right three panels (b,c,d) are each read top-to-bottom along their lifelines, compared left to right."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 4,
+    "column": "double",
+    "aspect": 5.09,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f8cecc",
+        "used_for": "background shading of the LP / MESI (local protocol) region in every panel"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "background shading of the GP / CXL.mem (global protocol) region in every panel"
+      },
+      {
+        "hex": "#b85450",
+        "used_for": "arrows and text for LP-side / local-cache messages (GetM, Ack, Inv, InvAck)"
+      },
+      {
+        "hex": "#d6b656",
+        "used_for": "arrows and text for GP-side / global messages (MemRd_A, Cmp-E, Data, BISnpInv, BIRsp-I)"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "lifelines, state-box borders, and the local st/hit annotations"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid dark lifelines and square state-box borders; message arrows coloured by protocol side",
+    "font": "serif (Times New Roman / Linux Libertine), small 5.5-9pt, with monospace for the literal 'store' keyword",
+    "corners": "square",
+    "arrows": "angled arrows with small heads for inter-lifeline messages, dashed for invalidation/snoop messages (Inv, InvAck, BISnpInv, BIRsp-I); circled numbers 1-4 order the synthesis steps in panel (a)",
+    "icons": "circled step-number glyphs only, no pictorial icons"
+  },
+  "encoding": {
+    "color_means": "pink = local-protocol (LP/MESI) domain, yellow = global-protocol (GP/CXL.mem) domain, applied consistently to region shading, arrows and message text across all four panels",
+    "line_style_means": "solid arrows are the main request/response messages; dashed arrows mark invalidation or snoop messages (Inv/InvAck, BISnpInv/BIRsp-I)",
+    "state_means": "bridge/protocol states are named boxes stacked along each vertical lifeline, read top-to-bottom as time; compound bridge states show the (LP,GP) state pair",
+    "marker_means": "circled numbers 1-4 in panel (a) order the two-pass synthesis pipeline's stages",
+    "emphasis": "panel (b) is framed as the paper's synthesized result, flanked by its two source protocols (c) and (d) so the fused transaction can be checked against each original",
+    "reusable_patterns": [
+      "multi-lane sequence-diagram trace with boxed states on the lifelines and labelled message arrows between them",
+      "colour-coded domain shading (two background tints) shared across every panel of a multi-panel figure",
+      "a small numbered pipeline flowchart with a feedback loop from an early stage into a later one"
+    ],
+    "weaknesses": [
+      "panel (a)'s loop-back arrow from step 1 to step 3 is easy to miss among the other straight arrows",
+      "the compound state notation (e.g. S,SM^D) is not explained inside the figure itself"
+    ]
+  },
+  "tags": [
+    "cache-coherence",
+    "cxl",
+    "protocol-bridge",
+    "fsm-synthesis",
+    "formal-verification",
+    "mesi",
+    "directory-protocol"
+  ],
+  "provenance": {
+    "sections": [
+      "6 Automated Synthesis of CXL Bridges"
+    ],
+    "evidence": [
+      "The first pass identifies flow translation rules between domains",
+      "detecting transactions that must be propagated and translated when it populates LP and GP transitions",
+      "receiving a GetM request in the S local dir state originates from a store"
+    ]
+  },
+  "summary": "Figure 5 documents vCXLGen's two-pass bridge synthesis and validates the result on a store-miss-from-shared example. Panel (a) is a four-step pipeline: step 1 statically analyzes the input GP and LP protocol FSMs to infer translation rules (GP/LP TLTs); steps 2-4 then generate the bridge's compound stable state space, populate its transitions using those rules, and nest the matched remote flow graphs, producing the GP-LP bridge FSM. Panels (b), (c), and (d) compare the same store request as three lane diagrams: (b) shows the synthesized Br-MESI-CXL bridge forwarding a local GetM into a global MemRd_A/Cmp-E/Data exchange before acking the store, while (c) and (d) show the original, unbridged MESI and CXL.mem transaction flows that the synthesis process combined to produce it, so the reader can check the fused behaviour against its two sources message by message.",
+  "summary_zh": "图5展示vCXLGen的两遍桥接合成：(a)推断转换规则、生成状态空间、传播并嵌套流，得到GP-LP桥FSM；(b)(c)(d)用泳道图对比合成桥与原始MESI、CXL.mem处理同一store-miss事务的消息序列。",
+  "confidence": "high",
+  "notes": "Added 'comparison' as primary group (prior labels had only logic+walkthrough): panels (b),(c),(d) are plainly three side-by-side alternative FSM traces of the same store-miss-from-shared transaction, matching the comparison definition and even the prior pass's own grammar note ('Three side-by-side FSM ladders... trace the same... transaction'); kept logic and walkthrough as secondary since panel (a) is a numbered pipeline and each panel's base is a state machine. Panel (c)'s InvAck routing (sharer to requester vs. sharer to directory) is inferred from typical 3-hop MESI protocols since the low-resolution arrow is ambiguous.",
+  "venue": "ASPLOS26"
+}

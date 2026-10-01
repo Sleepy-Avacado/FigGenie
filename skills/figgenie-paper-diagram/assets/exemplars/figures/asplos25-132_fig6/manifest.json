@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-132_fig6",
+  "paper_id": "asplos25-132",
+  "fig": "6",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 6. Overall compiler toolchain of PICACHU.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 3.36,
+  "n_components": 13,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-132/asplos25-132_fig6_p9_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-132/asplos25-132_fig6_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Beside the five-stage MLIR pipeline, a separate inset walks one small DFG (ph1/mu1 inputs merging through add nodes) through Generation, Tuning and cycle-mapped Mapping, the DAG-inside-a-pipeline variant of this template.",
+      "what_to_learn": "Nest a compact three-step DFG-evolution inset, generation, tuning, cycle-mapped scheduling, beside the main pipeline row instead of folding it into the stage boxes; tie the inset to the top bar visually, since here it reads as a detached second figure."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-064_fig1",
+  "paper_id": "asplos25-064",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. SING uses 4-layer architecture to enhance the overall efficiency and flexibility in operation.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 0.67,
+  "n_components": 9,
+  "n_flows": 1,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-064/src/fig1_figure-workflow.svg",
+    "preview.png": "lab/extracted/asplos25-064/src/fig1_figure-workflow.png",
+    "print.png": "lab/extracted/asplos25-064/asplos25-064_fig1_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "The tallest clean layered figure (aspect 0.67) with explicit 'Layer 1..4' headers, section references and an icon column.",
+      "what_to_learn": "Numbering the layers in their headers and citing sections (SS3.1-SS3.4) makes a very tall single-column stack navigable; each layer gets an icon on the left and its content on the right."
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "template": "mirrored-pair",
+  "n": 17,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-051_fig2",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Reassigned from flanked-core by the note-writer: three matched four-layer stacks (Compute Node, Switch, Memory Node) sit side by side, with the paper's Central Scheduler contribution accent-filled on the switch axis between two mirrored sides, not a core flanked by bands.",
+      "what_to_learn": "Align identical protocol-stack layers across parallel columns so a reader compares row by row, and put the paper's actual contribution (the scheduler) on the shared axis between the two mirrored sides, accent-filled, rather than folding it into a bottom hardware band.",
+      "dir": "../figures/asplos25-051_fig2"
+    },
+    {
+      "id": "asplos25-080_fig1",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Sender and Receiver cores mirror the same Processor Core/Program Code/Local Apic boxes either side of a shared UPID memory box, with seven numbered steps tracing one posted interrupt across the System Bus to EOI.",
+      "what_to_learn": "Put the one shared resource, here a UPID memory box, directly on the axis between two mirrored processor-core stacks, and number every step of a round trip 1 through 7 straight onto the arrows; disambiguate duplicate box labels (Processor Core, Program Code) with a Sender/Receiver header above each side rather than relabeling the boxes themselves.",
+      "dir": "../figures/asplos25-080_fig1"
+    },
+    {
+      "id": "asplos25-157_fig3",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Memory Mode and Compute Mode panels mirror the identical Driver plus Memory-circuits grid, differing only in which GIA/GIAb/IA signals are active, meeting at the green Change Driver INPUT block that is the actual mode switch.",
+      "what_to_learn": "Use a mirrored pair to show one device in two operating modes, not just two devices: draw the exact same internal grid twice, side by side, and let one small accent-coloured block between them carry all the labelled signals that actually change between modes.",
+      "dir": "../figures/asplos25-157_fig3"
+    },
+    {
+      "id": "asplos26-067_fig3",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Intel and Arm compute-node domains mirror the same Private Cache, Local Directory, Global CC/LLC stack, in red and purple, joined by a dashed CXL Bridges band to one shared, gold CXL Memory Expander Node above.",
+      "what_to_learn": "Give two heterogeneous host domains the identical internal box sequence (private caches, local directory, coherence block) so they read as one mirrored stack, then draw the shared directory they both bridge into as the one gold-accented box on the axis, and number the request and response arrows in one round trip out and back.",
+      "dir": "../figures/asplos26-067_fig3"
+    },
+    {
+      "id": "nsdi23-047_fig4",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Two full stacks, Graph Store Server then Worker Machine, mirror left and right at high confidence, with explicitly labelled Cross-Partition Communication and Parameter Synchronization arrows crossing the gap between the twin pairs.",
+      "what_to_learn": "Stack two double-column mirrored pairs vertically, storage servers over worker machines, keep each pair's internal boxes (Graph Store plus Samplers, Feature Cache Engine plus GPU Workers) identically arranged on both sides, and write the exact noun each crossing arrow carries, Cross-Partition Communication, Parameter Synchronization, directly on the arrow instead of leaving it implicit.",
+      "dir": "../figures/nsdi23-047_fig4"
+    },
+    {
+      "id": "nsdi23-068_fig1",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Ranked first among mirrored-pair exemplars: client and proxy DChannel agents sit at the ends of five network swimlanes, each holding the same Packet steerer/Reordering buffer pair, mirrored in order, around the two crossing HBC/LLC channels.",
+      "what_to_learn": "Place the mirrored pair at the two ends of a swimlane network path rather than side by side, reverse the internal stacking order on the far side (steerer-then-buffer becomes buffer-then-steerer) to mirror it visually, and label the two crossing channel arrows in the figure itself, since no legend explains HBC and LLC here.",
+      "dir": "../figures/nsdi23-068_fig1"
+    },
+    {
+      "id": "nsdi23-085_fig8",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Two Worker Node containers mirror the same Scheduler/Executors/Object Store stack, cross-connected to each other's object store and to redundant Coordinators above via a crossing X of arrows, over one wide Durable Key-Value Store.",
+      "what_to_learn": "Draw a crossing X of bidirectional arrows between a redundant top layer and the two mirrored containers below to show any-to-any reachability, keep each container's role colours (scheduler green, executor yellow, store light blue) identical on both sides, and let one wide shared-store box at the bottom serve as the axis of symmetry.",
+      "dir": "../figures/nsdi23-085_fig8"
+    },
+    {
+      "id": "nsdi24-023_fig3",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Grace Encoder's and Grace Decoder's chains mirror each other left and right around one small coded-tensor icon at the centre, with a shared orange/blue NN-vs-non-NN legend applied identically to both sides.",
+      "what_to_learn": "Mirror an encoder and decoder around one small icon standing in for the data actually transmitted between them, and apply one binary colour legend, orange for learned modules, blue for classical ones, to both chains identically so a reader sees at a glance how much of the traditional codec structure survives.",
+      "dir": "../figures/nsdi24-023_fig3"
+    },
+    {
+      "id": "nsdi24-107_fig5",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Client and Server run the same HTTP/QUIC/UDP base stack with only their role-specific additions differing, Tunnel wrapping versus rate-control modules, while the Tunnel Server's three named modules occupy the shared middle carrying TECC's contribution.",
+      "what_to_learn": "Keep the common base protocol stack identical on both end nodes and add only the role-specific boxes where the design differs, client-side tunnel wrapping, server-side rate control, then dedicate the entire middle box to the paper's own contribution with named sub-modules. Disambiguate repeated HTTP/QUIC/UDP labels by column position, since duplicates can confuse a fast reader.",
+      "dir": "../figures/nsdi24-107_fig5"
+    },
+    {
+      "id": "nsdi26-021_fig10",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Sender and Receiver diagrams mirror the same VMs-over-CIPU-Hardware-Accelerator-over-Software stack with swapped internal box order, and nine circled numbers keyed to a shared middle legend trace one spray-reorder-ACK round trip across both.",
+      "what_to_learn": "Swap the internal stacking order of the mirrored receiver relative to the sender, hardware-then-software becomes software-then-hardware, so the eye still reads top-to-bottom as protocol flow on both sides, and key every circled step number to one shared legend panel placed between the two mirrored diagrams rather than beside either one.",
+      "dir": "../figures/nsdi26-021_fig10"
+    },
+    {
+      "id": "nsdi26-133_fig1",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "The bottom half draws two Node boxes as identical Ingress-gateway/Pod, Virtual-switch, NIC stacks, linked by orange inter-node and yellow intra-node paths labelled Path 1 and Path 2, the double-column full-stack variant.",
+      "what_to_learn": "Stack each mirrored side as gateway/pod over virtual switch over NIC, and colour the two kinds of crossing path differently, orange for inter-node, yellow for intra-node, so a reader sees at a glance which path a request re-traverses the network stack; keep the busy per-pod annotations and legend from crowding the main stack shape.",
+      "dir": "../figures/nsdi26-133_fig1"
+    },
+    {
+      "id": "osdi24-050_fig6",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Prefill Instance and Decoding Instance stacks, each a pool of offset LLM Model/GPU/Parallel Runtime boxes, mirror left and right, joined by one labelled KV Cache Transfer arrow, with a shared Controller dispatching to both above.",
+      "what_to_learn": "Draw a pool of same-role instances as a small stack of offset boxes rather than one box, name the two mirrored pools by role (Prefill, Decoding) not by number, and put the one operation that crosses between them, KV Cache Transfer, on a single labelled arrow bridging the gap.",
+      "dir": "../figures/osdi24-050_fig6"
+    },
+    {
+      "id": "osdi26-054_fig7",
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Two full PGD-PUD-PMD-PTE table chains stack top (real, read-write) and bottom (CR3-rooted shadow, read-only), aligned column by column with vertical sync arrows crossing the dashed midline that is JANUS's actual integrity boundary.",
+      "what_to_learn": "Stack two identical multi-level structures, real above and shadow below, aligned column by column so vertical arrows can show exactly which levels sync and which do not, and mark the read-write versus read-only halves on either side of a single dashed midline instead of a caption note.",
+      "dir": "../figures/osdi26-054_fig7"
+    },
+    {
+      "id": "asplos25-051_fig4",
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "Compute Node and Memory Node mirror the same Network Interface and Ethernet PHY P0/P1 stack, differing only in Application versus DDR4 controller, while the Switch sits on the axis between them carrying the EDM Scheduler.",
+      "what_to_learn": "Give the two mirrored peers different header colours when their roles genuinely differ, Application side versus DDR4 side, but keep every internal box (Network Interface, Ethernet PHY, matching port labels P0/P1) identically shaped and placed, and route the physical cabling as coloured arrows through the middle switch box that both sides share.",
+      "dir": "../figures/asplos25-051_fig4"
+    },
+    {
+      "id": "osdi25-051_fig4",
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: one integrated architecture, not two contrasted panels, where every added component is coloured orange against an all-white existing backdrop, and userspace/kernel form a mirrored pair rather than a baseline/ours split.",
+      "what_to_learn": "Colour every component the paper adds in one consistent accent (orange here) against an all-white backdrop for everything reused unchanged, so novelty reads at a glance across a single dense diagram; add an in-figure legend for the colour and arrow-style key, since this figure relies on caption text the extraction even cut off.",
+      "dir": "../figures/osdi25-051_fig4"
+    },
+    {
+      "id": "osdi26-050_fig2",
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "VM1's red Page-Out path (steps 0-2) and VM2's slate Map-In path (steps 3-4) mirror around one shared HPA box, the same physical page moving from one VM's ownership to the other's.",
+      "what_to_learn": "Mirror two sides as a reclaim sequence and its inverse remap sequence, both numbered and both meeting at one shared physical-resource box in the centre, so the figure argues reuse rather than copying; add a second colour cue beyond red/slate, since only one accent colour marks the highlighted VM path here.",
+      "dir": "../figures/osdi26-050_fig2"
+    },
+    {
+      "id": "sosp25-029_fig2",
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "The central Near-Storage Location, hosting the LVI Server, sits on the axis between two identical Near-User Location panels, each running the same Function Execution/Storage Library/Cache stack, the textbook central-server-flanked-by-two-instances case.",
+      "what_to_learn": "Flank one central server box with two literally identical copies of the peer panel, mirrored left and right, and route each peer's request/response arrows to the same handler inside the centre box; add colour or distinct line styles to the many double-headed arrows, since this exemplar uses none and they become hard to trace.",
+      "dir": "../figures/sosp25-029_fig2"
+    }
+  ]
+}

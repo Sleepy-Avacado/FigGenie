@@ -1,0 +1,42 @@
+{
+  "id": "sosp25-053_fig4",
+  "paper_id": "sosp25-053",
+  "fig": "4",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 4. Architecture of ByteRobust.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.94,
+  "n_components": 11,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-053/src/fig4_architecture.svg",
+    "preview.png": "lab/extracted/sosp25-053/src/fig4_architecture.png",
+    "print.png": "lab/extracted/sosp25-053/sosp25-053_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated: an offset stack of Pod 0/1/N cards (replication) sits inside a dashed Data-Plane box, wired by a bottom legend's orange data-flow and blue control-flow arrows to a separate dashed Control-Plane box.",
+      "what_to_learn": "Box the data plane and control plane as two separate dashed regions, use an offset card stack (Pod 0/1/N) to show replication inside the data-plane box without drawing every pod, and put a two-color arrow legend below to name data flow versus control flow."
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "paper_id": "asplos26-092",
+  "fig": "3",
+  "system": {
+    "name": "FlexiBits",
+    "one_liner": "a template microarchitecture for area-optimized RISC-V cores with tunable 1/4/8-bit datapaths for flexible electronics",
+    "domain": [
+      "hardware-architecture",
+      "edge-computing",
+      "risc-v"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Data Bus Address/Extension Support",
+        "role": "width-independent control logic handling the data bus address path",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Instruction Bus Address",
+        "role": "width-independent control logic supplying the instruction bus address",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Buffer Register #1",
+        "role": "width-dependent datapath register that scales with the chosen bit-width (SERV/QERV/HERV)",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Immediate Decoder",
+        "role": "width-dependent datapath logic that decodes immediates",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Buffer Register #2",
+        "role": "width-dependent datapath register scaling with datapath width",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Control Unit",
+        "role": "width-dependent logic coordinating instruction execution",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Control Status Registers",
+        "role": "width-dependent registers holding control/status state",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Arithmetic Logic Unit",
+        "role": "width-dependent unit performing arithmetic/logic operations",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Memory Interface",
+        "role": "width-dependent interface to memory",
+        "container": "Data plane",
+        "novel": true
+      },
+      {
+        "name": "Register File Interface",
+        "role": "width-independent control logic connecting the core to the register file (appears on both sides)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Data Bus/Extension Support",
+        "role": "width-independent control logic for the data bus/extension path",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Control Plane",
+        "role": "grouping box for the core's fixed control logic",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Decoder",
+        "role": "width-independent instruction decoder",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "State Machine",
+        "role": "width-independent control state machine sequencing execution",
+        "container": "Control Plane",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Register File Interface",
+        "to": "Buffer Register #1",
+        "what": "operand data",
+        "step": null
+      },
+      {
+        "from": "Buffer Register #1",
+        "to": "Immediate Decoder",
+        "what": "operand for immediate decoding",
+        "step": null
+      },
+      {
+        "from": "Immediate Decoder",
+        "to": "Buffer Register #2",
+        "what": "decoded value",
+        "step": null
+      },
+      {
+        "from": "Buffer Register #2",
+        "to": "Register File Interface",
+        "what": "result write-back",
+        "step": null
+      },
+      {
+        "from": "Instruction Bus Address",
+        "to": "Control Unit",
+        "what": "fetched instruction",
+        "step": null
+      },
+      {
+        "from": "Control Unit",
+        "to": "Control Status Registers",
+        "what": "control/status update",
+        "step": null
+      },
+      {
+        "from": "Control Status Registers",
+        "to": "Arithmetic Logic Unit",
+        "what": "control signals",
+        "step": null
+      },
+      {
+        "from": "Arithmetic Logic Unit",
+        "to": "Memory Interface",
+        "what": "computed result",
+        "step": null
+      },
+      {
+        "from": "Memory Interface",
+        "to": "Data Bus/Extension Support",
+        "what": "memory access",
+        "step": null
+      }
+    ],
+    "key_idea": "a single template microarchitecture cleanly separates width-independent control logic (yellow) from width-dependent datapath elements (blue), so the same design scales into 1-bit (SERV), 4-bit (QERV), and 8-bit (HERV) cores",
+    "reading_order": "top-down: bus/address control boxes at top, the Data plane block of datapath units in the middle, Register File Interface boxes flanking left and right, and the Control Plane block at the bottom"
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.24,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "width-dependent datapath components (blue), which vary with datapath width"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "width-independent control-logic components (yellow), fixed across all cores"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.9pt strokes, blue (#6c8ebf) borders on datapath boxes and gold (#d6b656) borders on control boxes",
+    "font": "Arial sans-serif, 4.5-7pt, bold",
+    "corners": "square",
+    "arrows": "bidirectional orthogonal and curved connectors, labelled with bus width (N/32)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow = width-independent control logic fixed across all cores, blue = width-dependent datapath elements that scale with bit-width",
+    "line_style_means": null,
+    "emphasis": "the two-color scheme (yellow control vs blue datapath) is the figure's main device for showing which parts of the template are reused unchanged and which parts are the tunable design-space parameter",
+    "reusable_patterns": [
+      "control-plane/data-plane split diagram used to show which blocks are fixed vs. parameterized in a template architecture"
+    ],
+    "weaknesses": [
+      "individual signal/data flows between blocks are not annotated with labels beyond bus widths, so exact wiring must be inferred from arrow placement"
+    ]
+  },
+  "tags": [
+    "risc-v",
+    "flexible-electronics",
+    "microarchitecture",
+    "item-level-intelligence",
+    "template-design",
+    "edge-computing"
+  ],
+  "provenance": {
+    "sections": [
+      "4 FlexiBits (p.7)"
+    ],
+    "evidence": [
+      "Yellow-colored components are fixed across all cores, while blue-colored elements vary with datapath width",
+      "the clean separation between width-independent control logic (shown in yellow) and width-dependent datapaths (shown in blue)"
+    ]
+  },
+  "summary": "FlexiFlow's FlexiBits family produces area-optimized RISC-V cores (SERV, QERV, HERV) with 1/4/8-bit datapaths for natively flexible electronics used in item-level intelligence. Figure 3 shows the shared template microarchitecture behind this family: a Data plane block containing Buffer Register #1, Immediate Decoder, Buffer Register #2, Control Unit, Control Status Registers, an Arithmetic Logic Unit, and a Memory Interface, flanked by Register File Interface and bus-address/extension-support boxes, plus a separate Control Plane block containing a Decoder and State Machine. The figure's key device is its two-color coding -- yellow for width-independent control logic that stays fixed across all cores, and blue for width-dependent datapath elements that scale with bit-width -- visually demonstrating that datapath width can be treated as a clean, tunable parameter rather than requiring a redesign. It is a flat, square-cornered drawio-style block diagram with bidirectional bus-width-labelled arrows.",
+  "summary_zh": "该图展示 FlexiBits 系列核心的通用模板微架构：黄色为跨所有核心固定不变的控制逻辑（如译码器、状态机、寄存器文件接口），蓝色为随数据通路位宽变化的数据通路部件（缓冲寄存器、ALU等），体现位宽作为可调参数的设计思路。",
+  "confidence": "medium",
+  "notes": "Individual signal-flow arrows (e.g., which register feeds which unit) are read directly from the figure since the surrounding text only describes the color-coding at a high level, not per-wire connectivity.",
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,212 @@
+{
+  "paper_id": "nsdi26-131",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "S2Sim",
+    "one_liner": "a selective symbolic-simulation tool that diagnoses and repairs distributed routing configuration errors by checking them against intent-compliant contracts",
+    "domain": [
+      "network verification",
+      "BGP configuration",
+      "fault tolerance"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "deriving a single-link-failure-tolerant data plane, then simulating it to diagnose B's route-import contract violation",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "S",
+        "kind": "node",
+        "role": "source router with no direct link toward the destination except via A or B; must reach p under any single link failure",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "node",
+        "role": "router adjacent to S, B, and C; carries two edge-disjoint forwarding paths toward p",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "node",
+        "role": "router adjacent to S, A, and D; configured to drop routes from D that match prefix p",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "router adjacent to A and D; carries two edge-disjoint forwarding paths toward p",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "D",
+        "kind": "node",
+        "role": "router that originates prefix p and is adjacent to B and C",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "p",
+        "kind": "port",
+        "role": "the destination prefix every router must be able to reach under any single-link failure",
+        "container": "D",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "S",
+        "to": "A",
+        "what": "S forwards toward p via A on one of its two edge-disjoint paths",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "S",
+        "to": "B",
+        "what": "S forwards toward p via B on its other edge-disjoint path",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "B",
+        "what": "A and B's paths cross here, giving each a second edge-disjoint route",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "C",
+        "what": "A reaches D via C on its second edge-disjoint path",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "D",
+        "what": "B's direct link to D, on which D is configured to deny routes matching prefix p",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "D",
+        "what": "C's direct link to D toward the originated prefix",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) fault-tolerant data plane",
+        "axis": "time",
+        "differs": "green arrows mark each node's two edge-disjoint forwarding paths, plus a callout giving the misconfiguration 'D -> B: match p: deny'",
+        "verdict": "intent-compliant design"
+      },
+      {
+        "label": "(b) selective symbolic simulation",
+        "axis": "time",
+        "differs": "the same topology instead carries numbered candidate routes r0-r11; selected routes are underlined, and B's r2 [B,D] is red and tagged c1",
+        "verdict": "diagnosed violation"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "each node's edge-disjoint forwarding paths in (a) and each node's numbered candidate routes r0-r11 with their guard condition in (b)",
+      "linked_by": "colour",
+      "result_cells": "selected/forwarding paths are shown as green arrows in (a) or underlined route lists in (b); the route implicated in the contract violation is coloured red and named in the '(vio) c1: isImported(...)' equation"
+    },
+    "key_idea": "Deriving two edge-disjoint paths per router tolerates any single link failure, but simulating the network under B's real deny-p policy shows B's import of [B,D] actually violates that fault-tolerance contract.",
+    "reading_order": "panel (a) first, reading each node's green two-path labels around the S-A-B-C-D graph; then panel (b), reading the same graph's numbered route lists down to the red violation note"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.48,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#00b050",
+        "used_for": "green forwarding-path arrows in panel (a), marking each node's two edge-disjoint paths"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red route text and the '(vio) c1' annotation in panel (b), marking the diagnosed violation"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the small policy/violation callout boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black network edges",
+    "corners": "square",
+    "arrows": "green arrows in (a) for forwarding paths; no arrowheads on the plain black topology edges",
+    "font": "sans (Calibri-Bold), 5-13pt, mostly bold",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green marks derived fault-tolerant forwarding paths in (a); red marks the specific route and contract implicated in the diagnosed violation in (b)",
+    "line_style_means": "not applicable; all topology edges are plain solid black, undifferentiated by type",
+    "state_means": "the two panels are told apart by their annotation style (green path arrows vs numbered red/black route lists) rather than ghosting or dashing",
+    "marker_means": "underlining in (b) marks each node's selected/forwarding routes among its listed candidates",
+    "emphasis": "the red '(vio) c1' note directly beneath B's routes ties the abstract contract text to the specific route r2 [B,D] that violates it",
+    "reusable_patterns": [
+      "the same small network topology redrawn with two different annotation conventions (path arrows vs numbered route lists) to move from design intent to diagnosed behaviour"
+    ],
+    "weaknesses": [
+      "reusing route IDs r0-r11 across a differently-annotated redraw of the same graph requires care to avoid confusing it with Figure 4's own r0-r11 labelling"
+    ]
+  },
+  "tags": [
+    "S2Sim",
+    "symbolic-simulation",
+    "BGP",
+    "fault-tolerance",
+    "edge-disjoint-paths",
+    "contract-violation"
+  ],
+  "provenance": {
+    "sections": [
+      "§6 Tolerating K-link Failure (p.10)",
+      "§6 Tolerating K-link Failure (p.11)"
+    ],
+    "evidence": [
+      "the intent is that all routers must be able to reach prefix p under any single-link failure",
+      "router B, which is configured to drop routes from neighbor D that match prefix p",
+      "we find that the isImported contract for this route is violated, so we record this violation as an error"
+    ]
+  },
+  "summary": "This two-panel figure from S2Sim's fault-tolerance section illustrates a five-router example (S, A, B, C, D) that must reach D's prefix p under any single-link failure. Panel (a) shows the derived fault-tolerant data plane: green arrows mark two edge-disjoint forwarding paths per node (e.g. B's [B,D] and [B,A,C,D]), alongside the injected misconfiguration 'D -> B: match p: deny'. Panel (b) simulates the network under that misconfiguration using the paper's numbered-route notation: each node's two selected routes are underlined, and B's imported route r2 [B,D] is coloured red and tagged c1, matching the note '(vio) c1: isImported(B,[B,D],D) == true'. Together the panels show how an intent-compliant design can still be broken by one router's real policy, which the simulation catches and localizes.",
+  "summary_zh": "该图分两部分：(a)展示S2Sim为容忍单链路故障推导的容错数据平面，绿色箭头标出每个节点的两条边不相交路径，并给出D对B的match p: deny误配置；(b)用编号路由r0-r11模拟该网络，B导入的r2[B,D]标红并标注c1，对应下方违反的isImported合约。",
+  "confidence": "high",
+  "notes": "Added 'comparison' as a secondary group alongside the prior 'evolution': the two panels are also literally the same topology re-annotated to compare a design-time intent (a) against a simulated real-world outcome (b). worked_example corrected from prior False to True, matching sibling Figure 4's identical route-list convention in the same paper: the r0-r11 candidate routes and the violated-contract equation are concrete values the reader checks, not mere annotations. content.relations describes the shared S-A-B-C-D topology common to both panels; panel-specific annotation differences (green paths vs numbered routes) are captured in content.panels.",
+  "venue": "NSDI26"
+}

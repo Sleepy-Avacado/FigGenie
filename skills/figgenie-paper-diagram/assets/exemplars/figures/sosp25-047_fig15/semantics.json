@@ -1,0 +1,206 @@
+{
+  "paper_id": "sosp25-047",
+  "fig": "15",
+  "kind": "mechanism",
+  "system": {
+    "name": "Tempo",
+    "one_liner": "a deep learning system that compiles a declarative, recurrent-tensor program into a whole-program-optimized schedule via a symbolic dependence graph",
+    "domain": [
+      "deep-learning-compilers",
+      "memory-management",
+      "tensor-programs"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how Tempo augments the symbolic dependence graph with new nodes for tensor deallocation and for GPU-CPU memory swapping",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "SDG",
+        "kind": "box",
+        "role": "dashed boundary marking the original, unaugmented symbolic dependence graph containing C and P",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "the consumer node, with domain Omega_C, that reads a tensor produced by P",
+        "container": "SDG",
+        "highlighted": false
+      },
+      {
+        "name": "P",
+        "kind": "node",
+        "role": "the producer node, with domain Omega_P, whose tensor C consumes",
+        "container": "SDG",
+        "highlighted": false
+      },
+      {
+        "name": "Dealloc",
+        "kind": "node",
+        "role": "panel (a) only: new node that frees P's tensor once both production and C's last use have happened",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Evict_B",
+        "kind": "node",
+        "role": "panel (b) only: new node that evicts the reloaded tensor back to CPU after C's last use",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Load",
+        "kind": "node",
+        "role": "panel (b) only: new node that reloads P's tensor from CPU back to GPU for C to consume",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Evict_A",
+        "kind": "node",
+        "role": "panel (b) only: new node that evicts P's tensor to CPU immediately after production",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "C",
+        "to": "P",
+        "what": "the consumer C reads tensor P via mapping phi, unchanged inside the SDG",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Dealloc",
+        "to": "P",
+        "what": "Dealloc has an identity dependence on P: it may only run after P produces its tensor",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Dealloc",
+        "to": "C",
+        "what": "Dealloc also depends on C via the inverse mapping phi^-1, so it waits until C has finished consuming that timestep's tensor",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "Load",
+        "what": "in the swap augmentation, C's dependency on P is redirected through phi to Load instead",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Load",
+        "to": "Evict_A",
+        "what": "Load has an identity dependence on Evict_A; the evicted copy must exist before it can be loaded back",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Evict_A",
+        "to": "P",
+        "what": "Evict_A has an identity dependence on P, evicting P's tensor to CPU memory right after it is produced",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Evict_B",
+        "to": "C",
+        "what": "Evict_B depends on C via the inverse mapping phi^-1, so the second eviction waits until C's last use",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Memory management operations (deallocation, or GPU/CPU swap eviction and reload) are added to the SDG with an identity dependence on producer P and an inverse-mapped dependence on consumer C, so they run only after production and last use.",
+    "reading_order": "in (a) Deallocation, C and P inside the SDG box, then Dealloc below with its two dependence arrows; in (b) Swap, the same pair plus Evict_B above and Load/Evict_A below"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "callout",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.18,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f9f7ed",
+        "used_for": "pale cream fill of the dashed SDG background box"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of every node circle"
+      },
+      {
+        "hex": "#202122",
+        "used_for": "near-black outline and text colour"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black circle outlines; dashed black border around the SDG sub-box",
+    "corners": "square",
+    "arrows": "thin black arrows labelled phi or phi^-1 (or left unlabelled for an identity dependence) linking each new node to C and/or P",
+    "font": "italic serif math notation (C, P, Omega, phi) inside plain sans-serif circles; bold sans-serif 'SDG' and panel captions",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "purely monochrome; the only fill distinction is the pale cream dashed box marking which nodes belong to the original, unaugmented SDG versus the new memory-management nodes drawn outside it",
+    "line_style_means": "a dashed border separates the original SDG (C, P) from the newly added nodes; solid arrows labelled phi or phi^-1 (or left unlabelled for a plain identity dependence) show each new dependence",
+    "state_means": "not applicable; both panels are single static augmented graphs, not before/after states of one graph",
+    "marker_means": null,
+    "emphasis": "keeping C and P inside a visually distinct dashed 'SDG' box while drawing every new memory-management node outside it makes clear that augmentation only adds dependencies, never touches the original computation graph",
+    "reusable_patterns": [
+      "a small unchanged sub-graph ringed by a dashed boundary, with new operator nodes attached outside it by labelled forward/inverse dependency arrows"
+    ],
+    "weaknesses": [
+      "phi and phi^-1 look nearly identical at this size (an inverse-exponent superscript), so a reader must look closely to see which direction of dependency each arrow encodes"
+    ]
+  },
+  "tags": [
+    "dataflow-graph",
+    "memory-management",
+    "GPU-CPU-swapping",
+    "deallocation-scheduling",
+    "Tempo"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Scheduling SDGs with the Polyhedral Model"
+    ],
+    "evidence": [
+      "Fig. 15a shows how Tempo augments the SDG with deallocations for the tensor produced by P and consumed by C",
+      "Deallocation must always happen after production, which Tempo models with an identity dependence",
+      "Fig. 15b shows how Tempo augments the SDG with evict (GPU-to-CPU) and load (CPU-to-GPU) memory movement operations"
+    ]
+  },
+  "summary": "Figure 15 shows two ways Tempo augments a symbolic dependence graph (SDG) with memory-management nodes, keeping the original producer P and consumer C (linked by phi) inside a dashed SDG box in both cases. In (a) Deallocation, a Dealloc node is added outside the SDG with an identity dependence on P (it may only run after P is produced) and an inverse-mapped (phi^-1) dependence on C (it must wait for C's last use of that timestep) before deallocating P's tensor. In (b) Swap, C's dependence on P is redirected through phi to a new Load node, which itself depends on an EvictA node that evicts P's tensor to CPU right after production; a further EvictB node, depending on C via phi^-1, evicts the reloaded copy again once C is done with it, completing a GPU-to-CPU-to-GPU round trip.",
+  "summary_zh": "该图示Tempo为SDG添加内存节点：P、C(经φ相连)仍在虚线框内；(a)新增Dealloc，待P产出且C末次使用后才释放；(b)C改依赖新增Load，其依赖EvictA(产出即逐出CPU)，EvictB依赖C用完后再逐出，完成往返。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

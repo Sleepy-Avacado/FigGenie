@@ -1,0 +1,256 @@
+{
+  "paper_id": "nsdi25-036",
+  "fig": "19",
+  "system": {
+    "name": "LoopTailor",
+    "one_liner": "an end-to-end VSync regulator that decouples game rendering from the cloud pipeline and coordinates VSync timing with the client",
+    "domain": [
+      "mobile-cloud-gaming",
+      "virtualization"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "MCG-X",
+        "role": "one of three compared mobile cloud gaming architectures; renders inside a Guest VM and forwards frames via a Host with a sub-millisecond Projection step",
+        "container": "Game Rendering",
+        "novel": false
+      },
+      {
+        "name": "Google Android Emulator",
+        "role": "a Guest-VM-based MCG architecture compared alongside MCG-X, forwarding Context/Resource/Drawing APIs to its Host over RPC",
+        "container": "Game Rendering",
+        "novel": false
+      },
+      {
+        "name": "DroidCloud",
+        "role": "a container-based MCG architecture (no guest VM) that maps Context/Resource/Drawing APIs to a separate Rendering Backend",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Game Rendering",
+        "role": "grouping box covering the VM-based rendering stage shared by MCG-X and Google Android Emulator",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Guest VM",
+        "role": "virtualized guest environment in which the game renders; used by both MCG-X and Google Android Emulator",
+        "container": "Game Rendering",
+        "novel": false
+      },
+      {
+        "name": "Container",
+        "role": "lightweight OS-level container DroidCloud uses instead of a guest VM",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host",
+        "role": "host-side component that composites and forwards guest rendering output; paired with each Guest VM",
+        "container": "Game Rendering",
+        "novel": false
+      },
+      {
+        "name": "Rendering Backend",
+        "role": "host-side rendering component paired with DroidCloud's Container",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Shadow Contexts",
+        "role": "MCG-X's guest-side mechanism tracked before Host-side projection",
+        "container": "Guest VM",
+        "novel": false
+      },
+      {
+        "name": "Resource Handles",
+        "role": "MCG-X's guest-side resource references passed to the Host",
+        "container": "Guest VM",
+        "novel": false
+      },
+      {
+        "name": "Context APIs",
+        "role": "graphics context calls forwarded via RPC from the Guest VM/Container to the Host/Rendering Backend, used by Google Android Emulator and DroidCloud",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Resource APIs",
+        "role": "resource-handling calls forwarded via RPC from the Guest VM/Container to the Host/Rendering Backend, used by Google Android Emulator and DroidCloud",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Drawing APIs",
+        "role": "drawing calls forwarded via RPC from the Guest VM/Container to the Host/Rendering Backend, used by Google Android Emulator and DroidCloud",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Projection",
+        "role": "MCG-X's Host-side step projecting the guest's shadow contexts/resource handles into a frame (~0.0 ms)",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "Layer Composition",
+        "role": "shared downstream pipeline stage that composites the rendered frame",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Virtual Display",
+        "role": "shared downstream pipeline stage presenting the composited frame to a virtual display",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Frame Encoding",
+        "role": "shared downstream pipeline stage encoding the frame for network transmission",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Client",
+        "role": "end device receiving the encoded frame, triggering VSync5",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Input Injection",
+        "role": "entry point where player input is injected for MCG-X/Google Android Emulator, triggering VSync1",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Input Mapping",
+        "role": "DroidCloud's entry point mapping player input into its Container, triggering VSync1",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Injection",
+        "to": "Guest VM",
+        "what": "player input (VSync1)",
+        "step": null
+      },
+      {
+        "from": "Input Mapping",
+        "to": "Container",
+        "what": "player input (VSync1)",
+        "step": null
+      },
+      {
+        "from": "Guest VM",
+        "to": "Host",
+        "what": "rendering output (shadow contexts/resource handles, or Context/Resource/Drawing APIs via RPC), ~0.3-1.2 ms",
+        "step": null
+      },
+      {
+        "from": "Container",
+        "to": "Rendering Backend",
+        "what": "Context/Resource/Drawing APIs via RPC, ~0.5-2.5 ms",
+        "step": null
+      },
+      {
+        "from": "Host",
+        "to": "Layer Composition",
+        "what": "composited layer (VSync2)",
+        "step": null
+      },
+      {
+        "from": "Rendering Backend",
+        "to": "Layer Composition",
+        "what": "composited layer (VSync2)",
+        "step": null
+      },
+      {
+        "from": "Layer Composition",
+        "to": "Virtual Display",
+        "what": "frame (VSync3)",
+        "step": null
+      },
+      {
+        "from": "Virtual Display",
+        "to": "Frame Encoding",
+        "what": "frame (VSync4)",
+        "step": null
+      },
+      {
+        "from": "Frame Encoding",
+        "to": "Client",
+        "what": "encoded frame (VSync5)",
+        "step": null
+      }
+    ],
+    "key_idea": "Comparing MCG-X, Google Android Emulator, and DroidCloud shows all three route game frames through a guest-side rendering stage and a shared host-side composition/encoding pipeline, each adding different per-stage latency before reaching the client.",
+    "reading_order": "top to bottom through the three architecture rows (MCG-X, Google Android Emulator, DroidCloud), each read left to right into the shared downstream pipeline on the right"
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.79,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d0cece",
+        "used_for": "shaded inner panels (e.g., Shadow Contexts/Resource Handles area, chip icons) inside the Guest VM/Container boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines, dashed for the Guest VM/Container virtualization boundary",
+    "font": "sans-serif (Calibri/Cambria Math), 5.5-7pt",
+    "corners": "mixed",
+    "arrows": "thin black arrows connecting pipeline stages, latency values labeled directly on or beside each arrow",
+    "icons": "vector chip/processor icons (2) inside the Guest VM and Host boxes"
+  },
+  "encoding": {
+    "color_means": "red text highlights VSync events and per-stage latency numbers to draw attention to timing overhead at each hop",
+    "line_style_means": "dashed outlines mark the Guest VM / Container virtualization boundary, distinct from the solid Host / Rendering Backend and pipeline boxes",
+    "emphasis": "stacking three architectures as rows with matched pipeline stages lets the reader compare where each system spends time (the latency numbers) as frames move from input to client",
+    "reusable_patterns": [
+      "side-by-side architecture rows compared against a shared downstream pipeline, annotated with per-hop latency numbers instead of a data table"
+    ],
+    "weaknesses": [
+      "no body paragraph accompanies this figure, so component roles are read from the figure/caption alone",
+      "no explicit legend even though color (red) and line style (dashed) both carry meaning"
+    ]
+  },
+  "tags": [
+    "mobile-cloud-gaming",
+    "architecture-comparison",
+    "vsync",
+    "latency-breakdown",
+    "virtualization"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Evaluation"
+    ],
+    "evidence": [
+      "Architectural comparison of X-MCG and other representative MCG solutions",
+      "The numbers atop arrows refer to the average latency overhead per game frame"
+    ]
+  },
+  "summary": "This paper introduces LoopTailor, an end-to-end VSync regulator that streamlines mobile cloud gaming's interactive loop. Rather than showing LoopTailor itself, Figure 19 compares three baseline mobile cloud gaming (MCG) architectures side by side: MCG-X and the Google Android Emulator both inject input into a Guest VM (via Shadow Contexts/Resource Handles or Context/Resource/Drawing APIs over RPC) that a paired Host composites, while DroidCloud instead maps input into a lightweight Container served by a separate Rendering Backend. All three converge on a shared downstream pipeline of Layer Composition, Virtual Display, and Frame Encoding before reaching the Client. Latency numbers labeled on the arrows (roughly 0.3-2.5 ms per stage) quantify each architecture's overhead, and VSync1 through VSync5 mark the timing events each design must synchronize across the guest/host or container/backend boundary.",
+  "summary_zh": "图19比较MCG-X、Google Android Emulator与DroidCloud三种架构：前两者用Guest VM渲染经Host合成，DroidCloud用容器加独立后端；三者共享右侧合成显示编码到客户端流水线，箭头标注延迟。",
+  "confidence": "low",
+  "notes": "layout-proposal: stacked-pipeline-comparison — three architecture variants (MCG-X, Google Android Emulator, DroidCloud) are stacked as rows, each a short input-to-rendering pipeline annotated with per-stage latency, converging into one shared downstream pipeline (Layer Composition to Client). No body paragraph mentions this figure, so components and roles are read from the caption and figure only; note the figure itself labels this system 'MCG-X' although the paper's running text elsewhere calls it 'X-MCG'.",
+  "venue": "NSDI25"
+}

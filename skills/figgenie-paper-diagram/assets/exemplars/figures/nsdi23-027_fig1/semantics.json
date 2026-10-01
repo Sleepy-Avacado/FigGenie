@@ -1,0 +1,238 @@
+{
+  "paper_id": "nsdi23-027",
+  "fig": "1",
+  "system": {
+    "name": "LinkLab 2.0",
+    "one_liner": "a multi-tenant, three-layer (IoT/edge/cloud) programmable IoT testbed for experimenting with edge-cloud integration",
+    "domain": [
+      "iot",
+      "testbed",
+      "edge-cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "LDC Management Cluster",
+        "role": "management infrastructure in the cloud layer running LDC's controller and monitoring",
+        "container": "Layer 3: Cloud",
+        "novel": true
+      },
+      {
+        "name": "Monitoring Server",
+        "role": "collects monitoring data path traffic for system-wide anomaly detection",
+        "container": "LDC Management Cluster",
+        "novel": true
+      },
+      {
+        "name": "LDC Controller",
+        "role": "central controller of the LinkLab 2.0 Device Center, coordinating LDC Servers",
+        "container": "LDC Management Cluster",
+        "novel": true
+      },
+      {
+        "name": "LDC Servers",
+        "role": "Kubernetes-based servers that manage programmable devices across layers",
+        "container": "LDC Management Cluster",
+        "novel": true
+      },
+      {
+        "name": "Programmable Cloud Infrastructure",
+        "role": "cloud compute resources users can program as part of an experiment",
+        "container": "Layer 3: Cloud",
+        "novel": false
+      },
+      {
+        "name": "Public Cloud",
+        "role": "third-party cloud services (AWS, Azure, Alibaba Cloud) usable as the cloud node in an experiment",
+        "container": "Programmable Cloud Infrastructure",
+        "novel": false
+      },
+      {
+        "name": "LinkLab Built-in Cloud",
+        "role": "LinkLab's own built-in cloud infrastructure with general-purpose compute (CPU, GPU)",
+        "container": "Programmable Cloud Infrastructure",
+        "novel": true
+      },
+      {
+        "name": "LDC Client Cluster",
+        "role": "management infrastructure agents running on the edge layer",
+        "container": "Layer 2: Edge",
+        "novel": true
+      },
+      {
+        "name": "LDC Client",
+        "role": "per-device agent connecting a programmable device to the LDC management plane",
+        "container": "LDC Client Cluster",
+        "novel": true
+      },
+      {
+        "name": "Programmable Edge Devices",
+        "role": "edge hardware users can program as part of an experiment",
+        "container": "Layer 2: Edge",
+        "novel": false
+      },
+      {
+        "name": "Raspberry Pi",
+        "role": "a supported programmable edge device",
+        "container": "Programmable Edge Devices",
+        "novel": false
+      },
+      {
+        "name": "NVIDIA Jetson TX2",
+        "role": "a supported programmable edge device",
+        "container": "Programmable Edge Devices",
+        "novel": false
+      },
+      {
+        "name": "NVIDIA Xavier AGX",
+        "role": "a supported programmable edge device",
+        "container": "Programmable Edge Devices",
+        "novel": false
+      },
+      {
+        "name": "Programmable IoT Devices",
+        "role": "IoT hardware users can program or interact with",
+        "container": "Layer 1: IoT",
+        "novel": false
+      },
+      {
+        "name": "Prototyping Devices",
+        "role": "development boards for IoT programming (e.g. CC2650 LaunchPad, TelosB, STM32, AliOS HaaS, ESP32, Arduino, virtual devices)",
+        "container": "Programmable IoT Devices",
+        "novel": false
+      },
+      {
+        "name": "COTS Devices",
+        "role": "commercial off-the-shelf smart-home devices (e.g. Philips Hue, Xiaomi Smart Home, Tuya Smart) available for experiments",
+        "container": "Programmable IoT Devices",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "LDC Controller",
+        "to": "LDC Servers",
+        "what": "coordination within the LDC Management Cluster",
+        "step": null
+      },
+      {
+        "from": "LDC Management Cluster",
+        "to": "Programmable Cloud Infrastructure",
+        "what": "control and monitoring data paths over a Wired Channel",
+        "step": null
+      },
+      {
+        "from": "LDC Management Cluster",
+        "to": "LDC Client Cluster",
+        "what": "control and monitoring data paths over a Wired Channel",
+        "step": null
+      },
+      {
+        "from": "LDC Client Cluster",
+        "to": "Programmable Edge Devices",
+        "what": "control and monitoring data paths over a Wired Channel",
+        "step": null
+      },
+      {
+        "from": "Programmable Edge Devices",
+        "to": "Programmable Cloud Infrastructure",
+        "what": "experimental/control/monitoring data over a Wired Channel",
+        "step": null
+      },
+      {
+        "from": "LDC Client Cluster",
+        "to": "Programmable IoT Devices",
+        "what": "control and monitoring data paths over USB Serial",
+        "step": null
+      },
+      {
+        "from": "Programmable Edge Devices",
+        "to": "Programmable IoT Devices",
+        "what": "experimental data path over a Wireless Channel",
+        "step": null
+      }
+    ],
+    "key_idea": "LinkLab 2.0 spans IoT, edge, and cloud layers, pairing a dashed-outline management infrastructure (LDC controller/clients) with solid-outline programmable infrastructure at each layer, linked by labeled experimental, control, and monitoring data paths.",
+    "reading_order": "Top-down by layer (Cloud, Edge, IoT); within each layer, management infrastructure (dashed, left) pairs with programmable infrastructure (solid, right), per the top legend."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.82,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#00b0f0",
+        "used_for": "Experimental Data Path arrows"
+      },
+      {
+        "hex": "#00b050",
+        "used_for": "Control Data Path dashed arrows"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "Monitoring Data Path dashed arrows"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "solid-outline 'Programmable Infrastructure' box borders"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid rounded borders for Programmable Infrastructure boxes, dashed rounded borders for Management Infrastructure boxes",
+    "font": "Nimbus Sans, small (~4.5-8pt) labels, bold for layer/box titles",
+    "corners": "rounded",
+    "arrows": "bidirectional double-headed arrows, color-coded and solid vs. dashed per the legend",
+    "icons": "bitmap logos and product photos: cloud providers (AWS, Azure, Alibaba Cloud) and each hardware device (Raspberry Pi, Jetson, Arduino boards, smart-home devices, etc.)"
+  },
+  "encoding": {
+    "color_means": "blue solid arrows = Experimental Data Path, green dashed arrows = Control Data Path, gold dashed arrows = Monitoring Data Path, per the figure's own legend; solid-outline pill boxes = Programmable Infrastructure, dashed-outline pill boxes = Management Infrastructure",
+    "line_style_means": "dashed vs. solid box borders distinguish management from programmable infrastructure; dashed vs. solid arrows distinguish control/monitoring paths from the experimental data path",
+    "emphasis": "an explicit shape+color legend at the top lets the reader classify every box and arrow in the three layers below at a glance, without needing to read the body text",
+    "reusable_patterns": [
+      "three horizontally stacked layers (device/edge/cloud) each split into a management column and a programmable-resources column",
+      "explicit in-figure legend mapping line color/style and box style to semantic categories",
+      "product logos/photos used as icons for real hardware and cloud providers"
+    ],
+    "weaknesses": [
+      "very icon- and label-dense for a single-column figure",
+      "some inter-layer wires (e.g. USB Serial vs. Wireless Channel) are easy to confuse without careful tracing"
+    ]
+  },
+  "tags": [
+    "iot-testbed",
+    "edge-cloud",
+    "multi-tenancy",
+    "kubernetes",
+    "testbed-architecture",
+    "device-management"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.3)",
+      "2 Basics and Usage of LinkLab 2.0 (p.3)"
+    ],
+    "evidence": [
+      "Figure 1 shows the overall architecture of LinkLab 2.0.",
+      "LinkLab 2.0 consists of three layers: device layer, edge layer and cloud layer.",
+      "There are three different data paths among different layers."
+    ]
+  },
+  "summary": "This figure gives the overall architecture of LinkLab 2.0, a multi-tenant IoT testbed spanning three layers: Cloud, Edge, and IoT. Each layer pairs a dashed-outline Management Infrastructure column with a solid-outline Programmable Infrastructure column, per the figure's own legend. In the cloud, an LDC Management Cluster (Monitoring Server, LDC Controller, LDC Servers) oversees Programmable Cloud Infrastructure spanning public clouds (AWS, Azure, Alibaba Cloud) and LinkLab's own built-in cloud. At the edge, an LDC Client Cluster of per-device agents pairs with Programmable Edge Devices such as a Raspberry Pi, NVIDIA Jetson TX2, and Xavier AGX. At the IoT layer, Programmable IoT Devices include both prototyping boards (e.g. CC2650 LaunchPad, Arduino, ESP32, virtual devices) and COTS smart-home devices (Philips Hue, Xiaomi, Tuya). Color-coded arrows distinguish the Experimental, Control, and Monitoring data paths connecting all three layers over wired, wireless, or USB channels.",
+  "summary_zh": "该图展示 LinkLab 2.0 三层架构（云、边缘、IoT），每层均含虚线管理基础设施与实线可编程基础设施，通过实验、控制、监控三种数据通路互联。",
+  "confidence": "high",
+  "notes": "The extracted image also includes adjacent page-header text (paper title/authors) above the actual figure, which is excluded from this description. Individual IoT prototyping/COTS device models are summarized under their figure sub-band labels rather than listed as separate components.",
+  "venue": "NSDI23"
+}

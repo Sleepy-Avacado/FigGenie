@@ -1,0 +1,63 @@
+{
+  "id": "osdi26-136_fig7",
+  "kind": "mechanism",
+  "paper_id": "osdi26-136",
+  "fig": "7",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Fig. 7: FST construction example. RT constructs the FST",
+  "groups_in_record": [
+    "evolution",
+    "logic"
+  ],
+  "worked_example": true,
+  "base": "state-machine",
+  "subject": "how RT builds the squeeze-transducer product automaton from an input DFA and projects it into a result NFA",
+  "arrangement": "panels-grid",
+  "panel_count": 4,
+  "frame_template": "free",
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.17,
+  "n_elements": 11,
+  "n_relations": 13,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-136/osdi26-136_fig7_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-136/osdi26-136_fig7_p9_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "RT builds a squeeze transducer for one concrete input DFA by taking their automaton product state by state, then projects that product onto its output symbols alone to get the result NFA.",
+      "what_to_learn": "small automaton diagrams whose accepting states are drawn as double circles and whose transitions are labelled input/output pairs; a 2x2 progression from two small input automata to their product and then to a simplified result automaton",
+      "note_source": "record"
+    },
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "RT builds a squeeze transducer for one concrete input DFA by taking their automaton product state by state, then projects that product onto its output symbols alone to get the result NFA.",
+      "what_to_learn": "small automaton diagrams whose accepting states are drawn as double circles and whose transitions are labelled input/output pairs; a 2x2 progression from two small input automata to their product and then to a simplified result automaton",
+      "note_source": "record"
+    }
+  ]
+}

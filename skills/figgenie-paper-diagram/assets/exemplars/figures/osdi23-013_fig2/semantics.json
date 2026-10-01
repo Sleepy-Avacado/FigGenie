@@ -1,0 +1,154 @@
+{
+  "paper_id": "osdi23-013",
+  "fig": "2",
+  "system": {
+    "name": "Larch",
+    "one_liner": "a system for accountable authentication with privacy protection for universal login",
+    "domain": [
+      "security",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Goal 1",
+        "role": "section illustrating log enforcement against a malicious client",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "amazon",
+        "role": "example relying party (RP); shown trusted (green check) when the log enforces correct login behavior",
+        "container": "Goal 1 / Goal 2",
+        "novel": false
+      },
+      {
+        "name": "Client",
+        "role": "end user authenticating to a relying party via Larch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Log",
+        "role": "Larch's public append-only log server, shown malicious/untrusted (red) in Goal 2",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Goal 2",
+        "role": "section illustrating privacy and security against a malicious log",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Goal 3",
+        "role": "section illustrating privacy against a malicious relying party (RP)",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "RPs",
+        "role": "multiple relying parties shown unable to identify or collude on the same client (privacy against malicious RP)",
+        "container": "Goal 3",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client",
+        "to": "amazon",
+        "what": "login enforced correctly (green check)",
+        "step": null
+      },
+      {
+        "from": "Client",
+        "to": "Log",
+        "what": "authentication record",
+        "step": null
+      },
+      {
+        "from": "Log",
+        "to": "amazon",
+        "what": "query attempting to learn which RP the client used ('amazon?')",
+        "step": null
+      },
+      {
+        "from": "amazon",
+        "to": "Log",
+        "what": "no direct connection / blocked (red X, security against malicious log)",
+        "step": null
+      },
+      {
+        "from": "RPs",
+        "to": "Client",
+        "what": "RPs cannot tell whether they share the same client ('?')",
+        "step": null
+      }
+    ],
+    "key_idea": "Larch's three security goals are illustrated with a consistent client/log/relying-party icon vocabulary: correct login enforcement against a malicious client, privacy and security against a malicious log, and privacy against a malicious or colluding relying party.",
+    "reading_order": "Left to right across three goal panels separated by dotted vertical lines, each a small icon scene of a relying party (amazon), Client, and Log."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 5.68,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5d5d5",
+        "used_for": "neutral icon fill (e.g. database/log icon default shading)"
+      }
+    ],
+    "background": "white",
+    "fill": "mixed",
+    "stroke": "thin black outlines for icons and dotted vertical separators between the three goals",
+    "font": "Times-like serif, 8.5-12pt, bold for 'Goal N' headings",
+    "corners": "mixed",
+    "arrows": "bidirectional double-headed arrows connecting icons, one curved",
+    "icons": "bitmap: person, bank/building ('amazon'), and database ('Log') icons, colored red for malicious/untrusted or green-checked for trusted/enforced; these colors are embedded in raster icons and are not captured in the vector fill histogram"
+  },
+  "encoding": {
+    "color_means": "green check = trusted/enforced; red = malicious, untrusted, or blocked; black = default/neutral party",
+    "line_style_means": null,
+    "emphasis": "color-coded checkmarks, X marks, and red-tinted icons highlight which party is malicious or blocked in each of the three goals",
+    "reusable_patterns": [
+      "repeated actor-icon vocabulary (person / building / database) reused across goal variants to show which party becomes untrusted"
+    ],
+    "weaknesses": [
+      "red/green semantic color coding relies on bitmap icons not captured in the vector color histogram",
+      "very wide (aspect 5.68) double-column figure packing three dense sub-scenes"
+    ]
+  },
+  "tags": [
+    "authentication",
+    "privacy",
+    "threat-model",
+    "security-goals",
+    "universal-login",
+    "accountability"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Design overview (p.5)"
+    ],
+    "evidence": [
+      "We now describe the security goals of larch (Figure 2)."
+    ]
+  },
+  "summary": "This figure lays out Larch's three security goals using a small icon vocabulary of a relying party ('amazon'), a Client, and a Log server, repeated with color changes across three side-by-side panels. Goal 1 shows log enforcement against a malicious client: a green check marks the RP as protected and a lock icon secures the 'amazon' identifier. Goal 2 shows privacy and security against a malicious log: the log is shown querying which RP a client used, and separately an RP is shown disconnected (red X) from a compromised (red) log. Goal 3 shows privacy against a malicious relying party: two red RP icons are marked with a '?' to indicate they cannot tell whether they are colluding on the same client. Dotted vertical lines separate the three goal panels, and double-headed arrows show bidirectional interactions between icons.",
+  "summary_zh": "图2用统一的图标(依赖方amazon、客户端Client、日志Log)展示Larch的三个安全目标：目标1为防恶意客户端的登录强制(绿色对勾)；目标2为防恶意日志的隐私与安全(日志试探依赖方、红色叉号断开连接)；目标3为防恶意依赖方的隐私(两个红色依赖方无法确认是否为同一客户端)。",
+  "confidence": "low",
+  "notes": "The excerpted body text is a single generic sentence ('We now describe the security goals of larch (Figure 2)'); component roles and flows above are inferred primarily from the figure's icons, colors, and labels (Goal 1/2/3, amazon, Client, Log, RPs) rather than from surrounding prose.",
+  "venue": "OSDI23"
+}

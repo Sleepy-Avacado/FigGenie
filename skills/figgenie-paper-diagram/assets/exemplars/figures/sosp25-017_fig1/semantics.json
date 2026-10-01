@@ -1,0 +1,262 @@
+{
+  "paper_id": "sosp25-017",
+  "fig": "1",
+  "system": {
+    "name": "Tai Chi",
+    "one_liner": "a hardware-software co-designed scheduler that uses SmartNIC-accelerated hybrid virtualization to coordinate control-plane tasks and data-plane services",
+    "domain": [
+      "networking",
+      "virtualization",
+      "os-kernel"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Bare-metal",
+        "role": "panel (a): a single tenant exclusively occupies all compute resources",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "LC task",
+        "role": "latency-critical application task, shown per deployment model",
+        "container": "Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "BE task",
+        "role": "best-effort/batch task scheduled alongside the LC task for CPU utilization",
+        "container": "Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "Custom scheduler",
+        "role": "balances LC vs BE task scheduling on bare-metal",
+        "container": "Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "DPDK or SPDK",
+        "role": "user-space I/O framework bypassing the kernel to reach NICs directly",
+        "container": "Bare-metal",
+        "novel": false
+      },
+      {
+        "name": "NICs",
+        "role": "physical network interface cards, the common endpoint of the I/O path in all three panels",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VM 0",
+        "role": "a tenant VM running LC/BE tasks and a NIC driver, shown in panels (b) and (c)",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "VM 1",
+        "role": "a second, stacked tenant VM instance shown behind VM 0 in panels (b) and (c)",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "NIC driver",
+        "role": "in-guest driver for the (virtual or physical) NIC",
+        "container": "VM 0",
+        "novel": false
+      },
+      {
+        "name": "Host",
+        "role": "hypervisor host machine running QEMU/KVM, shown in panels (b) and (c)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vNIC",
+        "role": "QEMU-emulated virtual NIC exposed to each VM (panel b)",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "QEMU and KVM",
+        "role": "virtualization stack co-located with DPDK to accelerate I/O for VMs",
+        "container": "Host",
+        "novel": false
+      },
+      {
+        "name": "SmartNIC",
+        "role": "panel (c): compact PCIe device with general-purpose cores and programmable I/O acceleration hardware",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CP tasks",
+        "role": "control-plane tasks managing device operations, coordinating with QEMU on the host (panel c)",
+        "container": "SmartNIC",
+        "novel": false
+      },
+      {
+        "name": "DP services",
+        "role": "data-plane services statically reserving most SmartNIC cores for latency-sensitive I/O processing (panel c)",
+        "container": "SmartNIC",
+        "novel": false
+      },
+      {
+        "name": "Core",
+        "role": "general-purpose SmartNIC cores running CP tasks and DP services",
+        "container": "SmartNIC",
+        "novel": false
+      },
+      {
+        "name": "Programmable I/O accelerator",
+        "role": "FPGA/ASIC hardware accelerator hosting emulated NICs (eNICs) passed through to VMs",
+        "container": "SmartNIC",
+        "novel": false
+      },
+      {
+        "name": "eNIC",
+        "role": "emulated NIC instance passed through to a VM",
+        "container": "Programmable I/O accelerator",
+        "novel": false
+      },
+      {
+        "name": "CSP",
+        "role": "cloud service provider's cluster management software, source of the VM-creation command sequence in panel (c)",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "LC task",
+        "to": "NICs",
+        "what": "I/O path through the custom scheduler and DPDK/SPDK (bare-metal)",
+        "step": null
+      },
+      {
+        "from": "LC task",
+        "to": "NICs",
+        "what": "I/O path through the NIC driver, vNIC, QEMU/KVM, and DPDK/SPDK (VM with virtual NIC)",
+        "step": null
+      },
+      {
+        "from": "Programmable I/O accelerator",
+        "to": "NIC driver",
+        "what": "eNIC passed through to the VM via PCIe",
+        "step": 1
+      },
+      {
+        "from": "eNIC",
+        "to": "DP services",
+        "what": "I/O request preprocessed and accelerated, then handed to the data-plane service",
+        "step": 2
+      },
+      {
+        "from": "DP services",
+        "to": "NICs",
+        "what": "forwarded to the NIC for transmission (steps 3-4)",
+        "step": 3
+      },
+      {
+        "from": "CSP",
+        "to": "CP tasks",
+        "what": "commands with required device specifications",
+        "step": 1
+      },
+      {
+        "from": "CP tasks",
+        "to": "DP services",
+        "what": "coordinate the data-plane to complete device initialization",
+        "step": 3
+      },
+      {
+        "from": "DP services",
+        "to": "CP tasks",
+        "what": "signal device initialization complete",
+        "step": 4
+      },
+      {
+        "from": "CP tasks",
+        "to": "QEMU and KVM",
+        "what": "notify QEMU to trigger VM creation",
+        "step": 5
+      }
+    ],
+    "key_idea": "Moving from bare-metal to VM-with-vNIC to VM-with-SmartNIC deployments progressively separates latency-critical I/O from control-plane device management, culminating in a SmartNIC that runs control-plane (CP) tasks and data-plane (DP) services on shared cores while a programmable accelerator exposes per-VM emulated NICs.",
+    "reading_order": "Left to right across three increasingly complex panels (a, b, c); within panel (c), blue circled numbers trace the data-plane I/O path and red circled numbers trace the control-plane VM-creation path."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.41,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff2600",
+        "used_for": "red arrows/circled numbers for the VM-creation (control-plane) path"
+      },
+      {
+        "hex": "#4040ff",
+        "used_for": "blue arrows/circled numbers for the I/O (data-plane) path"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of the CP tasks and DP services boxes in panel (c)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.76pt) solid dark box borders; dashed blue/red lines for the two path arrow types",
+    "font": "HelveticaNeue sans-serif, about 5.5-6pt, slight bold for headers",
+    "corners": "square",
+    "arrows": "dashed diagonal/orthogonal arrows in blue or red with filled arrowheads, annotated with small circled step numbers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = I/O (data-plane) path; red = VM-creation (control-plane) path; gray fill = SmartNIC control-plane/data-plane task boxes (CP tasks, DP services)",
+    "line_style_means": "dashed arrows in both colors trace two distinct request paths through the same static box diagram; solid thin lines are plain structural/containment borders",
+    "emphasis": "the same box skeleton is reused for panels (b) and (c) (VM 0/VM 1, Host, NICs) so that only the newly added SmartNIC internals and the two numbered colored paths draw the eye to what changed",
+    "reusable_patterns": [
+      "three side-by-side architecture panels of increasing complexity sharing one legend",
+      "two color-coded numbered paths (data-plane vs control-plane) overlaid on one static box diagram"
+    ],
+    "weaknesses": [
+      "panel (c) overlays two independently-numbered 1-5 step sequences (blue and red) on the same crowded diagram, so the arrows and circles are dense enough to be hard to trace without the legend"
+    ]
+  },
+  "tags": [
+    "SmartNIC",
+    "DPDK",
+    "virtualization",
+    "I/O acceleration",
+    "control-plane",
+    "data-plane"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.2)",
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "a single tenant exclusively occupies all compute resources",
+      "tenant VMs cannot directly access physical NICs and instead use QEMU-emulated virtual NICs",
+      "SmartNICs incorporate a limited number of general purpose cores (ARM or x86 cores) and programmable I/O hardware"
+    ]
+  },
+  "summary": "Tai Chi is a hardware-software co-designed scheduler that uses SmartNIC-accelerated hybrid virtualization to coordinate latency-sensitive control-plane (CP) tasks and data-plane (DP) services on the same cores. Figure 1 is a background comparison of three I/O-acceleration deployment models, drawn as three side-by-side box diagrams of increasing complexity: (a) bare-metal, where an LC/BE task pair reaches NICs through a custom scheduler and DPDK/SPDK; (b) VMs with virtual NICs, where each VM's NIC driver reaches a host-side vNIC, QEMU/KVM, and DPDK/SPDK; and (c) VMs with SmartNICs, where a SmartNIC hosts CP tasks and DP services on shared cores plus a programmable I/O accelerator exposing per-VM eNICs. Blue circled numbers trace the data-plane I/O path from eNIC to DP services to the physical NICs; red circled numbers trace the control-plane VM-creation path from the CSP through CP tasks, DP-services coordination, and a QEMU notification.",
+  "summary_zh": "图1对比三种I/O加速部署：裸机经调度器与DPDK/SPDK直达网卡；VM经虚拟网卡、QEMU/KVM访问网卡；VM经SmartNIC，CP与DP共享核心；蓝色编号示数据面路径，红色编号示CP发起的控制路径。",
+  "confidence": "high",
+  "notes": "layout-proposal: n-panel-comparison - three side-by-side deployment-architecture panels (bare-metal, VM+virtual-NIC, VM+SmartNIC) of increasing complexity, with two color-coded numbered paths overlaid consistently across panels; 'two-panel' undercounts the actual panel count of three.",
+  "venue": "SOSP25"
+}

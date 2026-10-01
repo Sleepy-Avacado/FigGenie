@@ -1,0 +1,55 @@
+{
+  "id": "nsdi26-043_figtex18",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-043",
+  "fig": "tex18",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Catching the next bus: (1) Our client sends a Type transaction to the process. (2) After the first , the process sends a speculative outcome. (3) The client uses this speculative outcome to send its 2nd causally related transaction. (4) At we learn that our read will be stale, and the process inform",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "timeline",
+  "subject": "how a client's speculative early transaction gets corrected once the node reports the speculation was stale",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 3.21,
+  "n_elements": 8,
+  "n_relations": 5,
+  "n_panels": 0,
+  "n_steps": 5,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "chrome",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-043/src/texfig18_img3.svg",
+    "preview.png": "lab/extracted/nsdi26-043/src/texfig18_img3.png",
+    "print.png": null
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "A client can pipeline a causally-dependent second transaction immediately after a speculative outcome for the first, without waiting for finality; if the process later reports that speculation was stale, the client resubmits at a later round instead of stalling on every request.",
+      "what_to_learn": "a two-lane (server/client) swimlane with round-indexed sub-phase boxes on one lane, crossed by numbered, differently-coloured arrows tracing a speculate-then-correct message exchange",
+      "note_source": "record"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "asplos25-080_fig1",
+  "paper_id": "asplos25-080",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. Architecture View of UIPI: UIPI is largely im- plemented in microcode. The sender communicates the UIPI vector through shared memory (UPID). Steps described in §3.3.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.85,
+  "n_components": 13,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-080/asplos25-080_fig1_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-080/asplos25-080_fig1_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Sender and Receiver repeat identical box labels (Processor Core, Program Code, Local Apic) across a system bus, with numbered steps 1-7 tracing one interrupt end to end across both sides.",
+      "what_to_learn": "Overlay a single numbered path (1-7) across two mirrored panels to narrate one operation end to end, but label which side is which prominently: this exemplar's identical Processor Core/Program Code/Local Apic labels on both sides force readers back to the Sender/Receiver headers."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar: each Sender and Receiver dashed box nests a Processor Core box that nests Program Code and a Local Apic, seven numbered steps threading through all three nesting levels on both sides.",
+      "what_to_learn": "Mirror the identical three-level containment, host box over processor core over program code and local APIC, on both communicating parties, and number the steps once across the whole nested structure so the sequence reads correctly despite duplicate box labels on each side."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Sender and Receiver cores mirror the same Processor Core/Program Code/Local Apic boxes either side of a shared UPID memory box, with seven numbered steps tracing one posted interrupt across the System Bus to EOI.",
+      "what_to_learn": "Put the one shared resource, here a UPID memory box, directly on the axis between two mirrored processor-core stacks, and number every step of a round trip 1 through 7 straight onto the arrows; disambiguate duplicate box labels (Processor Core, Program Code) with a Sender/Receiver header above each side rather than relabeling the boxes themselves."
+    }
+  ]
+}

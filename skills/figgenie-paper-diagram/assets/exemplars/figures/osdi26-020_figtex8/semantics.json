@@ -1,0 +1,192 @@
+{
+  "paper_id": "osdi26-020",
+  "fig": "tex8",
+  "system": {
+    "name": "Cocoon-Emb",
+    "one_liner": "Cocoon's optimization for embedding tables that pre-computes and coalesces correlated noise ahead of training to remove the per-iteration CPU-GEMV bottleneck",
+    "domain": [
+      "ml-systems",
+      "security"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Baseline (CPU-GEMV)",
+        "role": "reference timeline where each training iteration waits on a CPU GEMV noise computation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU Train",
+        "role": "GPU training step per iteration in the baseline timeline",
+        "container": "Baseline (CPU-GEMV)",
+        "novel": false
+      },
+      {
+        "name": "CPU GEMV",
+        "role": "CPU noise-generation step per iteration in the baseline, performing the GEMV that dominates iteration time",
+        "container": "Baseline (CPU-GEMV)",
+        "novel": false
+      },
+      {
+        "name": "Cocoon-Emb",
+        "role": "optimized timeline that pre-computes noise ahead of training instead of per iteration",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Hot/Cold Splitting",
+        "role": "step 1: splits embedding-table entries by access frequency into hot or cold",
+        "container": "Cocoon-Emb",
+        "novel": true
+      },
+      {
+        "name": "Accelerated Pre-computation",
+        "role": "step 2: pre-computes all correlated noises for the cold entries' future iterations before training starts",
+        "container": "Cocoon-Emb",
+        "novel": true
+      },
+      {
+        "name": "Noise Coalescing",
+        "role": "step 3: coalesces and stores the pre-computed noises in a compact format",
+        "container": "Cocoon-Emb",
+        "novel": true
+      },
+      {
+        "name": "Noise Addition",
+        "role": "step 4: adds the coalesced, pre-computed noise into each training iteration",
+        "container": "Cocoon-Emb",
+        "novel": true
+      },
+      {
+        "name": "Training",
+        "role": "GPU training iterations (Iter 1, Iter 2, ..., Iter n) that run using the pre-computed noise",
+        "container": "Cocoon-Emb",
+        "novel": false
+      },
+      {
+        "name": "Speedup",
+        "role": "annotated reduction in total timeline length achieved by Cocoon-Emb versus the baseline",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Baseline (CPU-GEMV)",
+        "to": "Cocoon-Emb",
+        "what": "each baseline per-iteration CPU GEMV is instead performed ahead of time as a pre-computed block",
+        "step": null
+      },
+      {
+        "from": "Hot/Cold Splitting",
+        "to": "Accelerated Pre-computation",
+        "what": "cold entries selected for pre-computation",
+        "step": 1
+      },
+      {
+        "from": "Accelerated Pre-computation",
+        "to": "Noise Coalescing",
+        "what": "pre-computed noise for cold entries",
+        "step": 2
+      },
+      {
+        "from": "Noise Coalescing",
+        "to": "Noise Addition",
+        "what": "coalesced, compactly stored noise",
+        "step": 3
+      },
+      {
+        "from": "Noise Addition",
+        "to": "Training",
+        "what": "noise added into each training iteration",
+        "step": 4
+      }
+    ],
+    "key_idea": "Instead of performing a per-iteration CPU GEMV that dominates training time, Cocoon-Emb splits table entries into hot/cold, pre-computes and coalesces noise for cold entries on the idle GPU before training starts, and adds it during training, yielding a large speedup.",
+    "reading_order": "Top panel first (Baseline CPU-GEMV timeline, iteration by iteration), then bottom panel (Cocoon-Emb timeline) read left to right through the four circled steps, ending at the red Speedup bracket."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.37,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0b76a0",
+        "used_for": "teal-blue precomputed/coalesced noise blocks and step brace annotations"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray GPU Train blocks"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "medium gray CPU GEMV blocks and training-iteration blocks"
+      },
+      {
+        "hex": "#104862",
+        "used_for": "dark navy hot/cold-splitting block"
+      },
+      {
+        "hex": "#156082",
+        "used_for": "blue header text and panel labels"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red Speedup bracket and label"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.5pt, dashed panel borders and dotted iteration separators",
+    "font": "Arial/ArialMT sans-serif, 12-18pt",
+    "corners": "square",
+    "arrows": "straight, filled triangular heads for step arrows; curved black arrows mapping baseline iterations to pre-computed blocks",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light gray = GPU Train time, medium gray = CPU GEMV / training-iteration time, teal blue = pre-computed and coalesced noise blocks, dark navy = hot/cold splitting block, red = the resulting speedup",
+    "line_style_means": "dashed boxes separate the Baseline and Cocoon-Emb panels; dotted vertical lines mark iteration boundaries within each timeline",
+    "emphasis": "a red 'Speedup' bracket at the right visually compares the shortened Cocoon-Emb timeline against the longer Baseline timeline, with circled numbers 1-4 marking each optimization step",
+    "reusable_patterns": [
+      "stacked before/after timeline comparison with circled numbered process steps and a speedup bracket"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "differential privacy",
+    "noise precomputation",
+    "embedding training",
+    "timeline comparison",
+    "speedup",
+    "gpu-cpu overlap"
+  ],
+  "provenance": {
+    "sections": [
+      "\\sysdlrm: Pre-computing and Storing Coalesced Noises for Embedding Tables",
+      "Noise Pre-computing"
+    ],
+    "evidence": [
+      "splits the table entries by access frequency into either hot or cold",
+      "efficiently pre-computes all the correlated noises to be used for the cold entries",
+      "pre-computing can use the faster GPU for GEMV, which idles before the training starts"
+    ]
+  },
+  "summary": "This figure compares two timelines for training embedding models under differentially private training. The top panel, 'Baseline (CPU-GEMV)', shows each GPU training iteration blocked on a much longer CPU GEMV noise-generation step, repeated every iteration. The bottom panel, 'Cocoon-Emb', shows the paper's optimization: circled steps 1-4 label hot/cold splitting of table entries by access frequency, accelerated pre-computation of correlated noise for cold entries on the otherwise-idle GPU before training starts, coalescing that noise into a compact stored format, and adding it into the actual training iterations. Because pre-computation reuses the same amount of GEMV work as the baseline but runs on a faster, otherwise-idle GPU with better data reuse, the training iterations run back-to-back, and a red 'Speedup' bracket on the right visualizes the resulting reduction in total timeline length. The figure is drawn as two stacked dashed-bordered horizontal timeline panels with gray/teal flat blocks, dotted iteration separators, and curved arrows connecting baseline iterations to their corresponding pre-computed blocks below.",
+  "summary_zh": "该图对比了差分隐私嵌入训练的两种时间线：上方基线中每次 GPU 训练迭代都要等待较长的 CPU GEMV 噪声计算；下方 Cocoon-Emb 通过冷热拆分、利用空闲 GPU 提前预计算、噪声合并与噪声添加四步，将噪声开销移出训练主循环，右侧红色括号标示由此获得的加速效果。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

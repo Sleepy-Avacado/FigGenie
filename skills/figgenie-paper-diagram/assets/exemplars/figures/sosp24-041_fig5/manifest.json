@@ -1,0 +1,42 @@
+{
+  "id": "sosp24-041_fig5",
+  "paper_id": "sosp24-041",
+  "fig": "5",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 5. LoongServe system overview.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.59,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-041/src/fig5_overview_architecture_LoongServe.svg",
+    "preview.png": "lab/extracted/sosp24-041/src/fig5_overview_architecture_LoongServe.png",
+    "print.png": "lab/extracted/sosp24-041/sosp24-041_fig5_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Control-plane band on top, a homogeneous GPU row in the middle, one shared resource band at the bottom, split by a dashed rule.",
+      "what_to_learn": "The 'manager over devices over shared pool' sandwich: a dashed horizontal rule separates control plane from data plane and the shared pool is a full-width band."
+    }
+  ]
+}

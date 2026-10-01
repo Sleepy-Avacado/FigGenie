@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-078_fig3",
+  "paper_id": "osdi26-078",
+  "fig": "3",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 3: Building blocks of BALBOA: ➀- ACK-clocked flow control, ➁- Retransmission logic, ➂- ICRC pipeline",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.24,
+  "n_components": 9,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-078/osdi26-078_fig3_p8_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-078/osdi26-078_fig3_p8_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from composite-figure by the note-writer: three block diagrams (flow control, retransmission, ICRC pipeline) are fully independent modules with no shared component, dominant panel, or dataflow between them; the rule that unrelated panels are two figures, not one, applies directly.",
+      "what_to_learn": "When three block diagrams genuinely share no component or dataflow, do not force them into one composite just to save space; either draw a connecting line to the larger system they belong to, or split them into separate figures, since grouping unrelated modules under one caption reads as three mini-diagrams, not one architecture."
+    }
+  ]
+}

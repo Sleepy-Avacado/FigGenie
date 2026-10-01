@@ -1,0 +1,185 @@
+{
+  "paper_id": "osdi26-025",
+  "fig": "2",
+  "system": {
+    "name": "Try",
+    "one_liner": "a tool that runs an opaque component inside a semisolate to observe, filter, stack and later commit or discard its filesystem effects",
+    "domain": [
+      "os-kernel",
+      "security"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "p1",
+        "role": "a process wrapped by try with network access elided and a path masked",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "p2",
+        "role": "a process wrapped by try without masking, whose effects are persisted to a named semisolate",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "p3",
+        "role": "a process wrapped by try while stacking the effects of the semisolate created for p2",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "upperdir",
+        "role": "overlay layer that captures a wrapped process's writes, reads-of-writes, and deletes (as mask files)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "lowerdir",
+        "role": "overlay layer through which reads of untouched paths are served, from the host filesystem or a stacked semisolate",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "semisolate",
+        "role": "a named, persisted capture of a process's effects that can later be stacked or committed",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "host filesystem",
+        "role": "the real underlying filesystem holding paths alpha, beta, pi and delta",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "p1",
+        "to": "upperdir",
+        "what": "captured effects: read alpha, write beta, read beta, delete delta",
+        "step": null
+      },
+      {
+        "from": "p1",
+        "to": "lowerdir",
+        "what": "read of the masked path pi fails, recorded as a negative dependency",
+        "step": null
+      },
+      {
+        "from": "p2",
+        "to": "upperdir",
+        "what": "captured effects: write beta, write psi, delete delta",
+        "step": null
+      },
+      {
+        "from": "p2",
+        "to": "semisolate",
+        "what": "effects persisted to a named semisolate after excluding psi",
+        "step": null
+      },
+      {
+        "from": "p3",
+        "to": "upperdir",
+        "what": "captured effects: write alpha, write pi",
+        "step": null
+      },
+      {
+        "from": "p3",
+        "to": "semisolate",
+        "what": "read of beta served from the stacked lowerdir of the earlier semisolate",
+        "step": null
+      },
+      {
+        "from": "semisolate",
+        "to": "host filesystem",
+        "what": "commit applies the stacked effects from bottom to top",
+        "step": null
+      }
+    ],
+    "key_idea": "A worked walkthrough of four try invocations shows how each one captures a wrapped process's filesystem effects in an overlay upperdir, how effects can be filtered, persisted as a named semisolate, or stacked onto a later invocation, and how a final commit applies stacked effects back onto the real host filesystem from bottom to top.",
+    "reading_order": "Left to right across four try invocations (p1, p2, p3, and p3's commit), each read top to bottom through its invocation command, captured component effects, internal upperdir/lowerdir state, and resulting host filesystem state."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "digits",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.99,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3c78d8",
+        "used_for": "blue highlight marking an active isolation dimension (e.g. a masked 'net' or 'user' tab) for one try invocation"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "gold/mustard highlight on another isolation-dimension tab or effect label"
+      },
+      {
+        "hex": "#93c47d",
+        "used_for": "green highlight on another isolation-dimension tab or captured-effect label"
+      },
+      {
+        "hex": "#efefef",
+        "used_for": "light gray fill for upperdir/lowerdir boxes"
+      },
+      {
+        "hex": "#010000",
+        "used_for": "near-black text and box outlines throughout"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark outlines; dashed connectors linking related effects across rows",
+    "font": "Consolas-like monospace for invocation commands, italic serif for annotations, 4.5-8pt",
+    "corners": "rounded",
+    "arrows": "many thin straight and curved arrows connecting each invocation's command to its captured effects and layered state",
+    "icons": "small vector lock glyphs marking masked/whited-out filesystem entries"
+  },
+  "encoding": {
+    "color_means": "colored tabs (mount/proc/user/net) at the top of each column mark which isolation dimensions are active or elided for that try invocation",
+    "line_style_means": "dashed connectors trace a given effect (e.g. a read or write) from the invocation command down through the layered upperdir/lowerdir state to the filesystem",
+    "emphasis": "the rightmost column is grayed out to show the commit/apply phase happening after and separately from the three live invocations, and lock icons draw attention to masked/whited-out paths",
+    "reusable_patterns": [
+      "matrix walkthrough: the same row categories (invocation, effects, internal state, filesystem state) repeated across example columns to compare behavior",
+      "overlay-filesystem upperdir/lowerdir stack visualization"
+    ],
+    "weaknesses": [
+      "dense, code-like column headers (e.g. 'try -ntx -i pi p1') require reading the flag semantics from the text to fully parse",
+      "Greek-letter path names (alpha, beta, pi, delta, psi, zeta, sigma) are not decoded anywhere inside the figure itself"
+    ]
+  },
+  "tags": [
+    "sandboxing",
+    "overlayfs",
+    "namespaces",
+    "effect-tracking",
+    "process-isolation",
+    "filesystem"
+  ],
+  "provenance": {
+    "sections": [
+      "4 The Try Subsystem (p.8)"
+    ],
+    "evidence": [
+      "Fig. 2 illustrates the internals of four try invocations.",
+      "mounts it on top of the host filesystem's lowerdir, ignoring the underlying π",
+      "try stores the semisolate (and by extension, its effects) inside a named directory on the host filesystem"
+    ]
+  },
+  "summary": "Try wraps an opaque component so its filesystem effects can be observed, filtered, stacked and later committed or discarded. Figure 2 is a matrix walkthrough of four try invocations, one per column, each read top to bottom through its invocation command, the component effects it captures, its internal upperdir/lowerdir overlay state, and the resulting host filesystem state. The first invocation elides network access and masks a path; the second persists its effects as a named semisolate after excluding one write; the third stacks the second's semisolate as its lowerdir and captures further effects; the fourth (grayed out) shows committing the stacked semisolate's effects onto the real filesystem from bottom to top. The figure is a dense, code-like diagram with monospace command headers, rounded gray overlay boxes, small lock icons for masked paths, and many thin arrows linking commands to effects to filesystem state.",
+  "summary_zh": "图2矩阵式对照四次try调用：每列自上而下为调用命令、捕获效应、upperdir/lowerdir状态、主机文件系统状态。前两次示隔离/屏蔽与效应过滤存为semisolate；第三次叠加前者效应；第四列示自下而上提交效应。",
+  "confidence": "high",
+  "notes": "Only a representative subset of the many per-invocation effects described in the text is listed under flows; the full walkthrough (five effects for p1, three for p2, three for p3, plus the commit) is more detailed than shown here.",
+  "venue": "OSDI26"
+}

@@ -1,0 +1,213 @@
+{
+  "paper_id": "nsdi24-064",
+  "fig": "3",
+  "system": {
+    "name": "Klonet",
+    "one_liner": "an easy-to-use, scalable platform for computer-network education that lets students run virtual network experiments across a server cluster",
+    "domain": [
+      "networking",
+      "education"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "External Service Interface",
+        "role": "receives user requests from the Klonet Interface",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Klonet Controller",
+        "role": "orchestrator's core, installed on one server",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Local Task Executor",
+        "role": "handles authentication and database queries",
+        "container": "Klonet Controller",
+        "novel": true
+      },
+      {
+        "name": "User Register/Login",
+        "role": "authentication task",
+        "container": "Local Task Executor",
+        "novel": true
+      },
+      {
+        "name": "Get User List",
+        "role": "database query task",
+        "container": "Local Task Executor",
+        "novel": true
+      },
+      {
+        "name": "Get Scene List",
+        "role": "database query task",
+        "container": "Local Task Executor",
+        "novel": true
+      },
+      {
+        "name": "Get Node List",
+        "role": "database query task",
+        "container": "Local Task Executor",
+        "novel": true
+      },
+      {
+        "name": "Cluster Task Dispatcher",
+        "role": "assigns cluster tasks to appropriate agents for execution",
+        "container": "Klonet Controller",
+        "novel": true
+      },
+      {
+        "name": "Network Embedding",
+        "role": "virtual network embedding task dispatched to agents",
+        "container": "Cluster Task Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Scene Loading",
+        "role": "cluster task dispatched to agents",
+        "container": "Cluster Task Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Cluster Monitor",
+        "role": "cluster task dispatched to agents",
+        "container": "Cluster Task Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Node/Link Configuration",
+        "role": "link configuration task dispatched to agents",
+        "container": "Cluster Task Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Terminal Relay",
+        "role": "cluster task dispatched to agents",
+        "container": "Cluster Task Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Traffic Generator",
+        "role": "cluster task dispatched to agents",
+        "container": "Cluster Task Dispatcher",
+        "novel": true
+      },
+      {
+        "name": "Data Interface",
+        "role": "channel through which the controller interacts with the user management model",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Klonet Agent",
+        "role": "per-server agent that executes dispatched cluster tasks",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "External Service Interface",
+        "to": "Klonet Controller",
+        "what": "user requests",
+        "step": null
+      },
+      {
+        "from": "Local Task Executor",
+        "to": "Data Interface",
+        "what": "authentication and database queries against the user management model",
+        "step": null
+      },
+      {
+        "from": "Cluster Task Dispatcher",
+        "to": "Klonet Agent",
+        "what": "cluster tasks such as virtual network embedding and link configuration, via the Internal Service Interface",
+        "step": null
+      }
+    ],
+    "key_idea": "The Klonet Controller is the orchestrator's core: a Local Task Executor handles authentication/database queries while a Cluster Task Dispatcher assigns tasks like network embedding out to Klonet Agents.",
+    "reading_order": "Top to bottom: requests enter via External Service Interface, are split inside the Controller between Local Task Executor and Cluster Task Dispatcher, reaching Data Interface and Klonet Agent."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange fill of the Local Task Executor and Cluster Task Dispatcher boxes"
+      },
+      {
+        "hex": "#fbe5d5",
+        "used_for": "light peach fill of the individual task pills inside those two boxes"
+      },
+      {
+        "hex": "#538135",
+        "used_for": "dark green dashed Klonet Agent box"
+      },
+      {
+        "hex": "#dae2f3",
+        "used_for": "light blue fill of the External Service Interface / Data Interface boxes"
+      },
+      {
+        "hex": "#2e75b5",
+        "used_for": "blue border and title text of the outer Klonet Controller box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt borders, dashed for the Klonet Agent box and the internal-service link",
+    "font": "Calibri sans-serif, 7-8pt, bold titles for Controller/Executor/Dispatcher headers",
+    "corners": "square",
+    "arrows": "solid arrows for control flow and dashed arrows for data flow, per an in-figure legend",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks the Controller boundary, orange marks its two internal task-handling modules, green marks the (external) Klonet Agent it dispatches to",
+    "line_style_means": "solid vs. dashed arrows distinguish control flow from data flow per the legend",
+    "emphasis": "the Controller is drawn as a hub with three external touch points (External Service Interface above, Data Interface beside, Klonet Agent below), foregrounding its role as the orchestrator's core",
+    "reusable_patterns": [
+      "central controller hub with two internal function-dispatch modules and three external interfaces"
+    ],
+    "weaknesses": [
+      "Klonet Agent is only partially shown at the figure's edge, relying on Figure 4 for detail",
+      "many same-style task pills inside the two modules with little differentiation beyond text"
+    ]
+  },
+  "tags": [
+    "orchestration",
+    "task-dispatch",
+    "network-education",
+    "controller",
+    "virtual-network-embedding"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Design and Implementation (p.7)"
+    ],
+    "evidence": [
+      "the controller receives user requests via external service interfaces and interacts with the user management model through data interfaces",
+      "It contains a local task executor for authentication and database queries",
+      "a cluster task dispatcher for assigning cluster tasks, such as virtual network embedding and link configuration"
+    ]
+  },
+  "summary": "This figure details the Klonet Controller, the core of Klonet's distributed orchestrator. It receives user requests through an External Service Interface at the top and interacts with the user management model through a Data Interface. Internally, a Local Task Executor (orange box) handles authentication and database queries such as User Register/Login and Get User/Scene/Node List, while a Cluster Task Dispatcher (orange box) assigns cluster-level tasks—virtual Network Embedding, Scene Loading, Cluster Monitor, Node/Link Configuration, Terminal Relay, and Traffic Generator—down to a Klonet Agent shown at the bottom edge. A small legend distinguishes solid control-flow arrows from dashed data-flow arrows. The figure frames the Controller as a hub with three external touch points and two internal, function-grouped modules.",
+  "summary_zh": "该图展示 Klonet 控制器：通过外部服务接口接收用户请求，经数据接口与用户管理模型交互，内部本地任务执行器负责鉴权与数据库查询，集群任务调度器则把网络嵌入、链路配置等任务下发给 Klonet 代理。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

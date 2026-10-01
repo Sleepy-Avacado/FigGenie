@@ -1,0 +1,241 @@
+{
+  "paper_id": "sosp25-008",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "Orq",
+    "one_liner": "a system for collaborative analytics on private data using secure multiparty computation that eliminates the quadratic cost of secure joins",
+    "domain": [
+      "secure-multiparty-computation",
+      "privacy-preserving-analytics",
+      "databases"
+    ],
+    "abstraction": "MPC protocol"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one protocol exchange",
+    "subject": "how three parties jointly compute a secure AND using shares and one round of z-value communication",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Secret Sharing",
+        "kind": "label",
+        "role": "defines x and y as XOR-shared across 3 parties (x = x1 xor x2 xor x3), with a worked example (6 = 15 xor 8 xor 1)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Random Sharing of Zero",
+        "kind": "label",
+        "role": "defines a 3-way sharing of 0 (0 = r1 xor r2 xor r3) used to re-randomize the AND result, with a worked example (0 = 17 xor 63 xor 46)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Functionality",
+        "kind": "label",
+        "role": "states the goal z = x AND y and its worked check (4 = 6 AND 13 = 31 xor 63 xor 36)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "P1",
+        "kind": "actor",
+        "role": "first party; holds two of the three shares of x and y, computes 'local' and z1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "P2",
+        "kind": "actor",
+        "role": "second party; computes 'local' and z2 from its shares",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "P3",
+        "kind": "actor",
+        "role": "third party; computes 'local' and z3 from its shares",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "local",
+        "kind": "label",
+        "role": "each party's AND cross-term over its two known shares of x and y, computed before masking",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "z1",
+        "kind": "label",
+        "role": "P1's local term masked with random share r1; sent on to P2",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "z2",
+        "kind": "label",
+        "role": "P2's local term masked with random share r2; sent on to P3",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "z3",
+        "kind": "label",
+        "role": "P3's local term masked with random share r3; sent on to P1",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "P1",
+        "to": "P2",
+        "what": "P1 sends its masked result z1 to P2",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "P2",
+        "to": "P3",
+        "what": "P2 sends its masked result z2 to P3",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "P3",
+        "to": "P1",
+        "what": "P3 sends its masked result z3 to P1",
+        "kind": "data",
+        "step": "2"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "P1's box",
+        "what": "P1 computes local := x1y1 xor x1y2 xor x2y1 = 14, then z1 := local xor r1 = 31",
+        "carries": "x1,y1,x2,y2 shares and r1"
+      },
+      {
+        "marker": "1",
+        "at": "P2's box",
+        "what": "P2 computes local := x2y2 xor x2y3 xor x3y2 = 0, then z2 := local xor r2 = 63",
+        "carries": "x2,y2,x3,y3 shares and r2"
+      },
+      {
+        "marker": "1",
+        "at": "P3's box",
+        "what": "P3 computes local := x3y3 xor x3y1 xor x1y3 = 10, then z3 := local xor r3 = 36",
+        "carries": "x3,y3,x1,y1 shares and r3"
+      },
+      {
+        "marker": "2",
+        "at": "P1 to P2",
+        "what": "P1 sends its masked result to P2",
+        "carries": "z1 = 31"
+      },
+      {
+        "marker": "2",
+        "at": "P2 to P3",
+        "what": "P2 sends its masked result to P3",
+        "carries": "z2 = 63"
+      },
+      {
+        "marker": "2",
+        "at": "P3 to P1",
+        "what": "P3 sends its masked result to P1",
+        "carries": "z3 = 36"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "concrete numeric shares and results for one worked AND instance: x=6 shared as (15,8,1), y=13 shared as (72,14,75), zero shared as 0=(17,63,46), giving z=4=6 AND 13 reconstructed as 31 xor 63 xor 36",
+      "linked_by": "colour (orange highlight rows) and position within the Initialization column",
+      "result_cells": "orange-highlighted equation rows show each secret's shares and, at the bottom, the reconstructed AND result 4 = 31 xor 63 xor 36"
+    },
+    "key_idea": "Three parties can jointly compute a boolean AND on XOR-secret-shared inputs by each locally combining its two known share-pairs, masking the result with a pre-shared zero, and sending that single masked value once around a ring.",
+    "reading_order": "top to bottom through the Initialization definitions and worked numbers, then left to right through the three parties' Local Computation boxes, then around the Communication ring"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.26,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#feae00",
+        "used_for": "orange highlight fill behind the worked concrete-number equations in Initialization and Functionality"
+      },
+      {
+        "hex": "#d5d5d5",
+        "used_for": "light gray fill of the P1/P2/P3 party boxes in the Communication ring diagram"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the three Local Computation formula boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black box outlines and ruling lines separating each party's input/local/result rows",
+    "corners": "mixed",
+    "arrows": "curved black arrows forming the 3-node communication ring, each labeled with the z value it carries",
+    "font": "serif math font (STIXGeneral) for equations, bold sans-serif for the three section headers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange highlights the concrete worked numbers of the running example against the plain general formulas; gray fills the three party boxes in the communication ring",
+    "line_style_means": "solid ruled lines divide each party's box into input, local computation, and masked-output rows; curved arrows show the fixed P1-to-P2-to-P3-to-P1 message order",
+    "state_means": "not applicable; this is a single worked run of the protocol rather than a before/after state change",
+    "marker_means": "circled 1 and 2 order the protocol into its two logical phases, local computation and communication",
+    "emphasis": "orange highlighting isolates the one concrete numeric example running through Initialization, Local Computation, and the final reconstruction check, tying the abstract formulas to checkable numbers",
+    "reusable_patterns": [
+      "a definitions/legend column beside per-party identical-template computation boxes beside a small message-order ring diagram, with one running numeric example highlighted throughout"
+    ],
+    "weaknesses": [
+      "the mapping from the Initialization panel's plain x1,x2,x3/y1,y2,y3 shares to each party's two-share input pairs in the Local Computation boxes is not drawn explicitly and must be inferred"
+    ]
+  },
+  "tags": [
+    "secure-multiparty-computation",
+    "MPC",
+    "secret-sharing",
+    "AND-protocol",
+    "replicated-sharing",
+    "ORQ"
+  ],
+  "provenance": {
+    "sections": [
+      "§front"
+    ],
+    "evidence": [
+      "Figure 3 and the example below discuss the AND protocol for our replicated three-party",
+      "So-called replicated secret-sharing protocols distribute multiple shares to each party",
+      "Parties perform local computation on their shares"
+    ]
+  },
+  "summary": "Figure 3 walks through Araki et al.'s secure AND protocol for Orq's replicated three-party (semi-honest, honest-majority) MPC, using one concrete numeric example. Initialization defines XOR secret sharing (x=6 as 15,8,1; y=13 as 72,14,75) and a pre-agreed sharing of zero (0=17,63,46), with the target z=x AND y=4 shown reconstructing as 31 xor 63 xor 36. Step 1 Local Computation shows each party Pi, holding two of the three shares of x and y, computing a local AND cross-term (14, 0, and 10 respectively) and masking it with its share of zero to get zi (31, 63, 36). Step 2 Communication then sends each zi once around a ring, P1 to P2 to P3 to P1, so every party ends up with a full additive share of z without ever learning x, y, or z directly.",
+  "summary_zh": "该图用具体数值演示Orq三方MPC安全AND协议：初始化定义x、y的异或分享及零分享；步骤①各方用两份分享做本地AND并用零分享掩盖得zi；步骤②各方将zi沿P1→P2→P3→P1环发送一轮，重构出z=x∧y而不泄露原值。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

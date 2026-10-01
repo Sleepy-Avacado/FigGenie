@@ -1,0 +1,219 @@
+{
+  "paper_id": "osdi26-005",
+  "fig": "3",
+  "system": {
+    "name": "Prism",
+    "one_liner": "a cost-efficient multi-LLM serving system that shares GPU memory across models via memory ballooning and flexible space/time sharing",
+    "domain": [
+      "ml-systems",
+      "llm-serving",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "LLM applications",
+        "role": "the client applications issuing inference requests",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Frontend",
+        "role": "receives inference requests and routes them to the corresponding LLMs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU group 0",
+        "role": "a strict scheduling boundary: a set of GPUs tightly coupled to jointly serve one or more model instances",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPU group n",
+        "role": "another GPU group, illustrating that multiple groups are managed",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Slack-Aware Request Arbitration",
+        "role": "prioritizes requests on each GPU to maximize SLO attainment",
+        "container": "GPU group 0",
+        "novel": true
+      },
+      {
+        "name": "Model1",
+        "role": "a low-rate model colocated with others via time/space sharing",
+        "container": "GPU group 0",
+        "novel": false
+      },
+      {
+        "name": "Model2",
+        "role": "another low-rate model colocated via time/space sharing",
+        "container": "GPU group 0",
+        "novel": false
+      },
+      {
+        "name": "Model3",
+        "role": "a model colocated in another GPU group via space sharing",
+        "container": "GPU group n",
+        "novel": false
+      },
+      {
+        "name": "Time Share",
+        "role": "denotes models sharing a GPU by taking turns in time",
+        "container": "GPU group 0",
+        "novel": true
+      },
+      {
+        "name": "Space Share",
+        "role": "denotes models sharing a GPU concurrently by partitioning memory space",
+        "container": "GPU group n",
+        "novel": true
+      },
+      {
+        "name": "GPU Memory Ballooning",
+        "role": "the balloon-driver mechanism (kvcached) enabling flexible, efficient cross-model memory sharing",
+        "container": "GPU group 0",
+        "novel": true
+      },
+      {
+        "name": "Load-Aware Model Placement",
+        "role": "maximizes memory headroom across GPU groups to facilitate ballooning",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "LLM applications",
+        "to": "Frontend",
+        "what": "requests",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "GPU group 0",
+        "what": "routed requests",
+        "step": null
+      },
+      {
+        "from": "Frontend",
+        "to": "GPU group n",
+        "what": "routed requests",
+        "step": null
+      },
+      {
+        "from": "Slack-Aware Request Arbitration",
+        "to": "Model1",
+        "what": "prioritized request scheduling",
+        "step": null
+      },
+      {
+        "from": "Slack-Aware Request Arbitration",
+        "to": "Model2",
+        "what": "prioritized request scheduling",
+        "step": null
+      },
+      {
+        "from": "Load-Aware Model Placement",
+        "to": "GPU group 0",
+        "what": "model placement decision",
+        "step": null
+      },
+      {
+        "from": "Load-Aware Model Placement",
+        "to": "GPU group n",
+        "what": "model placement decision",
+        "step": null
+      }
+    ],
+    "key_idea": "Prism routes requests through a frontend into GPU groups, each a strict scheduling boundary where colocated models share GPUs flexibly via time and space sharing enabled by memory ballooning, coordinated by load-aware placement across groups and slack-aware request arbitration within a group.",
+    "reading_order": "Left to right and top to bottom: LLM applications send Requests into the Frontend, which routes them into GPU group 0 (with its internal Slack-Aware Request Arbitration and Time-Shared Model1/Model2), then down into further GPU groups (..., GPU group n) with Space/Time sharing among Model1/Model2/Model3, with Load-Aware Model Placement annotated as spanning across the groups on the right."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.77,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill/border of the GPU group boxes"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange accent fill for one of the colocated model boxes"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "medium blue accent fill for model boxes"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "light green accent, possibly indicating space-shared regions"
+      },
+      {
+        "hex": "#e0b3b6",
+        "used_for": "light pink accent bars in the Slack-Aware Request Arbitration box"
+      },
+      {
+        "hex": "#0d0d0d",
+        "used_for": "near-black text labels"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders with rounded corners, dashed grouping around time-shared models",
+    "font": "Calibri/Calibri-Italic sans, small (5.5-6.5pt)",
+    "corners": "rounded",
+    "arrows": "thin black arrows for request routing, section-reference labels annotated along box edges",
+    "icons": "small document/application icons for LLM applications, colored bar icons in the arbitration box"
+  },
+  "encoding": {
+    "color_means": "blue = GPU group boundary, orange/blue variants = individual colocated model instances, pink = the request arbitration component",
+    "line_style_means": "dashed grouping distinguishes time-shared models from space-shared, separately boxed models within a GPU group",
+    "emphasis": "each design piece is annotated with its paper section number (§5, §6.1, §6.3) directly on the diagram, tying the architecture to the corresponding technique sections",
+    "reusable_patterns": [
+      "hub (frontend) routing into repeated resource-group units",
+      "time-share vs. space-share visual distinction within the same container"
+    ],
+    "weaknesses": [
+      "ellipsis between GPU group 0 and GPU group n compresses an unspecified number of intermediate groups"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "gpu-sharing",
+    "memory-ballooning",
+    "scheduling",
+    "multi-tenant",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Overview (p.6)"
+    ],
+    "evidence": [
+      "Prism receives inference requests at its frontend, which routes them to the corresponding LLMs",
+      "a GPU group represents the strict scheduling boundary",
+      "load-aware model placement (§6.1) ... and (2) slack-aware request arbitration"
+    ]
+  },
+  "summary": "This figure shows the system architecture and design overview of Prism, a cost-efficient multi-LLM serving system. Requests from LLM applications arrive at a Frontend, which routes them into GPU groups -- the strict scheduling boundaries in Prism, each a set of GPUs jointly serving one or more model instances. Within GPU group 0, a Slack-Aware Request Arbitration component prioritizes requests among colocated models (Model1, Model2) that time-share the GPU, underpinned by GPU Memory Ballooning (§5) for flexible cross-model memory sharing. Additional GPU groups (shown as GPU group n) illustrate both time-sharing and space-sharing of models (Model1, Model2, Model3), with Load-Aware Model Placement coordinating model assignment across groups to maximize memory headroom. The diagram is a flat, rounded-box architecture drawing in a blue/orange/pink palette with each mechanism directly annotated by its corresponding paper section number.",
+  "summary_zh": "该图展示 Prism 的系统架构：请求经前端路由到各 GPU 组（严格的调度边界），组内模型通过内存气球机制灵活进行时间/空间共享，组内的松弛感知请求仲裁负责优先级调度，负载感知的模型放置则跨多个 GPU 组协调资源分配，图中各机制均标注对应章节号。",
+  "confidence": "high",
+  "notes": "Exact section number on the request-arbitration box (read as \"§6.3\" in the preview image) differs slightly from the body text's \"§6.2\" reference for slack-aware request arbitration; kept as read from the figure per the labeling rule, but this could be an OCR/reading uncertainty.",
+  "venue": "OSDI26"
+}

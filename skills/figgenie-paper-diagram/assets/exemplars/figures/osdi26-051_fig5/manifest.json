@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-051_fig5",
+  "paper_id": "osdi26-051",
+  "fig": "5",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 5: Overview of Espresso.",
+  "corpus_template": "host-device",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.96,
+  "n_components": 14,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-051/osdi26-051_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-051/osdi26-051_fig5_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Dense 14-component figure whose red-numbered 1-8 sequence overlays a Borrower/Lender pair sharing a coherent memory space, with a top four-color legend (control, command, data, metadata) the reader must cross-reference against numbers placed far below it.",
+      "what_to_learn": "Number the resource-sharing protocol steps in one bold color directly on the repeated peer boxes (Borrower/Lender) so the sequence reads without a key; but place the flow-type legend near those numbers, not at the opposite end of the figure, since this one forces a long eye trip between the two."
+    }
+  ]
+}

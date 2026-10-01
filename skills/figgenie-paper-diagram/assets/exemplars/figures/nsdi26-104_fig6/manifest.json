@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-104_fig6",
+  "paper_id": "nsdi26-104",
+  "fig": "6",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 6: Key idea of ZooRoute. 3.2 Architecture and Workflow",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.43,
+  "n_components": 16,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-104/nsdi26-104_fig6_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-104/nsdi26-104_fig6_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "Only the top strip is a real inset: thin diagonal lines zoom the packet's Outer header down into its five named fields, the format-inset variant, while the layer-stack and path-mesh below are separate, unconnected panels.",
+      "what_to_learn": "For a format inset, draw thin diagonal lines fanning from the byte-field bar down into a small exploded view naming each field, and highlight only the one field the paper mutates. This exemplar's weakness: it then adds two more diagram idioms with no shared frame or legend."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three diagram idioms, a zoomed packet-header byte table, a tenant/overlay/physical layer stack, and an abstract path mesh, share one gold/orange/green colour thread (the mutable outer source port) but no dividing frame or legend groups them.",
+      "what_to_learn": "Even when three unlike diagram idioms (byte table, layer stack, path mesh) share one colour thread across a mechanism, still give each panel its own frame or gutter and one shared legend, since this figure's absence of both, a listed weakness, makes the three parts read as unrelated at first glance."
+    }
+  ]
+}

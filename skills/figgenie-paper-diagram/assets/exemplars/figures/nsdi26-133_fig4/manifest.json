@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-133_fig4",
+  "paper_id": "nsdi26-133",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: The HM NIC stack’s workflow.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.05,
+  "n_components": 14,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-133/nsdi26-133_fig4_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-133/nsdi26-133_fig4_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "High-confidence pipeline nesting five numbered sub-stages inside just two top-level hardware containers, using a worked example highlighted in blue and threaded through the boxes to make an abstract packet pipeline concrete.",
+      "what_to_learn": "Nest a fine-grained numbered sequence inside two or three coarse top-level containers rather than one box per step, highlight one concrete instance in an accent colour as it moves through every stage, and drop dashed leaders from bottom annotations up to the exact stage that consumes each field."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence exemplar of the numbering exception: fourteen components nest inside two physical SmartNIC zones, and circled steps 1-5 appear only because the figure traces one packet's route through the hardware.",
+      "what_to_learn": "Only number stages inside a floorplan when one concrete request is being followed start to finish, here a single packet through matching, decryption, scaling and metadata embedding, and ground the abstraction with a worked example, one named service and pod, instead of describing the mechanism purely in prose."
+    }
+  ]
+}

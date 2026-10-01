@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-037_fig3",
+  "paper_id": "osdi23-037",
+  "fig": "3",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 3: System model, SW stack, and I/O path of a multi-tenant ZNS SSD deployment. RD/WR=Read/Write. The write cache flushes data to the NAND flash asynchronously. Zone resets are completed after invalidating the mapping layer, where NAND blocks are erased lazily.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 2.14,
+  "n_components": 13,
+  "n_flows": 11,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-037/osdi23-037_fig3_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-037/osdi23-037_fig3_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": false,
+      "why_chosen": "Three panels re-explain the identical five-layer hierarchy three ways, as a shaded containment stack, a matching software stack, and a colour-coded read/write/reset I/O path, so a reader maps one layer across all three views.",
+      "what_to_learn": "Re-draw the same N-layer hierarchy as three complementary views (a shaded containment stack, a software stack, a coloured data-path diagram) with layers aligned row by row so a reader traces one layer left to right; add a real legend box for the colours instead of inline coloured text, a listed weakness here."
+    }
+  ]
+}

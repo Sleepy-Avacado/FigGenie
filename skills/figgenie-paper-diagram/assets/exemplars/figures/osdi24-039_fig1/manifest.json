@@ -1,0 +1,41 @@
+{
+  "id": "osdi24-039_fig1",
+  "paper_id": "osdi24-039",
+  "fig": "1",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 1: Overview of EBS Architecture. VD: Virtual Disk; LSBD: Log-Structured Block Device. GC: Garbage Collection.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.19,
+  "n_components": 14,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-039/osdi24-039_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-039/osdi24-039_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Three full-width tiers (Compute, Block, Persistence) are named in the left margin, each a nested box-in-box (VMs inside the Compute Server, GC/Snapshot Workers inside each Block Proxy), connected top-down by double-headed LSBD arrows.",
+      "what_to_learn": "Nest the repeated internal structure (VMs in the compute tier, GC/Snapshot workers in each block proxy) inside its tier's own box rather than flattening it, and name every tier once in a shared left margin; add one accent colour, since this figure's all-gray palette (a listed weakness) makes component roles hard to tell apart."
+    }
+  ]
+}

@@ -1,0 +1,333 @@
+{
+  "paper_id": "nsdi23-073",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "CRAB",
+    "one_liner": "a control loop that lets users steer their own Internet path performance by reallocating, reclaiming, or probing bandwidth across their flows",
+    "domain": [
+      "networking",
+      "congestion control"
+    ],
+    "abstraction": "control loop"
+  },
+  "content": {
+    "groups": [
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "CRAB's control loop: which of four priority-ordered actions to take after each throughput measurement",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Wait & Measure",
+        "kind": "state",
+        "role": "central hub state that measures throughput and picks the next action; redrawn both in the outer loop and inside Bandwidth Probing",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Reclamation",
+        "kind": "state",
+        "role": "highest-priority action: reclaim bandwidth a growing flow had lent out to others",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Reallocation",
+        "kind": "state",
+        "role": "second-priority action: lend bandwidth unused by non-saturating flows to saturating flows",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Decrease Bandwidth Estimate",
+        "kind": "state",
+        "role": "third-priority action: lower the total bandwidth estimate and redivide it between flows by weight",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bandwidth Probing",
+        "kind": "state",
+        "role": "default, lowest-priority compound action taken when no other condition holds; a nested sub-loop that probes for more bandwidth",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "increase a saturating flow f's assigned rate by inc",
+        "kind": "state",
+        "role": "entry action of Bandwidth Probing: bumps one saturating flow's rate by the probe step inc",
+        "container": "Bandwidth Probing",
+        "highlighted": false
+      },
+      {
+        "name": "Redivide new bandwidth estimate between flows, double the value of inc",
+        "kind": "state",
+        "role": "taken when the probe increased observed throughput; grows the probe step for the next round",
+        "container": "Bandwidth Probing",
+        "highlighted": false
+      },
+      {
+        "name": "Reset flow f's rate and inc's value",
+        "kind": "state",
+        "role": "taken when the probe did not increase throughput; undoes the rate bump and exits probing",
+        "container": "Bandwidth Probing",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Wait & Measure",
+        "to": "Reclamation",
+        "what": "any flow growing (drawn both from the outer state and from within Bandwidth Probing)",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "Reclamation",
+        "to": "Wait & Measure",
+        "what": "returns to measurement after reclaiming",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Wait & Measure",
+        "to": "Reallocation",
+        "what": "at least one non-saturating and one saturating flow exist",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Reallocation",
+        "to": "Wait & Measure",
+        "what": "returns to measurement after reallocating",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Wait & Measure",
+        "to": "Decrease Bandwidth Estimate",
+        "what": "observed throughput dropped and no saturating flow exists",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "Decrease Bandwidth Estimate",
+        "to": "Wait & Measure",
+        "what": "returns to measurement after decreasing the estimate",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Wait & Measure",
+        "to": "increase a saturating flow f's assigned rate by inc",
+        "what": "none of the above applies; enters Bandwidth Probing (no numbered badge)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "increase a saturating flow f's assigned rate by inc",
+        "to": "Wait & Measure",
+        "what": "re-measure after increasing the rate",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Wait & Measure",
+        "to": "Redivide new bandwidth estimate between flows, double the value of inc",
+        "what": "increase in observed throughput",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Wait & Measure",
+        "to": "Reset flow f's rate and inc's value",
+        "what": "no increase in observed throughput",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "Reset flow f's rate and inc's value",
+        "to": "Wait & Measure",
+        "what": "returns to the outer measurement, exiting Bandwidth Probing",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Reclamation",
+        "what": "if any flow is growing, reclaim bandwidth it had lent out",
+        "carries": null
+      },
+      {
+        "marker": "2",
+        "at": "Reallocation",
+        "what": "else if at least one non-saturating and one saturating flow exist, lend unused bandwidth to saturating flows",
+        "carries": null
+      },
+      {
+        "marker": "3",
+        "at": "Decrease Bandwidth Estimate",
+        "what": "else if throughput dropped and no flow is saturating, decrease the bandwidth estimate and redivide it by weight",
+        "carries": null
+      }
+    ],
+    "logic": {
+      "states": [
+        "Wait & Measure",
+        "Reclamation",
+        "Reallocation",
+        "Decrease Bandwidth Estimate",
+        "Bandwidth Probing: increase rate",
+        "Bandwidth Probing: redivide & double inc",
+        "Bandwidth Probing: reset rate & inc"
+      ],
+      "transitions": [
+        {
+          "from": "Wait & Measure",
+          "to": "Reclamation",
+          "guard": "any flow growing"
+        },
+        {
+          "from": "Wait & Measure",
+          "to": "Reallocation",
+          "guard": "at least one non-saturating and one saturating flow exist"
+        },
+        {
+          "from": "Wait & Measure",
+          "to": "Decrease Bandwidth Estimate",
+          "guard": "throughput dropped and no saturating flow"
+        },
+        {
+          "from": "Wait & Measure",
+          "to": "Bandwidth Probing: increase rate",
+          "guard": "otherwise (no numbered badge)"
+        },
+        {
+          "from": "Bandwidth Probing: increase rate",
+          "to": "Wait & Measure",
+          "guard": "always, after increasing the rate"
+        },
+        {
+          "from": "Wait & Measure",
+          "to": "Bandwidth Probing: redivide & double inc",
+          "guard": "increase in observed throughput"
+        },
+        {
+          "from": "Wait & Measure",
+          "to": "Bandwidth Probing: reset rate & inc",
+          "guard": "no increase in observed throughput"
+        },
+        {
+          "from": "Bandwidth Probing: reset rate & inc",
+          "to": "Wait & Measure",
+          "guard": "always, exiting Bandwidth Probing"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "which action does CRAB take after a throughput measurement?",
+          "branches": [
+            "any flow growing -> Reclamation",
+            "one non-saturating & one saturating flow -> Reallocation",
+            "throughput dropped, no saturating flow -> Decrease Bandwidth Estimate",
+            "otherwise -> Bandwidth Probing"
+          ]
+        },
+        {
+          "question": "inside Bandwidth Probing, did the rate increase help?",
+          "branches": [
+            "throughput increased -> redivide and double inc",
+            "throughput did not increase -> reset rate and inc"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "CRAB's control loop is a strict priority order over four actions - reclaim, reallocate, decrease, or probe - always returning to a shared measurement state before checking again.",
+    "reading_order": "starts at 'Wait & Measure', follows the numbered guarded arrows 1, 2, 3 out to Reclamation, Reallocation and Decrease Bandwidth Estimate, and otherwise descends into Bandwidth Probing"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "badge",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.05,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a9c4eb",
+        "used_for": "medium-blue fill of the outer action states (Reclamation, Reallocation, Decrease Bandwidth Estimate) and the Bandwidth Probing container"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of the three inner Bandwidth Probing action boxes"
+      },
+      {
+        "hex": "#d4e1f5",
+        "used_for": "pale-blue fill of the 'Wait & Measure' ovals"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on all boxes and ovals",
+    "corners": "mixed",
+    "arrows": "thin black arrows, mostly straight with some curved returns; each forward transition carries a black circular numbered badge beside its guard-condition text",
+    "font": "sans (Arial), small bold italic state-name labels with smaller condition text",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks the outer priority-ordered action states and the Bandwidth Probing container; gray marks the three inner probing actions; pale blue marks the shared 'Wait & Measure' state wherever it recurs",
+    "line_style_means": "not used to distinguish transitions; solid arrows throughout, curved for returns and cross-cutting exits, straight for direct causes",
+    "state_means": "each action is its own coloured box; the same 'Wait & Measure' state is redrawn at two places (outer loop and inside Bandwidth Probing) rather than distinguished by colour",
+    "marker_means": "circled numbers 1-3 rank the priority order in which guard conditions are checked, reused with locally analogous guards inside the nested Bandwidth Probing sub-loop",
+    "emphasis": "the large blue Bandwidth Probing container visually demotes the fourth, unlabelled default action to a subordinate sub-diagram, matching its place as the last-checked, catch-all branch",
+    "reusable_patterns": [
+      "a central hub state with priority-numbered guarded transitions fanning out to peer action states, all returning to the hub",
+      "a compound state drawn as a large container holding its own miniature copy of the hub-and-spoke pattern"
+    ],
+    "weaknesses": [
+      "the 'Redivide new bandwidth estimate...' box has no drawn outgoing arrow, so the figure alone does not show how the probing loop continues after that action",
+      "reusing the same three numbered badges for two different sets of guard conditions (outer vs. inner) could be misread as one shared priority order"
+    ]
+  },
+  "tags": [
+    "congestion-control",
+    "state-machine",
+    "control-loop",
+    "bandwidth-allocation",
+    "CRAB",
+    "priority-order"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 CRAB Control Loop"
+    ],
+    "evidence": [
+      "we take one of the four actions in the exact priority order",
+      "If there exists any growing flow, we do reclamation for it",
+      "We return to the throughput measurement after each action."
+    ]
+  },
+  "summary": "This figure is a simplified state diagram for CRAB's control loop, a rate-allocation policy that runs after every throughput measurement. From the central 'Wait & Measure' state, three numbered, guarded transitions check conditions in strict priority order: (1) if any flow is growing, go to Reclamation; (2) else if both a non-saturating and a saturating flow exist, go to Reallocation; (3) else if throughput dropped with no saturating flow, go to Decrease Bandwidth Estimate. If none apply, control instead falls into Bandwidth Probing, a nested compound state that increases one flow's rate, re-measures, and then either doubles its step size when throughput improved or resets the rate when it did not, reusing the same three-way priority check before exiting back to the outer 'Wait & Measure'. Every action eventually returns control to that shared measurement state.",
+  "summary_zh": "该图为CRAB控制环状态图：以Wait & Measure为中心，按优先级①②③转向Reclamation、Reallocation或降速；否则进入Bandwidth Probing子循环调速，最终都返回测量态。",
+  "confidence": "high",
+  "notes": "Kept prior groups ['logic','walkthrough'] since the numbered badges give a priority order, though they are not a single trace through a structure drawn once; 'steps' lists only the 3 badges that literally appear (there is no 4th badge for the default Bandwidth Probing branch). 'Wait & Measure' is drawn twice (outer loop and inside Bandwidth Probing) but modelled as one element since the text describes a single recurring state. No source-SVG colour histogram exists for this figure, so palette hex values come from the index's measured-attributes summary. The 'Redivide...' box has no drawn outgoing arrow in the figure; this is left as a noted gap rather than invented.",
+  "venue": "NSDI23"
+}

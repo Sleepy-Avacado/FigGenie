@@ -1,0 +1,196 @@
+{
+  "paper_id": "nsdi24-004",
+  "fig": "8",
+  "system": {
+    "name": "MadEye",
+    "one_liner": "a live video analytics system that adaptively selects PTZ camera orientations to boost query accuracy",
+    "domain": [
+      "video-analytics",
+      "edge-computing"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "PTZ camera",
+        "role": "captures frames and physically rotates to explore many orientations per timestep",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Approximation models",
+        "role": "cheap edge-compatible models that rank explored orientations by predicted workload accuracy",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Search algorithm",
+        "role": "selects which orientations to explore next using ranked orientations",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Backend server",
+        "role": "runs the accurate query models and manages training of the approximation models",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Approximation model trainer",
+        "role": "retrains the approximation models on samples from the backend",
+        "container": "Backend server",
+        "novel": true
+      },
+      {
+        "name": "Query registration",
+        "role": "accepts user query specifications (scene, model, objects, task)",
+        "container": "Backend server",
+        "novel": false
+      },
+      {
+        "name": "Workload execution",
+        "role": "runs the registered query on the best orientation's frames and returns results",
+        "container": "Backend server",
+        "novel": false
+      },
+      {
+        "name": "User/App",
+        "role": "registers queries and receives query results",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "PTZ camera",
+        "to": "Approximation models",
+        "what": "explored orientations",
+        "step": null
+      },
+      {
+        "from": "Approximation models",
+        "to": "Search algorithm",
+        "what": "ranked orientations",
+        "step": null
+      },
+      {
+        "from": "Search algorithm",
+        "to": "PTZ camera",
+        "what": "next orientation to explore",
+        "step": null
+      },
+      {
+        "from": "PTZ camera",
+        "to": "Workload execution",
+        "what": "best orientations",
+        "step": null
+      },
+      {
+        "from": "Workload execution",
+        "to": "Approximation model trainer",
+        "what": "training samples",
+        "step": null
+      },
+      {
+        "from": "Approximation model trainer",
+        "to": "Approximation models",
+        "what": "updated weights",
+        "step": null
+      },
+      {
+        "from": "Workload execution",
+        "to": "User/App",
+        "what": "query results",
+        "step": null
+      },
+      {
+        "from": "User/App",
+        "to": "Query registration",
+        "what": "query registration",
+        "step": null
+      }
+    ],
+    "key_idea": "MadEye rapidly explores many PTZ orientations per timestep, uses lightweight approximation models to rank them, and continuously retrains those models from backend query results to keep selecting the most accurate camera configuration.",
+    "reading_order": "left to right: from the PTZ camera's scene exploration loop, through the approximation-model/search-algorithm feedback loop, to the backend server's training and query-execution pipeline, ending at the user."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.49,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b6d7a8",
+        "used_for": "green processing boxes: Approximation models, Search algorithm, Approximation model trainer, Query registration, Workload execution"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "dashed container backgrounds for PTZ camera and Backend server"
+      },
+      {
+        "hex": "#00ffff",
+        "used_for": "explored/ranked/best orientation color swatches"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "highlighted bounding box on the query result frame"
+      },
+      {
+        "hex": "#93c47d",
+        "used_for": "accent shading on processing boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "gray thin outlines, dashed borders on the two container groups",
+    "font": "Arial sans, small, italic for edge labels",
+    "corners": "mixed",
+    "arrows": "orthogonal black arrows with filled heads, loop back from search algorithm to camera",
+    "icons": "bitmap camera lens, video thumbnails, person icons for User and User/App"
+  },
+  "encoding": {
+    "color_means": "green = MadEye's own processing stages; small colored squares encode individual orientations that are explored, ranked, or selected",
+    "line_style_means": null,
+    "emphasis": "the loop drawn between the camera, approximation models and search algorithm highlights the fast iterative orientation-exploration process at the core of the contribution",
+    "reusable_patterns": [
+      "feedback loop between a sensor and a lightweight ranking model",
+      "backend training loop feeding an online decision model"
+    ],
+    "weaknesses": [
+      "many small labeled data groups (explored/ranked/best orientations) are not enclosed in boxes, so their scope is only implied by proximity"
+    ]
+  },
+  "tags": [
+    "video-analytics",
+    "ptz-camera",
+    "adaptive-configuration",
+    "edge-model",
+    "pipeline",
+    "feedback-loop"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 8 shows the end-to-end operation of MadEye.",
+      "leverage fast PTZ rotation speeds to explore many orientations",
+      "users register queries with a backend agent"
+    ]
+  },
+  "summary": "MadEye boosts live video analytics accuracy by rapidly rotating a PTZ camera through many orientations each timestep and picking the one(s) that best serve the current query workload under resource limits. Figure 8 shows this end-to-end workflow as a left-to-right pipeline. On the left, the PTZ camera captures frames while a tight loop between it, a green 'Approximation models' box and a green 'Search algorithm' box explores orientations, ranks them with small colored squares, and feeds the ranking back to steer the next rotation. The best orientations are then sent right to a dashed 'Backend server' container holding 'Query registration', 'Workload execution' and 'Approximation model trainer' boxes: workload execution runs the real query models and returns results to a 'User/App' icon, while its outputs also become training samples that update the approximation models' weights, closing a second, slower feedback loop. Icons (camera, video thumbnails, people) and small color swatches make the data-heavy pipeline easier to follow.",
+  "summary_zh": "该图展示MadEye端到端流程：PTZ相机在探索算法与轻量近似模型之间循环，快速探索并排序多个拍摄朝向，选出最佳朝向后交由后端服务器执行查询、训练近似模型并向用户返回结果。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

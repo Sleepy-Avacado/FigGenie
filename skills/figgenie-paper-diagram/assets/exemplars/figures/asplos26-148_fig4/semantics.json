@@ -1,0 +1,183 @@
+{
+  "paper_id": "asplos26-148",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "CLM",
+    "one_liner": "a system that renders large 3D Gaussian Splatting scenes on a single consumer GPU by offloading Gaussians to CPU memory and loading them on demand, guided by frustum-culling sparsity and spatial locality",
+    "domain": [
+      "computer-graphics",
+      "memory-systems"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "why only Gaussians inside the camera's view frustum, clustered in one region, need to be accessed when rendering",
+    "base": "scene",
+    "elements": [
+      {
+        "name": "camera",
+        "kind": "icon",
+        "role": "the viewpoint whose frustum determines which Gaussians are rendered",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "frustum",
+        "kind": "box",
+        "role": "the camera's view volume, drawn as a pale-yellow 3D box, bounding which Gaussians can contribute to the rendered image",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "in-frustum Gaussians",
+        "kind": "icon",
+        "role": "four distinctly coloured ellipses (red, green, orange, cyan) inside the frustum, representing Gaussians that will be accessed when rendering this view",
+        "container": "frustum",
+        "highlighted": true
+      },
+      {
+        "name": "out-of-frustum Gaussians",
+        "kind": "icon",
+        "role": "numerous grey ellipses scattered through the rest of the scene, representing Gaussians that will not be accessed for this view",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "scene bounding volume",
+        "kind": "box",
+        "role": "a dotted-line cube outlining the full extent of the 3D scene that contains every Gaussian",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "camera",
+        "to": "frustum",
+        "what": "the camera's sight lines define the frustum's shape",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "frustum",
+        "to": "in-frustum Gaussians",
+        "what": "only Gaussians spatially located inside the frustum are coloured, i.e. considered accessed",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "scene bounding volume",
+        "to": "out-of-frustum Gaussians",
+        "what": "Gaussians elsewhere in the scene, outside the frustum, are left grey/unaccessed",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Only the Gaussians that fall inside the camera's view frustum, a small, spatially clustered region of the whole scene, are accessed when rendering a view; everything outside the frustum can safely stay off the GPU.",
+    "reading_order": "Start at the camera, follow its frustum lines outward into the pale-yellow box, compare the coloured Gaussians inside it against the grey Gaussians scattered through the rest of the scene."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.72,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fffd78",
+        "used_for": "fill of the camera's frustum box"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "outline of one in-frustum Gaussian ellipse"
+      },
+      {
+        "hex": "#4ea72e",
+        "used_for": "outline of one in-frustum Gaussian ellipse"
+      },
+      {
+        "hex": "#e97132",
+        "used_for": "outline of one in-frustum Gaussian ellipse"
+      },
+      {
+        "hex": "#0f9ed5",
+        "used_for": "outline of one in-frustum Gaussian ellipse"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "outline/fill of the many out-of-frustum Gaussian ellipses and the scene's dotted bounding cube"
+      },
+      {
+        "hex": "#042433",
+        "used_for": "dark solid edges of the frustum box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat, with the frustum box and Gaussian ellipses using pale/translucent fills over coloured or grey outlines",
+    "stroke": "dotted lines for the scene's outer bounding cube; solid coloured outlines for the 4 in-frustum Gaussians; solid grey outlines for the out-of-frustum Gaussians; dark solid edges for the frustum box",
+    "font": "none; the figure has no text at all",
+    "corners": "rounded",
+    "arrows": "no arrowheads; plain straight lines from the camera to the frustum's far corners",
+    "icons": "a simple line-drawn camera glyph; ellipses stand in for Gaussians"
+  },
+  "encoding": {
+    "color_means": "red/green/orange/cyan outlines mark four example Gaussians that fall inside the camera's frustum (and would be accessed); grey ellipses are Gaussians elsewhere in the scene that are not accessed for this view",
+    "line_style_means": "dotted lines outline the full 3D scene's bounding volume; solid lines draw the frustum box and the camera's sight lines; colour vs grey, not line style, marks accessed vs non-accessed",
+    "state_means": "not applicable: a single static scene snapshot for one camera view, not multiple frames",
+    "marker_means": "no numbers, letters or symbolic markers are used; colour alone marks membership in the frustum",
+    "emphasis": "the pale-yellow tinted frustum box visually isolates the small in-frustum region, and only Gaussians inside it get distinct saturated colours, while dozens of grey ellipses fill the rest of the scene to emphasise how few Gaussians are needed per view",
+    "reusable_patterns": [
+      "a 3D wireframe/dotted bounding volume with a highlighted sub-region cut out to show spatial locality",
+      "colour-vs-grey encoding to separate a small accessed/relevant subset of many identical-shaped objects from the rest",
+      "a hand-drawn camera glyph with sight-line rays converging on a highlighted region to explain visibility or access scope"
+    ],
+    "weaknesses": [
+      "no text or labels at all in the figure itself, so the camera icon, the yellow box and the colour-vs-grey convention rely entirely on the caption",
+      "the four in-frustum Gaussians are given four different colours with no stated reason, which could mislead a reader into thinking the colours themselves carry meaning beyond 'this one is inside'"
+    ]
+  },
+  "tags": [
+    "3d-gaussian-splatting",
+    "frustum-culling",
+    "spatial-locality",
+    "gpu-memory-offloading",
+    "novel-view-synthesis",
+    "sparsity"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Our approach: sparsity-guided offloading (p.4)"
+    ],
+    "evidence": [
+      "Gaussians outside of camera frustum will not be accessed when rendering the camera's view",
+      "the process exhibits spatial locality",
+      "only a fraction of the scene's Gaussians are used when rendering a view"
+    ]
+  },
+  "summary": "Figure 4 illustrates the frustum-culling sparsity that CLM exploits to decide which 3D Gaussians must be kept on the GPU. A camera view frustum is drawn as a pale-yellow box whose sides are traced by sight lines from the camera icon. Four example Gaussians, drawn as ellipses that fall inside this frustum, are coloured distinctly red, green, orange and cyan, representing Gaussians that will actually be accessed when rendering this view. Many more Gaussians are scattered throughout the rest of the scene bounding volume, shown as a dotted cube, but left grey, since they fall outside the frustum and are not touched for this render. The figure visually grounds two claims from the text: rendering a view only touches a sparse subset of the scene Gaussians, and that subset is spatially clustered rather than scattered, which is what makes offloading the rest to CPU memory practical.",
+  "summary_zh": "图4展示视锥剔除的稀疏性：相机视锥画成淡黄盒子，落在其中的4个高斯(椭圆)分别着红绿橙青色，表示渲染该视角时会被访问；场景其余(点线立方体内)大量高斯保持灰色、未被访问，说明渲染只需少量且空间聚集的高斯，其余可卸载到CPU内存。",
+  "confidence": "high",
+  "notes": "Caption text is truncated mid-word ('...improve performan'); treated as 'performance' without inventing further content beyond it.",
+  "venue": "ASPLOS26"
+}

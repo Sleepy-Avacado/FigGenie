@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-098_fig2",
+  "paper_id": "osdi26-098",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: (1) Left: Decoder-only LLM architecture; (2) Mid- dle: LLM quantization and Arbitrary-Precision Quantization (APQ); (3) Right: Padding and the LUT-based strategy in APQ LLM inference.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.14,
+  "n_components": 7,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-098/osdi26-098_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-098/osdi26-098_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Kept after review although the note-writer judged the fit loose: one ungrouped panel of background small multiples, a generic Transformer block plus two quantization schemes plus two execution strategies, no lettered sub-panels, no dominant architecture view, explaining prior concepts, not the paper's own system.",
+      "what_to_learn": "Reserve composite-figure for a dominant architecture plus lettered unlike-kind detail panels; a flat, unlettered sequence of small background-concept diagrams like this one (Transformer block, then quantization, then execution strategy) is closer to small multiples and needs no single anchor panel, only consistent bit-width labels and dashed cross-reference arrows tying each stage to the next."
+    }
+  ]
+}

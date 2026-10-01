@@ -1,0 +1,165 @@
+{
+  "paper_id": "nsdi26-082",
+  "fig": "6",
+  "system": {
+    "name": "FlexLLM",
+    "one_liner": "a token-level co-serving system for LLM inference and finetuning with SLO guarantees",
+    "domain": [
+      "ml-systems",
+      "fine-tuning"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Input",
+        "role": "input tensor entering the layer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Layer Norm",
+        "role": "normalizes the input before attention/MLP",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Linear",
+        "role": "linear projection (query/key/value or MLP), reused across all PEFT variants",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Matmul",
+        "role": "matrix multiplication inside attention",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Softmax",
+        "role": "attention-score normalization",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Add",
+        "role": "residual addition combining backbone and PEFT branch outputs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SiLU",
+        "role": "activation function in the MLP block",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Identity",
+        "role": "pass-through operator on the bypass path",
+        "container": "(c) Adapters architecture",
+        "novel": true
+      },
+      {
+        "name": "ReLU",
+        "role": "nonlinearity inside the adapter bottleneck (Linear-ReLU-Linear)",
+        "container": "(c) Adapters architecture",
+        "novel": true
+      },
+      {
+        "name": "Multiply",
+        "role": "elementwise scaling operator applied to a projection",
+        "container": "(d) (IA)3 architecture",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "PEFT Operators",
+        "to": "LLM Backbone Operators",
+        "what": "bypass-network output merged back via Add; intermediate activations are either reserved (solid arrow) or pruned (dashed arrow) for backpropagation",
+        "step": null
+      }
+    ],
+    "key_idea": "Different PEFT methods (LoRA, Adapters, (IA)^3) attach small blue bypass-network operators to the same green backbone Transformer pipeline, and which backbone activations must be kept for backprop depends on the method.",
+    "reading_order": "grid of four labelled sub-panels (a-d), each read left to right along its own operator pipeline"
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 1.92,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#70ad47",
+        "used_for": "LLM backbone operator boxes (green)"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "PEFT operator boxes and legend arrow (blue)"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "light-blue accents / reserved-activation arrows"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "input box and other gray fills"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "pruned-activation dashed arrows and gray strokes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark gray (~0.57pt median), solid on boxes",
+    "font": "Arial/Calibri-Bold sans, 5-7pt, bold for legend and panel labels",
+    "corners": "mixed",
+    "arrows": "solid gray/blue arrows for reserved activations, light dashed arrows for pruned activations",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = operators of the backbone LLM, blue = operators introduced by the PEFT method",
+    "line_style_means": "solid arrows = activations reserved for backpropagation, dashed arrows = pruned activations",
+    "emphasis": "the blue PEFT-operator boxes stand out against the green backbone in each panel to show exactly where each method attaches",
+    "reusable_patterns": [
+      "side-by-side pipeline comparison of variant architectures sharing a common backbone"
+    ],
+    "weaknesses": [
+      "very small font size for a dense grid of 4 sub-diagrams"
+    ]
+  },
+  "tags": [
+    "PEFT",
+    "LoRA",
+    "adapters",
+    "LLM",
+    "fine-tuning",
+    "operator graph"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Static Compilation (p.7)"
+    ],
+    "evidence": [
+      "Figure 6: An overview of existing parameter-efficient finetuning (PEFT) methods.",
+      "Green boxes show the operators of the backbone LLM, while blue boxes are the operators introduced by different PEFT methods.",
+      "Figure 6 illustrates examples of how various PEFT methods attach their bypass networks to the base LLM."
+    ]
+  },
+  "summary": "Figure 6 from FlexLLM compares the operator-level architecture of three parameter-efficient finetuning (PEFT) methods -- LoRA, Adapters, and (IA)^3 -- against the plain backbone Transformer. Each of the four panels draws the same base pipeline (Layer Norm, three Linear projections, Matmul/Softmax attention, Add, another Layer Norm, and an SiLU-gated MLP block) in green boxes labelled LLM Backbone Operators. Blue boxes labelled PEFT Operators show the extra Linear/ReLU/Multiply layers each method attaches to the backbone. Solid gray/blue arrows mark activations that must be reserved for backpropagation; light dashed arrows mark activations that can be pruned because no PEFT operator depends on them. The figure's purpose is to justify FlexLLM's per-PEFT-method activation-reservation analysis used for memory-efficient co-serving.",
+  "summary_zh": "图6对比了LoRA、Adapters和(IA)^3等参数高效微调方法与原始Transformer骨干网络的算子级结构，绿色为骨干算子，蓝色为PEFT算子，实线箭头表示需保留的反向传播激活，虚线箭头表示可裁剪的激活。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

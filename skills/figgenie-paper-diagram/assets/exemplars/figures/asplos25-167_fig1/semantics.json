@@ -1,0 +1,171 @@
+{
+  "paper_id": "asplos25-167",
+  "fig": "1",
+  "system": {
+    "name": "Wave",
+    "one_liner": "a framework for offloading userspace system-software resource-management decisions to SmartNIC ARM cores",
+    "domain": [
+      "networking",
+      "operating-systems"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "SmartNIC CPU",
+        "role": "outer region on the SmartNIC that hosts the offloaded agents",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Wave Userspace Agents",
+        "role": "runs offloaded system software (thread scheduling, RPC stack, memory management) as userspace processes on the SmartNIC",
+        "container": "SmartNIC CPU",
+        "novel": true
+      },
+      {
+        "name": "SmartNIC Cache/DRAM",
+        "role": "SmartNIC-side memory backing the shared queue abstraction",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PCIe MMIO/DMA",
+        "role": "host-SmartNIC interconnect carrying the shared memory queues, chosen as MMIO or DMA",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Host Cache/DRAM",
+        "role": "host-side memory backing the shared queue abstraction",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Wave Mechanism",
+        "role": "kernel-space component that sends required state to Wave agents and enforces their decisions",
+        "container": "Host CPU",
+        "novel": true
+      },
+      {
+        "name": "Workload",
+        "role": "host userspace workload whose resource usage is managed via Wave",
+        "container": "Host CPU",
+        "novel": false
+      },
+      {
+        "name": "Host CPU",
+        "role": "host processor running the kernel-space Wave Mechanism and userspace Workload",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Wave Mechanism",
+        "to": "Host Cache/DRAM",
+        "what": "required state",
+        "step": null
+      },
+      {
+        "from": "Host Cache/DRAM",
+        "to": "PCIe MMIO/DMA",
+        "what": "queue traffic",
+        "step": null
+      },
+      {
+        "from": "PCIe MMIO/DMA",
+        "to": "SmartNIC Cache/DRAM",
+        "what": "queue traffic",
+        "step": null
+      },
+      {
+        "from": "SmartNIC Cache/DRAM",
+        "to": "Wave Userspace Agents",
+        "what": "required state",
+        "step": null
+      },
+      {
+        "from": "Wave Userspace Agents",
+        "to": "Wave Mechanism",
+        "what": "resource allocation decisions (transaction-based API)",
+        "step": null
+      },
+      {
+        "from": "Workload",
+        "to": "Wave Mechanism",
+        "what": "local interaction",
+        "step": null
+      }
+    ],
+    "key_idea": "Wave moves resource-management decision-making out of the host kernel into userspace agents on the SmartNIC, connected to the host kernel via a shared-memory queue over PCIe MMIO/DMA and a transaction-based decision API.",
+    "reading_order": "Top-down: SmartNIC CPU and its Wave Userspace Agents at the top, the PCIe MMIO/DMA interconnect band in the middle, and the Host CPU with Wave Mechanism and Workload at the bottom."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.06,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9d9",
+        "used_for": "labeled component box fill"
+      },
+      {
+        "hex": "#1a1a1a",
+        "used_for": "text and small accent fills"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black borders, mixed square/rounded corners on the section bands",
+    "font": "Roboto sans, 6-11.5pt",
+    "corners": "mixed",
+    "arrows": "thin solid orthogonal arrows with filled heads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "monochrome (grayscale) diagram; gray fill distinguishes labeled boxes from the plain white section bands",
+    "line_style_means": null,
+    "emphasis": "horizontal bands separate SmartNIC-side, PCIe interconnect, and host-side layers to emphasize the offload boundary between kernel and SmartNIC",
+    "reusable_patterns": [
+      "layered host/device diagram split by an interconnect band in the middle"
+    ],
+    "weaknesses": [
+      "nearly monochrome palette gives no color cue to distinguish component types"
+    ]
+  },
+  "tags": [
+    "SmartNIC",
+    "resource management offload",
+    "kernel bypass",
+    "PCIe",
+    "systems software",
+    "datacenter"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Wave Design - 3.1 Wave Overview (p.4)"
+    ],
+    "evidence": [
+      "Figure 1 shows the high-level Wave design",
+      "Wave implements a shared memory queue abstraction backed by a choice of MMIO or DMA",
+      "The agents send their decisions back to the host kernel via a transaction-based API"
+    ]
+  },
+  "summary": "Wave offloads userspace system-software decision-making (kernel thread scheduling, memory management, an RPC stack) from host CPUs to processes running on SmartNIC ARM cores. This high-level design figure is drawn as three stacked horizontal bands. At the top, the SmartNIC CPU band contains the Wave Userspace Agents box, annotated as running system software for thread scheduling, RPC stack, and memory management, backed by SmartNIC Cache/DRAM below it. The middle band, PCIe MMIO/DMA, is the shared-memory queue interconnect linking the SmartNIC and host sides. The bottom band is the Host CPU, split into a kernel-space Wave Mechanism box and a userspace Workload box; Wave Mechanism sends required state over the queue to the SmartNIC agents and receives back resource-allocation decisions via a transaction-based API, which it then enforces on the host.",
+  "summary_zh": "该图展示 Wave 的高层设计：SmartNIC 侧的 Wave 用户态代理运行线程调度、RPC 栈、内存管理等被卸载的系统软件，通过 PCIe MMIO/DMA 共享内存队列与主机内核态的 Wave 机制及用户态工作负载通信。",
+  "confidence": "high",
+  "notes": "Small vertical text labels between the two queue boxes in the source figure were not fully legible in the preview and were omitted rather than guessed.",
+  "venue": "ASPLOS25"
+}

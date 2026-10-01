@@ -1,0 +1,254 @@
+{
+  "paper_id": "osdi26-076",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "Umap",
+    "one_liner": "a memory-mapped I/O system for distributed file systems that speeds up efficient matrix access",
+    "domain": [
+      "memory-mapped-IO",
+      "distributed-file-systems",
+      "caching"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how a cache block's Inactive/Semiactive/Active state changes with its reference map and CET index, without locking",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Inactive",
+        "kind": "state",
+        "role": "CB is not referred to by any thread and not pointed to by any index-array entry; used for cache replacement",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Semiactive",
+        "kind": "state",
+        "role": "CB is not referred to by any thread but still pointed to by an index-array entry; can be re-activated or evicted",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Active",
+        "kind": "state",
+        "role": "CB is referred to by threads and pointed to by a CET index-array entry; data is returned directly",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Allocate",
+        "kind": "label",
+        "role": "the external entry action that creates a new Inactive CB",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "rmap",
+        "kind": "label",
+        "role": "per-CB reference-map field recording which thread ids currently refer to it",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "cetidx",
+        "kind": "label",
+        "role": "per-CB field recording its CET index-array slot, or -1 when inactive",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CET",
+        "kind": "row",
+        "role": "the cache-entry-table index array that maps index-array entries to cache blocks",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "thread",
+        "kind": "actor",
+        "role": "a running thread (tid=0,1,2 shown) that references a cache block through the CET",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Allocate",
+        "to": "Inactive",
+        "what": "a newly allocated cache block starts Inactive",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Inactive",
+        "to": "Active",
+        "what": "an uninitialized CET entry is accessed, so umap initializes the CB, loads data, sets a non-negative cetidx and a non-empty rmap",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Semiactive",
+        "to": "Active",
+        "what": "an initialized but unreferenced CB is accessed again, so umap sets a non-negative cetidx",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Active",
+        "to": "Semiactive",
+        "what": "every thread referring to the CB has finished or moved on, so its rmap is set to empty",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Semiactive",
+        "to": "Inactive",
+        "what": "when inactive CBs run low, umap flushes this CB and sets its cetidx to -1",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Active",
+        "to": "Active",
+        "what": "a thread id is added to or removed from the CB's rmap as threads start or stop referring to it",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "thread",
+        "to": "CET",
+        "what": "each thread's tid indexes into the CET to find its currently referenced cache block",
+        "kind": "pointer",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Inactive",
+        "Semiactive",
+        "Active"
+      ],
+      "transitions": [
+        {
+          "from": "Inactive",
+          "to": "Active",
+          "guard": "an uninitialized CET entry is accessed; umap initializes the CB, sets cetidx to a non-negative value and rmap to non-empty"
+        },
+        {
+          "from": "Semiactive",
+          "to": "Active",
+          "guard": "an initialized but unreferenced CB is accessed; cetidx is set to a non-negative value"
+        },
+        {
+          "from": "Active",
+          "to": "Semiactive",
+          "guard": "no thread refers to the CB any longer; rmap is set to {}"
+        },
+        {
+          "from": "Semiactive",
+          "to": "Inactive",
+          "guard": "inactive CBs are insufficient; the CB is flushed and cetidx is set to -1"
+        },
+        {
+          "from": "Active",
+          "to": "Active",
+          "guard": "a thread id is added to or removed from rmap"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "A cache block's Inactive/Semiactive/Active state, driven purely by whether its CET index and thread reference map (rmap) are set, lets CaM manage concurrent access without locking or unnecessary cache replacement.",
+    "reading_order": "Panel (a) first, following thread arrows into the CET array and down to each block's rmap/cetidx; then panel (b)'s Inactive-Semiactive-Active cycle via the Allocate arrow and each labelled transition."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "double",
+    "aspect": 3.09,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#deebf7",
+        "used_for": "fill of Semiactive (S) circles and CET/reference-map cells for semiactive cache blocks"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "fill of Active (A) circles and CET cells for active cache blocks"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "fill of the Inactive (I) circle and neutral CET cells"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light-grey background shading, e.g. the thread/tid label boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat pastel circle and cell fills keyed to I/S/A state",
+    "stroke": "thin black outlines (median ~0.5pt) on every circle, box, and arrow",
+    "corners": "mixed",
+    "arrows": "thin curved black arrows for the three-state cycle plus one self-loop, and short straight arrows from threads down into CET cells and cache blocks",
+    "font": "serif (Times New Roman), italic for transition-label text",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "white/grey marks Inactive, light blue marks Semiactive, and light green marks Active, applied consistently to both the reference-map illustration and the state-machine circles",
+    "line_style_means": "all edges are solid curved arrows; no dashed or coloured lines are used, so transitions are told apart only by their text labels",
+    "state_means": "the three cache-block states are told apart by circle fill colour (white/blue/green) and by the letter (I/S/A) printed inside each circle",
+    "marker_means": "no numbered markers; the letters I/S/A inside each node/circle name the state, and italic text on each arrow names the exact condition (cetidx/rmap update) that triggers it",
+    "emphasis": "the identical I/S/A colour coding linking panel (a)'s concrete cache blocks to panel (b)'s abstract states lets the reader see which concrete example blocks are in which state",
+    "reusable_patterns": [
+      "a concrete annotated data-structure illustration paired directly with the abstract state machine that governs it, sharing one colour key"
+    ],
+    "weaknesses": [
+      "panel (a) does not label which specific arrow belongs to which thread, so matching a tid to its exact CET cell takes some tracing",
+      "the Allocate entry arrow has no source state, so it is not clear from the figure alone what happens before a block is first allocated"
+    ]
+  },
+  "tags": [
+    "memory-mapped-IO",
+    "cache-management",
+    "state-machine",
+    "lock-free",
+    "concurrency",
+    "Umap",
+    "reference-counting"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design"
+    ],
+    "evidence": [
+      "CaM detects the concurrency degree at runtime and distinguishes threads accessing the same data",
+      "each CB has a reference map rmap to record which threads are referring to it",
+      "A CB with a non-empty rmap will never be evicted"
+    ]
+  },
+  "summary": "Figure 8 overviews Umap's lock-free concurrency-aware mechanism (CaM) and the state machine behind it. Panel (a) illustrates the reference map: three threads (tid=0,1,2) index into the CET array to reach specific cache blocks, each annotated with its rmap (the set of thread ids currently referring to it) and its cetidx; blocks with a non-empty rmap, like cetidx 11 ({0,1}) and 12 ({2}), are Active, while the rest sit Semiactive. Panel (b) draws the three-state machine that produces these labels: a newly allocated block starts Inactive, moves directly to Active once its cetidx and rmap are both set, drops back to Semiactive once its rmap empties, returns to Inactive when flushed under low inactive-block pressure, and simply updates its rmap while looping on Active as threads attach or detach, all without taking a lock.",
+  "summary_zh": "图8展示Umap并发机制CaM及状态机：(a)线程经CET索引到缓存块，标注rmap和cetidx；(b)三态机中块从Inactive经分配到Active，rmap清空降为Semiactive，资源紧张时降回Inactive，全程无锁。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

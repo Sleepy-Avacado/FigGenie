@@ -1,0 +1,215 @@
+{
+  "paper_id": "nsdi25-033",
+  "fig": "tex7",
+  "system": {
+    "name": "SuperServe",
+    "one_liner": "a fine-grained inference-serving system that activates subnetworks of a shared supernetwork per query to meet unpredictable per-query latency SLOs",
+    "domain": [
+      "ml-systems",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Router",
+        "role": "receives client queries, holds the EDF queue, runs the scheduler, and returns predictions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "EDF Queue",
+        "role": "earliest-deadline-first queue holding queries ordered by absolute deadline D",
+        "container": "Router",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "decides the query-batch (B) and subnetwork (star) for the query at the head of the queue",
+        "container": "Router",
+        "novel": true
+      },
+      {
+        "name": "Dispatcher",
+        "role": "sends the chosen batch and subnetwork to a worker",
+        "container": "Router",
+        "novel": true
+      },
+      {
+        "name": "Result Queue",
+        "role": "holds worker predictions before returning them to clients",
+        "container": "Router",
+        "novel": true
+      },
+      {
+        "name": "Supernetwork Profiler",
+        "role": "runs NAS and latency profiling offline to find Pareto-optimal subnetworks per latency target",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Worker1",
+        "role": "instantiates a supernetwork and actuates the dispatched subnetwork in place on its GPU",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Worker2",
+        "role": "instantiates a supernetwork and actuates the dispatched subnetwork in place on its GPU",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Supernetwork",
+        "role": "a single network containing many subnetworks that can be selectively activated on the GPU",
+        "container": "Worker1 / Worker2",
+        "novel": true
+      },
+      {
+        "name": "GPU",
+        "role": "hardware executing the actuated subnetwork",
+        "container": "Worker1 / Worker2",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client",
+        "to": "Router",
+        "what": "asynchronous RPC query with an SLO deadline",
+        "step": 1
+      },
+      {
+        "from": "Router",
+        "to": "Scheduler",
+        "what": "invocation when a worker becomes available and the EDF queue is non-empty",
+        "step": 2
+      },
+      {
+        "from": "Scheduler",
+        "to": "Dispatcher",
+        "what": "chosen batch size B and subnetwork",
+        "step": 3
+      },
+      {
+        "from": "Dispatcher",
+        "to": "Worker1",
+        "what": "query-batch B=4 with chosen subnetwork (star)",
+        "step": 3
+      },
+      {
+        "from": "Dispatcher",
+        "to": "Worker2",
+        "what": "query-batch B=2 with chosen subnetwork (star)",
+        "step": 3
+      },
+      {
+        "from": "Worker1",
+        "to": "Worker1",
+        "what": "in-place actuation of the chosen subnetwork on the GPU, then inference",
+        "step": 4
+      },
+      {
+        "from": "Worker1",
+        "to": "Router",
+        "what": "predictions for the query-batch",
+        "step": 5
+      },
+      {
+        "from": "Router",
+        "to": "Client",
+        "what": "predictions redirected back to the client",
+        "step": 7
+      },
+      {
+        "from": "Supernetwork Profiler",
+        "to": "Router",
+        "what": "latency profile used by the scheduler",
+        "step": null
+      }
+    ],
+    "key_idea": "SuperServe routes deadline-bound queries through an EDF queue and a scheduler that jointly picks batch size and a Pareto-optimal subnetwork per query, dispatched to GPU workers that actuate only that subnetwork of a shared supernetwork.",
+    "reading_order": "Starts at the client on the left, follows numbered circles through the router's internal EDF queue, scheduler and dispatcher, out to the two workers on the right, and back to the client."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.27,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7a7a7a",
+        "used_for": "gray fill/stroke for the Router container and neutral text"
+      },
+      {
+        "hex": "#60a917",
+        "used_for": "green worker/subnetwork example (Worker1, green star)"
+      },
+      {
+        "hex": "#d4d4d4",
+        "used_for": "gray fill for queue and grouping boxes"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue worker/subnetwork example (Worker2 supernetwork boxes, blue accents)"
+      },
+      {
+        "hex": "#7499cf",
+        "used_for": "medium blue strokes for the blue-path worker elements"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.72pt median, black plus color-coded green/blue strokes marking the two example query paths",
+    "font": "Times New Roman / Arial mixed, 10-16pt",
+    "corners": "mixed",
+    "arrows": "orthogonal and diagonal, filled triangular heads",
+    "icons": "vector icons (clock for deadlines, person for client, image stack for query batch, star for chosen subnetwork) plus a bitmap-style heatmap/scatter chart inset"
+  },
+  "encoding": {
+    "color_means": "green and blue distinguish two concurrent example queries/subnetworks (D1/star-green vs D2/star-blue) as they flow through the same pipeline to two different workers",
+    "line_style_means": null,
+    "emphasis": "numbered black circles trace the critical path of one query end to end, while the color-coded pair of examples shows two queries scheduled differently based on their slack",
+    "reusable_patterns": [
+      "numbered request path through a central router to a worker pool",
+      "heatmap and pareto-curve inset explaining an offline profiler feeding a scheduler"
+    ],
+    "weaknesses": [
+      "combining an architecture diagram with two embedded charts (heatmap, Pareto plot) raises text/element density"
+    ]
+  },
+  "tags": [
+    "inference serving",
+    "supernetwork",
+    "latency SLO",
+    "EDF scheduling",
+    "subnetwork selection",
+    "GPU serving",
+    "Pareto optimality"
+  ],
+  "provenance": {
+    "sections": [
+      "\\system: System Architecture (fig:sys_arch_detailed)"
+    ],
+    "evidence": [
+      "SuperServe consists of a router, scheduler, workers and a supernetwork profiler.",
+      "The client submits asynchronous RPC queries to the router with a deadline.",
+      "As soon as any worker becomes available, 's fine-grained scheduler is invoked"
+    ]
+  },
+  "summary": "SuperServe is a fine-grained inference-serving system for unpredictable workloads that activates a subnetwork of a shared supernetwork per query to meet latency SLOs. The figure shows a central Router containing an EDF queue, scheduler, dispatcher, and result queue, flanked by a client on the left and two GPU workers on the right, each hosting a supernetwork. Numbered circles trace the critical path: the client submits a deadline-bound query, it is enqueued by absolute deadline, the scheduler picks a batch size and subnetwork once a worker is free, the dispatcher sends the batch to a worker, the worker actuates that subnetwork in place on the GPU and runs inference, and predictions flow back through the router to the client. Two color-coded example queries (green and blue) walk through this same pipeline to the two different workers. An inset heatmap of measured latency by batch size and subnetwork, plus a Pareto accuracy-vs-latency scatter plot, explain the offline Supernetwork Profiler that feeds the scheduler's choices.",
+  "summary_zh": "SuperServe 是面向不可预测负载的细粒度推理服务系统，图示以路由器为中心的架构：EDF 队列、调度器、分发器与结果队列，两侧连接客户端与两个 GPU worker，编号圆圈标出查询从提交到返回预测的关键路径，绿蓝两色示例展示不同查询被调度到不同 worker，并附带离线的超网络画像器与延迟热力图。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

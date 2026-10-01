@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-027_fig5",
+  "paper_id": "nsdi23-027",
+  "fig": "5",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 5: LinkLab 2.0 edge/cloud software stack.",
+  "corpus_template": "layered",
+  "direction": "bottom-up",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.73,
+  "n_components": 19,
+  "n_flows": 0,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-027/nsdi23-027_fig5_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-027/nsdi23-027_fig5_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": false,
+      "why_chosen": "Reassigned from flanked-core by the note-writer: three co-equal dashed bands (Applications, LinkLab Edge/Cloud Runtime, KubeEdge) stack bottom-up with zero arrows, pure vertical containment standing for 'runs on top of', not one core distinguished from its bands.",
+      "what_to_learn": "When a stack has no data flow to show, drop the arrows entirely and let vertical position alone mean 'runs on top of', colouring only the layer that is the paper's own contribution against reused third-party logos elsewhere; this is a layered stack, so do not force a middle tier into a flanked-core engine role."
+    }
+  ]
+}

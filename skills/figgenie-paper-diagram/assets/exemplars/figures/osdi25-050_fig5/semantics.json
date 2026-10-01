@@ -1,0 +1,220 @@
+{
+  "paper_id": "osdi25-050",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "BlitzScale",
+    "one_liner": "a fast, live autoscaling system for large-model serving that uses O(1) host caching",
+    "domain": [
+      "ML-serving",
+      "autoscaling",
+      "GPU-cluster-networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how GPU-to-GPU bandwidth differs between an NVSwitch/NVLink fabric and a shared PCIe link when no NVLink is present",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "GPU",
+        "kind": "node",
+        "role": "one of several identical GPUs in a server's top or bottom row",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NIC",
+        "kind": "port",
+        "role": "network interface card connecting a server's GPUs to the RDMA network",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "CPU memory",
+        "kind": "box",
+        "role": "host memory attached to the NIC in each server",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Server 0",
+        "kind": "label",
+        "role": "names the top server in the template",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "RDMA: 200 Gbps",
+        "kind": "label",
+        "role": "names the inter-server network link and its bandwidth, common to both panels",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Server 1",
+        "kind": "label",
+        "role": "names the bottom server in the template",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "NVLink (1.6Tbps)",
+        "kind": "label",
+        "role": "names the per-GPU high-speed link bandwidth in panel (a)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "NVSwitch",
+        "kind": "node",
+        "role": "the switch fabric joining all of Server 1's GPUs via NVLink in panel (a)",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "GPU",
+        "to": "NIC",
+        "what": "Server 0's GPUs connect to its NIC",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "CPU memory",
+        "what": "the NIC attaches to host CPU memory",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "NIC",
+        "what": "the two servers' NICs are linked by the 200 Gbps RDMA network",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "GPU",
+        "to": "NVSwitch",
+        "what": "each of Server 1's GPUs links to the NVSwitch fabric over a 1.6 Tbps NVLink",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) A800 SXM",
+        "axis": "alternatives",
+        "differs": "template: GPUs within Server 1 are joined by an NVSwitch fabric over per-GPU NVLink at 1.6 Tbps",
+        "verdict": null
+      },
+      {
+        "label": "(b) A100 PCIe",
+        "axis": "alternatives",
+        "differs": "no NVSwitch/NVLink; instead a looping connector shows GPUs 0 and 1 sharing one 256 Gbps PCIe link",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the bandwidth figures for each link: 200 Gbps RDMA (both panels), 1.6 Tbps NVLink and its NVSwitch (a), and 256 Gbps shared PCIe between GPU 0 and GPU 1 (b)",
+      "linked_by": "position next to the drawn link, plus the shared template aligning both panels",
+      "result_cells": "no separate result cells; each bandwidth number is printed directly beside the link it labels"
+    },
+    "key_idea": "NVLink connects all of a server's GPUs through an NVSwitch at 1.6 Tbps per GPU, far faster than the 200 Gbps inter-server RDMA network; without NVLink, GPU pairs instead share just a 256 Gbps PCIe link.",
+    "reading_order": "Left panel (a) first, top-down through Server 0, RDMA, Server 1 and its NVSwitch; then the same top-down path in panel (b), where PCIe replaces NVLink."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.69,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff6e6",
+        "used_for": "cream fill of every GPU box in both panels"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of NIC boxes and the CPU-memory icon"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "the dashed red rectangle framing the whole (a)-vs-(b) comparison"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "grey stroke of the RDMA bandwidth bar and the plain lines from GPUs down to the NIC"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light-grey shading accents at the ends of the RDMA bar"
+      }
+    ],
+    "background": "white",
+    "fill": "flat, pale cream fill for GPU boxes, white for NIC/CPU-memory glyphs",
+    "stroke": "thin black box outlines (median ~0.57pt) with a shaded grey RDMA bar and a dashed red rectangle framing both panels",
+    "corners": "mixed",
+    "arrows": "plain lines without arrowheads connect GPUs to NICs; a single curved black line loops between two GPUs in panel (b) marking their shared PCIe connection",
+    "font": "sans (Lato), italic for the Server 0/Server 1 captions",
+    "icons": "small CPU-memory glyph icon beside each NIC; a small dark square NVLink port icon under each GPU in panel (a)"
+  },
+  "encoding": {
+    "color_means": "cream marks every GPU box in both panels; the dashed red rectangle simply frames the whole comparison rather than encoding meaning; grey marks the RDMA link and the plain GPU-to-NIC wiring",
+    "line_style_means": "a shaded grey bar denotes the 200 Gbps inter-server RDMA link common to both panels; a looping black line in panel (b) denotes the shared 256 Gbps PCIe link between two GPUs, replacing panel (a)'s per-GPU NVLink ports into an NVSwitch",
+    "state_means": "the two alternatives are told apart by what sits below Server 1's NIC: an NVSwitch fed by per-GPU NVLink ports in (a), versus a plain GPU row with one looping shared-PCIe link in (b)",
+    "marker_means": "no numbered markers; bandwidth values (200 Gbps, 1.6 Tbps, 256 Gbps) printed next to each link are the figure's real content",
+    "emphasis": "the bold bandwidth numbers next to each link, especially the 1.6 Tbps NVLink versus 256 Gbps shared-PCIe contrast, carry the figure's point",
+    "reusable_patterns": [
+      "two identical Server0/RDMA/Server1/NIC templates side by side, differing only in how the bottom row of GPUs is interconnected"
+    ],
+    "weaknesses": [
+      "only two of each server's GPUs are drawn explicitly (the rest are elided with an ellipsis), so the full GPU count per server is not shown",
+      "panel (b) labels GPUs '0' and '1' only inline in the shared-link caption, not as visible per-box numbers, so matching the caption to the drawn boxes takes a moment"
+    ]
+  },
+  "tags": [
+    "GPU-interconnect",
+    "NVLink",
+    "PCIe",
+    "RDMA",
+    "network-comparison",
+    "BlitzScale",
+    "MAAS"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Characterizing Scaling Requirements and"
+    ],
+    "evidence": [
+      "the inter-GPU network (RDMA) operates at 200 Gbps, which is close to the host-to-GPU PCIe speed",
+      "With NVLink, the speed is much faster.",
+      "the 256 Gbps PCIe is shared between two GPUs attached to it"
+    ]
+  },
+  "summary": "Figure 5 contrasts two GPU server interconnects that BlitzScale's network model must account for. Both panels share the same template: a row of GPUs in Server 0 feeding a NIC and CPU memory, linked to Server 1 over a 200 Gbps RDMA network, whose own NIC feeds Server 1's GPU row. The panels differ only in what joins the GPUs within Server 1. In (a) A800 SXM, each GPU has its own NVLink port feeding a shared NVSwitch, giving 1.6 Tbps of GPU-to-GPU bandwidth. In (b) A100 PCIe, there is no NVSwitch; instead a looping connector shows that GPUs 0 and 1 simply share one 256 Gbps PCIe link. The comparison makes the point that without NVLink, intra-server GPU bandwidth collapses from terabit-scale to a PCIe link only about as fast as the inter-server RDMA network.",
+  "summary_zh": "图5对比两种GPU互联：面板共用Server0经RDMA(200Gbps)连Server1模板；(a)A800经NVLink(1.6Tbps)接NVSwitch；(b)A100无NVSwitch，两GPU共享256Gbps PCIe。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

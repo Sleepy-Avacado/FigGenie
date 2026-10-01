@@ -1,0 +1,267 @@
+{
+  "paper_id": "nsdi26-074",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "SSDO",
+    "one_liner": "a fast solver-free algorithm for traffic engineering in large-scale data center networks",
+    "domain": [
+      "networking",
+      "traffic-engineering",
+      "data-center-networks"
+    ],
+    "abstraction": "control-plane-algorithm"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how two different split-ratio solutions for one demand pair both reach the same optimal link utilization",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "u*",
+        "kind": "row",
+        "role": "table row: the optimal maximum link utilization for this subproblem, 0.8",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "D_AB",
+        "kind": "row",
+        "role": "table row: total demand volume for the (A,B) pair, 1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T_ABB",
+        "kind": "row",
+        "role": "table row (green): whether the direct A-B path carries part of the (A,B) demand (0 = unused)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T_ACB",
+        "kind": "row",
+        "role": "table row (red): whether the A-C-B indirect path carries part of the (A,B) demand",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "T_ADB",
+        "kind": "row",
+        "role": "table row (orange): whether the A-D-B indirect path carries part of the (A,B) demand",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "A",
+        "kind": "node",
+        "role": "source of the (A,B) demand",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "node",
+        "role": "destination of the (A,B) demand and convergence point of all three candidate paths",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "intermediate relay for the A-C-B path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "D",
+        "kind": "node",
+        "role": "intermediate relay for the A-D-B path",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "A",
+        "to": "C",
+        "what": "background traffic, 0.6/2, shared by both solutions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "D",
+        "what": "background traffic, 0/2, shared by both solutions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "B",
+        "what": "background traffic, 0/2, shared by both solutions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "B",
+        "what": "background traffic, 1.6/2, already the network's bottleneck edge in both solutions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "D",
+        "to": "B",
+        "what": "background traffic, 0.6/2, shared by both solutions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "B",
+        "what": "the (A,B) demand's own direct-path share, T_ABB, drawn as a separate green curved overlay, 0 in both solutions",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "C",
+        "what": "the (A,B) demand's own share routed via C, T_ACB, drawn as a red overlay",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "B",
+        "what": "continuation of the (A,B) demand's C-routed share",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "D",
+        "what": "the (A,B) demand's own share routed via D, T_ADB, drawn as an orange overlay",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "D",
+        "to": "B",
+        "what": "continuation of the (A,B) demand's D-routed share",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(c) Solution 1",
+        "axis": "alternatives",
+        "differs": "splits the (A,B) demand evenly across the two indirect paths, 0.5/2 on each leg of A-C-B (red) and 0.5/2 on each leg of A-D-B (orange); the balanced solution the paper's binary search finds",
+        "verdict": "balanced / preferred"
+      },
+      {
+        "label": "(d) Solution 2",
+        "axis": "alternatives",
+        "differs": "routes the full (A,B) demand through A-C-B (red, 1/2 on each leg) while A-D-B (orange) carries 0/2; still reaches the same optimal MLU but fails the balance condition",
+        "verdict": "imbalanced / feasible but rejected"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "background-traffic fractions (0.6/2, 0/2, 1.6/2, 0.6/2) shared by both solutions, plus each solution's own T_ABB/T_ACB/T_ADB split of the (A,B) demand's 1 unit across three candidate paths",
+      "linked_by": "colour: green for the direct path (T_ABB), red for the via-C path (T_ACB), orange for the via-D path (T_ADB), matching the table rows in (a) to the overlaid arrows in (c)/(d)",
+      "result_cells": "every edge is annotated 'used/capacity'; both solutions keep every background number and the green path identical, changing only the red/orange numbers, yet both reach the same MLU"
+    },
+    "key_idea": "When the true bottleneck edge (A-B's background traffic) already fixes the optimal MLU, the remaining demand can be split across alternate paths in more than one way, evenly (balanced) or skewed onto a single path (imbalanced), without changing the achieved MLU.",
+    "reading_order": "system information (a) gives u*, demand, and which paths carry flow; background traffic (b) fixes the shared black-edge values; Solution 1 (c) and Solution 2 (d) then overlay two different red/orange splits on the same graph, with the green direct-path value unchanged"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 4,
+    "column": "single",
+    "aspect": 1.38,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale-blue fill of the A/B/C/D node circles"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red text/arrows for the T_ACB path (A-C-B) and its table row"
+      },
+      {
+        "hex": "#00cc00",
+        "used_for": "green text/arrow for the T_ABB direct path and its table row"
+      },
+      {
+        "hex": "#ff9933",
+        "used_for": "orange text/arrows for the T_ADB path (A-D-B) and its table row"
+      },
+      {
+        "hex": "#fe9833",
+        "used_for": "a near-identical second orange shade also used for the T_ADB path/table row"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.44pt) black outlines for the table and node circles/background edges; coloured strokes for each overlay path",
+    "corners": "mixed",
+    "arrows": "thin black arrows for background traffic; coloured arrows (green/red/orange) overlaid on the same or adjacent edges for the SD-specific path split, with a curved green arrow for the direct path",
+    "font": "serif (Times New Roman), ~7.5-8pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green marks the direct A-B path's share of the (A,B) demand (T_ABB), red marks the A-C-B path's share (T_ACB), orange marks the A-D-B path's share (T_ADB); black marks fixed background traffic from other demands",
+    "line_style_means": "a curved green arrow distinguishes the direct-path overlay from the straight black background edge it runs alongside; red and orange overlays follow the same straight edges as the background but in their own colour",
+    "state_means": "the two alternatives are told apart by the numeric split on the red and orange paths, even (0.5/0.5) in Solution 1 versus skewed (1/0) in Solution 2, while every background value and the green path stay identical",
+    "marker_means": "no numbered markers; each edge's 'used/capacity' fraction is both its label and its value",
+    "emphasis": "keeping every black background number and the green path identical between (c) and (d) isolates the red/orange numbers as the only thing that changed, making the multi-solution phenomenon visually obvious",
+    "reusable_patterns": [
+      "a shared background graph redrawn twice with only two coloured path variables' split changed, so the reader can see two different feasible solutions reach the same bottleneck value"
+    ],
+    "weaknesses": [
+      "stacking two numeric labels (background and overlay) on the same short edge segment makes the diagram dense and requires matching each number's colour carefully to its path"
+    ]
+  },
+  "tags": [
+    "SSDO",
+    "traffic-engineering",
+    "multi-solution",
+    "flow-splitting",
+    "MLU",
+    "binary-search"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 SSDO Design"
+    ],
+    "evidence": [
+      "there exist multiple feasible TE configurations, but only one balanced TE configuration which can be binary searched",
+      "fACB and fADB are greater than zero, the maximum utilization of the paths A→C→B and A→D→B",
+      "an alternative solution shown in (d) of Figure 4 fails to meet the second condition"
+    ]
+  },
+  "summary": "This figure illustrates SSDO's multi-solution phenomenon: for the same optimal maximum link utilization (u*=0.8), more than one split-ratio solution for the (A,B) demand (D_AB=1) is feasible. System information (a) and background traffic (b) fix a 4-node graph (A, B, C, D) with black background flows, including A-B already at 1.6/2. Solution 1 (c) splits the (A,B) demand's remaining routing evenly across two indirect paths, A-C-B (red, 0.5/2 on each leg) and A-D-B (orange, 0.5/2 on each leg), with the direct path unused (green, 0/2); this is the balanced solution the paper's binary search finds. Solution 2 (d) reaches the same optimal MLU by instead routing the full demand through A-C-B (red, 1/2 on each leg) while leaving A-D-B unused (orange, 0/2); it is feasible but fails the balance condition since the A-D-B path's utilization stays below the required threshold.",
+  "summary_zh": "该图示SSDO多解现象：(A,B)需求可用不同分流达到同一最优MLU。(c)方案一均分给A-C-B、A-D-B两条间接路径（各0.5/2），为均衡解；(d)方案二全走A-C-B（各1/2），A-D-B为0，同达最优但不均衡。",
+  "confidence": "high",
+  "notes": "content.elements' T_ABB/T_ACB/T_ADB values (0/1/1 in the table) are interpreted as which paths carry nonzero flow in the balanced solution (c), not literal flow amounts, since the actual per-solution numeric splits (0.5/0.5 vs 1/0) are read directly off the (c)/(d) overlay labels; this interpretation follows the paper's Characteristic 3 text ('fACB and fADB are greater than zero') rather than being stated outright. layout.panel_count/panels=4 matches the index's own (2x2) count, with content.panels listing only (c)/(d) as the comparison pair while (a)/(b) are shared setup panels.",
+  "venue": "NSDI26"
+}

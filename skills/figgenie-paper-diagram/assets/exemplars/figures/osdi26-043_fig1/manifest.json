@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-043_fig1",
+  "paper_id": "osdi26-043",
+  "fig": "1",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 1: Comparison between existing disaggregated RL architecture and WEAVE’s co-scheduling paradigm.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.93,
+  "n_components": 13,
+  "n_flows": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-043/osdi26-043_fig1_p2_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-043/osdi26-043_fig1_p2_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated, textbook two-lane Gantt: Rollout Pool and Training Pool are named lanes holding colored phase blocks, idle gaps highlighted red as 'Dependency Bubbles', with a bracket below measuring solo iteration time against a co-scheduled meta-iteration.",
+      "what_to_learn": "Name the lanes in a left gutter (Rollout Pool, Training Pool), keep every block aligned to one shared time grid so idle gaps are visible rather than compressed away, color the red idle blocks as the named defect ('Dependency Bubbles'), and put a measurement bracket under each timeline to state exactly what got shorter."
+    }
+  ]
+}

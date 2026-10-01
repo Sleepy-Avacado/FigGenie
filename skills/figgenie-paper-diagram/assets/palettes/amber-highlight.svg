@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#36393d"/></marker><marker id="ahx" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#ff0000"/></marker></defs>
+<rect x="0" y="0" width="600" height="300" fill="#ffffff"/>
+<text x="16" y="24" font-size="15" font-weight="bold" fill="#2c2c2e">Amber highlight on neutral</text>
+<text x="584" y="24" font-size="11" text-anchor="end" fill="#a6a6a6">amber-highlight &#183; n=16 (5.9%)</text>
+<line x1="16" y1="33" x2="584" y2="33" stroke="#a6a6a6" stroke-width="0.6"/>
+<rect x="16" y="46" width="272" height="152" rx="4" fill="#d9d9d9" stroke="#2c2c2e" stroke-width="1"/>
+<text x="26" y="63" font-size="10" font-weight="bold" fill="#2c2c2e">Container</text>
+<rect x="26" y="74" width="74" height="34" rx="3" fill="#ffeed9" stroke="#2c2c2e" stroke-width="1"/>
+<text x="63" y="95" font-size="10" text-anchor="middle" fill="#2c2c2e">module</text>
+<rect x="113" y="74" width="74" height="34" rx="3" fill="#a7c0de" stroke="#2c2c2e" stroke-width="1"/>
+<text x="150" y="95" font-size="10" text-anchor="middle" fill="#2c2c2e">alt 1</text>
+<rect x="200" y="74" width="74" height="34" rx="3" fill="#d3e2b7" stroke="#2c2c2e" stroke-width="1"/>
+<text x="237" y="95" font-size="10" text-anchor="middle" fill="#2c2c2e">alt 2</text>
+<line x1="100" y1="91" x2="111" y2="91" stroke="#36393d" stroke-width="1.4" marker-end="url(#ah)"/>
+<line x1="187" y1="91" x2="198" y2="91" stroke="#36393d" stroke-width="1.4" marker-end="url(#ah)"/>
+<rect x="26" y="128" width="74" height="34" rx="3" fill="#cc9600" stroke="#2c2c2e" stroke-width="1"/>
+<text x="63" y="149" font-size="10" font-weight="bold" text-anchor="middle" fill="#2c2c2e">accent</text>
+<path d="M100,145 H150 V112" fill="none" stroke="#ff0000" stroke-width="1.8" marker-end="url(#ahx)"/>
+<text x="158" y="143" font-size="9" fill="#a6a6a6">accent arrow</text>
+<text x="26" y="182" font-size="9" fill="#a6a6a6">text-muted annotation</text>
+<rect x="16" y="208" width="272" height="26" rx="2" fill="#f2f2f2" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="26" y="225" font-size="10" fill="#2c2c2e">lane / band</text>
+<rect x="16" y="244" width="96" height="26" rx="2" fill="#fff2cc" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="26" y="261" font-size="9" fill="#2c2c2e">legend</text>
+<text x="124" y="261" font-size="9" fill="#a6a6a6">canvas #ffffff</text>
+<text x="16" y="288" font-size="8.5" fill="#a6a6a6">Neutral grey lanes and peach/white boxes, with a dark gold-amber fill reserved for the one...</text>
+<rect x="308" y="46" width="24" height="24" rx="2" fill="#ffffff" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="339" y="57" font-size="9.5" fill="#2c2c2e">canvas</text>
+<text x="339" y="68" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#ffffff</text>
+<rect x="450" y="46" width="24" height="24" rx="2" fill="#d9d9d9" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="481" y="57" font-size="9.5" fill="#2c2c2e">container</text>
+<text x="481" y="68" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#d9d9d9</text>
+<rect x="308" y="87" width="24" height="24" rx="2" fill="#f2f2f2" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="339" y="98" font-size="9.5" fill="#2c2c2e">lane</text>
+<text x="339" y="109" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#f2f2f2</text>
+<rect x="450" y="87" width="24" height="24" rx="2" fill="#ffeed9" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="481" y="98" font-size="9.5" fill="#2c2c2e">module</text>
+<text x="481" y="109" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#ffeed9</text>
+<rect x="308" y="128" width="24" height="24" rx="2" fill="#a7c0de" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="339" y="139" font-size="9.5" fill="#2c2c2e">module-alt +2</text>
+<text x="339" y="150" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#a7c0de</text>
+<rect x="450" y="128" width="24" height="24" rx="2" fill="#cc9600" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="481" y="139" font-size="9.5" fill="#2c2c2e">accent</text>
+<text x="481" y="150" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#cc9600</text>
+<rect x="308" y="169" width="24" height="24" rx="2" fill="#2c2c2e" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="339" y="180" font-size="9.5" fill="#2c2c2e">stroke</text>
+<text x="339" y="191" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#2c2c2e</text>
+<rect x="450" y="169" width="24" height="24" rx="2" fill="#2c2c2e" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="481" y="180" font-size="9.5" fill="#2c2c2e">text</text>
+<text x="481" y="191" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#2c2c2e</text>
+<rect x="308" y="210" width="24" height="24" rx="2" fill="#a6a6a6" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="339" y="221" font-size="9.5" fill="#2c2c2e">text-muted</text>
+<text x="339" y="232" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#a6a6a6</text>
+<rect x="450" y="210" width="24" height="24" rx="2" fill="#36393d" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="481" y="221" font-size="9.5" fill="#2c2c2e">arrow</text>
+<text x="481" y="232" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#36393d</text>
+<rect x="308" y="251" width="24" height="24" rx="2" fill="#ff0000" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="339" y="262" font-size="9.5" fill="#2c2c2e">arrow-accent</text>
+<text x="339" y="273" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#ff0000</text>
+<rect x="450" y="251" width="24" height="24" rx="2" fill="#fff2cc" stroke="#2c2c2e" stroke-width="0.7"/>
+<text x="481" y="262" font-size="9.5" fill="#2c2c2e">legend</text>
+<text x="481" y="273" font-size="9" font-family="Menlo, monospace" fill="#a6a6a6">#fff2cc</text>
+</svg>

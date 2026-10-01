@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-021_fig8",
+  "paper_id": "asplos26-021",
+  "fig": "8",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 8. DARTH-PUM architecture.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.75,
+  "n_components": 8,
+  "n_flows": 2,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-021/src/fig8_DARTH-PUM-ARCH.svg",
+    "preview.png": "lab/extracted/asplos26-021/src/fig8_DARTH-PUM-ARCH.png",
+    "print.png": "lab/extracted/asplos26-021/asplos26-021_fig8_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar reading as a physical resource map: identical Hybrid Compute Tile cells surround one central Front End, with a callout zooming from one grid cell into its stacked analog-over-digital internal structure.",
+      "what_to_learn": "Use a matrix of identical tile cells to depict physical placement of replicated hardware around one shared control block, and zoom from a single selected cell into an exploded detail panel rather than expanding every cell, keeping the grid itself uncluttered."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A uniform tile grid with one tile highlighted and exploded into an internal view via a callout wedge.",
+      "what_to_learn": "Highlight the source tile in the grid (different border/fill) before drawing the callout, so the reader knows which of the N tiles was expanded."
+    }
+  ]
+}

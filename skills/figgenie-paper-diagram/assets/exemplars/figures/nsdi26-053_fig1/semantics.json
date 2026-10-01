@@ -1,0 +1,136 @@
+{
+  "paper_id": "nsdi26-053",
+  "fig": "1",
+  "system": {
+    "name": "SyncWise",
+    "one_liner": "an error-aware time synchronization protocol for reconfigurable data center networks built on optical circuit switches",
+    "domain": [
+      "networking",
+      "data-center-networks",
+      "time-synchronization"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Electrical Switch",
+        "role": "network switch node forming the traditional DCN's spanning tree",
+        "container": "(a) Traditional Data Center Network",
+        "novel": false
+      },
+      {
+        "name": "Communication Endpoint",
+        "role": "host/pod/ToR endpoint connected via cables or dynamic optical circuits",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Optical Switch (OCS)",
+        "role": "reconfigurable optical circuit switch interconnecting endpoints in the RDCN",
+        "container": "(b) Reconfigurable Data Center Network",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Electrical Switch",
+        "to": "Communication Endpoint",
+        "what": "Network Cable (fixed electrical link)",
+        "step": null
+      },
+      {
+        "from": "Electrical Switch",
+        "to": "Communication Endpoint",
+        "what": "Clock Propagation down the static spanning tree",
+        "step": null
+      },
+      {
+        "from": "Communication Endpoint",
+        "to": "Optical Switch (OCS)",
+        "what": "dynamic optical circuit",
+        "step": null
+      },
+      {
+        "from": "Optical Switch (OCS)",
+        "to": "Optical Switch (OCS)",
+        "what": "OCS Internal Connection, reconfigured over time",
+        "step": null
+      }
+    ],
+    "key_idea": "A traditional DCN distributes clock via a static spanning tree of electrical switches, whereas an RDCN's optical circuit switches reconfigure dynamic circuits between endpoints over time.",
+    "reading_order": "Left to right across the three panels: static tree (a), reconfigurable endpoint-OCS topology (b), then the OCS's internal time-varying configuration (c)."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.88,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#76d6ff",
+        "used_for": "electrical switch and communication endpoint icons"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "network cable lines and clock-propagation dashed lines"
+      },
+      {
+        "hex": "#dead26",
+        "used_for": "Optical Switch (OCS) icons"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin lines (~0.5pt), dashed for clock propagation, solid for network cables and OCS internal connections",
+    "font": "Helvetica Neue, 5-8.5pt, italic for panel captions",
+    "corners": "square",
+    "arrows": "mostly undirected thin lines for cables/circuits, with a few curved arrows for clock-propagation direction",
+    "icons": "vector, small squares for electrical/optical switches and circles for communication endpoints"
+  },
+  "encoding": {
+    "color_means": "cyan = electrical switches and communication endpoints, gray = fixed network cabling and clock-propagation edges, gold = optical circuit switches (OCS)",
+    "line_style_means": "dashed gray lines show clock-propagation paths; solid lines show physical network cables or OCS internal connections",
+    "emphasis": "placing the rigid tree (a) beside the OCS-mediated endpoint graph (b) and the OCS's own time-varying internal configuration (c) shows why fixed clock-propagation trees break down as circuits reconfigure",
+    "reusable_patterns": [
+      "side-by-side before/after topology comparison with a shared legend",
+      "single schematic of an internal component's behavior over time appended to a topology comparison"
+    ],
+    "weaknesses": [
+      "legend uses several similar small icons that require close reading to distinguish",
+      "panel (c)'s meaning depends on the caption/text rather than in-figure labels"
+    ]
+  },
+  "tags": [
+    "time-synchronization",
+    "data-center-networks",
+    "optical-circuit-switching",
+    "reconfigurable-networks",
+    "clock-propagation"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "2 Problem Formulation (p.3)"
+    ],
+    "evidence": [
+      "In an RDCN (Fig. 1), a (logically) centralized optical controller reconfigures OCSes to establish dynamic optical circuits",
+      "As illustrated in Fig. 1b, an RDCN contains a number of (two in the figure) OCSes",
+      "build a static clock propagation tree (e.g., spanning tree as in Fig. 1a)"
+    ]
+  },
+  "summary": "Figure 1 contrasts a traditional data center network with a reconfigurable one (RDCN) to motivate SyncWise. Panel (a) shows a traditional DCN as a static tree of electrical switches connecting communication endpoints, with clock propagation following the tree edges, matching how protocols like PTP operate. Panel (b) shows an RDCN where endpoints instead connect through optical circuit switches (OCSes, two shown), which establish dynamic optical circuits between endpoint pairs rather than fixed cabling. Panel (c), 'OCS Configuration,' schematically depicts the OCS's internal switching fabric changing its endpoint-to-endpoint connections over time. Together the three panels argue that an RDCN's dynamically changing topology invalidates static, tree-based clock-propagation schemes, motivating SyncWise's error-aware synchronization design. A legend spanning the top of the figure defines the switch, endpoint, cable, OCS and clock-propagation symbols shared by all three panels.",
+  "summary_zh": "该图对比传统数据中心网络与可重构网络(RDCN)：(a)电交换机构成生成树、时钟沿树传播；(b)端点经光交换机(OCS)建立动态光路；(c)展示 OCS 内部连接随时间重构，说明静态同步方案为何失效。",
+  "confidence": "high",
+  "notes": "layout-proposal: n-panel-comparison — three side-by-side sub-diagrams (traditional tree DCN, reconfigurable DCN, OCS time-varying internal configuration) sharing one legend row above them; the named templates only cover two-panel or single-diagram layouts. The shared legend sits above the panels rather than inside/below/right of any single one, so 'legend: inside' is an approximation.",
+  "venue": "NSDI26"
+}

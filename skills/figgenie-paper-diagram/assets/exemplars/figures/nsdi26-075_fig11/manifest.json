@@ -1,0 +1,55 @@
+{
+  "id": "nsdi26-075_fig11",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-075",
+  "fig": "11",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 11: General encoder rate control process.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how an encoder predicts, bounds, then budget-checks a frame's compression ratio to produce the final frame",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 3.08,
+  "n_elements": 10,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-075/nsdi26-075_fig11_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-075/nsdi26-075_fig11_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A three-step rate-control pipeline (predict, clamp, budget-check) where step 2 draws the value literally boxed inside two labelled rails (max_ratio/min_ratio) instead of a text inequality.",
+      "what_to_learn": "Merge labelled inputs into one prediction box with a single bracket, then draw the next step's bound as two horizontal rails (max_ratio, min_ratio) with the value's box nested between them — but the two outcome labels differ only by capitalization.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "paper_id": "osdi23-048",
+  "fig": "1",
+  "system": {
+    "name": "Off-path SmartNIC (Bluefield-2) characterization",
+    "one_liner": "a comparison of RDMA-capable NIC, on-path SmartNIC and off-path SmartNIC hardware architectures and their communication paths",
+    "domain": [
+      "networking",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Client Requests",
+        "role": "requests arriving from RDMA-capable client machines",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "NIC cores",
+        "role": "network interface processing cores common to all three architectures",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "DRAM",
+        "role": "on-board memory reachable directly by the on-path SmartNIC's offloaded code",
+        "container": "on-path SmartNIC",
+        "novel": null
+      },
+      {
+        "name": "PCIe",
+        "role": "PCIe link connecting NIC cores to host DRAM",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Host DRAM",
+        "role": "host machine's memory, target of RDMA/DMA requests",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "PCIe switch",
+        "role": "integrated switch dispatching packets among NIC cores, SoC and host in the off-path design",
+        "container": "off-path SmartNIC",
+        "novel": null
+      },
+      {
+        "name": "SoC cores",
+        "role": "separate general-purpose compute cores (ARM) with their own DRAM, off the network critical path",
+        "container": "off-path SmartNIC",
+        "novel": null
+      },
+      {
+        "name": "DRAM",
+        "role": "SoC-local memory",
+        "container": "off-path SmartNIC",
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client Requests",
+        "to": "NIC cores",
+        "what": "RDMA request",
+        "step": 1
+      },
+      {
+        "from": "NIC cores",
+        "to": "Host DRAM",
+        "what": "one-sided DMA access via PCIe",
+        "step": null
+      },
+      {
+        "from": "Client Requests",
+        "to": "DRAM (on-path SmartNIC)",
+        "what": "inline requests interacting directly with offloaded code",
+        "step": null
+      },
+      {
+        "from": "Client Requests",
+        "to": "SoC cores",
+        "what": "Client<->SoC RDMA request",
+        "step": 2
+      },
+      {
+        "from": "SoC cores",
+        "to": "Host DRAM",
+        "what": "SoC<->Host communication via RNIC (RDMA) or DMA (DOCA)",
+        "step": 3
+      },
+      {
+        "from": "SoC cores",
+        "to": "NIC cores",
+        "what": "SoC offloading of network requests",
+        "step": 4
+      }
+    ],
+    "key_idea": "Off-path SmartNICs (like Bluefield-2) add a separate SoC with its own cores, memory and network interface behind a PCIe switch, decoupling offloaded compute from the network critical path unlike on-path SmartNICs, at the cost of longer communication paths through the switch.",
+    "reading_order": "left to right across three side-by-side subfigures (a) RNIC, (b) on-path SmartNIC, (c) off-path SmartNIC, each showing client requests entering NIC cores and reaching host DRAM via PCIe, with (c) adding the SoC and PCIe switch."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "double",
+    "aspect": 4.84,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0433ff",
+        "used_for": "blue NIC core / RX/TX component fills"
+      },
+      {
+        "hex": "#febd7c",
+        "used_for": "orange fill for Host DRAM boxes"
+      },
+      {
+        "hex": "#fffeca",
+        "used_for": "pale yellow fill for PCIe boxes"
+      },
+      {
+        "hex": "#64cb76",
+        "used_for": "green fill for SoC cores/DRAM in the off-path SmartNIC"
+      },
+      {
+        "hex": "#ff2600",
+        "used_for": "red highlight for the PCIe switch and error/bottleneck markers"
+      },
+      {
+        "hex": "#deecf3",
+        "used_for": "light blue fill for Client Requests cloud"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders, dashed boxes grouping NIC cores/SoC cores",
+    "font": "Segoe UI, 6.5-9pt",
+    "corners": "rounded",
+    "arrows": "orthogonal, filled arrowheads, some curved",
+    "icons": "vector, chip/core grid icons for NIC cores and SoC cores, cloud icon for clients"
+  },
+  "encoding": {
+    "color_means": "orange = host DRAM, yellow = PCIe link, green = SoC compute/memory, red = PCIe switch bottleneck, blue = NIC RX/TX",
+    "line_style_means": "numbered circled labels ①-④ (plus 0 and 3*) mark distinct communication paths referenced throughout the paper",
+    "emphasis": "side-by-side panel (c) is visually the largest and most detailed, reflecting the paper's focus on the off-path SmartNIC",
+    "reusable_patterns": [
+      "three-panel side-by-side hardware architecture comparison with numbered communication paths reused as labels throughout the paper"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "SmartNIC",
+    "RDMA",
+    "DMA",
+    "PCIe",
+    "Bluefield",
+    "hardware architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Context (p.3-5)"
+    ],
+    "evidence": [
+      "the NIC core internally uses the direct memory access (DMA) feature of the PCIe link to access the host memory (see Figure 1(a))",
+      "Figure 1(c) illustrates its overall hardware architecture",
+      "clients can issue one-sided or two-sided RDMA requests to the SoC"
+    ]
+  },
+  "summary": "This figure compares three NIC hardware architectures relevant to accelerating distributed systems: (a) a plain RDMA-capable NIC (RNIC), where NIC cores use PCIe DMA to access host DRAM; (b) an on-path SmartNIC, where offloaded code sits directly on the critical network path and can access on-board DRAM but competes with host-bound traffic for NIC cores; and (c) an off-path SmartNIC (the paper's focus, exemplified by Bluefield-2), which adds a separate SoC with its own ARM cores and DRAM behind a PCIe switch, keeping offloaded computation off the network's critical path at the cost of extra hops through the switch. Numbered circled labels (①-④) mark the distinct communication paths — client-to-host, client-to-SoC, SoC-to-host (via RNIC or DMA), and SoC offloading — that the paper characterizes experimentally. The three subfigures are drawn as parallel boxed diagrams using a flat, rounded-corner style with color coding (blue NIC cores, orange host DRAM, green SoC, red PCIe switch/bottleneck).",
+  "summary_zh": "图1对比三种网卡架构：(a) 普通RDMA网卡(RNIC)通过PCIe DMA访问主机内存；(b) 在路径上的SmartNIC，卸载代码直接位于网络关键路径上；(c) 离路径SmartNIC(如Bluefield-2)，通过PCIe交换机连接独立的SoC核心与内存，使卸载计算脱离网络关键路径，图中以带圈数字标出①-④几类通信路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

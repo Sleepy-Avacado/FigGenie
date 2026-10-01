@@ -1,0 +1,207 @@
+{
+  "paper_id": "asplos26-074",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "HNLPU",
+    "one_liner": "a chip architecture that physically hardwires LLM weight parameters into the computational fabric via metal interconnects instead of silicon multiplier cells, for extreme energy efficiency in LLM inference",
+    "domain": [
+      "ml-systems",
+      "hardware-accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how metal-embedding replaces cell-embedding's one-multiplier-per-input datapath with shared per-weight-value accumulators and multipliers",
+    "base": "component",
+    "elements": [
+      {
+        "name": "x1–x16",
+        "kind": "port",
+        "role": "16 parallel input activations (4b each) feeding one multiplier per input",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "×a",
+        "kind": "box",
+        "role": "constant multiplier hardwired to weight value a, instantiated once per input using this weight (7 of 16 inputs)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "×b",
+        "kind": "box",
+        "role": "constant multiplier hardwired to weight value b, instantiated once per input using this weight (2 of 16 inputs)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "×c",
+        "kind": "box",
+        "role": "constant multiplier hardwired to weight value c, instantiated once per input using this weight (6 of 16 inputs)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "×d",
+        "kind": "box",
+        "role": "constant multiplier hardwired to weight value d, instantiated once per input using this weight (1 of 16 inputs)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "+",
+        "kind": "icon",
+        "role": "adder tree summing all 16 multiplier outputs into one accumulated sum",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "σ",
+        "kind": "icon",
+        "role": "nonlinear activation applied to the accumulated sum, producing the 12-bit neuron output",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "x1–x16",
+        "to": "×a",
+        "what": "each input is multiplied by its own dedicated hardwired weight (shown for weight a; ×b/×c/×d are wired identically for their inputs)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "×a",
+        "to": "+",
+        "what": "all 16 per-input products (×a/×b/×c/×d) are summed by the adder tree",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "+",
+        "to": "σ",
+        "what": "the accumulated sum is passed through the activation function",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "❶ Cell-embedding",
+        "axis": "alternatives",
+        "differs": "baseline: one dedicated 4b multiplier per input (16 shown, 2,880 in the real design), weights stored in silicon device cells",
+        "verdict": "baseline, conventional"
+      },
+      {
+        "label": "❷ Metal-embedding",
+        "axis": "alternatives",
+        "differs": "bit-serial (1b) inputs are routed by weight value to only 4 shared accumulators (POPCNT) that count inputs sharing the same weight; each count is multiplied once by its unique weight, the 4 per-weight products are summed, then deserialized before activation; weights are embedded as metal wiring instead of silicon cells",
+        "verdict": "ours, HN metal-embedding, fewer multipliers"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Metal-embedding replaces cell-embedding's one dedicated multiplier per input with metal wiring that routes inputs sharing a weight value into a shared POPCNT accumulator, multiplying by each unique weight only once instead of once per input.",
+    "reading_order": "Top panel: left to right across 16 inputs into the multiplier row, down through the adder tree to sigma; bottom panel repeats this with routing and shared accumulators."
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.15,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1f77b4",
+        "used_for": "fill of ×a multiplier/accumulator boxes (8 occurrences across both panels)"
+      },
+      {
+        "hex": "#d62728",
+        "used_for": "fill of ×c multiplier/accumulator boxes (7 occurrences across both panels)"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "fill of the grey adder-tree '+' triangles (5 total: 1 in cell-embedding, 4 in metal-embedding)"
+      },
+      {
+        "hex": "#2ca02c",
+        "used_for": "fill of ×b multiplier/accumulator boxes (3 occurrences across both panels)"
+      },
+      {
+        "hex": "#9467bd",
+        "used_for": "fill of ×d multiplier/accumulator boxes (2 occurrences across both panels)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "fill of the two σ (activation) boxes, one per panel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black box and triangle outlines; gold-brown wires for signal routing between inputs, multipliers, adders and activation",
+    "font": "serif (Cambria / Linux Biolinum), small labels around 4.5-6.5pt for bit-widths and weight names",
+    "corners": "square",
+    "arrows": "no arrowheads; plain lines represent wires between inputs, multiplier/accumulator boxes, adder triangles and the activation box",
+    "icons": "none beyond the geometric adder-triangle and activation-box glyphs"
+  },
+  "encoding": {
+    "color_means": "colour groups multiplier/accumulator boxes by which of the 4 example unique weight values (a-d) they hold: blue=a, green=b, red=c, violet=d, consistent across both panels; dark red marks the sigma activation box",
+    "line_style_means": "solid gold-brown wires carry signal routing; no dashed lines or arrowheads are used, box/triangle edges alone indicate connection points",
+    "state_means": "the two panels are alternative circuit designs (cell- vs metal-embedding) for the same 16-input neuron, not time steps; matched by shared input labels and consistent weight colours",
+    "marker_means": "the circled 1 / 2 label which panel is which design (cell- vs metal-embedding), not a sequence of steps",
+    "emphasis": "the four-colour weight groups let the reader see cell-embedding's 16 separate same-coloured multipliers collapse into metal-embedding's 4 shared multipliers of matching colour, feeding a shared '4b' output",
+    "reusable_patterns": [
+      "two stacked circuit-block diagrams sharing an identical input row so a reader can align corresponding wires top-to-bottom",
+      "colour-coding identical logical values (here, the 4 unique weights) across two different circuit layouts so the hardware reduction is visually countable"
+    ],
+    "weaknesses": [
+      "the caption's numbered sub-steps ('(1) route the inputs...') are not marked with in-figure step numbers, so the routing/accumulate/multiply/sum order in panel 2 must be inferred by tracing wires",
+      "'Des' (deserializer) is not defined inside the figure"
+    ]
+  },
+  "tags": [
+    "hardwired-neuron",
+    "metal-embedding",
+    "llm-inference-hardware",
+    "weight-embedding",
+    "popcnt-accumulator",
+    "bit-serial-arithmetic",
+    "asic-datapath"
+  ],
+  "provenance": {
+    "sections": [
+      "Hardwired-Neuron design (p.4)",
+      "HN Array (p.7)"
+    ],
+    "evidence": [
+      "Conventional neurons are Cell-Embedding (CE, Figure 4), weight parameters are written into the silicon device cells",
+      "For each unique value in FP4, there is an accumulator (POPCNT) in the HN",
+      "the weight parameters are embedded as metal wires"
+    ]
+  },
+  "summary": "Figure 4 contrasts the two multiplier architectures behind the paper's Hardwired-Neuron (HN) design. Panel 1 (Cell-Embedding, the conventional baseline) shows 16 example inputs, each 4 bits wide, each driving its own dedicated constant-weight multiplier (colour-coded by one of 4 example unique weight values a-d); all 16 products feed a large adder tree and then an activation (sigma) unit. Panel 2 (Metal-Embedding, the paper's approach) instead serializes each input to 1 bit and routes it, via hardwired metal connections rather than silicon multiplier cells, to a shared POPCNT-style accumulator for its weight value; only 4 multipliers are needed (one per unique weight) instead of 16, and their products are summed, deserialized, and activated. The figure visually argues that grouping inputs by shared weight value before multiplying, instead of after, is what lets Hardwired-Neurons collapse a huge per-input multiplier array down to one multiplier per unique weight value.",
+  "summary_zh": "图4对比两种硬件神经元乘法：①基线Cell-Embedding中16个输入各驱专属乘法器，求和后经sigma激活；②Metal-Embedding将输入按位串行化，路由到共享POPCNT累加器，每个权重仅需一个乘法器，再求和解串激活。",
+  "confidence": "high",
+  "notes": "Removed 'walkthrough' from prior groups: the only numbered markers in the figure (circled 1/2) label which panel is cell- vs metal-embedding, the same role letters like '(a)/(b)' play in other comparison figures, not a numbered trace along one structure, so content.steps is left empty. Corrected base from prior 'circuit' (not a valid value in this schema's enum) to 'component'. Caption is truncated after '(1) route the inputs multi...', so panel 2's exact caption-numbered sub-steps beyond 'route' are described from the visual (accumulate, multiply, sum, deserialize) and the POPCNT paragraph rather than quoted.",
+  "venue": "ASPLOS26"
+}

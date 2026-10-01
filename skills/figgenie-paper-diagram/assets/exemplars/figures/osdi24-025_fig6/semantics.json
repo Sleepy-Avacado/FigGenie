@@ -1,0 +1,191 @@
+{
+  "paper_id": "osdi24-025",
+  "fig": "6",
+  "system": {
+    "name": "Parrot",
+    "one_liner": "an LLM application serving system that exposes Semantic Variables to enable app-centric, cross-request optimization",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Applications (front-end)",
+        "role": "client-side layer where LLM applications are written",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Parrot Front-end",
+        "role": "front-end for programming LLM applications with Semantic Variable annotations",
+        "container": "Applications (front-end)",
+        "novel": true
+      },
+      {
+        "name": "Others (LangChain, SK, etc.)",
+        "role": "compatible existing LLM orchestration frameworks",
+        "container": "Applications (front-end)",
+        "novel": false
+      },
+      {
+        "name": "Parrot APIs w/ Semantic Variables",
+        "role": "API boundary exposing the Semantic Variable abstraction to applications over the Internet",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Parrot Manager w/ Inter-Request Analysis",
+        "role": "server-side manager that performs inter-request analysis to enable cross-request optimizations",
+        "container": "Parrot App-centric LLM Service",
+        "novel": true
+      },
+      {
+        "name": "Inter-Request Comm.",
+        "role": "detects and manages communication/dependencies between requests",
+        "container": "Parrot Manager w/ Inter-Request Analysis",
+        "novel": true
+      },
+      {
+        "name": "Perf. Objective Deduction",
+        "role": "deduces application-level performance objectives from Semantic Variables",
+        "container": "Parrot Manager w/ Inter-Request Analysis",
+        "novel": true
+      },
+      {
+        "name": "Sharing Prompt Prefix",
+        "role": "identifies and shares common prompt prefixes across requests",
+        "container": "Parrot Manager w/ Inter-Request Analysis",
+        "novel": true
+      },
+      {
+        "name": "App-centric Scheduling",
+        "role": "schedules requests using application-level context rather than treating requests independently",
+        "container": "Parrot Manager w/ Inter-Request Analysis",
+        "novel": true
+      },
+      {
+        "name": "Contextual Fill / Gen",
+        "role": "intermediate stage that fills and generates content based on Semantic Variable context",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Parrot LLM Engine",
+        "role": "backend engine layer executing the LLM inference, run as multiple instances",
+        "container": "Parrot App-centric LLM Service",
+        "novel": false
+      },
+      {
+        "name": "Context Management",
+        "role": "manages the LLM context (e.g., KV cache/prompt context) for efficient reuse",
+        "container": "Parrot LLM Engine",
+        "novel": true
+      },
+      {
+        "name": "Efficient GPU Kernels",
+        "role": "optimized GPU kernels for LLM inference",
+        "container": "Parrot LLM Engine",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Applications (front-end)",
+        "to": "Parrot APIs w/ Semantic Variables",
+        "what": "requests annotated with Semantic Variables",
+        "step": null
+      },
+      {
+        "from": "Parrot APIs w/ Semantic Variables",
+        "to": "Parrot Manager w/ Inter-Request Analysis",
+        "what": "annotated requests",
+        "step": null
+      },
+      {
+        "from": "Parrot Manager w/ Inter-Request Analysis",
+        "to": "Contextual Fill / Gen",
+        "what": "scheduled/optimized request",
+        "step": null
+      },
+      {
+        "from": "Contextual Fill / Gen",
+        "to": "Parrot LLM Engine",
+        "what": "filled context for generation",
+        "step": null
+      }
+    ],
+    "key_idea": "Centering on the Semantic Variable abstraction, Parrot Manager performs inter-request analysis (communication, performance-objective deduction, prompt-prefix sharing, app-centric scheduling) between the application front-end and the LLM engine.",
+    "reading_order": "Top to bottom: application front-ends across a dashed Internet boundary into the Parrot App-centric LLM Service, through the Parrot Manager's four analysis sub-modules, then Contextual Fill/Gen, down into the Parrot LLM Engine."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.65,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dceaf7",
+        "used_for": "outer layer container boxes (Applications, Parrot Manager, Parrot LLM Engine) (light blue)"
+      },
+      {
+        "hex": "#fbe3d6",
+        "used_for": "inner module boxes (Parrot Front-end, Others, Inter-Request Comm., Perf. Objective Deduction, Sharing Prompt Prefix, App-centric Scheduling, Context Management, Efficient GPU Kernels) (peach)"
+      },
+      {
+        "hex": "#d83b01",
+        "used_for": "emphasized text 'Semantic Variables' and 'Inter-Request Analysis' (dark orange-red)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dark teal borders (~0.5pt), dashed teal horizontal line marking the Internet boundary",
+    "font": "Aptos sans, 5-6pt, bold used for over half the labels",
+    "corners": "rounded",
+    "arrows": "single downward orthogonal arrows connecting the layers",
+    "icons": "vector: stacked-rectangle icon behind Parrot LLM Engine denoting multiple engine instances"
+  },
+  "encoding": {
+    "color_means": "blue = system-level layer containers, peach = individual modules within a layer, dark red-orange text = the paper's key abstractions (Semantic Variables, Inter-Request Analysis)",
+    "line_style_means": "dashed horizontal line marks the network/Internet boundary between client applications and the Parrot service",
+    "emphasis": "key contribution terms (Semantic Variables, Inter-Request Analysis) are set in bold colored text inside their boxes",
+    "reusable_patterns": [
+      "layered system stack with a labeled network boundary",
+      "stacked-rectangle icon denoting multiple backend engine instances"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "LLM-serving",
+    "semantic-variable",
+    "inter-request-scheduling",
+    "prompt-sharing",
+    "system-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Parrot Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 6 depicts the overview of Parrot's design.",
+      "Parrot provides a natural way of programming LLM applications with Semantic Variable annotations",
+      "Centering on this abstraction, Parrot Manager is designed"
+    ]
+  },
+  "summary": "This figure gives Parrot's system overview as a top-down layered stack. At the top, Applications (front-end) includes the Parrot Front-end and compatibility with other frameworks like LangChain; requests cross an Internet boundary via Parrot APIs annotated with Semantic Variables. The Parrot App-centric LLM Service layer contains the Parrot Manager, which performs Inter-Request Analysis through four sub-modules — Inter-Request Comm., Perf. Objective Deduction, Sharing Prompt Prefix, and App-centric Scheduling — then a Contextual Fill/Gen stage feeds the Parrot LLM Engine, shown as multiple stacked instances handling Context Management and Efficient GPU Kernels. Outer containers use a light-blue fill and inner modules a peach fill, with the key terms 'Semantic Variables' and 'Inter-Request Analysis' set in bold dark-orange text to emphasize the paper's core abstraction.",
+  "summary_zh": "图6展示Parrot的系统总览：应用前端(含Parrot Front-end及LangChain等兼容框架)通过带Semantic Variables标注的API跨越Internet边界，进入Parrot Manager进行跨请求分析(通信、性能目标推导、公共前缀共享、应用感知调度)，再经Contextual Fill/Gen进入多实例的Parrot LLM Engine，蓝色为分层容器，橙红色文字突出核心抽象。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

@@ -1,0 +1,239 @@
+{
+  "paper_id": "nsdi23-003",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "Boomerang",
+    "one_liner": "a metadata-private messaging system built on hardware trust (enclaves) that obliviously pairs and routes messages; Boomerang+ shards this across multiple B-node enclaves for horizontal scalability",
+    "domain": [
+      "privacy",
+      "security",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how B-nodes obliviously sort, detect/patch/swap, and re-sort message records to pair conversations and hide access patterns",
+    "base": "table",
+    "elements": [
+      {
+        "name": "E1",
+        "kind": "lane",
+        "role": "an enclave holding up to two message-record slots, tracked before and after each stage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "E2",
+        "kind": "lane",
+        "role": "an enclave holding message-record slots; ends up holding only a DUMMY placeholder in this example",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "E3",
+        "kind": "lane",
+        "role": "an enclave holding message-record slots",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "E4",
+        "kind": "lane",
+        "role": "an enclave holding message-record slots",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "priv_label",
+        "kind": "cell",
+        "role": "a shared private hex tag linking the two records of one conversation (e.g. 0x2A6F4595 links A's and C's records)",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "entry_id",
+        "kind": "cell",
+        "role": "a per-record identifier used to re-sort records back to their original slot in stage 3",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "tag",
+        "kind": "cell",
+        "role": "marks a record as REAL (a genuine message) or DUMMY (a padding placeholder with no real content)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "R, S",
+        "kind": "cell",
+        "role": "the record's sender and receiver fields, initially NULL/partial and completed (patched) during stage 2",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "priv_label",
+        "to": "entry_id",
+        "what": "records are grouped by priv_label so records sharing the same label become adjacent for detection",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "entry_id",
+        "to": "R, S",
+        "what": "adjacent same-label records are patched and have their R/S fields swapped/completed",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "R, S",
+        "to": "entry_id",
+        "what": "patched records are re-sorted back by entry_id to restore original slot order",
+        "kind": "control",
+        "step": "3"
+      }
+    ],
+    "panels": [
+      {
+        "label": "initial",
+        "axis": "time",
+        "differs": "starting layout: each enclave's message records in their original slots, several R/S fields still NULL",
+        "verdict": null
+      },
+      {
+        "label": "1: after OSort by priv_label",
+        "axis": "time",
+        "differs": "records are obliviously re-sorted by priv_label, so the two records sharing a label become adjacent, moving each into a different enclave slot",
+        "verdict": null
+      },
+      {
+        "label": "2: after Detect, patch, and swap",
+        "axis": "time",
+        "differs": "adjacent same-label records are patched (missing R/S fields filled in) and have values swapped, completing each REAL record's sender/receiver pair",
+        "verdict": null
+      },
+      {
+        "label": "3: after OSort by entry_id",
+        "axis": "time",
+        "differs": "records are obliviously re-sorted back by entry_id, restoring each enclave's original slot so the completed messages can be delivered",
+        "verdict": "final"
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "OSort by priv_label",
+        "what": "obliviously sort all message records by their private label so records sharing a label become adjacent",
+        "carries": "message records (priv_label, entry_id, tag, R, S)"
+      },
+      {
+        "marker": "2",
+        "at": "Detect, patch, and swap",
+        "what": "detect irregular label patterns (single or more-than-two), patch missing R/S fields, and swap values between paired records",
+        "carries": "patched R/S fields"
+      },
+      {
+        "marker": "3",
+        "at": "OSort by entry_id",
+        "what": "obliviously re-sort the patched records back by entry_id, restoring each enclave's original slot assignment",
+        "carries": "completed message records"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "concrete message records (hex priv_labels 0x2A6F4595, 0x20FF3976, 0x0D24E832, plus DUMMY placeholders) with entry_id, tag, and R/S sender/receiver fields, shown at all four stages of the sort-patch-swap pipeline",
+      "linked_by": "colour: matching orange/purple header fills plus the identical hex priv_label track the same conversation's two records across stages; a dashed box highlights one slot grouping",
+      "result_cells": "the final R,S columns show each REAL record's completed sender-to-receiver pair (e.g. A,C and C,A), while DUMMY records keep placeholder asterisks"
+    },
+    "key_idea": "Sorting message records by private label makes same-label pairs adjacent so they can be detected, patched and swapped into complete sender/receiver pairs, then re-sorting by entry_id restores each enclave's original slots without ever revealing who talked to whom.",
+    "reading_order": "Left to right across four columns (initial, after stage 1, after stage 2, after stage 3), tracking the same hex priv_label and header colour down through each enclave's shifting slots."
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 4,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b3b3b3",
+        "used_for": "fill of the 'Message format' legend box and the three grey stage-name boxes"
+      },
+      {
+        "hex": "#fad7ac",
+        "used_for": "header fill of one tracked record in the A/C conversation pair"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "header fill of the other tracked record in the A/C conversation pair"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid black table borders; one dashed grey outline highlighting a specific slot group in the final column",
+    "font": "sans-serif (Arial), small 6-10pt, monospace-style hex strings for priv_label values",
+    "corners": "square",
+    "arrows": "block/chevron arrow shapes with no separate arrowhead glyph, linking each enclave to its record stack and each column to the next",
+    "icons": "bold circled numerals 1, 2, 3 naming the three stages"
+  },
+  "encoding": {
+    "color_means": "pale orange and pale purple header fills track the two message records that share one private label (the A-side and C-side of one conversation) as they move between slots and stages; greyed boxes mark the schema legend and the three stage-name boxes; uncoloured records (B's and D's) are not part of a colour-tracked pair",
+    "line_style_means": "solid black lines only for table borders; one dashed grey box highlights a specific slot grouping in the final column",
+    "state_means": "each of the four columns is the same enclave/record grid at a later point in the pipeline; a record's identity is tracked by its hex priv_label and header colour, not by staying in the same visual row",
+    "marker_means": "bold circled 1/2/3 name the three transformations that turn one column into the next: sort by label, detect/patch/swap, sort by entry_id",
+    "emphasis": "hex private labels and matching header colours let the reader follow two specific records across all four columns even though oblivious sorting relocates them to different enclave slots each time, making the otherwise-invisible sort/patch/swap operations traceable",
+    "reusable_patterns": [
+      "a grid of small record-tables repeated in successive columns to show a multi-pass sort/transform pipeline",
+      "colour- and value-linking a handful of tracked records across frames whose row/column position is not stable",
+      "numbered stage-name boxes placed between columns rather than inside them"
+    ],
+    "weaknesses": [
+      "entry_id values are reassigned between some columns without an explicit note, so tracking a specific conversation requires following its hex priv_label rather than any single field",
+      "DUMMY placeholder records use '*' for every field, easy to confuse with a real wildcard value"
+    ]
+  },
+  "tags": [
+    "metadata-private-messaging",
+    "oblivious-sort",
+    "trusted-execution",
+    "hardware-enclave",
+    "message-pairing",
+    "b-node",
+    "horizontal-scalability"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Boomerang+: Horizontal Scalability (p.10)"
+    ],
+    "evidence": [
+      "A and C are talking to each other, B talks to herself (idle client)",
+      "the message from someone to D is blocked",
+      "there are two types of irregular label patterns on B-nodes: 1) single pattern and 2) more-than-two pattern"
+    ]
+  },
+  "summary": "Figure 7 walks through how a Boomerang+ B-node obliviously pairs message records across three named stages, using a concrete worked example. Records start in per-enclave slots (E1-E4), each holding a private label, entry_id, tag (REAL or DUMMY), and sender/receiver (R,S) fields, some still NULL. Stage 1, OSort by priv_label, obliviously re-sorts every record by its label so the two records sharing a label become adjacent, moving them into different enclave slots. Stage 2, Detect, patch, and swap, finds these adjacent pairs, fills in missing R/S fields, and swaps values so each record ends with a complete sender-receiver pair; a DUMMY record pads any label that only appears once. Stage 3, OSort by entry_id, re-sorts everything back to its original slot. The worked example shows A and C completing into a real pair, B looping to herself, and D left blocked.",
+  "summary_zh": "图7示例展示B节点三阶段无关排序配对消息：①按priv_label排序使同标签记录相邻；②检测并打补丁交换，补全R/S，缺配对时插DUMMY；③按entry_id排回原位。示例中A与C配对成功，B自说自话，D的消息被阻塞。",
+  "confidence": "high",
+  "notes": "Corrected primary group from prior 'walkthrough' to 'evolution' (step-sequence), keeping walkthrough as a secondary tag: the grid of enclave slots is drawn four separate times (one per column), which is evolution's defining structure, and the circled 1/2/3 label the named transformations between those columns rather than marking points along one structure drawn once, so they fit evolution's step-sequence variant better than a strict walkthrough trace. The exact protocol meaning of entry_id being reassigned between records (columns 2-3) is described only at the level the figure's fields support, since the source paragraph is cut off before explaining it further.",
+  "venue": "NSDI23"
+}

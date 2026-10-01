@@ -1,0 +1,178 @@
+{
+  "paper_id": "nsdi24-086",
+  "fig": "22",
+  "system": {
+    "name": "NN-defined Modulator",
+    "one_liner": "a reconfigurable, portable software modulator for IoT gateways built from neural-network-defined signal processing modules",
+    "domain": [
+      "networking",
+      "iot",
+      "ml-systems"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "NN-defined STF Mod",
+        "role": "neural-network-defined modulator for the STF field of IEEE 802.11a/g WiFi frames",
+        "container": "NN-defined Wi-Fi Mod",
+        "novel": true
+      },
+      {
+        "name": "NN-defined LTF Mod",
+        "role": "neural-network-defined modulator for the LTF field of IEEE 802.11a/g WiFi frames",
+        "container": "NN-defined Wi-Fi Mod",
+        "novel": true
+      },
+      {
+        "name": "NN-defined SIG Mod",
+        "role": "neural-network-defined modulator for the SIG field of IEEE 802.11a/g WiFi frames",
+        "container": "NN-defined Wi-Fi Mod",
+        "novel": true
+      },
+      {
+        "name": "NN-defined DATA Mod",
+        "role": "neural-network-defined modulator for the DATA field of IEEE 802.11a/g WiFi frames",
+        "container": "NN-defined Wi-Fi Mod",
+        "novel": true
+      },
+      {
+        "name": "Concatenate",
+        "role": "combines the four field modulators into the single NN-defined WiFi modulator",
+        "container": "NN-defined Wi-Fi Mod",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Wi-Fi symbols",
+        "to": "NN-defined STF Mod",
+        "what": "STF symbol",
+        "step": null
+      },
+      {
+        "from": "Input Wi-Fi symbols",
+        "to": "NN-defined LTF Mod",
+        "what": "LTF symbol",
+        "step": null
+      },
+      {
+        "from": "Input Wi-Fi symbols",
+        "to": "NN-defined SIG Mod",
+        "what": "SIG symbol",
+        "step": null
+      },
+      {
+        "from": "Input Wi-Fi symbols",
+        "to": "NN-defined DATA Mod",
+        "what": "DATA symbol",
+        "step": null
+      },
+      {
+        "from": "NN-defined STF Mod",
+        "to": "Concatenate",
+        "what": "modulated STF output",
+        "step": null
+      },
+      {
+        "from": "NN-defined LTF Mod",
+        "to": "Concatenate",
+        "what": "modulated LTF output",
+        "step": null
+      },
+      {
+        "from": "NN-defined SIG Mod",
+        "to": "Concatenate",
+        "what": "modulated SIG output",
+        "step": null
+      },
+      {
+        "from": "NN-defined DATA Mod",
+        "to": "Concatenate",
+        "what": "modulated DATA output",
+        "step": null
+      },
+      {
+        "from": "Concatenate",
+        "to": "Output Waveform",
+        "what": "final transmit waveform",
+        "step": null
+      }
+    ],
+    "key_idea": "Four separately trained NN-defined modulators, one per IEEE 802.11a/g WiFi frame field (STF, LTF, SIG, DATA), are combined to create a single NN-defined WiFi modulator that addresses each field's unique modulation requirements.",
+    "reading_order": "top-down: input Wi-Fi symbols split into four parallel NN-defined modulator boxes, which converge into a single Concatenate box producing the output waveform below."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.94,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "the four NN-defined modulator boxes (STF/LTF/SIG/DATA)"
+      },
+      {
+        "hex": "#ffc000",
+        "used_for": "one of the colored dashed routing lines from input symbols to a module"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "one of the colored dashed routing lines"
+      },
+      {
+        "hex": "#e02c28",
+        "used_for": "one of the colored dashed routing lines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outer container outline, colored dashed lines routing each symbol to its module",
+    "font": "Calibri-Bold sans, small (6.5pt)",
+    "corners": "square",
+    "arrows": "black solid arrows from modules to Concatenate and from Concatenate to Output Waveform",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "the four blue module boxes share one fill, distinguished only by their text labels; differently colored dashed lines route each input symbol type to its corresponding module",
+    "line_style_means": "dashed colored lines for symbol routing versus solid black arrows for the main data pipeline",
+    "emphasis": "the four uniformly styled blue boxes emphasize that each Wi-Fi symbol type gets an identical NN-defined treatment before being recombined",
+    "reusable_patterns": [
+      "parallel per-type processing modules converging into a single concatenation/merge step"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "wi-fi",
+    "modulator",
+    "neural-network",
+    "iot-gateway",
+    "software-defined-radio",
+    "parallel-pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "WiFi-compliant Signals"
+    ],
+    "evidence": [
+      "Four NN-defined modulators corresponding to the four fields in IEEE 802.11a/g WiFi frames are implemented",
+      "These modulators are then combined to create a single NN-defined WiFi modulator",
+      "allowing for a comprehensive modulation process that addresses the unique requirements of each field"
+    ]
+  },
+  "summary": "This figure illustrates the NN-defined Wi-Fi modulator, built by combining four separately implemented neural-network-defined modulators, one for each field of an IEEE 802.11a/g WiFi frame: STF, LTF, SIG, and DATA. Input Wi-Fi symbols enter at the top and are routed by colored dashed lines to four parallel, identically styled blue boxes: 'NN-defined STF Mod', 'NN-defined LTF Mod', 'NN-defined SIG Mod' and 'NN-defined DATA Mod', all enclosed in an outer 'NN-defined Wi-Fi Mod' container. Their outputs converge into a 'Concatenate' box below, which produces the 'Output Waveform' at the bottom. The figure is sparse and symmetric, using uniform blue fills for the four modules to emphasize that each field is handled by its own dedicated but structurally identical neural module, together addressing the unique modulation requirements of each field before being combined into one comprehensive modulation process.",
+  "summary_zh": "该图展示NN定义的Wi-Fi调制器：针对IEEE 802.11a/g帧的STF、LTF、SIG、DATA四个字段分别实现独立的神经网络调制模块并行处理，随后合并（Concatenate）生成最终输出波形，满足各字段的调制需求。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

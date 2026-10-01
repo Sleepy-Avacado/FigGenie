@@ -1,0 +1,209 @@
+{
+  "paper_id": "asplos25-101",
+  "fig": "1",
+  "system": {
+    "name": "LLM decoding (background)",
+    "one_liner": "background comparison of how a transformer decoder generates tokens serially versus in parallel via batching or speculative decoding",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Decoding",
+        "role": "overall decoding block containing N decoder layers",
+        "container": "(a) LLM structure",
+        "novel": false
+      },
+      {
+        "name": "Decoder 1...N",
+        "role": "stacked transformer-based decoder layers",
+        "container": "(a) LLM structure",
+        "novel": false
+      },
+      {
+        "name": "QKV Generation",
+        "role": "fully-connected kernel producing Query/Key/Value",
+        "container": "Decoder",
+        "novel": false
+      },
+      {
+        "name": "Multi-head Attention",
+        "role": "attention kernel consuming QKV",
+        "container": "Decoder",
+        "novel": false
+      },
+      {
+        "name": "Projection",
+        "role": "fully-connected kernel projecting attention output",
+        "container": "Decoder",
+        "novel": false
+      },
+      {
+        "name": "Feed Forward Networks",
+        "role": "fully-connected kernel (FFN) closing the decoder layer",
+        "container": "Decoder",
+        "novel": false
+      },
+      {
+        "name": "Prefill",
+        "role": "processes the input prompt in parallel to produce the first output token",
+        "container": "(b) Serial Decoding",
+        "novel": false
+      },
+      {
+        "name": "Decoding 1/2/3/4",
+        "role": "sequential decoding iterations, each producing one output token",
+        "container": "(b) Serial Decoding",
+        "novel": false
+      },
+      {
+        "name": "Decoding 1/2 (batching)",
+        "role": "decoding iterations for multiple requests processed in parallel as a batch",
+        "container": "(c) Parallel Decoding with Batching",
+        "novel": false
+      },
+      {
+        "name": "Decoding 1/2 (speculative)",
+        "role": "draft-then-verify decoding iterations generating multiple tokens per request in one iteration",
+        "container": "(d) Parallel Speculative Decoding",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Decoding",
+        "to": "Decoder 1...N",
+        "what": "input hidden state processed layer by layer",
+        "step": null
+      },
+      {
+        "from": "QKV Generation",
+        "to": "Multi-head Attention",
+        "what": "query/key/value",
+        "step": null
+      },
+      {
+        "from": "Multi-head Attention",
+        "to": "Projection",
+        "what": "attention output",
+        "step": null
+      },
+      {
+        "from": "Projection",
+        "to": "Feed Forward Networks",
+        "what": "projected output",
+        "step": null
+      },
+      {
+        "from": "Prefill",
+        "to": "Decoding 1",
+        "what": "first output token x0",
+        "step": 1
+      },
+      {
+        "from": "Decoding 1",
+        "to": "Decoding 2",
+        "what": "output token x1 fed back as next input",
+        "step": 2
+      },
+      {
+        "from": "Decoding 2",
+        "to": "Decoding 3",
+        "what": "output token x2 fed back as next input",
+        "step": 3
+      },
+      {
+        "from": "Decoding 3",
+        "to": "Decoding 4",
+        "what": "output token x3 fed back as next input",
+        "step": 4
+      }
+    ],
+    "key_idea": "This background figure contrasts LLM decoding parallelism strategies: standard serial decoding generates one token per iteration, batching parallelizes across multiple requests, and speculative decoding parallelizes across multiple tokens per request within one iteration.",
+    "reading_order": "Top: LLM/decoder structure and its four kernel types (FC in orange, attention in green). Middle: serial decoding timeline generating x0-x4. Bottom: batching (multiple requests in parallel) versus speculative decoding (multiple tokens per request in parallel)."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 4,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffc000",
+        "used_for": "input/output token tiles (small yellow squares) across all panels"
+      },
+      {
+        "hex": "#8faadc",
+        "used_for": "Decoding/Decoder boxes"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "token tiles unique to the parallel decoding (batching/speculative) panels"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "fully-connected kernel boxes: QKV Generation, Projection, Feed Forward Networks"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Multi-head Attention kernel box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.53pt median, dashed connector from (a)'s decoder stack to its kernel breakdown",
+    "font": "Arial/Cambria Math sans, 4.5-6.5pt",
+    "corners": "mixed",
+    "arrows": "16 arrowheads, straight lines",
+    "icons": "small square token icons"
+  },
+  "encoding": {
+    "color_means": "orange = fully-connected (FC) kernels, green = multi-head attention kernel (per body text); blue = decoder/decoding block boxes",
+    "line_style_means": "dashed line connects the decoder stack in (a) to its zoomed-in kernel breakdown",
+    "emphasis": "panels (c) and (d) placed side by side visually contrast batching-based versus speculative parallel decoding",
+    "reusable_patterns": [
+      "stacked timeline diagram comparing serial vs. parallel execution strategies using small token-square icons"
+    ],
+    "weaknesses": [
+      "four sub-panels of different sizes and layouts packed into one figure can be visually busy"
+    ]
+  },
+  "tags": [
+    "llm-decoding",
+    "speculative-decoding",
+    "batching",
+    "transformer",
+    "parallelism",
+    "background"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "2 Background (p.2)",
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "An LLM structure contains several transformer-based decoders, as illustrated in Figure 1(a)",
+      "This serialized process is called serial decoding",
+      "two yellow tokens in Figure 1(d) for one request are decoded simultaneously, i.e., when TLP = 2"
+    ]
+  },
+  "summary": "This background figure (not a diagram of PAPI itself) explains the LLM decoding concepts PAPI is built around. Panel (a) shows an LLM as a stack of decoder layers, each containing four kernels: QKV Generation, Multi-head Attention, Projection, and Feed Forward Networks, with FC layers in orange and the attention layer in green. Panel (b) shows serial decoding: a Prefill step processes the prompt, then four Decoding iterations generate tokens x0 through x4 one at a time. Panels (c) and (d) contrast two parallelism techniques: batching runs decoding for multiple requests concurrently, while speculative decoding lets one request produce multiple tokens (shown as two token tiles) per iteration. Small yellow/green token-square icons and blue decoder boxes recur across all four panels.",
+  "summary_zh": "该背景图对比LLM解码的并行策略：(a) LLM由多个解码器层堆叠而成，每层含QKV生成、多头注意力、投影、前馈网络四种核；(b) 串行解码逐个生成token；(c)(d) 分别展示批处理并行解码与推测解码并行解码，后者单次迭代可生成多个token。",
+  "confidence": "high",
+  "notes": "Background figure explaining generic LLM decoding parallelism, not a diagram of PAPI itself (PAPI's own architecture is shown in Figure 5).",
+  "venue": "ASPLOS25"
+}

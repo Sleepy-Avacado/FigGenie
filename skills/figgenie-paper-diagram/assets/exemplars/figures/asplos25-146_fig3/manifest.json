@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-146_fig3",
+  "paper_id": "asplos25-146",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. FlexSP system overview.",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.2,
+  "n_components": 7,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-146/src/fig3_HASP_System_Overview.svg",
+    "preview.png": "lab/extracted/asplos25-146/src/fig3_HASP_System_Overview.png",
+    "print.png": "lab/extracted/asplos25-146/asplos25-146_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "A starred, high-confidence core pipeline exemplar: a depth-3 dashed Solver group nests two title-bar stages (Sequence Blaster, Parallelism Planner) before handing off to a separate solid Executor box, in 7 components and 4 flows.",
+      "what_to_learn": "Use a dashed box to group a multi-stage sub-pipeline as one unit distinct from the solid downstream stage, append section references directly onto stage titles, and use small coloured-bar card icons to encode variable-length data instead of prose."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar at depth 3: a dashed Solver box contains two title-bar stages, and the inner Parallelism Planner itself contains a further Sequence Bucketing and Parallelism Solving pair, in just 7 components.",
+      "what_to_learn": "Make the outermost container a dashed logical grouping rather than a drawn system boundary, and change only the fill tint between nesting levels, dark-blue title bar to light-blue body, instead of also changing border style, keeping three levels of depth visually calm."
+    }
+  ]
+}

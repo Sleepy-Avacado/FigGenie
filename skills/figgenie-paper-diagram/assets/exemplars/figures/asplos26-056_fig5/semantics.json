@@ -1,0 +1,177 @@
+{
+  "paper_id": "asplos26-056",
+  "fig": "5",
+  "system": {
+    "name": "TreeVQA",
+    "one_liner": "a tree-based execution framework that reduces shot counts for Variational Quantum Algorithms by jointly executing similar tasks and branching as they diverge",
+    "domain": [
+      "quantum-computing",
+      "ml-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "TreeVQA Controller",
+        "role": "central controller performing resource coordination and enforcement of the global shot budget across VQA clusters",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "C_i, C_k, C_j",
+        "role": "VQA clusters, each a fundamental computational unit jointly optimizing a shared parameterized state over an assigned subset of Hamiltonians",
+        "container": "TreeVQA Controller",
+        "novel": true
+      },
+      {
+        "name": "Post-Processing",
+        "role": "final step evaluating each Hamiltonian across all cluster states to select the optimal solution",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "VQA Cluster",
+        "role": "zoomed detail of one cluster's internal loop: joint optimization with a splitting decision",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "min(<H_mixed>)",
+        "role": "collective parameter optimization step minimizing the expectation of the cluster's mixed Hamiltonian",
+        "container": "VQA Cluster",
+        "novel": true
+      },
+      {
+        "name": "Splitting?",
+        "role": "decision testing, via a similarity metric, whether the cluster's Hamiltonians' optimization trajectories have diverged enough to split",
+        "container": "VQA Cluster",
+        "novel": true
+      },
+      {
+        "name": "new VQA cluster 1 / new VQA cluster 2",
+        "role": "child clusters created when a parent cluster splits, inheriting parameters from the parent",
+        "container": "VQA Cluster",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "H1, H2, ... Hn, S_max, A",
+        "to": "TreeVQA Controller",
+        "what": "task Hamiltonians, initial states, shot budget and other settings",
+        "step": null
+      },
+      {
+        "from": "TreeVQA Controller",
+        "to": "Post-Processing",
+        "what": "optimized cluster states after all iterations",
+        "step": null
+      },
+      {
+        "from": "Post-Processing",
+        "to": "E1,|ψ1⟩ ... En,|ψn⟩",
+        "what": "selected optimal energy and state per Hamiltonian",
+        "step": null
+      },
+      {
+        "from": "C_j",
+        "to": "min(<H_mixed>)",
+        "what": "cluster jointly optimizes its assigned Hamiltonians' mixed state",
+        "step": null
+      },
+      {
+        "from": "min(<H_mixed>)",
+        "to": "Splitting?",
+        "what": "similarity-based divergence check",
+        "step": null
+      },
+      {
+        "from": "Splitting?",
+        "to": "min(<H_mixed>)",
+        "what": "No: continue joint optimization",
+        "step": null
+      },
+      {
+        "from": "Splitting?",
+        "to": "new VQA cluster 1 / new VQA cluster 2",
+        "what": "Yes: cluster splits into children inheriting parent parameters",
+        "step": null
+      }
+    ],
+    "key_idea": "A central controller manages a set of VQA clusters that jointly optimize similar Hamiltonians and adaptively split into child clusters when their optimization trajectories diverge, before a post-processing step selects the best solution per Hamiltonian.",
+    "reading_order": "Left to right across the top: input Hamiltonians/settings feed the dashed TreeVQA Controller box containing stacked cluster cards (C_i, C_k, C_j) that loop and feed Post-Processing, producing per-Hamiltonian outputs; a callout below zooms into one cluster's optimize/split decision loop."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.77,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1d3557",
+        "used_for": "dark navy dashed outlines and bold labels for 'TreeVQA Controller' and 'VQA Cluster'"
+      },
+      {
+        "hex": "#457b9d",
+        "used_for": "medium blue stacked-card fill for the cluster instances (C_i, C_k, C_j)"
+      },
+      {
+        "hex": "#a8dadc",
+        "used_for": "light teal fill for computational/decision boxes: Post-Processing, min(<H_mixed>), Splitting? and the new child clusters"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "very thin outlines (near-zero median stroke width) with dashed navy rounded rectangles grouping the controller and the zoomed cluster region",
+    "font": "sans (Arial) for labels, monospace (Lucida Console) for component names like 'TreeVQA Controller' and 'VQA Cluster', 4.5-6.5pt",
+    "corners": "mixed",
+    "arrows": "thin black arrows and curved feedback lines connecting controller, clusters and post-processing",
+    "icons": "stacked-card vector icons denoting a set/ensemble of parallel clusters"
+  },
+  "encoding": {
+    "color_means": "dark navy marks the controller-level structure labels; medium blue stacked cards represent VQA cluster instances; light teal marks individual computational or decision steps and the post-processing block",
+    "line_style_means": "dashed navy rounded rectangles group the controller box and the zoomed VQA-cluster detail; solid arrows show data/control flow; a diamond shape marks the Yes/No splitting decision",
+    "emphasis": "one cluster (C_j) is linked by thin connector lines to a zoomed 'VQA Cluster' panel below, showing exactly how a cluster decides whether to split",
+    "reusable_patterns": [
+      "stacked-card icon denoting a collection of identical parallel sub-instances",
+      "zoom callout linking one instance in the main diagram to its detailed internal logic",
+      "diamond decision box with Yes/No branches for a splitting/termination criterion"
+    ],
+    "weaknesses": [
+      "math notation (H_mixed, S_max, A) requires familiarity with the paper's algorithm to fully parse"
+    ]
+  },
+  "tags": [
+    "variational-quantum-algorithms",
+    "quantum-computing",
+    "shot-reduction",
+    "tree-execution",
+    "clustering",
+    "controller-worker"
+  ],
+  "provenance": {
+    "sections": [
+      "5 TreeVQA Framework Architecture (p.6)"
+    ],
+    "evidence": [
+      "resource coordination, and enforcement of the global shot budget, as illustrated in Figure 5.",
+      "TreeVQA initializes a corresponding number of VQA clusters, each containing Hamiltonians",
+      "the cluster adaptively splits into child clusters to maintain optimization efficiency"
+    ]
+  },
+  "summary": "TreeVQA is a tree-based execution framework for Variational Quantum Algorithms (VQAs) that cuts shot counts by executing similar tasks jointly and branching only as their quantum executions diverge. This figure shows TreeVQA's architecture: a central controller receives task Hamiltonians, initial states, a shot budget and other settings, and manages a set of VQA clusters (drawn as stacked cards C_i, C_k, C_j), each jointly optimizing a mixed Hamiltonian over the tasks sharing an initial state; after iterations a Post-Processing step evaluates each Hamiltonian across all cluster states to output the optimal energy and quantum state per task. A callout below zooms into one VQA Cluster's inner loop, min(<H_mixed>), which feeds a Splitting? decision: if trajectories have not diverged it loops back to continue joint optimization, otherwise the cluster splits into two child clusters that inherit the parent's parameters.",
+  "summary_zh": "该图展示TreeVQA架构：中央控制器接收多个哈密顿量、初始态与射击预算，管理若干VQA簇（堆叠卡片表示）联合优化混合哈密顿量，迭代后由后处理模块为每个哈密顿量选出最优解；下方放大展示单个簇的优化-分裂决策循环，轨迹发散时分裂为两个继承参数的子簇。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

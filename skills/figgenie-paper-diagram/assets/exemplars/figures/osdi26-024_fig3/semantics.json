@@ -1,0 +1,248 @@
+{
+  "paper_id": "osdi26-024",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "SPEX",
+    "one_liner": "a speculative exploration framework that breaks the reward-feedback barrier in tree-of-thought reasoning",
+    "domain": [
+      "LLM-reasoning",
+      "tree-of-thought",
+      "speculative-execution"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how speculative exploration removes the reward-feedback wait that blocks BFS and DFS search-tree expansion",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Reasoning Output",
+        "kind": "label",
+        "role": "legend swatch naming the grey plain reasoning-step box colour",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Reward",
+        "kind": "label",
+        "role": "legend swatch naming the orange reward-score box colour",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Breadth-First Search",
+        "kind": "label",
+        "role": "names the top mechanism block",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "150",
+        "kind": "box",
+        "role": "first BFS branch's reasoning-output box (a generated token count)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Length: 400",
+        "kind": "box",
+        "role": "second BFS branch's reasoning-output box",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "200",
+        "kind": "box",
+        "role": "third BFS branch's reasoning-output box",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "0.9",
+        "kind": "box",
+        "role": "reward score attached to the first BFS branch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "0.5",
+        "kind": "box",
+        "role": "reward score attached to the second (and third) BFS branch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "wait",
+        "kind": "label",
+        "role": "dashed synchronization marker before BFS/DFS may continue, appearing at both the BFS aggregation point and the DFS backtrack point",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Depth-First Search",
+        "kind": "label",
+        "role": "names the bottom mechanism block",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Back Propagation",
+        "kind": "label",
+        "role": "names the arrows that feed a completed node's reward back to its parent on the DFS path",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "0.8",
+        "kind": "box",
+        "role": "reward score on the DFS path's second step",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "150",
+        "to": "0.9",
+        "what": "the reward model scores this branch's reasoning output",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Length: 400",
+        "to": "0.5",
+        "what": "the reward model scores this branch's reasoning output",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "0.9",
+        "to": "wait",
+        "what": "BFS must wait for every branch's reward before choosing the next expansion budget",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Back Propagation",
+        "to": "0.8",
+        "what": "a completed node's reward is propagated back to the preceding node on the DFS path",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "0.8",
+        "to": "wait",
+        "what": "DFS must wait for the reward before deciding whether to continue or backtrack",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) reward barrier",
+        "axis": "alternatives",
+        "differs": "template: both BFS and DFS stall at a dashed 'wait' point until reward-model feedback for all pending branches arrives",
+        "verdict": "baseline"
+      },
+      {
+        "label": "(b) speculative exploration",
+        "axis": "alternatives",
+        "differs": "green speculative-reasoning-output boxes and dashed placeholder branches replace the wait point, so expansion continues before reward feedback arrives",
+        "verdict": "ours"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Both breadth-first and depth-first tree-of-thought search must pause at a synchronization point to wait for reward-model feedback before continuing; SPEX's speculative exploration instead keeps expanding speculative branches through that point without waiting.",
+    "reading_order": "Top-down through Breadth-First then Depth-First Search in panel (a), each ending at a dashed wait point, then the same order in panel (b) where speculative boxes replace the wait."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.66,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d6dce5",
+        "used_for": "fill of 'Reasoning Output' boxes (grey-blue), the plain generated tree nodes"
+      },
+      {
+        "hex": "#fce6d5",
+        "used_for": "fill of 'Reward' boxes (peach)"
+      },
+      {
+        "hex": "#c8e5b3",
+        "used_for": "fill of 'Speculative Reasoning Output' boxes (green), added only in panel (b)"
+      },
+      {
+        "hex": "#192d54",
+        "used_for": "dark-navy stroke and text colour for every box outline, arrow, and label"
+      }
+    ],
+    "background": "white",
+    "fill": "flat pastel fills (blue-grey, peach, green) for the three box kinds",
+    "stroke": "thin dark-navy outlines (#192d54) on every box and arrow, dashed for not-yet-reached placeholder boxes and the wait marker",
+    "corners": "square",
+    "arrows": "thin dashed and solid navy arrows connect boxes along each branch, with angled back-propagation arrows feeding a reward back to an earlier node",
+    "font": "sans (Arial)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "grey-blue marks plain reasoning-output boxes, peach marks reward-score boxes, and green (added only in panel b) marks speculative reasoning-output boxes",
+    "line_style_means": "dashed lines and boxes mark branches not yet expanded or the wait synchronization point; solid lines connect already-produced steps; angled arrows show back-propagation of a reward to an earlier node",
+    "state_means": "panel (a) freezes at a dashed 'wait' point before reward feedback returns; panel (b) instead continues past that point with green speculative boxes and dashed not-yet-resolved placeholders",
+    "marker_means": "no numbered markers; the printed numbers (0.9, 0.8, 0.5, length values) are the reward and length values themselves, not step indices",
+    "emphasis": "the added green speculative-output boxes in panel (b), replacing the grey dashed wait gap of panel (a), visually carry the contribution",
+    "reusable_patterns": [
+      "identical BFS and DFS branch templates redrawn in a before/after pair, with new coloured boxes filling in what used to be a blocking wait"
+    ],
+    "weaknesses": [
+      "the same reward value 0.5 labels two different BFS branches, so it is not clear whether they are coincidentally equal or a simplification",
+      "the DFS 'Back Propagation' arrows are not numbered, so the order of propagation among the three shown rewards (0.9, 0.8, 0.5) is not fully explicit"
+    ]
+  },
+  "tags": [
+    "tree-of-thought",
+    "speculative-execution",
+    "reward-model",
+    "BFS",
+    "DFS",
+    "LLM-reasoning",
+    "SPEX"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Motivation and Challenge"
+    ],
+    "evidence": [
+      "the system must pause to await feedback from the reward model before determining the next action",
+      "faster branches are forced to idle until the global aggregation completes",
+      "SPEX proactively and speculatively explores promising candidate branches based on predictive signals"
+    ]
+  },
+  "summary": "Figure 3 contrasts the reward barrier that stalls tree-of-thought search with SPEX's speculative fix, using the same Breadth-First and Depth-First Search templates in both panels. In (a), BFS fans out into parallel branches (labelled with token counts like 150, Length: 400, 200) each scored by a reward box (0.9, 0.5), but must wait at a dashed synchronization point until every branch's reward returns before picking the next expansion budget; DFS similarly advances one path with back-propagated rewards (0.9, 0.8, 0.5) but must wait for feedback before deciding whether to continue or backtrack. In (b), green Speculative Reasoning Output boxes and dashed placeholder branches fill in exactly where the wait used to block progress, so both BFS and DFS keep expanding predicted branches while the true reward is still pending.",
+  "summary_zh": "图3对比奖励壁垒与SPEX的推测式解决方案：(a)中BFS并行分支和DFS单路径都需在虚线等待点等待奖励模型反馈才能继续；(b)中绿色推测推理输出和虚线占位分支填补等待处，使搜索无需等待即可继续扩展。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

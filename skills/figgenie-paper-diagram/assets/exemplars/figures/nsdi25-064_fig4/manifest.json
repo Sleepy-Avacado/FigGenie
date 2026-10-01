@@ -1,0 +1,56 @@
+{
+  "id": "nsdi25-064_fig4",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-064",
+  "fig": "4",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 4: The OPTIREDUCE design: Transpose AllReduce with colocated parameter servers, Unreliable Bounded Transport, and Hadamard Transform.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "mixed",
+  "subject": "how Transpose AllReduce, Unreliable Bounded Transport and Hadamard Transform combine in one node's gradient-sharding pipeline",
+  "arrangement": "inset",
+  "panel_count": 2,
+  "frame_template": null,
+  "delta_marking": "callout",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 0.89,
+  "n_elements": 17,
+  "n_relations": 10,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": true,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-064/src/fig4_ultima-design.svg",
+    "preview.png": "lab/extracted/nsdi25-064/src/fig4_ultima-design.png",
+    "print.png": "lab/extracted/nsdi25-064/nsdi25-064_fig4_p5_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "OptiReduce's Transpose AllReduce connects colocated parameter-server/worker nodes in a peer-to-peer mesh over an Unreliable Bounded Transport; zooming into one node's pipeline shows how a gradient bucket is Hadamard-encoded (to disperse the effect of any lost gradient), split into shards that rotate responsibility…",
+      "what_to_learn": "Topology above, one node's pipeline zoomed below, joined by one bold arrow; a bracket naming which stages a timeout covers",
+      "note_source": "doc"
+    }
+  ]
+}

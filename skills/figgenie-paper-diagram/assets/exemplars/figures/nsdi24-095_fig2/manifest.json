@@ -1,0 +1,48 @@
+{
+  "id": "nsdi24-095_fig2",
+  "paper_id": "nsdi24-095",
+  "fig": "2",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 2: Data-plane-friendly binary RNN architecture.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "wps",
+  "aspect": 1.48,
+  "n_components": 11,
+  "n_flows": 12,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-095/src/fig2_BinaryRNN.svg",
+    "preview.png": "lab/extracted/nsdi24-095/src/fig2_BinaryRNN.png",
+    "print.png": "lab/extracted/nsdi24-095/nsdi24-095_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline with a below-figure legend, one of only 19% of pipelines that legend, explaining that every green full-precision layer is paired with a pink STE band, across 11 components and 12 flows.",
+      "what_to_learn": "Pair each functional layer box with a thin coloured band directly beneath it to show a per-layer transform without extra boxes, route the one recurrent connection as a curved dashed arrow into a distinctly coloured memory block, and define the colour code in a legend below the figure."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A left-to-right packet pipeline contains a nested GRU-Memory feedback loop drawn as a dashed curved arrow, with a below-figure legend spelling out STE (Straight-Through Estimator) so the binarization contribution is named, not just colored.",
+      "what_to_learn": "Draw an internal recurrent feedback loop (GRU to Memory and back) as a curved dashed arrow distinct from the straight solid feed-forward arrows around it, and put a legend below the figure naming any abbreviation (STE) the first time a coloured step appears."
+    }
+  ]
+}

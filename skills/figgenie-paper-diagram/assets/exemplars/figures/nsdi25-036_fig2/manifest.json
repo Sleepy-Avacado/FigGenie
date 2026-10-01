@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-036_fig2",
+  "paper_id": "nsdi25-036",
+  "fig": "2",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 2: The interactive loop of X-MCG using LoopTailor.",
+  "corpus_template": "host-device",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.98,
+  "n_components": 14,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-036/nsdi25-036_fig2_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-036/nsdi25-036_fig2_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Client-cloud host-device variant: only the two novel modules, blue Game Frame Interceptor and green Remote VSync Coordinator labels, are colored against an otherwise plain black-and-white baseline pipeline (Input Injection, Game Rendering, Frame Encoding).",
+      "what_to_learn": "Leave the reused baseline pipeline plain black-and-white and color only the boxes and labels you are contributing (blue, green here); but unlike this figure, still add a small legend for those colors and draw an explicit arrow for a component like the Remote VSync Coordinator instead of implying its connections by position."
+    }
+  ]
+}

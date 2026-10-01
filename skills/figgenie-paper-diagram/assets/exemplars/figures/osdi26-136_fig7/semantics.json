@@ -1,0 +1,374 @@
+{
+  "paper_id": "osdi26-136",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "RT",
+    "one_liner": "a type system that gives POSIX shell pipelines regular types so streaming shell scripts can be statically checked",
+    "domain": [
+      "shells",
+      "type-systems",
+      "programming-languages"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "evolution",
+      "logic"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how RT builds the squeeze-transducer product automaton from an input DFA and projects it into a result NFA",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "C",
+        "kind": "state",
+        "role": "start and accepting state of the input DFA",
+        "container": "Input DFA (a)",
+        "highlighted": false
+      },
+      {
+        "name": "D",
+        "kind": "state",
+        "role": "DFA state reached from C on a blank character",
+        "container": "Input DFA (a)",
+        "highlighted": false
+      },
+      {
+        "name": "E",
+        "kind": "state",
+        "role": "DFA state reached from D on 'b'; loops back to C on a blank",
+        "container": "Input DFA (a)",
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "state",
+        "role": "start and accepting FST state; passes non-blank ('other') and the first blank through unchanged",
+        "container": "Squeezing FST (b)",
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "state",
+        "role": "accepting FST state entered after one blank; further blanks self-loop here producing no output (epsilon) until a non-blank returns to A",
+        "container": "Squeezing FST (b)",
+        "highlighted": true
+      },
+      {
+        "name": "A/C",
+        "kind": "state",
+        "role": "start/accepting product state pairing FST-state A with DFA-state C",
+        "container": "product automaton (c, d)",
+        "highlighted": false
+      },
+      {
+        "name": "B/C",
+        "kind": "state",
+        "role": "accepting product state pairing FST-state B with DFA-state C",
+        "container": "product automaton (c, d)",
+        "highlighted": false
+      },
+      {
+        "name": "A/D",
+        "kind": "state",
+        "role": "product state pairing FST-state A with DFA-state D",
+        "container": "product automaton (c, d)",
+        "highlighted": false
+      },
+      {
+        "name": "B/D",
+        "kind": "state",
+        "role": "product state pairing FST-state B with DFA-state D",
+        "container": "product automaton (c, d)",
+        "highlighted": false
+      },
+      {
+        "name": "A/E",
+        "kind": "state",
+        "role": "product state pairing FST-state A with DFA-state E",
+        "container": "product automaton (c, d)",
+        "highlighted": false
+      },
+      {
+        "name": "B/E",
+        "kind": "state",
+        "role": "product state pairing FST-state B with DFA-state E; drawn with no incoming or outgoing transitions, unreachable from the start state",
+        "container": "product automaton (c, d)",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "C",
+        "to": "D",
+        "what": "on a blank/space character (Input DFA)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "D",
+        "to": "E",
+        "what": "on 'b' (Input DFA)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "E",
+        "to": "C",
+        "what": "on a blank/space character, closing the DFA's cycle (Input DFA)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "A",
+        "what": "self-loop on any non-blank ('other'), output unchanged (Squeezing FST)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "B",
+        "what": "on a blank, outputs the same blank (Squeezing FST)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "A",
+        "what": "on any non-blank ('other'), output unchanged (Squeezing FST)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "B",
+        "what": "self-loop on a further blank, outputs nothing (epsilon) -- the squeeze (Squeezing FST)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "A/C",
+        "to": "B/D",
+        "what": "product of A-to-B (blank/blank) and C-to-D; labelled blank/blank in (c), projected to just the output blank in (d)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "B/C",
+        "to": "B/D",
+        "what": "product of B's self-loop (blank/epsilon) and C-to-D; labelled blank/epsilon in (c), projected to epsilon in (d)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "A/D",
+        "to": "A/E",
+        "what": "product of A's self-loop (b/b) and D-to-E; labelled b/b in (c), projected to b in (d)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "B/D",
+        "to": "A/E",
+        "what": "product of B-to-A (b/b) and D-to-E; labelled b/b in (c), projected to b in (d)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "A/E",
+        "to": "B/C",
+        "what": "product of A-to-B (blank/blank) and E-to-C; labelled blank/blank in (c), projected to blank in (d)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "B/E",
+        "to": "B/C",
+        "what": "product of B's self-loop (blank/epsilon) and E-to-C; labelled blank/epsilon in (c), projected to epsilon in (d)",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Input DFA",
+        "axis": "time",
+        "differs": "the starting 3-state DFA over C, D, E that recognizes the input language",
+        "verdict": null
+      },
+      {
+        "label": "(b) Squeezing FST",
+        "axis": "time",
+        "differs": "the 2-state transducer over A, B that passes non-blanks through and collapses runs of blanks to one",
+        "verdict": null
+      },
+      {
+        "label": "(c) Squeezing FST x Input DFA",
+        "axis": "time",
+        "differs": "the 6-state product automaton pairing each FST state with each DFA state, with input/output-labelled transitions",
+        "verdict": null
+      },
+      {
+        "label": "(d) Result NFA",
+        "axis": "time",
+        "differs": "the same 6 product states with transitions relabelled by output symbol alone (blank, b, or epsilon), dropping the input side",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": {
+      "states": [
+        "C",
+        "D",
+        "E",
+        "A",
+        "B",
+        "A/C",
+        "B/C",
+        "A/D",
+        "B/D",
+        "A/E",
+        "B/E"
+      ],
+      "transitions": [
+        {
+          "from": "C",
+          "to": "D",
+          "guard": "blank (Input DFA)"
+        },
+        {
+          "from": "D",
+          "to": "E",
+          "guard": "b (Input DFA)"
+        },
+        {
+          "from": "E",
+          "to": "C",
+          "guard": "blank (Input DFA)"
+        },
+        {
+          "from": "A",
+          "to": "A",
+          "guard": "other / other (Squeezing FST)"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "guard": "blank / blank (Squeezing FST)"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "guard": "other / other (Squeezing FST)"
+        },
+        {
+          "from": "B",
+          "to": "B",
+          "guard": "blank / epsilon (Squeezing FST)"
+        },
+        {
+          "from": "A/C",
+          "to": "B/D",
+          "guard": "blank/blank in (c); blank in (d)"
+        },
+        {
+          "from": "B/C",
+          "to": "B/D",
+          "guard": "blank/epsilon in (c); epsilon in (d)"
+        },
+        {
+          "from": "A/D",
+          "to": "A/E",
+          "guard": "b/b in (c); b in (d)"
+        },
+        {
+          "from": "B/D",
+          "to": "A/E",
+          "guard": "b/b in (c); b in (d)"
+        },
+        {
+          "from": "A/E",
+          "to": "B/C",
+          "guard": "blank/blank in (c); blank in (d)"
+        },
+        {
+          "from": "B/E",
+          "to": "B/C",
+          "guard": "blank/epsilon in (c); epsilon in (d)"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "RT builds a squeeze transducer for one concrete input DFA by taking their automaton product state by state, then projects that product onto its output symbols alone to get the result NFA.",
+    "reading_order": "left to right, top to bottom: the Input DFA (a) and Squeezing FST (b) on top, then their product automaton (c) below, and its output-projected Result NFA (d) beside it"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 4,
+    "frame_template": "free",
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 4,
+    "column": "single",
+    "aspect": 1.17,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [],
+    "background": "white",
+    "fill": "none",
+    "stroke": "thin (~0.55pt) black outlines on every state circle and arrow; a double circle marks an accepting state",
+    "corners": "square",
+    "arrows": "thin black arrows, many curved (16 of 30 lines), with 21 solid arrowheads, including long looping arcs for the product automaton's cross transitions",
+    "font": "Times New Roman serif (regular and bold), 7.5-10.5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "monochrome figure; no colour is used to encode meaning",
+    "line_style_means": "all edges are solid lines; direction is shown only by arrowheads, and a double circle (rather than line style) marks an accepting state",
+    "state_means": "states are told apart by their letter label and by single vs. double circle (accepting); product states in (c)/(d) stack the FST-state letter over the DFA-state letter inside one circle",
+    "marker_means": "not applicable; the panel letters (a)-(d) only order the four diagrams, they are not path markers",
+    "emphasis": "panels (c) and (d) share the same state layout so the reader can directly see which transitions survive projecting away the input side",
+    "reusable_patterns": [
+      "small automaton diagrams whose accepting states are drawn as double circles and whose transitions are labelled input/output pairs",
+      "a 2x2 progression from two small input automata to their product and then to a simplified result automaton"
+    ],
+    "weaknesses": [
+      "state B/E is drawn with no visible incoming or outgoing transitions in either (c) or (d), which reads as confusing without the text explaining it is an unreachable product state",
+      "several transition arrows cross closely near state B/D, making it easy to misread which state a given label belongs to"
+    ]
+  },
+  "tags": [
+    "finite-state-transducer",
+    "automata-product",
+    "regular-types",
+    "shell",
+    "translate-chars",
+    "RT"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Complex Transformations (p.8)"
+    ],
+    "evidence": [
+      "RT computes the translate-chars operation over regular types by constructing the operation’s FST",
+      "computing its product with the input language automata, and constructing a resulting NFA",
+      "Fig. 7 illustrates this process in detail for the input type"
+    ]
+  },
+  "summary": "Figure 7 works through RT's construction of a translate-chars (squeeze=true) FST for one concrete example. Panel (a) gives a 3-state Input DFA (C, D, E) that reads a blank, then b, then a blank again back to C. Panel (b) gives the 2-state Squeezing FST (A, B): non-blank (other) characters pass through unchanged in either state, the first blank moves A to B unchanged, and further blanks self-loop on B producing no output (epsilon), squeezing runs of blanks to one. Panel (c) is their product automaton over 6 paired states (e.g. A/C, B/D), with each transition labelled input/output; panel (d) is the resulting NFA, the same 6 states with each transition relabelled by output symbol alone once the input side is projected away.",
+  "summary_zh": "该图示RT构造translate-chars(squeeze)FST的例子：(a)输入DFA(C,D,E)；(b)压缩FST(A,B)，首个空白通过、后续空白自环输出ε；(c)二者乘积自动机(6个配对状态)；(d)按输出投影得到结果NFA。",
+  "confidence": "medium",
+  "notes": "worked_example corrected from the prior False to True: the caption itself calls this an 'FST construction example' built from concrete states/symbols (C/D/E, A/B, b, other), so removing the concrete labels would leave nothing. Confidence set to medium because the paragraph text only describes the algorithm generically (build FST, take product, project to NFA) and is cut off before naming this specific example; the per-state transition wiring in panels (c)/(d), including which of two close, crossing arrows connects to which state, was resolved by close visual inspection cross-checked against the automaton-product logic implied by panels (a)/(b), not stated in the text.",
+  "venue": "OSDI26"
+}

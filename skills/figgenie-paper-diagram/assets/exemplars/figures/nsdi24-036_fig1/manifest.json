@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-036_fig1",
+  "paper_id": "nsdi24-036",
+  "fig": "1",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 1: Our edge cloud’s topology, business traffic examples, and architecture of our P4-capable gateway.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 4.36,
+  "n_components": 23,
+  "n_flows": 17,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-036/nsdi24-036_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-036/nsdi24-036_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Three unlike panels share one figure: an edge-cloud topology (a), two structurally identical but reorder-conflicting five-module NF chains stacked to expose the conflict (b), and a four-pipeline gateway ASIC (c) with 17 flows total.",
+      "what_to_learn": "Stack two structurally parallel chains directly above each other so a swapped module position jumps out without annotation; but unify panel styles with one shared palette, since packing an edge topology, chain diagrams and an ASIC block diagram with no common visual language is this figure's own listed weakness."
+    }
+  ]
+}

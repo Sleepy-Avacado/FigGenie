@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-083_fig1",
+  "paper_id": "asplos25-083",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. OctoCache Overview. faster voxel update by generating high (e.g., >95%) cache hits and fewer (e.g., 0.125X) memory visits in the cache compared with octree.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.93,
+  "n_components": 4,
+  "n_flows": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-083/asplos25-083_fig1_p2_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-083/asplos25-083_fig1_p2_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "A floor-sized pipeline, 4 components and 3 flows, pairing a compact cache-in-front-of-tree diagram with a results-callout panel; the record itself flags this mixing of architecture and results as a weakness.",
+      "what_to_learn": "Keep the architecture path itself tiny and legible, batch to cache table to evicted-and-reordered write to tree, using just two colours for the two paths; avoid this figure's flaw of parking results text beside the diagram instead of encoding it in the diagram."
+    }
+  ]
+}

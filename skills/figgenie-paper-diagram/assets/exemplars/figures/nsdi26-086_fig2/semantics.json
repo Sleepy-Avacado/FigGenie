@@ -1,0 +1,168 @@
+{
+  "paper_id": "nsdi26-086",
+  "fig": "2",
+  "system": {
+    "name": "KubeDirect",
+    "one_liner": "a modified Kubernetes cluster manager that shortens the narrow-waist control path for serverless (FaaS) scaling with direct message passing",
+    "domain": [
+      "cloud",
+      "serverless"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Custom Controllers",
+        "role": "platform-specific controllers that perform offline configuration for the FaaS orchestrator",
+        "container": "FaaS Orchestrator",
+        "novel": false
+      },
+      {
+        "name": "Autoscaler",
+        "role": "computes the desired number of instances from runtime metrics and updates the Deployment replicas field",
+        "container": "FaaS Orchestrator",
+        "novel": false
+      },
+      {
+        "name": "Load Balancer",
+        "role": "read-only, downstream gateway and monitoring component that routes traffic to ready Pods",
+        "container": "FaaS Orchestrator",
+        "novel": false
+      },
+      {
+        "name": "API Server",
+        "role": "entry point of the K8s core that stores/serves API objects",
+        "container": "K8s Core",
+        "novel": false
+      },
+      {
+        "name": "etcd",
+        "role": "persistent store backing the API Server",
+        "container": "K8s Core",
+        "novel": false
+      },
+      {
+        "name": "Core Controllers",
+        "role": "the shared narrow-waist controllers (Deployment/ReplicaSet/Scheduler) that scale FaaS instances",
+        "container": "K8s Core",
+        "novel": false
+      },
+      {
+        "name": "Kubelet (Sandbox Manager)",
+        "role": "on each worker node, filters locally assigned Pods and forwards them to the sandbox runtime",
+        "container": "Worker Node",
+        "novel": false
+      },
+      {
+        "name": "Pod",
+        "role": "basic unit of scheduling holding the containers of one FaaS instance",
+        "container": "Worker Node",
+        "novel": false
+      },
+      {
+        "name": "Runtime",
+        "role": "sandbox runtime that executes the Pod's containers",
+        "container": "Worker Node",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Autoscaler",
+        "to": "Core Controllers",
+        "what": "updates the Deployment's replicas field",
+        "step": 1
+      },
+      {
+        "from": "Core Controllers",
+        "to": "API Server",
+        "what": "Deployment controller selects the ReplicaSet and sets its replicas field",
+        "step": 2
+      },
+      {
+        "from": "Core Controllers",
+        "to": "API Server",
+        "what": "ReplicaSet controller creates new Pods to match the desired scale",
+        "step": 3
+      },
+      {
+        "from": "Core Controllers",
+        "to": "Kubelet (Sandbox Manager)",
+        "what": "Scheduler assigns Pods to nodes by updating nodeName",
+        "step": 4
+      },
+      {
+        "from": "Kubelet (Sandbox Manager)",
+        "to": "Load Balancer",
+        "what": "marks Pods ready and exposes them to the data plane",
+        "step": 5
+      }
+    ],
+    "key_idea": "Three popular Kubernetes-based FaaS platforms share a common narrow waist of controllers (highlighted in orange) that implements the critical scale-out path from Autoscaler to running Pod, which is the primary source of latency.",
+    "reading_order": "left FaaS Orchestrator column, right K8s Cluster Manager column, then top-to-bottom following the circled steps 1 through 5 down to the Worker Node and back to the Load Balancer"
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.86,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "narrow-waist components highlighted in orange (Core Controllers, Kubelet/Sandbox Manager)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "generic box fills (API Server, etcd, Pod, Runtime, Autoscaler, Load Balancer)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.7pt dark navy box borders, dashed vertical divider between orchestrator and cluster manager",
+    "font": "ArialMT / Arial-Italic sans, 5.5-6.5pt",
+    "corners": "square",
+    "arrows": "orthogonal solid arrows with circled step numbers 1-5; dashed arrows for policy/spec/metrics links",
+    "icons": "vector logos in the Custom Controllers box, gateway and monitor icons in the Load Balancer box"
+  },
+  "encoding": {
+    "color_means": "orange fill marks the shared narrow-waist controllers that the paper identifies as the primary source of latency",
+    "line_style_means": "solid circled-number arrows trace the numbered scale-out request path; dashed arrows show auxiliary spec/policy/metrics links",
+    "emphasis": "the orange highlight isolates the narrow-waist components from the rest of the two-column K8s pipeline",
+    "reusable_patterns": [
+      "two-column layered architecture with a highlighted critical-path stack running through the middle"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "Kubernetes",
+    "FaaS",
+    "serverless",
+    "control plane",
+    "narrow waist"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "Figure 2: Architecture of Kubernetes-based FaaS platform.",
+      "We highlight the narrow waist in orange.",
+      "1 to 5 are from Figure 1 and are indirect calls via the API Server."
+    ]
+  },
+  "summary": "Figure 2 lays out the architecture of a typical Kubernetes-based FaaS platform, split into a FaaS Orchestrator (Custom Controllers, Autoscaler, Load Balancer) and the underlying K8s Cluster Manager (API Server, etcd, Core Controllers, and a Worker Node running Kubelet, Pod and Runtime). The paper highlights in orange the 'narrow waist' of controllers -- Core Controllers and the Kubelet sandbox manager -- shared by Knative, OpenFaaS and Fission, that implements the critical upscaling path: the Autoscaler computes a target replica count (step 1), the Deployment/ReplicaSet controllers act on it (steps 2-3), the Scheduler and Kubelet place and start Pods (step 4), and the Load Balancer is updated once Pods are ready (step 5). The figure motivates KubeDirect's optimization of this common critical path via direct message passing instead of API-server watch/list overhead.",
+  "summary_zh": "图2展示了基于Kubernetes的FaaS平台通用架构，橙色标出的核心控制器与Kubelet是所有平台共有的瓶颈腰部，图中①-⑤标注了从计算副本数到Pod就绪并暴露给负载均衡器的完整关键路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

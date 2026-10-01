@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-108_fig5",
+  "paper_id": "asplos25-108",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. GPU execution model.",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.97,
+  "n_components": 18,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-108/src/fig5_sangam_gpu_diagram.svg",
+    "preview.png": "lab/extracted/asplos25-108/src/fig5_sangam_gpu_diagram.png",
+    "print.png": "lab/extracted/asplos25-108/asplos25-108_fig5_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "GPU-wide layout on the left with one SM expanded on the right; accent fill marks the two active decision points across both levels.",
+      "what_to_learn": "Carry the accent colour across the zoom boundary so the same component reads as the same component at both scales."
+    }
+  ]
+}

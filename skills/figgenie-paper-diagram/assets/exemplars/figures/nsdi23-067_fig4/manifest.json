@@ -1,0 +1,47 @@
+{
+  "id": "nsdi23-067_fig4",
+  "paper_id": "nsdi23-067",
+  "fig": "4",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 4: Supporting packet schedulers with RIBOSOME.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.05,
+  "n_components": 10,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-067/nsdi23-067_fig4_p10_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-067/nsdi23-067_fig4_p10_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "The switch is the hub with two deliberately asymmetric spokes, an NF-compute server handling headers and an RDMA-memory server handling payloads, each returning results the switch's rebuilder reassembles in order.",
+      "what_to_learn": "A hub's spokes need not be identical: when two offload targets do genuinely different jobs, still draw them as parallel boxes at the same level, and colour-code the shared unit that threads through both, four packet flows here, so the reader can follow one flow out to its spoke and back."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence rank-19 pick: the boxed programmable switch is the chip, with the multi-core NF server and RDMA server drawn outside it, and four color-coded packets trace the header and payload split across ten components.",
+      "what_to_learn": "Draw the switch's boundary as the chip and place the two external servers physically outside it, then give each flow its own packet colour rather than one arrow style so a reader can trace a single packet through splitter, storage and rebuilder; reserve dashed for outbound and solid for the return path."
+    }
+  ]
+}

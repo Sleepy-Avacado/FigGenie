@@ -1,0 +1,122 @@
+{
+  "paper_id": "asplos25-168",
+  "fig": "11",
+  "system": {
+    "name": "ASDR",
+    "one_liner": "an algorithm-architecture co-design that accelerates neural rendering (NeRF) on computing-in-memory hardware via adaptive sampling and data reuse",
+    "domain": [
+      "ml-systems",
+      "hardware-accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Embedding Tables",
+        "role": "original per-resolution feature tables (e.g. 16^3, 20^3, 25^3, 32^3 items) before hashing",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "HTs (Length=2^19)",
+        "role": "fixed-length hash tables produced from the embedding tables; storing only one copy limits storage utilization and parallel access",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Copied Tables",
+        "role": "low-resolution tables stored without hashing and replicated into multiple copies for higher storage utilization and parallel access",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Embedding Tables",
+        "to": "HTs (Length=2^19)",
+        "what": "Hash",
+        "step": 1
+      },
+      {
+        "from": "HTs (Length=2^19)",
+        "to": "Copied Tables",
+        "what": "proposed alternative storage scheme",
+        "step": null
+      }
+    ],
+    "key_idea": "Hashing embedding tables into a single fixed-length hash table wastes storage and limits parallel access; ASDR instead stores unhashed low-resolution tables in multiple replicated copies to raise both storage utilization and parallel access.",
+    "reading_order": "Panel (a) on the left shows several Embedding Tables of different sizes hashed into HTs; panel (b) shows sampled points from multiple rays landing in a shared 3D voxel grid; the right side compares HTs (sad face, low utilization) against Copied Tables (happy face, high utilization)."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "letters",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.23,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e6e6e6",
+        "used_for": "stored-item cell fill in the hash-table boxes"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "unused-space cell fill"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "points-in-voxel highlighted cell fill"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "highlighted/selected cell accent"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders, square corners on table cells",
+    "font": "Arial sans, 5-11.5pt, bold for headers",
+    "corners": "square",
+    "arrows": "thin solid arrow for the Hash operation",
+    "icons": "sad-face and happy-face icons in the right-hand comparison boxes; camera icon in panel (b)"
+  },
+  "encoding": {
+    "color_means": "yellow-filled cells mark points-in-voxel / stored items, gray cells mark unused or other-point storage",
+    "line_style_means": null,
+    "emphasis": "side-by-side sad-face vs. happy-face comparison boxes explicitly rank the single-copy hash table against the proposed copied-table scheme on storage utilization and parallel access",
+    "reusable_patterns": [
+      "small icon-labeled pros/cons comparison boxes placed next to a technical diagram"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "hash mapping",
+    "embedding tables",
+    "computing-in-memory",
+    "storage utilization",
+    "parallel access",
+    "NeRF"
+  ],
+  "provenance": {
+    "sections": [
+      "5 ASDR Architecture (p.8)"
+    ],
+    "evidence": [
+      "several consecutive sample points on a ray can be indexed in the low-resolution space using the embedded features of eight vertices",
+      "we utilize the observed storage headroom by adopting a de-hashed indexing approach for low-resolution tables and replicating multiple copies"
+    ]
+  },
+  "summary": "This figure motivates ASDR's de-hashed, replicated storage scheme for low-resolution embedding tables. Panel (a), 'Hash Mapping for Low Resolution Tables', shows several Embedding Tables of different sizes (e.g. 16^3, 20^3, 25^3, 32^3 items) each hashed into a fixed-length hash table, HTs (Length=2^19). Panel (b), 'Sampled points from multiple rays', shows a camera casting multiple rays into a shared 3D voxel grid, illustrating that many sampled points land in the same voxels. The right side directly compares the two storage strategies with sad/happy-face icons: the single-copy HTs box is marked with a sad face for low storage utilization and limited parallel access, while the Copied Tables box (128 copies of a 16^3-item table) is marked with a happy face for high storage utilization and highly parallel access.",
+  "summary_zh": "该图对比两种嵌入表存储方案：单份哈希表（HTs）因存储利用率低、并行访问受限被标为差评；ASDR 提出的多副本存储表（Copied Tables）通过复制未哈希的低分辨率表实现高利用率与高并行访问，被标为好评。",
+  "confidence": "medium",
+  "notes": "The body paragraph discusses Figure 11(b) sampled points directly but attributes the de-hashing/address-generation mechanics mainly to Figures 12 and 14; those later-figure details were not attributed to Fig. 11 in this record.",
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,172 @@
+{
+  "paper_id": "osdi26-127",
+  "fig": "1",
+  "system": {
+    "name": "Drs.NAS",
+    "one_liner": "an ultra-efficient neural architecture search framework that finds deep recommendation-system architectures via superproxy-guided differentiable graph search",
+    "domain": [
+      "ml-systems",
+      "recommendation-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Layer 1",
+        "role": "supernet layer holding several candidate operators",
+        "container": "Supernet Initialization",
+        "novel": false
+      },
+      {
+        "name": "Layer D",
+        "role": "last supernet layer in the stack, mirrored later as the final architecture's layer stack",
+        "container": "Supernet Initialization",
+        "novel": false
+      },
+      {
+        "name": "Superproxies",
+        "role": "compact seven-dimensional proxy representation computed per candidate operator",
+        "container": "§3.2 Superproxy Formulation",
+        "novel": true
+      },
+      {
+        "name": "Vertex V1",
+        "role": "graph vertex representing a candidate layer in the DAG search space",
+        "container": "§3.3 Search Space Generation",
+        "novel": true
+      },
+      {
+        "name": "Vertex VD",
+        "role": "last vertex in the DAG search space, corresponding to Layer D",
+        "container": "§3.3 Search Space Generation",
+        "novel": true
+      },
+      {
+        "name": "Optimal candidate architecture",
+        "role": "relaxed, gradient-searched architecture over the DAG vertices",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Optimal searched architecture",
+        "role": "final discrete layered architecture obtained by discretizing the candidate",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Layer 1",
+        "to": "Superproxies",
+        "what": "Proxy Computation",
+        "step": 1
+      },
+      {
+        "from": "Superproxies",
+        "to": "Vertex V1",
+        "what": "superproxy of operators mapped onto a DAG vertex",
+        "step": 2
+      },
+      {
+        "from": "Vertex V1",
+        "to": "Vertex VD",
+        "what": "candidate dataflow edges in the DAG search space",
+        "step": null
+      },
+      {
+        "from": "Vertex V1",
+        "to": "Optimal candidate architecture",
+        "what": "Gumbel-Softmax relaxation and gradient-based search",
+        "step": 3
+      },
+      {
+        "from": "Optimal candidate architecture",
+        "to": "Optimal searched architecture",
+        "what": "Discretize",
+        "step": 4
+      }
+    ],
+    "key_idea": "Drs.NAS turns a layered supernet into cheap superproxy vectors, builds a DAG search space from them, relaxes it for gradient-based multi-objective search, then discretizes the result into a concrete layered architecture.",
+    "reading_order": "Z-pattern across four quadrants: top-left superproxy formulation feeds top-right DAG search-space generation, then bottom-right relaxed search discretizes into the bottom-left final architecture."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.15,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#767171",
+        "used_for": "gray dotted connector lines and arrow strokes throughout"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple fill of the Layer boxes (Superproxy Formulation and Optimal searched architecture panels)"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "orange operator-type squares inside the Layer/Vertex boxes"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "gold/yellow operator-type squares inside the Layer/Vertex boxes"
+      },
+      {
+        "hex": "#548235",
+        "used_for": "green operator-type squares and the Discretize arrow label"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid panel borders, one dashed panel border around Search Space Generation, dotted vertical ellipses abbreviating repeated layer/vertex stacks",
+    "font": "Times New Roman (regular and bold), 4.5-8pt, bold for panel headers and box titles",
+    "corners": "mixed",
+    "arrows": "thin arrows with triangular heads for phase transitions, curved arrows for DAG edges between vertices",
+    "icons": "none; operator identity is shown with small colored squares rather than pictorial icons"
+  },
+  "encoding": {
+    "color_means": "purple boxes represent concrete network Layers, blue boxes represent DAG Vertices; small colored squares inside each box represent different candidate/selected operator types",
+    "line_style_means": "a dashed panel border sets the DAG search-space panel apart from the three solid-bordered panels; dotted vertical ellipses abbreviate repeated Layer/Vertex stacks",
+    "emphasis": "the same operator-color pattern is carried from Layer boxes into Superproxies into Vertex boxes, visually showing that the graph search space preserves the supernet's per-layer operator information",
+    "reusable_patterns": [
+      "a 2x2 grid folding a four-phase pipeline into compact quadrants",
+      "consistent small-square color coding carried across representations (layers, superproxies, DAG vertices) to show they encode the same information"
+    ],
+    "weaknesses": [
+      "no legend decodes what each small square color means",
+      "the four-phase pipeline is folded into a Z-reading-order grid that could be misread as a simple top-to-bottom sequence"
+    ]
+  },
+  "tags": [
+    "neural-architecture-search",
+    "recommendation-systems",
+    "differentiable-nas",
+    "graph-search-space",
+    "dnn-compression"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Proposed Approach: Drs.NAS (p.5)"
+    ],
+    "evidence": [
+      "Fig. 1 presents the overview of Drs.NAS framework, which is mainly composed of four major phases.",
+      "we construct a graph-based search space built on top of the computed superproxies",
+      "we relax the discrete graph search space, using Gumbel-Softmax, to enable a differentiable NAS process"
+    ]
+  },
+  "summary": "Figure 1 lays out Drs.NAS's four-phase framework for searching deep recommendation-system (DRS) architectures, folded into a 2x2 grid. In Superproxy Formulation (top-left, §3.2), a supernet's stacked Layers, each holding several candidate operators, undergo Proxy Computation into compact Superproxies. In Search Space Generation (top-right, §3.3), these superproxies become colored operator markers inside DAG Vertices (V1...VD), forming the graph-based DAG search space. The bottom-right panel then applies Search Space Relaxation (§3.4) and Gradient-Based Search (§3.5, Gumbel-Softmax) to these vertices to obtain an Optimal candidate architecture, which a Discretize arrow converts, bottom-left, into the concrete stacked-Layer Optimal searched architecture. Purple boxes consistently denote layers and blue boxes denote DAG vertices, with small colored squares carrying operator identity across all four panels.",
+  "summary_zh": "该图展示 Drs.NAS 四阶段框架：Layer 经 Proxy Computation 得 Superproxies，建成 DAG 搜索空间，经松弛与梯度搜索得候选架构，再 Discretize 为最终架构。",
+  "confidence": "high",
+  "notes": "layout-proposal: four-quadrant phase pipeline — four sequential phases (superproxy formulation, search-space generation, relaxation/gradient search, discretization) are folded into a 2x2 grid read top-left, top-right, bottom-right, bottom-left, rather than drawn as one straight pipeline.",
+  "venue": "OSDI26"
+}

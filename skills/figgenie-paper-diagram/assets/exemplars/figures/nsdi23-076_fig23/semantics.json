@@ -1,0 +1,563 @@
+{
+  "paper_id": "nsdi23-076",
+  "fig": "23",
+  "kind": "mechanism",
+  "system": {
+    "name": "TopoOpt",
+    "one_liner": "co-optimizes network topology and parallelization strategy for distributed training jobs on reconfigurable optical links",
+    "domain": [
+      "distributed training",
+      "datacenter networking",
+      "collective communication"
+    ],
+    "abstraction": "collective communication algorithm"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "three different node-number permutations applied to the same double-binary-tree shape for a reduce operation",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "0",
+        "kind": "node",
+        "role": "root of Tree 1 (top); has a single child, unlike other internal nodes",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "2",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "4",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "6",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "8",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "10",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "12",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "14",
+        "kind": "node",
+        "role": "internal node of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "1",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "3",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "5",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "7",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "9",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "11",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "13",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "15",
+        "kind": "node",
+        "role": "leaf of Tree 1 (top)",
+        "container": "Tree 1 (top)",
+        "highlighted": false
+      },
+      {
+        "name": "1",
+        "kind": "node",
+        "role": "root of Tree 2 (bottom); has a single child, unlike other internal nodes",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "3",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "5",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "7",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "9",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "11",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "13",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "15",
+        "kind": "node",
+        "role": "internal node of Tree 2 (bottom); a leaf of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "0",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "2",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "4",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "6",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "8",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "10",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "12",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      },
+      {
+        "name": "14",
+        "kind": "node",
+        "role": "leaf of Tree 2 (bottom); an internal node of Tree 1 with the same number",
+        "container": "Tree 2 (bottom)",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "0",
+        "to": "2",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "2",
+        "to": "4",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "2",
+        "to": "6",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "8",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "10",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "6",
+        "to": "12",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "6",
+        "to": "14",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "8",
+        "to": "1",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "8",
+        "to": "3",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "10",
+        "to": "5",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "10",
+        "to": "7",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "12",
+        "to": "9",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "12",
+        "to": "11",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "14",
+        "to": "13",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "14",
+        "to": "15",
+        "what": "parent-child communication link in Tree 1 (top)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "3",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "3",
+        "to": "5",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "3",
+        "to": "7",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "9",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "5",
+        "to": "11",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "7",
+        "to": "13",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "7",
+        "to": "15",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "9",
+        "to": "0",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "9",
+        "to": "2",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "11",
+        "to": "4",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "11",
+        "to": "6",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "13",
+        "to": "8",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "13",
+        "to": "10",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "15",
+        "to": "12",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "15",
+        "to": "14",
+        "what": "parent-child communication link in Tree 2 (bottom)",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Double binary tree permutation 1",
+        "axis": "alternatives",
+        "differs": "Tree 1's internal nodes are all even and its leaves all odd; Tree 2 flips this exactly",
+        "verdict": null
+      },
+      {
+        "label": "(b) Double binary tree permutation 2",
+        "axis": "alternatives",
+        "differs": "same tree shape with a different node-number assignment (Tree 1 root 0, then 6, 12/2, ...)",
+        "verdict": null
+      },
+      {
+        "label": "(c) Double binary tree permutation 3",
+        "axis": "alternatives",
+        "differs": "same tree shape with a third node-number assignment (Tree 1 root 0, then 3, 6/9, ...; Tree 2 rooted at 8)",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the specific node-ID numbers 0-15 assigned to every position of the two trees, in each of the three permutations",
+      "linked_by": "position: the same node slot across the three panels, and the shared 0-15 numbering re-used by both trees within a panel",
+      "result_cells": "not applicable here; the node numbers themselves are the result, later used elsewhere to compute per-pair traffic demand matrices"
+    },
+    "key_idea": "The same double-binary-tree shape admits many different node-number permutations that all balance communication load equally, leaving freedom to pick one that also fits the network topology.",
+    "reading_order": "left to right through panels (a), (b), (c); within each panel, Tree 1 root to leaves, then Tree 2 root to leaves"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "identical",
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.68,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a6a6a6",
+        "used_for": "gray fill of all 96 circular tree-node badges (32 nodes x 3 panels)"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue stroke of all 90 parent-child edges (30 edges x 3 panels)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin blue lines for tree edges; thin darker-gray outline with a subtle bevel on each node circle",
+    "corners": "rounded",
+    "arrows": "no arrowheads; plain thin solid blue lines connect parent to child",
+    "font": "sans (Calibri), small labels centred inside each node circle, larger caption text below each panel",
+    "icons": "none (nodes are plain vector circles, not icon graphics)"
+  },
+  "encoding": {
+    "color_means": "gray fills every tree node uniformly; blue is used only for the connecting edges; colour does not distinguish trees, panels, or node roles",
+    "line_style_means": "not used; all edges are plain solid blue lines regardless of tree or panel",
+    "state_means": "not applicable; there is no before/after, only different numbers assigned to identical positions across panels",
+    "marker_means": "the plain integers 0-15 inside each node identify that node's rank in the collective operation, not a step order",
+    "emphasis": "none; the three permutations are given equal, unaccented visual weight so the reader must compare the numbers themselves",
+    "reusable_patterns": [
+      "identical tree skeleton repeated side by side with only the node numbering changed to depict alternative permutations",
+      "a double binary tree drawn as two mirrored trees stacked, sharing the same node IDs split between leaf and internal role"
+    ],
+    "weaknesses": [
+      "without colour or highlighting to guide comparison, spotting exactly which numbers differ between panels requires reading every node"
+    ]
+  },
+  "tags": [
+    "collective-communication",
+    "binary-tree",
+    "all-reduce",
+    "permutation",
+    "network-topology",
+    "TopoOpt"
+  ],
+  "provenance": {
+    "sections": [
+      "Tree-Reduce and Other Reduce Permutations"
+    ],
+    "evidence": [
+      "in the first binary tree, the in-tree nodes are even, and the leaf nodes are odd",
+      "a second binary tree is constructed by flipping the labeling of the leaf and in-tree nodes",
+      "Arbitrary permutations can be used, and to limit the cases, we could simply consider the cyclic permutations"
+    ]
+  },
+  "summary": "This figure compares three alternative node-number permutations for TopoOpt's double binary tree (DBT), the reduce communication pattern used to compute per-job traffic demand matrices. Each panel draws the same tree shape twice, stacked: a first binary tree whose non-root internal nodes get one half of the 16 node IDs and whose leaves get the other half, and a second binary tree that flips that assignment, so every node other than the two roots is an internal node in one tree and a leaf in the other, balancing each node's communication load. Panels (a), (b), and (c) keep this identical tree skeleton and simply reassign which of the 16 node IDs sits at each position, showing that many permutations can realize the same balanced double-binary-tree pattern, leaving room to also match it to the network topology.",
+  "summary_zh": "该图比较TopoOpt双二叉树(DBT)的三种节点编号排列：每组上下两棵树形状相同，节点在一棵树中为内部节点、在另一棵树中为叶子，实现通信负载均衡；(a)(b)(c)保持树形不变，仅改变16个编号的分配方式。",
+  "confidence": "high",
+  "notes": "Elements/relations enumerate panel (a) as the template (32 nodes, 30 edges: two 16-node trees where each node is internal in one tree and a leaf in the other); panels (b) and (c) share the identical tree shape with different number assignments. This matches the source-SVG histogram exactly (96 gray node fills = 32 x 3 panels, 90 blue strokes = 30 x 3 panels). worked_example is set to true because the specific node numbers are the entire content the reader checks. layout.panels mirrors the index's raw value (1) while layout.panel_count (3) reflects the three drawn alternatives, matching the convention used in sibling records.",
+  "venue": "NSDI23"
+}

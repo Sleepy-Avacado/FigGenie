@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-077_fig6",
+  "paper_id": "nsdi23-077",
+  "fig": "6",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 6: The cache-free SQ scheduler.",
+  "corpus_template": "host-device",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.34,
+  "n_components": 11,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-077/nsdi23-077_fig6_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-077/nsdi23-077_fig6_p8_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Medium-confidence, 11-component exemplar: a Host band of four send-queue boxes sits above the RNIC band, inside which an Event Mux core with four submodules (QPC, Schedule Policy, Schedule Queue) aggregates doorbell, credit and dequeue signals.",
+      "what_to_learn": "Place the caller band's repeated small boxes (four send queues here) in one row above the hardware band, then let a single mux-shaped core inside that band collect every event type by arrow direction alone rather than colour, so in and out of the core reads as the only code that matters."
+    }
+  ]
+}

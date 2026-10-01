@@ -1,0 +1,213 @@
+{
+  "paper_id": "osdi26-018",
+  "fig": "7",
+  "system": {
+    "name": "Syncopate",
+    "one_liner": "a compiler system for automatic chunk-centric compute-communication overlap in multi-GPU AI kernels",
+    "domain": [
+      "ml-systems",
+      "compiler"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Copy Engine",
+        "role": "dedicated hardware engine driving communication in backend (a)",
+        "container": "(a) Communication with copy engine",
+        "novel": false
+      },
+      {
+        "name": "SM 0",
+        "role": "streaming multiprocessor listed in the SM roster",
+        "container": "(a)/(b)/(c) panels",
+        "novel": false
+      },
+      {
+        "name": "SM 1",
+        "role": "streaming multiprocessor listed in the SM roster",
+        "container": "(a)/(b)/(c) panels",
+        "novel": false
+      },
+      {
+        "name": "SM n (TMA/CUDA)",
+        "role": "specialized SM dedicated to communication in backend (b)",
+        "container": "(b) Communication with specialized SM",
+        "novel": false
+      },
+      {
+        "name": "Tile 0",
+        "role": "compute tile produced before communication",
+        "container": "(a)/(b)/(c) panels",
+        "novel": false
+      },
+      {
+        "name": "Tile 1",
+        "role": "compute tile produced before communication",
+        "container": "(a)/(b)/(c) panels",
+        "novel": false
+      },
+      {
+        "name": "RS Kernel 0",
+        "role": "communication unit realized as a separate kernel in backend (a)",
+        "container": "(a) Communication with copy engine",
+        "novel": true
+      },
+      {
+        "name": "RS Kernel 1",
+        "role": "communication unit realized as a separate kernel in backend (a)",
+        "container": "(a) Communication with copy engine",
+        "novel": true
+      },
+      {
+        "name": "RS Chunk 0",
+        "role": "communication unit realized per chunk on the specialized SM in backend (b)",
+        "container": "(b) Communication with specialized SM",
+        "novel": true
+      },
+      {
+        "name": "RS Chunk 1",
+        "role": "communication unit realized per chunk on the specialized SM in backend (b)",
+        "container": "(b) Communication with specialized SM",
+        "novel": true
+      },
+      {
+        "name": "RS Tile 0",
+        "role": "communication unit co-located with compute on the same SM in backend (c)",
+        "container": "(c) Communication with co-located SM",
+        "novel": true
+      },
+      {
+        "name": "RS Tile 1",
+        "role": "communication unit co-located with compute on the same SM in backend (c)",
+        "container": "(c) Communication with co-located SM",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Tile 0",
+        "to": "RS Kernel 0",
+        "what": "Global Memory Signal",
+        "step": null
+      },
+      {
+        "from": "Tile 1",
+        "to": "RS Kernel 1",
+        "what": "Global Memory Signal",
+        "step": null
+      },
+      {
+        "from": "Tile 0",
+        "to": "RS Chunk 0",
+        "what": "Global Memory Signal",
+        "step": null
+      },
+      {
+        "from": "Tile 1",
+        "to": "RS Chunk 1",
+        "what": "Global Memory Signal",
+        "step": null
+      },
+      {
+        "from": "Tile 0",
+        "to": "RS Tile 0",
+        "what": "Shared Memory Barrier",
+        "step": null
+      },
+      {
+        "from": "Tile 1",
+        "to": "RS Tile 1",
+        "what": "Shared Memory Barrier",
+        "step": null
+      }
+    ],
+    "key_idea": "The same logical chunk-level communication schedule can be realized by several backends that differ in signaling mechanism and how SM resources are divided between compute and communication.",
+    "reading_order": "Top to bottom through three stacked comparison panels (a) copy engine, (b) specialized SM, (c) co-located SM; within each panel, left to right from the SM/engine roster through tiles to the resulting communication units."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.35,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e3f2fd",
+        "used_for": "light blue box for the first tile column in each panel"
+      },
+      {
+        "hex": "#bbdefb",
+        "used_for": "darker blue box for the second tile column in each panel"
+      },
+      {
+        "hex": "#b1001c",
+        "used_for": "red signaling annotations (Global Memory Signal / Shared Memory Barrier) and their arrows"
+      },
+      {
+        "hex": "#eceff1",
+        "used_for": "light gray SM/engine roster box on the left of each panel"
+      },
+      {
+        "hex": "#e8f5e9",
+        "used_for": "light green boxes for resulting RS (communication) units"
+      },
+      {
+        "hex": "#a5d6a7",
+        "used_for": "green shading variant on RS unit boxes"
+      },
+      {
+        "hex": "#c8e6c9",
+        "used_for": "green shading variant on RS unit boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.93pt, solid black outlines with dashed separators inside the SM roster boxes",
+    "font": "HelveticaNeue sans-serif italic labels, ~6.5-7.5pt",
+    "corners": "rounded",
+    "arrows": "curved, red-highlighted arrows depicting the signaling path",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light blue = first tile column, darker blue = second tile column, light gray = SM/engine roster, green = resulting communication (RS) unit, red = signaling/barrier mechanism connecting tiles to their RS unit",
+    "line_style_means": "dashed lines inside the left roster box separate individual SMs; solid black borders enclose each comparison panel",
+    "emphasis": "identical internal tile-to-RS structure repeated across the three panels isolates the one thing that changes: which hardware resource drives communication and how readiness is signaled",
+    "reusable_patterns": [
+      "stacked (a)/(b)/(c) comparison panels sharing the same internal layout to isolate a single varying mechanism"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "compiler",
+    "gpu communication",
+    "copy engine",
+    "tma",
+    "sm allocation",
+    "compute-communication overlap"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Syncopate: Fine-Grained Overlap Compiler (p.9-10)"
+    ],
+    "evidence": [
+      "the same logical schedule can be realized by several backends that differ in how they move chunks",
+      "tiles are produced on one side and consumed by operations on the other side",
+      "the compiler can instantiate each transfer using any of the backends in Fig. 7"
+    ]
+  },
+  "summary": "This figure from the Syncopate paper compares three backends for realizing the same chunk-level communication schedule generated by the compiler. Panel (a) shows communication issued by a dedicated copy engine with global-memory signaling: tiles produced by compute SMs signal readiness to separate RS Kernel units. Panel (b) shows a dedicated SM (running TMA/CUDA) driving the transfer as RS Chunk units, again via global-memory signaling. Panel (c) shows communication co-located with compute on the same SM, using a faster shared-memory barrier to hand tiles to RS Tile units. All three panels share an identical internal structure (an SM/engine roster, a tile-production stage, and a resulting communication-unit stage) so the reader can directly compare how each backend differs only in its signaling mechanism and its allocation of SM resources between compute and communication.",
+  "summary_zh": "该图比较了 Syncopate 编译器为同一通信调度选择的三种后端实现：(a) 拷贝引擎配合全局内存信号，(b) 专用 SM 驱动传输，(c) 通信与计算共处同一 SM 并使用共享内存屏障，三者结构一致仅信号机制不同。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

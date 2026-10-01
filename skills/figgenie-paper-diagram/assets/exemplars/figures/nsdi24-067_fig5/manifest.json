@@ -1,0 +1,55 @@
+{
+  "id": "nsdi24-067_fig5",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-067",
+  "fig": "5",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "FIGURE 5: MetaOpt automatically converts the bi-level problem to a single-level optimization. It supports any follower, which either (1) is a convex optimization; (2) is a feasibility problem; or (3) has an objective that aligns with the outer problem.",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "tree",
+  "subject": "how MetaOpt decides whether to leave an inner problem as is, mark it NA, or rewrite it via primal-dual KKT",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 3.36,
+  "n_elements": 7,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-067/nsdi24-067_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-067/nsdi24-067_fig5_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "MetaOpt avoids needlessly rewriting an inner problem: if aligned with the outer objective or merely a feasibility problem, its constraints are merged in as is; otherwise a convex problem gets a primal-dual/KKT rewrite, and anything else is marked NA.",
+      "what_to_learn": "A left-to-right diamond cascade: `Y` drops to a terminal box, `N` continues right, so the unhandled case lands last",
+      "note_source": "doc"
+    }
+  ]
+}

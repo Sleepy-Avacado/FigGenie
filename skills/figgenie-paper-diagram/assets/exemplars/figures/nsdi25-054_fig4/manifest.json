@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-054_fig4",
+  "paper_id": "nsdi25-054",
+  "fig": "4",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 4: Horizontal migration overview (When Granules reach a barrier control point, such as MPI_Barrier, the application’s main Granule queries the resource scheduler. If triggered, the runtime performs a horizontal migration by taking a snapshot of the migrated Granule and transferring it to the ",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 1.84,
+  "n_components": 10,
+  "n_flows": 11,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-054/nsdi25-054_fig4_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-054/nsdi25-054_fig4_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "A single numbered thread (circled steps 1 through 12) runs continuously across all three panels (Normal execution, Barrier control point, Migration), unlike figures that restart numbering each panel, tying one scenario together end to end.",
+      "what_to_learn": "When three panels show one continuous scenario, number the steps once across all of them instead of restarting per panel, and reuse the same backend colour coding (red MPI, green POSIX) from the architecture figure so panels cross-reference cleanly; budget more room per step than this figure's dense twelve-step layout."
+    }
+  ]
+}

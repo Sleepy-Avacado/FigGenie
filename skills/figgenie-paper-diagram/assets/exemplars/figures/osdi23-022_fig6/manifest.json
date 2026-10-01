@@ -1,0 +1,55 @@
+{
+  "id": "osdi23-022_fig6",
+  "kind": "mechanism",
+  "paper_id": "osdi23-022",
+  "fig": "6",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 6: Inferring statement-dependency graphs for Figure 1.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "mixed",
+  "subject": "how matching outputs of instrumented BWR/VSR reads across two transactions' statements are mapped to specific dependency-graph edges",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 0.92,
+  "n_elements": 10,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-022/osdi23-022_fig6_p7_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-022/osdi23-022_fig6_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Colour links two overlapping instrumented-read outputs, (1,20) and (2,43,8), directly to the predicate-anti and item-anti edges they produce in the inferred statement-dependency graph.",
+      "what_to_learn": "a code listing stacked above the graph it produces, with colour-coded dashed connectors tying specific highlighted lines to the specific edges they justify",
+      "note_source": "record"
+    }
+  ]
+}

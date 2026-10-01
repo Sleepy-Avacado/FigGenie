@@ -1,0 +1,42 @@
+{
+  "id": "sosp24-041_fig1",
+  "paper_id": "sosp24-041",
+  "fig": "1",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 1. Sequence parallelism in the prefill phase.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.33,
+  "n_components": 8,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-041/src/fig1_background_sequence_parallelism_v3.svg",
+    "preview.png": "lab/extracted/sosp24-041/src/fig1_background_sequence_parallelism_v3.png",
+    "print.png": "lab/extracted/sosp24-041/sosp24-041_fig1_p2_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Three instance lanes separated by dashed rules, with lane labels on the right and phase brackets underneath.",
+      "what_to_learn": "Lanes (who) run horizontally with labels in one gutter; phases (when) are dashed vertical rules with brackets under the axis - the two never share a device."
+    }
+  ]
+}

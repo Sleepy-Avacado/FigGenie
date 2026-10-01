@@ -1,0 +1,217 @@
+{
+  "paper_id": "nsdi23-035",
+  "fig": "3",
+  "system": {
+    "name": "ExoPlane",
+    "one_liner": "an operating system that augments on-rack switch resources with external devices via a packet-pinning model",
+    "domain": [
+      "networking",
+      "programmable-switches",
+      "os-kernel"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Network Operator",
+        "role": "provides device information, cross-app requirements, and objective functions as input",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Developer(s)",
+        "role": "provides P4 programs plus app-specific requirements and state synchronization logic as input",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "P4 programs",
+        "role": "developer-supplied P4 program code fed into the ExoPlane planner",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ExoPlane planner (§5)",
+        "role": "profiles P4 programs, computes optimal resource allocation, and merges P4 programs into one program",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Profiling P4 programs",
+        "role": "planner sub-step that profiles resource use of the input P4 programs",
+        "container": "ExoPlane planner (§5)",
+        "novel": true
+      },
+      {
+        "name": "Optimal resource allocation",
+        "role": "planner sub-step that allocates switch and external-device resources across applications",
+        "container": "ExoPlane planner (§5)",
+        "novel": true
+      },
+      {
+        "name": "Merging P4 programs",
+        "role": "planner sub-step that merges multiple applications' P4 programs into one program",
+        "container": "ExoPlane planner (§5)",
+        "novel": true
+      },
+      {
+        "name": "Merged P4 program",
+        "role": "planner's output program deployed onto the on-rack resource augmentation architecture",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "On-rack resource augmentation arch.",
+        "role": "the switch plus external-device hardware that executes application processing",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Prog. Switch",
+        "role": "programmable switch that runs the merged program and can hand packets to external devices",
+        "container": "On-rack resource augmentation arch.",
+        "novel": false
+      },
+      {
+        "name": "External devices",
+        "role": "auxiliary devices attached to the rack that process packets pinned to them",
+        "container": "On-rack resource augmentation arch.",
+        "novel": false
+      },
+      {
+        "name": "ExoPlane runtime environment (§4)",
+        "role": "places workloads on devices, manages app state, and handles load balancing and external-device failures at runtime",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Workload placement",
+        "role": "runtime sub-function that places applications and flows on switch or external devices",
+        "container": "ExoPlane runtime environment (§4)",
+        "novel": true
+      },
+      {
+        "name": "Load balancing and fault handling",
+        "role": "runtime sub-function that balances load and handles external-device failures",
+        "container": "ExoPlane runtime environment (§4)",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Network Operator",
+        "to": "ExoPlane planner (§5)",
+        "what": "device information, cross-app requirements, objective functions",
+        "step": null
+      },
+      {
+        "from": "Developer(s)",
+        "to": "ExoPlane planner (§5)",
+        "what": "app-specific requirements and state synchronization logic",
+        "step": null
+      },
+      {
+        "from": "P4 programs",
+        "to": "ExoPlane planner (§5)",
+        "what": "developer P4 program code",
+        "step": null
+      },
+      {
+        "from": "ExoPlane planner (§5)",
+        "to": "Merged P4 program",
+        "what": "merged, profiled, and allocated P4 program",
+        "step": null
+      },
+      {
+        "from": "Merged P4 program",
+        "to": "On-rack resource augmentation arch.",
+        "what": "deployed merged program",
+        "step": null
+      },
+      {
+        "from": "On-rack resource augmentation arch.",
+        "to": "ExoPlane runtime environment (§4)",
+        "what": "workload changes and device status feeding runtime management",
+        "step": null
+      }
+    ],
+    "key_idea": "ExoPlane splits control into a long-term planner that merges and allocates developer P4 programs from operator/developer inputs, and a short-term runtime environment that places and rebalances workloads on the switch and external devices.",
+    "reading_order": "Top-down: Network Operator and Developer(s) inputs (green) feed the ExoPlane planner (blue, long-term), which outputs a merged P4 program to the on-rack hardware, managed at runtime by the ExoPlane runtime environment (yellow, short-term)."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.37,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill for system-input boxes (operator and developer inputs, P4 programs)"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "light blue fill for the ExoPlane planner, the long-term-planning module"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow fill for the ExoPlane runtime environment, the short-term-management module"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for neutral boxes such as the merged program and hardware containers"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid thin borders (~0.9pt) on all boxes and group containers, no dashing",
+    "font": "Calibri sans-serif, about 7.5pt, bold for module titles (ExoPlane planner, ExoPlane runtime environment)",
+    "corners": "square",
+    "arrows": "straight black arrows with filled heads connecting inputs to the planner and the planner to the hardware/runtime layers",
+    "icons": "two vector person icons representing Network Operator and Developer(s)"
+  },
+  "encoding": {
+    "color_means": "green = system input, blue = long-term planning module (ExoPlane planner), yellow = short-term management module (ExoPlane runtime environment)",
+    "line_style_means": null,
+    "emphasis": "a three-item color legend (System input / Long-term planning / Short-term management) at the left explicitly labels the meaning of green, yellow, and blue boxes",
+    "reusable_patterns": [
+      "color-legend key defining input vs. planning-module vs. runtime-module boxes",
+      "layered top-down flow from external inputs through a planning stage to a managed hardware/runtime layer"
+    ],
+    "weaknesses": [
+      "many similarly-styled nested boxes at different levels require the legend to disambiguate roles"
+    ]
+  },
+  "tags": [
+    "programmable-switch",
+    "p4",
+    "resource-allocation",
+    "workload-placement",
+    "network-os",
+    "packet-pinning"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.5)"
+    ],
+    "evidence": [
+      "ExoPlane implements the packet-pinning operating model via two key components (Fig 3):",
+      "The ExoPlane planner takes inputs from developers and the network operator and allocates resources",
+      "Green boxes represent inputs and yellow and blue boxes indicate key modules."
+    ]
+  },
+  "summary": "This figure gives an overview of ExoPlane, an operating system for augmenting on-rack switch resources with external devices under a packet-pinning model. Green boxes show the inputs: a Network Operator supplies device information, cross-app requirements, and objective functions, while Developer(s) supply P4 programs, app-specific requirements, and state synchronization logic. These feed the blue ExoPlane planner (§5), a long-term-planning module that profiles P4 programs, computes optimal resource allocation, and merges the programs into one Merged P4 program deployed on the on-rack resource augmentation architecture (the programmable switch and external devices). The yellow ExoPlane runtime environment (§4) is the short-term-management module that handles workload placement and load balancing and fault handling at runtime. A small color legend at the left explicitly maps green/yellow/blue to system input, long-term planning, and short-term management.",
+  "summary_zh": "该图展示ExoPlane系统概览：绿色为系统输入（网络运营商与开发者提供的信息和P4程序），蓝色ExoPlane规划器负责长期资源分配并合并P4程序，黄色ExoPlane运行时环境负责工作负载放置与故障处理。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

@@ -1,0 +1,227 @@
+{
+  "paper_id": "nsdi26-072",
+  "fig": "8",
+  "system": {
+    "name": "Agentix",
+    "one_liner": "a serving engine that treats LLM agents as stateful general programs, scheduling their LLM calls across engine instances",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Programs (Frontend, §5)",
+        "role": "user's locally running program that issues LLM calls within a stateful session",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "MCTS",
+        "role": "example new agent program using Monte Carlo Tree Search",
+        "container": "New Programs",
+        "novel": false
+      },
+      {
+        "name": "ReAct",
+        "role": "example new agent program using the ReAct pattern",
+        "container": "New Programs",
+        "novel": false
+      },
+      {
+        "name": "WebAgent",
+        "role": "example running agent program that browses the web",
+        "container": "Running",
+        "novel": false
+      },
+      {
+        "name": "Code",
+        "role": "example running agent program that writes/executes code",
+        "container": "Running",
+        "novel": false
+      },
+      {
+        "name": "Process Table",
+        "role": "global table tracking program metadata (service time, thread state, waiting times) across sessions (§4.2)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Load-Balancer",
+        "role": "routes LLM calls to engine instances using process-table and engine data (§4.3)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Engine Data",
+        "role": "per-engine metadata used by the load balancer to route calls",
+        "container": "Load-Balancer",
+        "novel": true
+      },
+      {
+        "name": "LLM Engine",
+        "role": "stateful serving engine instance executing scheduled LLM calls",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Priority Function",
+        "role": "computes call priority for scheduling (§4.2)",
+        "container": "LLM Engine",
+        "novel": true
+      },
+      {
+        "name": "Memory Manager",
+        "role": "manages memory allocation for KV cache and execution state (§4.2)",
+        "container": "LLM Engine",
+        "novel": true
+      },
+      {
+        "name": "KV Cache",
+        "role": "stores cached attention state for in-flight and paused LLM calls",
+        "container": "LLM Engine",
+        "novel": false
+      },
+      {
+        "name": "Scheduler",
+        "role": "schedules which LLM call runs next on the engine (§4.2)",
+        "container": "LLM Engine",
+        "novel": true
+      },
+      {
+        "name": "Model Executor",
+        "role": "executes the LLM forward pass for the scheduled call",
+        "container": "LLM Engine",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Programs (Frontend, §5)",
+        "to": "Load-Balancer",
+        "what": "LLM Call",
+        "step": null
+      },
+      {
+        "from": "Programs (Frontend, §5)",
+        "to": "Process Table",
+        "what": "Start Session",
+        "step": null
+      },
+      {
+        "from": "Process Table",
+        "to": "LLM Engine",
+        "what": "program metadata informing scheduling",
+        "step": null
+      },
+      {
+        "from": "Load-Balancer",
+        "to": "LLM Engine",
+        "what": "routed LLM call",
+        "step": null
+      },
+      {
+        "from": "Priority Function",
+        "to": "Scheduler",
+        "what": "call priority",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Memory Manager",
+        "what": "scheduling decision requiring memory allocation",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Model Executor",
+        "what": "next call to execute",
+        "step": null
+      }
+    ],
+    "key_idea": "Agentix tracks every stateful program session in a global process table, whose per-program metadata informs both the load balancer and the engine's scheduler and memory manager.",
+    "reading_order": "Top-down from the user's local Programs box, through 'LLM Call' to the Load-Balancer, into the LLM Engine's internal scheduling boxes; Process Table feeds in from the left."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.19,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#efefef",
+        "used_for": "neutral gray fills for the Programs and LLM Engine outer boxes"
+      },
+      {
+        "hex": "#e6efe3",
+        "used_for": "pale green fill for the Load-Balancer and Model Executor boxes"
+      },
+      {
+        "hex": "#fff2e5",
+        "used_for": "pale orange fill for the Scheduler box"
+      },
+      {
+        "hex": "#f4cccc",
+        "used_for": "pale red/pink fill for the Memory Manager box"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red arrows linking Priority Function, Scheduler and Memory Manager inside the LLM Engine"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed borders around the 'New Programs' and 'Process Table' groupings; solid borders elsewhere, ~0.6pt",
+    "font": "serif (Century Schoolbook) for labels, monospace (Inconsolata) for the JSON snippet, 6-8.5pt",
+    "corners": "mixed",
+    "arrows": "thin black arrows for the main control/data flow, plus red arrows looping between scheduling boxes inside the LLM Engine",
+    "icons": "vector icons: a person (user), a magnifying glass over the process table, and stacked-paper icons indicating multiple program/engine instances"
+  },
+  "encoding": {
+    "color_means": "pale green/orange/pink fills distinguish the Load-Balancer/Model-Executor, Scheduler, and Memory-Manager boxes inside the engine; red arrows mark the scheduler's internal decision loop",
+    "line_style_means": "dashed boxes group example programs (New Programs) and the process-table detail; solid boxes and arrows carry the main session/call flow",
+    "emphasis": "the stacked-paper icons behind Programs and LLM Engine signal many concurrent programs/instances, while the Process Table's arrow wrapping into the engine highlights it as shared state informing scheduling",
+    "reusable_patterns": [
+      "global metadata table feeding both a load balancer and a downstream scheduler",
+      "stacked-box icon to denote many concurrent instances of a component"
+    ],
+    "weaknesses": [
+      "dense with 44 text boxes at single-column width",
+      "the long wraparound arrow from Process Table to the engine's scheduler is easy to miss"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "agent-systems",
+    "scheduling",
+    "load-balancing",
+    "stateful-sessions",
+    "KV-cache"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Agentix Design (p.7)"
+    ],
+    "evidence": [
+      "Figure 8 illustrates Agentix's overall architecture",
+      "Agentix is stateful: programs execute from the user’s local machine, establish a session with the Agentix",
+      "Agentix adds a corresponding entry to a global process table"
+    ]
+  },
+  "summary": "This figure shows Agentix's overall architecture for serving LLM agents as stateful general programs. Users run Programs locally (new ones like MCTS/ReAct, or already-Running ones like WebAgent/Code), which start a session and issue LLM Calls to Agentix's backend. Starting a session adds an entry to a global Process Table recording metadata such as PID, service time, and thread state for each program. This table informs both the Load-Balancer, which routes calls to LLM Engine instances using per-engine data, and the LLM Engine's own internal Scheduler and Memory Manager. Inside each LLM Engine, a Priority Function, Scheduler, Memory Manager, KV Cache, and Model Executor cooperate (linked by red arrows) to decide and execute the next LLM call. The figure argues that treating sessions as first-class, tracked state is what lets Agentix schedule and load-balance LLM calls more effectively than stateless engines.",
+  "summary_zh": "该图展示 Agentix 架构：本地程序发起会话并提交 LLM 调用；全局进程表记录会话元数据，为负载均衡器与引擎内调度器、内存管理器提供依据，共同决定调用的路由与执行。",
+  "confidence": "high",
+  "notes": "layout-proposal: shared-table-informed layers — a top-down Programs/Load-Balancer/Engine stack augmented by a side Process Table whose data feeds both the load balancer and the engine's internal scheduler; 'layered' is the closest named template but does not capture this cross-cutting shared table.",
+  "venue": "NSDI26"
+}

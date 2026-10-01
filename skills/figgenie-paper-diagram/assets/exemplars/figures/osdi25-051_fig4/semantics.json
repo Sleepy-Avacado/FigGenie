@@ -1,0 +1,327 @@
+{
+  "paper_id": "osdi25-051",
+  "fig": "4",
+  "system": {
+    "name": "bpftime",
+    "one_liner": "a userspace runtime that extends applications with eBPF-compatible extensions, safely and efficiently, without kernel involvement",
+    "domain": [
+      "os-kernel",
+      "tracing",
+      "extensibility"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "eBPF Program Source Code",
+        "role": "source code input to the standard eBPF toolchain (reused from eBPF)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "eBPF compiler",
+        "role": "compiles eBPF program source into bytecode (reused from eBPF)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "eBPF application",
+        "role": "the resulting user application containing bytecode and the loader library",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "eBPF bytecode",
+        "role": "compiled eBPF bytecode inside the eBPF application",
+        "container": "eBPF application",
+        "novel": false
+      },
+      {
+        "name": "libbpf",
+        "role": "the standard eBPF userspace library used to load bytecode",
+        "container": "eBPF application",
+        "novel": false
+      },
+      {
+        "name": "UbiBPF Loader",
+        "role": "loads and prepares an eBPF application for execution atop bpftime's userspace runtime",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Binary Rewriter",
+        "role": "rewrites the target binary to redirect eBPF hook points to bpftime",
+        "container": "UbiBPF Loader",
+        "novel": true
+      },
+      {
+        "name": "JIT compiler",
+        "role": "JIT-compiles eBPF bytecode; reused eBPF component, appears in both the UbiBPF Loader and the kernel-side chain",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "verifier",
+        "role": "verifies eBPF bytecode safety; reused eBPF component, appears in both the UbiBPF Loader and the kernel-side chain",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Syscall Interposition",
+        "role": "interposes on eBPF-related system calls, the narrow waist where bpftime intercepts the existing eBPF ecosystem",
+        "container": "UbiBPF Loader",
+        "novel": true
+      },
+      {
+        "name": "UbiBPF user runtime",
+        "role": "bpftime's userspace runtime executing loaded eBPF extensions in-process",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Target process",
+        "role": "the host application(s) being extended, containing uprobe/tracepoint/syscall hook points",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "uprobe",
+        "role": "a userspace probe hook point in the target process (reused from eBPF)",
+        "container": "Target process",
+        "novel": false
+      },
+      {
+        "name": "userspace tracepoint",
+        "role": "a new userspace tracepoint hook point introduced by bpftime",
+        "container": "Target process",
+        "novel": true
+      },
+      {
+        "name": "Syscall tracepoint",
+        "role": "a new syscall-tracepoint hook point introduced by bpftime for attaching extensions to syscalls in userspace",
+        "container": "Target process",
+        "novel": true
+      },
+      {
+        "name": "UbiBPF maps",
+        "role": "shared map mechanism for sharing data across extensions, bridging kernel and userspace",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "syscall",
+        "role": "represents syscall events flowing between UbiBPF maps and the kernel-side hook points",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "eBPF runtime",
+        "role": "the traditional in-kernel eBPF runtime executing kernel-side eBPF programs (reused from eBPF)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "tracepoint",
+        "role": "a kernel tracepoint hook point (reused from eBPF)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "kprobe",
+        "role": "a kernel kprobe hook point (reused from eBPF)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "socket",
+        "role": "a kernel socket hook point (reused from eBPF)",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "eBPF Program Source Code",
+        "to": "eBPF compiler",
+        "what": "source code",
+        "step": null
+      },
+      {
+        "from": "eBPF compiler",
+        "to": "eBPF bytecode",
+        "what": "eBPF bytecode",
+        "step": null
+      },
+      {
+        "from": "libbpf",
+        "to": "Binary Rewriter",
+        "what": "loading eBPF application",
+        "step": null
+      },
+      {
+        "from": "libbpf",
+        "to": "Syscall Interposition",
+        "what": "syscalls crossing into kernel",
+        "step": null
+      },
+      {
+        "from": "Syscall Interposition",
+        "to": "verifier",
+        "what": "verify bytecode",
+        "step": null
+      },
+      {
+        "from": "verifier",
+        "to": "JIT compiler",
+        "what": "verified bytecode",
+        "step": null
+      },
+      {
+        "from": "JIT compiler",
+        "to": "Binary Rewriter",
+        "what": "JIT-compiled code",
+        "step": null
+      },
+      {
+        "from": "Binary Rewriter",
+        "to": "UbiBPF user runtime",
+        "what": "rewritten binary / loaded program",
+        "step": null
+      },
+      {
+        "from": "verifier",
+        "to": "JIT compiler",
+        "what": "verified bytecode (kernel-side chain)",
+        "step": null
+      },
+      {
+        "from": "JIT compiler",
+        "to": "eBPF runtime",
+        "what": "JIT-compiled code (kernel-side chain)",
+        "step": null
+      },
+      {
+        "from": "UbiBPF user runtime",
+        "to": "Target process",
+        "what": "extension execution (uprobe/userspace tracepoint/syscall tracepoint attachment)",
+        "step": null
+      },
+      {
+        "from": "Syscall tracepoint",
+        "to": "UbiBPF maps",
+        "what": "extension execution data",
+        "step": null
+      },
+      {
+        "from": "syscall",
+        "to": "tracepoint",
+        "what": "extension execution (syscall to kernel tracepoint)",
+        "step": null
+      },
+      {
+        "from": "eBPF runtime",
+        "to": "tracepoint",
+        "what": "extension execution",
+        "step": null
+      },
+      {
+        "from": "UbiBPF user runtime",
+        "to": "UbiBPF maps",
+        "what": "shared map access (bidirectional)",
+        "step": null
+      },
+      {
+        "from": "UbiBPF maps",
+        "to": "eBPF runtime",
+        "what": "shared map access (bidirectional)",
+        "step": null
+      },
+      {
+        "from": "UbiBPF Loader",
+        "to": "UbiBPF maps",
+        "what": "shared map access (bidirectional)",
+        "step": null
+      }
+    ],
+    "key_idea": "bpftime reimplements the eBPF toolchain's narrow waist (syscall interposition and shared maps) in userspace, letting existing eBPF bytecode load and JIT-compile into a UbiBPF user runtime that attaches to uprobes and new userspace tracepoints without kernel involvement.",
+    "reading_order": "Left to right: the standard eBPF toolchain (source, compiler, bytecode/libbpf) feeds bpftime's UbiBPF Loader; top (Userspace) and bottom (Kernel) halves mirror load-verify-JIT-execute chains reaching each side's hook points."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.97,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill for components reused from standard eBPF (e.g., verifier, JIT compiler, eBPF runtime, uprobe, tracepoint, kprobe, socket)"
+      },
+      {
+        "hex": "#ffcc99",
+        "used_for": "orange fill for components new to bpftime (e.g., UbiBPF Loader, Binary Rewriter, Syscall Interposition, UbiBPF user runtime, UbiBPF maps, userspace/syscall tracepoint)"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue arrows showing the compile-and-load execution flow"
+      },
+      {
+        "hex": "#00b050",
+        "used_for": "green arrows showing the flow when an eBPF extension executes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.43pt) rounded borders; solid black outlines for most boxes, colored (blue/green) arrows for the two execution-flow types, plus a bidirectional white-fill/black-outline arrow for shared-map access",
+    "font": "Aptos / Aptos-Bold, uniformly ~5pt, almost no bold",
+    "corners": "rounded",
+    "arrows": "two execution-flow colors (blue = compile/load, green = extension execution) plus black double-headed arrows for shared-memory map access; many small arrows (31 heads) given the figure's density",
+    "icons": "a cylinder icon for UbiBPF maps and a stacked-page icon for multiple Target process instances"
+  },
+  "encoding": {
+    "color_means": "white marks components reused unchanged from standard eBPF; orange marks components bpftime adds or modifies; blue arrows trace the one-time compile-and-load path; green arrows trace the repeated runtime path when an extension executes",
+    "line_style_means": "plain colored arrows carry directional execution flow (blue, green); black double-headed arrows (white fill, black outline) mark bidirectional shared-memory access to UbiBPF maps, distinct from the directional flows",
+    "emphasis": "Consistently coloring every bpftime-original component orange against an all-white standard-eBPF backdrop lets the reader see, at a glance, exactly how much of the existing eBPF toolchain bpftime reuses versus replaces",
+    "reusable_patterns": [
+      "two-color component coding (new vs. reused/existing) applied consistently across an entire architecture diagram",
+      "two differently-colored arrow types distinguishing a one-time setup flow from a repeated runtime flow",
+      "mirrored top/bottom sub-pipelines for two execution environments (userspace vs. kernel) of the same underlying technology"
+    ],
+    "weaknesses": [
+      "the caption's explanation of the fourth arrow style (white arrows with black outline) is cut off in the extracted text, so that arrow's precise meaning is not fully confirmed here",
+      "no in-figure legend repeats the caption's color/arrow key, so the coding must be learned from the caption alone"
+    ]
+  },
+  "tags": [
+    "ebpf",
+    "extensibility",
+    "userspace-runtime",
+    "tracing",
+    "observability",
+    "sandboxing"
+  ],
+  "provenance": {
+    "sections": [
+      "4 bpftime Design (p.8)"
+    ],
+    "evidence": [
+      "bpftime identifies a narrow waist in the current eBPF ecosystem and interposes at this point.",
+      "We implemented bpftime in 13,000 lines of code; Figure 4 provides the high-level design.",
+      "White components are from eBPF; orange components are new to bpftime."
+    ]
+  },
+  "summary": "Figure 4 shows bpftime's design, color-coding every box white (reused from eBPF) or orange (new to bpftime). On the left, a standard eBPF toolchain compiles source into bytecode loaded via libbpf. This feeds bpftime's UbiBPF Loader, whose Binary Rewriter, JIT compiler, verifier, and Syscall Interposition chain (blue, load-time arrows) prepare an eBPF application for bpftime's UbiBPF user runtime, which attaches to a Target process's uprobe and two new hook points, userspace tracepoint and Syscall tracepoint. A mirrored, unmodified kernel-side chain (verifier, JIT compiler, eBPF runtime) still serves kernel tracepoint, kprobe, and socket hooks. Both halves share data through UbiBPF maps, accessed bidirectionally (black double arrows) and along green arrows that trace an extension's actual execution. The whole system spans a dashed Userspace/Kernel boundary, showing bpftime's user-level reimplementation running alongside the original in-kernel path.",
+  "summary_zh": "图4展示bpftime设计:白色为沿用eBPF组件,橙色为新增组件。左侧工具链经libbpf进入UbiBPF Loader,供运行时挂载uprobe与新tracepoint;内核侧保留verifier/JIT路径,双方经maps共享数据。",
+  "confidence": "medium",
+  "notes": "layout-proposal: mirrored-userspace-kernel-pipeline — a Userspace/Kernel layered split where each half runs a near-mirrored load/verify/JIT/execute sub-pipeline, fed by a separate linear eBPF-toolchain flow on the left; the source caption is truncated before explaining the fourth (white/black-outline) arrow style, so that arrow's exact meaning is inferred from the image alone.",
+  "venue": "OSDI25"
+}

@@ -1,0 +1,175 @@
+{
+  "paper_id": "asplos25-036",
+  "fig": "3",
+  "system": {
+    "name": "BatchZK",
+    "one_liner": "a fully pipelined GPU-accelerated system for high-throughput batch generation of zero-knowledge proofs",
+    "domain": [
+      "cryptography",
+      "gpu-computing"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Bipartite Graph",
+        "role": "representation used to derive the sparse matrix for each encoding stage, with left vertices as columns and right vertices as rows",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Stage 1",
+        "role": "outermost recursive encoding stage: multiplies the Input Vector by a Sparse Matrix, forwards the result to Stage 2, then combines the returned vector with a second Sparse Matrix multiplication to form its Output",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Sparse Matrix",
+        "role": "sparse matrix derived from a bipartite graph, used in the stage's vector-matrix multiplication",
+        "container": "Stage 1",
+        "novel": false
+      },
+      {
+        "name": "Input Vector",
+        "role": "input vector for the recursive encoding stage",
+        "container": "Stage 1",
+        "novel": false
+      },
+      {
+        "name": "Output",
+        "role": "result of a stage's vector-matrix multiplications, returned to the caller",
+        "container": "Stage 1",
+        "novel": false
+      },
+      {
+        "name": "Stage 2",
+        "role": "nested recursive encoding stage invoked from Stage 1, structurally identical, which in turn invokes Stage 3",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Stage 3",
+        "role": "further nested recursive stage, abbreviated in the figure",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Bipartite Graph",
+        "to": "Sparse Matrix",
+        "what": "each bipartite graph is represented as a sparse matrix",
+        "step": null
+      },
+      {
+        "from": "Input Vector",
+        "to": "Sparse Matrix",
+        "what": "vector-matrix multiplication (X)",
+        "step": null
+      },
+      {
+        "from": "Stage 1",
+        "to": "Stage 2",
+        "what": "intermediate vector passed into the next recursive stage",
+        "step": null
+      },
+      {
+        "from": "Stage 2",
+        "to": "Stage 3",
+        "what": "intermediate vector passed into the next recursive stage",
+        "step": null
+      },
+      {
+        "from": "Stage 2",
+        "to": "Stage 1",
+        "what": "vector returned from the subsequent stage, combined via a second vector-matrix multiplication",
+        "step": null
+      },
+      {
+        "from": "Sparse Matrix",
+        "to": "Output",
+        "what": "result of vector-matrix multiplication combined with the input and returned vectors",
+        "step": null
+      }
+    ],
+    "key_idea": "The Spielman linear-time encoder recursively multiplies an input vector by sparse matrices derived from bipartite graphs, nesting a smaller sub-problem inside each encoding stage.",
+    "reading_order": "Top-left bipartite graph explains the sparse matrix; the bottom Stage 1 box shows the recursive multiply-then-recurse-then-multiply pattern repeated in Stage 2 at top right."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.03,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale-orange fill of the Sparse Matrix boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill of the Input Vector / Output bars"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light-gray fill of the outer Stage container panels"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "light-gray fill of the numeric sparse-matrix grid box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.59pt black, solid",
+    "corners": "square",
+    "arrows": "orthogonal arrows with filled triangular heads, plus dotted connector lines linking a stage's forwarded/returned vector to the nested stage box",
+    "font": "Helvetica / Helvetica-Bold sans-serif, 7-11pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pale orange marks the sparse-matrix operand; pale yellow marks input/output vectors; gray marks the stage container and the numeric matrix grid",
+    "line_style_means": "solid arrows show the multiply-then-recurse data flow; dotted lines connect a stage's forwarded/returned vector to its nested stage box",
+    "emphasis": "the nested Stage 2 box, drawn at smaller relative size next to Stage 1, visually conveys the recursive, self-similar structure of the encoder",
+    "reusable_patterns": [
+      "recursive/self-similar stage diagram with one level shown in detail and further levels abbreviated by an ellipsis",
+      "explicit operator legend (X = vector-matrix multiplication) at the figure's foot"
+    ],
+    "weaknesses": [
+      "recursion depth beyond Stage 2/3 is only implied by an ellipsis, not shown",
+      "no explicit visual distinction between the two separate sparse matrices used within one stage"
+    ]
+  },
+  "tags": [
+    "zero-knowledge-proofs",
+    "linear-time-encoding",
+    "Spielman-code",
+    "sparse-matrix",
+    "background",
+    "GPU"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "The encoding process of the Spielman encoder is shown in Figure 3.",
+      "each execution stage involves the use of two bipartite graphs",
+      "it executes another vector-matrix multiplication between the vector returned from the subsequent stage"
+    ]
+  },
+  "summary": "BatchZK is a fully pipelined GPU-accelerated system for batch generation of zero-knowledge proofs, one of whose computational modules is a linear-time (Spielman) encoder. This background figure explains that encoder's recursive structure rather than BatchZK's own pipelined version of it. A bipartite graph (left vertices as matrix columns, right vertices as rows) is shown being converted into a sparse matrix. The bottom Stage 1 box then shows the recursive pattern: an Input Vector is multiplied by a Sparse Matrix, the result is forwarded into a nested Stage 2 (shown at top right, which itself calls a further Stage 3, abbreviated with an ellipsis); the vector Stage 2 returns is multiplied by a second Sparse Matrix, and combined with the input and returned vectors to form Stage 1's Output. A legend at the bottom defines 'X' as vector-matrix multiplication and labels the overall data/code roles of the input and output vectors.",
+  "summary_zh": "该图说明BatchZK所用线性时间(Spielman)编码器的递归结构：二部图转化为稀疏矩阵；Stage 1输入向量与矩阵相乘后交由嵌套的Stage 2处理，返回向量再相乘得到输出，底部给出乘法符号X图例。",
+  "confidence": "high",
+  "notes": "This figure explains a general background technique (the Spielman encoder) that BatchZK later customizes for its pipeline; components are therefore marked as non-novel.",
+  "venue": "ASPLOS25"
+}

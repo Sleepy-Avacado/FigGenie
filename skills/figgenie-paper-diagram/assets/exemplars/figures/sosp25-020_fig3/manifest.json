@@ -1,0 +1,42 @@
+{
+  "id": "sosp25-020_fig3",
+  "paper_id": "sosp25-020",
+  "fig": "3",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 3. Inferlet service workflow (§5). The application layer executes inferlets that make API calls to the control layer whose batch scheduler adaptively batches these calls and forwards them to the inference layer. Results are sent back to the control layer and then to the inferlets.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "illustrator",
+  "aspect": 2.26,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-020/src/fig3_arch.svg",
+    "preview.png": "lab/extracted/sosp25-020/src/fig3_arch.png",
+    "print.png": "lab/extracted/sosp25-020/sosp25-020_fig3_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Flattest layered figure in the set (nesting_depth 1) - three labelled bands, white/gray fills only, circled numbers 1-5 tracing one request.",
+      "what_to_learn": "Colour is optional: white boxes for the traced path and gray for background components, plus dashed band separators, already carry a full layered architecture."
+    }
+  ]
+}

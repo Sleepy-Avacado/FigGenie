@@ -1,0 +1,208 @@
+{
+  "paper_id": "osdi26-050",
+  "fig": "2",
+  "system": {
+    "name": "Blowfish",
+    "one_liner": "a system providing elastic virtual-machine memory over disaggregated memory infrastructure",
+    "domain": [
+      "disaggregated-memory",
+      "virtualization"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "VM #1",
+        "role": "source virtual machine giving up a cold page",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VM #2",
+        "role": "destination virtual machine receiving the reallocated page",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Page Out",
+        "role": "step 0: selects a cold page and swaps out its infrequently-used data ('Swap Data Out')",
+        "container": "VM #1",
+        "novel": false
+      },
+      {
+        "name": "GVA",
+        "role": "guest virtual address mapped to the cold page being reclaimed",
+        "container": "VM #1",
+        "novel": false
+      },
+      {
+        "name": "Unmap GPT",
+        "role": "unmaps the guest page table entry to release the cold page",
+        "container": "VM #1",
+        "novel": false
+      },
+      {
+        "name": "GPA (IOVA)",
+        "role": "guest physical / IO virtual address freed in VM #1 once the GPT entry is unmapped",
+        "container": "VM #1",
+        "novel": false
+      },
+      {
+        "name": "GPA (IOVA)",
+        "role": "new guest physical / IO virtual address that VM #2 receives once the page is marked available",
+        "container": "VM #2",
+        "novel": false
+      },
+      {
+        "name": "Scan & Mark Invalid",
+        "role": "hypervisor step 1: scans and marks the freed guest page invalid",
+        "container": "Hypervisor",
+        "novel": false
+      },
+      {
+        "name": "Unmap EPT & IOPT",
+        "role": "hypervisor step 2: unmaps the extended page table and I/O page table to reclaim the free host page",
+        "container": "Hypervisor",
+        "novel": false
+      },
+      {
+        "name": "Map EPT & IOPT",
+        "role": "hypervisor step 3: remaps EPT and IOPT for the destination VM (reverse of step 2)",
+        "container": "Hypervisor",
+        "novel": false
+      },
+      {
+        "name": "Mark Available",
+        "role": "hypervisor step 4: marks the remapped page available to the destination VM (reverse of step 1)",
+        "container": "Hypervisor",
+        "novel": false
+      },
+      {
+        "name": "HPA",
+        "role": "the single host physical address/page being unmapped from VM #1 and remapped to VM #2",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "GVA",
+        "to": "Unmap GPT",
+        "what": "guest page table entry released during page-out",
+        "step": 0
+      },
+      {
+        "from": "Unmap GPT",
+        "to": "GPA (IOVA)",
+        "what": "frees the guest physical address in VM #1",
+        "step": 0
+      },
+      {
+        "from": "GPA (IOVA)",
+        "to": "Scan & Mark Invalid",
+        "what": "freed page handed to the hypervisor",
+        "step": 1
+      },
+      {
+        "from": "Scan & Mark Invalid",
+        "to": "Unmap EPT & IOPT",
+        "what": "invalidated page proceeds to EPT/IOPT unmap",
+        "step": 2
+      },
+      {
+        "from": "Unmap EPT & IOPT",
+        "to": "HPA",
+        "what": "reclaims the free host physical page",
+        "step": 2
+      },
+      {
+        "from": "HPA",
+        "to": "Map EPT & IOPT",
+        "what": "same host physical page remapped for VM #2",
+        "step": 3
+      },
+      {
+        "from": "Map EPT & IOPT",
+        "to": "Mark Available",
+        "what": "remapped page proceeds to being marked available",
+        "step": 4
+      },
+      {
+        "from": "Mark Available",
+        "to": "GPA (IOVA)",
+        "what": "page becomes VM #2's new guest physical address",
+        "step": 4
+      }
+    ],
+    "key_idea": "Reclaiming a cold guest page swaps out its data and unmaps GPT/EPT/IOPT to free the host physical page, which the hypervisor remaps and marks available as a new GPA in another VM.",
+    "reading_order": "Top-down in VM #1 (Page Out, GVA, Unmap GPT) into four numbered Hypervisor steps around a shared HPA box, then back up into VM #2's new GPA (IOVA)."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.03,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#647687",
+        "used_for": "slate blue-gray fill of the Hypervisor step boxes, GPA (IOVA) boxes, and HPA box"
+      },
+      {
+        "hex": "#a20025",
+        "used_for": "dark red/maroon fill of the highlighted VM #1 page-out path (Page Out label, GVA, Unmap GPT)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.3pt solid strokes throughout, no dashing",
+    "font": "Arial sans-serif, 5-6pt, almost entirely bold",
+    "corners": "square",
+    "arrows": "a few straight arrows with filled heads connecting the sequential steps",
+    "icons": "vector; small circled step-number glyphs only, no pictorial icons"
+  },
+  "encoding": {
+    "color_means": "dark red/maroon marks the source-side page-out actions in VM #1 (Page Out, GVA, Unmap GPT); slate blue-gray marks the generic hypervisor and physical-address elements (step boxes, GPA(IOVA), HPA)",
+    "line_style_means": null,
+    "emphasis": "the same HPA box anchors both halves of the figure, showing that reclaiming and reallocating a cold page reuses one physical page across the unmap/map sequence rather than copying it",
+    "reusable_patterns": [
+      "mirrored reclaim/remap step sequence sharing one foundational resource box (HPA) at the bottom",
+      "numbered steps spanning both a per-VM software layer and a shared hypervisor layer"
+    ],
+    "weaknesses": [
+      "only two colors are used across a fairly dense diagram, so red is the only visual cue distinguishing the highlighted VM#1 page-out path from everything else"
+    ]
+  },
+  "tags": [
+    "memory-disaggregation",
+    "virtual-machine-memory",
+    "page-reclamation",
+    "ept",
+    "hypervisor",
+    "cold-memory"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Related Work (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 demonstrates the procedure of reclaiming a cold page through the guest-level swapping",
+      "the hypervisor needs to unmap the corresponding EPT to reclaim the corresponding free host page",
+      "the hypervisor also needs to unmap the IOPT (2) due to the utilization of the emerging fabrics"
+    ]
+  },
+  "summary": "This figure walks through reallocating a cold memory page from VM #1 to VM #2 via guest-level swapping. In VM #1, a Page Out step (0) swaps the cold page's infrequently-used data out and unmaps its GPT entry, freeing its GPA (IOVA). The hypervisor then scans and marks the page invalid (step 1) and unmaps the corresponding EPT and IOPT (step 2) to reclaim the underlying host physical page (HPA). To reallocate that same HPA to VM #2, the hypervisor performs the reverse steps: mapping a new EPT and IOPT (step 3) and marking the page available (step 4), at which point it appears as a new GPA (IOVA) inside VM #2. The figure is a compact, two-color (red/slate-blue) box diagram illustrating background guest-level swapping machinery that the paper's memory-overcommitment design builds on, rather than the paper's own novel mechanism.",
+  "summary_zh": "该图示范将冷页从 VM1 重分配给 VM2：VM1 换出冷页数据并解除 GPT 映射；管理程序依次标记无效、解除 EPT/IOPT 回收宿主物理页（HPA），再反向映射并标记可用，成为 VM2 新 GPA。",
+  "confidence": "high",
+  "notes": "The index marks this figure's role as 'background' (section 2, Background and Related Work): it illustrates a pre-existing guest-level swapping/cold-memory-reclaim mechanism that the paper's own system builds on, not a newly proposed component, so all components are marked novel:false. layout-proposal: mirrored U-pipeline — a numbered reclaim sequence descends from VM #1 into the Hypervisor/HPA, then a mirrored remap sequence ascends back up into VM #2 sharing the same HPA foundation; closest named template is pipeline, but the U-shaped, foundation-sharing arrangement is atypical for a straight pipeline.",
+  "venue": "OSDI26"
+}

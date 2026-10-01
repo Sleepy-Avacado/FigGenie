@@ -1,0 +1,47 @@
+{
+  "id": "osdi26-054_fig7",
+  "paper_id": "osdi26-054",
+  "fig": "7",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 7: The relationship between shadow root and GPTL2",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.59,
+  "n_components": 10,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-054/osdi26-054_fig7_p9_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-054/osdi26-054_fig7_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of two mirrored page-table rows, a guest chain above and a shadow chain below, cross-linked column by column by vertical arrows, with a dashed rule separating read-write region from read-only one.",
+      "what_to_learn": "Line up two parallel same-depth chains, real versus shadow or baseline versus protected, as two rows sharing identical column headers, and connect them with one vertical arrow per column instead of a tangle of diagonal lines, using one dashed rule to mark which side is mutable."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Two full PGD-PUD-PMD-PTE table chains stack top (real, read-write) and bottom (CR3-rooted shadow, read-only), aligned column by column with vertical sync arrows crossing the dashed midline that is JANUS's actual integrity boundary.",
+      "what_to_learn": "Stack two identical multi-level structures, real above and shadow below, aligned column by column so vertical arrows can show exactly which levels sync and which do not, and mark the read-write versus read-only halves on either side of a single dashed midline instead of a caption note."
+    }
+  ]
+}

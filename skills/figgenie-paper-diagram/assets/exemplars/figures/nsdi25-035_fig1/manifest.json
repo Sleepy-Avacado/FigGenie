@@ -1,0 +1,63 @@
+{
+  "id": "nsdi25-035_fig1",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-035",
+  "fig": "1",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 1: The (a) synchronous and (b) asynchronous execution ﬂow of traversing grid points in Multi-Grid PDE [65].",
+  "groups_in_record": [
+    "comparison",
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how synchronous thread-switching hides remote-memory latency compared to asynchronous coroutine execution on one thread",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "callout",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.74,
+  "n_elements": 10,
+  "n_relations": 6,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-035/nsdi25-035_fig1_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-035/nsdi25-035_fig1_p4_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same coloured step-blocks reused in both panels so the reader sees which steps (thread switching, context save) vanish moving from synchronous to asynchronous.",
+      "what_to_learn": "Colour-code each step type once (orange = context ops, blue = request/poll) and reuse those colours in both panels, then bracket the idle span the async version fills with useful work instead of a thread switch.",
+      "note_source": "agent"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Same coloured step-blocks reused in both panels so the reader sees which steps (thread switching, context save) vanish moving from synchronous to asynchronous.",
+      "what_to_learn": "Colour-code each step type once (orange = context ops, blue = request/poll) and reuse those colours in both panels, then bracket the idle span the async version fills with useful work instead of a thread switch.",
+      "note_source": "agent"
+    }
+  ]
+}

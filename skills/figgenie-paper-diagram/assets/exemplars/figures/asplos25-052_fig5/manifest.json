@@ -1,0 +1,53 @@
+{
+  "id": "asplos25-052_fig5",
+  "paper_id": "asplos25-052",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. System architecture of FleetIO.",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.2,
+  "n_components": 10,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-052/asplos25-052_fig5_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-052/asplos25-052_fig5_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "A star exemplar of the shared-band variant: three identical vSSD/RL-agent columns (yellow outer box, monitor plus model) each exchange Actions/Reward with one Admission Control band below rather than radiating around a single hub.",
+      "what_to_learn": "When N identical agents all talk to one shared coordinator, it can sit below them as a horizontal band instead of beside them as a box; keep every agent column visually identical and mark its two channels (Actions up, Reward down) the same way in each."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "Star, high-confidence nested-stack exemplar combining containment with replication: three identical vSSD columns each nest an RL Agent box nesting a Monitor and Model, funnelling into a shared Admission Control box nesting a dashed manager.",
+      "what_to_learn": "Repeat the identical three-level column, agent over monitor-and-model, exactly N times for N replicated learners, and mark a box that is a logical tracking structure rather than a physical component with a dashed border, one level inside the shared infrastructure box it belongs to."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Three identical vSSD/RL-agent columns each send an Actions arrow down and receive a labelled Reward arrow back from Admission Control, turning a replicated-grid of agents into a clean multi-instance control loop.",
+      "what_to_learn": "When N identical agents each close their own loop with a shared hub, label both arrow directions distinctly (Actions down, Reward up) on every column rather than drawing one generic pair and implying the rest, and use a dashed border for a logical/tracking structure like the ghost superblock manager that is not a hard component."
+    }
+  ]
+}

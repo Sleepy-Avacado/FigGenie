@@ -1,0 +1,195 @@
+{
+  "paper_id": "asplos25-101",
+  "fig": "5",
+  "system": {
+    "name": "PAPI",
+    "one_liner": "a PIM-enabled heterogeneous computing system that dynamically schedules LLM decoding kernels across GPU-like PUs and two types of PIM units based on runtime parallelism",
+    "domain": [
+      "ml-systems",
+      "hardware",
+      "memory-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Host CPU",
+        "role": "sends instructions to the high-performance processor and the disaggregated Attn-PIM devices",
+        "container": "(a) PAPI System",
+        "novel": false
+      },
+      {
+        "name": "High-Speed Interconnect",
+        "role": "connects components inside the high-performance processor",
+        "container": "(a) PAPI System",
+        "novel": false
+      },
+      {
+        "name": "Processing Units (PUs)",
+        "role": "compute-bound kernel execution units, e.g. GPU tensor cores",
+        "container": "High-Performance Processor",
+        "novel": false
+      },
+      {
+        "name": "FC-PIM",
+        "role": "PIM memory unit with relatively high computation capability, catering to FC kernels",
+        "container": "High-Performance Processor",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "hardware scheduler that monitors runtime parallelization changes and dynamically offloads FC kernels",
+        "container": "High-Performance Processor",
+        "novel": true
+      },
+      {
+        "name": "Interconnect",
+        "role": "connects the high-performance processor to the disaggregated Attn-PIM units",
+        "container": "(a) PAPI System",
+        "novel": false
+      },
+      {
+        "name": "Attn-PIM",
+        "role": "physically separate, memory-capacity-optimized PIM units dedicated to the always memory-bound attention kernel",
+        "container": "(a) PAPI System",
+        "novel": true
+      },
+      {
+        "name": "Bank Groups (BGs)",
+        "role": "memory bank groups inside FC-PIM/Attn-PIM devices",
+        "container": "(b) FC-PIMs / (c) Attn-PIMs",
+        "novel": false
+      },
+      {
+        "name": "FPU",
+        "role": "floating-point unit performing PIM computation within a bank",
+        "container": "Bank Groups (BGs)",
+        "novel": false
+      },
+      {
+        "name": "RLP/TLP/Reschedule/RESULT table",
+        "role": "worked example of runtime request- and token-level parallelism counters driving the PU/PIM reallocation decision",
+        "container": "(d) PAPI's Dynamic Mapping & Scheduling",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Host CPU",
+        "to": "High-Performance Processor",
+        "what": "instructions",
+        "step": null
+      },
+      {
+        "from": "Host CPU",
+        "to": "Attn-PIM",
+        "what": "instructions",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "FC-PIM",
+        "what": "FC kernel offload when identified as memory-bound",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Processing Units (PUs)",
+        "what": "FC kernel offload when identified as compute-bound",
+        "step": null
+      },
+      {
+        "from": "RLP/TLP/Reschedule/RESULT table",
+        "to": "Scheduler",
+        "what": "estimated arithmetic intensity used to decide rescheduling",
+        "step": null
+      }
+    ],
+    "key_idea": "PAPI is a heterogeneous architecture pairing a high-performance processor (PUs + FC-PIM + scheduler) with disaggregated Attn-PIM units, whose scheduler monitors request- and token-level parallelism at runtime to dynamically place FC kernels on the best-fit hardware while attention kernels always run on Attn-PIM.",
+    "reading_order": "Left: the PAPI System panel (a) showing the host CPU, high-performance processor with PUs/FC-PIM/scheduler, and disaggregated Attn-PIM units; right: FC-PIM (b) and Attn-PIM (c) internal bank-group/FPU structure, and (d) a worked example of the dynamic RLP/TLP-based scheduling decision table."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 4,
+    "column": "double",
+    "aspect": 2.0,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#004e9a",
+        "used_for": "Attn-PIM boxes (dark blue)"
+      },
+      {
+        "hex": "#843c0c",
+        "used_for": "FC-PIM box (dark brown)"
+      },
+      {
+        "hex": "#3f0065",
+        "used_for": "Processing Units (PUs) box (purple)"
+      },
+      {
+        "hex": "#00b050",
+        "used_for": "Scheduler box (bright green)"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "Bank Groups in the FC-PIMs panel (light blue)"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "Bank Groups/FPU icons in the Attn-PIMs panel (orange)"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.56pt median, dashed lines, hatched fills throughout",
+    "font": "Arial sans / Linux Libertine serif, 6.5-12pt",
+    "corners": "square",
+    "arrows": "15 arrowheads, straight lines",
+    "icons": "bank-group/FPU grid icons"
+  },
+  "encoding": {
+    "color_means": "dark blue = Attn-PIM (memory-capacity-optimized), brown = FC-PIM (compute-optimized), purple = GPU-like PUs, green = the dynamic scheduler",
+    "line_style_means": null,
+    "emphasis": "panel (d)'s RLP/TLP/Reschedule/RESULT table makes the dynamic scheduling decision concrete with a worked example",
+    "reusable_patterns": [
+      "system diagram paired with internal-unit zoom-ins and a worked runtime-decision table"
+    ],
+    "weaknesses": [
+      "hatched fills and dense text across four sub-panels increase visual complexity"
+    ]
+  },
+  "tags": [
+    "processing-in-memory",
+    "llm-inference",
+    "heterogeneous-architecture",
+    "dynamic-scheduling",
+    "hbm",
+    "attention"
+  ],
+  "provenance": {
+    "sections": [
+      "4 PAPI: Overview (p.5)",
+      "5 PAPI Dynamic Scheduling (p.6)"
+    ],
+    "evidence": [
+      "Figure 5 shows the overview of the PAPI framework.",
+      "FC-PIM units offer relatively high computation capabilities to cater to the FC kernels",
+      "hardware scheduler (green block in Figure 5(a)) that monitors runtime parallelization changes"
+    ]
+  },
+  "summary": "PAPI is a PIM-enabled heterogeneous architecture that dynamically routes LLM decoding kernels to the most suitable hardware. Figure 5(a) shows the overall system: a host CPU drives a high-performance processor containing GPU-like Processing Units (PUs), an FC-PIM memory unit, and a hardware Scheduler, all connected via a high-speed interconnect, plus physically disaggregated Attn-PIM units reached over a separate interconnect. Panels (b) and (c) zoom into the FC-PIM and Attn-PIM bank-group/FPU internals. Panel (d) walks through a worked example of the scheduler's dynamic mapping: per-token RLP and TLP values are combined to estimate arithmetic intensity and decide, token by token, whether to reschedule the FC kernel between PUs and FC-PIM while attention always runs on Attn-PIM. Distinct flat colors mark PUs, FC-PIM, Attn-PIM, and the scheduler.",
+  "summary_zh": "图5展示PAPI异构系统：(a) 主机CPU驱动含GPU式处理单元、FC-PIM及调度器的高性能处理器，并通过互连连接独立的Attn-PIM单元；(b)(c) 展示FC-PIM与Attn-PIM内部的存储体组与FPU结构；(d) 给出基于RLP/TLP动态判断并重新调度FC核到PU或PIM的实例。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

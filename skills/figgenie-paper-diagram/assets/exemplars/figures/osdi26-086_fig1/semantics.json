@@ -1,0 +1,291 @@
+{
+  "paper_id": "osdi26-086",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "WiseCode",
+    "one_liner": "an erasure-coding system that scales wide-stripe vector codes to reach ultra-low storage overhead with low repair traffic",
+    "domain": [
+      "storage",
+      "erasure-coding"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "the three-stage design process that turns coding parameters into a working vector-code encoding/decoding algorithm",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Parameters: (n, k, α)",
+        "kind": "box",
+        "role": "initial inputs: code length, dimension and sub-packetization level",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Coding structure design",
+        "kind": "box",
+        "role": "stage 1: specifies sub-chunk variables in each sub-stripe's equation, leaving coefficients unknown",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "coding equations with unknown coefficients",
+        "kind": "box",
+        "role": "artifact output by structure design; per-sub-stripe equations whose coefficients are still boxed placeholders",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "example equations for coding structure",
+        "kind": "label",
+        "role": "dashed callout instantiating the unknown-coefficient equations for two example sub-stripes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Coefficient search",
+        "kind": "box",
+        "role": "stage 2: selects coefficients that ensure decodability under any 1 to m-chunk failure",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Indices of parity/lost chunks",
+        "kind": "box",
+        "role": "side input telling the algorithm stage which chunks are parity or lost",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "coding equations with valid coefficients",
+        "kind": "box",
+        "role": "artifact output by coefficient search; equations whose coefficients are now fixed and named",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "example equations for coefficient search",
+        "kind": "label",
+        "role": "dashed callout showing the same two sub-stripe equations with named coefficients L0...L5",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Encoding/Decoding algorithm",
+        "kind": "box",
+        "role": "stage 3: develops efficient encoding/decoding algorithms from the coefficient-complete equations",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "steps to solve coding equations",
+        "kind": "box",
+        "role": "final artifact: concrete arithmetic steps for computing encoding/decoding results",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "example equations for encoding algorithm",
+        "kind": "label",
+        "role": "dashed callout giving the worked formulas for two parity values as weighted sums of data chunks",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Parameters: (n, k, α)",
+        "to": "Coding structure design",
+        "what": "the code's length/dimension/sub-packetization parameters feed the structure-design stage",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Coding structure design",
+        "to": "coding equations with unknown coefficients",
+        "what": "produces per-sub-stripe coding equations whose coefficients are not yet fixed",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "coding equations with unknown coefficients",
+        "to": "example equations for coding structure",
+        "what": "instantiates the unknown-coefficient equations for two example sub-stripes",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "coding equations with unknown coefficients",
+        "to": "Coefficient search",
+        "what": "the undetermined equations are the input the coefficient search must solve",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Indices of parity/lost chunks",
+        "to": "Encoding/Decoding algorithm",
+        "what": "identifies which chunks are parity or lost so the algorithm knows what to solve for",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Coefficient search",
+        "to": "coding equations with valid coefficients",
+        "what": "fixes the coefficients so the equations are decodable under any 1 to m-chunk failure",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "coding equations with valid coefficients",
+        "to": "example equations for coefficient search",
+        "what": "shows the same two sub-stripe equations now with named coefficients L0...L5",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "coding equations with valid coefficients",
+        "to": "Encoding/Decoding algorithm",
+        "what": "the coefficient-complete equations are compiled into an algorithm",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Encoding/Decoding algorithm",
+        "to": "steps to solve coding equations",
+        "what": "produces concrete arithmetic steps for computing each parity/lost term",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "steps to solve coding equations",
+        "to": "example equations for encoding algorithm",
+        "what": "shows the worked formulas for p0 and p1 as weighted sums of data chunks",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "after Coding structure design",
+        "axis": "time",
+        "differs": "raw (n,k,α) parameters become per-sub-stripe equations with boxed (□) placeholder coefficients over blue data-chunk and orange parity-chunk terms",
+        "verdict": null
+      },
+      {
+        "label": "after Coefficient search",
+        "axis": "time",
+        "differs": "placeholder coefficients are replaced by named, valid coefficients (L0...L5), using the indices of parity/lost chunks",
+        "verdict": null
+      },
+      {
+        "label": "after Encoding/Decoding algorithm",
+        "axis": "time",
+        "differs": "the coefficient-complete equations are compiled into concrete arithmetic steps, e.g. p0 = x*d0 + y*d1",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Realizing a vector code takes three sequential design steps—fix the coding structure, solve for valid coefficients, then build an encode/decode algorithm—each turning the previous step's output into a more concrete artifact.",
+    "reading_order": "left to right along the top row of boxes from Parameters to the final steps box, following the arrows; each dashed callout below shows the concrete equations produced at that point"
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": true,
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.72,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ddebf7",
+        "used_for": "light-blue fill of the three main pipeline-stage boxes (Coding structure design, Coefficient search, Encoding/Decoding algorithm)"
+      },
+      {
+        "hex": "#1e3f97",
+        "used_for": "dark-navy border stroke of those three blue pipeline-stage boxes"
+      },
+      {
+        "hex": "#3d6bb4",
+        "used_for": "blue connecting arrows between stages and the blue data-chunk (d) terms inside the example coding equations"
+      },
+      {
+        "hex": "#ededee",
+        "used_for": "light-gray fill of the parameter/artifact boxes (Parameters, both 'coding equations' boxes, Indices of parity/lost chunks, steps to solve coding equations)"
+      },
+      {
+        "hex": "#929597",
+        "used_for": "gray border stroke of the light-gray boxes and the dashed leader lines/placeholder squares in the example equations"
+      },
+      {
+        "hex": "#ed7922",
+        "used_for": "orange parity-chunk (p) terms inside the example coding equations"
+      },
+      {
+        "hex": "#bb1e23",
+        "used_for": "bold red 'unknown' / 'valid' words marking whether an equation's coefficients are still unresolved or already fixed"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin box borders, dashed leader lines and dashed callout borders linking each artifact box to its worked example",
+    "corners": "rounded",
+    "arrows": "thin gray/blue orthogonal arrows with small solid triangular heads connecting boxes left to right",
+    "font": "Arial/Helvetica sans, bold for stage-box titles and the red 'unknown'/'valid' emphasis words",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light-blue fill with dark-navy borders marks the three active processing stages; light gray marks input/output artifacts; inside example equations, blue picks out data-chunk (d) terms and orange picks out parity-chunk (p) terms; bold red flags whether coefficients are 'unknown' or already 'valid'",
+    "line_style_means": "solid arrows show the left-to-right derivation flow between stages; dashed lines lead from an artifact box down to a callout with its concrete example equations",
+    "state_means": "the same coding-equation artifact is told apart at each stage by its red coefficient-status word ('unknown' before the search, 'valid' after) and by the worked example shown underneath",
+    "marker_means": "no numbered markers; empty boxes (□) in the first example stand for still-unknown coefficients, later replaced by named coefficients (L0...L5)",
+    "emphasis": "bold red 'unknown' and 'valid' words single out exactly what the coefficient-search stage resolves",
+    "reusable_patterns": [
+      "a left-to-right chain of process boxes alternating with artifact boxes, each artifact box elaborated by a dashed-callout worked example underneath"
+    ],
+    "weaknesses": [
+      "the callout examples are linked to the boxes above them only by thin converging leader lines, so the mapping from abstract stage to concrete equation must be inferred",
+      "the blue-d/orange-p colour coding is never explained inside the figure itself"
+    ]
+  },
+  "tags": [
+    "erasure-coding",
+    "vector-codes",
+    "coding-theory",
+    "wide-stripe",
+    "coefficient-search",
+    "WiseCode"
+  ],
+  "provenance": {
+    "sections": [
+      "§1 Introduction (p.2)"
+    ],
+    "evidence": [
+      "implementing a vector code involves three key steps",
+      "designing the coding structure that specifies sub-chunk variables",
+      "selecting coefficients that ensure decodability under any 1 to m-chunk failures"
+    ]
+  },
+  "summary": "Figure 1 lays out the three sequential steps that WiseCode's paper says any vector code implementation must go through, moving from abstract parameters to a runnable algorithm. Starting from parameters (n, k, alpha), a Coding structure design box produces per-sub-stripe coding equations whose coefficients are still unknown, illustrated in a dashed callout with two example equations mixing blue data-chunk (d) and orange parity-chunk (p) terms against boxed placeholders. A Coefficient search box fixes those placeholders into valid, named coefficients (L0...L5) so the equations are decodable under any 1 to m-chunk failure, using the indices of which chunks are parity or lost. Finally, an Encoding/Decoding algorithm box turns the resolved equations into concrete arithmetic steps, shown solving for two parity values as weighted sums of data chunks. Bold red 'unknown' and 'valid' labels flag exactly what the middle stage changes.",
+  "summary_zh": "该图展示WiseCode实现向量码的三步骤：由参数经\"结构设计\"得系数未知方程（蓝=数据项，橙=校验项），再经\"系数搜索\"得有效系数，最后\"编解码算法\"给出求解步骤，红色标注unknown/valid的变化。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'none' (not a valid v3 base value) to 'flowchart', matching the left-to-right chain of process/artifact boxes. style.palette was read directly from the source SVG's fill/stroke attributes (7 colours), which is more complete than the index's top-3 area histogram; colours were matched to roles by visual inspection of the rendered PNG.",
+  "venue": "OSDI26"
+}

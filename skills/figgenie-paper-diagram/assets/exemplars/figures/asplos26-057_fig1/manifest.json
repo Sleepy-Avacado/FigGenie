@@ -1,0 +1,41 @@
+{
+  "id": "asplos26-057_fig1",
+  "paper_id": "asplos26-057",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Multi-host CXL-DSM architecture.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 2.18,
+  "n_components": 11,
+  "n_flows": 1,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-057/asplos26-057_fig1_p2_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-057/asplos26-057_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Simple, single-flow host-device figure: shadow-stacked host boxes (implying N repeated hosts) sit symmetrically against one CXL memory-node box, joined by a single CXL Links arrow, though neither the host count nor request-vs-response direction is labeled.",
+      "what_to_learn": "A shadow-stacked box implies repetition even at nesting depth 2 with no lanes, but unlike this figure, label the stack with its count or an explicit N so the reader is not left guessing; also name what direction an interconnect arrow carries (request vs response) rather than leaving one plain arrow to mean everything."
+    }
+  ]
+}

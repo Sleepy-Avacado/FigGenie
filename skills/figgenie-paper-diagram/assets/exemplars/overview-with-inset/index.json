@@ -1,0 +1,160 @@
+{
+  "template": "overview-with-inset",
+  "n": 19,
+  "stars": 15,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-039_fig3",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Also a named hub-spoke exemplar: three panels run left to right, Coordinator internals, a colour-typed cluster graph, and one Compute Node's queue/layer chain pulled into a zoomed panel by a dashed connector, legend below.",
+      "what_to_learn": "Chain three different kinds of panel left to right (control logic, then a topology graph, then one zoomed node) rather than forcing one drawing to hold all three, and put a single legend below spanning all of them since node colour and the layer icon both need explaining.",
+      "dir": "../figures/asplos25-039_fig3"
+    },
+    {
+      "id": "asplos25-100_fig3",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Background figure that expands left-to-right in three panels, from coarse stages to a full per-layer compute graph.",
+      "what_to_learn": "Progressive expansion left-to-right suits background/context figures; dashed brackets mark the xN repeated block so the expansion stays finite.",
+      "dir": "../figures/asplos25-100_fig3"
+    },
+    {
+      "id": "asplos25-101_fig1",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Only panel (a) of this 4-panel figure is the relevant instance: a Decoding stack zooms via a dashed line into its four-kernel breakdown, while panels (b)-(d) are unrelated serial/batch/speculative timelines.",
+      "what_to_learn": "A background/definitions figure can carry a small inset inside just one of several panels: zoom the repeated-block stack (Decoder 1...N) into its four internal kernel stages with a single dashed line, and leave the timeline panels beside it in a separate, unconnected visual grammar.",
+      "dir": "../figures/asplos25-101_fig1"
+    },
+    {
+      "id": "asplos25-107_fig6",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A star format-inset exemplar: the six-step client-to-SSD pipeline is grounded by a bottom callout box unpacking the bop_add pseudocode, the new hardware command the whole paper is about.",
+      "what_to_learn": "Put the new instruction's pseudocode in its own framed inset below the architecture rather than inline in a box, connect it to the component that executes it, and keep the six circled step numbers running through both the main flow and the client/server/SSD colour bands.",
+      "dir": "../figures/asplos25-107_fig6"
+    },
+    {
+      "id": "asplos25-108_fig5",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "GPU-wide layout on the left with one SM expanded on the right; accent fill marks the two active decision points across both levels.",
+      "what_to_learn": "Carry the accent colour across the zoom boundary so the same component reads as the same component at both scales.",
+      "dir": "../figures/asplos25-108_fig5"
+    },
+    {
+      "id": "asplos25-147_fig2",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "The annotation-rail variant: a five-stage vertical pipeline pairs every stage box with a small red-labelled thumbnail of its output artifact, from a MetaGraph icon down to a per-worker execution-plan timeline.",
+      "what_to_learn": "Give every stage in a vertical pipeline its own small thumbnail icon of the concrete data structure it outputs, aligned in a right-hand rail, so an abstract stage name (Graph Contraction, Wavefront Scheduler) is anchored to a picture rather than left purely verbal.",
+      "dir": "../figures/asplos25-147_fig2"
+    },
+    {
+      "id": "asplos25-157_fig2",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Three lettered panels (a)/(b)/(c) chained by dashed leaders, each zooming into a region of the previous one.",
+      "what_to_learn": "Chained zoom: each panel's leader lines start at a marked region of its predecessor, so the reader can follow core -> array -> cell without a caption.",
+      "dir": "../figures/asplos25-157_fig2"
+    },
+    {
+      "id": "asplos26-021_fig8",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A uniform tile grid with one tile highlighted and exploded into an internal view via a callout wedge.",
+      "what_to_learn": "Highlight the source tile in the grid (different border/fill) before drawing the callout, so the reader knows which of the N tiles was expanded.",
+      "dir": "../figures/asplos26-021_fig8"
+    },
+    {
+      "id": "asplos26-076_fig2",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: three successively magnified panels, wafer to die to core, is overview-with-inset's own named 3-level chained (a)-(b)-(c) sequence, not a hub dispatching to interchangeable spokes.",
+      "what_to_learn": "For a hardware hierarchy with 3+ magnification levels, chain (a)(b)(c) panels left to right instead of one hub-spoke drawing, carry one highlight device across the boundary (the red X marking a bypassed core in (b), traced to a blue-outlined core in (c)), and let the mesh inside one panel, not radiating spokes, show replication.",
+      "dir": "../figures/asplos26-076_fig2"
+    },
+    {
+      "id": "asplos26-094_fig9",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: panel (a) is one systolic-array overview and (b)-(h) are seven different circuit-block zooms, each a distinct block, not repeated copies of one drawing; this is composite-figure or overview-with-inset, not n-panel-comparison.",
+      "what_to_learn": "When lettered sub-panels each show a different, unique circuit block rather than the same block under different conditions, treat the figure as an overview with several distinct insets, not a comparison; keep one consistent colour-phase code (as this figure does) so each inset still maps back to its place in the main dataflow.",
+      "dir": "../figures/asplos26-094_fig9"
+    },
+    {
+      "id": "nsdi25-033_figtex7",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Two embedded charts, not one drawn callout: a latency heatmap and a Pareto accuracy-vs-latency scatterplot sit beside the router-and-workers architecture, together standing in for the offline Supernetwork Profiler that feeds the scheduler.",
+      "what_to_learn": "When the thing you need to explain is a data-driven decision rather than a drawn component, inset an actual chart (a heatmap, a Pareto curve) next to the architecture instead of forcing it into a box; keep the figure's own colour-coded example queries walking through both the diagram and, implicitly, the chart's axes.",
+      "dir": "../figures/nsdi25-033_figtex7"
+    },
+    {
+      "id": "nsdi26-054_fig1",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A star exploded-stage exemplar: a top row of alternating Dense/MoE layer boxes zooms into one MoE Layer's three parallel GPU rows below, with the two AlltoAllv exchanges the paper targets highlighted in red.",
+      "what_to_learn": "Zoom from a layer-level pipeline down into one layer's per-GPU detail below it, and spend your one accent colour (red) only on the operation the paper is actually about, so it reads as the reason for the whole figure rather than one more box.",
+      "dir": "../figures/nsdi26-054_fig1"
+    },
+    {
+      "id": "osdi25-003_fig2",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "The reference guide's own named example of the zoom pattern: nested DP/PP/Layer boxes are the overview, and a dashed callout expands one pipeline stage into CP/TP sublayers on the right at nesting depth 3.",
+      "what_to_learn": "Mark the exact source of a zoom (one pipeline stage) before expanding it, and keep colour consistent across the boundary (navy/blue on the left reappears inside the right-hand CP/TP detail); budget bigger type than this exemplar did, since its own weakness is text too small for four nested levels.",
+      "dir": "../figures/osdi25-003_fig2"
+    },
+    {
+      "id": "sosp24-035_fig1",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A compact block stack on the left with two dashed callouts on the right expanding its two weight matrices.",
+      "what_to_learn": "Insets sit outside the overview and connect back with dashed leader lines from the exact sub-box they expand - never overlap the overview.",
+      "dir": "../figures/sosp24-035_fig1"
+    },
+    {
+      "id": "sosp25-015_fig2",
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A textbook zoom callout: HBM/L2 feeding a GPC grid of TPC/SM tiles on the left, with a dashed connector magnifying one SM into its six named internal units on the right.",
+      "what_to_learn": "Colour-code each level of a hardware hierarchy consistently (yellow memory, blue TPC, orange SM, green SM-internals) from the overview straight into the magnified callout, so the reader never loses track of which level of the zoom they are looking at.",
+      "dir": "../figures/sosp25-015_fig2"
+    },
+    {
+      "id": "asplos26-008_figtex6",
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "An exploded-stage exemplar: the numbered main flow (execute_request to Raft Log to Standby Replicas) sends one dashed line to a grey callout box that unpacks steps 2-4, the AST conversion inside the active replica.",
+      "what_to_learn": "Keep the callout's numbering continuous with the main flow (steps 2-4 inside the box pick up right after step 1 outside it), and colour the one active replica differently (purple) from the passive ones (tan) it feeds so the reader can find the source of the zoom at a glance.",
+      "dir": "../figures/asplos26-008_figtex6"
+    },
+    {
+      "id": "nsdi23-045_fig2",
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "Multiple callouts off one pipeline: four dashed boxes below expand the multisine waveform, channelization, packet-matching and localization sub-steps of a numbered seven-stage top row, ending in a heatmap thumbnail output.",
+      "what_to_learn": "One pipeline can carry several callouts, not just one: hang a dashed detail box below any stage that needs unpacking, keep the circled numbers on the top row as the single reading order, and finish with a thumbnail of the actual output (the localization heatmap) instead of a bare label.",
+      "dir": "../figures/nsdi23-045_fig2"
+    },
+    {
+      "id": "nsdi24-087_fig2",
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "Also a hub-spoke exemplar elsewhere: the Tower fans dotted control lines to a small Application DAG, and one node's relationship is pulled out into a magnified Captain panel on the right via a curved leader.",
+      "what_to_learn": "When only one instance among many needs explaining, do not draw every instance's internals: pick one, connect it with a curved funnel line to a same-colour detail panel, and let the untouched instances stay as small schematic icons in the background DAG.",
+      "dir": "../figures/nsdi24-087_fig2"
+    },
+    {
+      "id": "nsdi26-104_fig6",
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "Only the top strip is a real inset: thin diagonal lines zoom the packet's Outer header down into its five named fields, the format-inset variant, while the layer-stack and path-mesh below are separate, unconnected panels.",
+      "what_to_learn": "For a format inset, draw thin diagonal lines fanning from the byte-field bar down into a small exploded view naming each field, and highlight only the one field the paper mutates. This exemplar's weakness: it then adds two more diagram idioms with no shared frame or legend.",
+      "dir": "../figures/nsdi26-104_fig6"
+    }
+  ]
+}

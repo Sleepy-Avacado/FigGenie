@@ -1,0 +1,241 @@
+{
+  "paper_id": "nsdi26-036",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "MoCE",
+    "one_liner": "a mixture-of-context-aware-experts framework for troubleshooting internet-scale service incidents",
+    "domain": [
+      "observability",
+      "incident-troubleshooting",
+      "simulation"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how a Login flow is modeled as a request pattern graph with per-URL parameters and duration/failure formulas",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Login start",
+        "kind": "node",
+        "role": "entry point of the modeled Login application flow",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "URL1",
+        "kind": "node",
+        "role": "first request, app.com/token",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "backup",
+        "kind": "node",
+        "role": "app.com/backup/token, the fallback service used if URL1 fails",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "URL2",
+        "kind": "node",
+        "role": "second sequential request, app.com/info",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "URL3",
+        "kind": "node",
+        "role": "one of three parallel requests after URL2, app.com/v1/clientinfo",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "URL4",
+        "kind": "node",
+        "role": "one of three parallel requests after URL2, app.com/v1/init",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "URL5",
+        "kind": "node",
+        "role": "one of three parallel requests after URL2, app.com/v1/profile",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Login end",
+        "kind": "node",
+        "role": "exit point where the three parallel requests converge",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "parameters of each URL",
+        "kind": "label",
+        "role": "legend box listing the per-URL parameters: mean latency (μ), stdev latency (σ), failure rate (p), max_retries, timeout",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Login duration = T(url1) + T(url2) + max(T(url3), T(url4), T(url5))",
+        "kind": "label",
+        "role": "formula deriving total flow duration from sequential and parallel request latencies",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Login failure = ∨i (F(urli) ∧ F(backupi))",
+        "kind": "label",
+        "role": "formula deriving overall flow failure from a request and its backup both failing",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Login start",
+        "to": "URL1",
+        "what": "the flow begins with the token request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL1",
+        "to": "backup",
+        "what": "if the primary URL fails, the backup URL is tried instead",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL1",
+        "to": "URL2",
+        "what": "the flow proceeds sequentially to the info request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL2",
+        "to": "URL3",
+        "what": "fan-out into a parallel request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL2",
+        "to": "URL4",
+        "what": "fan-out into a parallel request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL2",
+        "to": "URL5",
+        "what": "fan-out into a parallel request",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL3",
+        "to": "Login end",
+        "what": "fan-in once the parallel request completes",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL4",
+        "to": "Login end",
+        "what": "fan-in once the parallel request completes",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "URL5",
+        "to": "Login end",
+        "what": "fan-in once the parallel request completes",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "A Login application flow is modeled as a small graph of sequential and parallel URL requests, each carrying latency/failure parameters and a backup alternative, from which the simulator derives closed-form duration and failure formulas.",
+    "reading_order": "left to right: Login start into URL1 (with its dashed backup path), then URL2, which fans out into three parallel URLs (3/4/5) that converge at Login end; the parameter legend sits top-right and the two aggregate formulas sit at the bottom"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.7,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#156082",
+        "used_for": "dark teal-blue fill of every process node (Login start/end, URL1-5, backup) and their connecting arrows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outline around the parameter legend box; dashed line linking URL1 to its backup node",
+    "corners": "mixed",
+    "arrows": "thin dark arrows connecting nodes left to right, fanning out then back in around the three parallel requests",
+    "font": "sans (GillSansMT), small (~4-6.5pt); magenta/purple heading text for the parameter legend; italic math (CambriaMath) for the two formulas",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "a single dark teal-blue marks every process node and connecting arrow uniformly; colour does not differentiate node roles, only position in the graph does",
+    "line_style_means": "solid arrows show the required sequential/parallel path; a dashed line links URL1 to its backup alternative, marking it as a fallback rather than a mandatory hop",
+    "state_means": "not applicable; a single static request-pattern graph, not a before/after or alternatives figure",
+    "marker_means": "no numbered or lettered markers; node labels (URL1-URL5) and their app.com paths identify each request",
+    "emphasis": "the fan-out/fan-in shape around URL2 visually sets the three parallel requests (URL3-5) apart from the strictly sequential URL1/URL2 hops, matching the max() term in the duration formula",
+    "reusable_patterns": [
+      "a left-to-right request-pattern graph with a dashed fallback node hanging off one step and a fan-out/fan-in parallel block, closed by symbolic aggregate formulas below the graph"
+    ],
+    "weaknesses": [
+      "only one exact fill colour (#156082) could be measured, since no separate author source-SVG file exists for this figure, so the magenta parameter-box heading and formula text colours are described qualitatively rather than by hex"
+    ]
+  },
+  "tags": [
+    "MoCE",
+    "simulator",
+    "pattern-graph",
+    "workload-model",
+    "login-flow",
+    "latency-modeling"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Implementation and setup"
+    ],
+    "evidence": [
+      "Each flow is represented by a pattern graph of URL requests, as shown in Figure 8",
+      "each request is defined by its URL, mean (latency), variance (latency), failure rate, max_retries and timeout_sec",
+      "A service is optionally assigned a backup service in case the primary URL fails."
+    ]
+  },
+  "summary": "This figure shows how MoCE's simulator models a client application flow, here a 'Login' step, as a small pattern graph of URL requests. Login start leads into URL1 (app.com/token), which has a dashed backup alternative (app.com/backup/token) used if the primary URL fails; the flow continues to URL2 (app.com/info), which fans out into three parallel requests, URL3 (clientinfo), URL4 (init), and URL5 (profile), before converging at Login end. Each URL node carries its own parameters, mean and standard-deviation latency, failure rate, max_retries, and timeout, shown in the top-right legend. Below the graph, two formulas derive the flow's overall behavior from these per-node values: total Login duration sums the sequential URL1/URL2 latencies with the maximum of the three parallel requests, and Login failure is true whenever some request and its backup both fail.",
+  "summary_zh": "该图展示MoCE模拟器将\"登录\"流程建模为URL请求图：URL1有备份URL兜底，URL2后并行发三个请求汇合于结束；每个URL带延迟失败率参数，图下公式据此算总时长与失败概率。",
+  "confidence": "high",
+  "notes": "content.groups corrected from the prior label's ['logic'] to ['anatomy']: the figure has no decision diamonds or guarded state transitions (the v3 definition of 'logic'), it is a static request-pattern graph with sequential and parallel edges, annotated below by two aggregate formulas, which matches anatomy's 'worked computation' variant instead.",
+  "venue": "NSDI26"
+}

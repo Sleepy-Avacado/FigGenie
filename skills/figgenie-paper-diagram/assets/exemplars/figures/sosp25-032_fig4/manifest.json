@@ -1,0 +1,48 @@
+{
+  "id": "sosp25-032_fig4",
+  "paper_id": "sosp25-032",
+  "fig": "4",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 4. Dandelion worker node system architecture.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.67,
+  "n_components": 9,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-032/src/fig4_system_archv2.svg",
+    "preview.png": "lab/extracted/sosp25-032/src/fig4_system_archv2.png",
+    "print.png": "lab/extracted/sosp25-032/sosp25-032_fig4_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Dispatcher to typed queues to typed engines with the control plane drawn as a separate box feeding back beneath the data path.",
+      "what_to_learn": "Draw the control plane as its own box under the data path with its own arrows, so 'who decides' is separable from 'what moves'."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A dispatcher-to-typed-queues-to-typed-engines spine has the Control Plane hanging underneath with double-headed arrows into the dispatcher and both engine columns, the 'optimizer beside the spine' shape rather than a drawn ring.",
+      "what_to_learn": "Split the spine into two colour-coded parallel paths (compute vs communication engines here) and hang the rebalancing controller underneath both, connected by double-headed arrows rather than a single looping line, when the feedback is continuous rebalancing rather than a discrete numbered cycle."
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "paper_id": "nsdi26-074",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "SSDO",
+    "one_liner": "a fast solver-free algorithm for traffic engineering in large-scale data center networks",
+    "domain": [
+      "networking",
+      "traffic-engineering",
+      "data-center-networks"
+    ],
+    "abstraction": "control-plane-algorithm"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how re-splitting one demand's routing across a direct and an indirect path lowers the network's max link utilization",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Capacity",
+        "kind": "label",
+        "role": "table column giving each link's capacity (all equal to 2)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Demand",
+        "kind": "label",
+        "role": "table column giving each node pair's traffic demand: (A,B)=2, (A,C)=1, (B,C)=1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "node",
+        "role": "source of the (A,B) and (A,C) demands",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "node",
+        "role": "destination of the (A,B) demand and one endpoint of the (B,C) demand",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "destination of the (A,C) demand and the other endpoint of the (B,C) demand; also the indirect relay for rerouted (A,B) traffic",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Optimize f_ABC, f_ABB",
+        "kind": "label",
+        "role": "block arrow naming the split-ratio variables being optimized between the initial and optimal panels",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "A",
+        "to": "B",
+        "what": "direct edge, capacity 2, carries the (A,B) demand",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "C",
+        "what": "direct edge, capacity 2, carries the (A,C) demand",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "C",
+        "what": "direct edge, capacity 2, carries the (B,C) demand",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "C",
+        "what": "in the optimal condition, 0.5 units of the (A,B) demand are rerouted through C instead of the direct A-B edge",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "B",
+        "what": "the rerouted 0.5 units complete their indirect path back to B",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(c) Initial traffic condition",
+        "axis": "time",
+        "differs": "all three demands take only their direct edge: A-B carries 2/2 (fully saturated), A-C carries 1/2, B-C carries 1/2, giving a maximum link utilization of 1",
+        "verdict": "before"
+      },
+      {
+        "label": "(d) Optimal traffic condition",
+        "axis": "time",
+        "differs": "0.5 units of the (A,B) demand are rerouted via C: A-B now carries 1.5/2, A-C carries an added 0.5 alongside its own 1/2, and the rerouted flow returns C-to-B at 0.5/2, lowering the maximum link utilization to 0.75",
+        "verdict": "optimal"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "link capacities (all 2), demand volumes ((A,B)=2, (A,C)=1, (B,C)=1), and the per-edge used/capacity fractions in the initial (2/2, 1/2, 1/2) versus optimal (1.5/2, 1/2, 0.5/2, 1/2, 0.5/2) conditions",
+      "linked_by": "colour: blue for the (A,B) demand and its flow, purple for (A,C), green for (B,C), consistent across the table, topology, and both flow diagrams",
+      "result_cells": "each edge is annotated 'used/capacity' (e.g. '1.5/2'); the maximum fraction across all edges drops from 1 (initial MLU) to 0.75 (optimal MLU)"
+    },
+    "key_idea": "Holding the (A,C) and (B,C) split ratios fixed and only re-optimizing the (A,B) demand's routing across the direct edge and an indirect A-C-B path lowers the network's maximum link utilization from 1.0 to 0.75.",
+    "reading_order": "top-left table gives each link's capacity and each pair's demand; top-right shows the shared triangle topology; bottom-left shows the initial all-direct routing (MLU 1); the optimize arrow leads to bottom-right's rebalanced routing (MLU 0.75)"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.58,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale-blue fill of the A/B/C node circles in the topology and flow diagrams"
+      },
+      {
+        "hex": "#00cc00",
+        "used_for": "green text/arrows for the (B,C) demand and its flow, consistent across the table, topology, and both flow diagrams"
+      },
+      {
+        "hex": "#9933ff",
+        "used_for": "purple text/arrows for the (A,C) demand and its flow"
+      },
+      {
+        "hex": "#007fff",
+        "used_for": "blue text/arrow for the (A,B) demand's direct-edge flow"
+      },
+      {
+        "hex": "#027ffe",
+        "used_for": "a second, near-identical blue for the (A,B) demand's rerouted-via-C flow in the optimal condition"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines for the table and node circles; coloured arrow strokes matching each demand",
+    "corners": "mixed",
+    "arrows": "thin coloured arrows with solid heads for each demand's flow, plus one bold horizontal block arrow labelled 'Optimize f_ABC, f_ABB' linking the initial to the optimal panel",
+    "font": "serif (Times New Roman), ~7pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks the (A,B) demand and its flows, purple marks (A,C), green marks (B,C); the same three colours recur unchanged from the table through the topology into both flow diagrams",
+    "line_style_means": "straight arrows are direct-edge flows; the one curved blue arrow in the optimal condition marks the rerouted portion of the (A,B) demand taking the indirect A-C-B path",
+    "state_means": "initial vs optimal states are told apart by the fraction labels on each edge (e.g. 2/2 becoming 1.5/2) and by the new curved reroute arrow and its matching C-to-B return arrow",
+    "marker_means": "fraction labels ('used/capacity', e.g. '1/2') on every edge double as both the identifying marker and the worked value",
+    "emphasis": "the bold block arrow captioned 'Optimize f_ABC, f_ABB' visually separates cause from effect, and the new curved blue arrow in the optimal panel draws the eye straight to what changed",
+    "reusable_patterns": [
+      "a table of capacities/demands feeding a shared topology, then the same topology redrawn before/after an optimization step with per-edge used/capacity fractions and one demand's colour split across a direct and a rerouted arrow"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "SSDO",
+    "traffic-engineering",
+    "subproblem-optimization",
+    "flow-splitting",
+    "MLU",
+    "data-center-network"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 SSDO Design"
+    ],
+    "evidence": [
+      "Notations like “1/2” on the edges mean that the flow through the edge is 1 and the capacity",
+      "resulting in an MLU of max{1,0.5,0.5} = 1 , which occurs at the edge A →B",
+      "the MLU transitions to max{0.75,0.75,0.5,0.25} = 0.75"
+    ]
+  },
+  "summary": "This figure walks through SSDO's subproblem-optimization (SO) mechanic on a 3-node triangle network. The table (a) and topology (b) set up the input: each of the three edges (A-B, A-C, B-C) has capacity 2, and three demands, (A,B)=2 in blue, (A,C)=1 in purple, (B,C)=1 in green, share it. In the initial traffic condition (c), all demands take their direct edge, saturating A-B at 2/2 and giving a maximum link utilization (MLU) of 1. Optimizing only the (A,B) demand's split ratios (labelled f_ABC, f_ABB) while holding the other two demands fixed produces the optimal condition (d): 1.5 of the 2 units still cross A-B directly, but 0.5 are rerouted via C, adding a curved A-to-C arrow and a return C-to-B arrow. The four edges now sit at 0.75, 0.75, 0.5, and 0.25 of capacity, lowering the MLU from 1 to 0.75.",
+  "summary_zh": "该图走读SSDO子问题优化：(a)(b)给三角网容量与三需求（蓝A-B=2、紫A-C=1、绿B-C=1）；(c)初始全直连A-B满载2/2，MLU=1；调分流比得(d)最优，四边0.75/0.75/0.5/0.25，MLU降至0.75。",
+  "confidence": "high",
+  "notes": "layout.panel_count is set to 4 (matching the figure's four lettered sub-figures a/b/c/d) even though the index's raw panel count is 1; layout.panels/column/aspect mirror the index value as instructed. content.panels lists only (c) and (d), the actual before/after evolution pair, since (a) the capacity/demand table and (b) the topology are setup panels rather than frames of a changing instance.",
+  "venue": "NSDI26"
+}

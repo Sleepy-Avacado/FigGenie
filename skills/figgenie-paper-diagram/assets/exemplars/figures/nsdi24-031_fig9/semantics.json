@@ -1,0 +1,227 @@
+{
+  "paper_id": "nsdi24-031",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "RAPID",
+    "one_liner": "a programmable switch dataplane that augments a match-action pipeline with a backward-flowing side ring for fast stateful read/write communication between stages",
+    "domain": [
+      "networking",
+      "programmable-switches",
+      "packet-processing"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "the state-machine logic governing how a blocked flow moves between Run, Wait, Suspend, and Schedule states",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Run",
+        "kind": "state",
+        "role": "the flow is processed normally, not subject to the blocking scheme",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Wait",
+        "kind": "state",
+        "role": "the flow's entry has been written to dTable and is monitored against the packet buffer (PB)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Suspend",
+        "kind": "state",
+        "role": "packets of the flow are present in PB; scheduling is suspended until the timer expires",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Schedule",
+        "kind": "state",
+        "role": "a packet has been scheduled after the suspend timer expired; PB is checked again for remaining packets",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Run",
+        "to": "Wait",
+        "what": "Write dTable",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Wait",
+        "to": "Run",
+        "what": "Timeout (flow removed from dTable)",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Wait",
+        "to": "Suspend",
+        "what": "PB not empty",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Suspend",
+        "to": "Schedule",
+        "what": "Timeout",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Schedule",
+        "to": "Wait",
+        "what": "PB empty",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Schedule",
+        "to": "Suspend",
+        "what": "PB not empty",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Run",
+        "Wait",
+        "Suspend",
+        "Schedule"
+      ],
+      "transitions": [
+        {
+          "from": "Run",
+          "to": "Wait",
+          "guard": "Write dTable"
+        },
+        {
+          "from": "Wait",
+          "to": "Run",
+          "guard": "Timeout"
+        },
+        {
+          "from": "Wait",
+          "to": "Suspend",
+          "guard": "PB not empty"
+        },
+        {
+          "from": "Suspend",
+          "to": "Schedule",
+          "guard": "Timeout"
+        },
+        {
+          "from": "Schedule",
+          "to": "Wait",
+          "guard": "PB empty"
+        },
+        {
+          "from": "Schedule",
+          "to": "Suspend",
+          "guard": "PB not empty"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "RAPID's blocking mode is a 4-state FSM (Run, Wait, Suspend, Schedule) driven by the packet buffer PB: a flow is suspended whenever PB is non-empty and only returns to normal Run processing once a timeout finds PB empty after scheduling.",
+    "reading_order": "starts at Run, follows 'Write dTable' to Wait, then to Suspend on 'PB not empty', to Schedule on 'Timeout', and back to Wait or Suspend, with Wait finally returning to Run on 'Timeout'."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.5,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#188237",
+        "used_for": "stroke/text of the 'Run' state and the green 'Write dTable' transition arrow"
+      },
+      {
+        "hex": "#ccf6d8",
+        "used_for": "fill of the 'Run' state circle"
+      },
+      {
+        "hex": "#cfdcf3",
+        "used_for": "fill of the 'Wait' state circle and its associated blue transition arrows"
+      },
+      {
+        "hex": "#c4f6ff",
+        "used_for": "fill of the 'Suspend' state circle and its associated cyan transition arrows"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "fill of the 'Schedule' state circle and its associated grey transition arrows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "coloured circle outlines matching each state's own hue (green, blue, cyan, grey); no black outlines",
+    "corners": "rounded",
+    "arrows": "thin curved arrows, each coloured to match its source/thematic state, with bold italic labels naming the triggering condition",
+    "font": "bold italic sans-serif (FranklinGothic) state names and transition labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each state (and its adjoining transition arrows) gets its own accent colour (green Run, blue Wait, cyan Suspend, grey Schedule) purely to keep the four states visually distinct; colour carries no meaning beyond state identity",
+    "line_style_means": "all transitions are plain curved arrows; only colour and the italic bold text label distinguish one trigger from another",
+    "state_means": "the four blocking-mode states are told apart by position, outline/fill colour, and name",
+    "marker_means": "no numbered or symbolic markers; every transition is labelled with the plain-text guard condition that fires it (Timeout, Write dTable, PB empty, PB not empty)",
+    "emphasis": "the two 'PB not empty' labels and the shared 'Timeout' label on different edges emphasize that the same condition can retrigger suspension from two different states",
+    "reusable_patterns": [
+      "a small colour-coded finite-state machine with one accent colour per state and its adjoining transitions"
+    ],
+    "weaknesses": [
+      "'PB not empty' labels two different edges (Wait→Suspend and Schedule→Suspend) and 'Timeout' labels two different edges (Wait→Run and Suspend→Schedule), so the reader must track source/target position rather than the label alone to tell the transitions apart"
+    ]
+  },
+  "tags": [
+    "finite-state-machine",
+    "packet-buffer",
+    "blocking-mode",
+    "flow-scheduling",
+    "stateful-packet-processing",
+    "RAPID"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 RAPID Architecture (p.9)"
+    ],
+    "evidence": [
+      "FSM for the blocking mode in RAPID.",
+      "if packets of the flow are present in PB, the flow enters a Suspend state",
+      "otherwise, the flow transitions to the Wait state and is removed from dTable when the timer expires"
+    ]
+  },
+  "summary": "Figure 9 draws the finite-state machine governing RAPID's blocking mode for a single flow, driven by whether its packet buffer (PB) is empty. A flow starts in Run; writing its entry to dTable moves it to Wait. Once packets for the flow appear in PB, it enters Suspend, where a timer must expire before a packet can be scheduled. Expiry moves the flow to Schedule; if PB still holds packets, it re-enters Suspend, otherwise it returns to Wait. Wait itself returns to Run, removing the flow from dTable, once its own timeout fires. Four colour-coded circles (green Run, blue Wait, cyan Suspend, grey Schedule) and bold italic edge labels name each trigger, though 'Timeout' and 'PB not empty' each repeat on a second edge.",
+  "summary_zh": "图9展示RAPID阻塞模式的有限状态机：Run经Write dTable到Wait；PB非空则进入Suspend，超时后到Schedule；PB空则回到Wait，Wait超时后回到Run并从dTable移除。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

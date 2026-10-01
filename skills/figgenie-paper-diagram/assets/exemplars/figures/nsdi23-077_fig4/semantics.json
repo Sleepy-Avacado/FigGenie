@@ -1,0 +1,240 @@
+{
+  "paper_id": "nsdi23-077",
+  "fig": "4",
+  "system": {
+    "name": "SRNIC",
+    "one_liner": "a scalable hardware architecture for RDMA NICs that separates fast and slow paths for outbound and inbound traffic",
+    "domain": [
+      "networking",
+      "rdma",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Application",
+        "role": "generates data to send over RDMA",
+        "container": "User space",
+        "novel": false
+      },
+      {
+        "name": "Buffer",
+        "role": "holds data awaiting retransmission on the outbound path",
+        "container": "User space",
+        "novel": false
+      },
+      {
+        "name": "Software Retransmission",
+        "role": "handles retransmission for the inbound slow path in software",
+        "container": "User space",
+        "novel": true
+      },
+      {
+        "name": "RetryQ",
+        "role": "queue tracking WQEs pending retry",
+        "container": "Driver",
+        "novel": true
+      },
+      {
+        "name": "SQ",
+        "role": "send queue of work requests",
+        "container": "Driver",
+        "novel": false
+      },
+      {
+        "name": "RQ",
+        "role": "receive queue of work requests",
+        "container": "Driver",
+        "novel": false
+      },
+      {
+        "name": "QP",
+        "role": "queue-pair state used by the driver",
+        "container": "Driver",
+        "novel": false
+      },
+      {
+        "name": "Tx",
+        "role": "transmit completion/queue handling on the inbound fast path",
+        "container": "Driver",
+        "novel": false
+      },
+      {
+        "name": "Rx",
+        "role": "receive completion/queue handling",
+        "container": "Driver",
+        "novel": false
+      },
+      {
+        "name": "CtrlQ",
+        "role": "control queue for the inbound slow path",
+        "container": "Driver",
+        "novel": true
+      },
+      {
+        "name": "Data Mover",
+        "role": "moves data between host memory and the RNIC over PCIe",
+        "container": "Transport",
+        "novel": true
+      },
+      {
+        "name": "QP Scheduler",
+        "role": "schedules queue pairs for transmission",
+        "container": "Transport",
+        "novel": true
+      },
+      {
+        "name": "Congestion Control",
+        "role": "controls the sending rate to avoid congestion",
+        "container": "Transport",
+        "novel": false
+      },
+      {
+        "name": "Hardware Retransmission",
+        "role": "handles retransmission for the inbound fast path directly in hardware",
+        "container": "Transport",
+        "novel": true
+      },
+      {
+        "name": "QPC",
+        "role": "queue-pair context storage",
+        "container": "Transport",
+        "novel": false
+      },
+      {
+        "name": "MTT",
+        "role": "memory translation table for address translation",
+        "container": "Transport",
+        "novel": false
+      },
+      {
+        "name": "100GE MAC",
+        "role": "100 Gigabit Ethernet MAC layer",
+        "container": "Basic NIC",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application",
+        "to": "Buffer",
+        "what": "outbound data",
+        "step": null
+      },
+      {
+        "from": "Buffer",
+        "to": "SQ",
+        "what": "outbound path data queued for send",
+        "step": null
+      },
+      {
+        "from": "SQ",
+        "to": "Data Mover",
+        "what": "outbound path data moved across PCIe",
+        "step": null
+      },
+      {
+        "from": "Data Mover",
+        "to": "100GE MAC",
+        "what": "outbound path data through the transport layer",
+        "step": null
+      },
+      {
+        "from": "100GE MAC",
+        "to": "Hardware Retransmission",
+        "what": "inbound traffic entering the fast path",
+        "step": null
+      },
+      {
+        "from": "Hardware Retransmission",
+        "to": "Rx",
+        "what": "inbound fast-path completions",
+        "step": null
+      },
+      {
+        "from": "CtrlQ",
+        "to": "Software Retransmission",
+        "what": "inbound slow-path data needing software retransmission handling",
+        "step": null
+      },
+      {
+        "from": "Software Retransmission",
+        "to": "Application",
+        "what": "recovered inbound data on the slow path",
+        "step": null
+      }
+    ],
+    "key_idea": "SRNIC keeps the common inbound case in a fast hardware path with hardware retransmission, while an uncommon inbound slow path escalates to software retransmission in user space, all connected to the host over PCIe.",
+    "reading_order": "Top to bottom, following the three colored arrows (Outbound, Inbound Fast, Inbound Slow) from the CPU's User space and Driver, across PCIe, into the RNIC."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.8,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "red arrows/text for the Inbound Fast Path (solid) and Inbound Slow Path (dashed)"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue arrow/text for the Outbound Path"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "light gray fill for the component boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on boxes (~0.47pt), dashed boundary lines separating User space/Driver and Transport/Basic NIC sublayers",
+    "font": "sans-serif (Calibri, some italic), 6.5-8.5pt",
+    "corners": "square",
+    "arrows": "a blue solid vertical arrow (outbound), a red solid vertical arrow (inbound fast), a red dashed vertical arrow (inbound slow), and a double-headed arrow labelled PCIe between CPU and RNIC",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks the outbound data path; solid red marks the inbound fast path; dashed red marks the inbound slow path that goes through software retransmission",
+    "line_style_means": "solid vs dashed distinguishes the inbound fast path (hardware retransmission) from the inbound slow path (software retransmission)",
+    "emphasis": "three parallel colored arrows running top-to-bottom through the whole figure make the three data paths (outbound, inbound fast, inbound slow) the organizing idea, with the PCIe boundary separating CPU software from RNIC hardware",
+    "reusable_patterns": [
+      "host/device split diagram with a PCIe boundary between software (CPU) and hardware (NIC) layers",
+      "fast-path/slow-path distinction drawn as parallel solid/dashed arrows through the same stack"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "rdma",
+    "nic-architecture",
+    "hardware-offload",
+    "fast-path",
+    "congestion-control",
+    "pcie"
+  ],
+  "provenance": {
+    "sections": [
+      "4 SRNIC Design (p.6)"
+    ],
+    "evidence": [
+      "we design a scalable RDMA NIC architecture SRNIC, as shown in Figure 4",
+      "Figure 4: SRNIC architecture."
+    ]
+  },
+  "summary": "Figure 4 gives the overall architecture of SRNIC, a scalable RDMA NIC design, split across a CPU host (top) and the RNIC hardware (bottom) connected via PCIe. On the CPU, user-space Application, Buffer, and Software Retransmission components sit above a Driver layer with send/receive/retry queues (SQ, RQ, RetryQ, QP) and completion/control queues (Tx, Rx, CtrlQ). On the RNIC, a Transport layer contains a Data Mover, QP Scheduler, Congestion Control, Hardware Retransmission, and per-connection state (QPC, MTT) above a Basic NIC with a 100GE MAC. Three colored arrows running through the whole stack label the Outbound Path, the Inbound Fast Path (handled by Hardware Retransmission, staying in hardware), and the Inbound Slow Path (dashed, escalating to Software Retransmission in user space), organizing the architecture around these three traffic paths rather than around individual components.",
+  "summary_zh": "图4展示SRNIC架构：CPU主机（应用/缓冲区/软件重传，驱动含SQ/RQ/RetryQ）经PCIe连RNIC硬件（Data Mover、QP调度、拥塞控制、硬件重传、QPC/MTT）。三色箭头标出三条数据路径。",
+  "confidence": "medium",
+  "notes": null,
+  "venue": "NSDI23"
+}

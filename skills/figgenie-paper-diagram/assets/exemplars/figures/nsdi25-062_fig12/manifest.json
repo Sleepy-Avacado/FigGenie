@@ -1,0 +1,56 @@
+{
+  "id": "nsdi25-062_fig12",
+  "kind": "mechanism",
+  "paper_id": "nsdi25-062",
+  "fig": "12",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 12: An example of execution planning process seven 30- fps streams s.t. <1s latency & >0.9 accuracy performance target. The throughputs (TPS) of one model executing on one hardware (Model@HW) in the right table are proﬁled with batch size (Bat) and time cost (Cos). The red boxes highlight the",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "mixed",
+  "subject": "how RegenHance profiles DFG components across hardware, then dynamic-programs a CPU/GPU execution schedule meeting performance targets",
+  "arrangement": "other",
+  "panel_count": 4,
+  "frame_template": "free",
+  "delta_marking": "badge",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.83,
+  "n_elements": 13,
+  "n_relations": 4,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-062/src/fig12_manager4.svg",
+    "preview.png": "lab/extracted/nsdi25-062/src/fig12_manager4.png",
+    "print.png": "lab/extracted/nsdi25-062/nsdi25-062_fig12_p9_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "Chains four unlike diagram types (dataflow graph, profiling table, DP algorithm box, Gantt schedule) into one numbered pipeline, using one colour per stage to tie them all together.",
+      "what_to_learn": "Keep one colour per logical item across four different diagram types (graph, table, algorithm box, timeline), and outline in red just the table rows the search picked — but two DFG nodes share the same green, blurring their schedule blocks.",
+      "note_source": "agent"
+    }
+  ]
+}

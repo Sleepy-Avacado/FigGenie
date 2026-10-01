@@ -1,0 +1,191 @@
+{
+  "paper_id": "osdi23-040",
+  "fig": "6",
+  "system": {
+    "name": "Enso",
+    "one_liner": "a streaming interface for NIC-application communication that replaces fixed-size descriptors with dynamically sized, on-demand data streams",
+    "domain": [
+      "networking",
+      "nic-hardware",
+      "kernel-bypass"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Metadata",
+        "role": "incoming metadata for an RX operation, including the Enso Pipe ID and enqueued data size",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Data",
+        "role": "incoming raw data received by the NIC",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RX Ensō Pipe Manager 1",
+        "role": "one of 16 parallel per-pipe managers handling metadata for its assigned Enso Pipe",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "RX Ensō Pipe Manager 16",
+        "role": "another parallel per-pipe manager (up to 16 total, elided in the figure)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "MMIO/JTAG",
+        "role": "configuration/control interface into each Pipe Manager and the Notification Buffer Manager",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "RX Notification Buffer Manager",
+        "role": "aggregates metadata/notifications from the pipe managers and forwards them to the DMA engine",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Data FIFO",
+        "role": "buffers incoming data separately from metadata before it reaches the DMA engine, keeping inter-module queues small",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "DMA Engine",
+        "role": "transfers the metadata/notification stream and the data stream into host memory",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Metadata",
+        "to": "RX Ensō Pipe Manager 1",
+        "what": "incoming metadata demultiplexed to the matching pipe manager",
+        "step": null
+      },
+      {
+        "from": "Metadata",
+        "to": "RX Ensō Pipe Manager 16",
+        "what": "incoming metadata demultiplexed to the matching pipe manager",
+        "step": null
+      },
+      {
+        "from": "MMIO/JTAG",
+        "to": "RX Ensō Pipe Manager 1",
+        "what": "configuration/control signals",
+        "step": null
+      },
+      {
+        "from": "RX Ensō Pipe Manager 1",
+        "to": "RX Notification Buffer Manager",
+        "what": "processed per-pipe metadata, remultiplexed",
+        "step": null
+      },
+      {
+        "from": "RX Ensō Pipe Manager 16",
+        "to": "RX Notification Buffer Manager",
+        "what": "processed per-pipe metadata, remultiplexed",
+        "step": null
+      },
+      {
+        "from": "MMIO/JTAG",
+        "to": "RX Notification Buffer Manager",
+        "what": "configuration/control signals",
+        "step": null
+      },
+      {
+        "from": "RX Notification Buffer Manager",
+        "to": "DMA Engine",
+        "what": "metadata/notification stream",
+        "step": null
+      },
+      {
+        "from": "Data",
+        "to": "Data FIFO",
+        "what": "incoming raw data buffered ahead of DMA",
+        "step": null
+      },
+      {
+        "from": "Data FIFO",
+        "to": "DMA Engine",
+        "what": "buffered data stream",
+        "step": null
+      }
+    ],
+    "key_idea": "The RX datapath demultiplexes incoming metadata across 16 parallel per-pipe managers, remultiplexes their output into a shared notification buffer manager, and separately FIFOs the raw data, before both reach the DMA engine.",
+    "reading_order": "Left to right: Metadata and Data inputs fan out to 16 parallel Pipe Managers (metadata) and a Data FIFO (data), converging through the Notification Buffer Manager into the DMA Engine."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.88,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e6e6e6",
+        "used_for": "fill of the Pipe Manager boxes, Notification Buffer Manager, and DMA Engine boxes"
+      },
+      {
+        "hex": "#2ca02c",
+        "used_for": "occupied slots in the Data FIFO"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.7pt) black borders, solid throughout",
+    "font": "sans-serif, 7-8.5pt, non-bold",
+    "corners": "square",
+    "arrows": "thin black arrows; trapezoidal fan-out/fan-in connector shapes demultiplex Metadata across the 16 Pipe Managers and remultiplex their outputs",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green fill marks occupied slots in the Data FIFO, showing it as a queue with some entries filled and some empty; gray fill is used uniformly for all processing-module boxes with no further semantic distinction",
+    "line_style_means": "trapezoid connector shapes fan metadata out to, and back in from, the 16 parallel Pipe Managers; plain arrows carry the separate Data path beneath the Metadata/control path",
+    "emphasis": "drawing 16 identical Pipe Manager boxes (elided with a vertical ellipsis) alongside a visibly separate, FIFO-buffered Data path makes clear that Enso keeps metadata and bulk data on independent, differently-parallelized channels",
+    "reusable_patterns": [
+      "fan-out/fan-in trapezoids to depict per-instance parallel processing units",
+      "a separate, narrower lane for bulk data running parallel to a control/metadata pipeline",
+      "vertical ellipsis to elide a large fixed number (16) of identical repeated units"
+    ],
+    "weaknesses": [
+      "the two 'MMIO/JTAG' control inputs are drawn similarly to the main dataflow arrows, which could be confused with the RX data/metadata path"
+    ]
+  },
+  "tags": [
+    "NIC-datapath",
+    "streaming-interface",
+    "kernel-bypass",
+    "hardware-pipeline",
+    "networking"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Enso Implementation (p.9)"
+    ],
+    "evidence": [
+      "Figure 6 illustrates the RX datapath. It receives as input data and metadata, which includes the Ensō Pipe ID",
+      "Metadata is handled separately from the data, which allows for smaller queues between modules.",
+      "the transfer goes around the Ensō Pipe boundary and automatically partitions it into several transfers"
+    ]
+  },
+  "summary": "This figure shows Enso's NIC RX datapath, the hardware pipeline that receives data and metadata from the network before handing them to the host. Incoming Metadata (including the Enso Pipe ID and enqueued size) fans out to 16 parallel RX Enso Pipe Manager instances, each configurable via MMIO/JTAG, which process per-pipe state before their outputs are remultiplexed into a shared RX Notification Buffer Manager. Enso keeps the bulk Data path separate from metadata, running it through its own Data FIFO so that inter-module queues can stay small. Both the resulting Metadata/Notification stream and the buffered Data stream are finally handed to the DMA Engine, which moves them into host memory; the caption notes that a transfer crossing an Enso Pipe boundary is automatically split into several transfers no larger than the buffer size.",
+  "summary_zh": "该图展示 Enso 的 NIC 接收数据通路：元数据分发给16个并行Pipe Manager后汇聚到通知缓冲管理器；数据单独经Data FIFO缓冲，二者最终送入DMA引擎。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

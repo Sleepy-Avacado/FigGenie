@@ -1,0 +1,48 @@
+{
+  "id": "sosp24-005_fig4",
+  "paper_id": "sosp24-005",
+  "fig": "4",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 4. Perseus architecture and workflow.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 0.79,
+  "n_components": 8,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-005/src/fig4_overview_v2_Perseus.svg",
+    "preview.png": "lab/extracted/sosp24-005/src/fig4_overview_v2_Perseus.png",
+    "print.png": "lab/extracted/sosp24-005/sosp24-005_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence two-tier layered exemplar, a blue Server box over an orange Client box over a GPU row, where circled numbers 1-5 on the connecting arrows trace a profiling-optimization-schedule-feedback loop around an embedded lookup-table object.",
+      "what_to_learn": "Embed a small data object, such as a lookup table with one highlighted row, inside the tier that owns it rather than describing it in prose, and number the back-and-forth arrows between just two tiers in interaction order even when several arrows point the same direction, so the loop reads sequentially."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Numbered steps 1-5 trace a full server-to-client-to-server cycle (profile, optimize, deliver schedule, straggler-notify back), with the two tiers colour-coded blue/green and the chosen schedule row picked out in orange.",
+      "what_to_learn": "Number every arrow in the server-client cycle in one continuous sequence, even where it re-enters the server (step 4's straggler notification), and colour the two tiers distinctly (blue server, green client) so the reader always knows which side owns each step."
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "paper_id": "osdi25-009",
+  "fig": "3",
+  "system": {
+    "name": "PipeThreader",
+    "one_liner": "a DNN compiler that combines tile-based data parallelism with pipelined scheduling across heterogeneous GPU execution units",
+    "domain": [
+      "ml-systems",
+      "compilers",
+      "gpu"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DFG of operators",
+        "role": "example input data-flow graph of operators A and B",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "sTask partition",
+        "role": "partitions each operator by configuring the TileShape of sTasks",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "sTask-graph",
+        "role": "graph of sTasks preserving the computation and data dependencies of the original DFG",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "sTask scheduling",
+        "role": "schedules sTasks across EUs and sEUs using a two-level (inter-EU, intra-EU) algorithm",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Virtualized Device",
+        "role": "two-layer hardware abstraction of the underlying accelerator that executes the sProgram",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "EU",
+        "role": "homogeneous execution unit enabling SPMD-style parallelism across sTask-subgraphs",
+        "container": "Virtualized Device",
+        "novel": false
+      },
+      {
+        "name": "sEU",
+        "role": "specialized execution unit within an EU supporting MPMD-style parallelism for heterogeneous hardware (e.g., TensorCores vs CUDA cores)",
+        "container": "EU",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DFG of operators",
+        "to": "sTask partition",
+        "what": "DFG of operators",
+        "step": null
+      },
+      {
+        "from": "sTask partition",
+        "to": "sTask-graph",
+        "what": "sTask-graph",
+        "step": null
+      },
+      {
+        "from": "sTask-graph",
+        "to": "sTask scheduling",
+        "what": "sTask-graph",
+        "step": null
+      },
+      {
+        "from": "sTask scheduling",
+        "to": "Virtualized Device",
+        "what": "sProgram",
+        "step": null
+      },
+      {
+        "from": "Virtualized Device",
+        "to": "sTask scheduling",
+        "what": "Profiling",
+        "step": null
+      }
+    ],
+    "key_idea": "PipeThreader compiles a DFG into an sTask-graph, schedules sTasks across heterogeneous execution units (EU/sEU) on a virtualized device, and uses runtime profiling to inform scheduling.",
+    "reading_order": "Top-down: input DFG through sTask partition, sTask-graph, sTask scheduling, down into the virtualized device's EU/sEU units, with profiling feeding back up."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.4,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#9dc3e6",
+        "used_for": "blue fill for 'A' operator/sTask boxes and one sEU"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange fill for 'B' operator/sTask boxes and the other sEU"
+      },
+      {
+        "hex": "#404040",
+        "used_for": "dark gray fill for the sTask partition and sTask scheduling process boxes / bold text"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "medium gray fill for EU boxes and container borders"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill for the Virtualized Device container background"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1pt solid dark strokes on all boxes, no dashing",
+    "font": "Calibri sans-serif, 5.5-10.5pt, italic for the two gray process-stage labels",
+    "corners": "mixed",
+    "arrows": "orthogonal, solid, filled triangular heads, labelled with stage-transition text (sTask-graph, sProgram, Profiling)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue and orange distinguish the two example operators/sTasks (A vs B) as they flow through partitioning, the sTask-graph, and execution on sEUs; gray shades denote process boxes and container backgrounds",
+    "line_style_means": "not used - all connector arrows are solid lines",
+    "emphasis": "The bold dark-gray process boxes (sTask partition, sTask scheduling) and the labelled transition arrows (sTask-graph, sProgram, Profiling) highlight PipeThreader's new compilation and scheduling stages, while colored A/B boxes trace how operators are transformed into sTasks and mapped onto sEUs",
+    "reusable_patterns": [
+      "top-down transformation pipeline (DFG -> task graph -> schedule -> hardware execution)",
+      "profiling feedback loop back into an earlier pipeline stage",
+      "nested hardware hierarchy (device > EU > sEU)"
+    ],
+    "weaknesses": [
+      "the 'order' arrow and stacked A/A/A, B/B/B icons inside each EU are not explained by any legend or caption text"
+    ]
+  },
+  "tags": [
+    "dnn-compiler",
+    "pipelining",
+    "task-scheduling",
+    "heterogeneous-gpu",
+    "tile-based-parallelism"
+  ],
+  "provenance": {
+    "sections": [
+      "3 PipeThreader Abstraction (p.4)",
+      "3 PipeThreader Abstraction (p.5)",
+      "4 PipeThreader Scheduling (p.7)"
+    ],
+    "evidence": [
+      "Figure 3 provides an overview of the system.",
+      "As illustrated in Figure 3, operators from the input DFG are converted into sTasks via sTask-partition",
+      "Our scheduling policy is inspired by the two-layer hardware abstraction described in Figure 3"
+    ]
+  },
+  "summary": "Figure 3 gives the system overview of PipeThreader, a DNN compiler that fuses tile-based data parallelism with pipelined scheduling for heterogeneous GPU execution units. The top-down diagram starts from an example DFG of operators A and B, which sTask-partition converts into an sTask-graph of fine-grained, dependency-preserving sTasks (shown as repeated blue-A/orange-B chains). sTask scheduling then applies a two-level algorithm to produce an sProgram, which runs on a Virtualized Device modeled as multiple EUs, each holding heterogeneous sEUs (e.g., TensorCore-like and CUDA-core-like units) that execute A/B sTasks in a defined order. A Profiling arrow feeds runtime measurements from the device back into sTask scheduling, closing the loop between compilation and execution.",
+  "summary_zh": "图3展示PipeThreader系统概览:将算子DFG经sTask划分转为sTask图,再由两级调度生成sProgram,在虚拟设备的EU/sEU异构单元上执行,并通过Profiling反馈回调度阶段形成闭环。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

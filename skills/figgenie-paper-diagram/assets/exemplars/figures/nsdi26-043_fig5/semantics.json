@@ -1,0 +1,282 @@
+{
+  "paper_id": "nsdi26-043",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "Lemonshark",
+    "one_liner": "an asynchronous DAG-BFT protocol that achieves early finality for sharded transactions",
+    "domain": [
+      "distributed-systems",
+      "BFT-consensus",
+      "sharding"
+    ],
+    "abstraction": "consensus-protocol"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one data structure",
+    "subject": "how block-dependency pointers across nodes and rounds let a shard's blocks be ordered before commitment",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Round",
+        "kind": "label",
+        "role": "column header indexing protocol rounds 1 through 6",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 1",
+        "kind": "lane",
+        "role": "one of four nodes that can be in charge of a shard's block in a given round",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 2",
+        "kind": "lane",
+        "role": "one of four nodes that can be in charge of a shard's block in a given round",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 3",
+        "kind": "lane",
+        "role": "one of four nodes that can be in charge of a shard's block in a given round",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Node 4",
+        "kind": "lane",
+        "role": "one of four nodes that can be in charge of a shard's block in a given round",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b_1^1",
+        "kind": "cell",
+        "role": "shard k1's block in round 1, at Node 1; the 'first uncommitted block' worked example discussed in the text",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "b_2^1",
+        "kind": "cell",
+        "role": "shard k2's block in round 1, at Node 2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b_1^2",
+        "kind": "cell",
+        "role": "shard k1's block in round 2, at Node 2",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b_2^2",
+        "kind": "cell",
+        "role": "shard k2's block in round 2, at Node 4",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b_2^3",
+        "kind": "cell",
+        "role": "shard k2's block in round 3, at Node 1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b_1^3",
+        "kind": "cell",
+        "role": "shard k1's block in round 3, at Node 3",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "b'",
+        "kind": "cell",
+        "role": "a leader block, at Node 3 round 4",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "b_2^4",
+        "kind": "cell",
+        "role": "shard k2's block in round 4, at Node 2; discussed as persisting into round 5",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "b_1^4",
+        "kind": "cell",
+        "role": "shard k1's block in round 4, at Node 4; discussed as persisting into round 5",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "b''",
+        "kind": "cell",
+        "role": "a leader block, at Node 4 round 6",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "b_1^1",
+        "to": "b_1^2",
+        "what": "shard k1's block points to the previous round's block in charge of the same shard",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b_1^2",
+        "to": "b_1^3",
+        "what": "shard k1's block points to the previous round's block in charge of the same shard",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b_1^3",
+        "to": "b_1^4",
+        "what": "shard k1's block points to the previous round's block in charge of the same shard",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b_2^1",
+        "to": "b_2^3",
+        "what": "shard k2's block points back to the most recent earlier block in charge of the same shard",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b_2^3",
+        "to": "b_2^4",
+        "what": "shard k2's block points to the previous round's block in charge of the same shard",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "b'",
+        "to": "b_1^3",
+        "what": "the leader block's causal history reaches back through the uncommitted chain it must include a prefix of",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "b''",
+        "to": "b_1^4",
+        "what": "the leader block's causal history must include the chain of uncommitted shard blocks preceding it",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "b''",
+        "to": "b_2^4",
+        "what": "the leader block's causal history must include the chain of uncommitted shard blocks preceding it",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "concrete block labels b_1^r / b_2^r (shard subscript, round superscript) and two leader blocks b', b'' placed in specific Node x Round grid cells",
+      "linked_by": "colour (green = shard k1, blue = shard k2, red = leader) and pointer arrows drawn between same-shard blocks across rounds",
+      "result_cells": "no computed result cells; the worked values are the block instances themselves, used in the surrounding text to argue which blocks a committing leader's causal history must include"
+    },
+    "key_idea": "Blocks in charge of the same shard form a pointer chain across rounds, so once a leader commits a block far enough along that chain, its causal history is forced to include a proper prefix of the whole chain, giving every block in it a determinate order before commitment.",
+    "reading_order": "left to right by round (1 through 6), scanning down the four node rows within each round; colour identifies each block's shard (green k1, blue k2) or leader role (red), and pointer arrows trace each block back to the previous round's block in charge of the same shard"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.34,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "pale-green fill of most shard-k1 blocks (stroke #82b366)"
+      },
+      {
+        "hex": "#97d077",
+        "used_for": "a more saturated green singling out one shard-k1 block, most likely b_1^1, the 'first uncommitted block' worked example"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale-blue fill of shard-k2 blocks (stroke #6c8ebf)"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pale-red/pink fill of the two leader blocks b' and b'' (stroke #b85450)"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of empty grid cells where no block is in charge that round"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "very thin (~0.01pt reported) black grid-cell borders, coloured to match each cell's fill category",
+    "corners": "square",
+    "arrows": "thin black arrows with solid heads linking a block to the earlier block of the same shard it points to",
+    "font": "small sans-serif subscript/superscript labels (shard index, round number)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green marks shard k1's blocks, blue marks shard k2's blocks, and red marks leader blocks that commit portions of the DAG; white marks a round with no block for that node",
+    "line_style_means": "solid arrows are pointer/dependency edges; no dashed or alternate line styles are used",
+    "state_means": "not applicable; a single static grid of the DAG's block placement, not a before/after or alternatives figure",
+    "marker_means": "subscripts name the shard (1 or 2) and superscripts name the round, so a block's own label already encodes its position in its shard's chain",
+    "emphasis": "a more saturated green distinguishes the specific block the surrounding text walks through as its running example from the other same-colour blocks",
+    "reusable_patterns": [
+      "a node-by-round grid with coloured cells marking which entity is in charge each round, linked by pointer arrows into a per-category chain"
+    ],
+    "weaknesses": [
+      "the grid is small and the pointer arrows cross densely, so some exact arrow endpoints (particularly around the two leader blocks' causal-history references) are read as representative of the described mechanism rather than pixel-traced"
+    ]
+  },
+  "tags": [
+    "Lemonshark",
+    "DAG-BFT",
+    "sharding",
+    "early-finality",
+    "block-ordering",
+    "leader-commitment"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Lemonshark"
+    ],
+    "evidence": [
+      "the first uncommitted block in-charge of that shard, illustrated by block b1 1 in Fig. 5",
+      "requiring block br i to have a pointer to br−1 i, where the latter has SBO",
+      "The blue and green blocks are in-charge of two distinct shards (k1,k2), and the red blocks b′,b′′ are leader blocks."
+    ]
+  },
+  "summary": "This figure is a worked-example grid of protocol rounds (columns 1-6) by nodes (rows Node 1-4) in Lemonshark's asynchronous DAG-BFT. Coloured blocks mark which node is in charge of which shard's block each round: green blocks (b1^1, b1^2, b1^3, b1^4) belong to shard k1, blue blocks (b2^1, b2^2, b2^3, b2^4) belong to shard k2, and two red blocks (b', b'') are leader blocks that later commit portions of the DAG. Pointer arrows connect each shard's block to the block that was in charge of the same shard in an earlier round, forming a recursive chain per shard. The figure illustrates Lemonshark's core argument for early finality: a committing leader far along such a chain is forced to include a proper prefix of the whole chain in its causal history, giving every block in it a determinate execution order before commitment.",
+  "summary_zh": "该图用节点x轮次区块网格展示Lemonshark：绿区块属分片k1，蓝属k2，红b'、b''为leader；同分片区块跨轮次指针相连成链，使提交leader须在因果历史含该链前缀，提交前即定执行顺序。",
+  "confidence": "medium",
+  "notes": "content.groups/base/worked_example kept per the prior label (anatomy primary, timeline base, worked example true), which fit the figure well. Confidence set to medium because the small grid's densely crossing pointer arrows could not all be pixel-traced with certainty, and the identity of the one specially-highlighted (more saturated green) block is inferred from the text's emphasis on b_1^1 rather than directly confirmed.",
+  "venue": "NSDI26"
+}

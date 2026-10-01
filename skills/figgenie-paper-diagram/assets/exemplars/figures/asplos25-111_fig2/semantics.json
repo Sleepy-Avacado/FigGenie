@@ -1,0 +1,214 @@
+{
+  "paper_id": "asplos25-111",
+  "fig": "2",
+  "system": {
+    "name": "Aqua",
+    "one_liner": "a GPU memory management framework that reduces paging overhead to enable responsive, high-throughput preemptive LLM inference",
+    "domain": [
+      "llm-serving",
+      "gpu-memory",
+      "distributed-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "NVLink Domain",
+        "role": "group of GPUs interconnected via a high-speed NVLink interconnect for GPU-GPU memory access",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU 1",
+        "role": "GPU within the NVLink domain hosting inference jobs",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 2",
+        "role": "GPU within the NVLink domain; source of a dashed intra-domain link to GPU 6",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 3",
+        "role": "GPU within the NVLink domain hosting inference jobs",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 4",
+        "role": "GPU within the NVLink domain; connected to AQUA-LIB and source of a dashed link to GPU 8",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 5",
+        "role": "GPU within the NVLink domain hosting inference jobs",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 6",
+        "role": "GPU within the NVLink domain; target of a dashed intra-domain link from GPU 2",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 7",
+        "role": "GPU within the NVLink domain hosting inference jobs",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "GPU 8",
+        "role": "highlighted GPU within the NVLink domain; connects to AQUA-LIB and receives feedback from AQUA-PLACER",
+        "container": "NVLink Domain",
+        "novel": false
+      },
+      {
+        "name": "AQUA-PROF",
+        "role": "profiles the NVLink Domain's GPUs and feeds the result to AQUA-PLACER",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "AQUA-PLACER",
+        "role": "receives profiling data from AQUA-PROF and issues a placement decision back into the NVLink Domain",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "AQUA-LIB",
+        "role": "library-level component that GPUs (e.g., GPU 4, GPU 8) communicate with directly, likely mediating GPU-GPU memory access",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "NVLink Domain",
+        "to": "AQUA-PROF",
+        "what": "profiling data collected from the GPU domain",
+        "step": null
+      },
+      {
+        "from": "AQUA-PROF",
+        "to": "AQUA-PLACER",
+        "what": "profiling information used for a placement decision",
+        "step": null
+      },
+      {
+        "from": "AQUA-PLACER",
+        "to": "NVLink Domain",
+        "what": "placement decision applied back to a GPU (GPU 8)",
+        "step": null
+      },
+      {
+        "from": "AQUA-LIB",
+        "to": "GPU 4",
+        "what": "bidirectional communication between AQUA-LIB and a GPU",
+        "step": null
+      },
+      {
+        "from": "GPU 8",
+        "to": "AQUA-LIB",
+        "what": "a GPU communicates with AQUA-LIB",
+        "step": null
+      },
+      {
+        "from": "GPU 2",
+        "to": "GPU 6",
+        "what": "dashed intra-domain connection between two GPUs; exact purpose not stated in the excerpted text",
+        "step": null
+      },
+      {
+        "from": "GPU 4",
+        "to": "GPU 8",
+        "what": "dashed intra-domain connection between two GPUs; exact purpose not stated in the excerpted text",
+        "step": null
+      }
+    ],
+    "key_idea": "Aqua's three components, AQUA-PROF, AQUA-PLACER, and AQUA-LIB, surround a multi-GPU NVLink Domain, profiling GPUs, deciding memory/compute placement, and mediating GPU access to enable fast, memory-aware preemption.",
+    "reading_order": "starts at the stacked NVLink Domain of GPU grids, follows the brace down to AQUA-PROF, right to AQUA-PLACER and back up, then right to AQUA-LIB"
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.8,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill portion of each GPU box (alternating light/dark stripe pattern)"
+      },
+      {
+        "hex": "#cfe2f3",
+        "used_for": "light blue tint, a minor/background accent not clearly distinguishable as a separate region"
+      },
+      {
+        "hex": "#f3f3f3",
+        "used_for": "very light gray background fill of the stacked NVLink Domain panel(s)"
+      },
+      {
+        "hex": "#ead1dc",
+        "used_for": "light pink fill of the AQUA-LIB, AQUA-PROF, and AQUA-PLACER boxes"
+      },
+      {
+        "hex": "#a64d79",
+        "used_for": "dark magenta highlighted swatch inside GPU 8, singling it out for the example"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black strokes, mixed corner styles (square GPU boxes, rounder AQUA-* boxes), with dashed strokes on two connectors",
+    "font": "OpenSans Bold/Regular sans, bold for GPU and component labels",
+    "corners": "mixed",
+    "arrows": "solid black arrows with filled heads for the profiler/placer/lib connections; dashed arrows for two intra-domain GPU-to-GPU links",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pink = Aqua's three named components (AQUA-LIB, AQUA-PROF, AQUA-PLACER), gray = GPU boxes within the NVLink Domain, dark magenta = one highlighted GPU (GPU 8) singled out in the example",
+    "line_style_means": "solid arrows show the profiling/placement control loop and GPU-to-library communication; dashed arrows mark two specific intra-domain GPU-to-GPU links",
+    "emphasis": "stacking multiple NVLink Domain sheets suggests the design generalizes across many multi-GPU servers, while the single highlighted GPU 8 cell anchors a concrete example",
+    "reusable_patterns": [
+      "central resource pool (NVLink Domain) flanked by named control components in a hub-spoke layout"
+    ],
+    "weaknesses": [
+      "the meaning of the two dashed GPU-to-GPU arrows (GPU2 to GPU6, GPU4 to GPU8) is not explained in the retrieved text"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "gpu-memory-management",
+    "preemption",
+    "nvlink",
+    "memory-offloading",
+    "paging"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Aqa Design (p.4)"
+    ],
+    "evidence": [
+      "Aqa has three main components (Figure 2):",
+      "such as Nvlinks, which offers an order of magnitude higher bandwidth compared to PCIe.",
+      "We leverage this insight to decouple the memory and compute allocation on GPUs for inference jobs."
+    ]
+  },
+  "summary": "Figure 2 sketches Aqua's design as three named components arranged around a multi-GPU NVLink Domain. Several servers (drawn as stacked sheets) each hold 8 GPUs in a grid; GPU 8 is highlighted in dark magenta. A brace under the domain leads down to AQUA-PROF, which connects rightward to AQUA-PLACER, which in turn arrows back up into the domain at GPU 8, suggesting a profile-then-place control loop. AQUA-LIB sits to the right, wired with a bidirectional arrow to GPU 4 and an incoming arrow from GPU 8. Two dashed arrows inside the domain (GPU 2 to GPU 6, GPU 4 to GPU 8) hint at intra-domain data movement, though the retrieved paper text is truncated just before it explains what each named component does, so those roles are inferred mainly from the figure and component names rather than confirmed prose.",
+  "summary_zh": "图2展示Aqua围绕NVLink多GPU域的三大组件:AQUA-PROF分析后交给AQUA-PLACER决策并反馈GPU,AQUA-LIB与GPU直接通信;虚线箭头暗示域内GPU间数据迁移,但正文在具体说明前被截断。",
+  "confidence": "low",
+  "notes": "The provided paragraph is truncated immediately before it lists and explains Aqua's three main components, so component roles and flow semantics (especially the two dashed GPU-to-GPU arrows) are inferred mainly from the figure's labels and layout rather than stated directly in the text.",
+  "venue": "ASPLOS25"
+}

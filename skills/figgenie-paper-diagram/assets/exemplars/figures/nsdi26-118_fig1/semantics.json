@@ -1,0 +1,328 @@
+{
+  "paper_id": "nsdi26-118",
+  "fig": "1",
+  "system": {
+    "name": "SONiC DASH SmartSwitch",
+    "one_liner": "a uni-box hardware model that converges an NPU and multiple DPUs in a top-of-rack switch to offload cloud network services at scale",
+    "domain": [
+      "networking",
+      "hardware-accelerators",
+      "cloud"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Datacenter",
+        "role": "outer physical envelope (elevation view) containing compute rows and the spine",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Compute Rows",
+        "role": "racks of servers, each column topped by a ToR/T1 switch",
+        "container": "Datacenter",
+        "novel": null
+      },
+      {
+        "name": "T0/ToR",
+        "role": "top-of-rack switch layer serving each rack's servers",
+        "container": "Compute Rows",
+        "novel": null
+      },
+      {
+        "name": "SST1",
+        "role": "a SmartSwitch deployed directly in a compute row's existing T1 (ToR) switch position",
+        "container": "Compute Rows",
+        "novel": true
+      },
+      {
+        "name": "MoR/T1",
+        "role": "middle-of-row T1 switch used in the baseline (Sirius) deployment",
+        "container": "Compute Rows",
+        "novel": false
+      },
+      {
+        "name": "Spine (T2)",
+        "role": "spine layer connecting the T0/T1 switches upward",
+        "container": "Datacenter",
+        "novel": null
+      },
+      {
+        "name": "Sirius",
+        "role": "the prior DPU-centric appliance, requiring its own purpose-built rack; blocked from ad hoc placement among existing compute rows",
+        "container": "Datacenter",
+        "novel": false
+      },
+      {
+        "name": "T3",
+        "role": "top of the switch hierarchy above T2 in the Sirius logical topology",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "T2",
+        "role": "switch layer between T3 and MoR/T1 in the Sirius logical topology",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "ToR/T0",
+        "role": "leaf switch layer connecting to VM servers in the Sirius logical topology",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "VMs",
+        "role": "virtual machines running on the leaf servers",
+        "container": "Servers",
+        "novel": null
+      },
+      {
+        "name": "Servers",
+        "role": "compute servers reached through the T3/T2/MoR-T1/ToR-T0 switch hierarchy",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "SmartSwitch T1",
+        "role": "callout showing where a SmartSwitch sits in the topology (T1 position), replacing the switches it points to",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "DPU",
+        "role": "DPUs attached to Sirius's dedicated servers, reached over extra cabling from the switch hierarchy",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Server",
+        "role": "Sirius's DPU-attached server box, separate from the compute-row servers",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "SDN controller (DASH client)",
+        "role": "issues service configuration that drives the DASH pipeline",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "DASH pipeline (§4)",
+        "role": "match-action table pipeline representing cloud network service logic, with a fixed set of immutable stages configured via exposed attributes",
+        "container": "SDN controller (DASH client)",
+        "novel": true
+      },
+      {
+        "name": "SONiC",
+        "role": "switch OS layer that turns configuration into DASH API calls",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "gNMI Container",
+        "role": "handles gRPC get/set configuration calls into SONiC",
+        "container": "SONiC",
+        "novel": null
+      },
+      {
+        "name": "Redis DB",
+        "role": "stores switch/service state for SONiC",
+        "container": "SONiC",
+        "novel": null
+      },
+      {
+        "name": "Switch State Service",
+        "role": "tracks and serves switch state within SONiC",
+        "container": "SONiC",
+        "novel": null
+      },
+      {
+        "name": "DASH-SAI API (§3&6)",
+        "role": "vendor-neutral API standard connecting SONiC to the hardware provider's ASIC SDK",
+        "container": "SONiC",
+        "novel": false
+      },
+      {
+        "name": "Hardware Provider ASIC SDK",
+        "role": "vendor-supplied SDK sitting below the DASH-SAI API",
+        "container": "SONiC",
+        "novel": false
+      },
+      {
+        "name": "ASIC Driver",
+        "role": "lowest-level driver programming the ASIC hardware",
+        "container": "SONiC",
+        "novel": false
+      },
+      {
+        "name": "SmartSwitch (§5)",
+        "role": "uni-box hardware model converging an NPU and multiple DPUs via an interconnect",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "NPU",
+        "role": "network processing unit that delivers packets intended for service processing to the backend DPUs",
+        "container": "SmartSwitch (§5)",
+        "novel": null
+      },
+      {
+        "name": "Interconnect",
+        "role": "connects the NPU and DPUs, e.g. backplane Ethernet or PCIe",
+        "container": "SmartSwitch (§5)",
+        "novel": true
+      },
+      {
+        "name": "DPU 0",
+        "role": "one of the SmartSwitch's multiple DPUs; implements DASH pipelines and maintains flow state",
+        "container": "SmartSwitch (§5)",
+        "novel": null
+      },
+      {
+        "name": "CPU",
+        "role": "DPU-resident CPU running the data-plane application",
+        "container": "DPU 0",
+        "novel": null
+      },
+      {
+        "name": "DPAPP",
+        "role": "data-plane application running on the DPU's CPU",
+        "container": "CPU",
+        "novel": null
+      },
+      {
+        "name": "SONiC-DASH Community",
+        "role": "community contribution point at the SDN-controller/DASH-pipeline layer (Community-driven Development Model, §6)",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Hardware Providers",
+        "role": "hardware vendors (SS1, SS2, SS3) contributing at the SmartSwitch hardware layer",
+        "container": null,
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "NPU",
+        "to": "DPU 0",
+        "what": "NPU delivers packets intended for service processing to the backend DPUs",
+        "step": null
+      },
+      {
+        "from": "SDN controller (DASH client)",
+        "to": "SONiC",
+        "what": "controller writes configurations that SONiC turns into DASH API calls to program service logic",
+        "step": null
+      },
+      {
+        "from": "SONiC",
+        "to": "SmartSwitch (§5)",
+        "what": "DASH-SAI API programs service logic down into the ASIC/DPU hardware",
+        "step": null
+      },
+      {
+        "from": "Sirius",
+        "to": "Datacenter",
+        "what": "a Sirius appliance requires its own purpose-built rack; ad hoc placement among existing compute rows is blocked",
+        "step": null
+      },
+      {
+        "from": "SST1",
+        "to": "Compute Rows",
+        "what": "a SmartSwitch instead fits directly into a compute row's existing T1 switch position",
+        "step": null
+      }
+    ],
+    "key_idea": "SONiC DASH SmartSwitch collapses Sirius's separate rack, servers and switches into one uni-box device that slots into a compute row's existing T1 position, stacking an SDN controller, SONiC, and NPU+DPU hardware behind the DASH-SAI API.",
+    "reading_order": "Panel (a) left to right: datacenter compute rows versus the Sirius appliance's separate rack. Panel (b) left to right: Sirius's multi-hop switch-to-DPU-server topology, then the SmartSwitch's layered controller/OS/hardware stack."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "double",
+    "aspect": 3.2,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#9673a6",
+        "used_for": "purple SST1 box and 'SmartSwitch T1' callout"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "background fill of the SDN controller / SONiC container boxes"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "neutral gray fill of rack/compute-row icons and the VMs/Servers box"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "orange MoR/T1, Spine (T2), T3/T2/ToR-T0 switch-hierarchy boxes, and the DPU tan boxes"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale-orange fill of DPU 0's ASIC/CPU sub-boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.7pt solid borders; thick black cabling/interconnect lines in panel (a)",
+    "font": "sans-serif (Gill Sans MT), 5-6pt body, 10.5pt bold section titles",
+    "corners": "mixed",
+    "arrows": "few explicit arrowheads; mostly plain connecting lines forming a switch-fabric mesh, plus small check/cross icons marking allowed/blocked placements",
+    "icons": "vector icons: rack/server units, a person silhouette, green check and red cross marks, small circular 'community' and 'SAI' badge icons"
+  },
+  "encoding": {
+    "color_means": "purple marks SmartSwitch-as-T1 elements; orange marks generic switch-hierarchy and DPU hardware boxes; red marks the baseline Sirius appliance and a blocked placement; green marks an accepted placement",
+    "line_style_means": "solid black lines form the switch-to-server cabling mesh; a dashed outline groups a switch layer (T2) or callouts a SmartSwitch's position; no line style encodes control vs. data",
+    "emphasis": "panel (a)'s red Sirius box with a crossed-out placement arrow, next to a greyed-out Sirius with a check mark in the SmartSwitch's slot, visually argues that SmartSwitch reuses existing rack space that Sirius cannot",
+    "reusable_patterns": [
+      "side-by-side physical-footprint comparison of a baseline appliance vs. the proposed hardware",
+      "layered software/hardware stack diagram (controller / OS / ASIC) paired with a topology diagram"
+    ],
+    "weaknesses": [
+      "panel (b) actually packs two different diagrams (a Sirius topology sketch and a detailed SmartSwitch stack) under one label, which is easy to miss",
+      "very dense small text and repeated switch-hierarchy labels (T3/T2/T1/T0) require the caption to disambiguate"
+    ]
+  },
+  "tags": [
+    "SmartSwitch",
+    "DPU",
+    "NPU",
+    "SONiC",
+    "DASH",
+    "cloud-offload",
+    "datacenter-hardware",
+    "network-services"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Motivating SONiC DASH SmartSwitch (p.4)",
+      "3 SONiC DASH SmartSwitch Overview (p.5)",
+      "5 SmartSwitch: A Uni-box Hardware Model (p.8)"
+    ],
+    "evidence": [
+      "in addition to 2×6 DPUs, each Sirius appliance entails the new installation of 2 servers",
+      "a SmartSwitch is built by integrating an NPU with multiple DPUs via interconnects",
+      "SmartSwitches are deployed as T1 switches and services are disaggregated to their DPU resource"
+    ]
+  },
+  "summary": "This paper offloads cloud network services onto SONiC DASH SmartSwitch, a uni-box hardware model that converges an NPU and multiple DPUs, replacing the prior DPU-centric Sirius appliance. Figure 1 argues the case in two panels. Panel (a) shows a datacenter elevation view: Sirius needs its own purpose-built rack with extra servers and ToR-equivalent switches (blocked from ad hoc placement among compute rows), whereas a SmartSwitch (SST1) simply takes the place of a compute row's existing T1 switch. Panel (b) gives the logical architecture: Sirius disaggregates network processing onto a separate pool of DPU-equipped servers reached through several switch-hierarchy hops (T3/T2/MoR-T1/ToR-T0), while SONiC DASH SmartSwitch collapses this into one box, stacking an SDN controller running a DASH pipeline, SONiC (gNMI/Redis/switch-state) invoking a DASH-SAI API, and the SmartSwitch hardware itself, where an NPU forwards packets to multiple DPUs (each with an ASIC and a CPU running DPAPP) over an interconnect, with community/hardware-provider contribution points marked alongside.",
+  "summary_zh": "该图对比Sirius与SmartSwitch部署：前者需独立机架和额外服务器交换机，后者可直接替代机架内T1交换机；逻辑上前者经多级交换连至DPU服务器池，后者将控制器、SONiC与NPU/DPU整合为一体。",
+  "confidence": "high",
+  "notes": "Panel (b) actually contains two sub-diagrams (a Sirius topology sketch and a detailed SmartSwitch stack); the component list covers the named boxes in both. Some very small repeated icons (individual rack units, VM circles) are omitted from the component list for brevity.",
+  "venue": "NSDI26"
+}

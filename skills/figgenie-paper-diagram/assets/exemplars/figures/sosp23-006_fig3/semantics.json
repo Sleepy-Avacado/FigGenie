@@ -1,0 +1,215 @@
+{
+  "paper_id": "sosp23-006",
+  "fig": "3",
+  "system": {
+    "name": "Acto",
+    "one_liner": "the first automatic end-to-end testing technique for cloud system operators, using a state-centric testing approach",
+    "domain": [
+      "cloud",
+      "kubernetes",
+      "testing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "kubectl",
+        "role": "user-facing client used to submit the upscale request",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ZooKeeper CR",
+        "role": "custom resource declaring the desired ZooKeeper state, edited to change replicas from 2 to 3",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "ZooKeeper Operator",
+        "role": "operator that reconciles the managed ZooKeeper cluster toward the declared CR state",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Kubernetes Core",
+        "role": "Kubernetes control-plane components that maintain state objects and their controllers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "State Objects",
+        "role": "etcd-backed state objects (Pod, Vol) representing current cluster entities",
+        "container": "Kubernetes Core",
+        "novel": false
+      },
+      {
+        "name": "Pod",
+        "role": "state object representing a ZooKeeper replica pod",
+        "container": "State Objects",
+        "novel": false
+      },
+      {
+        "name": "Vol",
+        "role": "state object representing a ZooKeeper replica's storage volume",
+        "container": "State Objects",
+        "novel": false
+      },
+      {
+        "name": "Statefulset Controller",
+        "role": "Kubernetes controller that increases the stateful-set replica count and creates new pods",
+        "container": "Kubernetes Core",
+        "novel": false
+      },
+      {
+        "name": "Volume Controller",
+        "role": "Kubernetes controller that creates new persistent volumes for new replicas",
+        "container": "Kubernetes Core",
+        "novel": false
+      },
+      {
+        "name": "Managed ZooKeeper",
+        "role": "the actual running ZooKeeper cluster whose Pods and Vols are updated to match the desired state",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Pods",
+        "role": "resulting ZooKeeper pods after scale-up (three shown)",
+        "container": "Managed ZooKeeper",
+        "novel": false
+      },
+      {
+        "name": "Vols",
+        "role": "resulting ZooKeeper volumes after scale-up (three shown)",
+        "container": "Managed ZooKeeper",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "kubectl",
+        "to": "ZooKeeper CR",
+        "what": "submits desired-state declaration (upscale ZooKeeper)",
+        "step": null
+      },
+      {
+        "from": "ZooKeeper CR",
+        "to": "ZooKeeper Operator",
+        "what": "new replica count (3, was 2)",
+        "step": null
+      },
+      {
+        "from": "ZooKeeper Operator",
+        "to": "Kubernetes Core",
+        "what": "reconciliation request to increase stateful-set count",
+        "step": null
+      },
+      {
+        "from": "Pod",
+        "to": "Statefulset Controller",
+        "what": "current pod state object",
+        "step": null
+      },
+      {
+        "from": "Vol",
+        "to": "Volume Controller",
+        "what": "current volume state object",
+        "step": null
+      },
+      {
+        "from": "Statefulset Controller",
+        "to": "Pods",
+        "what": "creates a new pod",
+        "step": null
+      },
+      {
+        "from": "Volume Controller",
+        "to": "Vols",
+        "what": "creates a new volume",
+        "step": null
+      }
+    ],
+    "key_idea": "A single CR edit (bumping ZooKeeper replicas from 2 to 3) flows through the ZooKeeper Operator and Kubernetes' built-in state-object controllers to produce a new Pod and Volume in the managed cluster.",
+    "reading_order": "Left to right: kubectl issues the edited CR, into the ZooKeeper Operator, through Kubernetes Core's state-object controllers, ending at the managed ZooKeeper Pods/Vols on the right."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.19,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1f4e79",
+        "used_for": "dark blue for arrows and box header text"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red highlight on the changed replica value (3 <- 2) in the CR"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "light blue fill for the Kubernetes Core control-plane box"
+      },
+      {
+        "hex": "#ffe699",
+        "used_for": "light yellow fill, e.g. Managed ZooKeeper section background"
+      },
+      {
+        "hex": "#f8cbad",
+        "used_for": "peach fill for the ZooKeeper Operator box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed border around the Kubernetes Core boundary, solid on other boxes",
+    "font": "mixed serif (Times) labels with Consolas monospace for the CR YAML snippet, 6-10.5pt",
+    "corners": "mixed",
+    "arrows": "straight arrows with solid triangular heads",
+    "icons": "bitmap/vector icons depicting a kubectl user, pods (cubes), and volumes (cylinders)"
+  },
+  "encoding": {
+    "color_means": "peach = ZooKeeper Operator, light blue = Kubernetes Core control-plane box, red = the changed replica value (2 to 3) in the CR, dark blue = arrows/box headers",
+    "line_style_means": "dashed border delineates the Kubernetes Core boundary from the operator and the managed system",
+    "emphasis": "the red-highlighted diff (3 <- 2) in the CR draws the eye to exactly what changed, tracing the causal chain from that one edit to new Pods/Vols on the right",
+    "reusable_patterns": [
+      "single concrete before/after example (2 to 3 replicas) tracing a declarative config change through a control loop to concrete resources"
+    ],
+    "weaknesses": [
+      "ellipsis boxes elide most of the reconciliation loop, showing only the pod/volume path"
+    ]
+  },
+  "tags": [
+    "kubernetes",
+    "operator",
+    "zookeeper",
+    "reconciliation",
+    "custom-resource",
+    "testing"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.3)",
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "Figure 3 shows how a ZooKeeper operator scales up a managed ZooKeeper cluster.",
+      "the operator notifies Kubernetes to increase the stateful-set count for replicas",
+      "Kubernetes creates a new pod and a new volume"
+    ]
+  },
+  "summary": "This figure illustrates, as background motivation for Acto, how a Kubernetes ZooKeeper operator scales a managed cluster from 2 to 3 replicas. A user issues kubectl to submit an edited custom resource (CR) that changes the replicas field from 2 to 3 (highlighted in red). The ZooKeeper Operator picks up this desired-state declaration and asks Kubernetes Core, whose Statefulset and Volume controllers read the current Pod/Vol state objects (backed by etcd) and create a new pod and a new volume. The result, a Managed ZooKeeper cluster with three pods and three volumes, appears on the right. Drawn as a left-to-right flow with peach, light-blue, and light-yellow flat-filled boxes, dark-blue arrows, and small pod/volume icons, the figure motivates Acto's state-centric testing approach by showing the operator's reconcile loop from declaration to concrete cluster state.",
+  "summary_zh": "该图以 ZooKeeper 为例，展示 Kubernetes 运算符如何将副本数从 2 扩容到 3：用户通过 kubectl 提交修改后的 CR，运算符驱动 Kubernetes 核心的 StatefulSet 与 Volume 控制器创建新 Pod 和卷。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP23"
+}

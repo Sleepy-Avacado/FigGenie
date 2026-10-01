@@ -1,0 +1,226 @@
+{
+  "paper_id": "asplos25-147",
+  "fig": "6",
+  "kind": "mechanism",
+  "system": {
+    "name": "Spindle",
+    "one_liner": "a distributed training system for multi-task multi-modal models that schedules execution via wavefront scheduling",
+    "domain": [
+      "distributed-training",
+      "multi-task-learning"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one policy decision",
+    "subject": "how Spindle remaps two MetaOps across GPU islands so the higher-volume data flow becomes intra-island",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "GPU",
+        "kind": "node",
+        "role": "physical accelerator that hosts a MetaOp and belongs to one device island",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "device island",
+        "kind": "lane",
+        "role": "a bracket-grouped pair of GPUs joined by fast links, separated from the other island by the dashed boundary",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "yellow MetaOp",
+        "kind": "box",
+        "role": "a MetaOp whose output fans out to two consumers at 1MB each",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "red MetaOp",
+        "kind": "box",
+        "role": "a MetaOp pair with a much larger 20MB flow between them, the one Spindle prioritizes to keep within one island",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "blue MetaOp",
+        "kind": "box",
+        "role": "a MetaOp pair whose two 10MB flows converge on one destination GPU regardless of placement",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "yellow MetaOp",
+        "to": "yellow MetaOp",
+        "what": "1MB copy to the co-located consumer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "yellow MetaOp",
+        "to": "yellow MetaOp",
+        "what": "second 1MB copy to a consumer on the other island",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "red MetaOp",
+        "to": "red MetaOp",
+        "what": "20MB flow to its consumer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "blue MetaOp",
+        "to": "blue MetaOp",
+        "what": "10MB flow from the first blue GPU",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "blue MetaOp",
+        "to": "blue MetaOp",
+        "what": "10MB flow from the second blue GPU, converging on the same destination",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "before",
+        "axis": "time",
+        "differs": "the 20MB red-MetaOp flow crosses the island boundary (red, inter-island) while the 1MB yellow-MetaOp flow stays within one island (green)",
+        "verdict": "naive placement"
+      },
+      {
+        "label": "after",
+        "axis": "time",
+        "differs": "placement is remapped so the 20MB red-MetaOp flow becomes intra-island (green) while one 1MB yellow-MetaOp flow now crosses the boundary instead (red)",
+        "verdict": "Spindle's placement"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "per-edge data-flow volumes in MB (1MB, 20MB, 10MB, 10MB) attached to each arrow",
+      "linked_by": "position beside its arrow, plus arrow colour",
+      "result_cells": "no aggregate cell; the volumes justify which edges are red (inter-island) vs green (intra-island) in each panel"
+    },
+    "key_idea": "Spindle's device placement swaps which MetaOp flow crosses the island boundary, sacrificing a small 1MB flow to keep a much larger 20MB flow intra-island and cut communication cost.",
+    "reading_order": "left to right within each panel from source MetaOps to destination MetaOps, then compare the same layout before (left panel) and after remapping (right panel)"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.93,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fcc63b",
+        "used_for": "darker gold fill of the circle icon inside each yellow MetaOp box"
+      },
+      {
+        "hex": "#1176b2",
+        "used_for": "darker blue fill of the circle icon inside each blue MetaOp box"
+      },
+      {
+        "hex": "#fde29d",
+        "used_for": "pale yellow fill of the yellow MetaOp boxes"
+      },
+      {
+        "hex": "#86bad8",
+        "used_for": "pale blue fill of the blue MetaOp boxes"
+      },
+      {
+        "hex": "#00fa00",
+        "used_for": "bright green, heavier arrows for same-GPU / intra-device copy edges"
+      },
+      {
+        "hex": "#00bd00",
+        "used_for": "darker green, arrows for intra-island edges between different GPUs"
+      },
+      {
+        "hex": "#db979c",
+        "used_for": "pale rose fill of the red MetaOp boxes"
+      },
+      {
+        "hex": "#b82f39",
+        "used_for": "darker red fill of the circle icon inside each red MetaOp box"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "bright red arrows marking inter-island communication, the edges that cross the dashed boundary"
+      },
+      {
+        "hex": "#0ced00",
+        "used_for": "a slightly different bright-green shade on one intra-island arrow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thick (~2-3pt) black outlines around all boxes and circles; grey dotted vertical line marking the island boundary",
+    "corners": "rounded",
+    "arrows": "medium-thick green arrows for intra-island/intra-device transfers, thinner red arrows for inter-island transfers, an open black chevron between the two panels",
+    "font": "sans-serif, small (~6-7pt) labels for MB values and GPU text, larger for the legend",
+    "icons": "raster GPU chip glyph reused at each device slot; single or overlapping-double circle glyphs inside each MetaOp box"
+  },
+  "encoding": {
+    "color_means": "yellow/red/blue distinguish the three MetaOps; pale fill = the MetaOp box, darker inner circle = its icon; red arrow = inter-island communication, green arrow = intra-island communication or intra-device copy",
+    "line_style_means": "no dashing on arrows; the grey dotted vertical line marks the boundary between the two device islands",
+    "state_means": "before vs. after placement are told apart by which arrows are red (crossing the island boundary) vs green (staying within it) in each of the two side-by-side panels",
+    "marker_means": "a double (overlapping) circle icon marks a MetaOp whose output fans out along two edges; a single circle marks one with a single edge; the MB number beside each arrow gives that edge's data-flow volume",
+    "emphasis": "the same 20MB red-MetaOp edge is drawn red in the left panel and green in the right, visually proving the placement change to the reader",
+    "reusable_patterns": [
+      "two side-by-side topology panels linked by an open chevron arrow to show a before/after remapping",
+      "arrow colour recoding (red vs green) to show the same edge crossing or not crossing a partition boundary",
+      "numeric data-volume labels beside each edge to justify a placement/scheduling decision"
+    ],
+    "weaknesses": [
+      "relies on the reader cross-referencing the legend to decode red vs the two shades of green",
+      "the yellow MetaOp's newly-crossing edge is not given its own callout even though it is the trade-off the text discusses"
+    ]
+  },
+  "tags": [
+    "device-placement",
+    "GPU-islands",
+    "communication-volume",
+    "MetaOp",
+    "wavefront-scheduling",
+    "Spindle"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 System Design"
+    ],
+    "evidence": [
+      "the data flow volume between red MetaOps is significantly higher than that between yellow ones",
+      "Spindle prefers to place the data flow between red ones within the island",
+      "Illustration of Spindle device placement."
+    ]
+  },
+  "summary": "This figure illustrates how Spindle's device-placement policy assigns MetaOps to GPUs across two device islands. Two side-by-side topology panels, linked by an open arrow, show the same four GPUs and three colour-coded MetaOps (yellow, red, blue) before and after remapping. Each edge between MetaOps carries a data-flow-volume label in MB and is coloured red when it crosses the island boundary (inter-island) or green when it stays within one island (intra-island communication or intra-device copy). In the left, 'before' panel, the high-volume 20MB flow between the two red MetaOps crosses islands while the smaller 1MB yellow flow stays local. In the right, 'after' panel, Spindle swaps the placement so the 20MB red flow becomes intra-island, at the cost of pushing one 1MB yellow flow across the boundary instead, lowering overall communication cost.",
+  "summary_zh": "该图示Spindle的设备放置策略：两面板对比重映射前后，红色MetaOp间20MB高流量数据流由跨孤岛(红箭头)变为孤岛内(绿箭头)，代价是让黄色1MB的一条流转为跨孤岛，从而降低总通信开销。",
+  "confidence": "high",
+  "notes": "Index measured panels=1 for a figure that plainly draws two side-by-side before/after panels linked by an arrow; kept layout.panels=1 (from the index) while layout.panel_count and content.panels reflect the actual 2. The yellow MetaOp's second edge crossing the island boundary in the 'after' panel is read from the arrow-colour change visible in the figure; the quoted text only states the red-MetaOp prioritization explicitly.",
+  "venue": "ASPLOS25"
+}

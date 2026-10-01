@@ -1,0 +1,42 @@
+{
+  "id": "osdi24-009_fig4",
+  "paper_id": "osdi24-009",
+  "fig": "4",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 4: Chop Chop architecture.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.98,
+  "n_components": 3,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-009/src/fig4_architecture-crop.svg",
+    "preview.png": "lab/extracted/osdi24-009/src/fig4_architecture-crop.png",
+    "print.png": "lab/extracted/osdi24-009/osdi24-009_fig4_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "Only three logical components (clients / brokers / servers) wrapped in two labelled scope outlines that overlap deliberately.",
+      "what_to_learn": "Overlapping labelled scopes let one figure name two protocols over the same three tiers without drawing the tiers twice."
+    }
+  ]
+}

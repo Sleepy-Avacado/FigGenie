@@ -1,0 +1,41 @@
+{
+  "id": "osdi25-051_fig4",
+  "paper_id": "osdi25-051",
+  "fig": "4",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 4: bpftime Design. White components are from eBPF; orange components are new to bpftime. Blue arrows show execution flow when compiling and loading an eBPF appli- cation. Green arrows show execution flow when an eBPF extension executes. White arrows with black outline indicate components that",
+  "corpus_template": "layered",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.97,
+  "n_components": 21,
+  "n_flows": 17,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-051/osdi25-051_fig4_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi25-051/osdi25-051_fig4_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: one integrated architecture, not two contrasted panels, where every added component is coloured orange against an all-white existing backdrop, and userspace/kernel form a mirrored pair rather than a baseline/ours split.",
+      "what_to_learn": "Colour every component the paper adds in one consistent accent (orange here) against an all-white backdrop for everything reused unchanged, so novelty reads at a glance across a single dense diagram; add an in-figure legend for the colour and arrow-style key, since this figure relies on caption text the extraction even cut off."
+    }
+  ]
+}

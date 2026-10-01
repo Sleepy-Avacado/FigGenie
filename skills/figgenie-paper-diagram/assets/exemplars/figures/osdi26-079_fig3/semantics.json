@@ -1,0 +1,220 @@
+{
+  "paper_id": "osdi26-079",
+  "fig": "3",
+  "system": {
+    "name": "DPA-Store",
+    "one_liner": "a NIC-resident ordered key-value store that answers requests on-path using a learned index, while the host asynchronously applies structural updates",
+    "domain": [
+      "networking",
+      "storage"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "BF3 packet processing",
+        "role": "receives incoming request packets on the NIC",
+        "container": "NIC-side",
+        "novel": false
+      },
+      {
+        "name": "DPA traverser threads",
+        "role": "on-path DPA threads that are assigned incoming requests and walk the NIC-side learned index to fetch values or buffer inserts",
+        "container": "NIC DRAM",
+        "novel": true
+      },
+      {
+        "name": "Inner_0 (root)",
+        "role": "root node of the learned-index tree, mirrored on both the NIC and host sides",
+        "container": "NIC DRAM",
+        "novel": true
+      },
+      {
+        "name": "Inner",
+        "role": "internal learned-index node guiding traversal toward a leaf",
+        "container": "NIC DRAM",
+        "novel": true
+      },
+      {
+        "name": "Leaf",
+        "role": "leaf node holding a leaf-level model, key ranges/values and an insert buffer",
+        "container": "NIC DRAM",
+        "novel": true
+      },
+      {
+        "name": "Hot-pair cache",
+        "role": "thread-local cache for hot key-value pairs",
+        "container": "NIC DRAM",
+        "novel": true
+      },
+      {
+        "name": "insert buffer",
+        "role": "per-leaf buffer that batches inserts/updates before propagating them to the host",
+        "container": "Leaf",
+        "novel": true
+      },
+      {
+        "name": "new Inner",
+        "role": "newly created internal node produced by a host-side structural update",
+        "container": "Host DRAM",
+        "novel": true
+      },
+      {
+        "name": "new Leaf",
+        "role": "newly created leaf node produced by a host-side structural update, e.g. from a leaf split",
+        "container": "Host DRAM",
+        "novel": true
+      },
+      {
+        "name": "'stitch' packages",
+        "role": "packaged structural updates sent from the host back to the NIC",
+        "container": "Host DRAM",
+        "novel": true
+      },
+      {
+        "name": "'patch' requests",
+        "role": "requests sent from the NIC to the host asking it to perform a structural update, e.g. when an insert buffer is full",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Allocators",
+        "role": "host-side allocators tracking DRAM space and DPA space for new nodes",
+        "container": "Host DRAM",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "BF3 packet processing",
+        "to": "DPA traverser threads",
+        "what": "request packets assigned to a DPA traverser thread",
+        "step": 1
+      },
+      {
+        "from": "DPA traverser threads",
+        "to": "Inner_0 (root)",
+        "what": "walks the NIC-side learned index from the root",
+        "step": 2
+      },
+      {
+        "from": "DPA traverser threads",
+        "to": "Leaf",
+        "what": "value fetched per DMA using the leaf-level model",
+        "step": 3
+      },
+      {
+        "from": "DPA traverser threads",
+        "to": "insert buffer",
+        "what": "inserts placed in the leaf-level insert buffer",
+        "step": 4
+      },
+      {
+        "from": "insert buffer",
+        "to": "'patch' requests",
+        "what": "a patch request is added when the insert buffer becomes full",
+        "step": null
+      },
+      {
+        "from": "'patch' requests",
+        "to": "new Inner",
+        "what": "host 'patch' threads update the host tree, creating new nodes",
+        "step": 5
+      },
+      {
+        "from": "new Leaf",
+        "to": "'stitch' packages",
+        "what": "structural updates packaged for the NIC",
+        "step": null
+      },
+      {
+        "from": "'stitch' packages",
+        "to": "Inner",
+        "what": "DPA 'stitch' threads apply host updates back into the NIC-side tree",
+        "step": null
+      }
+    ],
+    "key_idea": "DPA-Store keeps a mirrored learned-index tree on the NIC (answering reads/inserts on-path) and on the host, exchanging lightweight 'patch' requests and 'stitch' packages across the PCIe boundary to keep them in sync without blocking the NIC-side fast path.",
+    "reading_order": "Left to right across the NIC-host PCIe boundary: packets enter on the NIC side (I), traverse the tree (II-IV), and patch/stitch messages synchronize with the host-side tree (V) shown on the right."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#006633",
+        "used_for": "dark green text/icon for the DPA traverser threads and the step markers on the NIC side"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale blue fill for Inner/root tree nodes"
+      },
+      {
+        "hex": "#b3b3b3",
+        "used_for": "gray fill for Leaf node icons"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale orange background for the Host-side region and 'patch'-related labels"
+      },
+      {
+        "hex": "#b0e3e6",
+        "used_for": "cyan fill for the NIC-side background region"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin strokes (~0.7pt), mixed square/rounded corners",
+    "font": "mixed serif/monospace (Times New Roman and Courier New), roughly 5.5-11pt, bold for headers",
+    "corners": "mixed",
+    "arrows": "very many thin lines forming the tree edges, plus a handful of curved cross-boundary arrows for patch/stitch traffic",
+    "icons": "vector icons for metadata, key-child/value pairs, insert buffers and ring queues, explained in a small legend"
+  },
+  "encoding": {
+    "color_means": "cyan region = NIC DRAM (on-path learned index), orange region = Host DRAM (host-side tree and allocators), green = DPA traverser/patch step labels and new nodes created by a structural update",
+    "line_style_means": "solid black edges draw the learned-index tree on each side; colored curved arrows carry 'patch request' and 'stitch package' traffic across the NIC-host PCIe boundary",
+    "emphasis": "a dashed vertical line separating NIC-side and Host-side, with green-highlighted 'new Inner'/'new Leaf' nodes, calls out that structural updates originate on the host and are later stitched back into the NIC-resident index",
+    "reusable_patterns": [
+      "mirrored tree structure on both sides of a NIC/host PCIe boundary, with lightweight patch/stitch messages keeping them in sync",
+      "small icon legend explaining tree-node glyphs"
+    ],
+    "weaknesses": [
+      "identically named Inner/Leaf/Inner_0(root) nodes appear on both the NIC and host sides, which requires reading the side/background color to disambiguate"
+    ]
+  },
+  "tags": [
+    "smartnic",
+    "learned-index",
+    "key-value-store",
+    "in-network-computing",
+    "dma",
+    "ordered-store"
+  ],
+  "provenance": {
+    "sections": [
+      "3 DPA-Store: Architecture & Implementation (p.5)"
+    ],
+    "evidence": [
+      "Request packets are assigned on-path to a DPA traverser thread",
+      "walks a NIC-side learned index",
+      "Values are fetched per DMA using leaf-level models"
+    ]
+  },
+  "summary": "DPA-Store is an ordered key-value store that runs entirely on a BlueField-3 SmartNIC's on-path DPA cores, answering requests without host involvement on the common path. The figure splits into a cyan NIC-side and an orange Host-side across a dashed PCIe boundary, each holding a mirrored learned-index tree of Inner nodes and Leaf nodes. On the NIC, incoming request packets are assigned to a DPA traverser thread (I), which walks the tree from the root (II), fetches values per DMA using leaf-level models (III), and places inserts into a leaf's insert buffer (IV); a full insert buffer triggers a patch request to the host. The host's patch threads then perform structural updates, creating new Inner/Leaf nodes (V) that are packaged and stitched back into the NIC-side tree by DPA stitch threads.",
+  "summary_zh": "DPA-Store是运行于BlueField-3网卡DPA核心的有序键值存储:PCIe两侧各维护镜像索引树,NIC侧遍历线程查找/取值/插入(I-IV),缓冲满时向主机发patch,主机更新树(V)后stitch回NIC。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

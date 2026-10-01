@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-157_fig3",
+  "paper_id": "asplos25-157",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. Dual-mode CIM Array.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.02,
+  "n_components": 8,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-157/src/fig3_CIM_switch.svg",
+    "preview.png": "lab/extracted/asplos25-157/src/fig3_CIM_switch.png",
+    "print.png": "lab/extracted/asplos25-157/asplos25-157_fig3_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two mirrored mode panels bridged by a single central block that names the thing that changes.",
+      "what_to_learn": "For mode/state comparisons, put the transition operator physically between the panels rather than beside them."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Memory Mode and Compute Mode panels mirror the identical Driver plus Memory-circuits grid, differing only in which GIA/GIAb/IA signals are active, meeting at the green Change Driver INPUT block that is the actual mode switch.",
+      "what_to_learn": "Use a mirrored pair to show one device in two operating modes, not just two devices: draw the exact same internal grid twice, side by side, and let one small accent-coloured block between them carry all the labelled signals that actually change between modes."
+    }
+  ]
+}

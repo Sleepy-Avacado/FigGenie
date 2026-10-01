@@ -1,0 +1,48 @@
+{
+  "id": "nsdi23-045_fig2",
+  "paper_id": "nsdi23-045",
+  "fig": "2",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 2: RF-CHORD system overview.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 3.22,
+  "n_components": 6,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-045/src/fig2_overview.svg",
+    "preview.png": "lab/extracted/nsdi23-045/src/fig2_overview.png",
+    "print.png": "lab/extracted/nsdi23-045/nsdi23-045_fig2_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Star, high-confidence double-column pipeline with 7 circled numbered stages along the main line and matching dashed callouts hanging below expanding four of them, ending in a small rendered heatmap thumbnail.",
+      "what_to_learn": "Keep the numbered main path as one row of plain boxes and drop expanded explanation into dashed callout boxes underneath, tied by leader lines and annotation text back to the numbered step they detail; finish a signal-processing pipeline with a rendered-output thumbnail, not just a label."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": false,
+      "why_chosen": "Multiple callouts off one pipeline: four dashed boxes below expand the multisine waveform, channelization, packet-matching and localization sub-steps of a numbered seven-stage top row, ending in a heatmap thumbnail output.",
+      "what_to_learn": "One pipeline can carry several callouts, not just one: hang a dashed detail box below any stage that needs unpacking, keep the circled numbers on the top row as the single reading order, and finish with a thumbnail of the actual output (the localization heatmap) instead of a bare label."
+    }
+  ]
+}

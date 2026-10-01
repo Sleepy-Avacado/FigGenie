@@ -1,0 +1,142 @@
+{
+  "paper_id": "nsdi26-030",
+  "fig": "1",
+  "system": {
+    "name": "LMT execution stack",
+    "one_liner": "the full software/hardware stack that cooperates to execute large model training (LMT)",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "The user's code",
+        "role": "user-written training code",
+        "container": "In the container",
+        "novel": false
+      },
+      {
+        "name": "Training framework (Megatron, DeepSpeed, Nemo)",
+        "role": "training framework that executes the user's code",
+        "container": "In the container",
+        "novel": false
+      },
+      {
+        "name": "GPU operation",
+        "role": "GPU-side operations issued by the framework",
+        "container": "In the container",
+        "novel": false
+      },
+      {
+        "name": "CPU&Mem operation",
+        "role": "CPU and memory operations issued by the framework",
+        "container": "In the container",
+        "novel": false
+      },
+      {
+        "name": "Collective Communication",
+        "role": "collective communication operations issued by the framework",
+        "container": "In the container",
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "physical GPU hardware executing GPU operators",
+        "container": "Physical host",
+        "novel": false
+      },
+      {
+        "name": "CPU, Mem, Disk",
+        "role": "physical CPU, memory, and disk hardware",
+        "container": "Physical host",
+        "novel": false
+      },
+      {
+        "name": "NVLink, PCIe, NICs",
+        "role": "physical interconnects for intra-host and network communication",
+        "container": "Physical host",
+        "novel": false
+      },
+      {
+        "name": "Inter-host Network",
+        "role": "network connecting multiple hosts",
+        "container": "Inter-host",
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "Large model training depends on a layered stack from user code and training frameworks down through GPU/CPU/interconnect hardware to the inter-host network, and a fault in any layer can cause performance issues.",
+    "reading_order": "Top-down through three labeled layers: In the container (user code and framework operations), Physical host (hardware), and Inter-host (network)."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 4.4,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for the user's-code/training-framework row"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale green fill for the physical-host hardware row"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "pale blue fill for the inter-host network row"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.7pt) black outlines, square boxes, no dashing",
+    "font": "Calibri sans-serif with bold Arial labels, ~6.5pt",
+    "corners": "square",
+    "arrows": "none",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow = in-container software layer, green = physical host hardware layer, blue = inter-host network layer",
+    "line_style_means": null,
+    "emphasis": "flat stacked bands visually separate software from hardware from network to show the full dependency chain",
+    "reusable_patterns": [
+      "three-tier software/hardware/network stack diagram"
+    ],
+    "weaknesses": [
+      "no arrows to indicate direction of dependency or data flow between layers"
+    ]
+  },
+  "tags": [
+    "large-model-training",
+    "GPU-cluster",
+    "software-stack",
+    "hardware-stack",
+    "background-diagram"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "Large model training (LMT) requires the cooperation of multiple hardware and software modules (Figure 1)",
+      "Software modules include GPU operators, communication libraries like NCCL"
+    ]
+  },
+  "summary": "This is a background figure showing the full stack involved in executing large model training (LMT). It is drawn as three flat, color-coded horizontal bands stacked top to bottom. The top band, labeled 'In the container', shows the user's code running atop a training framework (Megatron, DeepSpeed, Nemo), which issues GPU operations, CPU/memory operations, and collective communication. The middle band, labeled 'Physical host', shows the corresponding hardware: GPUs, CPU/memory/disk, and NVLink/PCIe/NICs. The bottom band, labeled 'Inter-host', shows the inter-host network connecting multiple physical hosts. The figure has no arrows; it simply enumerates the layers that must all function correctly for LMT to run without performance issues, motivating the paper's claim that malfunctions in any layer can cause slowdowns.",
+  "summary_zh": "该图展示大模型训练所依赖的完整软硬件栈：容器内的用户代码与训练框架（发起 GPU、CPU/内存与集合通信操作），物理主机的 GPU、CPU/内存/磁盘及 NVLink/PCIe/NIC 硬件，以及主机间网络，三层平铺自上而下排列。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

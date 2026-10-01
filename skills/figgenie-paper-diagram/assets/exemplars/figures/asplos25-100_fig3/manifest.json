@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-100_fig3",
+  "paper_id": "asplos25-100",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. (a) Prefill stage encodes prompt tokens in parallel. Decoding stage generates output tokens sequentially. (b) LLM contains N× decoder transformer blocks. (c) Llama2 model architecture.",
+  "corpus_template": "layered",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 0.96,
+  "n_components": 17,
+  "n_flows": 10,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-100/src/fig3_LLaMA_model_new_new.svg",
+    "preview.png": "lab/extracted/asplos25-100/src/fig3_LLaMA_model_new_new.png",
+    "print.png": "lab/extracted/asplos25-100/asplos25-100_fig3_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Background figure that expands left-to-right in three panels, from coarse stages to a full per-layer compute graph.",
+      "what_to_learn": "Progressive expansion left-to-right suits background/context figures; dashed brackets mark the xN repeated block so the expansion stays finite."
+    }
+  ]
+}

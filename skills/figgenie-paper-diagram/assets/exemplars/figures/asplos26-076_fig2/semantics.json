@@ -1,0 +1,222 @@
+{
+  "paper_id": "asplos26-076",
+  "fig": "2",
+  "system": {
+    "name": "Ouroboros",
+    "one_liner": "a wafer-scale SRAM computing-in-memory architecture with token-grained pipelining for LLM inference",
+    "domain": [
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Die",
+        "role": "one of 9x7 homogeneous dies (23mm x 30mm) stitched together on the wafer, containing a 13x17 grid of CIM cores",
+        "container": "Wafer",
+        "novel": true
+      },
+      {
+        "name": "Inter-Wafer Interface",
+        "role": "optical Ethernet port enabling multi-wafer scaling beyond a single wafer's capacity",
+        "container": "Wafer",
+        "novel": true
+      },
+      {
+        "name": "CIM",
+        "role": "one of the 13x17 grid of compute-in-memory cores interconnected in a high-bandwidth mesh network within a die",
+        "container": "Die",
+        "novel": true
+      },
+      {
+        "name": "Control Unit",
+        "role": "manages sync, KV control, address generation and pipeline control for a CIM core",
+        "container": "CIM Core",
+        "novel": true
+      },
+      {
+        "name": "Sync. Reg.",
+        "role": "synchronization register within the control unit",
+        "container": "Control Unit",
+        "novel": true
+      },
+      {
+        "name": "KV Control",
+        "role": "manages dynamic KV-cache allocation within the core's memory",
+        "container": "Control Unit",
+        "novel": true
+      },
+      {
+        "name": "Addr. Gen.",
+        "role": "address generation logic for accessing crossbar memory",
+        "container": "Control Unit",
+        "novel": true
+      },
+      {
+        "name": "Pipe. Control",
+        "role": "pipeline control logic coordinating token-grained pipelining within the core",
+        "container": "Control Unit",
+        "novel": true
+      },
+      {
+        "name": "Input buffer",
+        "role": "128KB ping-pong buffer storing 8-bit intermediate activations entering the core",
+        "container": "CIM Core",
+        "novel": true
+      },
+      {
+        "name": "Crossbar (XB) Array",
+        "role": "32-crossbar array with 4MB SRAM capacity performing the core's MAC computation",
+        "container": "CIM Core",
+        "novel": true
+      },
+      {
+        "name": "XB",
+        "role": "one of the 32 individual crossbar units interconnected via a 1024-bit H-tree NoC",
+        "container": "Crossbar (XB) Array",
+        "novel": true
+      },
+      {
+        "name": "ElementWise",
+        "role": "elementwise operations (exp, multiply, add) within the special function unit",
+        "container": "SFU",
+        "novel": true
+      },
+      {
+        "name": "Reduction",
+        "role": "add-tree and sqrt reduction operations within the special function unit",
+        "container": "SFU",
+        "novel": true
+      },
+      {
+        "name": "Output buffer",
+        "role": "32KB buffer storing output intermediate activations from the core",
+        "container": "CIM Core",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Die",
+        "to": "Die",
+        "what": "activation propagation across the wafer mesh (isomorphic dies)",
+        "step": null
+      },
+      {
+        "from": "CIM",
+        "to": "CIM",
+        "what": "core-to-core mesh link, replacing a defective core",
+        "step": null
+      },
+      {
+        "from": "Input buffer",
+        "to": "Crossbar (XB) Array",
+        "what": "8-bit activations",
+        "step": null
+      },
+      {
+        "from": "Crossbar (XB) Array",
+        "to": "ElementWise",
+        "what": "partial results for elementwise nonlinear processing",
+        "step": null
+      },
+      {
+        "from": "ElementWise",
+        "to": "Reduction",
+        "what": "intermediate values for reduction (add tree / sqrt)",
+        "step": null
+      },
+      {
+        "from": "Reduction",
+        "to": "Output buffer",
+        "what": "final output activations",
+        "step": null
+      }
+    ],
+    "key_idea": "Ouroboros is organized hierarchically from a 215mm x 215mm wafer of stitched homogeneous dies, down to a 13x17 mesh of CIM cores per die, down to a single CIM core containing a 32-crossbar SRAM array, buffers, control unit and special function unit, so all LLM inference stays in first-level on-chip SRAM.",
+    "reading_order": "Left to right, zooming in through three nested panels: (a) whole wafer with dies and inter-wafer interface, (b) one die's CIM core mesh with a faulty core being bypassed, (c) one CIM core's internal microarchitecture."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.22,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bcdcf3",
+        "used_for": "light blue fill for Die blocks in panels (a)/(b)"
+      },
+      {
+        "hex": "#f0ecbc",
+        "used_for": "pale yellow fill for CIM core blocks"
+      },
+      {
+        "hex": "#f3bcbf",
+        "used_for": "pale pink/red fill for control-unit sub-blocks in panel (c)"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill/stroke for the Input buffer and highlighted core outline"
+      },
+      {
+        "hex": "#e1e2e4",
+        "used_for": "light gray fill for the SFU grouping box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines with dashed blue mesh interconnect lines between dies/cores",
+    "font": "MicrosoftYaHei-Bold / DengXian sans, 4.5-8pt",
+    "corners": "rounded",
+    "arrows": "thin lines with small filled arrowheads for activation/data flow, dashed for mesh links",
+    "icons": "bitmap: dashed circular outline over the wafer photo-style rendering in panel (a)"
+  },
+  "encoding": {
+    "color_means": "blue = die/interconnect fabric level, yellow = die/core level, pink = control-unit sub-blocks, matching each of the three nested hierarchy levels",
+    "line_style_means": "dashed lines denote the wafer-level and die-level mesh interconnect; solid arrows denote intra-core data flow",
+    "emphasis": "a red X marks a defective core being bypassed in panel (b), and the zoomed core in panel (c) is highlighted with a blue outline traced back to its position in panel (b)",
+    "reusable_patterns": [
+      "three-level zoom-in hierarchy (wafer -> die -> core) drawn as successively magnified panels",
+      "mesh network with per-node fault tolerance shown via a marked-out node"
+    ],
+    "weaknesses": [
+      "dense abbreviations (SFU, XB, Addr. Gen.) require the caption/text for full understanding",
+      "high shape density (116 shapes) across a wide double-column figure"
+    ]
+  },
+  "tags": [
+    "computing-in-memory",
+    "wafer-scale",
+    "SRAM",
+    "mesh-interconnect",
+    "fault-tolerance",
+    "LLM-inference",
+    "hardware-accelerator"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Architecture Overview (p.4)"
+    ],
+    "evidence": [
+      "The top-level structure is a monolithic WSC measuring 215mm x 215mm",
+      "Each die comprises a 13 x 17 grid of CIM cores interconnected in a high-bandwidth mesh network",
+      "The 2.97mm2 Core contains the following components"
+    ]
+  },
+  "summary": "This figure presents Ouroboros's three-level hierarchical architecture. Panel (a) shows the wafer-scale integration: a 215mm x 215mm monolithic wafer composed of 9x7 homogeneous dies stitched together via offset exposures, with an inter-wafer interface (optical Ethernet) for multi-wafer scaling and on-chip SRAM storing weights, activations and KV cache. Panel (b) zooms into a single die's organization: a 13x17 mesh of CIM cores with 256-bit bidirectional core-to-core links in all four directions, illustrating core-level fault tolerance by marking a defective core with a red X being bypassed. Panel (c) further zooms into a single CIM core's microarchitecture: input/output buffers, a 32-crossbar array with 4MB SRAM linked by a 1024-bit H-tree NoC, and a control unit (sync register, KV control, address generation, pipeline control) alongside a special function unit for elementwise and reduction operations.",
+  "summary_zh": "该图展示Ouroboros的三级层次架构：(a)215mm×215mm晶圆级集成，由9×7同构裸片拼接而成，支持多晶圆光互联扩展；(b)单裸片内13×17网格CIM核心的高带宽网状互联，图中红叉标出容错替换的失效核心；(c)单个CIM核心微架构，含32路Crossbar阵列、输入输出缓冲区及控制单元。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

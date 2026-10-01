@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-077_figtex1",
+  "paper_id": "asplos25-077",
+  "fig": "tex1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "The behavioral model of a mapping unit.",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "inkscape",
+  "aspect": 3.28,
+  "n_components": 6,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-077/src/texfig1_unitmodel.svg",
+    "preview.png": "lab/extracted/asplos25-077/src/texfig1_unitmodel.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "The most abstract control/data split in the corpus: a dashed horizontal divider with 'control plane' and 'data plane' as margin labels.",
+      "what_to_learn": "Borrow switch terminology literally - label the margins 'control plane' / 'data plane' and let the divider do all the grouping work. (No PDF-extracted print.png; this is a TeX-only figure.)"
+    }
+  ]
+}

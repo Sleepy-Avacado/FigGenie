@@ -1,0 +1,55 @@
+{
+  "id": "nsdi26-036_fig8",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-036",
+  "fig": "8",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 8: Modeling a “Login” process in the simulator",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "how a Login flow is modeled as a request pattern graph with per-URL parameters and duration/failure formulas",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.7,
+  "n_elements": 11,
+  "n_relations": 9,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-036/nsdi26-036_fig8_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-036/nsdi26-036_fig8_p10_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "A Login application flow is modeled as a small graph of sequential and parallel URL requests, each carrying latency/failure parameters and a backup alternative, from which the simulator derives closed-form duration and failure formulas.",
+      "what_to_learn": "a left-to-right request-pattern graph with a dashed fallback node hanging off one step and a fan-out/fan-in parallel block, closed by symbolic aggregate formulas below the graph",
+      "note_source": "record"
+    }
+  ]
+}

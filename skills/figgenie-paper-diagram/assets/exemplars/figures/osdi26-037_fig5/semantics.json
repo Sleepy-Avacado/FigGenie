@@ -1,0 +1,278 @@
+{
+  "paper_id": "osdi26-037",
+  "fig": "5",
+  "kind": "mechanism",
+  "system": {
+    "name": "UCSAN",
+    "one_liner": "a compilation-based under-constrained execution engine that tracks memory objects with shadow pointers",
+    "domain": [
+      "symbolic-execution",
+      "compiler",
+      "memory-safety"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a shadow pointer records base addresses at creation, then translates a later pseudo-pointer into a real pointer",
+    "base": "code",
+    "elements": [
+      {
+        "name": "Legends",
+        "kind": "label",
+        "role": "key defining the figure's symbols",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Solver Event",
+        "kind": "label",
+        "role": "legend entry for the blue block-arrow symbol",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "Control Flow",
+        "kind": "label",
+        "role": "legend entry for the plain black arrow symbol",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "Seed",
+        "kind": "label",
+        "role": "legend entry for a plain white box symbol",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "Phantom Seed",
+        "kind": "label",
+        "role": "legend entry for dashed coloured box symbols",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "Obj",
+        "kind": "label",
+        "role": "legend entry for the blue point-to arrow icon",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "check_ptr(head, head_s)",
+        "kind": "label",
+        "role": "code line invoking check_ptr for the first time, setting head=1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "curr = GEP(head, -4)",
+        "kind": "label",
+        "role": "code line computing the pseudo-pointer offset, curr=-3",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "head_s (shadow ptr)",
+        "kind": "box",
+        "role": "the shadow-pointer record created by the first check_ptr call",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "pseudo_ptr base: 0x01",
+        "kind": "label",
+        "role": "the pseudo-pointer's recorded base value inside head_s",
+        "container": "head_s (shadow ptr)",
+        "highlighted": false
+      },
+      {
+        "name": "real_ptr base: 0xff00",
+        "kind": "label",
+        "role": "the real memory base address recorded inside head_s",
+        "container": "head_s (shadow ptr)",
+        "highlighted": false
+      },
+      {
+        "name": "Provisioned Obj 1 In Memory",
+        "kind": "label",
+        "role": "names the memory layout table for the allocated object",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "0xfefc",
+        "kind": "cell",
+        "role": "address of Obj 1's lower bound in memory",
+        "container": "Provisioned Obj 1 In Memory",
+        "highlighted": false
+      },
+      {
+        "name": "0xff00",
+        "kind": "cell",
+        "role": "base address of Obj 1's list_t next field in memory",
+        "container": "Provisioned Obj 1 In Memory",
+        "highlighted": false
+      },
+      {
+        "name": "check_ptr(curr_v, head_s)",
+        "kind": "label",
+        "role": "code line for the second check_ptr call, translating curr_v via head_s",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "p_v = 0xfefc, *p_v = 0x65",
+        "kind": "label",
+        "role": "the real pointer and dereferenced value returned by the second check_ptr call",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "check_ptr(head, head_s)",
+        "to": "head_s (shadow ptr)",
+        "what": "the first check_ptr call creates and returns the shadow pointer head_s",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "head_s (shadow ptr)",
+        "to": "pseudo_ptr base: 0x01",
+        "what": "head_s records the pseudo-pointer's base value at allocation time",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "head_s (shadow ptr)",
+        "to": "0xff00",
+        "what": "head_s points to the real memory base address of the provisioned object",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "check_ptr(curr_v, head_s)",
+        "to": "head_s (shadow ptr)",
+        "what": "the second check_ptr call looks up head_s to translate curr_v into a real pointer",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "head_s (shadow ptr)",
+        "to": "p_v = 0xfefc, *p_v = 0x65",
+        "what": "combining curr_v with head_s's recorded bases yields the real pointer and its dereferenced value",
+        "kind": "mapping",
+        "step": "2"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "①",
+        "at": "head_s (shadow ptr)",
+        "what": "the first check_ptr invocation creates the shadow pointer, records the pseudo-pointer base, and allocates Obj 1 from Seed 2",
+        "carries": "head (pseudo-pointer, head=1) and the newly allocated Obj 1"
+      },
+      {
+        "marker": "②",
+        "at": "head_s (shadow ptr)",
+        "what": "the second check_ptr invocation leverages the recorded shadow-pointer data to return the translated real pointer curr_v - pseudo_ptr_base + real_ptr_base",
+        "carries": "curr_v (pseudo-pointer offset, curr_v=-3) and the resulting real pointer p_v = 0xfefc"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A shadow pointer created by the first check_ptr call remembers an object's pseudo- and real-address bases; a later check_ptr call reuses that record to translate a new pseudo-pointer offset into the correct real memory address.",
+    "reading_order": "Follow the downward code-flow arrow through step ① into head_s and the memory table, then into the second code box and back to head_s at step ②."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.43,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#6c8ebf",
+        "used_for": "fill of the blue 'Solver Event' arrow icon in the Legends box"
+      },
+      {
+        "hex": "#82b366",
+        "used_for": "fill of the green 'Phantom Seed' swatch in the Legends box"
+      },
+      {
+        "hex": "#d6b656",
+        "used_for": "fill of the gold 'Phantom Seed' swatch in the Legends box and similar highlight boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow background tint behind annotation/code boxes"
+      },
+      {
+        "hex": "#3b88c3",
+        "used_for": "fill of the blue 'Obj' point-to arrow icon in the Legends box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat pastel fills on legend icons; code and memory boxes are plain white with black text",
+    "stroke": "thin black box outlines (median ~0.6pt), dashed for Seed/Phantom-Seed boxes and for not-yet-reached code blocks",
+    "corners": "mixed",
+    "arrows": "a single bold open downward arrow traces the code-flow order; thin black arrows show control flow and pointer point-to relations",
+    "font": "mixed sans/monospace (Liberation Sans for prose, a monospace-styled code font for the listings)",
+    "icons": "small blue point-to arrow icons inline in the legend and in the memory table"
+  },
+  "encoding": {
+    "color_means": "colour is confined to the Legends key (blue for Solver Event/Obj arrows, green/blue/gold dashed swatches for the three Phantom Seed variants); the working diagram itself is otherwise black text on white boxes",
+    "line_style_means": "dashed box borders mark Seed/Phantom-Seed provenance and not-yet-executed code; the single bold arrow down the middle marks the order of code execution (code flow)",
+    "state_means": "not applicable - the figure traces one execution rather than alternative or before/after states",
+    "marker_means": "circled ① and ② number the two check_ptr invocations in the order the caption discusses them",
+    "emphasis": "the bold vertical code-flow arrow and the two circled step markers pull the eye straight down through the two check_ptr calls that the caption explains",
+    "reusable_patterns": [
+      "a vertical code-flow arrow linking numbered code snippets to a shared side annotation box and a memory-layout table"
+    ],
+    "weaknesses": [
+      "the extracted image crop bleeds in unrelated content (a different object's memory table, circled steps 9-10, and body-text lines) from an adjacent part of the page, which had to be excluded from this record",
+      "the exact meaning of the purple 'Point-by' arrow and the object labelled '2' in the bled-in region cannot be attributed to Figure 5 itself"
+    ]
+  },
+  "tags": [
+    "shadow-pointer",
+    "pointer-translation",
+    "concolic-execution",
+    "under-constrained-execution",
+    "UCSAN",
+    "symbolic-execution"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Ucsan"
+    ],
+    "evidence": [
+      "UCSAN initializes the shadow memory of the memory object with shadow values to track the origin of the data",
+      "check_ptr translates pseudo-pointer to the actual real-pointer.",
+      "Figure 5 illustrates how an object is created from the seed via JITI for the first time"
+    ]
+  },
+  "summary": "Figure 5 traces how UCSAN's shadow-pointer mechanism creates and later translates a pointer to Obj 1 allocated from Seed 2. A bold code-flow arrow leads from a first code snippet, where check_ptr(head, head_s) both allocates the object and creates its shadow pointer head_s, recording a pseudo-pointer base of 0x01 and a real-pointer base of 0xff00 that points into the 'Provisioned Obj 1 In Memory' table. Step (1) marks this creation. Later, a second code snippet computes a new pseudo-pointer offset (curr_v = -3) and calls check_ptr(curr_v, head_s) again; step (2) marks how this second call reuses head_s's recorded bases to compute the real pointer curr_v - pseudo_ptr_base + real_ptr_base, yielding p_v = 0xfefc and dereferencing the value 0x65. A shared Legends box defines the Seed, Phantom Seed, Control Flow, and Obj point-to symbols used across the paper's figures.",
+  "summary_zh": "图5展示UCSAN影子指针处理Obj 1(Seed 2)：①首次check_ptr创建head_s，记录伪指针基址0x01和真实基址0xff00；②第二次check_ptr复用该记录，转换出真实指针0xfefc，取值0x65。",
+  "confidence": "medium",
+  "notes": "The extracted preview crop includes unrelated content bleeding in from an adjacent figure/body text on the same PDF page (an object labelled '2' with steps 9-10 and a purple 'Point-by' arrow); this record describes only the check_ptr/head_s/Obj-1 content that matches Figure 5's own caption and paragraph.",
+  "venue": "OSDI26"
+}

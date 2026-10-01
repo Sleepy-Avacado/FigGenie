@@ -1,0 +1,189 @@
+{
+  "paper_id": "asplos26-088",
+  "fig": "12",
+  "system": {
+    "name": "Neo",
+    "one_liner": "a hardware accelerator for real-time on-device 3D Gaussian Splatting using reuse-and-update sorting",
+    "domain": [
+      "computer-graphics",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Sorting Core 1..16",
+        "role": "16 parallel cores composing the Sorting Engine, one of which is expanded in detail",
+        "container": "Sorting Engine",
+        "novel": true
+      },
+      {
+        "name": "Bitonic Sorting Unit (BSU)",
+        "role": "performs bitonic sorting within a Sorting Core",
+        "container": "Sorting Core",
+        "novel": true
+      },
+      {
+        "name": "Input Buffer",
+        "role": "holds incoming Gaussian data for the Sorting Core",
+        "container": "Sorting Core",
+        "novel": false
+      },
+      {
+        "name": "Output Buffer",
+        "role": "holds sorted Gaussian data output from the Sorting Core",
+        "container": "Sorting Core",
+        "novel": false
+      },
+      {
+        "name": "Merge Sorting Unit+ (MSU+)",
+        "role": "merges two locally sorted lists using invalid-bit filtering to complete dynamic partial sorting",
+        "container": "Sorting Core",
+        "novel": true
+      },
+      {
+        "name": "Index Counter",
+        "role": "tracks the current read index across the two local input buffers during merge",
+        "container": "Merge Sorting Unit+ (MSU+)",
+        "novel": true
+      },
+      {
+        "name": "Local Input buffer 1",
+        "role": "holds one of the two locally sorted sequences being merged",
+        "container": "Merge Sorting Unit+ (MSU+)",
+        "novel": true
+      },
+      {
+        "name": "Local Input buffer 2",
+        "role": "holds the other locally sorted sequence being merged",
+        "container": "Merge Sorting Unit+ (MSU+)",
+        "novel": true
+      },
+      {
+        "name": "Invalid Bit Filter",
+        "role": "filters out entries flagged invalid (e.g., outgoing Gaussians) during the merge",
+        "container": "Merge Sorting Unit+ (MSU+)",
+        "novel": true
+      },
+      {
+        "name": "Local Output buffer",
+        "role": "receives the merged, filtered output sequence",
+        "container": "Merge Sorting Unit+ (MSU+)",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Buffer",
+        "to": "Bitonic Sorting Unit (BSU)",
+        "what": "unsorted Gaussian entries",
+        "step": null
+      },
+      {
+        "from": "Bitonic Sorting Unit (BSU)",
+        "to": "Merge Sorting Unit+ (MSU+)",
+        "what": "locally bitonic-sorted sequence",
+        "step": null
+      },
+      {
+        "from": "Local Input buffer 1",
+        "to": "Invalid Bit Filter",
+        "what": "entries from sequence 1",
+        "step": null
+      },
+      {
+        "from": "Local Input buffer 2",
+        "to": "Invalid Bit Filter",
+        "what": "entries from sequence 2",
+        "step": null
+      },
+      {
+        "from": "Invalid Bit Filter",
+        "to": "Local Output buffer",
+        "what": "filtered, merged entries via comparator/multiplexer",
+        "step": null
+      },
+      {
+        "from": "Index Counter",
+        "to": "Local Input buffer 1",
+        "what": "read index control",
+        "step": null
+      },
+      {
+        "from": "Merge Sorting Unit+ (MSU+)",
+        "to": "Output Buffer",
+        "what": "fully sorted Gaussian table",
+        "step": null
+      }
+    ],
+    "key_idea": "Each of Neo's 16 parallel Sorting Cores combines a Bitonic Sorting Unit for local sorting with an enhanced Merge Sorting Unit+ that merges two sorted sequences while filtering out invalid (outgoing) entries via per-entry invalid bits, avoiding a full re-sort.",
+    "reading_order": "Top: Sorting Engine's 16 sorting cores listed, with Sorting Core expanded to show BSU, Input/Output Buffer and MSU+ blocks; bottom: MSU+ expanded further into Index Counter, two Local Input buffers, Invalid Bit Filters, a comparator/multiplexer, and the Local Output buffer."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.53,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e9eefd",
+        "used_for": "very light blue fill for the Merge Sorting Unit+ (MSU+) bounding box"
+      },
+      {
+        "hex": "#3764b9",
+        "used_for": "blue stroke/accent highlighting the MSU+ block and its outline"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines; green stroke on Sorting Engine/Core boxes, blue stroke on the MSU+ detail box",
+    "font": "HelveticaNeue / HelveticaNeue-Bold sans, 8-11.5pt",
+    "corners": "square",
+    "arrows": "thin black bidirectional arrows between blocks, plus internal signal lines in the MSU+ detail",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light blue fill/outline isolates the newly detailed Merge Sorting Unit+ block from the rest of the diagram",
+    "line_style_means": "dashed connector lines link the Sorting Core box to its zoomed MSU+ detail below, indicating a containment/zoom relationship rather than data flow",
+    "emphasis": "a stepwise zoom (Sorting Engine -> Sorting Core -> MSU+) is drawn top-to-bottom, culminating in the blue-highlighted MSU+ as the figure's focal novel component",
+    "reusable_patterns": [
+      "successive zoom-in from a list of parallel units into one unit's internal block diagram",
+      "merge-sort hardware unit with dual input buffers feeding a filter and multiplexer"
+    ],
+    "weaknesses": [
+      "the '>' comparator symbol in the MSU+ detail has no explicit label, relying on visual convention"
+    ]
+  },
+  "tags": [
+    "3D-gaussian-splatting",
+    "hardware-accelerator",
+    "sorting",
+    "bitonic-sort",
+    "merge-sort",
+    "reuse-and-update"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Neo Accelerator Architecture (p.8)"
+    ],
+    "evidence": [
+      "Figure 12 shows the microarchitecture of our Sorting Engine, which comprises 16 parallel Sorting Cores",
+      "Each Sorting Core has a Bitonic Sorting Unit (BSU), a Merge Sorting"
+    ]
+  },
+  "summary": "This figure details Neo's Sorting Engine microarchitecture. At the top, the Sorting Engine is shown as 16 parallel Sorting Cores; one core is expanded to reveal a Bitonic Sorting Unit (BSU) alongside Input and Output Buffers and a Merge Sorting Unit+ (MSU+). The bottom panel further expands the MSU+, Neo's key novel component: it holds two locally sorted sequences in separate local input buffers, tracks progress with an index counter, applies an invalid-bit filter to each buffer to drop outgoing (no-longer-visible) Gaussians, and merges the filtered streams through a comparator/multiplexer into a local output buffer. The figure conveys how reuse-and-update sorting is implemented at the hardware level by augmenting a standard bitonic/merge sort pipeline with invalid-entry filtering.",
+  "summary_zh": "该图展示Neo排序引擎的微架构：排序引擎由16个并行排序核心组成，每个核心含位序排序单元(BSU)、输入输出缓冲区和增强型归并排序单元(MSU+)；下方进一步展开MSU+内部结构，通过索引计数器、双本地输入缓冲区、无效位过滤器和比较器/多路复用器，实现对失效高斯的过滤与归并，支撑复用-更新式排序。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,63 @@
+{
+  "id": "osdi23-020_fig9",
+  "kind": "mechanism",
+  "paper_id": "osdi23-020",
+  "fig": "9",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 9: (a) Ghost values (dashed cyan boxes) travel alongside physical values (solid yellow). Ghost values are atomically updated according to the LTS rules (see §3.3.2 for details). (b) LTS transitions, in turn, are abstracted into the GSM (§3.3.3).",
+  "groups_in_record": [
+    "evolution",
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "timeline",
+  "subject": "one DoTransfer(A,B,$7) execution tracking ghost shard values against physical heap values through locks and an atomic ghost transition",
+  "arrangement": "stacked-timeline",
+  "panel_count": 5,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 2.48,
+  "n_elements": 11,
+  "n_relations": 9,
+  "n_panels": 5,
+  "n_steps": 8,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "labelled-arrows",
+  "zoom_callout": false,
+  "tool": "matplotlib",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-020/osdi23-020_fig9_p8_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-020/osdi23-020_fig9_p8_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "As Thread 2 executes one $7 transfer under separate A/B locks, the physical balances update first and the ghost (specification) values catch up atomically in one instantaneous step that exactly matches the GSM's single global transition.",
+      "what_to_learn": "a swimlane timeline where a specification-level (ghost) copy and an implementation-level (physical) copy of the same value are drawn as paired boxes that travel together, with one isolated instant where the ghost jumps to re-sync",
+      "note_source": "record"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "As Thread 2 executes one $7 transfer under separate A/B locks, the physical balances update first and the ghost (specification) values catch up atomically in one instantaneous step that exactly matches the GSM's single global transition.",
+      "what_to_learn": "a swimlane timeline where a specification-level (ghost) copy and an implementation-level (physical) copy of the same value are drawn as paired boxes that travel together, with one isolated instant where the ghost jumps to re-sync",
+      "note_source": "record"
+    }
+  ]
+}

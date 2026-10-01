@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-026_fig4",
+  "paper_id": "asplos26-026",
+  "fig": "4",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 4. Overview of the GRPO [55] RL training process.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "keynote",
+  "aspect": 2.74,
+  "n_components": 9,
+  "n_flows": 10,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-026/src/fig4_rl_overview.svg",
+    "preview.png": "lab/extracted/asplos26-026/src/fig4_rl_overview.png",
+    "print.png": "lab/extracted/asplos26-026/asplos26-026_fig4_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Three named phases separated by dashed vertical rules, with phase headers set above the band.",
+      "what_to_learn": "Dashed vertical rules plus bold phase headers are enough to segment a pipeline; the same component may legitimately reappear per phase if the headers disambiguate it."
+    }
+  ]
+}

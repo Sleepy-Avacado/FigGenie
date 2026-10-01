@@ -1,0 +1,56 @@
+{
+  "id": "sosp24-011_fig7",
+  "kind": "mechanism",
+  "paper_id": "sosp24-011",
+  "fig": "7",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 7. Example of ReCycle’s fault tolerance guarantees.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "topology",
+  "subject": "how ReCycle's worker grid tolerates worst-case single-group failures versus scattered 8-worker failures across a pipeline",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.58,
+  "n_elements": 7,
+  "n_relations": 1,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "per-panel",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-011/src/fig7_recovery-in-recycle.svg",
+    "preview.png": "lab/extracted/sosp24-011/src/fig7_recovery-in-recycle.png",
+    "print.png": "lab/extracted/sosp24-011/sosp24-011_fig7_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Same 3x4 data-parallel x pipeline-stage worker grid drawn twice: one clustered whole-column failure (checkpoint needed) versus scattered failures leaving one live worker per column (training survives).",
+      "what_to_learn": "Ring one whole failed column in a dashed box labelled by name for the worst case; for the survivable case, scatter the same failure icons so every column still keeps one active worker — but red/black arrows go unexplained.",
+      "note_source": "agent"
+    }
+  ]
+}

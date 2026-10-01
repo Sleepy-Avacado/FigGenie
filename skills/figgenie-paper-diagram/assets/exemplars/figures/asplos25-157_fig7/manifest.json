@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-157_fig7",
+  "paper_id": "asplos25-157",
+  "fig": "7",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 7. Overview of dual-mode-aware compilation process.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 5.57,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-157/src/fig7_workflow_pdf_new.svg",
+    "preview.png": "lab/extracted/asplos25-157/src/fig7_workflow_pdf_new.png",
+    "print.png": "lab/extracted/asplos25-157/asplos25-157_fig7_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "The most extreme banner aspect among clean pipelines (5.57 at 485x87 pt) - the shape a double-column strip pipeline actually takes.",
+      "what_to_learn": "At aspect >5 every stage must be one box-and-caption tall; wrap only the paper's contribution (here DACO) in a dashed group so the eye finds it in a long strip."
+    }
+  ]
+}

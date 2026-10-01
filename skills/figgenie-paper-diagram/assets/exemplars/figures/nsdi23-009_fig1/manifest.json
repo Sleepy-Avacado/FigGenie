@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-009_fig1",
+  "paper_id": "nsdi23-009",
+  "fig": "1",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 1: High-level architecture of model serving system",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.98,
+  "n_components": 7,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-009/nsdi23-009_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-009/nsdi23-009_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: a plain three-stage pipeline (its own corpus label) with small decorative rate-over-time sparkline icons beside the inputs, not a magnified sub-block of any drawn component.",
+      "what_to_learn": "The transferable move is pipeline's: give each of several parallel input streams its own tiny characterizing chart, and distinguish repeated content (four differently-shaped models packed in one worker's GPU memory) by both shape and colour, then legend the shapes explicitly, since this exemplar leaves them unexplained."
+    }
+  ]
+}

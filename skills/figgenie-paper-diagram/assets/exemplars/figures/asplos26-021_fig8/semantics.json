@@ -1,0 +1,168 @@
+{
+  "paper_id": "asplos26-021",
+  "fig": "8",
+  "system": {
+    "name": "DARTH-PUM",
+    "one_liner": "a general-purpose hybrid processing-using-memory (PUM) architecture that tightly integrates analog and digital PUM within each compute tile",
+    "domain": [
+      "hardware accelerator",
+      "processing-in-memory",
+      "ml-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Front End",
+        "role": "fetches and decodes hybrid PUM instructions and issues PUM-specific micro-ops (Fetch, Decode, Issue)",
+        "container": "DARTH-PUM",
+        "novel": true
+      },
+      {
+        "name": "Hybrid Compute Tile",
+        "role": "replicated back-end tile that executes hybrid PUM kernels; multiple tiles form the back end",
+        "container": "DARTH-PUM",
+        "novel": true
+      },
+      {
+        "name": "Analog Compute Element",
+        "role": "performs analog MVM operations, coordinated by an A/D arbiter, transpose unit, and instruction injection unit",
+        "container": "Hybrid Compute Tile",
+        "novel": true
+      },
+      {
+        "name": "A/D Arbiter",
+        "role": "sequences operations and data movement between the analog and digital compute elements",
+        "container": "Analog Compute Element",
+        "novel": true
+      },
+      {
+        "name": "Transpose Unit",
+        "role": "supports data transposition between analog and digital domains",
+        "container": "Analog Compute Element",
+        "novel": true
+      },
+      {
+        "name": "Instruction Injection Unit",
+        "role": "per-HCT unit that reduces micro-op expansion overhead and mitigates front-end stalls",
+        "container": "Analog Compute Element",
+        "novel": true
+      },
+      {
+        "name": "Digital Compute Element",
+        "role": "performs digital PUM (non-MVM) operations dispatched from digital issue queues",
+        "container": "Hybrid Compute Tile",
+        "novel": true
+      },
+      {
+        "name": "Digital PUM µop Queues",
+        "role": "digital issue queue dispatching micro-ops to the digital PUM arrays",
+        "container": "Digital Compute Element",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Front End",
+        "to": "Hybrid Compute Tile",
+        "what": "decoded hybrid PUM micro-ops",
+        "step": null
+      },
+      {
+        "from": "Analog Compute Element",
+        "to": "Digital Compute Element",
+        "what": "8B/cycle I/O data transfer, rate-matching ADC throughput with DCE write bandwidth",
+        "step": null
+      }
+    ],
+    "key_idea": "DARTH-PUM pairs a shared front-end controller with a grid of Hybrid Compute Tiles, each tile fusing an Analog Compute Element and a Digital Compute Element through an arbitrated, rate-matched interface so analog MVM and digital non-MVM operations execute together in memory.",
+    "reading_order": "Left grid of repeated Hybrid Compute Tiles around a central Front End box, with a callout zooming into one tile to show the stacked Analog Compute Element above the Digital Compute Element."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.75,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ab74d5",
+        "used_for": "purple fill for Hybrid Compute Tile boxes"
+      },
+      {
+        "hex": "#e3d1f1",
+        "used_for": "light purple fill for the Front End and Analog Compute Element header"
+      },
+      {
+        "hex": "#89b981",
+        "used_for": "green fill accents on analog array icons"
+      },
+      {
+        "hex": "#ffff00",
+        "used_for": "yellow fill accents on analog array icons"
+      },
+      {
+        "hex": "#40b0ff",
+        "used_for": "blue fill for Digital Compute Element header and digital array icons"
+      },
+      {
+        "hex": "#003860",
+        "used_for": "dark navy fill/text for digital compute element background"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "dark purple accent strokes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.38pt) dashed strokes forming the array-grid icon pattern",
+    "font": "Calibri-Bold/BoldItalic sans, 5.5-7pt, heavily bold",
+    "corners": "mixed",
+    "arrows": "no arrowheads; 888 lines mostly forming crossbar/array grid icons",
+    "icons": "vector array-grid icons (dotted crossbar pattern) for analog and digital compute arrays"
+  },
+  "encoding": {
+    "color_means": "purple marks Hybrid Compute Tile and Front End structures; green/yellow mark analog compute elements; blue/navy mark digital compute elements",
+    "line_style_means": null,
+    "emphasis": "a callout line zooms from one tile in the grid into an exploded internal view, drawing attention to the analog/digital coordination hardware that is the paper's contribution",
+    "reusable_patterns": [
+      "tile-array architecture with one tile magnified via a callout to reveal internal microarchitecture"
+    ],
+    "weaknesses": [
+      "very dense array-icon shapes (888 lines) make the zoomed panel visually busy"
+    ]
+  },
+  "tags": [
+    "processing-in-memory",
+    "PUM",
+    "hybrid analog-digital",
+    "hardware accelerator",
+    "compute tile",
+    "front-end/back-end architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 DARTH-PUM System Design (p.6)"
+    ],
+    "evidence": [
+      "DARTH-PUM consists of two parts, as shown in Figure 8: (1) a front-end controller ... and (2) a back end composed of multiple hybrid compute tiles",
+      "We connect the ACE and DCE using an I/O data transfer network capable of transferring 8 B per cycle",
+      "we introduce an analog–digital arbiter and an instruction injection unit to sequence operations and data movement"
+    ]
+  },
+  "summary": "This figure shows the DARTH-PUM hardware architecture. A shared Front End (Fetch, Decode, Issue) sits amid a grid of replicated Hybrid Compute Tiles (HCTs) that form the back end. A callout zooms into one HCT to reveal its internal structure: an Analog Compute Element (with an A/D arbiter, a transpose unit, and an instruction injection unit driving analog PUM arrays) stacked above a Digital Compute Element (with digital PUM micro-op queues driving digital PUM arrays). The two compute elements are connected by an 8-byte-per-cycle I/O data transfer network that rate-matches ADC throughput to digital-array write bandwidth, letting analog MVM and digital non-MVM operations cooperate within the same tile. The figure combines a tile-array diagram with a magnified internal block diagram, using purple for tile/front-end structures and green/yellow versus blue/navy to separate the analog and digital compute elements.",
+  "summary_zh": "该图展示DARTH-PUM硬件架构：前端（取指、译码、发射）与多个混合计算瓦片（HCT）构成后端阵列；放大视图显示单个HCT内模拟计算单元（A/D仲裁器、转置单元、指令注入单元）与数字计算单元（数字PUM微操作队列）通过8字节/周期的数据传输网络协同工作。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

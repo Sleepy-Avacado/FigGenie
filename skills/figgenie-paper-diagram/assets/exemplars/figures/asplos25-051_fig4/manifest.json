@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-051_fig4",
+  "paper_id": "asplos25-051",
+  "fig": "4",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 4. Testbed setup.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "keynote",
+  "aspect": 1.44,
+  "n_components": 12,
+  "n_flows": 2,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-051/src/fig4_eval_arch-2.svg",
+    "preview.png": "lab/extracted/asplos25-051/src/fig4_eval_arch-2.png",
+    "print.png": "lab/extracted/asplos25-051/asplos25-051_fig4_p11_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated three-box testbed variant: Compute Node, Switch, and Memory Node mirror the identical Network-Interface/PHY/SerDes tier stack, with the interconnect drawn as literal orange Ethernet cables into labeled P0/P1 ports rather than an abstract band.",
+      "what_to_learn": "When the interconnect is itself hardware worth showing, draw it as literal cabling with named ports (P0/P1) instead of a plain arrow, and mirror three color-coded node boxes (compute, switch, memory) with the same internal tier stack so the reader can compare them at a glance."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": false,
+      "why_chosen": "Compute Node and Memory Node mirror the same Network Interface and Ethernet PHY P0/P1 stack, differing only in Application versus DDR4 controller, while the Switch sits on the axis between them carrying the EDM Scheduler.",
+      "what_to_learn": "Give the two mirrored peers different header colours when their roles genuinely differ, Application side versus DDR4 side, but keep every internal box (Network Interface, Ethernet PHY, matching port labels P0/P1) identically shaped and placed, and route the physical cabling as coloured arrows through the middle switch box that both sides share."
+    }
+  ]
+}

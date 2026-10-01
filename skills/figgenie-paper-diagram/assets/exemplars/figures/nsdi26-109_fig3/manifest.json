@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-109_fig3",
+  "paper_id": "nsdi26-109",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 3: OneSidedMW architecture and workflow overview.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 4.16,
+  "n_components": 11,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-109/nsdi26-109_fig3_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-109/nsdi26-109_fig3_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Double-column layout centers a literal circular free-list ring (Head/Tail, entries, null) inside the MN's Free MW Queue, with five circled steps and a dashed chain (MWTable to MW to Memory Chunk) crossing the CN/MN boundary.",
+      "what_to_learn": "Draw a ring buffer or free list as an actual circle with Head/Tail arrows and a null slot rather than a generic queue box, chain each table entry to its resource with a dashed indirection arrow, and number the steps so they cross the host/device boundary through explicit NIC boxes on both sides."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar spanning a host-device split: the CN side nests its API box inside a runtime box, while the MN side nests a ring buffer and an MWTable, tied together by 5 numbered steps.",
+      "what_to_learn": "Nest a paper's own small contribution box one level inside its host's generic runtime box rather than drawing it as a sibling, and represent an internal data structure like a free list literally as a ring with Head and Tail pointers instead of a plain rectangle."
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "paper_id": "nsdi23-070",
+  "fig": "2",
+  "system": {
+    "name": "Valinor-h",
+    "one_liner": "an eBPF-based measurement framework that measures how host networking stack elements contribute to traffic bursts",
+    "domain": [
+      "networking",
+      "measurement",
+      "operating-systems"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Application",
+        "role": "application traffic source inside a container, one of several stacked instances",
+        "container": "App Containers",
+        "novel": false
+      },
+      {
+        "name": "TCP/IP",
+        "role": "socket buffering and transport-protocol processing layer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Container Virtual Switch (bridge)",
+        "role": "virtual bridge connecting containers to the host network stack",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Qdiscs",
+        "role": "hierarchical packet schedulers that operate in parallel across CPU cores",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "TX Rings",
+        "role": "per-queue descriptor rings buffering packets before NIC transmission",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Network Interface",
+        "role": "NIC-side stage performing scheduling and hardware offloads",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NIC Scheduler",
+        "role": "schedules queued packets for transmission on the NIC",
+        "container": "Network Interface",
+        "novel": false
+      },
+      {
+        "name": "NIC Offloads",
+        "role": "performs scatter/gather, segmentation, and checksum offloads before sending",
+        "container": "Network Interface",
+        "novel": false
+      },
+      {
+        "name": "Wire",
+        "role": "physical link the packet is finally sent on",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application",
+        "to": "TCP/IP",
+        "what": "application data via socket interfaces",
+        "step": null
+      },
+      {
+        "from": "TCP/IP",
+        "to": "Container Virtual Switch (bridge)",
+        "what": "sk_buffs after transport processing and routing",
+        "step": null
+      },
+      {
+        "from": "Container Virtual Switch (bridge)",
+        "to": "Qdiscs",
+        "what": "sk_buffs forwarded toward the interface qdiscs",
+        "step": null
+      },
+      {
+        "from": "Qdiscs",
+        "to": "TX Rings",
+        "what": "scheduled sk_buffs",
+        "step": null
+      },
+      {
+        "from": "TX Rings",
+        "to": "Network Interface",
+        "what": "buffered packets notified to the NIC",
+        "step": null
+      },
+      {
+        "from": "Network Interface",
+        "to": "Wire",
+        "what": "packets sent after scatter/gather, segmentation, and checksum offload",
+        "step": null
+      }
+    ],
+    "key_idea": "A packet travels through a fixed sequence of buffering and scheduling layers, from application containers down to the wire, each layer a potential source of traffic bursts.",
+    "reading_order": "Strictly left to right, one pipeline stage after another, from App Containers to the Wire."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.17,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#808080",
+        "used_for": "gray funnel shapes for the Qdiscs and NIC converge/diverge icons"
+      },
+      {
+        "hex": "#9999cc",
+        "used_for": "blue-lavender outlines and text for the pipeline stage boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin blue-gray outlines on stage boxes (~0.8pt)",
+    "font": "serif (Linux Libertine), 5.5-8.5pt, bold labels",
+    "corners": "rounded",
+    "arrows": "solid arrows between stages, with converging/diverging trapezoids representing fan-in/fan-out at Qdiscs and the NIC",
+    "icons": "vector icons for the parallel TX ring buffers (stacked ring shapes) and a small switch icon inside the bridge box"
+  },
+  "encoding": {
+    "color_means": "blue outlines mark the named pipeline stages; gray trapezoids show where per-core parallelism fans in or out",
+    "line_style_means": "solid arrows show the single packet path from application to wire; no dashed or alternate paths are drawn",
+    "emphasis": "the funnel shapes at Qdiscs and the NIC visually emphasize that many per-core queues converge into shared hardware resources",
+    "reusable_patterns": [
+      "straight left-to-right layered pipeline of a kernel networking stack",
+      "funnel/trapezoid icons to show fan-in of parallel per-core queues"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "linux-networking",
+    "qdisc",
+    "container-networking",
+    "traffic-bursts",
+    "packet-pipeline",
+    "nic-offload"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Approaches to measuring traffic bursts (p.5)"
+    ],
+    "evidence": [
+      "sk_buffs eventually make their way towards interface qdiscs, the hierarchical packet schedulers in Linux",
+      "qdiscs operate in parallel on all CPU cores and forward the scheduled sk_buffs towards driver rings",
+      "the NIC performs scatter/gather, segmentation, checksum, and sends the packets on the wire"
+    ]
+  },
+  "summary": "Figure 2 depicts the conventional Linux network processing pipeline in a containerized deployment, as background for the paper's study of traffic bursts. Application traffic from multiple App Containers passes through TCP/IP socket and transport buffering, then a Container Virtual Switch (bridge) connecting containers to the host stack. Packets (sk_buffs) then reach the Qdiscs, Linux's hierarchical packet schedulers that run in parallel across CPU cores, before being placed in per-queue TX Rings that buffer them ahead of the NIC. Finally, the Network Interface's NIC Scheduler and NIC Offloads stages perform scatter/gather, segmentation, and checksum offloading before the packet is sent on the Wire. The figure is drawn as a simple left-to-right pipeline, with gray funnel icons showing where parallel per-core queues converge or diverge at the Qdiscs and NIC stages.",
+  "summary_zh": "图2展示容器化Linux主机中常规网络处理流水线：应用流量经TCP/IP、网桥后到达并行的Qdiscs调度，再进入TX环形缓冲区，最后网卡完成分散/聚合、分段与校验和卸载后发送到链路，作为论文研究流量突发的背景架构。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

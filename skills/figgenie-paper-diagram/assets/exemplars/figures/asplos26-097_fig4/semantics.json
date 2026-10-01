@@ -1,0 +1,223 @@
+{
+  "paper_id": "asplos26-097",
+  "fig": "4",
+  "system": {
+    "name": "Skyler",
+    "one_liner": "a static analysis framework for pre-deployment cost estimation of API invocations in serverless workflows",
+    "domain": [
+      "serverless",
+      "cost-analysis",
+      "static-analysis"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Application Code",
+        "role": "source code input to the graph generator",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "IaC Template",
+        "role": "infrastructure-as-code template input to the graph generator",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "API Profile",
+        "role": null,
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Serverless Graph Generator",
+        "role": "parses IaC templates and code to build a unified representation of control and data flows",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Serverless Graph",
+        "role": "unified graph representation of the application's control and data flow",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cloud Service Equations Plugins",
+        "role": "provider-specific pricing plugins (e.g. S3, SQS, aws, FS, Pub/Sub) that capture cloud billing semantics",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cost Modeling Engine",
+        "role": "traverses the graph and instantiates symbolic cost equations using the pricing plugins",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cost Equation",
+        "role": "symbolic cost equation produced by the cost modeling engine",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Symbolic Simulation Engine",
+        "role": "runs analysis queries over the cost model to explore costs, cost concentration, or input sensitivity",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Q1 Q2 Q3",
+        "role": "example analysis queries submitted to the simulation engine",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cost Metrics (Final Report)",
+        "role": "final predicted-cost output of the framework",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Application Code",
+        "to": "Serverless Graph Generator",
+        "what": "source code",
+        "step": null
+      },
+      {
+        "from": "IaC Template",
+        "to": "Serverless Graph Generator",
+        "what": "IaC template",
+        "step": null
+      },
+      {
+        "from": "API Profile",
+        "to": "Serverless Graph Generator",
+        "what": "API profile",
+        "step": null
+      },
+      {
+        "from": "Serverless Graph Generator",
+        "to": "Serverless Graph",
+        "what": "generated graph",
+        "step": null
+      },
+      {
+        "from": "Serverless Graph",
+        "to": "Cost Modeling Engine",
+        "what": "serverless graph",
+        "step": null
+      },
+      {
+        "from": "Cloud Service Equations Plugins",
+        "to": "Cost Modeling Engine",
+        "what": "provider-specific pricing rules",
+        "step": null
+      },
+      {
+        "from": "Cost Modeling Engine",
+        "to": "Cost Equation",
+        "what": "symbolic cost equation",
+        "step": null
+      },
+      {
+        "from": "Cost Equation",
+        "to": "Symbolic Simulation Engine",
+        "what": "cost equation and workflow details",
+        "step": null
+      },
+      {
+        "from": "Q1 Q2 Q3",
+        "to": "Symbolic Simulation Engine",
+        "what": "analyst-supplied queries",
+        "step": null
+      },
+      {
+        "from": "Symbolic Simulation Engine",
+        "to": "Cost Metrics (Final Report)",
+        "what": "predicted cost metrics",
+        "step": null
+      }
+    ],
+    "key_idea": "Skyler's three-stage pipeline (serverless graph generation, provider-specific cost modeling, and symbolic query simulation) turns application code and IaC templates into predicted API costs before deployment.",
+    "reading_order": "Left to right: code/template inputs into the graph generator, through cost modeling with pricing plugins, to the symbolic simulation engine and its cost-metric report."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.72,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f5f5f5",
+        "used_for": "neutral fill of the core pipeline boxes (Serverless Graph Generator, Cost Modeling Engine, Symbolic Simulation Engine, etc.)"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "green dashed band labeling the (§4) Graph-Based Model Generation section"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "purple dashed band labeling the (§5) Cloud Pricing Modeling section"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "yellow dashed band labeling the (§6) Cost Prediction Queries section"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray/black borders on solid boxes; dashed rectangles outline the three section bands",
+    "font": "Arial sans-serif, ~5-5.5pt, no bold",
+    "corners": "square",
+    "arrows": "straight orthogonal arrows with filled triangular heads, about 10-11 arrows total",
+    "icons": "vector icons for the input documents (Application Code, IaC Template, API Profile) and cloud service logos (S3, SQS, aws, etc.)"
+  },
+  "encoding": {
+    "color_means": "green/purple/yellow dashed bands mark which paper section (§4/§5/§6) each pipeline stage is detailed in; light gray boxes are the pipeline components themselves",
+    "line_style_means": "solid arrows show data/artifact flow between pipeline stages; dashed rectangles group stages by their corresponding paper section",
+    "emphasis": "the three colored section labels map the proposed three-stage pipeline directly onto the paper's own section structure, guiding the reader from architecture to implementation detail",
+    "reusable_patterns": [
+      "linear compiler-style pipeline annotated with the paper section that details each stage",
+      "icon row summarizing supported cloud services/pricing plugins"
+    ],
+    "weaknesses": [
+      "small font size (5-5.5pt) with many small service icons may be hard to read at print size",
+      "the API Profile input's exact role is not explained in the given text"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "cost-estimation",
+    "static-analysis",
+    "cloud-pricing",
+    "symbolic-execution"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Skyler Overview (p.4)"
+    ],
+    "evidence": [
+      "Figure 4 shows Skyler's modular architecture, which consists of three main pipeline stages.",
+      "a serverless graph generator parses IaC templates and code to build a unified representation",
+      "these components work in concert as a pipeline to deliver accurate, extensible, and platform-agnostic cost estimation"
+    ]
+  },
+  "summary": "This figure shows the architecture of Skyler, a static-analysis framework that predicts the monetary cost of API calls in serverless applications before deployment. Application source code and an IaC template (plus an API profile) feed a Serverless Graph Generator, which builds a unified control/data-flow graph. A Cost Modeling Engine then traverses this graph, combining it with provider-specific Cloud Service Equations Plugins (covering services such as S3, SQS, and Pub/Sub) to instantiate a symbolic cost equation. Finally, a Symbolic Simulation Engine executes analyst-supplied queries (Q1-Q3) over the cost model to explore provider-specific costs, cost concentration, or input sensitivity, producing a final Cost Metrics report. The diagram is drawn as a left-to-right pipeline of gray boxes, with three colored dashed bands along the bottom labeling which paper section (§4 graph generation, §5 pricing modeling, §6 cost-prediction queries) documents each stage.",
+  "summary_zh": "该图展示 Skyler 的三阶段流水线架构：代码和 IaC 模板构建无服务器图，结合云服务定价插件生成符号成本方程，再由符号模拟引擎执行查询得出成本报告，底部三色虚线框对应论文§4-§6节。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

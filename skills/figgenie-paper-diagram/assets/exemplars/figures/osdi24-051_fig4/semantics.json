@@ -1,0 +1,307 @@
+{
+  "paper_id": "osdi24-051",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "VeriSMo",
+    "one_liner": "a formally verified security module for confidential VMs that reasons about memory and lock permissions to guarantee safe concurrent memory access",
+    "domain": [
+      "security",
+      "formal-verification",
+      "confidential-computing"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "the states a memory range moves through, locked/unlocked, private/shared, trusted/unknown, and which transitions between them are safe",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Unlocked VMPL0-private",
+        "kind": "state",
+        "role": "VMPL0-private memory not currently locked by any CPU; content trust is unknown (black '?')",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Locked VMPL0-private",
+        "kind": "state",
+        "role": "VMPL0-private memory locked and verified trusted (green checks both sides); safe for unrestricted access and execution",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Locked VMPL0-private (Unknown content)",
+        "kind": "state",
+        "role": "VMPL0-private memory that is properly locked/owned (green check) but whose content has not yet been verified (black '?')",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Unlocked non-private",
+        "kind": "state",
+        "role": "memory shared with the hypervisor or guest OS, not locked; owner is untrusted (devil icon)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Locked non-private",
+        "kind": "state",
+        "role": "shared memory locked by the software, permitting copying/writing but not borrowing references; owner still untrusted (devil icon)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Memory-Safe Exec codes",
+        "kind": "label",
+        "role": "callout marking that only the fully trusted Locked VMPL0-private state may be treated as memory-safe executable code",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Lock",
+        "kind": "label",
+        "role": "transition acquiring the lock permission on a memory range",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Unlock",
+        "kind": "label",
+        "role": "transition releasing the lock permission",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Share via PT/RMP updates",
+        "kind": "label",
+        "role": "transition that turns locked private memory into locked non-private (shared) memory via page-table/RMP updates",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Copy to Private",
+        "kind": "label",
+        "role": "transition that copies locked non-private content into fresh, fully-trusted locked private memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Write",
+        "kind": "label",
+        "role": "transition that turns unknown-content locked private memory into trusted locked private memory by writing verified data",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Proper PT/RMP updates",
+        "kind": "label",
+        "role": "transition that reclaims locked non-private memory back into locked private memory with unknown content, via legitimate page-table/RMP updates",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Unlocked VMPL0-private",
+        "to": "Locked VMPL0-private",
+        "what": "Lock",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked VMPL0-private",
+        "to": "Unlocked VMPL0-private",
+        "what": "Unlock",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Unlocked non-private",
+        "to": "Locked non-private",
+        "what": "Lock",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked non-private",
+        "to": "Unlocked non-private",
+        "what": "Unlock",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked VMPL0-private",
+        "to": "Locked non-private",
+        "what": "Share via PT/RMP updates",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked non-private",
+        "to": "Locked VMPL0-private",
+        "what": "Copy to Private",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked non-private",
+        "to": "Locked VMPL0-private (Unknown content)",
+        "what": "Proper PT/RMP updates",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked VMPL0-private (Unknown content)",
+        "to": "Locked VMPL0-private",
+        "what": "Write",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Locked VMPL0-private",
+        "to": "Memory-Safe Exec codes",
+        "what": "only this trusted state may be treated as memory-safe executable code",
+        "kind": "dependency",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Unlocked VMPL0-private",
+        "Locked VMPL0-private",
+        "Locked VMPL0-private (Unknown content)",
+        "Unlocked non-private",
+        "Locked non-private"
+      ],
+      "transitions": [
+        {
+          "from": "Unlocked VMPL0-private",
+          "to": "Locked VMPL0-private",
+          "guard": "Lock"
+        },
+        {
+          "from": "Locked VMPL0-private",
+          "to": "Unlocked VMPL0-private",
+          "guard": "Unlock"
+        },
+        {
+          "from": "Unlocked non-private",
+          "to": "Locked non-private",
+          "guard": "Lock"
+        },
+        {
+          "from": "Locked non-private",
+          "to": "Unlocked non-private",
+          "guard": "Unlock"
+        },
+        {
+          "from": "Locked VMPL0-private",
+          "to": "Locked non-private",
+          "guard": "Share via PT/RMP updates"
+        },
+        {
+          "from": "Locked non-private",
+          "to": "Locked VMPL0-private",
+          "guard": "Copy to Private"
+        },
+        {
+          "from": "Locked non-private",
+          "to": "Locked VMPL0-private (Unknown content)",
+          "guard": "Proper PT/RMP updates"
+        },
+        {
+          "from": "Locked VMPL0-private (Unknown content)",
+          "to": "Locked VMPL0-private",
+          "guard": "Write"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "Only memory that is Locked, VMPL0-private and content-verified may be treated as memory-safe; sharing, copying or writing are the sole safe ways to move between the five permission states.",
+    "reading_order": "left-to-right across the top private-memory pair (Unlocked/Locked, then the Unknown-content state via Write), then down to the mirrored non-private pair, linked by Share/Copy transitions"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.4,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#231f20",
+        "used_for": "near-black fill of the '?' unknown-content icons and body text"
+      },
+      {
+        "hex": "#395829",
+        "used_for": "dark green fill of the checkmark icons marking a trusted/verified state"
+      },
+      {
+        "hex": "#e6e7e8",
+        "used_for": "light gray, used sparingly, likely icon background or padlock body"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt outlines; the Unlocked states are drawn with a dashed padlock outline versus solid for Locked states",
+    "corners": "rounded",
+    "arrows": "small triangular direction markers on short connectors between adjacent states, more like pointers than long arrows",
+    "font": "Times New Roman serif, 4-5.5pt, regular weight",
+    "icons": "12 vector glyph icons: open/closed padlock (sometimes with a key), a circled checkmark, a circled question mark, and a devil face, composed together to badge each state"
+  },
+  "encoding": {
+    "color_means": "green = verified/trusted (checkmark); black = unknown/unverified (question mark); the devil-face icon marks memory whose owner is an untrusted party (hypervisor or guest OS)",
+    "line_style_means": "dashed padlock/state outline marks an Unlocked state; solid marks Locked; plain connecting lines carry the Lock/Unlock/Share/Copy/Write transition labels",
+    "state_means": "each of the 5 states is badged by a pair of icons (content-trust glyph + lock glyph) rather than by a colour fill, so trust and lock status are read independently",
+    "marker_means": "checkmark = verified, question mark = unverified, devil face = shared with an untrusted owner; these badge icons, not numbers, mark which state a memory range is in",
+    "emphasis": "the single green-double-checkmark 'Locked VMPL0-private' state is the only one wired to 'Memory-Safe Exec codes', singling it out as the sole safe-to-execute state",
+    "reusable_patterns": [
+      "small badge-icon pairs (trust glyph + lock glyph) attached to each named state of an access-permission state machine"
+    ],
+    "weaknesses": [
+      "reusing the same padlock and checkmark glyphs across five states, distinguished only by small colour/fill differences, makes the states easy to confuse without close reading"
+    ]
+  },
+  "tags": [
+    "confidential-computing",
+    "memory-safety",
+    "lock-permission",
+    "state-machine",
+    "VeriSMo",
+    "SEV-SNP"
+  ],
+  "provenance": {
+    "sections": [
+      "§6 Implementation Verification (p.11)"
+    ],
+    "evidence": [
+      "Figure 4 illustrates safe operations for handling memory and lock permissions",
+      "the memory can be considered as private to VMPL0, and the acquire operation will safely grant a memory permission",
+      "copying and writing, but not borrowing references"
+    ]
+  },
+  "summary": "VeriSMo is a formally verified security module for confidential VMs that reasons about memory and lock permissions to guarantee safe concurrent access. This state-machine figure names five memory states, badged with a lock icon plus a trust icon (a green checkmark, a black question mark, or a devil face): Unlocked/Locked VMPL0-private, a further Locked-VMPL0-private-but-Unknown-content state, and Unlocked/Locked non-private (shared) memory. Lock and Unlock toggle within each privacy class. Crossing classes, 'Share via PT/RMP updates' turns trusted locked-private memory into locked non-private memory, while 'Copy to Private' turns locked non-private memory directly into the trusted private state and 'Proper PT/RMP updates' instead reclaims it as private with content still unknown; a subsequent 'Write' then upgrades that unknown-content state to fully trusted. Only the fully trusted Locked VMPL0-private state is wired to 'Memory-Safe Exec codes', marking it as the sole state safe to execute.",
+  "summary_zh": "该图展示VeriSMo的内存状态机：锁形加信任图标（对勾/问号/恶魔）区分私有与共享内存的锁定与可信状态，Share/Copy/Write等操作在其间转换，只有完全可信的Locked VMPL0-private态可执行代码。",
+  "confidence": "medium",
+  "notes": "states and transition names are read directly from the figure's own labels/icons (checkmark=trusted, '?'=unknown, devil=untrusted owner); the source paragraph is truncated before it fully explains the 'copy' vs 'PT/RMP update' distinction. style.palette falls back to the measured PDF-extracted-SVG attributes since no separate source-SVG histogram was provided.",
+  "venue": "OSDI24"
+}

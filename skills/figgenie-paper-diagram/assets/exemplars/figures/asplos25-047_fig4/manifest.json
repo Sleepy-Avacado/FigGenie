@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-047_fig4",
+  "kind": "mechanism",
+  "paper_id": "asplos25-047",
+  "fig": "4",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 4. Overview of DarwinGame’s tournament-based tun- ing: multiple phases and different playing styles.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "mixed",
+  "subject": "how DarwinGame's tournament narrows a large pool of candidate configurations down to one winner through four differently-styled phases",
+  "arrangement": "frames-row",
+  "panel_count": 4,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.25,
+  "n_elements": 10,
+  "n_relations": 4,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "chrome",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-047/src/fig4_overview.svg",
+    "preview.png": "lab/extracted/asplos25-047/src/fig4_overview.png",
+    "print.png": "lab/extracted/asplos25-047/asplos25-047_fig4_p5_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "Four tournament phases drawn as four completely different population shapes — grid, cluster blob, cycle graph, pair — unified only by one green-dot 'winner' colour and one repeated transition icon.",
+      "what_to_learn": "Let each phase's container shape mimic its tournament format — grid of pools, two-region blob, cyclic graph, simple pair — but keep the winner dot's colour and transition-icon arrow identical everywhere so the eye tracks one shrinking population.",
+      "note_source": "agent"
+    }
+  ]
+}

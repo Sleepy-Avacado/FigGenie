@@ -1,0 +1,177 @@
+{
+  "paper_id": "osdi26-060",
+  "fig": "1",
+  "system": {
+    "name": "BatchGen",
+    "one_liner": "a system architecture for scalable and efficient batch inference of large language models",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Global Batch",
+        "role": "the full list of submitted sequences (..., Seq. 3, Seq. 2, Seq. 1) forming a batch inference job",
+        "container": "(a) Batch Inference",
+        "novel": false
+      },
+      {
+        "name": "Sub-Batch",
+        "role": "a portion of the global batch processed and completed together, returning incremental output",
+        "container": "(a) Batch Inference",
+        "novel": false
+      },
+      {
+        "name": "BCT",
+        "role": "batch completion time: total time from batch submission until every sequence has been processed",
+        "container": "(a) Batch Inference",
+        "novel": true
+      },
+      {
+        "name": "SCT",
+        "role": "sequence completion time: time from batch submission until a specific sequence's output is available, set by its sub-batch's completion",
+        "container": "(a) Batch Inference",
+        "novel": true
+      },
+      {
+        "name": "Seq. 1",
+        "role": "a single submitted sequence in the interactive inference panel",
+        "container": "(b) Interactive Inference",
+        "novel": false
+      },
+      {
+        "name": "Submit",
+        "role": "the user's submission action starting the interactive request timeline",
+        "container": "(b) Interactive Inference",
+        "novel": false
+      },
+      {
+        "name": "TTFT",
+        "role": "time to first token, measured from submission to the first output token",
+        "container": "(b) Interactive Inference",
+        "novel": false
+      },
+      {
+        "name": "TPOT",
+        "role": "time per output token, measured between successive output tokens",
+        "container": "(b) Interactive Inference",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Global Batch",
+        "to": "Sub-Batch",
+        "what": "sequences (e.g., Seq. 3) placed into a sub-batch for processing",
+        "step": null
+      },
+      {
+        "from": "Sub-Batch",
+        "to": "BCT",
+        "what": "all sub-batches together determine the total batch completion time",
+        "step": null
+      },
+      {
+        "from": "Sub-Batch",
+        "to": "SCT",
+        "what": "each sub-batch's completion determines the sequence completion time for its sequences",
+        "step": null
+      },
+      {
+        "from": "Submit",
+        "to": "Seq. 1",
+        "what": "user submits a sequence",
+        "step": null
+      },
+      {
+        "from": "Seq. 1",
+        "to": "TTFT",
+        "what": "elapsed time until the first output token",
+        "step": null
+      },
+      {
+        "from": "Seq. 1",
+        "to": "TPOT",
+        "what": "elapsed time between subsequent output tokens",
+        "step": null
+      }
+    ],
+    "key_idea": "Batch inference should be measured by batch completion time (BCT) and sequence completion time (SCT), which are fundamentally different from the per-token responsiveness metrics (TTFT, TPOT) used to evaluate interactive inference.",
+    "reading_order": "Left panel (a) Batch Inference read left to right along its time axis showing sub-batches and BCT/SCT brackets; right panel (b) Interactive Inference read left to right showing a submitted sequence's output tokens with TTFT/TPOT brackets."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.95,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3a3a3a",
+        "used_for": "dark gray grid/hatch icons marking completed sub-batches and output-token squares"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "medium-light gray shading of elapsed sub-batch / TTFT-TPOT time bands"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "very light gray background shading of the timeline"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "gray accent shading"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.65pt solid black/dark gray outlines",
+    "font": "HelveticaNeue sans-serif, 7-8pt, medium/bold for metric labels",
+    "corners": "square",
+    "arrows": "straight double-headed bracket arrows measuring named time intervals",
+    "icons": "vector; simple user/person icon, grid-hatch icon for completed batch, small squares for output tokens"
+  },
+  "encoding": {
+    "color_means": "dark gray = completed-work markers (grid squares for finished sub-batches, output-token squares), light gray shading = elapsed processing time bands along the time axis",
+    "line_style_means": "double-headed arrow brackets measure named time intervals (BCT, SCT in panel a; TTFT, TPOT in panel b) directly against a shared time axis",
+    "emphasis": "contrasts one long BCT bracket spanning the whole batch against multiple shorter per-sub-batch SCT brackets, versus TTFT/TPOT brackets for a single interactive sequence, motivating why batch inference needs different latency metrics",
+    "reusable_patterns": [
+      "side-by-side timeline diagrams with bracket-style interval annotations to define and contrast latency metrics"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "batch inference",
+    "latency metrics",
+    "batch completion time",
+    "interactive inference",
+    "ttft",
+    "tpot"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "As shown in Figure 1, we define the batch completion time (BCT) as the total time",
+      "SCT is determined by the completion time of the sub-batch that contains the sequence",
+      "interactive inference prioritizes user-perceived responsiveness, focusing on metrics such as time to first token"
+    ]
+  },
+  "summary": "This figure motivates BatchGen's design goals by contrasting batch inference with interactive inference along a shared time axis. Panel (a) Batch Inference shows a Global Batch of submitted sequences processed in Sub-Batches; it defines batch completion time (BCT) as the total time until every sequence in the batch is done, and sequence completion time (SCT) as the time until a specific sequence's sub-batch finishes and its output becomes available. Panel (b) Interactive Inference shows a single submitted sequence (Seq. 1) whose output tokens arrive over time, defining time to first token (TTFT) and time per output token (TPOT) as the relevant responsiveness metrics. The figure is a simple two-panel, flat grayscale timeline diagram with square-cornered blocks and double-headed bracket arrows labeling each interval, establishing that batch inference should optimize BCT/SCT rather than the token-level responsiveness metrics used for interactive inference.",
+  "summary_zh": "该图对比了批量推理与交互式推理的时间线：批量推理面板定义批完成时间（BCT）与序列完成时间（SCT），交互式推理面板定义首token时间（TTFT）与单token时间（TPOT），以此说明批量推理需要不同于交互式推理的评价指标，为 BatchGen 的设计目标提供动机。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

@@ -1,0 +1,54 @@
+{
+  "id": "asplos26-056_fig5",
+  "paper_id": "asplos26-056",
+  "fig": "5",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 5. TreeVQA: A central controller and VQA clusters",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.77,
+  "n_components": 7,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-056/src/fig5_tree_vqa-arch.svg",
+    "preview.png": "lab/extracted/asplos26-056/src/fig5_tree_vqa-arch.png",
+    "print.png": "lab/extracted/asplos26-056/asplos26-056_fig5_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "TreeVQA Controller is a dashed hub box holding stacked-card spokes C_i/C_k/C_j; a thin connector drops one spoke (C_j) down into a magnified detail panel showing its optimize/split decision loop.",
+      "what_to_learn": "Draw spokes as small stacked cards, a shorthand for identical parallel instances, inside a dashed hub boundary, then pick exactly one spoke and connect it with thin lines to a magnified panel below that spells out its internal decision logic with a Yes/No diamond."
+    },
+    {
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "An open pipeline feeds a boxed TreeVQA Controller loop where cluster cards iterate and split, and a zoom callout below expands one cluster's Yes/No decision with a diamond box, the open-pipeline-into-boxed-loop shape.",
+      "what_to_learn": "Draw the repeating stage as one dashed boxed container (stacked cluster cards) fed by an open input pipeline, and pull the internal iterate/split decision out into a separate zoomed callout below with its own diamond Yes/No box rather than crowding it into the main diagram."
+    },
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Stacked VQA-cluster cards (C_i, C_k, ellipsis, C_j) sit inside a dashed TreeVQA Controller box, with one card, C_j, linked by thin connectors to a zoomed panel below showing exactly how that instance decides to split.",
+      "what_to_learn": "Draw the replicated instances as stacked cards inside one coordinator box, then link exactly one of them by a thin connector to a separate zoomed panel that details its internal decision logic (here a Yes/No split diamond), instead of drawing that logic inside every card."
+    }
+  ]
+}

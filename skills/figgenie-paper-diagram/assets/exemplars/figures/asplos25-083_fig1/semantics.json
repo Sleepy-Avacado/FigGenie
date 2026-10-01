@@ -1,0 +1,142 @@
+{
+  "paper_id": "asplos25-083",
+  "fig": "1",
+  "system": {
+    "name": "OctoCache",
+    "one_liner": "a caching layer on top of OctoMap that speeds up voxel updates in 3D occupancy mapping for autonomous systems",
+    "domain": [
+      "robotics",
+      "storage"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Voxel batch",
+        "role": "incoming batch of voxel updates to be applied to the map",
+        "container": "OctoCache System",
+        "novel": false
+      },
+      {
+        "name": "Cache",
+        "role": "flattened, table-based cache that handles all voxel updates before they reach the octree",
+        "container": "OctoCache System",
+        "novel": true
+      },
+      {
+        "name": "Evicted",
+        "role": "voxels evicted from the cache, reordered by Morton code before updating the tree",
+        "container": "OctoCache System",
+        "novel": true
+      },
+      {
+        "name": "Octree",
+        "role": "OctoMap's underlying octree data structure, updated from evicted cache entries",
+        "container": "OctoCache System",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Voxel batch",
+        "to": "Cache",
+        "what": "write/update to a cache cell",
+        "step": null
+      },
+      {
+        "from": "Cache",
+        "to": "Evicted",
+        "what": "eviction of a cached voxel",
+        "step": null
+      },
+      {
+        "from": "Evicted",
+        "to": "Octree",
+        "what": "write update to a tree node, ordered by Morton code",
+        "step": null
+      }
+    ],
+    "key_idea": "OctoCache inserts a flattened table-based cache in front of OctoMap's octree so most voxel updates hit the cache, and only evicted, Morton-code-ordered voxels reach the costlier octree.",
+    "reading_order": "Left to right: Voxel batch writes into the Cache; evicted entries are reordered and written into the Octree; the right panel lists the resulting speedup numbers."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.93,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "voxel-batch cube icons and cache table icon"
+      },
+      {
+        "hex": "#375c9e",
+        "used_for": "darker blue shading on the cube/cache icons"
+      },
+      {
+        "hex": "#698ed0",
+        "used_for": "lighter blue accents on cache cells"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "performance callout box fill"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "octree node icon and 'write to tree node' label, callout box accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.4pt) solid strokes, rounded corners on icon and callout boxes",
+    "font": "serif (Times/Linux Biolinum), small 2.5-8pt captions",
+    "corners": "rounded",
+    "arrows": "thin solid arrows connecting the batch-cache-evicted-octree pipeline, no circled steps",
+    "icons": "vector/bitmap icons: stacked cube icons for voxel batches, a small grid icon for the cache table, a node-and-edge tree icon for the octree"
+  },
+  "encoding": {
+    "color_means": "blue marks OctoCache's new cache-path elements (voxel batch, cache table, evicted entries), orange marks the octree/write-to-tree path and the performance highlight callouts",
+    "line_style_means": null,
+    "emphasis": "The right-hand performance panel places concrete speedup numbers (5.85x, 46-88%, 28%) directly beside the architecture diagram to tie the caching design to its measured benefit",
+    "reusable_patterns": [
+      "small cache-in-front-of-tree pipeline diagram",
+      "architecture diagram paired with a callout list of headline results"
+    ],
+    "weaknesses": [
+      "performance numbers are presented as text callouts rather than encoded in the diagram itself, mixing an architecture view with a results summary"
+    ]
+  },
+  "tags": [
+    "caching",
+    "octree",
+    "3D mapping",
+    "robotics",
+    "voxel",
+    "edge computing"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)"
+    ],
+    "evidence": [
+      "we initially construct a flattened, table-based cache to handle all voxel updates",
+      "we arrange the evicted voxels from the cache using the Morton Code ordering",
+      "caching recently accessed voxels and their occupancy values before reaching the octree on the critical path"
+    ]
+  },
+  "summary": "OctoCache is a caching layer built on top of OctoMap that accelerates voxel updates in 3D occupancy mapping for autonomous systems such as UAVs. This overview figure shows the OctoCache System on the left: a Voxel batch is written into a flattened, table-based Cache instead of going straight to the octree; evicted cache entries are reordered by their Morton code before being written to the underlying Octree, cutting the number of costly tree memory accesses. The OctoCache Performance panel on the right lists the resulting headline numbers: OctoCache is up to 5.85x faster than the octree thanks to over 95% cache hit rates, its overall mapping generation is 46-88% faster than plain OctoMap, and an OctoCache-based UAV navigation system saves up to 28% of flight time. The figure pairs a compact blue/orange pipeline diagram with concrete speedup callouts rather than a detailed architecture breakdown.",
+  "summary_zh": "该图示OctoCache概览：体素批次写入扁平表格缓存，逐出项按Morton编码写入八叉树；命中率超95%带来最高5.85倍加速，建图比OctoMap快46%~88%，无人机飞行时间省28%。",
+  "confidence": "high",
+  "notes": "The performance numbers (5.85x, 46-88%, 28%) are read directly from the callout text in the image; they are consistent with the abstract's reported speedups (45.63%-88.01%, 28% flight-time reduction) though phrased slightly differently there.",
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,200 @@
+{
+  "paper_id": "nsdi24-023",
+  "fig": "3",
+  "system": {
+    "name": "GRACE",
+    "one_liner": "a loss-resilient real-time video system built on a neural video codec jointly trained under packet losses",
+    "domain": [
+      "video",
+      "ml-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Motion estimator",
+        "role": "estimates motion vectors between current and reference frame",
+        "container": "Grace Encoder",
+        "novel": true
+      },
+      {
+        "name": "MV encoder",
+        "role": "encodes motion vectors into a quantized tensor",
+        "container": "Grace Encoder",
+        "novel": true
+      },
+      {
+        "name": "MV decoder",
+        "role": "decodes the MV tensor back into motion vectors, mirrored inside the encoder to match the true decoder",
+        "container": "Grace Encoder",
+        "novel": true
+      },
+      {
+        "name": "Motion compensation",
+        "role": "applies motion vectors to the reference frame to produce a motion-compensated frame",
+        "container": "Grace Encoder",
+        "novel": false
+      },
+      {
+        "name": "Frame smoothing",
+        "role": "increases similarity between the motion-compensated frame and the current frame before residual computation",
+        "container": "Grace Encoder",
+        "novel": true
+      },
+      {
+        "name": "Residual encoder",
+        "role": "encodes the residual differences into a quantized coded-residual tensor",
+        "container": "Grace Encoder",
+        "novel": true
+      },
+      {
+        "name": "MV decoder",
+        "role": "decodes the received coded MV tensor into motion vectors",
+        "container": "Grace Decoder",
+        "novel": true
+      },
+      {
+        "name": "Motion compensation",
+        "role": "applies decoded motion vectors to the reference frame",
+        "container": "Grace Decoder",
+        "novel": false
+      },
+      {
+        "name": "Frame smoothing",
+        "role": "smooths the motion-compensated frame on the decoder side",
+        "container": "Grace Decoder",
+        "novel": true
+      },
+      {
+        "name": "Residual decoder",
+        "role": "decodes the coded residual tensor back into residuals",
+        "container": "Grace Decoder",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Motion estimator",
+        "to": "MV encoder",
+        "what": "motion vectors (MV)",
+        "step": null
+      },
+      {
+        "from": "MV encoder",
+        "to": "MV decoder",
+        "what": "quantized MV tensor",
+        "step": null
+      },
+      {
+        "from": "MV decoder",
+        "to": "Motion compensation",
+        "what": "reconstructed motion vectors",
+        "step": null
+      },
+      {
+        "from": "Motion compensation",
+        "to": "Frame smoothing",
+        "what": "motion-compensated frame",
+        "step": null
+      },
+      {
+        "from": "Frame smoothing",
+        "to": "Residual encoder",
+        "what": "residual differences",
+        "step": null
+      },
+      {
+        "from": "Residual encoder",
+        "to": "Residual decoder",
+        "what": "coded residual tensor",
+        "step": null
+      },
+      {
+        "from": "Residual decoder",
+        "to": "Motion compensation",
+        "what": "decoded residual added to compensated frame",
+        "step": null
+      }
+    ],
+    "key_idea": "GRACE's encoder and decoder mirror a traditional video codec's motion-estimation/residual-coding pipeline, but every stage is a jointly-trained neural network, and the resulting quantized coded MV and residual tensors are the only data sent from encoder to decoder.",
+    "reading_order": "left to right: current/reference frames enter the Grace Encoder pipeline, produce a coded tensor in the middle, which flows into the mirrored Grace Decoder pipeline to reconstruct the decoded frame."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.0,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f8cbad",
+        "used_for": "NN-module boxes (orange, per legend)"
+      },
+      {
+        "hex": "#97d2ff",
+        "used_for": "non-NN-module boxes (blue, per legend)"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "coded MV / coded residual labels and dashed transmission arrows"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "coded tensor grid icon"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "minor accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines, rounded module boxes",
+    "font": "Arial sans, small (6-8pt), italic for tensor labels",
+    "corners": "rounded",
+    "arrows": "black solid arrows for internal dataflow, red dashed arrows for the transmitted coded tensors",
+    "icons": "bitmap frame thumbnails for current/reference/decoded frames, small grid icon for the coded tensor"
+  },
+  "encoding": {
+    "color_means": "orange = NN modules, blue = non-NN (classical) modules, as stated by an explicit legend",
+    "line_style_means": "dashed red = coded MV/residual tensors transmitted between encoder and decoder; solid black = internal signal flow",
+    "emphasis": "the shared color legend and mirrored left/right layout emphasize how each classical codec stage has been replaced by a neural counterpart while preserving codec structure",
+    "reusable_patterns": [
+      "encoder/decoder pipeline mirrored around a transmitted coded tensor",
+      "color-coded legend distinguishing novel NN components from classical ones"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "neural-video-codec",
+    "loss-resilience",
+    "motion-compensation",
+    "residual-coding",
+    "encoder-decoder",
+    "pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Training GRACE's neural video codec (p.5)"
+    ],
+    "evidence": [
+      "Figure 3 depicts the workflow of GRACE's encoder and decoder",
+      "employs a neural network (NN) to estimate motion vectors (MVs)",
+      "an NN-based residual encoder encodes the residuals into another quantized tensor"
+    ]
+  },
+  "summary": "GRACE is a loss-resilient real-time video system whose neural video codec (NVC) jointly trains encoder and decoder under packet losses. Figure 3 shows the codec's workflow as two mirrored pipelines, Grace Encoder on the left and Grace Decoder on the right, connected by a small coded-tensor icon in the middle. The encoder chain runs Motion estimator, MV encoder, MV decoder, Motion compensation and Frame smoothing to compute a residual, which a Residual encoder turns into a quantized tensor; the decoder chain mirrors this with MV decoder, Motion compensation, Frame smoothing and Residual decoder to reconstruct the decoded frame. A legend marks orange boxes as NN modules and blue boxes as non-NN modules, and red dashed arrows trace the coded MV and coded residual tensors as they cross from encoder to decoder. The dense, two-column layout closely follows the structure of a traditional video codec while foregrounding which parts are now learned.",
+  "summary_zh": "该图展示GRACE神经视频编解码器的工作流程：左侧编码器与右侧解码器结构镜像对称，通过运动估计、运动补偿、帧平滑与残差编解码模块处理，图例用橙色区分神经网络模块、蓝色区分非神经网络模块。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

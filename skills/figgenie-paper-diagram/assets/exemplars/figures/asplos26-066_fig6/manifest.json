@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-066_fig6",
+  "paper_id": "asplos26-066",
+  "fig": "6",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 6. Compilation flow of FuseFlow. (a) PyTorch model. (b) Einsum expressions with optional user schedules (red) and sparse formats (green). (c) Cross-expression fusion of Fuse regions yields fused Einsum subgraphs and a partial-order graph. (d) Fusion tables encode iteration (rows), tensors (co",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 2.13,
+  "n_components": 6,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "letters",
+  "panels": 5,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-066/src/fig6_overview_figure.svg",
+    "preview.png": "lab/extracted/asplos26-066/src/fig6_overview_figure.png",
+    "print.png": "lab/extracted/asplos26-066/asplos26-066_fig6_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Five lettered panels carrying one computation from source code through expression IR to a fused dataflow graph, with consistent colour.",
+      "what_to_learn": "Keep one colour meaning (here schedule vs sparsity) constant across every representation so the reader can track the same tensor across panels."
+    }
+  ]
+}

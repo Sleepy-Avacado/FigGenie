@@ -1,0 +1,229 @@
+{
+  "paper_id": "nsdi24-068",
+  "fig": "tex18",
+  "kind": "mechanism",
+  "system": {
+    "name": null,
+    "one_liner": "a decision process (paired with a hyperparameter search) that helps practitioners pick a suitable max-min fair resource allocator without wastefully running every allocator in parallel",
+    "domain": [
+      "resource-allocation",
+      "max-min-fairness",
+      "graph-optimization"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "a worked trace of four numbers (9,6,4,8) through a 5-comparator sorting network producing sorted outputs 4,6,8,9",
+    "base": "circuit",
+    "elements": [
+      {
+        "name": "Inputs",
+        "kind": "label",
+        "role": "labels the left side where the four unsorted values enter",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "f1",
+        "kind": "port",
+        "role": "first wire; carries value 9 at input, ends at 4 (the sorted minimum)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "f2",
+        "kind": "port",
+        "role": "second wire; carries value 6 at input, ends at 6",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "f3",
+        "kind": "port",
+        "role": "third wire; carries value 4 at input, ends at 8",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "f4",
+        "kind": "port",
+        "role": "fourth wire; carries value 8 at input, ends at 9 (the sorted maximum)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Outputs",
+        "kind": "label",
+        "role": "labels the right side where the four sorted values emerge",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t1",
+        "kind": "port",
+        "role": "output of wire f1: the smallest value, 4",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "t2",
+        "kind": "port",
+        "role": "output of wire f2: the second-smallest value, 6",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t3",
+        "kind": "port",
+        "role": "output of wire f3: the second-largest value, 8",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "t4",
+        "kind": "port",
+        "role": "output of wire f4: the largest value, 9",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Comparator",
+        "kind": "icon",
+        "role": "legend explaining the two-wire min/max comparator symbol used throughout the network",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "f1",
+        "to": "f2",
+        "what": "comparator: min(9,6)=6 stays on f1, max(9,6)=9 moves to f2",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "f3",
+        "to": "f4",
+        "what": "comparator: min(4,8)=4 stays on f3, max(4,8)=8 stays on f4",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "f1",
+        "to": "f3",
+        "what": "comparator: min(6,4)=4 moves to f1, max(6,4)=6 moves to f3",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "f2",
+        "to": "f4",
+        "what": "comparator: min(9,8)=8 moves to f2, max(9,8)=9 moves to f4",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "f2",
+        "to": "f3",
+        "what": "comparator: min(8,6)=6 moves to f2, max(8,6)=8 moves to f3",
+        "kind": "transition",
+        "step": "3"
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the four input numbers (9,6,4,8) and their colour-coded values as they pass through each of the 5 min/max comparators to the sorted outputs (4,6,8,9)",
+      "linked_by": "colour (each of the 4 distinct values keeps the same colour as it moves between wires) and position along each horizontal wire",
+      "result_cells": "the final Outputs column (t1-t4), showing the values sorted in ascending order top to bottom"
+    },
+    "key_idea": "A concrete 4-element sorting network is traced end to end: each comparator sends the smaller input to the upper wire and the larger to the lower wire, and with inputs 9,6,4,8 colour-coded throughout, five comparators leave the wires sorted as 4,6,8,9.",
+    "reading_order": "left to right along wires f1-f4, following each colour-coded value through the comparator dots it passes, ending at the sorted Outputs t1-t4; a separate legend explains the min/max symbol."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "",
+    "aspect": 2.12,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cc0000",
+        "used_for": "tracks the value 9 as it moves through the network to output t4"
+      },
+      {
+        "hex": "#38761d",
+        "used_for": "tracks the value 6 as it moves through the network to output t2"
+      },
+      {
+        "hex": "#1155cc",
+        "used_for": "tracks the value 4 as it moves through the network to output t1"
+      },
+      {
+        "hex": "#b45f06",
+        "used_for": "tracks the value 8 as it moves through the network to output t3"
+      }
+    ],
+    "background": "white",
+    "fill": "none (line-based diagram; solid black dots mark comparator endpoints)",
+    "stroke": "thick black horizontal wires and comparator connector lines",
+    "corners": "square",
+    "arrows": "short solid black arrows point downward from the upper wire's comparator dot to the lower wire's, matching the legend's min(top)/max(bottom) convention",
+    "font": "Lora-Regular / Times New Roman serif for wire labels and coloured digits",
+    "icons": "a separate small 'Comparator' legend diagram explaining the min/max symbol"
+  },
+  "encoding": {
+    "color_means": "each of the four distinct input values keeps one colour (red=9, green=6, blue=4, orange=8) as it is carried across wires by successive comparators, so the reader can trace exactly where each original number ends up",
+    "line_style_means": "plain solid black lines for every wire and comparator link; only the coloured digit labels distinguish one tracked value from another",
+    "state_means": "not applicable; this is a single worked trace, not alternative states or panels",
+    "marker_means": "solid black dots mark each wire's entry/exit point at a comparator; there are no numbered step markers, since reading order is simply left to right",
+    "emphasis": "keeping one consistent colour per value from input to output visually proves the network sorts correctly, since 4(blue) ends at t1, 6(green) at t2, 8(orange) at t3, and 9(red) at t4 in ascending order",
+    "reusable_patterns": [
+      "a sorting-network circuit diagram where each tracked value keeps one colour across all wires and comparators, with a separate small legend defining the min/max comparator symbol"
+    ],
+    "weaknesses": [
+      "the comparator connecting f2 and f4 is drawn crossing straight through f3's wire with no dot there, which could be misread as also comparing f3 unless the reader checks carefully for a dot",
+      "the three comparator stages are not separated by any visual grouping or labelled stage number"
+    ]
+  },
+  "tags": [
+    "sorting-network",
+    "worked-example",
+    "comparator-circuit",
+    "max-min-fairness",
+    "one-shot-optimization"
+  ],
+  "provenance": {
+    "sections": [
+      "§One-shot Optimizations"
+    ],
+    "evidence": [
+      "Sorting Network Example.",
+      "using a sorting network to sort the rates as part of the optimization",
+      "using a linear weighted objective where the weight of a demand decreases based on its rank in the sorted order"
+    ]
+  },
+  "summary": "Figure tex18 traces a concrete run of the 5-comparator sorting network the paper uses to sort rates inside its one-shot max-min fair optimization. Four input wires f1-f4 start with the values 9, 6, 4, and 8, each kept in its own colour (red, green, blue, orange) as it moves through the network. Two comparators run first (f1-f2 and f3-f4), each sending its smaller input up and its larger input down; then two more (f1-f3 and f2-f4); then a final one (f2-f3), always following the min/max rule shown in the small legend: the upper wire gets min(x1,x2), the lower gets max(x1,x2). After all five comparisons, the four colours sort themselves ascending onto outputs t1-t4 as 4, 6, 8, 9.",
+  "summary_zh": "图tex18展示排序网络的具体运行：输入9、6、4、8经5个min/max比较器逐步比较，各数值以颜色标记，最终在输出t1-t4得到升序4、6、8、9。",
+  "confidence": "high",
+  "notes": "system.name left null: the context's paper text never resolves the paper's own system name, only the unexpanded LaTeX macros \\sysname/\\systitle, so no proper noun is stated anywhere in the given evidence.",
+  "venue": "NSDI24"
+}

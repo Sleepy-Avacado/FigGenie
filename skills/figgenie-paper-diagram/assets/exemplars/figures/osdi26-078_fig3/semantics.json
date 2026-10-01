@@ -1,0 +1,167 @@
+{
+  "paper_id": "osdi26-078",
+  "fig": "3",
+  "system": {
+    "name": "RoCE BALBOA",
+    "one_liner": "an open, modular RDMA/RoCEv2 offload engine for data-center SmartNICs with exchangeable slots for on-datapath and parallel-path service enhancements",
+    "domain": [
+      "networking",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "QPN",
+        "role": "queue-pair number field in the per-QP state table",
+        "container": "ACK-clocked flow control",
+        "novel": false
+      },
+      {
+        "name": "PSN-Head/Tail",
+        "role": "packet-sequence-number head/tail fields tracking the per-QP outstanding packet window",
+        "container": "ACK-clocked flow control",
+        "novel": true
+      },
+      {
+        "name": "Request-Buffer",
+        "role": "queues incoming RDMA requests when the per-QP packet budget is exhausted",
+        "container": "ACK-clocked flow control",
+        "novel": true
+      },
+      {
+        "name": "HBM-Channel",
+        "role": "HBM memory channel that stores retransmission data and commands",
+        "container": "Retransmission logic",
+        "novel": true
+      },
+      {
+        "name": "Bitmasking-Stage",
+        "role": "masks input bits before CRC computation",
+        "container": "ICRC pipeline",
+        "novel": true
+      },
+      {
+        "name": "CRC512",
+        "role": "computes a CRC over a 512-bit chunk of the data beat",
+        "container": "ICRC pipeline",
+        "novel": true
+      },
+      {
+        "name": "CRC320",
+        "role": "computes a CRC over a 320-bit chunk of the data beat",
+        "container": "ICRC pipeline",
+        "novel": true
+      },
+      {
+        "name": "CRC32_0",
+        "role": "one of 16 parallel 32-bit CRC lanes (CRC32_0 ... CRC32_15) combined to build the final ICRC",
+        "container": "ICRC pipeline",
+        "novel": true
+      },
+      {
+        "name": "CRC Insertion & Beat Creation",
+        "role": "inserts the computed CRC into the packet and (re)creates the output data beat",
+        "container": "ICRC pipeline",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Request-Buffer",
+        "to": "PSN-Head/Tail",
+        "what": "per-QP packet budget decreased when a new request is sent",
+        "step": null
+      },
+      {
+        "from": "PSN-Head/Tail",
+        "to": "Request-Buffer",
+        "what": "per-QP packet budget increased upon receipt of an RDMA ACK, allowing a queued request to be forwarded",
+        "step": null
+      }
+    ],
+    "key_idea": "Three of BALBOA's standalone building blocks are shown as independent block diagrams: a BRAM-backed per-QP credit counter for ACK-clocked flow control, an HBM-backed channel for retransmission data, and a bit-masked, lane-parallel pipeline for ICRC checksum computation.",
+    "reading_order": "Left panel (flow control) first, then the smaller top-right panel (retransmission), then the bottom-right panel (ICRC pipeline)."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.24,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#00b050",
+        "used_for": "green circular retry/refresh icon inside the Request-Buffer"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "gray fill for generic pipeline bars (Bitmasking-Stage, CRC Insertion & Beat Creation)"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray box outlines/background panels"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "blue fill for the HBM-Channel memory bar and the CRC32 lane boxes"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "red fill for the CRC512 box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed strokes (~0.2pt) around panel groups",
+    "font": "mixed sans/monospace (Arial and Courier New), roughly 4.5-11pt",
+    "corners": "square",
+    "arrows": "thin solid line connectors with no arrowheads recorded, linking labeled data-flow captions to each block",
+    "icons": "one small vector/bitmap cluster icon inside the Request-Buffer and HBM-Channel"
+  },
+  "encoding": {
+    "color_means": "green marks the retry/credit icon in the flow-control buffer, blue marks the HBM-backed retransmission channel and the bank of CRC32 lanes, red marks the wider CRC512 stage, gray marks generic pipeline bars",
+    "line_style_means": null,
+    "emphasis": "three self-contained building-block diagrams, each isolating one BALBOA infrastructure block (flow control, retransmission, checksum) named directly in the caption",
+    "reusable_patterns": [
+      "small self-contained block diagram per hardware module, referenced from a larger system figure elsewhere in the paper",
+      "parallel lane fan-out for a wide datapath CRC computation"
+    ],
+    "weaknesses": [
+      "the three panels are visually independent with no shared dataflow drawn between them, so the figure reads as three separate mini-diagrams rather than one coherent architecture"
+    ]
+  },
+  "tags": [
+    "rdma",
+    "flow-control",
+    "retransmission",
+    "crc",
+    "fpga",
+    "hardware-pipeline"
+  ],
+  "provenance": {
+    "sections": [
+      "4 RoCE BALBOA Architecture (p.7)",
+      "4 RoCE BALBOA Architecture (p.8)"
+    ],
+    "evidence": [
+      "incoming RDMA requests are either forwarded to the packet-processing pipeline or queued to limit the number of outstanding packets",
+      "The remaining packet budget per QP is stored in BRAM and updated",
+      "decreased when new requests are sent and increased upon receipt of RDMA ACKs"
+    ]
+  },
+  "summary": "This figure isolates three of BALBOA's building blocks named in the caption: ACK-clocked flow control, retransmission logic, and the ICRC pipeline. In the flow-control panel, incoming RDMA requests are either forwarded to the packet-processing pipeline or queued in a Request-Buffer once a per-QP packet budget (tracked via QPN and PSN-Head/Tail state) is exhausted; the budget is decremented on new requests and incremented on received ACKs. The retransmission panel shows an HBM-Channel handling RDMA write/read-response data and data-fetch/delivery commands for replaying lost packets from HBM. The ICRC panel shows a bitmasking stage feeding parallel CRC512, CRC320 and sixteen CRC32 lanes whose results are combined in a final CRC-insertion-and-beat-creation stage. The three panels are drawn as independent block diagrams rather than one connected pipeline.",
+  "summary_zh": "该图展示BALBOA三个构建模块:ACK流控按per-QP预算在Request-Buffer排队;重传逻辑由HBM-Channel负责数据读写投递;ICRC流水线掩码后并行算CRC512/320及16路CRC32并生成数据拍。",
+  "confidence": "medium",
+  "notes": "layout-proposal: independent-building-block-panels — three self-contained mini block-diagrams (flow control, retransmission, CRC) placed side by side without a shared dataflow between them. Panels 2 (retransmission) and 3 (ICRC) are described mainly from their figure labels since the body-text passages available focus on panel 1 (flow control).",
+  "venue": "OSDI26"
+}

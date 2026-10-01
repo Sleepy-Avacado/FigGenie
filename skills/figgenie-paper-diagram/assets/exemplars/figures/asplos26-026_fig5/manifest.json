@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-026_fig5",
+  "paper_id": "asplos26-026",
+  "fig": "5",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 5. Overview of Speculative Decoding. (a & b) Comparison between Vanilla and Speculative Decoding. (c) Speculative decoding achieves peak compute throughput (TFLOPS) at significantly smaller batch sizes (gray arrow).",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "keynote",
+  "aspect": 1.45,
+  "n_components": 5,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "circled-numbers",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-026/src/fig5_spec_dec.svg",
+    "preview.png": "lab/extracted/asplos26-026/src/fig5_spec_dec.png",
+    "print.png": "lab/extracted/asplos26-026/asplos26-026_fig5_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Token-sequence diagrams for vanilla (a) and speculative (b) decoding sit beside a roofline throughput plot (c), a genuine mix of diagram and chart kinds tied together by one shared token-colour legend.",
+      "what_to_learn": "Put a measurement plot (here a roofline chart) beside the mechanism diagrams it justifies, and reuse the diagrams' own colour legend (prompt/drafted/accepted/rejected tokens) as the one legend for the whole figure so the plot and the diagrams read as one argument, not two attachments."
+    }
+  ]
+}

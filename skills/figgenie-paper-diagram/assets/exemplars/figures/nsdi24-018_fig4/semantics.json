@@ -1,0 +1,467 @@
+{
+  "paper_id": "nsdi24-018",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "TANGO",
+    "one_liner": "a hybrid control- and data-plane system that lets cooperating edge networks reroute traffic over the public Internet using trustworthy, fine-grained telemetry",
+    "domain": [
+      "Internet routing",
+      "network telemetry",
+      "security"
+    ],
+    "abstraction": "control loop"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "the life cycle of one packet through TANGO's monitor, reroute, and control-plane modules from sender to receiver",
+    "base": "component",
+    "elements": [
+      {
+        "name": "BGP Pathfinder",
+        "kind": "box",
+        "role": "control-plane input feeding candidate paths into Route Updater",
+        "container": "Control Plane",
+        "highlighted": false
+      },
+      {
+        "name": "Sender's Objectives",
+        "kind": "box",
+        "role": "sender-side per-class performance objectives feeding Route Updater",
+        "container": "Control Plane (left)",
+        "highlighted": false
+      },
+      {
+        "name": "Precomputed Signatures",
+        "kind": "box",
+        "role": "sender-side precomputed signatures feeding the Signer",
+        "container": "Control Plane (left)",
+        "highlighted": false
+      },
+      {
+        "name": "Precomputed OTPs",
+        "kind": "box",
+        "role": "sender-side precomputed one-time-pads feeding the Decryptor",
+        "container": "Control Plane (left)",
+        "highlighted": false
+      },
+      {
+        "name": "Precomputed OTPs",
+        "kind": "box",
+        "role": "receiver-side precomputed one-time-pads feeding the Encryptor",
+        "container": "Control Plane (right)",
+        "highlighted": false
+      },
+      {
+        "name": "Precomputed Signatures",
+        "kind": "box",
+        "role": "receiver-side precomputed signatures feeding the Verifier",
+        "container": "Control Plane (right)",
+        "highlighted": false
+      },
+      {
+        "name": "Sender's Objectives",
+        "kind": "box",
+        "role": "objectives shared with the receiver, feeding its Route Optimizer",
+        "container": "Control Plane (right)",
+        "highlighted": false
+      },
+      {
+        "name": "Path Mapper",
+        "kind": "box",
+        "role": "step 0: classifies incoming traffic into a path class by application (Web, Zoom, Games)",
+        "container": "Data Plane / Monitor",
+        "highlighted": true
+      },
+      {
+        "name": "Metrics Engine",
+        "kind": "box",
+        "role": "step 1: records the packet's path, sequence number, and timestamp",
+        "container": "Data Plane / Monitor",
+        "highlighted": false
+      },
+      {
+        "name": "Signer",
+        "kind": "box",
+        "role": "step 2: signs the recorded path/sequence/timestamp metrics",
+        "container": "Data Plane / Monitor",
+        "highlighted": false
+      },
+      {
+        "name": "Tunneled Packet",
+        "kind": "box",
+        "role": "the signed packet in transit toward the receiver",
+        "container": "Data Plane / Monitor",
+        "highlighted": false
+      },
+      {
+        "name": "Path Verifier",
+        "kind": "box",
+        "role": "step 3: checks the packet arrived via the correct path",
+        "container": "Data Plane / Monitor",
+        "highlighted": true
+      },
+      {
+        "name": "Verifier",
+        "kind": "box",
+        "role": "step 4: verifies the signature on the reported metrics",
+        "container": "Data Plane / Monitor",
+        "highlighted": false
+      },
+      {
+        "name": "Monitor",
+        "kind": "box",
+        "role": "step 5: calculates loss and delay from verified metrics before forwarding traffic onward",
+        "container": "Data Plane / Monitor",
+        "highlighted": true
+      },
+      {
+        "name": "Route Optimizer",
+        "kind": "box",
+        "role": "step 6: recomputes the route mapping from the receiver's objectives and signatures",
+        "container": "Data Plane / Reroute",
+        "highlighted": true
+      },
+      {
+        "name": "Encryptor",
+        "kind": "box",
+        "role": "step 7: OTP-encrypts a route-update packet if an update is needed",
+        "container": "Data Plane / Reroute",
+        "highlighted": false
+      },
+      {
+        "name": "Route Update Packet",
+        "kind": "box",
+        "role": "the encrypted route-update message in transit back to the sender",
+        "container": "Data Plane / Reroute",
+        "highlighted": false
+      },
+      {
+        "name": "Decryptor",
+        "kind": "box",
+        "role": "step 8: decrypts and verifies the OTP on the route-update packet",
+        "container": "Data Plane / Reroute",
+        "highlighted": false
+      },
+      {
+        "name": "Route Updater",
+        "kind": "box",
+        "role": "step 9: updates the sender's route tables using BGP Pathfinder and the sender's objectives",
+        "container": "Data Plane / Reroute",
+        "highlighted": true
+      },
+      {
+        "name": "Public Internet",
+        "kind": "icon",
+        "role": "shared cloud that both the Tunneled Packet and the Route Update Packet dotted-line through",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Metadata",
+        "kind": "label",
+        "role": "vertical label marking the boundary carrying metadata between the Reroute and Monitor rows",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Path Mapper",
+        "to": "Metrics Engine",
+        "what": "classified traffic proceeds to metrics recording",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "Metrics Engine",
+        "to": "Signer",
+        "what": "recorded metrics are signed",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Signer",
+        "to": "Tunneled Packet",
+        "what": "signed packet is tunneled",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Tunneled Packet",
+        "to": "Public Internet",
+        "what": "packet crosses the public Internet",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Public Internet",
+        "to": "Path Verifier",
+        "what": "packet arrives at the receiver",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "Path Verifier",
+        "to": "Verifier",
+        "what": "path confirmed correct, proceeds to signature check",
+        "kind": "data",
+        "step": "4"
+      },
+      {
+        "from": "Verifier",
+        "to": "Monitor",
+        "what": "signature confirmed valid, proceeds to loss/delay calculation",
+        "kind": "data",
+        "step": "5"
+      },
+      {
+        "from": "Monitor",
+        "to": "Route Optimizer",
+        "what": "measured performance informs route re-optimization",
+        "kind": "data",
+        "step": "6"
+      },
+      {
+        "from": "Route Optimizer",
+        "to": "Encryptor",
+        "what": "new route mapping is OTP-encrypted if an update is needed",
+        "kind": "control",
+        "step": "7"
+      },
+      {
+        "from": "Encryptor",
+        "to": "Route Update Packet",
+        "what": "encrypted update is packaged",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Route Update Packet",
+        "to": "Public Internet",
+        "what": "update packet crosses the public Internet back to the sender",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Public Internet",
+        "to": "Decryptor",
+        "what": "update packet arrives at the sender",
+        "kind": "data",
+        "step": "8"
+      },
+      {
+        "from": "Decryptor",
+        "to": "Route Updater",
+        "what": "OTP confirmed valid, proceeds to updating route tables",
+        "kind": "data",
+        "step": "9"
+      },
+      {
+        "from": "BGP Pathfinder",
+        "to": "Route Updater",
+        "what": "supplies candidate paths for the update",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Sender's Objectives",
+        "to": "Route Updater",
+        "what": "supplies per-class objectives guiding the update",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Precomputed Signatures",
+        "to": "Signer",
+        "what": "supplies the signature material used to sign metrics",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Precomputed OTPs",
+        "to": "Decryptor",
+        "what": "supplies the OTP material used to decrypt the update",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Precomputed OTPs",
+        "to": "Encryptor",
+        "what": "supplies the OTP material used to encrypt the update",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Precomputed Signatures",
+        "to": "Verifier",
+        "what": "supplies the signature material used to verify metrics",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Sender's Objectives",
+        "to": "Route Optimizer",
+        "what": "supplies the shared objectives guiding re-optimization",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "0",
+        "at": "Path Mapper",
+        "what": "incoming traffic is classified into a path class by application (Web to Path A, Zoom to Path B, Games to Path C)",
+        "carries": "traffic"
+      },
+      {
+        "marker": "1",
+        "at": "Metrics Engine",
+        "what": "records the packet's path, sequence number, and timestamp",
+        "carries": "path, seqno, timestamp"
+      },
+      {
+        "marker": "2",
+        "at": "Signer",
+        "what": "signs the recorded metrics",
+        "carries": "signed metrics"
+      },
+      {
+        "marker": "3",
+        "at": "Path Verifier",
+        "what": "checks the packet arrived via the correct path (pass/fail)",
+        "carries": "path check result"
+      },
+      {
+        "marker": "4",
+        "at": "Verifier",
+        "what": "verifies the signature on the reported metrics (pass/fail)",
+        "carries": "signature check result"
+      },
+      {
+        "marker": "5",
+        "at": "Monitor",
+        "what": "calculates loss and delay from the verified metrics",
+        "carries": "loss/delay measurements"
+      },
+      {
+        "marker": "6",
+        "at": "Route Optimizer",
+        "what": "optimizes the route mapping using objectives and signatures",
+        "carries": "new route mapping"
+      },
+      {
+        "marker": "7",
+        "at": "Encryptor",
+        "what": "OTP-encrypts a route-update packet if an update is needed",
+        "carries": "encrypted route update"
+      },
+      {
+        "marker": "8",
+        "at": "Decryptor",
+        "what": "decrypts and verifies the OTP on the route-update packet (pass/fail)",
+        "carries": "decrypted route update"
+      },
+      {
+        "marker": "9",
+        "at": "Route Updater",
+        "what": "updates the sender's route tables using BGP Pathfinder and objectives",
+        "carries": "updated route tables"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "One packet's metrics and, when needed, one signed route update both travel the same round trip across the public Internet, verified at every hop before any route table is trusted enough to change.",
+    "reading_order": "Monitor row left to right (0 through 5) along the bottom, then Reroute row right to left (6 through 9) above it, with Control Plane inputs feeding down into both rows"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.9,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffee93",
+        "used_for": "pale-yellow fill of the Control Plane band and its routing/mapping boxes (BGP Pathfinder, Sender's Objectives, Route Optimizer, Route Updater, Path Mapper)"
+      },
+      {
+        "hex": "#ffdbff",
+        "used_for": "pale-pink/magenta fill of the Precomputed Signatures, Signer, and Verifier boxes"
+      },
+      {
+        "hex": "#b4e4ff",
+        "used_for": "pale-blue fill of the Precomputed OTPs, Encryptor, and Decryptor boxes"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "medium-gray fill of the neutral Tunneled Packet / Route Update Packet boxes and the Public Internet cloud"
+      },
+      {
+        "hex": "#595959",
+        "used_for": "dark-gray text labels throughout"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray outlines on all boxes",
+    "corners": "rounded",
+    "arrows": "thin gray solid arrows for the monitor/reroute data-plane pipeline and the control-plane feed-down arrows; dotted lines mark the two packets crossing the Public Internet cloud",
+    "font": "sans (LucidaSans / LucidaSans-Demi), small bold action labels over smaller component-name labels",
+    "icons": "small black glyph icons per control-plane box (router, person, book, key/lock), plus lock/key and checkmark/cross icons at the OTP and verification steps"
+  },
+  "encoding": {
+    "color_means": "yellow marks routing/mapping components, pink/magenta marks signing and verification components, blue marks OTP encryption components, and gray marks the two packet artifacts and the shared Public Internet; a small unlisted green also appears on Metrics Engine/Path Verifier/Monitor",
+    "line_style_means": "solid arrows carry the pipeline within one plane; dotted lines specifically mark the two packets (Tunneled Packet, Route Update Packet) crossing the Public Internet cloud",
+    "state_means": "not applicable; a one-shot walkthrough of one packet's life cycle, not a before/after figure",
+    "marker_means": "circled numbers 0-9 order every step a packet's metrics or a route update take, from traffic classification through verification, monitoring, optimization, and back to updated route tables",
+    "emphasis": "green-check/red-cross pairs at every verification point emphasize that each hop can fail (wrong path, bad signature, bad OTP) and the pipeline must handle that explicitly",
+    "reusable_patterns": [
+      "two colour-coded horizontal bands (control plane above, data plane below) with vertical feed arrows from control-plane inputs down into the numbered data-plane pipeline",
+      "a shared cloud icon that two different packet types both dotted-line through, reused instead of drawn twice"
+    ],
+    "weaknesses": [
+      "with 20+ labelled elements and two interleaved sub-pipelines (Monitor left-to-right, Reroute right-to-left) sharing the same vertical space, the reading order is not immediately obvious without following the circled numbers"
+    ]
+  },
+  "tags": [
+    "Internet-routing",
+    "control-plane",
+    "data-plane",
+    "telemetry",
+    "OTP",
+    "signature-verification",
+    "TANGO"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Secure, Metrics-Informed Dynamic Routing"
+    ],
+    "evidence": [
+      "Fig. 4 illustrates the life cycle of a packet through each of these modules from a TANGO sender",
+      "TANGO routes traffic at the granularity of traffic classes to satisfy application-specific requirements.",
+      "TANGO relies on cooperation: both edge networks share secret keys and per-class performance objectives."
+    ]
+  },
+  "summary": "This figure walks through the life cycle of one packet through TANGO's hybrid control- and data-plane pipeline, from a TANGO sender (left) to a receiver (right), across ten numbered steps. In the Monitor row, traffic is classified by application into a path class (0, Path Mapper), its path and timing are recorded (1, Metrics Engine) and signed (2, Signer), tunneled across the Public Internet, then checked for the correct path (3) and a valid signature (4) before Monitor (5) computes loss and delay. In the Reroute row, the receiver's Route Optimizer (6) recomputes the mapping, an Encryptor (7) OTP-protects a route-update packet sent back across the Public Internet, a Decryptor (8) verifies it, and Route Updater (9) applies BGP-guided changes to the sender's route tables. A Control Plane band above supplies each step's precomputed signatures, OTPs, and objectives.",
+  "summary_zh": "该图走读TANGO包的生命周期：Monitor行按应用分Path、记录签名(0-2)，经公网校验路径签名(3-4)，算丢包延迟(5)；Reroute行优化路由(6)，OTP加密更新包经公网解密验证(7-8)，据BGP更新路由表(9)。",
+  "confidence": "medium",
+  "notes": "base set to 'component' since 'architecture' is not a valid base value for mechanism records; the figure is a numbered walkthrough over many named component boxes. The given paragraph is a short framing sentence, so most step-level meanings (the bold action labels and icons on each box, e.g. 'Check Correct Path', 'Optimize Route Mapping') are read from the figure itself rather than quoted text. No source-SVG colour histogram exists for this figure, so palette hex values come from the index's measured-attributes summary (its top 5 of 11 total colours); a green hue mentioned in that summary could not be matched to an exact hex and is noted qualitatively instead. Repeated control-plane labels ('Sender's Objectives', 'Precomputed OTPs', 'Precomputed Signatures') are kept as literal duplicates, disambiguated by container (left/right).",
+  "venue": "NSDI24"
+}

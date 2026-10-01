@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-127_fig12",
+  "paper_id": "asplos26-127",
+  "fig": "12",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 12. Hardware Platform. (a) Post-PnR layout of the full accelerator. (b) Detailed layout of LDO. (c) Area and power breakdown. (d)(e) Example voltage scaling waveforms.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.53,
+  "n_components": 5,
+  "n_flows": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 5,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-127/src/fig12_layout_52.svg",
+    "preview.png": "lab/extracted/asplos26-127/src/fig12_layout_52.png",
+    "print.png": "lab/extracted/asplos26-127/asplos26-127_fig12_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "composite-figure",
+      "star": false,
+      "why_chosen": "Reassigned from matrix by the note-writer: this is a hardware evaluation composite of five unlike panels, chip photo, zoomed photo, an area/power table, two waveform plots, not comparable cells, so it fits composite-figure or overview-with-inset better than matrix.",
+      "what_to_learn": "When bundling a chip photo, a zoomed detail, a results table and measured waveforms into one figure, treat it as an overview-plus-detail composite rather than forcing a matrix grid; the record's own weakness warns that packing five different panel types into one single-column figure makes every axis label too small to read."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-102_fig1",
+  "paper_id": "asplos26-102",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Left (a) shows the hierarchical memory structure and bandwidth on mobile GPUs, highlighting the multi-step weight transfer path from disk to streaming multiprocessors. Right (b and c) depicts two multi-DNN support strategies.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.89,
+  "n_components": 9,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-102/src/fig1_texture-memory-hierarchy.svg",
+    "preview.png": "lab/extracted/asplos26-102/src/fig1_texture-memory-hierarchy.png",
+    "print.png": "lab/extracted/asplos26-102/asplos26-102_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Panels (b) and (c) reuse an identical DNN-icon-pool skeleton to contrast preemptible against FIFO multi-DNN scheduling, stacked beside numbered step markers 1-3 in panel (a) that trace the costly weight path each scheduling choice repeats.",
+      "what_to_learn": "Stack a small pair of identical-skeleton scheduling-strategy panels (preemptible vs FIFO) beside a larger numbered hardware-path diagram so the reader sees both what the cost is and how scheduling choice repeats it; keep the hierarchy labels larger, since this figure's high shape density is a listed weakness."
+    }
+  ]
+}

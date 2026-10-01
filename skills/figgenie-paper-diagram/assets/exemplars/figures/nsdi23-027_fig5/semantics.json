@@ -1,0 +1,195 @@
+{
+  "paper_id": "nsdi23-027",
+  "fig": "5",
+  "system": {
+    "name": "LinkLab 2.0",
+    "one_liner": "a multi-tenant, three-layer (IoT/edge/cloud) programmable IoT testbed for experimenting with edge-cloud integration",
+    "domain": [
+      "iot",
+      "testbed",
+      "edge-cloud"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Applications",
+        "role": "top layer where user experiments and their data run",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Database",
+        "role": "data storage services available to experiments (InfluxDB, Redis, MySQL)",
+        "container": "Applications",
+        "novel": false
+      },
+      {
+        "name": "Experimental Applications",
+        "role": "user application runtimes available for experiments",
+        "container": "Applications",
+        "novel": false
+      },
+      {
+        "name": "Serverless Function",
+        "role": "FaaS-style experimental application support",
+        "container": "Experimental Applications",
+        "novel": false
+      },
+      {
+        "name": "Docker-based App.",
+        "role": "container-based experimental application support",
+        "container": "Experimental Applications",
+        "novel": false
+      },
+      {
+        "name": "LinkLab Edge/Cloud Runtime",
+        "role": "LinkLab's own runtime layer supporting programming, controlling, and monitoring of edge/cloud devices",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Provision",
+        "role": "services for deploying and configuring experiments on a device",
+        "container": "LinkLab Edge/Cloud Runtime",
+        "novel": true
+      },
+      {
+        "name": "LDC Client",
+        "role": "agent connecting the device to the LDC management plane",
+        "container": "Provision",
+        "novel": true
+      },
+      {
+        "name": "Config. Manager",
+        "role": "manages device/experiment configuration",
+        "container": "Provision",
+        "novel": true
+      },
+      {
+        "name": "Service Manager",
+        "role": "manages the lifecycle of services/applications on the device",
+        "container": "Provision",
+        "novel": true
+      },
+      {
+        "name": "Exe. Support",
+        "role": "execution support services for running experiments on the device",
+        "container": "LinkLab Edge/Cloud Runtime",
+        "novel": true
+      },
+      {
+        "name": "Func. Runtime",
+        "role": "runtime that executes serverless functions",
+        "container": "Exe. Support",
+        "novel": true
+      },
+      {
+        "name": "Router Agent",
+        "role": "routes traffic/data for the running experiment",
+        "container": "Exe. Support",
+        "novel": true
+      },
+      {
+        "name": "Connector",
+        "role": "connects the runtime to external systems/services",
+        "container": "Exe. Support",
+        "novel": true
+      },
+      {
+        "name": "Data Collection",
+        "role": "collects operational data from the device for monitoring",
+        "container": "LinkLab Edge/Cloud Runtime",
+        "novel": true
+      },
+      {
+        "name": "Data Logging",
+        "role": "logs experiment/application data",
+        "container": "Data Collection",
+        "novel": true
+      },
+      {
+        "name": "Sys. Monitoring",
+        "role": "monitors system health/resource usage",
+        "container": "Data Collection",
+        "novel": true
+      },
+      {
+        "name": "NTP",
+        "role": "time synchronization service",
+        "container": "Data Collection",
+        "novel": false
+      },
+      {
+        "name": "KubeEdge",
+        "role": "underlying open-source edge-computing platform that LinkLab's runtime is built on",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "LinkLab's edge/cloud devices run a three-layer software stack: KubeEdge at the base, LinkLab's own Provision/Execution-Support/Data-Collection runtime in the middle, and user experiments (serverless functions, Docker apps, databases) on top.",
+    "reading_order": "Bottom-up: KubeEdge is the foundation, the LinkLab Edge/Cloud Runtime's three columns (Provision, Exe. Support, Data Collection) sit above it, and Applications run on top."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "bottom-up",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.73,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [],
+    "background": "white",
+    "fill": "none - all boxes are unfilled outlines",
+    "stroke": "~0.8pt dashed rounded-rectangle borders throughout, color-coded per layer/column (purple, red, dark blue)",
+    "font": "Arial sans, 6.5pt, bold for box/column titles",
+    "corners": "rounded",
+    "arrows": "none drawn; the stack's vertical layering itself conveys the built-on relationship between boxes",
+    "icons": "bitmap logos for third-party technologies (InfluxDB, Redis, MySQL, Docker, KubeEdge) and small vector icons (tree, gear, plant) labeling the three runtime columns"
+  },
+  "encoding": {
+    "color_means": "purple = the Applications layer, red = LinkLab's own Edge/Cloud Runtime layer, dark blue = the underlying KubeEdge platform; a separate blue outline further distinguishes Experimental Applications from Database within Applications",
+    "line_style_means": "dashed rounded-rectangle borders group boxes into layers and columns; no arrows are drawn, so vertical stacking alone represents 'runs on top of'",
+    "emphasis": "coloring only the LinkLab Edge/Cloud Runtime layer in red, and reusing recognizable third-party logos (InfluxDB, Docker, KubeEdge) elsewhere, isolates exactly which layer is the paper's own contribution versus off-the-shelf technology",
+    "reusable_patterns": [
+      "three-tier software stack drawn as nested dashed boxes with no arrows, purely by vertical position",
+      "three parallel functional columns (Provision/Exe. Support/Data Collection) within one middle layer",
+      "third-party product logos used as icons to name specific technologies reused by the system"
+    ],
+    "weaknesses": [
+      "no arrows or other explicit indication of runtime data flow between layers, only spatial stacking",
+      "the cited body text describing this figure is truncated mid-word ('...programming, controlling and moni-')"
+    ]
+  },
+  "tags": [
+    "edge-computing",
+    "software-stack",
+    "kubeedge",
+    "iot-testbed",
+    "runtime",
+    "serverless"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Designs of Management Services (p.5)"
+    ],
+    "evidence": [
+      "LinkLab 2.0 edge/cloud software stack.",
+      "LinkLab 2.0 develops a runtime for the edge/cloud (Figure 5) to support the programming, controlling and moni-",
+      "The LDC client is directly deployed on the programmable edge/cloud devices because they have enough computing ability"
+    ]
+  },
+  "summary": "This figure shows the software stack running on each of LinkLab 2.0's programmable edge/cloud devices. At the base sits KubeEdge, the open-source edge-computing platform the stack is built on. On top of it, LinkLab's own Edge/Cloud Runtime (outlined in red) provides three parallel groups of services: Provision (LDC Client, Config. Manager, Service Manager) for deploying and configuring experiments; Exe. Support (Func. Runtime, Router Agent, Connector) for running them; and Data Collection (Data Logging, Sys. Monitoring, NTP) for observing them. At the top, an Applications layer (purple) hosts the actual experiments: a Database group offering InfluxDB, Redis, and MySQL, and Experimental Applications that can run as Serverless Functions or Docker-based apps. No arrows are drawn; the three dashed, color-coded boxes are simply stacked to show what runs on top of what.",
+  "summary_zh": "该图展示 LinkLab 2.0 边缘/云软件栈：底层 KubeEdge，中层为自研运行时（含配置、执行、数据采集三组件），顶层承载数据库与无服务器/Docker 实验应用。",
+  "confidence": "high",
+  "notes": "The body paragraph describing this figure is truncated mid-word ('...programming, controlling and moni-'); the third runtime column's purpose (Data Collection / monitoring) is inferred by combining this with the figure's own labels. No fill-color histogram was available (fill: none), so the palette list is empty rather than guessed.",
+  "venue": "NSDI23"
+}

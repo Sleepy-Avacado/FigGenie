@@ -1,0 +1,219 @@
+{
+  "paper_id": "asplos25-094",
+  "fig": "6",
+  "system": {
+    "name": "Klotski",
+    "one_liner": "an MoE inference engine that reduces pipeline bubbles via an expert-aware multi-batch pipeline",
+    "domain": [
+      "ml-systems",
+      "inference-serving"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "MoE Model",
+        "role": "input model whose tensors are placed across memory before deployment",
+        "container": "Offline Phase",
+        "novel": false
+      },
+      {
+        "name": "Adaptive Tensor Placement",
+        "role": "senses memory limits and allocates MoE tensors across heterogeneous memory (§6.1)",
+        "container": "Offline Phase",
+        "novel": true
+      },
+      {
+        "name": "VRAM",
+        "role": "GPU memory tier holding placed tensors",
+        "container": "Offline Phase",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "CPU memory tier holding placed tensors",
+        "container": "Offline Phase",
+        "novel": false
+      },
+      {
+        "name": "Disk",
+        "role": "disk memory tier holding placed tensors",
+        "container": "Offline Phase",
+        "novel": false
+      },
+      {
+        "name": "Request Batch",
+        "role": "incoming batch of inference requests",
+        "container": "Online Phase",
+        "novel": false
+      },
+      {
+        "name": "Constraint-Sensitive IO-Comp. Planner",
+        "role": "formulates a pipeline plan based on current hardware constraints (§7)",
+        "container": "Online Phase",
+        "novel": true
+      },
+      {
+        "name": "Pipeline Plan",
+        "role": "schedule produced by the planner and consumed by the execution pipeline",
+        "container": "Online Phase",
+        "novel": true
+      },
+      {
+        "name": "Corr.-Aware Expert Prefetcher",
+        "role": "generates an expert correlation table during warm-up to guide expert prefetching (§6.2)",
+        "container": "Online Phase",
+        "novel": true
+      },
+      {
+        "name": "Execution Pipeline",
+        "role": "runs the scheduled inference using overlapped IO and compute threads (§5)",
+        "container": "Online Phase",
+        "novel": true
+      },
+      {
+        "name": "IO Thread",
+        "role": "loads expert/gate/attention layer weights from memory",
+        "container": "Execution Pipeline",
+        "novel": false
+      },
+      {
+        "name": "Infer. Thread",
+        "role": "computes expert/gate/attention layers",
+        "container": "Execution Pipeline",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "MoE Model",
+        "to": "Adaptive Tensor Placement",
+        "what": "model tensors",
+        "step": 1
+      },
+      {
+        "from": "Adaptive Tensor Placement",
+        "to": "VRAM",
+        "what": "placed tensors",
+        "step": 1
+      },
+      {
+        "from": "Adaptive Tensor Placement",
+        "to": "DRAM",
+        "what": "placed tensors",
+        "step": 1
+      },
+      {
+        "from": "Adaptive Tensor Placement",
+        "to": "Disk",
+        "what": "placed tensors",
+        "step": 1
+      },
+      {
+        "from": "Request Batch",
+        "to": "Constraint-Sensitive IO-Comp. Planner",
+        "what": "request batches",
+        "step": 2
+      },
+      {
+        "from": "Constraint-Sensitive IO-Comp. Planner",
+        "to": "Pipeline Plan",
+        "what": "pipeline plan",
+        "step": 3
+      },
+      {
+        "from": "Corr.-Aware Expert Prefetcher",
+        "to": "Execution Pipeline",
+        "what": "expert correlation table guiding prefetching",
+        "step": null
+      },
+      {
+        "from": "Pipeline Plan",
+        "to": "Execution Pipeline",
+        "what": "schedule for IO and inference threads",
+        "step": null
+      }
+    ],
+    "key_idea": "Klotski aggregates heterogeneous GPU/CPU/disk memory offline, then online orchestrates expert loading and computation order across multiple batches so IO and compute overlap and pipeline bubbles shrink.",
+    "reading_order": "Left to right: offline tensor placement across VRAM/DRAM/disk, then online request batches flow through the planner and prefetcher into the execution pipeline shown at the bottom."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.54,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#deebf7",
+        "used_for": "expert-layer graphics (per caption: blue = expert)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "attention-layer graphics (per caption: yellow = attention)"
+      },
+      {
+        "hex": "#baa5ff",
+        "used_for": "gate-layer graphics (per caption: purple = gate)"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "phase/panel background boxes"
+      },
+      {
+        "hex": "#adb9ca",
+        "used_for": "memory-tier accent fills"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.44pt median, dashed lines used inside the pipeline",
+    "font": "Arial/Helvetica sans, 4.5-8pt, bold for group titles",
+    "corners": "mixed",
+    "arrows": "8 arrowheads, mix of curved and straight, filled",
+    "icons": "vector cube-stack icon for the MoE Model"
+  },
+  "encoding": {
+    "color_means": "blue = expert layer, purple = gate layer, yellow = attention layer (per caption)",
+    "line_style_means": "dotted line in the pipeline marks grouped computations (caption text truncated before full explanation)",
+    "emphasis": "circled step numbers trace the request path from offline tensor placement through online scheduling into the execution pipeline",
+    "reusable_patterns": [
+      "two-phase (offline/online) system overview with an embedded pipeline timeline diagram"
+    ],
+    "weaknesses": [
+      "caption is cut off before fully explaining the dotted-line semantics"
+    ]
+  },
+  "tags": [
+    "moe",
+    "inference-serving",
+    "offloading",
+    "pipeline-scheduling",
+    "memory-management",
+    "gpu"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Overview (p.5)"
+    ],
+    "evidence": [
+      "We show the system overview of Klotski in Figure 6.",
+      "aggregate heterogeneous memory from GPU, CPU, and disk for model deployment",
+      "constraint-sensitive I/O-compute planner formulates a pipeline plan"
+    ]
+  },
+  "summary": "Klotski is an MoE inference engine that overlaps expert loading with computation to cut pipeline bubbles caused by offloading experts across GPU, CPU, and disk memory. Figure 6 gives the system overview as two side-by-side phases: an offline phase where an Adaptive Tensor Placement module allocates MoE model tensors across VRAM/DRAM/disk, and an online phase where incoming request batches are handed to a Constraint-Sensitive IO-Compute Planner that produces a pipeline plan, aided by a Correlation-Aware Expert Prefetcher. Both feed an Execution Pipeline, expanded below as parallel IO Thread and Inference Thread timelines. Circled numbers mark the flow order, and blue/purple/yellow blocks distinguish expert, gate, and attention layer computations throughout the diagram.",
+  "summary_zh": "图6展示Klotski系统架构：离线阶段将MoE张量分配到GPU/CPU/磁盘异构内存，在线阶段请求批次经IO-计算规划器和相关性预取器生成流水线计划，驱动下方IO线程与推理线程并行执行，蓝紫黄色块分别代表专家、门控、注意力层。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

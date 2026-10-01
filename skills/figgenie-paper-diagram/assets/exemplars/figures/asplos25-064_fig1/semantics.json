@@ -1,0 +1,155 @@
+{
+  "paper_id": "asplos25-064",
+  "fig": "1",
+  "system": {
+    "name": "SING",
+    "one_liner": "a full-stack system for managing shared ML GPU clusters via four extensible layers",
+    "domain": [
+      "ml-systems",
+      "cluster-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Layer 1: Job Profile Layer",
+        "role": "lets users define job and environment requirements via a self-contained profile syntax",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Job Packing",
+        "role": "example job-profile snippet (job_metadata, script, configurations)",
+        "container": "Layer 1: Job Profile Layer",
+        "novel": true
+      },
+      {
+        "name": "Layer 2: Adapter Layer",
+        "role": "interface between users and the cluster for job submission and monitoring",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SING Command Line Interface (CLI)",
+        "role": "user-side tool for Authenticate, Submit, Interact",
+        "container": "Layer 2: Adapter Layer",
+        "novel": true
+      },
+      {
+        "name": "SING Cluster Service",
+        "role": "cluster-side service (Parse, Compile, Monitor) transparent to users",
+        "container": "Layer 2: Adapter Layer",
+        "novel": true
+      },
+      {
+        "name": "Layer 3: Scheduler Layer",
+        "role": "manages resource allocation and job scheduling",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Scheduling Mechanisms",
+        "role": "optimized FCFS with thresholded backfill, power-of-2 allocation, reserved resources for small jobs",
+        "container": "Layer 3: Scheduler Layer",
+        "novel": true
+      },
+      {
+        "name": "Layer 4: Execution Layer",
+        "role": "executes ML jobs on cluster nodes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Provision",
+        "role": "three provisioning objectives: resource/network isolation, environment/dependency installation, networked file storage",
+        "container": "Layer 4: Execution Layer",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "SING Command Line Interface (CLI)",
+        "to": "SING Cluster Service",
+        "what": "job submission, execution transparent to users",
+        "step": null
+      }
+    ],
+    "key_idea": "SING structures cluster management into four stacked layers — job profile, adapter, scheduler, execution — each independently extensible, running user jobs from specification down to provisioned execution.",
+    "reading_order": "Top-to-bottom through Layer 1 to Layer 4, each row pairing an icon with its layer's responsibilities and section reference."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.67,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f5f5f5",
+        "used_for": "layer content panel background"
+      },
+      {
+        "hex": "#f6f9fe",
+        "used_for": "alternate layer content panel background (light blue tint)"
+      },
+      {
+        "hex": "#0000ff",
+        "used_for": "syntax-highlighted keywords in the job-profile code snippet"
+      },
+      {
+        "hex": "#343322",
+        "used_for": "layer title text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed borders around code/content boxes (~0.95pt), horizontal rules dividing the four layers",
+    "font": "Linux Libertine serif, bold for layer titles, monospace (CMU Typewriter) for the code snippet",
+    "corners": "square",
+    "arrows": "single downward line inside the Adapter Layer indicating flow from CLI to Cluster Service",
+    "icons": "line-art icons illustrating each layer (packing box, gear/cluster icon, scheduling grid, server rack)"
+  },
+  "encoding": {
+    "color_means": "blue = code keywords in the job-profile example; otherwise mostly monochrome layered sections divided by horizontal rules",
+    "line_style_means": null,
+    "emphasis": "Each layer is boxed with a bold numbered title and section citation (§3.1-§3.4), visually separating SING's four-layer stack",
+    "reusable_patterns": [
+      "numbered layer stack with icon + description per row",
+      "embedded code/config snippet as a sub-panel"
+    ],
+    "weaknesses": [
+      "single-column layout makes the figure very tall (aspect 0.67)"
+    ]
+  },
+  "tags": [
+    "GPU cluster",
+    "scheduler",
+    "job submission",
+    "cluster management",
+    "ML infrastructure"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design and Implementation (p.4)"
+    ],
+    "evidence": [
+      "SING's core architecture design follows a four-layer abstrac- tion",
+      "The Job Profile Layer allows users to define job and envi- ronment requirements",
+      "The Scheduler Layer manages resource allocation and job scheduling"
+    ]
+  },
+  "summary": "Figure 1 lays out SING's four-layer architecture for managing a shared ML GPU cluster. From top to bottom: the Job Profile Layer, where users author jobs with a self-contained profile syntax (illustrated by a sample job_metadata/script/configurations snippet); the Adapter Layer, split into a user-side SING CLI (Authenticate, Submit, Interact) and a cluster-side SING Cluster Service (Parse, Compile, Monitor) that stays transparent to users; the Scheduler Layer, which lists its scheduling mechanisms — optimized FCFS with backfill, power-of-2 allocation, and reserved capacity for small jobs; and the Execution Layer, which names its three provisioning objectives — resource/network isolation, environment/dependency installation, and networked file storage. Each layer row pairs a simple line-art icon with a text panel and its corresponding paper section, presenting SING as a stack of independently described, extensible layers.",
+  "summary_zh": "图1展示 SING 的四层架构：作业描述层（Job Profile）定义作业与环境；适配层（Adapter）含用户侧命令行与集群侧服务；调度层（Scheduler）负责资源分配与作业调度；执行层（Execution）负责资源、环境与存储的实际配置。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,244 @@
+{
+  "paper_id": "asplos25-074",
+  "fig": "7",
+  "system": {
+    "name": "EXIST",
+    "one_liner": "an extremely efficient intra-service tracing system for datacenters that keeps tracing overhead at the per-mille level",
+    "domain": [
+      "observability",
+      "datacenters"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Kubernetes Master",
+        "role": "cluster-level control plane hosting the Coverage Optimizer",
+        "container": "Datacenter",
+        "novel": false
+      },
+      {
+        "name": "Coverage Optimizer (Sec 3.4)",
+        "role": "cluster-level module that orchestrates trace coverage across nodes",
+        "container": "Kubernetes Master",
+        "novel": true
+      },
+      {
+        "name": "Spatial Sampler",
+        "role": "decides which services/pods to sample for tracing",
+        "container": "Coverage Optimizer (Sec 3.4)",
+        "novel": true
+      },
+      {
+        "name": "Temporal Decider",
+        "role": "decides when/for how long to trace",
+        "container": "Coverage Optimizer (Sec 3.4)",
+        "novel": true
+      },
+      {
+        "name": "Kubernetes Worker",
+        "role": "node-level host running traced services and the EXIST tracing stack",
+        "container": "Datacenter",
+        "novel": false
+      },
+      {
+        "name": "Service 1 ... Service n",
+        "role": "traced application services running on the worker node",
+        "container": "Kubernetes Worker",
+        "novel": false
+      },
+      {
+        "name": "Tracing Controller (Sec 3.2)",
+        "role": "eliminates costly tracing control operations to protect observed-application performance",
+        "container": "Kubernetes Worker",
+        "novel": true
+      },
+      {
+        "name": "Kernel Hooker",
+        "role": "hooks kernel-level tracing control points",
+        "container": "Tracing Controller (Sec 3.2)",
+        "novel": true
+      },
+      {
+        "name": "Tracing Facility",
+        "role": "underlying tracing facility interface used by the controller",
+        "container": "Tracing Controller (Sec 3.2)",
+        "novel": true
+      },
+      {
+        "name": "Efficient Tracing Abstraction",
+        "role": "OS-level abstraction unifying access to hardware tracers",
+        "container": "Kubernetes Worker",
+        "novel": true
+      },
+      {
+        "name": "Memory Allocator (Sec 3.3)",
+        "role": "dynamically allocates limited trace-buffer space based on application status",
+        "container": "Kubernetes Worker",
+        "novel": true
+      },
+      {
+        "name": "Coreset Sampler",
+        "role": "user-level sub-component selecting the traced core set",
+        "container": "Memory Allocator (Sec 3.3)",
+        "novel": true
+      },
+      {
+        "name": "Buffer Manager",
+        "role": "kernel-level sub-component resizing per-core trace buffers",
+        "container": "Memory Allocator (Sec 3.3)",
+        "novel": true
+      },
+      {
+        "name": "Tracer Core",
+        "role": "hardware processor core with tracing capability",
+        "container": "Kubernetes Worker",
+        "novel": false
+      },
+      {
+        "name": "Mem Buffer",
+        "role": "hardware trace-buffer memory attached to the cores",
+        "container": "Kubernetes Worker",
+        "novel": false
+      },
+      {
+        "name": "User",
+        "role": "operator who configures tracing and receives structured trace output",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "User",
+        "to": "Coverage Optimizer (Sec 3.4)",
+        "what": "anomaly signal and profiling config via Config Interface",
+        "step": null
+      },
+      {
+        "from": "Coverage Optimizer (Sec 3.4)",
+        "to": "Kubernetes Worker",
+        "what": "software knowledge and tracing configuration",
+        "step": null
+      },
+      {
+        "from": "Tracing Controller (Sec 3.2)",
+        "to": "Coverage Optimizer (Sec 3.4)",
+        "what": "runtime status",
+        "step": null
+      },
+      {
+        "from": "Coverage Optimizer (Sec 3.4)",
+        "to": "Tracing Controller (Sec 3.2)",
+        "what": "minimal control commands",
+        "step": null
+      },
+      {
+        "from": "Tracing Controller (Sec 3.2)",
+        "to": "Efficient Tracing Abstraction",
+        "what": "control path into the OS tracing layer",
+        "step": null
+      },
+      {
+        "from": "Efficient Tracing Abstraction",
+        "to": "Tracer Core",
+        "what": "control path down to hardware tracers",
+        "step": null
+      },
+      {
+        "from": "Memory Allocator (Sec 3.3)",
+        "to": "Mem Buffer",
+        "what": "buffer allocation/resize",
+        "step": null
+      },
+      {
+        "from": "Tracer Core",
+        "to": "User",
+        "what": "structured trace output",
+        "step": null
+      }
+    ],
+    "key_idea": "EXIST layers three cooperative modules across a Kubernetes cluster/node/OS/hardware stack: cluster-level coverage optimization, node-level control-operation elimination, and hardware-level buffer allocation, jointly minimizing tracing overhead.",
+    "reading_order": "Top-down and cluster-to-node: starts at Kubernetes Master/Coverage Optimizer (cluster level), descends into Kubernetes Worker's Software/OS/Hardware layers, ending at structured trace output to the user."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.83,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#dde9f5",
+        "used_for": "Kubernetes Master / cluster-level box fill"
+      },
+      {
+        "hex": "#868686",
+        "used_for": "outer Datacenter/Kubernetes Worker border and band separators"
+      },
+      {
+        "hex": "#aad290",
+        "used_for": "highlighted active Tracer Core"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Software/module component fill (Services, Tracing Controller)"
+      },
+      {
+        "hex": "#eef6e8",
+        "used_for": "Operating System / Hardware band background fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1pt strokes; dashed boxes outline the three cooperative EXIST modules (Coverage Optimizer, Tracing Controller, Memory Allocator)",
+    "font": "Nimbus Sans/Arial sans, 4.5-7pt, bold for module and section-number titles",
+    "corners": "rounded",
+    "arrows": "orthogonal arrows with filled heads; solid lines are control paths and dotted lines are data paths",
+    "icons": "none beyond simple box/text labels"
+  },
+  "encoding": {
+    "color_means": "green shades mark EXIST's own tracing-path components (Tracer Core, node-level modules), blue/gray mark surrounding Kubernetes cluster infrastructure",
+    "line_style_means": "solid lines are control paths and dotted lines are data paths (stated in the caption); dashed box borders delineate each of the three cooperative modules by section number",
+    "emphasis": "Dashed, section-labelled boxes around Coverage Optimizer (3.4), Tracing Controller (3.2), and Memory Allocator (3.3) call out EXIST's three contributions inside an otherwise standard Kubernetes cluster/node layout",
+    "reusable_patterns": [
+      "cluster-level vs. node-level layered deployment view",
+      "OS/hardware layer stack with one contribution box per layer",
+      "solid/dotted line legend for control vs. data path"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "tracing",
+    "observability",
+    "kubernetes",
+    "datacenter",
+    "hardware tracing",
+    "memory management",
+    "kernel"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design of EXIST (p.5)"
+    ],
+    "evidence": [
+      "we give an overview of EXIST that contains three cooperative components",
+      "The solid lines are control paths and the dotted lines are data paths.",
+      "for our pursuit of a three-dimensional design optima"
+    ]
+  },
+  "summary": "EXIST is a low-overhead intra-service tracing system for datacenter applications built on hardware tracing capabilities. This figure gives EXIST's overall design overview across a Kubernetes deployment: at the cluster level, the Kubernetes Master runs the Coverage Optimizer (Sec 3.4), whose Spatial Sampler and Temporal Decider pick tracing coverage and periods from anomaly signals and user config, then push software knowledge and tracing configuration down to each node. At the node level, the Kubernetes Worker layers traced Services, a Tracing Controller (Sec 3.2, with Kernel Hooker and Tracing Facility) that minimizes costly control operations, an Efficient Tracing Abstraction over the OS, and hardware Tracer Cores with a Memory Allocator (Sec 3.3, Coreset Sampler plus Buffer Manager) that manages per-core trace buffers, producing structured trace output back to the user. Solid lines denote control paths and dotted lines denote data paths.",
+  "summary_zh": "该图示EXIST架构：集群级Master运行Coverage Optimizer决定采样范围；节点级Tracing Controller精简控制操作，Memory Allocator管理核缓冲区；实线控制路径，虚线数据路径。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

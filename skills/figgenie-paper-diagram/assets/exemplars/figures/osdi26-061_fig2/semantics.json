@@ -1,0 +1,261 @@
+{
+  "paper_id": "osdi26-061",
+  "fig": "2",
+  "system": {
+    "name": "UCCL-Tran",
+    "one_liner": "an extensible, portable software transport layer for GPU networking that sits between collective libraries and NIC primitives",
+    "domain": [
+      "networking",
+      "gpu-networking",
+      "rdma"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "ML Applications",
+        "role": "applications issuing collective (e.g. allreduce) and point-to-point (e.g. SendRecv) calls via the collective library",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Collective Library",
+        "role": "e.g. NCCL; compiled as libnccl.so, calls into the UCCL-Tran layer as a drop-in network plugin",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "uTran Layer",
+        "role": "UCCL-Tran's layer implementing CC, LB and loss recovery over RC/UC/UD/AF_XDP primitives",
+        "container": "Server",
+        "novel": true
+      },
+      {
+        "name": "RC",
+        "role": "reliable-connection RDMA transport primitive used by the uTran Layer",
+        "container": "uTran Layer",
+        "novel": false
+      },
+      {
+        "name": "UC",
+        "role": "unreliable-connection RDMA transport primitive used by the uTran Layer",
+        "container": "uTran Layer",
+        "novel": false
+      },
+      {
+        "name": "UD",
+        "role": "unreliable-datagram RDMA transport primitive used by the uTran Layer",
+        "container": "uTran Layer",
+        "novel": false
+      },
+      {
+        "name": "AF_XDP",
+        "role": "user-space fast packet I/O primitive used for non-RDMA NICs",
+        "container": "uTran Layer",
+        "novel": false
+      },
+      {
+        "name": "CPU 1",
+        "role": "a server CPU connected to a PCIe switch",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "CPU 2",
+        "role": "a second server CPU connected to another PCIe switch",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "PCIe switch",
+        "role": "connects CPUs, GPUs and NICs within the server for high-bandwidth data transfer",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "GPU 1",
+        "role": "a GPU behind PCIe switch 1",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "GPU 8",
+        "role": "a GPU behind PCIe switch 8",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "NIC 1",
+        "role": "the RDMA/AF_XDP NIC paired with GPU 1 for network traffic",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "NIC 8",
+        "role": "the RDMA/AF_XDP NIC paired with GPU 8",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Multipath Datacenter Network",
+        "role": "the datacenter fabric connecting servers' NICs to each other",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "App",
+        "role": "the application issuing collective calls",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "uTran Plugin",
+        "role": "the network-plugin entry point the collective library calls into (connect/accept/send/recv/etc.)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "uTran engines (TX, RX, Pacer)",
+        "role": "the group of engine threads that actually execute transport functionality",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Conn A",
+        "role": "one connection's state, tracking paths plus CC & LB state",
+        "container": "uTran engines (TX, RX, Pacer)",
+        "novel": false
+      },
+      {
+        "name": "Conn B",
+        "role": "another connection's state",
+        "container": "uTran engines (TX, RX, Pacer)",
+        "novel": false
+      },
+      {
+        "name": "QP",
+        "role": "queue pairs owned by each connection for posting network operations",
+        "container": "uTran engines (TX, RX, Pacer)",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "ML Applications",
+        "to": "Collective Library",
+        "what": "applications call collective APIs (e.g. allreduce) and point-to-point APIs (e.g. SendRecv)",
+        "step": null
+      },
+      {
+        "from": "Collective Library",
+        "to": "uTran Layer",
+        "what": "the collective library's network-plugin system routes into the UCCL-Tran layer without code changes",
+        "step": null
+      },
+      {
+        "from": "uTran Layer",
+        "to": "NIC 1",
+        "what": "transport primitives (RC/UC/UD/AF_XDP) issue network operations to the RDMA/AF_XDP NIC",
+        "step": null
+      },
+      {
+        "from": "NIC 1",
+        "to": "Multipath Datacenter Network",
+        "what": "network traffic leaves the server over the multipath datacenter network",
+        "step": null
+      },
+      {
+        "from": "App",
+        "to": "uTran Plugin",
+        "what": "the app/collective library calls connect/accept/regmr/deregmr/send/recv/flush/poll on the plugin",
+        "step": null
+      },
+      {
+        "from": "uTran Plugin",
+        "to": "uTran engines (TX, RX, Pacer)",
+        "what": "plugin and engine threads interact via shared memory (SHM) to create connections and register memory",
+        "step": null
+      }
+    ],
+    "key_idea": "UCCL-Tran is a drop-in, extensible software transport layer inserted between an unmodified collective library and NIC hardware primitives, implemented as a plugin plus a pool of TX/RX/Pacer engine threads that manage per-connection paths and congestion/loss control entirely in user-space software.",
+    "reading_order": "Panel (a) shows the software stack over the server's hardware out to the datacenter network; panel (b) zooms into the threading model, from App to the engine threads."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "double",
+    "aspect": 3.24,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e97132",
+        "used_for": "'Control header' arrows (legend)"
+      },
+      {
+        "hex": "#4ea72e",
+        "used_for": "'Data payload' arrows (legend)"
+      },
+      {
+        "hex": "#215f9a",
+        "used_for": "'Network traffic' arrows (legend)"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "fill for the uTran Layer / uTran Plugin boxes"
+      },
+      {
+        "hex": "#cdcdcd",
+        "used_for": "fill for generic hardware/library boxes (CPU, GPU, Server outline)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.55pt outlines, dashed 'Server' boundary box",
+    "font": "Arial/Consolas sans, 6-9pt",
+    "corners": "rounded",
+    "arrows": "orthogonal arrows (5 curved) with filled heads, color-coded by traffic type",
+    "icons": "vector: small CPU/GPU/NIC glyph icons"
+  },
+  "encoding": {
+    "color_means": "orange = control-header traffic, green = data-payload traffic, blue = raw network traffic between NICs, per the figure's own legend; pale-blue boxes mark UCCL-Tran's own added layer/plugin, gray boxes mark pre-existing hardware and library components",
+    "line_style_means": null,
+    "emphasis": "panel (a)'s legend-colored arrows trace control vs. data vs. network traffic through one concrete 2-CPU/8-GPU server, while panel (b) reuses the same uTran naming to show the plugin/engine-thread split that implements it",
+    "reusable_patterns": [
+      "a layered software stack drawn directly above the physical hardware topology it runs on, paired with a threading-model panel showing that layer's internal implementation"
+    ],
+    "weaknesses": [
+      "the Control header/Data payload/Network traffic legend sits only in panel (a) but its colors are reused without restatement in panel (b)"
+    ]
+  },
+  "tags": [
+    "gpu-networking",
+    "rdma",
+    "transport-layer",
+    "nccl",
+    "collective-communication"
+  ],
+  "provenance": {
+    "sections": [
+      "3 UCCL-Tran Design (p.5)"
+    ],
+    "evidence": [
+      "UCCL-Tran layer sits between the collective library such as NCCL and the low-level communication primitives",
+      "providing a drop-in replacement for ML applications without code modification or recompilation",
+      "Each engine thread runs TX, RX, and pacing functionalities of UCCL-Tran multipath reliable transport"
+    ]
+  },
+  "summary": "UCCL-Tran is an extensible software transport layer for GPU networking, designed as a drop-in replacement beneath existing collective libraries. Figure 2's two panels show the design at two levels. Panel (a) gives the high-level architecture: ML Applications call a Collective Library such as NCCL, which loads the uTran Layer as its network plugin; the uTran Layer implements congestion control, load balancing and loss recovery over RC/UC/UD RDMA primitives or AF_XDP, sitting above a concrete server topology of two CPUs and eight PCIe-switched GPUs and NICs connected out through a Multipath Datacenter Network, with control-header, data-payload and network-traffic arrows color-coded per the legend. Panel (b) shows the threading model: an App and Collective Library call into the uTran Plugin, which coordinates over shared memory with a pool of uTran engine threads (TX, RX, Pacer) tracking per-connection paths, CC/LB state and queue pairs.",
+  "summary_zh": "图2展示UCCL-Tran:(a)架构—应用经NCCL调用uTran层(拥塞控制/负载均衡/丢包恢复),经RC/UC/UD/AF_XDP驱动GPU与网卡;(b)线程模型—App经插件与TX/RX/Pacer引擎协作,管理连接与队列状态。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

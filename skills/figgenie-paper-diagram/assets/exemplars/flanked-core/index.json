@@ -1,0 +1,152 @@
+{
+  "template": "flanked-core",
+  "n": 18,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos26-019_fig4",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-9 exemplar: a teal Request Scheduler core nesting three submodules sits above a shared GPU worker pool as the hardware band, with a purple Global Monitor as a side column closing the allocation loop.",
+      "what_to_learn": "Put the routing decision box above the shared resource pool it feeds and give the side monitor its own feedback arrow back into that pool rather than into the core; the weakness here is too many small labelled arrows crowd the scheduler, so budget space for routing labels before adding a monitor loop.",
+      "dir": "../figures/asplos26-019_fig4"
+    },
+    {
+      "id": "nsdi23-077_fig6",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Medium-confidence, 11-component exemplar: a Host band of four send-queue boxes sits above the RNIC band, inside which an Event Mux core with four submodules (QPC, Schedule Policy, Schedule Queue) aggregates doorbell, credit and dequeue signals.",
+      "what_to_learn": "Place the caller band's repeated small boxes (four send queues here) in one row above the hardware band, then let a single mux-shaped core inside that band collect every event type by arrow direction alone rather than colour, so in and out of the core reads as the only code that matters.",
+      "dir": "../figures/nsdi23-077_fig6"
+    },
+    {
+      "id": "nsdi23-083_fig3",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Medium-confidence, star exemplar: an Intercloud Broker core with two internal sub-columns (Catalog/Tracker, Optimizer/Provisioner/Executor) stacks above two symmetric Cloud A and Cloud B backends, a hub-above-peers reading of the same trusted-middle shape.",
+      "what_to_learn": "Draw the coordinator as one wide box straddling its two backend boxes below to assert one design generalizes across them, and split the coordinator's own internals into two adjacent stacks (bookkeeping versus execution); the weakness is that only two backends are shown, so add an ellipsis if the claim is meant to scale further.",
+      "dir": "../figures/nsdi23-083_fig3"
+    },
+    {
+      "id": "nsdi24-064_fig3",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: one controller box with three distinct, non-identical neighbours (an external interface above, a data interface beside, an agent below) is flanked-core's engine-between-bands shape, not a hub with interchangeable peer spokes.",
+      "what_to_learn": "The real lesson is flanked-core's, not hub-spoke's: place the external caller interface above the engine, the executing agent below it, and a second interface beside it, then colour the engine's internal function-dispatch modules (orange) distinctly from its boundary (blue).",
+      "dir": "../figures/nsdi24-064_fig3"
+    },
+    {
+      "id": "nsdi26-072_fig8",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-14, dense 14-component exemplar: a stacked-paper Programs band on top feeds a Process Table side column into an LLM Engine core nesting five submodules (Priority Function, Scheduler, Memory Manager, KV Cache, Model Executor).",
+      "what_to_learn": "Use a stacked-paper icon behind a box to signal many concurrent instances without drawing them all, and route shared metadata into both the dispatcher and the engine's scheduler; the weakness is that the long wraparound arrow carrying it into the engine is easy to miss, so keep shared-state arrows short and direct.",
+      "dir": "../figures/nsdi26-072_fig8"
+    },
+    {
+      "id": "nsdi26-090_fig4",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-15 textbook fit: three Application boxes form the interface band, a nested Cortex core sits below, and a dashed Region-A/B line marks the trust boundary above the Remote Data Service band of three pills.",
+      "what_to_learn": "Put the trust or region boundary as a dashed line directly between the core and the bottom band, exactly where the rule calls for it, and draw that bottom band as a row of three named service pills rather than one generic box; number the steps so cache-hit and cache-miss paths both stay traceable.",
+      "dir": "../figures/nsdi26-090_fig4"
+    },
+    {
+      "id": "nsdi26-092_fig6",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-16 exemplar at only 5 components: two Trustlet peers flank an Object core marked with a red X, all resting on a Trusted Monitor band, a trusted-middle pattern at half the usual component count.",
+      "what_to_learn": "Mark a denied access path with one bold red X on the shared object rather than a caption, and give the figure a small top-right legend distinguishing solid data-path arrows from dashed control-path arrows; the weakness here is that the X itself has no legend entry, so give every ad hoc symbol one too.",
+      "dir": "../figures/nsdi26-092_fig6"
+    },
+    {
+      "id": "osdi23-021_fig4",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, 25-component exemplar: inside the purple Hydro Coordinator band, a Cluster Scheduler core sits flanked left by two allocator boxes and right by an Elastic Executor, a flanked-core micro-pattern nested inside a layered whole.",
+      "what_to_learn": "A flanked-core sandwich can appear at any scale: repeat the same left-core-right composition inside one band of a larger layered figure, colour that band and its neighbour differently, and orange-highlight the technique sub-boxes inside each; the weakness here is the central box's role is legible only from position, so add one line to it.",
+      "dir": "../figures/osdi23-021_fig4"
+    },
+    {
+      "id": "osdi25-002_fig7",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, medium-confidence two-band variant: a User/Kernel line sits above the Manager core, which nests four submodules across 9 components, handing off to a Scheduler/Monitor pair as the band below.",
+      "what_to_learn": "Put the privilege boundary between the caller band and the core rather than lower down, give the core four labelled submodules so it reads as an engine, and let two kernel-side modules share the band below as equals instead of nesting one inside the other.",
+      "dir": "../figures/osdi25-002_fig7"
+    },
+    {
+      "id": "osdi26-020_figtex7",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "High-confidence, star-ranked (3rd) reading of a GPU training core fed by three circled, numbered noise sources, each cross-referenced against a three-item legend pill-stack labelled Distributed Noise History on the right.",
+      "what_to_learn": "When several distributed hardware sources all feed one engine box, number each source and give it a matching entry in a compact legend column instead of writing the source name on every arrow; keep the engine's internal stages in a dashed sub-box like the DP Training region here.",
+      "dir": "../figures/osdi26-020_figtex7"
+    },
+    {
+      "id": "osdi26-060_fig8",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-4, high-confidence 15-component exemplar: Request/Response Queues flank the Offline Profiler and Plan Optimizer as a small core, itself sandwiched between an HTTP-server interface band above and a GPU-Pool-bearing Worker Node band below.",
+      "what_to_learn": "The flanked-core sandwich can nest inside a larger layered stack: draw the two queues as small pills on either side of the planning core rather than as generic arrows, and give the bottom hardware band its own internal grid of managers instead of a single box.",
+      "dir": "../figures/osdi26-060_fig8"
+    },
+    {
+      "id": "sosp24-020_fig3",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-6 canonical exemplar: five circled numbers trace a path through the Skyloft LibOS core, a Scheduling Policy pill-stack sits beside it, and a dotted line marks the user/kernel boundary above the hardware band.",
+      "what_to_learn": "Run a numbered path through the core's internal submodules and draw interchangeable scheduling policies as a stack of index-card pills beside it; but number branches only when they truly form one sequence; here steps 2/3 split from the scheduler while 4/5 arrive independently from hardware, so the numbering reads as separate paths, not one flow.",
+      "dir": "../figures/sosp24-020_fig3"
+    },
+    {
+      "id": "sosp25-013_fig5",
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, high-confidence textbook case, 22 components: a purple KTransformers core sits between a tan User Interface band above and a tan Heterogeneous Hardware band below, with MoE Models and Advanced Operators as pill-stack side columns.",
+      "what_to_learn": "Use large white block arrows on all four sides to funnel bands and side columns into the core, keep both side columns as plain stacked pills naming interchangeable models or kernels, and show the core's own transformation as a small before/after computation-graph icon rather than prose.",
+      "dir": "../figures/sosp25-013_fig5"
+    },
+    {
+      "id": "asplos26-092_fig3",
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Medium-confidence, 14-component microarchitecture instance of the pattern: a Data-plane core with six sub-blocks sits between top bus-address pills and a bottom Control Plane band, flanked left and right by matching Register File Interface columns.",
+      "what_to_learn": "The flanked-core sandwich also works for on-chip blocks: use bus-width labels on the connecting lines instead of arrows, and colour every block by whether it scales with datapath width so the tunable parameter is visible at a glance; the weakness is that wiring beyond bus widths stays unlabelled, so name the bus's purpose too.",
+      "dir": "../figures/asplos26-092_fig3"
+    },
+    {
+      "id": "nsdi24-096_fig1",
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Medium-confidence context figure: a red-outlined Granular Task Scheduler core sits below three Application boxes and beside a stacked Spark/MapReduce Scheduler side column, both feeding a Rack-Server-and-Worker-Pool hardware band at the bottom.",
+      "what_to_learn": "Outline the paper's own contribution in a single accent colour against a gray-and-white field of existing infrastructure, and stack the interchangeable pre-existing schedulers as a plain side column beside it; the weakness here is a uniform tiny font across many labels, so give the emphasized box more visual weight, not just an outline.",
+      "dir": "../figures/nsdi24-096_fig1"
+    },
+    {
+      "id": "osdi23-018_fig4",
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "High-confidence, 13-component exemplar with a numbered 7-step path through the Conveyor Core hub, flanked by two dashed pill-columns of interchangeable plug-ins, Artifact Finders on one side and Action Services on the other.",
+      "what_to_learn": "Draw each side column as a dashed group box containing named interchangeable plug-ins (finders, action services) rather than one generic label, and number the full request path across both wings so a reader can follow create-then-run without a separate legend; add a legend anyway once box types multiply beyond dashed-versus-solid.",
+      "dir": "../figures/osdi23-018_fig4"
+    },
+    {
+      "id": "osdi26-092_fig1",
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Doc-cited exemplar of the two-small-hubs variant: GKBuilder and GKProbe sit as paired hubs inside the VMM band, mediating a Target/Observer pair above the Hypervisor's EPT pill band, plus a lettered key and numbered path.",
+      "what_to_learn": "Colour-code new components differently from the existing infrastructure they sit inside (white boxes on a grey VMM here) and give the bottom hardware band its own row of small pills; the weakness is that overlaying a lettered key and a numbered step sequence on one figure slows parsing, so pick one scheme per diagram.",
+      "dir": "../figures/osdi26-092_fig1"
+    },
+    {
+      "id": "sosp25-010_fig1",
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Medium-confidence, rank-7 exemplar of the horizontal variant: a formally verified container V sits between untrusted peers A and B, all three resting above the microkernel's endpoint data structures in the band below.",
+      "what_to_learn": "Flank the trusted middle component with its untrusted peers in one row rather than stacking all three, and match send()/recv() call labels on the two boxes that actually interact; the weakness here is that the third peer is drawn but never wired to anything, so give every peer at least one visible arrow.",
+      "dir": "../figures/sosp25-010_fig1"
+    }
+  ]
+}

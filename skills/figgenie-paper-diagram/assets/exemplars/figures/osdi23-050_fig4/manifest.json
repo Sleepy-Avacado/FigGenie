@@ -1,0 +1,53 @@
+{
+  "id": "osdi23-050_fig4",
+  "paper_id": "osdi23-050",
+  "fig": "4",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 4: System overview of DNN computation in (a) exist- ing DNN frameworks (e.g., JAX), and (b) COCKTAILER",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.58,
+  "n_components": 13,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-050/osdi23-050_fig4_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-050/osdi23-050_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star before/after exemplar: panel (a) frameworks split the loop (red, on the CPU) from MatMul/Add/Relu kernels on the accelerator, panel (b) fuses both into colour-matched Loop-uTasks mapped onto L0/L1/L2 hardware tiers.",
+      "what_to_learn": "Keep the same operator colours (blue MatMul, yellow Relu, gray Add) in both panels so a reader tracks exactly which pieces move from the CPU-side loop into accelerator-resident tasks; note panel (b)'s extra L0/L1/L2 tiers cost effort to map back to (a)."
+    },
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Mirrors the loop/schedule/hardware skeleton in both panels; red fill marks only the CPU-bound Loop box in (a), the one thing (b) fixes by folding it into uniform uTasks on the L0/L1/L2 grid.",
+      "what_to_learn": "Repeat the loop-plus-kernels skeleton in both panels, but colour only the anchor box that changes (the separate CPU Loop) so the eye finds the fix immediately; add a small legend mapping the multi-level L0/L1/L2 hardware boxes back to the simple CPU/accelerator split in (a), a step this figure skips."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "High-confidence pick where the floorplan payload sits only in panel (b): coloured uTasks map onto a nested L0-core, L1-SM and L2-device hardware hierarchy, contrasted against panel (a)'s plain CPU-driven loop and accelerator kernels.",
+      "what_to_learn": "When a hardware hierarchy is the point, draw it as boxes nested three levels deep with small coloured squares standing for identical tasks mapped onto each level, and pair it with a simpler baseline panel using the same colour key so a reader can trace exactly which piece moved onto the accelerator."
+    }
+  ]
+}

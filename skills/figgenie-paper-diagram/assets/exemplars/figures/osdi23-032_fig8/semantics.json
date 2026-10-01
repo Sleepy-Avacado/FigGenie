@@ -1,0 +1,285 @@
+{
+  "paper_id": "osdi23-032",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "SMART",
+    "one_liner": "a high-performance adaptive radix tree for disaggregated memory that lets compute nodes efficiently search and update tree structures stored on remote memory nodes",
+    "domain": [
+      "disaggregated memory",
+      "indexing",
+      "RDMA"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how lock-fail and key-conflict checks route concurrent reads or writes to delegation, combining, or a normal remote-memory access",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Concurrent Reads",
+        "kind": "label",
+        "role": "incoming stream of concurrent client read requests, panel (a)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Concurrent Writes",
+        "kind": "label",
+        "role": "incoming stream of concurrent client write requests, panel (b)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Lock",
+        "kind": "icon",
+        "role": "the local lock each client attempts to acquire before proceeding",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "lock fail",
+        "kind": "state",
+        "role": "decision: did acquiring the local lock fail?",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "conflict",
+        "kind": "state",
+        "role": "decision: does the arriving client's key hash-conflict with the current unique key?",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "R",
+        "kind": "label",
+        "role": "the delegated/normal read result value in (a)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W",
+        "kind": "label",
+        "role": "the delegated/normal write result value in (b)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "WCB",
+        "kind": "box",
+        "role": "write combining buffer holding the in-flight consensus write value, panel (b) only",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Time Window",
+        "kind": "label",
+        "role": "the memory-side latency window during which delegation/combining can occur",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Cache Search",
+        "kind": "lane",
+        "role": "memory-side phase: search the cache",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Tree Traversal",
+        "kind": "lane",
+        "role": "memory-side phase: traverse the radix tree",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Leaf Read",
+        "kind": "lane",
+        "role": "memory-side phase: read the leaf node, panel (a)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Leaf Lock",
+        "kind": "lane",
+        "role": "memory-side phase: lock the leaf node, panel (b) only",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Leaf Write",
+        "kind": "lane",
+        "role": "memory-side phase: write the leaf node, panel (b) only",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Leaf Unlock",
+        "kind": "lane",
+        "role": "memory-side phase: unlock the leaf node, panel (b) only",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "lock fail",
+        "to": "delegate/combiner path",
+        "what": "No: the first client to hold the lock proceeds as the delegate/combiner, opening the Time Window",
+        "kind": "control",
+        "step": "1"
+      },
+      {
+        "from": "lock fail",
+        "to": "conflict",
+        "what": "Yes: clients that fail to get the local lock instead check for a hash conflict",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "conflict",
+        "to": "queue/WCB",
+        "what": "No: the client queues behind the delegate/combiner and reuses its eventual result (R R R / W W W)",
+        "kind": "control",
+        "step": "3"
+      },
+      {
+        "from": "conflict",
+        "to": "normal path",
+        "what": "Yes: a hash conflict forces the client to run its own normal read/write, bypassing delegation",
+        "kind": "control",
+        "step": "2"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "delegate/combiner client",
+        "what": "the lock-holding client begins its remote tree search (read) or insert/update (write), opening the Time Window",
+        "carries": "target key as the unique key"
+      },
+      {
+        "marker": "2",
+        "at": "conflicting client",
+        "what": "a client whose key hash-conflicts with the unique key runs a normal read/write by itself, bypassing delegation",
+        "carries": "its own key"
+      },
+      {
+        "marker": "3",
+        "at": "queued client",
+        "what": "a non-conflicting client instead joins the read-waiting queue (or writes into WCB) and reuses the delegate/combiner's eventual result",
+        "carries": "queued request"
+      }
+    ],
+    "logic": {
+      "states": [],
+      "transitions": [],
+      "decisions": [
+        {
+          "question": "lock fail?",
+          "branches": [
+            "No -> proceed as delegate/combiner (step 1)",
+            "Yes -> check conflict"
+          ]
+        },
+        {
+          "question": "conflict?",
+          "branches": [
+            "No -> queue behind the delegate/combiner (step 3)",
+            "Yes -> run a normal read/write (step 2)"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "One client that grabs the local lock becomes the delegate (or write-combiner) for the memory-side access; conflicting clients fall back to a normal access, while non-conflicting clients queue and reuse its result.",
+    "reading_order": "left to right in each panel: from Concurrent Reads/Writes through the lock-fail and conflict diamonds along the numbered paths, across the computing-side/memory-side divide into the named memory-side phases"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "double",
+    "aspect": 3.86,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light-grey fill of the decision diamonds (lock fail, conflict) and the dashed memory-side phase lanes"
+      },
+      {
+        "hex": "#808080",
+        "used_for": "medium-grey fill of the padlock (Lock) icon"
+      },
+      {
+        "hex": "#4575b5",
+        "used_for": "blue 'Normal Read' / 'Normal Write' path labels and their looping arrows"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "light-pink fill of the WCB (write-combining buffer) box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black/grey outlines on diamonds and boxes; dashed borders around each memory-side phase lane",
+    "corners": "mixed",
+    "arrows": "curved black arrows with open heads for the decision routing; curved coloured arrows (blue normal path, plus red/green paths described in notes) looping into and out of the memory-side lanes",
+    "font": "sans (Arial), 6.5-8pt, bold",
+    "icons": "a padlock icon for Lock; circled numbers ①②③ marking the delegate/normal/queued paths"
+  },
+  "encoding": {
+    "color_means": "grey fills the decision diamonds and phase lanes; blue marks the Normal Read/Write path specifically",
+    "line_style_means": "dashed lane borders group the memory-side phases (Cache Search, Tree Traversal, Leaf ...); solid curved arrows trace each path's request/response",
+    "state_means": "not applicable; a static routing diagram, not a before/after or alternatives figure",
+    "marker_means": "circled numbers ①②③ mark, in the text's own order, the delegate/combiner path, the normal-access path, and the queued/combined path",
+    "emphasis": "the Time Window bracket spans exactly the memory-side phases the delegate/combiner's single access covers, visually justifying why other clients can safely reuse its result",
+    "reusable_patterns": [
+      "a twin decision-diamond gate (lock fail? / conflict?) that fans a stream of concurrent requests into a delegate path, a bypass path, and a queued/reuse path, crossing into a labelled pipeline of memory-side phases"
+    ],
+    "weaknesses": [
+      "661 small path segments/arrows (per the measured shape count) make the two decision paths visually busy despite the underlying logic being simple"
+    ]
+  },
+  "tags": [
+    "SMART",
+    "disaggregated-memory",
+    "radix-tree",
+    "RDMA",
+    "read-delegation",
+    "write-combining"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 SMART Design (p.10)"
+    ],
+    "evidence": [
+      "the delegation client records its target key as the unique key",
+      "If a hash conflict is found, the client executes a normal tree search by itself",
+      "it pushes itself into a read-waiting queue and waits for the search result from the first client"
+    ]
+  },
+  "summary": "This figure from SMART's design section shows two computing-side optimizations that shield disaggregated memory from redundant remote accesses. In (a) Read delegation, the first client to acquire the local lock searches the remote tree on behalf of others; a client that fails the lock check compares keys, running its own normal read (2) if the keys hash-conflict, or joining a read-waiting queue (3) to reuse the delegate's result once it returns from cache search, tree traversal, and leaf read. In (b) Write combining, the same lock-fail/conflict logic instead merges non-conflicting writes into a write-combining buffer (WCB) while the first client's remote insert/update (1) proceeds through cache search, tree traversal, leaf lock, write, and unlock, cutting the number of remote round trips for concurrent accesses to the same key.",
+  "summary_zh": "该图展示SMART针对分离式内存的两种计算侧优化：(a)读代理中，抢到本地锁的客户端代为远程查树，未抢到锁者按key是否冲突分别走普通读或排队复用代理结果；(b)写合并中，同样的锁失败/冲突判断改为将写请求合并进WCB缓冲区，减少并发访问同一key时的远程往返次数。",
+  "confidence": "high",
+  "notes": "Corrected content.base from prior 'component' to 'flowchart': the dominant drawn structure is two decision diamonds (lock fail?, conflict?) with Yes/No branches routing requests, which is the v3 flowchart pattern, though the memory-side phases are drawn as a component-like pipeline. content.logic.states/transitions are left as empty lists (not state-machine states/transitions) since the structure is a decision flowchart, not a named-state machine; content.logic.decisions captures the two diamonds. style.palette uses exactly the index's measured top-4 colours; a red 'Delegated Read'/'Combined Write' path colour and a green 'Time Window' bracket colour are clearly visible in the source PNG but fall outside that top-4 list, so they are described qualitatively (not given an asserted exact hex) in 'encoding' and 'style.arrows'.",
+  "venue": "OSDI23"
+}

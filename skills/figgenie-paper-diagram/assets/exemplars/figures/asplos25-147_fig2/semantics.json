@@ -1,0 +1,198 @@
+{
+  "paper_id": "asplos25-147",
+  "fig": "2",
+  "system": {
+    "name": "Spindle",
+    "one_liner": "a training system for multi-task multi-modal large models that plans and schedules execution via wavefront scheduling",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Computation Graph",
+        "role": "graph representation of user-defined multi-task multi-modal training tasks",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU Cluster",
+        "role": "target hardware cluster profiled to inform planning decisions",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Graph Contraction",
+        "role": "first execution-planner stage that contracts the computation graph into a MetaGraph with MetaOps",
+        "container": "Execution Planner",
+        "novel": true
+      },
+      {
+        "name": "Scalability Estimator",
+        "role": "estimates scaling curves for tasks using cluster profiling data",
+        "container": "Execution Planner",
+        "novel": true
+      },
+      {
+        "name": "Resource Allocator",
+        "role": "produces an allocation plan assigning devices/resources to tasks",
+        "container": "Execution Planner",
+        "novel": true
+      },
+      {
+        "name": "Wavefront Scheduler",
+        "role": "produces a wavefront schedule for dependency-driven execution",
+        "container": "Execution Planner",
+        "novel": true
+      },
+      {
+        "name": "Device Placement",
+        "role": "produces the final execution plan mapping tasks to devices over a timeline",
+        "container": "Execution Planner",
+        "novel": true
+      },
+      {
+        "name": "Runtime Engine",
+        "role": "executes the generated execution plan and trains the model on the GPU cluster",
+        "container": "Training Framework",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Computation Graph",
+        "to": "Graph Contraction",
+        "what": "computation graph",
+        "step": null
+      },
+      {
+        "from": "GPU Cluster",
+        "to": "Scalability Estimator",
+        "what": "profiling data",
+        "step": null
+      },
+      {
+        "from": "Graph Contraction",
+        "to": "Scalability Estimator",
+        "what": "MetaGraph with MetaOps",
+        "step": 1
+      },
+      {
+        "from": "Scalability Estimator",
+        "to": "Resource Allocator",
+        "what": "scaling curves",
+        "step": 2
+      },
+      {
+        "from": "Resource Allocator",
+        "to": "Wavefront Scheduler",
+        "what": "allocation plan",
+        "step": 3
+      },
+      {
+        "from": "Wavefront Scheduler",
+        "to": "Device Placement",
+        "what": "wavefront schedule",
+        "step": 4
+      },
+      {
+        "from": "Device Placement",
+        "to": "Runtime Engine",
+        "what": "execution plan",
+        "step": 5
+      },
+      {
+        "from": "Runtime Engine",
+        "to": "GPU Cluster",
+        "what": "training",
+        "step": null
+      }
+    ],
+    "key_idea": "Spindle sequentially contracts the computation graph, estimates scalability, allocates resources, and produces a wavefront schedule and device placement before the runtime engine trains the model on the GPU cluster.",
+    "reading_order": "Top-left inputs (Computation Graph, GPU Cluster) feed into a top-to-bottom pipeline of five execution-planner stages, ending at the Runtime Engine at the bottom."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.09,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#3890e6",
+        "used_for": "planner stage titles / highlighted blue accents"
+      },
+      {
+        "hex": "#9b0e11",
+        "used_for": "italic red annotation labels naming each stage's output artifact"
+      },
+      {
+        "hex": "#fde29d",
+        "used_for": "GPU cluster and side-illustration highlight fill"
+      },
+      {
+        "hex": "#d65b47",
+        "used_for": "accent color in the small side illustrations (e.g. scaling curves, allocation plan)"
+      },
+      {
+        "hex": "#d8e2dc",
+        "used_for": "background fill of Execution Planner stage boxes"
+      },
+      {
+        "hex": "#86bad8",
+        "used_for": "secondary light-blue fill in side illustrations"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin gray borders on stage boxes, dashed borders for the Execution Planner and Training Framework group boxes",
+    "font": "Calibri sans, 6.5-11pt, bold for group titles",
+    "corners": "rounded",
+    "arrows": "orthogonal, some curved, filled heads",
+    "icons": "bitmap/vector icons illustrating each stage's output (MetaGraph, scaling curves, allocation plan, wavefront schedule, execution plan)"
+  },
+  "encoding": {
+    "color_means": "gray-green boxes = execution-planner stages; red italic text = callout labels naming outputs; blue = stage title text and highlighted accents",
+    "line_style_means": "dashed boundaries mark the Execution Planner and Training Framework groups",
+    "emphasis": "each pipeline stage is paired with a small thumbnail illustration of its output artifact, visually tying the abstract stage name to a concrete data structure",
+    "reusable_patterns": [
+      "vertical pipeline of stage boxes each annotated with a thumbnail illustration of its output artifact"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "multi-task training",
+    "multi-modal",
+    "wavefront scheduling",
+    "execution planner",
+    "distributed training",
+    "resource allocation"
+  ],
+  "provenance": {
+    "sections": [
+      "3 System Design (p.4)",
+      "4 Implementation (p.9)"
+    ],
+    "evidence": [
+      "Fig. 2 depicts its system architecture, comprising the execution planner and the training framework",
+      "Spindle conducts the optimization workflow automatically, as illustrated in Fig. 2",
+      "the Spindle runtime engine provides efficient and scalable model training process"
+    ]
+  },
+  "summary": "Spindle is a training system for multi-task, multi-modal (MT MM) large models that uses wavefront scheduling to jointly optimize workload parallelization and execution scheduling. This architecture-overview figure shows the Execution Planner as a top-to-bottom pipeline of five stages: Graph Contraction (turning the input Computation Graph into a MetaGraph of MetaOps), Scalability Estimator (producing scaling curves using GPU Cluster profiling), Resource Allocator (producing an allocation plan), Wavefront Scheduler (producing a wavefront schedule), and Device Placement (producing the final execution plan). Each stage box is paired with a small red-labeled thumbnail illustrating its output artifact. The resulting execution plan flows into the Runtime Engine within the dashed Training Framework group at the bottom, which trains the model on the GPU cluster, closing the loop between planning and execution.",
+  "summary_zh": "该图展示 Spindle 的整体架构：执行规划器自上而下依次经过图收缩、可扩展性估计、资源分配、波前调度和设备放置五个阶段，每阶段旁配有输出产物示意图，最终执行计划交给运行时引擎在 GPU 集群上完成训练。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

@@ -1,0 +1,47 @@
+{
+  "id": "nsdi23-025_fig4",
+  "paper_id": "nsdi23-025",
+  "fig": "4",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 4: Protego Overview",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.78,
+  "n_components": 11,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-025/nsdi23-025_fig4_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-025/nsdi23-025_fig4_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: two side-by-side mechanism panels (its own corpus label control-data) with a small embedded throughput-vs-load chart, not a zoom of a region drawn elsewhere in the same figure.",
+      "what_to_learn": "The transferable move is control-data's: mark both places a request can be dropped in matching red, feed the resulting failure path into one dashed arrow, and let a small embedded performance chart justify the credit-pool adjustment instead of asserting it, but legend the resource icons this exemplar leaves unexplained."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Two labelled red Drop points (before CPU processing, at mutex acquisition) merge into one dashed failure arrow, while a double-headed arrow closes a compact feedback loop driven by an inset throughput-vs-load chart.",
+      "what_to_learn": "Embed a small inset chart (throughput vs load) beside the arrow it drives so the feedback signal is visible, not just implied, and give every drop point its own icon; route each to its own arrow rather than merging two distinct drop points into one dashed line, which here can read as a single point."
+    }
+  ]
+}

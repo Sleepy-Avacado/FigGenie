@@ -1,0 +1,205 @@
+{
+  "paper_id": "asplos26-132",
+  "fig": "6",
+  "system": {
+    "name": "DIP",
+    "one_liner": "a dynamic, modality-aware pipeline scheduling framework for large multimodal model (LMM) training",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "llm-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "LMM model",
+        "role": "the large multimodal model to be partitioned before training",
+        "container": "Offline Partitioner",
+        "novel": false
+      },
+      {
+        "name": "Model Chunk Partitioner",
+        "role": "offline component that divides the LMM into model chunks based on the separated partitioning principle",
+        "container": "Offline Partitioner",
+        "novel": true
+      },
+      {
+        "name": "Model chunks",
+        "role": "the resulting statically-placed chunks distributed to designated GPUs",
+        "container": "Offline Partitioner",
+        "novel": true
+      },
+      {
+        "name": "Training batches",
+        "role": "input batches whose metadata is fetched at the start of each iteration",
+        "container": "Online Planner",
+        "novel": false
+      },
+      {
+        "name": "Sub-Microbatch Partitioner",
+        "role": "divides microbatches into smaller, modality-specific sub-microbatches for load balancing",
+        "container": "Online Planner",
+        "novel": true
+      },
+      {
+        "name": "Pipeline Schedule Searcher",
+        "role": "explores and searches candidate pipeline schedules for the current batch",
+        "container": "Online Planner",
+        "novel": true
+      },
+      {
+        "name": "Multimodal Training Simulator",
+        "role": "simulates candidate schedules, used by both the partitioner and the searcher",
+        "container": "Online Planner",
+        "novel": true
+      },
+      {
+        "name": "GPU Training Workers",
+        "role": "GPUs that execute the deployed pipeline schedule for the current iteration",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "LMM model",
+        "to": "Model Chunk Partitioner",
+        "what": "model to be partitioned",
+        "step": null
+      },
+      {
+        "from": "Model Chunk Partitioner",
+        "to": "Model chunks",
+        "what": "partitioned model chunks",
+        "step": null
+      },
+      {
+        "from": "Training batches",
+        "to": "Sub-Microbatch Partitioner",
+        "what": "metadata prefetching",
+        "step": 1
+      },
+      {
+        "from": "Sub-Microbatch Partitioner",
+        "to": "Pipeline Schedule Searcher",
+        "what": "partitioned sub-microbatches",
+        "step": 2
+      },
+      {
+        "from": "Pipeline Schedule Searcher",
+        "to": "Pipeline Schedule Searcher",
+        "what": "iterative exploration of pipeline schedules",
+        "step": 3
+      },
+      {
+        "from": "Pipeline Schedule Searcher",
+        "to": "GPU Training Workers",
+        "what": "deploy schedules",
+        "step": 4
+      },
+      {
+        "from": "Sub-Microbatch Partitioner",
+        "to": "Multimodal Training Simulator",
+        "what": "uses simulator for partitioning decisions",
+        "step": null
+      },
+      {
+        "from": "Pipeline Schedule Searcher",
+        "to": "Multimodal Training Simulator",
+        "what": "uses simulator to evaluate schedules",
+        "step": null
+      }
+    ],
+    "key_idea": "DIP separates an offline model-chunk partitioning phase from an online four-step planning loop (prefetch metadata, adaptive microbatch partitioning, schedule search, deploy) so that pipeline schedules can be tailored per-batch without stalling GPU training workers.",
+    "reading_order": "Top box (Offline Partitioner) shows the LMM model being split into model chunks before training; bottom box (Online Planner) shows the circled ①-④ per-iteration loop from training batches through partitioning and schedule search to deployment on GPU Training Workers."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.16,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#99ccff",
+        "used_for": "blue fill of the core pipeline boxes (Model Chunk Partitioner, Sub-Microbatch Partitioner, Pipeline Schedule Searcher, Multimodal Training Simulator)"
+      },
+      {
+        "hex": "#ff8000",
+        "used_for": "orange circled step-order markers (①-④) and the 'Deploy schedules' label"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "light blue rectangle in the stacked 'Model chunks' icon"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green rectangle in the stacked 'Model chunks' icon"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "light orange rectangle in the stacked 'Model chunks' icon"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "light red/pink rectangle in the stacked 'Model chunks' icon"
+      },
+      {
+        "hex": "#333333",
+        "used_for": "dark gray fill of the LMM model cube icon and GPU Training Workers icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black strokes, dashed boundaries around the Offline Partitioner and Online Planner groups",
+    "font": "Calibri sans, 6.5-9.5pt, bold labels for component names",
+    "corners": "rounded",
+    "arrows": "orthogonal, filled triangular heads, one curved self-loop arrow on Pipeline Schedule Searcher",
+    "icons": "bitmap: LMM model cube icon, stacked colored model-chunk rectangles, GPU Training Workers icon"
+  },
+  "encoding": {
+    "color_means": "blue = core planner/partitioner pipeline boxes, orange = circled step-order markers, the four pastel colors on the stacked model-chunk icon distinguish separate chunks placed on different GPUs",
+    "line_style_means": "dashed = grouping boundary separating the Offline Partitioner from the Online Planner; solid = data/control flow arrows; dotted 'uses' arrows connect both partitioner and searcher to the shared simulator",
+    "emphasis": "circled numbers ①-④ walk the reader through the online per-iteration loop in strict order, distinguishing it from the one-time offline partitioning step above",
+    "reusable_patterns": [
+      "offline preparation phase feeding an online per-iteration control loop",
+      "circled-number sequence overlaid on a component diagram to show execution order"
+    ],
+    "weaknesses": [
+      "the 'uses' relationship to the shared Multimodal Training Simulator is drawn with light dotted lines that are easy to miss"
+    ]
+  },
+  "tags": [
+    "multimodal-training",
+    "pipeline-parallelism",
+    "scheduling",
+    "distributed-training",
+    "load-balancing",
+    "overview"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Approach Overview (p.6)"
+    ],
+    "evidence": [
+      "The overall workflow proceeds in two phases, as shown in Fig. 6.",
+      "For each iteration, the planner executes a four-stage process",
+      "Before training, the model chunk partitioner divides the LMM into model chunks based on our separated partitioning principle"
+    ]
+  },
+  "summary": "This figure shows the overall workflow of DIP, a scheduling framework for large multimodal model training. In an offline Model Chunk Partitioner phase, the LMM model is divided into model chunks (shown as a stack of four pastel-colored rectangles) that are statically distributed to designated GPUs. During training, an Online Planner executes a four-step circled loop each iteration: (1) prefetch metadata for the next batch, (2) the Sub-Microbatch Partitioner splits microbatches into modality-specific sub-microbatches, (3) the Pipeline Schedule Searcher explores pipeline schedules (self-loop), both partitioner and searcher relying on a shared Multimodal Training Simulator, and (4) deploy the resulting schedule to the GPU Training Workers. Blue flat-filled boxes represent the core pipeline components, orange marks the ordered steps, and dashed borders group the offline and online phases.",
+  "summary_zh": "该图展示DIP的整体工作流：训练前，模型分块器(Model Chunk Partitioner)将LMM模型离线切分为模型块并静态分配到各GPU；训练期间，在线规划器每轮迭代执行四步循环（①预取元数据、②子微批分割器切分子微批、③流水线调度搜索器探索调度方案、④将调度部署到GPU训练worker），二者共用多模态训练模拟器。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

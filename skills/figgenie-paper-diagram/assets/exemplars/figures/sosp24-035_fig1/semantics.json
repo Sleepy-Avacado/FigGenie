@@ -1,0 +1,186 @@
+{
+  "paper_id": "sosp24-035",
+  "fig": "1",
+  "system": {
+    "name": "PowerInfer",
+    "one_liner": "a high-speed LLM inference engine on a PC with a single consumer-grade GPU exploiting activation locality",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Self-Attention Block",
+        "role": "generates embedding vectors capturing relationships among input tokens",
+        "container": "MLP Block",
+        "novel": false
+      },
+      {
+        "name": "FC1 Layer",
+        "role": "first fully-connected layer of the MLP block",
+        "container": "MLP Block",
+        "novel": false
+      },
+      {
+        "name": "ReLU",
+        "role": "activation function gating which neurons are retained",
+        "container": "MLP Block",
+        "novel": false
+      },
+      {
+        "name": "FC2 Layer",
+        "role": "second fully-connected layer of the MLP block",
+        "container": "MLP Block",
+        "novel": false
+      },
+      {
+        "name": "FC1 Weights",
+        "role": "weight matrix of FC1; rows/columns are neurons",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FC1 Input",
+        "role": "input vector to FC1",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FC1 Output",
+        "role": "output vector of FC1, gated by ReLU",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FC2 Weights",
+        "role": "weight matrix of FC2",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FC2 Input",
+        "role": "ReLU-gated output of FC1, used as input to FC2",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FC2 Output",
+        "role": "final output vector of the MLP block",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Self-Attention Block",
+        "to": "FC1 Layer",
+        "what": "aggregated attention output",
+        "step": null
+      },
+      {
+        "from": "FC1 Layer",
+        "to": "ReLU",
+        "what": "FC1 output activations",
+        "step": null
+      },
+      {
+        "from": "ReLU",
+        "to": "FC2 Layer",
+        "what": "sparsified activations (FC2 input)",
+        "step": null
+      },
+      {
+        "from": "FC1 Weights",
+        "to": "FC1 Output",
+        "what": "matrix multiplication with FC1 Input",
+        "step": null
+      },
+      {
+        "from": "FC2 Weights",
+        "to": "FC2 Output",
+        "what": "matrix multiplication with FC2 Input",
+        "step": null
+      }
+    ],
+    "key_idea": "ReLU activation induces sparsity in a Transformer's MLP block: only the neurons (rows/columns of FC1/FC2 weight matrices) whose activations are positive, highlighted in green and boxed in red, contribute to the output.",
+    "reading_order": "left panel top-to-bottom: Self-Attention Block into the MLP Block (FC1, ReLU, FC2); right panel top-to-bottom: FC2 matrix multiplication above FC1 matrix multiplication, each shown as weights x input = output."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.83,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#265d10",
+        "used_for": "activated neuron rows/columns in weight matrices"
+      },
+      {
+        "hex": "#035f00",
+        "used_for": "activated output vector elements"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "inactive/non-selected matrix cells"
+      },
+      {
+        "hex": "#94a9d8",
+        "used_for": "Self-Attention Block box"
+      },
+      {
+        "hex": "#b10018",
+        "used_for": "red outline boxes highlighting activated neurons"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.45pt black strokes for grid cells, thick red outline highlighting activated rows/columns, mixed corners",
+    "font": "Helvetica / Helvetica-Bold sans",
+    "corners": "mixed",
+    "arrows": "black arrows connecting sequential layers; curved arrows indicating the matrix-multiplication data flow",
+    "icons": "colored grid/matrix icon representing weight matrices"
+  },
+  "encoding": {
+    "color_means": "green = activated neurons (rows/columns and output elements), gray = inactive neurons, red outline = highlighting the activated subset",
+    "line_style_means": null,
+    "emphasis": "red boxes and green fill single out the sparse subset of activated neurons within the FC1 and FC2 weight matrices",
+    "reusable_patterns": [
+      "matrix-multiplication diagram with color-coded sparse row/column highlighting"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-inference",
+    "activation-sparsity",
+    "relu",
+    "transformer",
+    "mlp"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "The LLM architecture includes multiple Transformer layers, each comprising a self-attention and an MLP",
+      "ReLU in this figure filters out negative values, allowing only positively valued neurons in FC1",
+      "These neurons, which contribute to the output, are considered activated in this paper."
+    ]
+  },
+  "summary": "This background figure from the PowerInfer paper explains the source of activation sparsity that the system exploits. The left panel sketches a Transformer layer's MLP block: a Self-Attention Block feeds into FC1, a ReLU activation, and FC2. The right panel zooms into the matrix multiplications for FC2 (top) and FC1 (bottom), each drawn as weights x input = output, with the activated neuron rows/columns picked out in green and boxed in red against a gray background of inactive cells. The figure visually demonstrates that ReLU zeroes out negative values, so only a sparse subset of neurons in FC1 and FC2 (termed activated neurons) actually influence the output, motivating PowerInfer's hot/cold neuron distinction.",
+  "summary_zh": "图1解释了PowerInfer所依赖的激活稀疏性来源：左侧为Transformer的MLP模块（自注意力后接FC1、ReLU、FC2），右侧展开FC1/FC2的矩阵乘法，绿色标出经ReLU筛选后被激活的神经元行/列（红框高亮），灰色为未激活部分。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

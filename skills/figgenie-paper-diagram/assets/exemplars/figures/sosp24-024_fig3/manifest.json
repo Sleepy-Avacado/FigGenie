@@ -1,0 +1,64 @@
+{
+  "id": "sosp24-024_fig3",
+  "kind": "mechanism",
+  "paper_id": "sosp24-024",
+  "fig": "3",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 3. An example that maps a MatMul operator to two cores with the compute-shift style execution. Both (b) and (c) are valid compute-shift execution plans, but with different tradeoffs between memory footprint and communication overhead.",
+  "groups_in_record": [
+    "comparison",
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "data-structure",
+  "subject": "how a MatMul operator can be partitioned across 2 cores either spatially only, or also temporally into 2 shift steps",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 7.26,
+  "n_elements": 8,
+  "n_relations": 4,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "timeline-ticks",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-024/src/fig3_ipu-motivation_example_drawio.svg",
+    "preview.png": "lab/extracted/sosp24-024/src/fig3_ipu-motivation_example_drawio.png",
+    "print.png": "lab/extracted/sosp24-024/sosp24-024_fig3_p4_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "One coloured Input/Weight/Output key from the whole-matrix panel is reused unchanged through both partition variants, and a nested Step/Shift/Step insert shows the exact tiles trading places.",
+      "what_to_learn": "Fix one colour per Input row-block, Weight column-block and Output block in the whole-operator panel, reuse those exact colours in every partitioned variant, and show the trade as a half-filled output block that a Shift sub-frame completes.",
+      "note_source": "agent"
+    },
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "One coloured Input/Weight/Output key from the whole-matrix panel is reused unchanged through both partition variants, and a nested Step/Shift/Step insert shows the exact tiles trading places.",
+      "what_to_learn": "Fix one colour per Input row-block, Weight column-block and Output block in the whole-operator panel, reuse those exact colours in every partitioned variant, and show the trade as a half-filled output block that a Shift sub-frame completes.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "sosp25-047_fig15",
+  "kind": "mechanism",
+  "paper_id": "sosp25-047",
+  "fig": "15",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Fig. 15: SDG memory management augmentations",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "how Tempo augments the symbolic dependence graph with new nodes for tensor deallocation and for GPU-CPU memory swapping",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "callout",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.18,
+  "n_elements": 7,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-047/src/fig15a_dealloc_augment.svg",
+    "preview.png": "lab/extracted/sosp25-047/src/fig15a_dealloc_augment.png",
+    "print.png": "lab/extracted/sosp25-047/sosp25-047_fig15_p9_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Memory management operations (deallocation, or GPU/CPU swap eviction and reload) are added to the SDG with an identity dependence on producer P and an inverse-mapped dependence on consumer C, so they run only after production and last use.",
+      "what_to_learn": "a small unchanged sub-graph ringed by a dashed boundary, with new operator nodes attached outside it by labelled forward/inverse dependency arrows",
+      "note_source": "record"
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "paper_id": "osdi24-052",
+  "fig": "6",
+  "system": {
+    "name": "MonoNN",
+    "one_liner": "a compiler that fuses an entire neural-network inference computation into one monolithic GPU kernel",
+    "domain": [
+      "ml-systems",
+      "compilers",
+      "gpu"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "(1) Subgraph Formulation",
+        "role": "formulates the input neural network into different subgraphs (SIS, EWS, OCS) and CI Ops for subsequent optimization",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "(2) Subgraph Inst. Reschedule",
+        "role": "reschedules instructions inside subgraphs to expose hidden parallelism of memory-intensive subgraphs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "(3) On-chip Resource Exploitation",
+        "role": "optimizes on-chip resource usage (register buffering, SMEM pipelining, caching) per subgraph via pattern analysis",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "(4) GTB Assign & Merge",
+        "role": "assigns and merges Global Thread Barriers across subgraphs to reduce synchronization overhead",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "(5) Schedule-Independent Group Tuning",
+        "role": "tunes the best schedule for each SIS and CI Op independently",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "(6) Automatic Code Generation",
+        "role": "compiles the tuned subgraphs into one executable monolithic kernel",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SIS",
+        "role": "schedule-independent subgraph, a unit MonoNN can freely reorder relative to other SIS",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "EWS",
+        "role": "element-wise subgraph",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "OCS",
+        "role": "output-only contracted subgraph",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CI Op",
+        "role": "compute-intensive op, a subgraph kept intact rather than split further",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Monolithic Kernel",
+        "role": "single fused GPU kernel produced by automatic code generation",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "(1) Subgraph Formulation",
+        "to": "(2) Subgraph Inst. Reschedule",
+        "what": "formulated SIS/EWS/OCS subgraphs and CI Ops",
+        "step": 1
+      },
+      {
+        "from": "(2) Subgraph Inst. Reschedule",
+        "to": "(3) On-chip Resource Exploitation",
+        "what": "rescheduled instructions",
+        "step": 2
+      },
+      {
+        "from": "(3) On-chip Resource Exploitation",
+        "to": "(4) GTB Assign & Merge",
+        "what": "resource-optimized subgraphs",
+        "step": 3
+      },
+      {
+        "from": "(4) GTB Assign & Merge",
+        "to": "(5) Schedule-Independent Group Tuning",
+        "what": "reordered/clustered subgraphs with merged GTBs",
+        "step": 4
+      },
+      {
+        "from": "(5) Schedule-Independent Group Tuning",
+        "to": "(6) Automatic Code Generation",
+        "what": "best schedule tuned per SIS/CI Op",
+        "step": 5
+      },
+      {
+        "from": "(6) Automatic Code Generation",
+        "to": "Monolithic Kernel",
+        "what": "compiled executable binary",
+        "step": 6
+      }
+    ],
+    "key_idea": "MonoNN compiles a neural network into one monolithic GPU kernel through six stages: formulating subgraphs, rescheduling instructions for hidden parallelism, exploiting on-chip resources, merging global thread barriers, tuning per-subgraph schedules, and generating the final fused code.",
+    "reading_order": "Grid read column by column through six numbered panels (1)-(6): left column top-to-bottom (1)(2)(3), right column top-to-bottom (4)(5)(6), each a self-contained diagram of one compilation stage."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.27,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#538135",
+        "used_for": "dark green SIS group border and title text"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "fill of SIS/EWS boxes and the Element-wise Op legend circle"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "fill of secondary op/merge tokens shown in panel (4)"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "fill of CI Op circles/boxes and the Compute-intensive Op legend circle"
+      },
+      {
+        "hex": "#ffff00",
+        "used_for": "yellow highlight on the Iter1/Iter2 instruction cells rescheduled in panel (2)"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.69pt, dashed grouping outlines around each SIS/EWS/OCS/CI-Op cluster",
+    "font": "Calibri sans, 5.5-7pt",
+    "corners": "rounded",
+    "arrows": "many small filled arrowheads chaining op nodes within and across panels",
+    "icons": "vector icons for register buffering / SMEM pipelining / caching in panel (3)"
+  },
+  "encoding": {
+    "color_means": "green marks Element-wise Op nodes/SIS subgraphs, orange marks Compute-intensive Op (CI Op) nodes, blue distinguishes secondary op/merge tokens, and a red circle in the in-figure legend marks Reduction Op nodes",
+    "line_style_means": "dashed boxes group each SIS/EWS/OCS cluster within a panel; hatched/striped cells highlight the specific instructions being rescheduled or tuned",
+    "emphasis": "six numbered panels walk through the compiler pipeline end to end, reusing the same green/orange/blue op-node vocabulary and the same running SIS 1/SIS 2/CI Op example across all six panels",
+    "reusable_patterns": [
+      "numbered grid of panels, each a self-contained mini-diagram of one pipeline stage, sharing one legend and one running example",
+      "consistent node-color vocabulary (op type) carried across all panels of a compiler pipeline"
+    ],
+    "weaknesses": [
+      "six dense panels packed into one figure make individual panels very small to read",
+      "the legend for op-node colors sits only at the bottom, far from panels (1)-(2) at the top"
+    ]
+  },
+  "tags": [
+    "dnn-compiler",
+    "gpu-kernel-fusion",
+    "kernel-scheduling",
+    "monolithic-kernel",
+    "instruction-scheduling",
+    "neural-network-inference"
+  ],
+  "provenance": {
+    "sections": [
+      "4 System Design (p.6)"
+    ],
+    "evidence": [
+      "the input neural network into different subgraphs for subsequent optimizations",
+      "MonoNN enables the hidden parallelism of memory-intensive subgraphs through context-aware instruction rescheduling",
+      "to reduce the required Global Thread Barriers (GTBs) to minimize the synchronization overhead"
+    ]
+  },
+  "summary": "This figure gives the end-to-end overview of MonoNN, a compiler that fuses a whole neural-network inference computation into one monolithic GPU kernel. Six numbered panels trace the pipeline: (1) Subgraph Formulation splits the network into schedule-independent (SIS), element-wise (EWS), and output-only contracted (OCS) subgraphs and compute-intensive ops (CI Op); (2) Subgraph Inst. Reschedule reorders instructions inside a subgraph to expose hidden parallelism; (3) On-chip Resource Exploitation applies register buffering, SMEM pipelining, and caching guided by pattern analysis; (4) GTB Assign & Merge reduces synchronization by merging Global Thread Barriers across subgraphs; (5) Schedule-Independent Group Tuning searches for the best schedule per SIS and CI Op; and (6) Automatic Code Generation compiles everything into the final Monolithic Kernel. A shared legend (Element-wise Op, Reduction Op, Compute-intensive Op) and running SIS1/SIS2 example tie the six panels together.",
+  "summary_zh": "该图展示MonoNN编译流程：六个编号面板依次完成子图划分、指令重调度、片上资源优化、线程屏障合并与分组调优，最终生成Monolithic Kernel。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

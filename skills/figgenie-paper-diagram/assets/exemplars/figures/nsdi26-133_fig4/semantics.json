@@ -1,0 +1,216 @@
+{
+  "paper_id": "nsdi26-133",
+  "fig": "4",
+  "system": {
+    "name": "HybridMesh",
+    "one_liner": "a hardware-software hybrid system that offloads service-mesh ingress packet processing from the host OS to a programmable SmartNIC",
+    "domain": [
+      "networking",
+      "service-mesh",
+      "smartnic"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "AP detector",
+        "role": "the HM NIC stack module that runs access-point matching, TLS decryption, and AP-aware RSS",
+        "container": "HM NIC stack",
+        "novel": true
+      },
+      {
+        "name": "(1) AP matching",
+        "role": "inspects packet headers to identify the shared access point (AP) grouping related services",
+        "container": "AP detector",
+        "novel": true
+      },
+      {
+        "name": "Access point i",
+        "role": "an access point identifier the AP detector matches against",
+        "container": "(1) AP matching",
+        "novel": false
+      },
+      {
+        "name": "(2) TLS decryption",
+        "role": "decrypts TLS payloads via kTLS offload using secrets installed during the handshake so dispatchers can analyze them",
+        "container": "AP detector",
+        "novel": true
+      },
+      {
+        "name": "Payload",
+        "role": "the packet payload being decrypted",
+        "container": "(2) TLS decryption",
+        "novel": false
+      },
+      {
+        "name": "(3) AP-aware RSS",
+        "role": "dynamically assigns packets from a given AP to a designated set of cores while preserving per-connection affinity",
+        "container": "AP detector",
+        "novel": true
+      },
+      {
+        "name": "Queue i",
+        "role": "a per-core receive queue that packets from a given AP's core set are steered to",
+        "container": "(3) AP-aware RSS",
+        "novel": true
+      },
+      {
+        "name": "Traffic dispatcher A (core 1)",
+        "role": "per-core dispatcher that receives an AP's packets from its RSS queue and determines their destination service",
+        "container": "HM NIC stack",
+        "novel": true
+      },
+      {
+        "name": "(4) Service matching",
+        "role": "extracts policy-defined fields from the packet and selects a destination service and endpoint pod",
+        "container": "Traffic dispatcher A (core 1)",
+        "novel": true
+      },
+      {
+        "name": "Service a",
+        "role": "one of several services an AP's traffic can be dispatched to",
+        "container": "(4) Service matching",
+        "novel": false
+      },
+      {
+        "name": "Pod A",
+        "role": "an endpoint pod candidate for a matched service",
+        "container": "(4) Service matching",
+        "novel": false
+      },
+      {
+        "name": "(5) Metadata embedding",
+        "role": "writes the selected service, subset, and policy identifiers into the packet's Destination MAC field as metadata",
+        "container": "Traffic dispatcher A (core 1)",
+        "novel": true
+      },
+      {
+        "name": "L2 Packet",
+        "role": "the outgoing packet shown with its embedded metadata field",
+        "container": "(5) Metadata embedding",
+        "novel": true
+      },
+      {
+        "name": "HM NIC stack",
+        "role": "overall SmartNIC-resident module whose internal workflow this figure details",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "(1) AP matching",
+        "to": "(2) TLS decryption",
+        "what": "packets matched to an access point (AP) proceed to have their TLS payloads decrypted",
+        "step": 2
+      },
+      {
+        "from": "(2) TLS decryption",
+        "to": "(3) AP-aware RSS",
+        "what": "decrypted packets, with AP information attached, assigned to a traffic dispatcher",
+        "step": 3
+      },
+      {
+        "from": "(3) AP-aware RSS",
+        "to": "(4) Service matching",
+        "what": "packets from a per-core RSS queue delivered to the corresponding traffic dispatcher",
+        "step": 4
+      },
+      {
+        "from": "(4) Service matching",
+        "to": "(5) Metadata embedding",
+        "what": "identified service/subset/policy IDs passed along for embedding",
+        "step": 5
+      },
+      {
+        "from": "(4) Service matching",
+        "to": "Pod A",
+        "what": "endpoint pod selected, optionally from a header-defined subset (e.g., version=v1 to subset_a)",
+        "step": null
+      },
+      {
+        "from": "(5) Metadata embedding",
+        "to": "L2 Packet",
+        "what": "6-byte metadata (service, subset, policy) inserted into the packet's Destination MAC field",
+        "step": null
+      }
+    ],
+    "key_idea": "The HM NIC stack processes each packet through five in-order steps on the SmartNIC — access-point matching, TLS decryption, AP-aware RSS, service matching, and metadata embedding — so that by the time a packet reaches the host it already carries its routing decision as packet metadata.",
+    "reading_order": "Left to right through the AP detector's three sub-stages (1-3), then into a per-core traffic dispatcher for service matching (4) and metadata embedding (5)."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.05,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray borders and group titles (AP detector, Traffic dispatcher A)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray background fill for the two main stage boxes"
+      },
+      {
+        "hex": "#0000ff",
+        "used_for": "blue highlight on the matched Service b box"
+      },
+      {
+        "hex": "#fff3cc",
+        "used_for": "pale yellow fill for Access point / Queue / Pod boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.52pt, dashed outline on the bottom annotation callouts",
+    "font": "Calibri sans, 6-7.5pt",
+    "corners": "mixed",
+    "arrows": "straight orthogonal arrows with filled heads linking the five numbered stages",
+    "icons": "small padlock icons on Access point boxes, a hatched icon on the Payload box, an 'M' metadata icon on the L2 packet"
+  },
+  "encoding": {
+    "color_means": "blue highlight marks the specific service (Service b) selected in the worked example; pale yellow marks candidate access points, queues, services, and pods",
+    "line_style_means": "dashed call-out lines connect the bottom annotations (network identifier, service signature) to the stages that consume those fields",
+    "emphasis": "five numbered sub-stages nested inside just two top-level boxes emphasize that the whole ingress pipeline runs entirely within the SmartNIC before any host involvement",
+    "reusable_patterns": [
+      "numbered sub-stage pipeline nested inside a small number of top-level hardware modules",
+      "worked example (Service b / Pod B / Subset a) threaded through the pipeline to make an abstract mechanism concrete"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "smartnic",
+    "packet-classification",
+    "tls-offload",
+    "receive-side-scaling",
+    "service-routing",
+    "metadata-embedding"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.6)",
+      "3 Design (p.7)"
+    ],
+    "evidence": [
+      "incoming packets are initially processed by the NIC stack through the following five internal steps",
+      "services a and b share the same AP i",
+      "routing requests with the header version=v1 to subset_a in Figure 4"
+    ]
+  },
+  "summary": "Figure 4 details the five-step internal workflow of HybridMesh's HM NIC stack, all running on the SmartNIC before any packet reaches the host. Inside the AP detector, incoming packets are first matched to a shared access point (step 1), have any TLS payload decrypted via kTLS offload (step 2), and are steered to a per-core queue by AP-aware receiver-side scaling that preserves connection affinity (step 3). A per-core Traffic dispatcher then extracts policy-defined fields to match the packet to a destination service and endpoint pod, optionally narrowing to a header-selected subset such as subset_a (step 4), and finally embeds the chosen service/subset/policy identifiers as 6-byte metadata in the packet's Destination MAC field before it is handed to the node's kernel (step 5). A worked example with services a-d and pods A-D, plus bottom call-outs naming the network-identifier and service-signature fields each stage consumes, makes the abstract pipeline concrete.",
+  "summary_zh": "图4展示HM NIC栈内部五步流水线：接入点匹配、TLS解密、AP感知RSS分发、服务匹配（含按请求头分子集选择Pod）、元数据嵌入（将服务/子集/策略ID写入L2包的目的MAC字段），全部在SmartNIC上完成后再交给主机内核。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

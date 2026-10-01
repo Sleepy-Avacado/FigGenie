@@ -1,0 +1,224 @@
+{
+  "template": "two-panel",
+  "n": 27,
+  "stars": 11,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-051_fig1",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Stacked (not side-by-side) comparison joined by an explicit 'V.S.' divider, with a dashed bracket naming the paper's scope.",
+      "what_to_learn": "Stack the two designs vertically when each is wide; a centred 'V.S.' label plus a dashed 'focus of this paper' bracket replaces sub-captions.",
+      "dir": "../figures/asplos25-051_fig1"
+    },
+    {
+      "id": "asplos25-052_fig1",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star exemplar showing panel (b) built from labelled brackets over shared channel boxes rather than a redrawn schematic: yellow fill flags the hardware-isolated vSSDs against the software-isolated pair for a direct utilization-vs-isolation contrast.",
+      "what_to_learn": "Label the two conditions with brackets above the shared boxes (Software-isolated / Hardware-isolated) instead of duplicating structure, but do add a legend line for the highlight colour: this exemplar's own weakness is leaving that yellow-vs-plain fill unexplained.",
+      "dir": "../figures/asplos25-052_fig1"
+    },
+    {
+      "id": "asplos25-100_fig9",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Two lettered panels with one shared legend placed below and spanning both.",
+      "what_to_learn": "When both panels use the same colour encoding, the legend goes below spanning the full width - never duplicated per panel.",
+      "dir": "../figures/asplos25-100_fig9"
+    },
+    {
+      "id": "asplos25-177_fig1",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star analogy exemplar: panel (a)'s software row/column access and panel (b)'s hardware ADE/IDE grid share matching green highlights on one row (R0) and column (C0), making the mapping visible.",
+      "what_to_learn": "To map a software concept onto hardware, draw matching panels and colour-highlight the same instance (one row, one column) in both; label the two access dimensions on the hardware grid's axes. Add a numbered connector between panels: this exemplar leaves that link to the caption.",
+      "dir": "../figures/asplos25-177_fig1"
+    },
+    {
+      "id": "asplos26-013_fig2",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Double-column stacked panels where a numbered pipeline is defined once in (a) and reused inside two loops in (b).",
+      "what_to_learn": "Define a numbered sub-pipeline in the first panel, then reuse the same numbers inside the second panel's loops instead of renumbering.",
+      "dir": "../figures/asplos26-013_fig2"
+    },
+    {
+      "id": "asplos26-102_fig3",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star exemplar of the frameless two-panel variant: colour alone (green Offline Stage, blue Online Execution) divides the two halves, packing 15 components and 13 flows, well above the template's median of 11 and 5.",
+      "what_to_learn": "Skip the dividing rule: give each stage its own fill colour (green offline, blue online) so the two-panel split reads from colour alone, and use dashed arrows only for the feedback edges (Kernel Info back to the Profiler).",
+      "dir": "../figures/asplos26-102_fig3"
+    },
+    {
+      "id": "osdi23-050_fig4",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star before/after exemplar: panel (a) frameworks split the loop (red, on the CPU) from MatMul/Add/Relu kernels on the accelerator, panel (b) fuses both into colour-matched Loop-uTasks mapped onto L0/L1/L2 hardware tiers.",
+      "what_to_learn": "Keep the same operator colours (blue MatMul, yellow Relu, gray Add) in both panels so a reader tracks exactly which pieces move from the CPU-side loop into accelerator-resident tasks; note panel (b)'s extra L0/L1/L2 tiers cost effort to map back to (a).",
+      "dir": "../figures/osdi23-050_fig4"
+    },
+    {
+      "id": "osdi25-003_fig2",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "This is the named overview-plus-zoomed-detail two-panel variant: nested DP/PP/Layer boxes on the left, with a dashed callout zooming one pipeline stage into CP/TP sublayers on the right, 20 components at nesting depth 3.",
+      "what_to_learn": "When one panel is a zoomed slice of the other rather than a comparable structure, connect them with a single dashed callout instead of forcing a second full panel frame; watch the font size once nesting reaches DP/PP/Layer/CP/TP depth, since this exemplar's own weakness is text too small for its nested detail.",
+      "dir": "../figures/osdi25-003_fig2"
+    },
+    {
+      "id": "osdi26-061_fig2",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: panel (b) is a different abstraction level (the threading model), not a magnified sub-block of a region in panel (a); no dashed leader connects them, so this is a plain two-panel figure.",
+      "what_to_learn": "The transferable move is two-panel's: stack a software layer directly above the hardware topology it runs on in panel (a), colour-code control/data/network traffic by one shared legend, then reuse the same component names in panel (b)'s separate threading-model view instead of drawing a zoom.",
+      "dir": "../figures/osdi26-061_fig2"
+    },
+    {
+      "id": "osdi26-085_fig2",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star, sparse-text exemplar of identical internal geometry across (a)/(b): the same stacked-card graph-index drawing convention and blue/red/gray search-path colour code repeat in both panels so only the storage tier differs.",
+      "what_to_learn": "When comparing two prior designs, redraw the same graph-index glyph and the same colour code (blue = visited path, red = top-k result, gray = unvisited) in each panel, changing only the storage medium each graph sits on.",
+      "dir": "../figures/osdi26-085_fig2"
+    },
+    {
+      "id": "sosp25-043_fig6",
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star exemplar of the plain dashed-divider variant (panels=1): Application Layer and Dynamic Layer sit either side of one vertical dashed rule, with red/green lines giving RX/TX its own small inside legend.",
+      "what_to_learn": "Divide the canvas with one plain vertical dashed rule instead of two boxed panels, bold the two side titles above it, and reserve colour (red RX, green TX) for the one distinction the case study is about.",
+      "dir": "../figures/sosp25-043_fig6"
+    },
+    {
+      "id": "asplos25-080_fig1",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Sender and Receiver repeat identical box labels (Processor Core, Program Code, Local Apic) across a system bus, with numbered steps 1-7 tracing one interrupt end to end across both sides.",
+      "what_to_learn": "Overlay a single numbered path (1-7) across two mirrored panels to narrate one operation end to end, but label which side is which prominently: this exemplar's identical Processor Core/Program Code/Local Apic labels on both sides force readers back to the Sender/Receiver headers.",
+      "dir": "../figures/asplos25-080_fig1"
+    },
+    {
+      "id": "asplos25-094_fig2",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Pairs one fully expanded MoE Block on the left with a tiled timeline of the same block repeated on the right, contrasting a one-shot Prefill pass against per-token Decoding steps at dense text density.",
+      "what_to_learn": "Expand the repeated unit once on one side (the MoE Block's internals) and tile the collapsed version across a timeline on the other side, so structure and repetition-over-time each get their own half instead of competing in one drawing.",
+      "dir": "../figures/asplos25-094_fig2"
+    },
+    {
+      "id": "asplos25-151_fig1",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Panel (a)'s 7-component schematic (QPU array through bus and queue to shared QRAM) is paired with panel (b)'s Big-O table, the schematic-plus-cost-table two-panel variant, at high confidence with only 3 flows.",
+      "what_to_learn": "Use a metrics table, not a second schematic, as panel (b) when the comparison is quantitative: rows are the metrics, columns are the two designs, and Big-O terms substitute for exact numbers.",
+      "dir": "../figures/asplos25-151_fig1"
+    },
+    {
+      "id": "asplos25-157_fig3",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two mirrored mode panels bridged by a single central block that names the thing that changes.",
+      "what_to_learn": "For mode/state comparisons, put the transition operator physically between the panels rather than beside them.",
+      "dir": "../figures/asplos25-157_fig3"
+    },
+    {
+      "id": "asplos26-127_fig11",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Reassigned from control-loop by the note-writer: panel (a) is a small CNN+MLP diagram and panel (b) a straight chain (predictor to LDO to controller to action) with no return arrow drawn anywhere; this is two-panel, not control-loop.",
+      "what_to_learn": "A control system is only a control-loop figure if a return path is actually drawn; when the feedback runs through the physical world rather than back into the diagram, either draw a dashed arrow from the output back to the sensing input or file the figure under two-panel or flanked-core instead.",
+      "dir": "../figures/asplos26-127_fig11"
+    },
+    {
+      "id": "nsdi23-004_fig1",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "'(a) Now: Library+Sidecar' vs '(b) Our Vision' with an inside legend and per-panel operation traces that can be counted.",
+      "what_to_learn": "Naming the panels by claim rather than by system, and adding a countable trace strip under each, turns a structural comparison into a quantitative one.",
+      "dir": "../figures/nsdi23-004_fig1"
+    },
+    {
+      "id": "nsdi25-052_fig2",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two machine panels share one inside legend (blue/orange/gray proclet types) at the top, with per-machine CPU/RAM bars and a warning icon making the resource-pressure asymmetry that motivates the arrows immediately visible.",
+      "what_to_learn": "Put one shared legend above both panels, not one per panel, then reuse its colours in a small utilization-bar readout under each panel; mark the trigger condition (a red warning triangle on the strained resource) so the dashed migrate/split/merge arrows have a visible cause.",
+      "dir": "../figures/nsdi25-052_fig2"
+    },
+    {
+      "id": "nsdi26-017_fig5",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Flat (nesting 1) side-by-side comparison with a right-hand legend decoding box fill as operator type/state.",
+      "what_to_learn": "When box fill encodes state rather than identity, the legend belongs in a right-hand column and the panels stay pure grid.",
+      "dir": "../figures/nsdi26-017_fig5"
+    },
+    {
+      "id": "nsdi26-028_fig5",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: two stacked address-space bars linked by dotted correspondence lines is a memory-mapping diagram, not a zoom; nothing here is drawn small then separately magnified.",
+      "what_to_learn": "For an address-translation figure, stack the two address spaces as parallel bars and connect corresponding regions with dotted diagonal lines plus a labelled fixed-offset arrow, rather than arrows implying data flow; avoid this exemplar's weakness of reusing the label Service VM for two different-scoped boxes.",
+      "dir": "../figures/nsdi26-028_fig5"
+    },
+    {
+      "id": "osdi23-003_fig4",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Double-column (a) naive / (b) fixed pair where a red cross marks the failure in (a).",
+      "what_to_learn": "Give both panels identical internal geometry and change exactly one thing; a red cross on the broken element is the whole argument.",
+      "dir": "../figures/osdi23-003_fig4"
+    },
+    {
+      "id": "osdi24-041_fig3",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two dashed-outline containers (Load Balancer, LLM Replicas) stand in for panel frames, each internally nested three levels deep, connected by two labelled cross-panel arrows (Requests, Migration) that state exactly what crosses the boundary.",
+      "what_to_learn": "Use a dashed rounded outline as a lightweight panel boundary instead of a hard frame, and always label the arrows that cross between panels with the noun they carry (Requests, Migration) rather than leaving the connective implicit.",
+      "dir": "../figures/osdi24-041_fig3"
+    },
+    {
+      "id": "osdi26-052_fig1",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "The floor case for two-panel: just 6 components and 2 flows, monochrome except two red latency numbers (10-100ns vs 250-2000ns), proving a single colour contrast can carry the entire argument.",
+      "what_to_learn": "Keep both panels identical in structure (CPU/cache stack over memory) and spend your only colour on the one number that changes: the access latency in red beside the arrow it labels.",
+      "dir": "../figures/osdi26-052_fig1"
+    },
+    {
+      "id": "osdi26-060_fig1",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two labelled sub-figures (a)/(b) share one time-axis convention and bracket-arrow style to define four latency metrics (BCT, SCT, TTFT, TPOT), showing how a two-panel figure can do definitional work rather than just showing structure.",
+      "what_to_learn": "For a metric-definition figure, draw one shared time axis and mark each interval with a double-headed bracket labelled by its acronym, keeping the two panels' visual grammar (grid squares for done work, light shading for elapsed time) identical.",
+      "dir": "../figures/osdi26-060_fig1"
+    },
+    {
+      "id": "osdi26-108_fig3",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Two rows sharing one horizontal time axis, with a green 'Minimized Downtime' annotation on the gap being compared.",
+      "what_to_learn": "Two stacked timelines on one shared axis make a duration claim readable at a glance; keep role colours (stayer/leaver/joiner) identical across rows.",
+      "dir": "../figures/osdi26-108_fig3"
+    },
+    {
+      "id": "sosp23-013_fig4",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Reassigned from composite-figure by the note-writer: both panels are sequential stages of one planning algorithm, template generation then plan instantiation, sharing one grayscale grid-of-squares glyph as a running anchor; that is two-panel's two-stages-of-one-thing case, not composite-figure's mix of unlike kinds.",
+      "what_to_learn": "Reuse one consistent glyph, here a grid of light/medium/dark squares sized by node count, across every panel of a multi-stage algorithm figure so a template's identity carries from generation through instantiation to the best-plan output; that continuity is a two-panel technique, not a reason to fragment into unlike-kind composite panels.",
+      "dir": "../figures/sosp23-013_fig4"
+    },
+    {
+      "id": "sosp25-011_fig7",
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Stacked (not side-by-side) two-panel: an abstract matrix row-split on top and its concrete fork-join execution graph below share one orange-NPU/blue-GPU colour code end to end, at 13 components and 9 flows.",
+      "what_to_learn": "Stack an abstract data-partition diagram above the concrete execution graph it produces, and carry one colour pair (orange/blue) through both so a reader can trace the same partition from the matrix down into the parallel sub-graphs.",
+      "dir": "../figures/sosp25-011_fig7"
+    }
+  ]
+}

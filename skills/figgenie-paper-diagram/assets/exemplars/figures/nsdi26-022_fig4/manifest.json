@@ -1,0 +1,56 @@
+{
+  "id": "nsdi26-022_fig4",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-022",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: The logic of overlay forwarding",
+  "groups_in_record": [
+    "logic"
+  ],
+  "worked_example": false,
+  "base": "flowchart",
+  "subject": "how PlanetServe's forwarding logic chains cache-hit and reputation checks to reach a load-balanced target node",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.83,
+  "n_elements": 7,
+  "n_relations": 7,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 0,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "acrobat",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-022/src/fig4_forward.svg",
+    "preview.png": "lab/extracted/nsdi26-022/src/fig4_forward.png",
+    "print.png": "lab/extracted/nsdi26-022/nsdi26-022_fig4_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": true,
+      "why_chosen": "Two stacked yes/no diamonds whose NO branches both dead-end in one shared fallback box, while YES keeps narrowing to a specific pick — logic collapsed to its actual branch count.",
+      "what_to_learn": "Chain the diamonds vertically and route every NO arrow into one shared fallback box instead of a separate box per branch, then tie the flowchart to the candidate-pool icon cluster with a single bracket leader line, not repeated arrows.",
+      "note_source": "agent"
+    }
+  ]
+}

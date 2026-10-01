@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-029_fig3",
+  "paper_id": "nsdi23-029",
+  "fig": "3",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 3: Architecture comparison between BigStation and Hydra (uplink). Unlike BigStation, Hydra shuffles data only after the subcarrier-parallel stage. “ZF”, ”Equal”, ”Demod”, and “Decode” are short for zero-forcing, equalization, de- modulation, and LDPC decoding, respectively.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.1,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-029/nsdi23-029_fig3_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-029/nsdi23-029_fig3_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "baseline-vs-ours",
+      "star": false,
+      "why_chosen": "Two identical antenna-to-decode pipelines stacked (a) BigStation / (b) Hydra, with the entire contribution shown as a single dashed box grouping ZF/Equal/Demod in (b) to remove one crossbar shuffle.",
+      "what_to_learn": "Stack the baseline and proposed pipelines with identical per-antenna rows and crossbar shuffles, then mark the one structural change with a single dashed grouping box rather than redrawing the whole stage; label the saved shuffle count explicitly, since this figure leaves the win unquantified."
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "paper_id": "osdi24-040",
+  "fig": "1",
+  "system": {
+    "name": "MSP430FR",
+    "one_liner": "a commercial energy-harvesting microcontroller platform combining volatile and non-volatile memory for intermittent computing",
+    "domain": [
+      "embedded-systems",
+      "intermittent-computing",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Harvester",
+        "role": "gathers ambient energy (e.g. solar, RF) and stores it in a capacitor",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Capacitor",
+        "role": "stores harvested energy, typically a few to several hundred microfarads",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MCU",
+        "role": "ultra-low power microcontroller",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Regs",
+        "role": "registers; volatile, lost upon a power outage",
+        "container": "MCU",
+        "novel": false
+      },
+      {
+        "name": "Volatile Memory",
+        "role": "e.g. SRAM; lost upon a power outage",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Non-Volatile Memory",
+        "role": "e.g. FRAM or MRAM; retains data across power cycles",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Harvester",
+        "to": "Capacitor",
+        "what": "harvested energy",
+        "step": null
+      },
+      {
+        "from": "Capacitor",
+        "to": "MCU",
+        "what": "power",
+        "step": null
+      },
+      {
+        "from": "MCU",
+        "to": "Volatile Memory",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "MCU",
+        "to": "Non-Volatile Memory",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "An energy-harvesting platform gathers ambient energy into a capacitor to power an ultra-low-power MCU, which has both volatile memory (lost on power failure) and non-volatile memory (persists across power cycles).",
+    "reading_order": "Left to right: a harvester charges a capacitor that powers the MCU, which connects to volatile memory (blue, at risk) and non-volatile memory (green, persistent)."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.31,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bdd7ee",
+        "used_for": "the Volatile Memory box"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "the Non-Volatile Memory box"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "the sun/energy icon over the harvester"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "neutral fill of the Harvester, Capacitor, and MCU boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.81pt black, solid",
+    "font": "Times New Roman serif, 7.5pt",
+    "corners": "mixed",
+    "arrows": "mostly plain thin connectors with minimal arrowheads",
+    "icons": "vector; a sun icon and solar-panel-like harvester icon"
+  },
+  "encoding": {
+    "color_means": "blue marks volatile memory and green marks non-volatile memory, visually reinforcing the caption's note that registers and SRAM (blue) are lost on power failure while FRAM/MRAM (green) persists",
+    "line_style_means": null,
+    "emphasis": "color alone (blue vs. green) distinguishes volatile from non-volatile storage, directly matching the caption's callout",
+    "reusable_patterns": [
+      "linear energy-flow block diagram from harvester through storage to compute and memory"
+    ],
+    "weaknesses": [
+      "most connectors lack arrowheads, leaving flow direction implicit"
+    ]
+  },
+  "tags": [
+    "intermittent-computing",
+    "energy-harvesting",
+    "non-volatile-memory",
+    "embedded-systems",
+    "msp430"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.3)"
+    ],
+    "evidence": [
+      "Figure 1 depicts an architecture of energy harvesting platforms available in TI MSP430",
+      "The energy harvester gathers ambient energy (e.g., solar, RF) and stores it in a capacitor",
+      "Registers and SRAM states (blue boxes) are lost upon a power outage"
+    ]
+  },
+  "summary": "This figure is background context (not the paper's own INTOS system, shown separately in Figure 2) illustrating the generic hardware architecture of an energy-harvesting platform such as the TI MSP430FR. A harvester gathers ambient energy such as solar or RF and stores it in a capacitor, typically sized from a few to several hundred microfarads. The capacitor powers an ultra-low-power MCU, which the caption notes is often built with a 16 MHz core, 8KB SRAM, and 256KB FRAM in the concrete MSP430FR5994 example. The MCU connects to Volatile Memory (e.g. SRAM, shown in blue) and Non-Volatile Memory (e.g. FRAM/MRAM, shown in green); registers and SRAM are highlighted in blue specifically because they are lost whenever the capacitor's charge is depleted and power is interrupted, motivating the paper's discussion of crash-consistency techniques.",
+  "summary_zh": "该图为背景图，展示能量采集平台（如 MSP430FR）架构：采集器收集环境能量存入电容为 MCU 供电，MCU 连接易失性内存（蓝，断电丢失）与非易失性内存（绿，断电保留）。",
+  "confidence": "medium",
+  "notes": "layout-proposal: linear hardware block diagram — a simple left-to-right energy/data flow (harvester to capacitor to MCU to memories) with no processing stages; pipeline is kept as the closest named template though the fit is loose. This is generic background on energy-harvesting hardware, not INTOS itself (INTOS is shown in Fig. 2).",
+  "venue": "OSDI24"
+}

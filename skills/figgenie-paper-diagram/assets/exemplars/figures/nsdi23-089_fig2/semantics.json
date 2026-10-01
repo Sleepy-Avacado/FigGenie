@@ -1,0 +1,263 @@
+{
+  "paper_id": "nsdi23-089",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Hindsight",
+    "one_liner": "a distributed tracing system that retroactively and lazily assembles detailed traces only for requests that later prove interesting",
+    "domain": [
+      "distributed tracing",
+      "observability",
+      "distributed systems"
+    ],
+    "abstraction": "tracing framework"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how Hindsight lazily collects a request's spans by triggering a coordinator's backward breadcrumb traversal instead of reporting eagerly",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "traceId",
+        "kind": "label",
+        "role": "identifies the request from its first hop, same starting point as the eager baseline in Fig. 1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "traced process",
+        "kind": "box",
+        "role": "one of several processes along the request's path, each locally buffering span data",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Application",
+        "kind": "box",
+        "role": "the instrumented application code that produces span data and metadata",
+        "container": "tracepoint callout",
+        "highlighted": false
+      },
+      {
+        "name": "Hindsight Client Lib",
+        "kind": "box",
+        "role": "buffers a process's span data and metadata locally in a ring buffer at each tracepoint",
+        "container": "tracepoint callout",
+        "highlighted": true
+      },
+      {
+        "name": "Hindsight Agent",
+        "kind": "box",
+        "role": "indexes buffered entries and evicts old ones as the local buffer fills",
+        "container": "agent callout",
+        "highlighted": true
+      },
+      {
+        "name": "trigger",
+        "kind": "icon",
+        "role": "a runtime condition that flags a request as worth tracing in detail",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Coordinator",
+        "kind": "actor",
+        "role": "central service that learns of a trigger and pulls the request's earlier spans back through its breadcrumb trail",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Backend Trace Collectors",
+        "kind": "box",
+        "role": "shared backend that stores spans once they are lazily reported",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "traced process",
+        "to": "traced process",
+        "what": "request continues hop to hop, carrying traceId; same base path as Fig. 1",
+        "kind": "timeline-message",
+        "step": "1"
+      },
+      {
+        "from": "Application",
+        "to": "Hindsight Client Lib",
+        "what": "span data and metadata are handed to the client library's local ring buffer",
+        "kind": "data",
+        "step": "2"
+      },
+      {
+        "from": "Hindsight Client Lib",
+        "to": "Hindsight Agent",
+        "what": "buffered entries are indexed by the agent, which evicts old ones",
+        "kind": "data",
+        "step": "3"
+      },
+      {
+        "from": "traced process",
+        "to": "trigger",
+        "what": "a runtime condition fires, flagging this request for detailed tracing",
+        "kind": "control",
+        "step": "4"
+      },
+      {
+        "from": "trigger",
+        "to": "Coordinator",
+        "what": "the coordinator learns of the trigger",
+        "kind": "control",
+        "step": "4"
+      },
+      {
+        "from": "Coordinator",
+        "to": "traced process",
+        "what": "breadcrumb traversal: the coordinator walks backward through each visited process's breadcrumb",
+        "kind": "control",
+        "step": "5"
+      },
+      {
+        "from": "traced process",
+        "to": "Backend Trace Collectors",
+        "what": "lazy trace reporting: only spans found relevant by the breadcrumb traversal are sent",
+        "kind": "data",
+        "step": "6"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "first traced process",
+        "what": "the request is tagged with a traceId, as in the eager baseline",
+        "carries": "traceId"
+      },
+      {
+        "marker": "2",
+        "at": "tracepoint (Application / Hindsight Client Lib callout)",
+        "what": "the client library buffers span data and metadata locally",
+        "carries": "span data, metadata"
+      },
+      {
+        "marker": "3",
+        "at": "Hindsight Agent callout",
+        "what": "the local agent indexes buffered entries and evicts old ones as the buffer fills",
+        "carries": "indexed buffer entries"
+      },
+      {
+        "marker": "4",
+        "at": "a later traced process",
+        "what": "a runtime condition fires a trigger, flagging the request as worth tracing in detail",
+        "carries": "triggerId"
+      },
+      {
+        "marker": "5",
+        "at": "Coordinator, tracing backward",
+        "what": "the coordinator performs a breadcrumb traversal, walking backward through each visited process",
+        "carries": "breadcrumb / traceId lookups"
+      },
+      {
+        "marker": "6",
+        "at": "traced processes to Backend Trace Collectors",
+        "what": "only the spans found relevant by the breadcrumb traversal are lazily reported",
+        "carries": "selected span data"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Instead of reporting every span immediately, Hindsight buffers locally and only pulls a request's spans, backward through its breadcrumb trail, once a trigger flags that request as worth the cost.",
+    "reading_order": "left to right along the request path for steps 1-3 (including the two zoomed callouts), then step 4's trigger, then backward along red breadcrumb arrows for step 5, then down to the backend for step 6"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "callout",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": true,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.51,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f0fdff",
+        "used_for": "pale-cyan fill of the two zoomed-in callout boxes (tracepoint and Hindsight Agent internals)"
+      },
+      {
+        "hex": "#3366dd",
+        "used_for": "blue fill of the span-dot icons along the path, matching Fig. 1"
+      },
+      {
+        "hex": "#aa1122",
+        "used_for": "red trigger icon and the breadcrumb-traversal dotted arrows/text marking the coordinator's backward query"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the plain (unzoomed) process boxes"
+      },
+      {
+        "hex": "#404040",
+        "used_for": "dark-gray text labels"
+      },
+      {
+        "hex": "#1122aa",
+        "used_for": "dark-blue dotted lines for the lazy-trace-reporting channel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid black for the main request path, dotted red for breadcrumb traversal, dotted blue for lazy reporting, gray trapezoids linking to callouts",
+    "corners": "mixed",
+    "arrows": "a thin black arrowhead ending the request path; red dotted arrows tracing the coordinator's backward breadcrumb queries; blue dotted lines carrying lazily-reported span data to the backend",
+    "font": "serif (STIXGeneral) for labels, monospace (Nimbus Mono L) for code-like tokens",
+    "icons": "small blue span-dot icons, a red gear/burst trigger icon, a location-pin icon on the Coordinator box"
+  },
+  "encoding": {
+    "color_means": "blue marks recorded span data and its (now lazy) reporting channel, as in Fig. 1; red marks the new trigger-and-breadcrumb-traversal mechanism deciding which spans to pull; pale cyan marks the two zoomed-in internal-detail callouts",
+    "line_style_means": "solid black is the request's own path; dotted blue is the lazy span-reporting channel; dotted red is the coordinator's backward breadcrumb-traversal queries, running opposite to the request's direction",
+    "state_means": "not applicable; a one-shot walkthrough designed as a direct sibling of Fig. 1, with the eager channel replaced by trigger-driven lazy reporting",
+    "marker_means": "circled numbers 1-6 order the steps from initial tagging through local buffering/indexing, triggering, backward breadcrumb traversal, and lazy reporting",
+    "emphasis": "the red trigger icon and backward-pointing red dotted arrows visually invert the request's own left-to-right flow, drawing attention to the new backward-looking mechanism that Fig. 1's eager design does not need",
+    "reusable_patterns": [
+      "the same base topology as a sibling figure, redrawn with one new colour-coded mechanism layered on top",
+      "paired zoom-in callouts opening two components' internals from specific points on a main path"
+    ],
+    "weaknesses": [
+      "the given paper text for this figure is a single sentence, so step-by-step meanings rely on the caption, the figure's own icons, and its similarity to Fig. 1 rather than on directly quoted explanation"
+    ]
+  },
+  "tags": [
+    "distributed-tracing",
+    "lazy-collection",
+    "breadcrumb",
+    "trigger",
+    "coordinator",
+    "Hindsight"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design"
+    ],
+    "evidence": [
+      "The end-to-end lifecycle of a trace in Hindsight",
+      "Fig. 2 shows a high-level diagram of Hindsight's main components."
+    ]
+  },
+  "summary": "This figure walks through Hindsight's lazy alternative to the eager tracing design shown in Fig. 1, reusing the same wavy request-path topology through system processes. As in Fig. 1, the request is tagged with a traceId (step 1) and its spans are locally buffered; two callouts zoom into this local handling, showing the Hindsight Client Lib buffering span data and metadata at a tracepoint (step 2) and the Hindsight Agent indexing and evicting buffered entries (step 3). Later along the path, a runtime condition fires a trigger (step 4), prompting the Coordinator to perform a breadcrumb traversal (step 5): red dotted arrows trace backward through the breadcrumbs each visited process left behind, to find the request's earlier spans. Only then does lazy trace reporting (step 6) send the relevant spans to the Backend Trace Collectors, avoiding the constant eager reporting of the baseline design.",
+  "summary_zh": "该图走读Hindsight惰性追踪设计（对照图1急切设计）：①打traceId→②③本地缓冲span并建索引淘汰旧条目→④触发trigger→⑤协调者沿breadcrumb反向回溯→⑥仅将相关span惰性上报后端，避免持续急切上报。",
+  "confidence": "low",
+  "notes": "Evidence for this figure is very thin: the given paragraph is a single sentence ('Walkthrough. Fig. 2 shows a high-level diagram of Hindsight's main components.') with no per-step explanation. The step-by-step reading (tracepoint buffering, agent indexing, trigger, breadcrumb traversal, lazy reporting) is reconstructed from the prior label's grammar/note/argues fields and from the figure's own icons and its structural similarity to the sibling Fig. 1 (same base request-path topology, contrasted by a trigger-driven backward breadcrumb query replacing Fig. 1's constant eager reporting). Confidence is set to low accordingly.",
+  "venue": "NSDI23"
+}

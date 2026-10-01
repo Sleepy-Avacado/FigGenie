@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-132_fig6",
+  "paper_id": "asplos26-132",
+  "fig": "6",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 6. The overall workflow of DIP. Before training, the LMM model is partitioned into model chunks by the model chunk parti- tioner. During each training iteration, DIP asynchronously executes a four-stage online planning process.",
+  "corpus_template": "pipeline",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.16,
+  "n_components": 8,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-132/src/fig6_overview.svg",
+    "preview.png": "lab/extracted/asplos26-132/src/fig6_overview.png",
+    "print.png": "lab/extracted/asplos26-132/asplos26-132_fig6_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Offline-phase box stacked over an online-phase box with circled numbers 1-4 driving only the online loop.",
+      "what_to_learn": "Split one-time setup from the per-iteration loop with a dashed group boundary, and number only the steps that repeat."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Named in the reference as the exemplar for separating one-time setup from a numbered loop: the Offline Partitioner sits in its own dashed box above, while only the Online Planner's four steps are circled 1-4.",
+      "what_to_learn": "Put one-time setup in its own dashed container above the repeating loop and number only the loop's steps (here 1-4), not the setup; give shared dependencies (the training simulator both stages use) a distinct dotted style, but make it heavier than this figure's, whose light dotted 'uses' lines are easy to miss."
+    }
+  ]
+}

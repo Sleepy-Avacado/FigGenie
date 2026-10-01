@@ -1,0 +1,333 @@
+{
+  "paper_id": "nsdi26-131",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "S2Sim",
+    "one_liner": "a selective symbolic-simulation tool that diagnoses and repairs distributed routing configuration errors by checking them against intent-compliant contracts",
+    "domain": [
+      "network verification",
+      "BGP configuration",
+      "routing"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "one symbolic-simulation run computing each router's route and flagging two contract violations (c1, c2) on an example network",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "A",
+        "kind": "node",
+        "role": "router; selects r8 [A,B,C,D] under c1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B",
+        "kind": "node",
+        "role": "router; selects r3 [B,C,D] under c1 after being forced to prefer the route via C",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "C",
+        "kind": "node",
+        "role": "router whose config would set isExported([C,D] to B) = false, violating c1; selects r1 [C,D]",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "D",
+        "kind": "node",
+        "role": "the destination router originating prefix p; trivially selects r0 [D]",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "E",
+        "kind": "node",
+        "role": "router; selects r2 [E,D]",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "F",
+        "kind": "node",
+        "role": "router forced by c1 ∧ c2 to keep r7 [F,E,D] instead of the longer route via A",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "p",
+        "kind": "port",
+        "role": "the prefix D originates, the destination all listed routes resolve toward",
+        "container": "D",
+        "highlighted": false
+      },
+      {
+        "name": "r8",
+        "kind": "label",
+        "role": "A's candidate route [A,B,C,D], selected, under c1",
+        "container": "A",
+        "highlighted": true
+      },
+      {
+        "name": "r10",
+        "kind": "label",
+        "role": "A's alternative route [A,F,E,D], not selected, under c1 ∧ c2",
+        "container": "A",
+        "highlighted": true
+      },
+      {
+        "name": "r3",
+        "kind": "label",
+        "role": "B's candidate route [B,C,D], selected, under c1",
+        "container": "B",
+        "highlighted": true
+      },
+      {
+        "name": "r6",
+        "kind": "label",
+        "role": "B's alternative route [B,E,D], not selected, no contract",
+        "container": "B",
+        "highlighted": false
+      },
+      {
+        "name": "r1",
+        "kind": "label",
+        "role": "C's candidate route [C,D], selected, no contract shown here",
+        "container": "C",
+        "highlighted": false
+      },
+      {
+        "name": "r5",
+        "kind": "label",
+        "role": "C's alternative route [C,E,D], not selected",
+        "container": "C",
+        "highlighted": false
+      },
+      {
+        "name": "r0",
+        "kind": "label",
+        "role": "D's trivial route [D], selected",
+        "container": "D",
+        "highlighted": false
+      },
+      {
+        "name": "r2",
+        "kind": "label",
+        "role": "E's candidate route [E,D], selected",
+        "container": "E",
+        "highlighted": false
+      },
+      {
+        "name": "r4",
+        "kind": "label",
+        "role": "E's alternative route [E,C,D], not selected",
+        "container": "E",
+        "highlighted": false
+      },
+      {
+        "name": "r9",
+        "kind": "label",
+        "role": "E's alternative route [E,B,C,D], not selected, under c1",
+        "container": "E",
+        "highlighted": true
+      },
+      {
+        "name": "r7",
+        "kind": "label",
+        "role": "F's candidate route [F,E,D], selected, under c1 ∧ c2 (fully red, the walkthrough's key outcome)",
+        "container": "F",
+        "highlighted": true
+      },
+      {
+        "name": "r11",
+        "kind": "label",
+        "role": "F's alternative route [F,A,B,C,D], not selected, under c1",
+        "container": "F",
+        "highlighted": true
+      },
+      {
+        "name": "c1",
+        "kind": "label",
+        "role": "violated contract: isExported(C, r1, B) == True",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "c2",
+        "kind": "label",
+        "role": "violated contract: isPreferred(F, r7, r11) == True",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "A",
+        "to": "B",
+        "what": "network adjacency carrying routes such as [A,B,C,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "C",
+        "what": "network adjacency carrying routes such as [B,C,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "D",
+        "what": "network adjacency carrying routes such as [C,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "A",
+        "to": "F",
+        "what": "network adjacency carrying routes such as [A,F,E,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "F",
+        "to": "E",
+        "what": "network adjacency carrying routes such as [F,E,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "B",
+        "to": "E",
+        "what": "network adjacency carrying routes such as [B,E,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "C",
+        "to": "E",
+        "what": "network adjacency carrying routes such as [C,E,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "E",
+        "to": "D",
+        "what": "network adjacency carrying routes such as [E,D]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "c1",
+        "to": "r1",
+        "what": "c1 forces C's isExported for r1 to be true",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "c1",
+        "to": "r3",
+        "what": "once c1 forces C to export [C,D], B selects r3 over r6",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "c2",
+        "to": "r7",
+        "what": "c1 ∧ c2 force F to keep r7 instead of the longer r11",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "each router's candidate routes r0-r11 (ordered node-path lists) and the two forced Boolean guard conditions c1, c2 that select among them",
+      "linked_by": "colour",
+      "result_cells": "the selected route at each router is underlined; routes forced by a violated contract are coloured red and labelled with the guard (c1, c1 ∧ c2) that applies; a table beneath the graph spells out what c1 and c2 mean"
+    },
+    "key_idea": "Running the symbolic simulation on the example network surfaces exactly two contract violations, c1 at C and c2 at F, and shows how forcing them changes which route each router finally selects.",
+    "reading_order": "the network graph first, router by router around its route lists, then down to the Violated-contracts table that defines c1 and c2"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.63,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "red text for c1/c2 guard-condition annotations and for routes forced by a violated contract (e.g. r7 [F,E,D])"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light-grey fill of the 'Violated contracts' table header row"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black network edges and table rules",
+    "corners": "square",
+    "arrows": "none (plain lines for network edges; no arrowheads)",
+    "font": "sans (Calibri/Calibri-Bold), 6-14pt, bold for headings",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "red marks any route or guard condition touched by a violated contract (c1, c2); plain black marks routes unaffected by either violation",
+    "line_style_means": "not applicable; all network edges are plain solid black lines, undifferentiated by type",
+    "state_means": "not applicable (a single static frame, not before/after or alternatives)",
+    "marker_means": "underlining marks the one route each router ultimately selects among its listed candidates",
+    "emphasis": "route r7 [F,E,D] is set in full red and underlined, singling it out as the walkthrough's key forced outcome",
+    "reusable_patterns": [
+      "a small labelled network graph with each node's candidate paths listed beside it, selected paths underlined, and a violation-driven subset coloured red and cross-referenced to a definitions table below"
+    ],
+    "weaknesses": [
+      "up to four route annotations crowd each node, and distinguishing 'selected' (underline) from 'contract-affected' (red) requires close reading"
+    ]
+  },
+  "tags": [
+    "S2Sim",
+    "symbolic-simulation",
+    "BGP",
+    "routing-configuration",
+    "contract-violation",
+    "network-verification"
+  ],
+  "provenance": {
+    "sections": [
+      "§F E the reverse of n’s intended path, (p.6)"
+    ],
+    "evidence": [
+      "Figure 4 shows the simulation of our example.",
+      "B receives and selects [B,C,D] as its path, then sends it to its neighbors.",
+      "F keeps [F,E,D] as its path, instead of [F,A,B,C,D]"
+    ]
+  },
+  "summary": "This figure from S2Sim's appendix illustrates Step 2 of the paper's symbolic simulation on a six-router example network (A-F) that originates a prefix p at D. Each router lists its candidate routes (r0-r11); the route it finally selects is underlined. Where the original configuration would violate an intent-compliant contract, the affected route and its forcing condition are coloured red: C's decision to not export [C,D] to B violates contract c1, so the simulation forces it, and B then selects r3 [B,C,D]. Downstream, F would prefer the longer [F,A,B,C,D] path, violating contract c2 together with c1, so the simulation forces F to keep r7 [F,E,D] instead. A table beneath the graph spells out both violated contracts, c1 and c2, in full.",
+  "summary_zh": "该图展示S2Sim对示例网络的符号模拟：各路由器列出候选路由r0-r11，下划线标最终选择；C违反合约c1被强制后B选r3；F因c1∧c2被迫保留r7而非更长路径，下方表格给出c1、c2定义。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

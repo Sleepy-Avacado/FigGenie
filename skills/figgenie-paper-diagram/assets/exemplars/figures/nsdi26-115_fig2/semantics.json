@@ -1,0 +1,211 @@
+{
+  "paper_id": "nsdi26-115",
+  "fig": "2",
+  "system": {
+    "name": "HyperEdge",
+    "one_liner": "an edge CDN that streams video from underutilized third-party 'Hdevices' coordinated by a centralized tracker alongside an external CDN",
+    "domain": [
+      "cdn",
+      "video-streaming",
+      "edge-computing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "External CDN",
+        "role": "black-box CDN that stores all videos and serves the initial fast segments",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Client",
+        "role": "client-side library on end-user devices that downloads video from the CDN and Hdevices and reassembles it for playback",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Tracker",
+        "role": "centralized, geo-distributed system that maps videos to Hdevices and applies content-distribution policy",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Index Map",
+        "role": "maps video IDs to the Hdevices storing them",
+        "container": "Tracker",
+        "novel": true
+      },
+      {
+        "name": "State Database",
+        "role": "stores Hdevice status and video popularity state",
+        "container": "Tracker",
+        "novel": true
+      },
+      {
+        "name": "Frequency Statistics",
+        "role": "records per-video download frequency over five-minute intervals as a popularity metric",
+        "container": "Tracker",
+        "novel": true
+      },
+      {
+        "name": "Resource Allocation",
+        "role": "tallies available Hdevice resources per region and combines them with popularity to derive caching distribution",
+        "container": "Tracker",
+        "novel": true
+      },
+      {
+        "name": "Dedicated server cluster",
+        "role": "servers that run the geo-distributed Tracker",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "HyperEdge Device",
+        "role": "third-party device with underutilized compute, storage and network resources that passively stores and serves video (Hdevice)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Fetch Video",
+        "role": "Hdevice fetches a newly assigned video using a download protocol analogous to the client library and stores it locally",
+        "container": "HyperEdge Device",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client",
+        "to": "External CDN",
+        "what": "requests the first few segments of the target video (Startup)",
+        "step": 1
+      },
+      {
+        "from": "Client",
+        "to": "Tracker",
+        "what": "request containing the target video ID",
+        "step": 2
+      },
+      {
+        "from": "Tracker",
+        "to": "Client",
+        "what": "list of Hdevices storing the video (Location)",
+        "step": 3
+      },
+      {
+        "from": "Client",
+        "to": "HyperEdge Device",
+        "what": "connection establishment, with NAT punching if needed",
+        "step": 4
+      },
+      {
+        "from": "HyperEdge Device",
+        "to": "Client",
+        "what": "remaining video segments downloaded concurrently via multipath parallel transmission",
+        "step": 5
+      },
+      {
+        "from": "HyperEdge Device",
+        "to": "Tracker",
+        "what": "periodic keepalive reporting device status (Heartbeat)",
+        "step": null
+      },
+      {
+        "from": "Tracker",
+        "to": "HyperEdge Device",
+        "what": "piggybacked list of new video IDs to cache",
+        "step": null
+      },
+      {
+        "from": "HyperEdge Device",
+        "to": "Tracker",
+        "what": "reports completion of the new video download (Finish)",
+        "step": null
+      }
+    ],
+    "key_idea": "A centralized Tracker matches client video requests to nearby underutilized Hdevices and pushes caching decisions to them, so clients download most of a video's segments in parallel from Hdevices instead of the External CDN.",
+    "reading_order": "Top-left legend, then Client (bottom-left) exchanging Video-ID/location messages with the Tracker (top) and connecting to the HyperEdge Device (bottom-right), while the Tracker separately pushes caching decisions to the HyperEdge Device."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.68,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "blue 'Video Data Download' arrows and legend line"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "orange 'Content Distribution' arrows and legend line"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "dark navy text/border accents on the Tracker box"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "gray fill of the Frequency Statistics / Resource Allocation boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill of the Index Map and State Database boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid borders, square corners",
+    "font": "serif (Times New Roman), 5-6pt body, bold green headers for component titles",
+    "corners": "square",
+    "arrows": "thin straight arrows with filled heads, colored by workflow (blue vs orange)",
+    "icons": "bitmap/vector device icons (monitor, laptop, phone, server tower, router) inside the Client and HyperEdge Device boxes"
+  },
+  "encoding": {
+    "color_means": "blue marks the video-data-download workflow; orange marks the content-distribution workflow",
+    "line_style_means": "no dashed/solid distinction beyond color; circled numbers and letters order the two workflows' steps",
+    "emphasis": "a two-line legend plus color-coded, numbered arrows separate and walk through the two named workflows (download vs distribution) sharing the same three boxes",
+    "reusable_patterns": [
+      "centralized tracker coordinating a client and a pool of peer-like edge devices",
+      "two overlaid, color-coded numbered workflows on one architecture diagram"
+    ],
+    "weaknesses": [
+      "Client and HyperEdge Device connect directly to each other as well as through the Tracker, so the diagram is not a clean hub-and-spoke",
+      "circled numerals are reused across both workflows (1-5, then a separate '7' for Finish) rather than one continuous sequence"
+    ]
+  },
+  "tags": [
+    "edge-CDN",
+    "video-streaming",
+    "peer-devices",
+    "tracker",
+    "caching",
+    "NAT-traversal",
+    "multipath"
+  ],
+  "provenance": {
+    "sections": [
+      "3 HyperEdge Overview (p.5)"
+    ],
+    "evidence": [
+      "The HyperEdge system consists of a client-side library that runs on end-user devices, a tracker cluster deployed in ByteDance",
+      "the client receives video data concurrently from all connected Hdevices using a multipath transmission scheme",
+      "the tracker piggybacks a list of new video IDs that the Hdevice should cache"
+    ]
+  },
+  "summary": "HyperEdge is an edge CDN infrastructure that reduces cost by streaming short videos mainly from underutilized third-party 'Hdevices' rather than an external CDN. Figure 2 shows the overall architecture and its two workflows. In video downloading, the Client library starts fetching a video from the External CDN while asking the Tracker for the video's ID; the Tracker returns a list of Hdevices holding the video, and the Client connects to them (with NAT punching if needed) to download the remaining segments over a multipath parallel transmission scheme. In content distribution, the Tracker's Index Map and State Database, informed by per-video Frequency Statistics and Resource Allocation, decide which videos each Hdevice should cache; Hdevices report status via periodic heartbeats and fetch newly assigned videos, reporting completion back to the Tracker.",
+  "summary_zh": "该图展示HyperEdge边缘CDN架构：客户端向Tracker请求视频ID，Tracker返回Hdevice列表供其NAT穿透并行下载；Tracker还依热度与资源分配决定各Hdevice缓存内容，Hdevice心跳上报并拉取新视频。",
+  "confidence": "high",
+  "notes": "layout-proposal: coordinator-with-direct-links — Client and HyperEdge Device connect directly to each other in addition to each connecting to the Tracker, so the arrangement is closer to a small 3-node mesh (Client, Tracker, HyperEdge Device) with the Tracker as coordinator than a pure hub-and-spoke.",
+  "venue": "NSDI26"
+}

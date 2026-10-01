@@ -1,0 +1,48 @@
+{
+  "id": "asplos25-177_fig1",
+  "paper_id": "asplos25-177",
+  "fig": "1",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 1. (a) HTAP system: OLTP and OLAP engines pro- cess rows and columns, respectively. (b) DRAM-based PIM architecture: CPU interleaves data across memory devices (ADE), and PIM units access data inside the device (IDE).",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "visio",
+  "aspect": 1.98,
+  "n_components": 9,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-177/src/fig1_interleaving_and_htap.svg",
+    "preview.png": "lab/extracted/asplos25-177/src/fig1_interleaving_and_htap.png",
+    "print.png": "lab/extracted/asplos25-177/asplos25-177_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "A star analogy exemplar: panel (a)'s software row/column access and panel (b)'s hardware ADE/IDE grid share matching green highlights on one row (R0) and column (C0), making the mapping visible.",
+      "what_to_learn": "To map a software concept onto hardware, draw matching panels and colour-highlight the same instance (one row, one column) in both; label the two access dimensions on the hardware grid's axes. Add a numbered connector between panels: this exemplar leaves that link to the caption."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Panel (a)'s software row/column access diagram and panel (b)'s DRAM-bank-plus-PIM hardware grid are two unlike kinds, software beside a hardware data structure, joined only by the shared insight that ADE/IDE mirrors OLTP/OLAP access.",
+      "what_to_learn": "Use matching colour underlines (green for the specific row or column each side accesses) across a software panel and a hardware grid panel to make an analogy visible without arrows connecting them; add at least one numbered pointer between the panels, since this purely motivational figure otherwise relies on the reader inferring the connection."
+    }
+  ]
+}

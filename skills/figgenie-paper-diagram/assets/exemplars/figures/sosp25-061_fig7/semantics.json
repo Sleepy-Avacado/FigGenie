@@ -1,0 +1,195 @@
+{
+  "paper_id": "sosp25-061",
+  "fig": "7",
+  "system": {
+    "name": "DiffKV",
+    "one_liner": "a framework that differentiates KV cache compression by key/value role, token importance, and per-head sparsity to cut LLM serving memory cost",
+    "domain": [
+      "ml-systems",
+      "memory-management",
+      "gpu-serving"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Scheduler",
+        "role": "batches as many requests as possible within available GPU memory and sends them to all workers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Worker-0",
+        "role": "executes a partition of the model on one GPU",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory Manager",
+        "role": "oversees the KV cache for the worker's assigned attention heads",
+        "container": "Worker-0",
+        "novel": true
+      },
+      {
+        "name": "Head-0",
+        "role": "groups KV cache entries belonging to one attention head",
+        "container": "Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "Head-1",
+        "role": "groups KV cache entries belonging to one attention head",
+        "container": "Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "Req-0",
+        "role": "per-request KV cache allocation slot within a head",
+        "container": "Head-0",
+        "novel": false
+      },
+      {
+        "name": "Req-1",
+        "role": "per-request KV cache allocation slot within a head",
+        "container": "Head-0",
+        "novel": false
+      },
+      {
+        "name": "Execution Engine",
+        "role": "performs model computation using the compressed KV cache",
+        "container": "Worker-0",
+        "novel": false
+      },
+      {
+        "name": "Custom Attention",
+        "role": "custom GPU attention kernel that computes the attention output using the compressed KV cache",
+        "container": "Execution Engine",
+        "novel": true
+      },
+      {
+        "name": "KV Compressor",
+        "role": "compresses key and value vectors following the differentiated compression policy before storing them in the KV cache",
+        "container": "Execution Engine",
+        "novel": true
+      },
+      {
+        "name": "Worker-N",
+        "role": "executes a partition of the model on another GPU",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Head-2N",
+        "role": "groups KV cache entries belonging to one attention head",
+        "container": "Memory Manager",
+        "novel": true
+      },
+      {
+        "name": "Head-2N+1",
+        "role": "groups KV cache entries belonging to one attention head",
+        "container": "Memory Manager",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Scheduler",
+        "to": "Worker-0",
+        "what": "batched requests",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Worker-N",
+        "what": "batched requests",
+        "step": null
+      }
+    ],
+    "key_idea": "A shared scheduler dispatches batched requests to replicated, per-GPU workers, each running an independent memory manager (organized by attention head) alongside an execution engine with a custom attention kernel and KV compressor.",
+    "reading_order": "Top-down: starts at the Scheduler box, follows the dispatch arrows down to Worker-0 and Worker-N, then reads each worker's Memory Manager above its Execution Engine."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.88,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e4f2fb",
+        "used_for": "Scheduler box fill"
+      },
+      {
+        "hex": "#fffbd7",
+        "used_for": "Worker-0 / Worker-N outer container fill"
+      },
+      {
+        "hex": "#fed9d9",
+        "used_for": "Memory Manager subsystem box fill"
+      },
+      {
+        "hex": "#ecffd7",
+        "used_for": "Head-* boxes and the Custom Attention / KV Compressor boxes"
+      },
+      {
+        "hex": "#f0f0f0",
+        "used_for": "Req-* per-request slot boxes"
+      },
+      {
+        "hex": "#c7ecf1",
+        "used_for": "Execution Engine subsystem box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.25pt) solid black outlines on structural boxes, dashed black outlines on Req-* slot boxes",
+    "font": "Arial/Helvetica sans-serif, roughly 5-7.5pt, larger for box/subsystem titles",
+    "corners": "square",
+    "arrows": "two thin straight lines with open arrowheads connecting Scheduler to each Worker box",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow = worker (per-GPU) container, red/pink = memory-manager subsystem, cyan = execution-engine subsystem, light green = attention-head / kernel component boxes, gray = per-request slots, light blue = scheduler",
+    "line_style_means": "dashed borders mark per-request (Req-*) slots inside a head; solid borders mark fixed structural boxes (Scheduler, Worker, Memory Manager, Head, Execution Engine)",
+    "emphasis": "the two structurally identical Worker boxes with an ellipsis between them emphasize that the per-head memory manager and execution engine are replicated across every GPU worker",
+    "reusable_patterns": [
+      "a hub dispatching to identical replicated worker units, each expanded into a nested subsystem hierarchy"
+    ],
+    "weaknesses": [
+      "no legend explaining what the six fill colors denote",
+      "arrow direction between Scheduler and Workers is only clarified by the surrounding text, not the figure itself"
+    ]
+  },
+  "tags": [
+    "LLM serving",
+    "KV cache",
+    "memory management",
+    "GPU worker",
+    "attention heads",
+    "scheduler"
+  ],
+  "provenance": {
+    "sections": [
+      "6 Implementation (p.9)"
+    ],
+    "evidence": [
+      "the scheduler batches as many requests as possible within the available GPU memory",
+      "each worker includes a dedicated memory manager that oversees the KV cache",
+      "execution engine integrates a KV compressor and a custom GPU attention kernel"
+    ]
+  },
+  "summary": "This figure shows the overall architecture of DiffKV, a memory-management framework for LLM serving. At the top, a Scheduler batches requests within available GPU memory and dispatches them to multiple Worker boxes (Worker-0 through Worker-N), each running on one GPU and executing a partition of the model. Every worker contains a Memory Manager, organized by attention head (Head-0, Head-1, ... Head-2N+1), with each head holding per-request KV cache slots (Req-0, Req-1), plus an Execution Engine containing a Custom Attention kernel and a KV Compressor that compresses key/value vectors before storing them. The repeated, side-by-side worker layout with an ellipsis conveys that DiffKV's differentiated, per-head memory management scales identically across all GPU workers in the deployment.",
+  "summary_zh": "该图展示了DiffKV的整体架构:调度器批处理请求并分发给多个GPU工作节点;每个工作节点内含按注意力头组织的内存管理器(含请求级KV槽位)和执行引擎(含自定义注意力核与KV压缩器),并列结构表示可跨GPU复制扩展。",
+  "confidence": "high",
+  "notes": "The figure itself draws the connecting lines with arrowheads pointing toward the Scheduler; the Scheduler-to-Worker dispatch direction used here follows the paper text rather than the visual arrowhead orientation.",
+  "venue": "SOSP25"
+}

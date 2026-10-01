@@ -1,0 +1,164 @@
+{
+  "paper_id": "sosp23-037",
+  "fig": "2",
+  "system": {
+    "name": "TreeSLS",
+    "one_liner": "a whole-system persistent microkernel that checkpoints a capability tree on NVM, unifying runtime memory and storage",
+    "domain": [
+      "os-kernel",
+      "storage",
+      "persistence"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "process cache",
+        "role": "in-memory cache of live process state",
+        "container": "EROS",
+        "novel": false
+      },
+      {
+        "name": "process cache",
+        "role": "in-memory cache of live process state",
+        "container": "Aurora",
+        "novel": false
+      },
+      {
+        "name": "process cache",
+        "role": "in-memory cache of live process state",
+        "container": "TreeSLS",
+        "novel": true
+      },
+      {
+        "name": "object cache",
+        "role": "DRAM cache of checkpointable objects",
+        "container": "EROS",
+        "novel": false
+      },
+      {
+        "name": "object cache",
+        "role": "DRAM cache of checkpointable objects",
+        "container": "Aurora",
+        "novel": false
+      },
+      {
+        "name": "recoverable state and cache",
+        "role": "DRAM region unifying recoverable state and cache",
+        "container": "TreeSLS",
+        "novel": true
+      },
+      {
+        "name": "checkpoint area (append-only)",
+        "role": "on-disk append-only checkpoint log holding inconsistent state",
+        "container": "EROS",
+        "novel": false
+      },
+      {
+        "name": "home location",
+        "role": "on-disk consistent-state storage",
+        "container": "EROS",
+        "novel": false
+      },
+      {
+        "name": "inconsistent backup",
+        "role": "on-disk inconsistent backup copy",
+        "container": "Aurora",
+        "novel": false
+      },
+      {
+        "name": "consistent backup",
+        "role": "on-disk consistent backup copy",
+        "container": "Aurora",
+        "novel": false
+      },
+      {
+        "name": "runtime",
+        "role": "live NVM hierarchy objects before checkpointing",
+        "container": "TreeSLS",
+        "novel": true
+      },
+      {
+        "name": "backup (with hierarchy)",
+        "role": "hierarchy-aware NVM backup of runtime objects, where a child may remain NULL",
+        "container": "TreeSLS",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "runtime",
+        "to": "backup (with hierarchy)",
+        "what": "checkpointing of live hierarchy objects into the backup",
+        "step": null
+      }
+    ],
+    "key_idea": "Prior single-level stores (EROS, Aurora) split volatile runtime/DRAM caches from disk-based backups and need extra consistency machinery, while TreeSLS collapses memory and storage into one NVM tier with a hierarchy-aware backup.",
+    "reading_order": "Left to right across the three column headers (EROS, Aurora, TreeSLS), then top to bottom within each column through the Cache, Main Memory, and Storage/NVM rows."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.42,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#76608a",
+        "used_for": "filled circle/square icons marking an occupied hierarchy node in TreeSLS's runtime/backup illustration"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1pt black outlines; dashed rounded rectangles group each column, solid horizontal rules separate hierarchy rows",
+    "font": "sans (Arial), ~6.5pt, column headers bold",
+    "corners": "mixed",
+    "arrows": "a few short bidirectional arrows linking runtime objects to their backups in the TreeSLS column; otherwise plain lines",
+    "icons": "vector — small circle/square glyphs act as symbolic hierarchy nodes, one filled to show an allocated object"
+  },
+  "encoding": {
+    "color_means": "purple fill marks an occupied/allocated hierarchy node versus an outline-only or NULL node; otherwise the figure is monochrome",
+    "line_style_means": "dashed boxes group each system's boxes and its DRAM/disk sub-regions; solid horizontal rules separate the Cache / Main Memory / Storage rows",
+    "emphasis": "TreeSLS's column is visibly simpler than EROS/Aurora (a single 'recoverable state and cache' box instead of separate caches, one NVM tier instead of a disk row), highlighting its unified single-tier design",
+    "reusable_patterns": [
+      "three-column architecture comparison against two prior systems",
+      "shared memory-hierarchy rows (cache / DRAM / disk) reused across columns for apples-to-apples comparison"
+    ],
+    "weaknesses": [
+      "the purple highlight color is used only on two small icons and is easy to miss",
+      "this passage's text elaborates EROS and Aurora but not TreeSLS's own column, which is explained elsewhere (Figure 3)"
+    ]
+  },
+  "tags": [
+    "single-level-store",
+    "NVM",
+    "checkpointing",
+    "memory-hierarchy",
+    "comparison",
+    "persistence"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)"
+    ],
+    "evidence": [
+      "Figure 2 shows the architecture of two representative systems",
+      "Prior SLSs build an illusion of single-level storage upon the volatile runtime and persistent disks or SSDs.",
+      "these SLSs still suffer from limitations due to the two-tiered architecture"
+    ]
+  },
+  "summary": "This figure compares the memory/storage architectures of two prior single-level stores, EROS and Aurora, against TreeSLS, the paper's own whole-system persistent microkernel. All three columns share a process cache row, but EROS and Aurora keep a separate DRAM object cache and a disk-based backup split into inconsistent and consistent copies (checkpoint area/home location for EROS, inconsistent/consistent backup for Aurora), reflecting their two-tiered runtime-memory-plus-disk design. TreeSLS instead merges memory and storage into a single NVM tier, replacing the DRAM cache with a unified 'recoverable state and cache' box and replacing the disk row with a 'runtime' and 'backup (with hierarchy)' pair of NVM regions, connected by small icons showing that a hierarchy child can be tracked as NULL. The comparison argues that TreeSLS avoids the extra caching and consistency machinery the two-tiered prior systems require.",
+  "summary_zh": "该图以矩阵形式对比 EROS、Aurora 与 TreeSLS 的缓存/内存/存储层次：前两者在易失内存与磁盘备份间需要额外一致性机制，而 TreeSLS 用单一 NVM 层统一运行时与备份，并支持层级化、可含 NULL 子节点的备份。",
+  "confidence": "medium",
+  "notes": null,
+  "venue": "SOSP23"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "osdi23-003_fig5",
+  "paper_id": "osdi23-003",
+  "fig": "5",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 5: Architecture of Rowan-KV. The per-thread logs (t-logs) and backup log (b-log) are divided into 4MB segments.",
+  "corpus_template": "hub-spoke",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.64,
+  "n_components": 10,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-003/src/fig5_RowanKV.svg",
+    "preview.png": "lab/extracted/osdi23-003/src/fig5_RowanKV.png",
+    "print.png": "lab/extracted/osdi23-003/osdi23-003_fig5_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Clients cloud fanning into a primary and two backups, with an inside legend for GET vs PUT/DEL and a small configuration table.",
+      "what_to_learn": "A replicated-store figure needs three things: a client source, one expanded server, and collapsed peers; the legend distinguishes operation classes by line style."
+    },
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Circled numbers on Server 1 trace a write crossing from local per-thread logs to RDMA-replicated backup logs on Server 2 and Server 3, with a shard-map table (CM) above as the routing tier clients consult.",
+      "what_to_learn": "Number the write path only where it crosses a machine boundary (local append versus RDMA replication to the backup tier), and draw the routing/shard-map table as a small inset table above the tier stack rather than another full box, since compact tabular metadata reads faster there."
+    }
+  ]
+}

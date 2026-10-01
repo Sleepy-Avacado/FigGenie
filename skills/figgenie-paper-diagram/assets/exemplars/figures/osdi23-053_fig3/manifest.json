@@ -1,0 +1,47 @@
+{
+  "id": "osdi23-053_fig3",
+  "paper_id": "osdi23-053",
+  "fig": "3",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 3: Optimization examples of EINNET. Figure (a) shows the optimization that transforms a Conv3×3 operator into a Matmul and an eOperator OffsetReduce, and a Conv1×1 operator into a Matmul. Then, inter-expression derivation is performed to fuse multiple operators into one. Figure (b) shows the ",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.46,
+  "n_components": 17,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-053/osdi23-053_fig3_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-053/osdi23-053_fig3_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "Panel (a) draws the same Conv3x3/Relu/Add subgraph three times, original then after intra- and inter-expression derivation, marking only the newly discovered red eOperator boxes against unchanged tan ones across all three steps.",
+      "what_to_learn": "To show a graph transformation, redraw the exact same operator graph two or three times under labelled derivation arrows and colour only the newly discovered operators red against unchanged tan ones. Qualify reused names like Matmul per panel, since bare repetition across panels can blur which instance is meant."
+    },
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "All three panels are three-step (i)-(iii) before/after derivations using the same tensor-cube glyphs and red-eOperator-vs-tan-predefined-operator colour code, letting EinNet's own Matmul+OffsetReduce rewrite in (b) be compared directly against classic im2col in (c).",
+      "what_to_learn": "Give every panel the same internal (i)/(ii)/(iii) numbering and one colour code (red for the paper's new operators, tan for predefined ones) so a novel rewrite and a textbook baseline sit side by side and compare step for step; qualify reused names per panel, since repeated labels (DLT, Matmul) without qualification is a listed weakness."
+    }
+  ]
+}

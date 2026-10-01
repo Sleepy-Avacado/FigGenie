@@ -1,0 +1,235 @@
+{
+  "paper_id": "nsdi23-004",
+  "fig": "2",
+  "system": {
+    "name": "mRPC",
+    "one_liner": "an RPC framework that runs marshalling and policy enforcement as a single privileged, managed system service instead of a library plus sidecar",
+    "domain": [
+      "networking",
+      "distributed-systems"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Stub",
+        "role": "compiled protocol stub the app is built with",
+        "container": "App A",
+        "novel": false
+      },
+      {
+        "name": "mRPC Library",
+        "role": "library apps use to build against mRPC and, at runtime, to allocate and dispatch RPCs via shared memory",
+        "container": "App A",
+        "novel": true
+      },
+      {
+        "name": "mRPC Schema Compiler",
+        "role": "compiles a Proto definition into the stub used by the app",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Proto",
+        "role": "the protocol/interface definition supplied by the developer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Proto Codegen",
+        "role": "generates app-specific marshalling code inside the mRPC service",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "libApp",
+        "role": "app-specific marshalling library compiled and loaded into both the app and the mRPC service",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Shared Memory",
+        "role": "control and data region used to pass RPC requests/responses between the app and mRPC with minimal copies",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "RPC Engines",
+        "role": "runtime engines inside mRPC that process dispatched RPCs",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "Frontend",
+        "role": "engine that routes RPCs and applies policy at runtime",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "Policy",
+        "role": "policy enforcement stage inside the RPC processing pipeline",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "RDMA | libApp",
+        "role": "transport-layer marshalling/backend stage",
+        "container": "mRPC",
+        "novel": true
+      },
+      {
+        "name": "NIC",
+        "role": "network interface card",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Global QoS Policy",
+        "role": "policy operators apply globally or per-app across the mRPC service",
+        "container": "mRPC Service",
+        "novel": true
+      },
+      {
+        "name": "RDMA",
+        "role": "transport backend an operator can update",
+        "container": "mRPC Service",
+        "novel": false
+      },
+      {
+        "name": "TCP",
+        "role": "transport backend an operator can update",
+        "container": "mRPC Service",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Proto",
+        "to": "mRPC Schema Compiler",
+        "what": "protocol definition compiled into a stub",
+        "step": 1
+      },
+      {
+        "from": "App A",
+        "to": "mRPC",
+        "what": "Connect(Proto, ...) request specifying protocols of interest",
+        "step": 2
+      },
+      {
+        "from": "mRPC",
+        "to": "libApp",
+        "what": "compile and load app-specific marshalling library",
+        "step": 3
+      },
+      {
+        "from": "App A",
+        "to": "Shared Memory",
+        "what": "RPC request allocated and dispatched via shared memory (key/meta/data)",
+        "step": 4
+      },
+      {
+        "from": "Shared Memory",
+        "to": "mRPC",
+        "what": "dispatched RPC handed to RPC engines",
+        "step": 5
+      },
+      {
+        "from": "Frontend",
+        "to": "NIC",
+        "what": "processed RPC forwarded through Policy and RDMA/libApp to the network",
+        "step": 6
+      },
+      {
+        "from": "Global QoS Policy",
+        "to": "App A",
+        "what": "operator applies/updates policy without modifying the app",
+        "step": 7
+      }
+    ],
+    "key_idea": "mRPC's workflow spans three phases: users build and connect apps against the service using a compiled stub (initialization), invoke RPCs that are dispatched through shared memory with minimal copying (runtime), and operators apply or update global/per-app policies without touching application code (management).",
+    "reading_order": "left to right across three columns—User-Initialization, User-Runtime, Operator-Management—following the circled step numbers 1 through 7 within each column."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.97,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#65e05c",
+        "used_for": "App box fill (green)"
+      },
+      {
+        "hex": "#79bcfb",
+        "used_for": "mRPC library/engine box fill (blue)"
+      },
+      {
+        "hex": "#68f4f3",
+        "used_for": "mRPC service header / shared memory highlight (cyan)"
+      },
+      {
+        "hex": "#ffc86f",
+        "used_for": "policy-related box fill (orange)"
+      },
+      {
+        "hex": "#fae08b",
+        "used_for": "circled step-number markers (yellow)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "neutral gray box fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines; dashed vertical rules separating the three phase columns; dashed outline on libApp/Policy boxes",
+    "font": "HelveticaNeue sans, 5-7pt, bold for module headers",
+    "corners": "mixed",
+    "arrows": "thin black arrows with triangular heads between components",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = application components, blue = mRPC library and engine components, cyan = mRPC service header and shared-memory region, orange = policy-related modules, yellow numbered circles = ordered workflow steps",
+    "line_style_means": "dashed boxes mark pluggable/loaded components (libApp, Policy); dashed vertical rules separate the three lifecycle phases",
+    "emphasis": "circled step numbers 1-7 walk the reader stage by stage through each of the three workflow phases",
+    "reusable_patterns": [
+      "three-phase lifecycle diagram (build/init, runtime, ops) drawn as adjacent columns",
+      "numbered steps annotated directly on the architecture diagram rather than in a separate caption list"
+    ],
+    "weaknesses": [
+      "dense text and many small boxes packed into a double-column figure"
+    ]
+  },
+  "tags": [
+    "RPC",
+    "shared-memory",
+    "policy-management",
+    "workflow",
+    "managed-service"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 shows a high-level overview of the mRPC architecture and workflow, breaking it down into three major phases: initialization, runtime, and management",
+      "The mRPC service runs as a non-root, user-space process with access to the necessary network devices and a shared-memory region for each application",
+      "The initialization phase extends from building the applica- tion to how the application binds to a specific RPC interface"
+    ]
+  },
+  "summary": "This figure walks through mRPC's end-to-end workflow in three side-by-side phases. In User-Initialization, an app is built with the mRPC library and a compiled stub, connects to the mRPC service specifying a Proto of interest, and mRPC compiles and loads an app-specific marshalling library. In User-Runtime, the app invokes RPCs through familiar stubs; the mRPC library allocates and dispatches requests via a shared-memory region, and the mRPC service's Frontend, Policy, and RDMA/libApp stages process the RPC with minimal copying. In Operator-Management, operators apply or update a Global QoS Policy and transport backends (RDMA/TCP) across multiple apps (A, B, C) without disrupting or modifying any application code. Circled numbers 1-7 mark the sequence within and across the three phases.",
+  "summary_zh": "该图分三个阶段展示mRPC工作流：用户初始化阶段构建并连接应用；用户运行时阶段通过共享内存分发RPC并由mRPC处理；运营管理阶段中运维人员可全局或按应用更新策略而无需改动应用代码。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

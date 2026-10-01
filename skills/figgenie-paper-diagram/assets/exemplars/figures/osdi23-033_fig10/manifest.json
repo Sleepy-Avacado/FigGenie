@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-033_fig10",
+  "paper_id": "osdi23-033",
+  "fig": "10",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 10: Simplified overview of Hyrax’s control plane.",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.14,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-033/osdi23-033_fig10_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-033/osdi23-033_fig10_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-loop",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: single-frame numbered loop (six steps cycling Server Health Monitor to Diagnostics to Hyrax Inventory to VM Scheduler and back) with an online/offline split, not two contrasted panels; this is a control-loop figure, not baseline-vs-ours.",
+      "what_to_learn": "Use a gold/red border legend to separate modified-existing components from newly built ones, and number a closed loop 1-6 with the online portion tinted apart from the offline portion; label every icon on the path, since this figure's unexplained gear icon at step 3 breaks the walkthrough."
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "paper_id": "asplos25-052",
+  "fig": "5",
+  "system": {
+    "name": "FleetIO",
+    "one_liner": "a learning-based storage virtualization framework that uses multi-agent reinforcement learning to balance performance isolation and utilization for shared SSDs",
+    "domain": [
+      "storage",
+      "virtualization"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Workload",
+        "role": "application workload generating I/O to a vSSD",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vSSD-1",
+        "role": "virtual SSD instance hosting its own RL agent",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "RL Agent",
+        "role": "monitors the vSSD's I/O traffic, extracts storage states, and selects the RL action with the highest predicted reward",
+        "container": "vSSD-1",
+        "novel": true
+      },
+      {
+        "name": "Monitor",
+        "role": "tracks storage states such as I/O latency, throughput, and queue delay",
+        "container": "RL Agent",
+        "novel": true
+      },
+      {
+        "name": "RL Model",
+        "role": "predicts the highest-reward RL action (e.g. Harvest, Make_Harvestable) from RL states",
+        "container": "RL Agent",
+        "novel": true
+      },
+      {
+        "name": "Admission Control",
+        "role": "validates and filters RL agents' actions, batching and reordering them before they run on the shared SSD",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SSD Virtualization",
+        "role": "platform on which admitted actions are executed on the shared SSD",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "vSSD Manager",
+        "role": "manages vSSD resources within SSD virtualization",
+        "container": "SSD Virtualization",
+        "novel": null
+      },
+      {
+        "name": "Ghost Superblock Manager",
+        "role": "manages harvestable storage tracked as ghost superblocks",
+        "container": "SSD Virtualization",
+        "novel": true
+      },
+      {
+        "name": "ghost Superblock",
+        "role": "harvestable storage unit tracked by the Ghost Superblock Manager",
+        "container": "Ghost Superblock Manager",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Workload",
+        "to": "RL Agent",
+        "what": "I/O traffic via the vSSD",
+        "step": null
+      },
+      {
+        "from": "RL Agent",
+        "to": "Admission Control",
+        "what": "actions (e.g. Harvest(), Make_Harvestable())",
+        "step": null
+      },
+      {
+        "from": "Admission Control",
+        "to": "RL Agent",
+        "what": "reward",
+        "step": null
+      },
+      {
+        "from": "Admission Control",
+        "to": "vSSD Manager",
+        "what": "admitted, batched and reordered actions",
+        "step": null
+      },
+      {
+        "from": "Admission Control",
+        "to": "Ghost Superblock Manager",
+        "what": "block/harvesting decisions",
+        "step": null
+      }
+    ],
+    "key_idea": "Per-vSSD RL agents independently choose harvest/allocation actions from monitored I/O states; a shared admission-control stage validates, batches, and reorders these actions before they reach the SSD.",
+    "reading_order": "Top row: three workloads each drive a vSSD's RL agent (monitor plus model). Their actions and rewards flow down through admission control into SSD virtualization's managers."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale-yellow fill of the vSSD-1/2/3 outer boxes"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "pale-green fill of the RL Agent box"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "pale-purple fill of the Monitor sub-box"
+      },
+      {
+        "hex": "#76608a",
+        "used_for": "dark-mauve fill of the RL Model sub-box"
+      },
+      {
+        "hex": "#647687",
+        "used_for": "slate blue-gray fill/border of the vSSD Manager box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.46pt thin solid",
+    "corners": "square",
+    "arrows": "thin vertical orthogonal arrows labelled Actions/Reward and Block/Harvesting, with filled triangular heads",
+    "font": "Arial sans-serif, 4.5-8pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "each vSSD column is a self-contained agent (yellow outer box) with a monitor (light purple) and model (dark purple) module; admission control and the ghost-superblock manager sit below as shared infrastructure",
+    "line_style_means": "a dashed border on the Ghost Superblock Manager box marks it as a logical/tracking structure rather than a hard component; solid arrows carry actions and rewards",
+    "emphasis": "identical repeated vSSD/RL-agent columns emphasize that FleetIO scales to many independently-learning agents funnelled through one shared admission-control chokepoint",
+    "reusable_patterns": [
+      "repeated identical agent columns feeding a shared hub component",
+      "paired Action/Reward arrows depicting an RL control loop"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "reinforcement-learning",
+    "SSD",
+    "storage-virtualization",
+    "admission-control",
+    "multi-agent",
+    "cloud-storage"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design and Implementation (p.4, p.7)"
+    ],
+    "evidence": [
+      "We show the system architecture of FleetIO in Figure 5.",
+      "FleetIO deploys an RL agent in each vSSD, enabling scalability to support multiple vSSDs.",
+      "we design an admission control mechanism (Figure 5) that ingests each RL agent's Harvest() and Make_Harvestable() actions"
+    ]
+  },
+  "summary": "This figure shows FleetIO's overall system architecture. FleetIO deploys an independent RL agent inside each vSSD so the design scales to many virtual SSDs. Three identical vSSD columns are shown, each with a Monitor sub-module that extracts I/O latency, throughput, and queue-delay states from the workload, and an RL Model that selects the action predicted to earn the highest reward; each agent exchanges Actions and Reward signals with a shared Admission Control stage below. Admission Control filters out inadmissible actions (letting cloud providers customize permission checks per vSSD), and processes the remaining Harvest()/Make_Harvestable() actions in batches, reordering each batch so harvestable-resource-producing actions run before consuming ones. The admitted actions are submitted to the SSD Virtualization layer, which contains a vSSD Manager and a Ghost Superblock Manager that tracks harvestable storage as ghost superblocks.",
+  "summary_zh": "该图展示FleetIO架构：每个vSSD内置RL智能体，监控I/O状态并选出最优动作；动作/奖励与共享准入控制交互，筛选重排后提交给SSD虚拟化层的vSSD管理器与幽灵超级块管理器执行。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

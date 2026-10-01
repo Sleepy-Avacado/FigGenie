@@ -1,0 +1,252 @@
+{
+  "paper_id": "osdi25-016",
+  "fig": "1",
+  "system": {
+    "name": "KPerfIR",
+    "one_liner": "a compiler-centric IR infrastructure that lets performance-profiling tools be composed as compiler passes sharing program semantics and metrics",
+    "domain": [
+      "compiler",
+      "ml-systems",
+      "performance-tooling"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Program",
+        "role": "the input AI kernel program in the prior-art profiling flow",
+        "container": "Prior Profiler Arts",
+        "novel": false
+      },
+      {
+        "name": "Profiler",
+        "role": "a profiler that observes execution but is disconnected from compiler semantics in prior designs",
+        "container": "Prior Profiler Arts",
+        "novel": false
+      },
+      {
+        "name": "Compiler",
+        "role": "the compiler producing dialects/binaries, separate from the profiler in prior designs",
+        "container": "Prior Profiler Arts",
+        "novel": false
+      },
+      {
+        "name": "Dialect A",
+        "role": "one compiler IR dialect used in the compilation path",
+        "container": "Compiler",
+        "novel": false
+      },
+      {
+        "name": "Dialect B",
+        "role": "another compiler IR dialect used in the compilation path",
+        "container": "Compiler",
+        "novel": false
+      },
+      {
+        "name": "Third-party Performance Tool",
+        "role": "an external analysis tool loosely attached to prior profiler output, or exchanging semantics/metrics with KPerfIR's IR",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Performance Insights",
+        "role": "the output produced by the prior profiler flow",
+        "container": "Prior Profiler Arts",
+        "novel": false
+      },
+      {
+        "name": "Hardware",
+        "role": "the target hardware (Nvidia, AMD) executing the program",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "IR",
+        "role": "KPerfIR's central compiler IR that carries program semantics and profiling metrics together",
+        "container": "KPerfIR: Compiler-centric Performance Tool",
+        "novel": true
+      },
+      {
+        "name": "KPerfIR Dialects",
+        "role": "dialects defining Operations and Passes for compiler-integrated profiling",
+        "container": "KPerfIR: Compiler-centric Performance Tool",
+        "novel": true
+      },
+      {
+        "name": "Kernel Program IR",
+        "role": "the kernel-level IR instrumented with profiling operations",
+        "container": "KPerfIR: Compiler-centric Performance Tool",
+        "novel": true
+      },
+      {
+        "name": "Execution Trace",
+        "role": "the profiling trace produced from running the instrumented binary on hardware",
+        "container": "KPerfIR: Compiler-centric Performance Tool",
+        "novel": true
+      },
+      {
+        "name": "AI Workloads",
+        "role": "example workloads (Flash Attention, GEMM) profiled through the pipeline",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "① Programmable Tools with IR Semantics",
+        "role": "example novel tool: a loop-profiling tool built with IR-level semantics",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "② Profiling-driven Compiler Passes",
+        "role": "example novel tool: a region-based profiling tool implemented as a compiler pass",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "③ Reusable Performance Tools",
+        "role": "example novel tool: performance tools reused across multiple IR levels (Triton, LLVM, KPerfIR) and hardware backends",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Program",
+        "to": "Profiler",
+        "what": "execution monitoring",
+        "step": null
+      },
+      {
+        "from": "Profiler",
+        "to": "Performance Insights",
+        "what": "profiling results",
+        "step": null
+      },
+      {
+        "from": "Compiler",
+        "to": "Hardware",
+        "what": "compiled binary",
+        "step": null
+      },
+      {
+        "from": "IR",
+        "to": "Third-party Performance Tool",
+        "what": "semantic and metrics exchange",
+        "step": null
+      },
+      {
+        "from": "IR",
+        "to": "Kernel Program IR",
+        "what": "lowering",
+        "step": null
+      },
+      {
+        "from": "Kernel Program IR",
+        "to": "Execution Trace",
+        "what": "instrumented execution",
+        "step": null
+      },
+      {
+        "from": "KPerfIR: Compiler-centric Performance Tool",
+        "to": "① Programmable Tools with IR Semantics",
+        "what": "enables",
+        "step": null
+      },
+      {
+        "from": "KPerfIR: Compiler-centric Performance Tool",
+        "to": "② Profiling-driven Compiler Passes",
+        "what": "enables",
+        "step": null
+      },
+      {
+        "from": "KPerfIR: Compiler-centric Performance Tool",
+        "to": "③ Reusable Performance Tools",
+        "what": "enables",
+        "step": null
+      }
+    ],
+    "key_idea": "Unlike prior profilers that sit outside the compiler and lose semantic information, KPerfIR places a shared IR at the center so that profiling operations become first-class compiler passes, enabling programmable, profiling-driven, and reusable performance tools.",
+    "reading_order": "Left to right: prior-art profiler pipeline (Left, showing the disconnect between profiler and compiler), then the KPerfIR compiler-centric concept (middle), then an Enables arrow into three numbered example tools built on top of it (Right)."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.92,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b1001c",
+        "used_for": "dark red fill/stroke used for the central IR box and semantic-gap/emphasis arrows"
+      },
+      {
+        "hex": "#bbdefb",
+        "used_for": "light blue fill of program/hardware/binary boxes"
+      },
+      {
+        "hex": "#ffcdd2",
+        "used_for": "light pink fill of profiler/analysis-pass boxes"
+      },
+      {
+        "hex": "#fff9c4",
+        "used_for": "light yellow fill of AI Workloads boxes"
+      },
+      {
+        "hex": "#c8e6c9",
+        "used_for": "light green fill of compiler/dialect/IR boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark borders, dashed boxes around the two compared designs and around each numbered example tool",
+    "font": "HelveticaNeue sans, very small (3-5.5pt), bold italic for section titles",
+    "corners": "rounded",
+    "arrows": "curved and straight thin arrows, red arrows/callouts highlighting the compiler-centric IR connections",
+    "icons": "small vector icons for AI workloads, hardware, and code snippets"
+  },
+  "encoding": {
+    "color_means": "red = KPerfIR's central IR and its emphasized connections, blue = programs/hardware/binaries, pink = profiling/analysis components, yellow = AI workloads, green = compiler/dialect components",
+    "line_style_means": "dashed grouping boxes separate the two compared designs (prior vs. KPerfIR) and the three enabled example tools",
+    "emphasis": "a side-by-side comparison of a disconnected prior-art profiler pipeline against KPerfIR's IR-centered design, with an explicit Enables arrow fanning out to three concrete example tools",
+    "reusable_patterns": [
+      "before/after architecture comparison",
+      "central hub IR with fan-out to multiple downstream use cases"
+    ],
+    "weaknesses": [
+      "very small font (down to 3pt) and high shape count make the figure hard to read at reduced scale",
+      "many labels in code snippets (scf.for, tt.dot, kperfir.start) are only legible at full resolution"
+    ]
+  },
+  "tags": [
+    "compiler",
+    "performance-profiling",
+    "gpu-kernels",
+    "intermediate-representation",
+    "tooling",
+    "comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.3)"
+    ],
+    "evidence": [
+      "Overview and comparison of KPerfIR's compiler-centric design and prior profiler designs",
+      "Demonstrative examples of novel performance tools facilitated by the compiler-centric design",
+      "incorporating multi-level compiler IR instrumentation into the profiling workflow"
+    ]
+  },
+  "summary": "This wide, two-column concept figure introduces KPerfIR, a compiler-centric infrastructure for GPU kernel performance tooling. The left side compares prior profiler designs, where a Program is profiled externally by a Profiler disconnected from the Compiler's dialects and target Hardware (Nvidia, AMD), against KPerfIR's design, where a shared IR sits at the center, exposing KPerfIR Dialects (Operations, Passes) and exchanging semantics and metrics with third-party performance tools, then lowering to a Kernel Program IR that is executed on hardware to produce an Execution Trace. An Enables arrow on the right fans out to three numbered example tools illustrating the benefits: ① Programmable Tools with IR Semantics (e.g., a loop-profiling tool), ② Profiling-driven Compiler Passes (e.g., a region-based profiling tool), and ③ Reusable Performance Tools spanning multiple IR levels (Triton, LLVM, KPerfIR) and hardware backends. The figure is a dense, small-font conceptual architecture diagram using red/blue/pink/yellow flat-filled rounded boxes with curved arrows and dashed grouping boundaries.",
+  "summary_zh": "该图对比了传统性能剖析工具与 KPerfIR 的设计理念：左侧展示传统剖析器与编译器、方言、硬件相互脱节的流程；中间展示 KPerfIR 以共享 IR 为核心，连接方言、第三方工具与硬件；右侧通过“Enables”箭头展示三种由此实现的新型工具（可编程工具、剖析驱动的编译器 pass、可复用工具）。",
+  "confidence": "medium",
+  "notes": "Figure is very dense with small text (down to 3pt); some component labels (e.g. exact wording inside the three numbered example boxes, code snippet identifiers) are inferred from the visible image and caption rather than from detailed body text, since only one introductory sentence referencing the figure was available.",
+  "venue": "OSDI25"
+}

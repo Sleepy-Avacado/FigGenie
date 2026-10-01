@@ -1,0 +1,47 @@
+{
+  "id": "nsdi24-003_fig1",
+  "paper_id": "nsdi24-003",
+  "fig": "1",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 1: Multicore monitoring problem in a server",
+  "corpus_template": "matrix",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.8,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-003/nsdi24-003_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-003/nsdi24-003_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar at floor size, 8 components and 6 flows, with the row-equals-layer, column-equals-core-replica grid drawn literally: three identical Core columns each stack Driver, Application and Monitoring bands feeding one shared Aggregator.",
+      "what_to_learn": "Draw each replica as one column and each shared concern as one row so both axes carry meaning, keep every column's internal band colours identical, and route many-to-one aggregation as curved arrows into a single box at the margin instead of drawing every core's own output stage."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "A cautionary case: three concrete Core columns are drawn with no ellipsis at all, violating the template's own 'never three or more concrete copies' rule, even though the stacked Driver/Application/Monitoring bands are cleanly repeated.",
+      "what_to_learn": "Do not draw three or more full concrete replicas side by side as this figure does; collapse to two columns plus an ellipsis (or a Core N column) instead, while keeping its good idea of repeating the same colored Driver/Application/Monitoring bands identically in every column and fanning them back to one Aggregator."
+    }
+  ]
+}

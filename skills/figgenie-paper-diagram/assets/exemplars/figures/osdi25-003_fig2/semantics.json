@@ -1,0 +1,261 @@
+{
+  "paper_id": "osdi25-003",
+  "fig": "2",
+  "system": {
+    "name": "WLB-LLM",
+    "one_liner": "a workload-balanced 4D parallelism scheme for LLM training that combines data, pipeline, context, and tensor parallelism",
+    "domain": [
+      "ml-systems",
+      "distributed-training"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DP-0",
+        "role": "one data-parallel worker owning a shard of the global batch and a full pipeline of PP stages",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DP-1",
+        "role": "additional data-parallel worker",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DP-2",
+        "role": "additional data-parallel worker",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DP-3",
+        "role": "additional data-parallel worker",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PP-0",
+        "role": "pipeline stage owning the first chunk of model layers",
+        "container": "DP-0",
+        "novel": false
+      },
+      {
+        "name": "PP-1",
+        "role": "pipeline stage owning the next chunk of model layers",
+        "container": "DP-0",
+        "novel": false
+      },
+      {
+        "name": "PP-2",
+        "role": "pipeline stage owning the next chunk of model layers",
+        "container": "DP-0",
+        "novel": false
+      },
+      {
+        "name": "PP-3",
+        "role": "pipeline stage owning the last chunk of model layers",
+        "container": "DP-0",
+        "novel": false
+      },
+      {
+        "name": "Layer 0",
+        "role": "a model layer held on this pipeline stage",
+        "container": "PP-0",
+        "novel": false
+      },
+      {
+        "name": "Input Sequence (Packed Documents)",
+        "role": "the packed input sequence split into chunks before context-parallel sharding",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Chunk 0",
+        "role": "one chunk of the packed input sequence",
+        "container": "Input Sequence (Packed Documents)",
+        "novel": true
+      },
+      {
+        "name": "Chunk 1",
+        "role": "another chunk of the packed input sequence",
+        "container": "Input Sequence (Packed Documents)",
+        "novel": true
+      },
+      {
+        "name": "CP-0",
+        "role": "context-parallel worker holding a shard of the sequence-length dimension",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CP-1",
+        "role": "another context-parallel worker holding a shard of the sequence-length dimension",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "TP-0",
+        "role": "tensor-parallel worker holding a shard of the layer's parameters",
+        "container": "CP-0",
+        "novel": false
+      },
+      {
+        "name": "TP-1",
+        "role": "another tensor-parallel worker holding a shard of the layer's parameters",
+        "container": "CP-0",
+        "novel": false
+      },
+      {
+        "name": "AllGather / ReduceScatter",
+        "role": "collective communication that gathers KV tensors across CP workers in the forward pass and reduce-scatters gradients in backward",
+        "container": "CP-0",
+        "novel": false
+      },
+      {
+        "name": "Attention",
+        "role": "attention sublayer operating on the sharded/gathered sequence",
+        "container": "CP-0",
+        "novel": false
+      },
+      {
+        "name": "Layer Norm",
+        "role": "normalization sublayer run independently per worker",
+        "container": "CP-0",
+        "novel": false
+      },
+      {
+        "name": "MLP",
+        "role": "feed-forward sublayer run independently per worker",
+        "container": "CP-0",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input Sequence (Packed Documents)",
+        "to": "CP-0",
+        "what": "sequence chunk shard",
+        "step": null
+      },
+      {
+        "from": "Input Sequence (Packed Documents)",
+        "to": "CP-1",
+        "what": "sequence chunk shard",
+        "step": null
+      },
+      {
+        "from": "CP-0",
+        "to": "CP-1",
+        "what": "KV tensors via AllGather/ReduceScatter",
+        "step": null
+      },
+      {
+        "from": "AllGather / ReduceScatter",
+        "to": "Attention",
+        "what": "gathered KV tensors",
+        "step": null
+      },
+      {
+        "from": "Attention",
+        "to": "Layer Norm",
+        "what": "attention output",
+        "step": null
+      },
+      {
+        "from": "Layer Norm",
+        "to": "MLP",
+        "what": "normalized activations",
+        "step": null
+      }
+    ],
+    "key_idea": "4D parallelism composes data, pipeline, context, and tensor parallelism hierarchically: DP workers each hold a pipeline of layer chunks, and within a layer, context-parallel groups shard the sequence while tensor-parallel groups within each CP shard the layer's parameters, synchronized via AllGather/ReduceScatter.",
+    "reading_order": "Left panel first, top-down through nested DP/PP/Layer boxes; a dashed callout zooms into one pipeline stage's layers to the right panel, read left-to-right and top-down through Chunk/CP/TP boxes and the two stacked Attention-LayerNorm-MLP sublayers."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.76,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#002060",
+        "used_for": "navy fill/stroke of the DP-x outer header bars"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "medium blue fill of the Layer boxes"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "light blue fill of the Attention boxes"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill used for TP/CP related boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light yellow fill of LayerNorm/MLP or chunk boxes"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "light peach accent fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark-blue borders on nested boxes, dashed line connecting the left overview to the right zoomed panel",
+    "font": "Arial/Arial-Bold sans, very small (5-6pt)",
+    "corners": "mixed",
+    "arrows": "thin arrows for collectives, dashed line for the zoom callout",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "navy = data-parallel/pipeline structural bars, blue = layers, light green/blue = context- and tensor-parallel sublayer boxes, yellow = normalization/MLP boxes",
+    "line_style_means": "dashed = zoom-in callout linking the left overview to the right detail panel",
+    "emphasis": "nested box-in-box drawing conveys the hierarchical composition of the four parallelism dimensions, with a zoomed detail panel dedicated to context/tensor parallelism inside a single layer",
+    "reusable_patterns": [
+      "box-in-box nesting to depict a hierarchy of parallelism dimensions",
+      "overview-plus-zoomed-detail two-panel layout"
+    ],
+    "weaknesses": [
+      "very small font size relative to the amount of nested detail"
+    ]
+  },
+  "tags": [
+    "llm-training",
+    "parallelism",
+    "data-parallel",
+    "pipeline-parallel",
+    "tensor-parallel",
+    "context-parallel",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 presents an example of a (TP=2, CP=2, PP=4, DP=4) 4D parallelism",
+      "CP duplicates the model parameters but shards the input and activations along the sequence length",
+      "TP splits the model parameters within a layer"
+    ]
+  },
+  "summary": "This figure illustrates an example instantiation of 4D parallelism (TP=2, CP=2, PP=4, DP=4) as used in LLM training. The left panel shows four data-parallel workers (DP-0 to DP-3), each internally split into four pipeline stages (PP-0 to PP-3) that own consecutive pairs of model layers (Layer 0 through Layer 7). A dashed callout zooms from one pipeline stage into the right panel, which shows how an input sequence of packed documents is chunked and sharded across two context-parallel groups (CP-0, CP-1), each further split into two tensor-parallel workers (TP-0, TP-1). Within each CP group, an AllGather/ReduceScatter collective synchronizes KV tensors before two stacked Attention-LayerNorm-MLP sublayers process the data. The diagram uses nested navy/blue/green/yellow boxes to convey the composition of data, pipeline, context, and tensor parallelism from outermost to innermost.",
+  "summary_zh": "该图展示了 4D 并行（TP=2, CP=2, PP=4, DP=4）的一个实例：左侧为数据并行与流水线并行的嵌套结构（DP-x 内含 PP-x 与层），右侧放大展示单层内上下文并行与张量并行如何通过 AllGather/ReduceScatter 及 Attention-LayerNorm-MLP 子层协作。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

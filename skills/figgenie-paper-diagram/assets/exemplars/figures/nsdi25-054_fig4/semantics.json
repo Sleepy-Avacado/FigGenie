@@ -1,0 +1,226 @@
+{
+  "paper_id": "nsdi25-054",
+  "fig": "4",
+  "system": {
+    "name": "GRANNY",
+    "one_liner": "a runtime for granular management of compute-intensive cloud applications that cross-compiles code to WebAssembly and virtualizes OpenMP/MPI/POSIX backends",
+    "domain": [
+      "cloud-computing",
+      "runtime-systems",
+      "hpc"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "VM A",
+        "role": "the machine hosting Granule 0 throughout; gains a migrated Granule 1 in panel (c)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VM B",
+        "role": "the machine hosting Granule 1 in panels (a)/(b) before it is migrated away in panel (c)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Granule 0",
+        "role": "the application's main Granule (MPI rank 0), running on VM A, which queries the scheduler at barrier control points",
+        "container": "VM A",
+        "novel": true
+      },
+      {
+        "name": "Granule 1",
+        "role": "a second Granule (MPI rank 1), initially on VM B, migrated to VM A in panel (c)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "MPI backend",
+        "role": "captures MPI_Send/MPI_Recv/MPI_Barrier calls, tracks each Granule's rank mapping, and exchanges BARRIER_JOIN/BARRIER_DONE messages",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "POSIX backend",
+        "role": "captures file operations (e.g., fwrite) and maps WebAssembly file descriptors to OS file descriptors",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "queried at each barrier control point ('Must migrate?') and returns a migration plan",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Migration plan",
+        "role": "output of the scheduler specifying which Granule moves where (e.g., G1: B to A)",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Granny core",
+        "role": "prepares and applies the migration: creates/terminates Granules, updates mailbox mappings, and restores snapshots",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Granule 1 snapshot",
+        "role": "captured linear memory and runtime state of Granule 1 (file mapping, bytes to fread) used to recreate it on VM A",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Granule 0",
+        "to": "MPI backend",
+        "what": "MPI_Send(1, sBuf) captured as a send operation",
+        "step": 1
+      },
+      {
+        "from": "MPI backend",
+        "to": "Granule 1",
+        "what": "message copied into Granule 1's mailbox",
+        "step": 2
+      },
+      {
+        "from": "MPI backend",
+        "to": "Granule 1",
+        "what": "message delivered to the application via a captured MPI_Recv",
+        "step": 3
+      },
+      {
+        "from": "Granule 1",
+        "to": "POSIX backend",
+        "what": "a file write (fwrite) captured via the POSIX backend",
+        "step": 4
+      },
+      {
+        "from": "Granule 1",
+        "to": "Granule 0",
+        "what": "BARRIER_JOIN message at MPI_Barrier",
+        "step": 5
+      },
+      {
+        "from": "Granule 0",
+        "to": "Scheduler",
+        "what": "query for any horizontal migrations",
+        "step": 6
+      },
+      {
+        "from": "Scheduler",
+        "to": "Migration plan",
+        "what": "chosen migration (e.g., G1: B to A)",
+        "step": 7
+      },
+      {
+        "from": "Migration plan",
+        "to": "Granny core",
+        "what": "distributed plan prepared on both VM A (new empty Granule) and VM B (snapshot)",
+        "step": 8
+      },
+      {
+        "from": "Granny core",
+        "to": "Granule 1 snapshot",
+        "what": "captured linear memory and runtime state of the old Granule 1 on VM B",
+        "step": 9
+      },
+      {
+        "from": "Granule 0",
+        "to": "Granule 1",
+        "what": "BARRIER_DONE broadcast to updated mailboxes",
+        "step": 10
+      },
+      {
+        "from": "Granule 1 snapshot",
+        "to": "Granule 1",
+        "what": "restored execution state on VM A",
+        "step": 11
+      }
+    ],
+    "key_idea": "At a barrier control point, GRANNY safely migrates a Granule between VMs by snapshotting its state on the source and restoring it on the destination before resuming.",
+    "reading_order": "left to right across three panels: (a) Normal execution message exchange, (b) both Granules reaching the Barrier control point and querying the Scheduler, (c) Granny core executing the Migration"
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "double",
+    "aspect": 1.84,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b85450",
+        "used_for": "MPI backend box border, consistent with the architecture figure"
+      },
+      {
+        "hex": "#82b366",
+        "used_for": "POSIX backend box border, consistent with the architecture figure"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "MPI backend box fill"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "code-snippet box background (App state/Runtime state panels)"
+      },
+      {
+        "hex": "#232f3d",
+        "used_for": "bold labels such as VM A, VM B, and Granny core"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dark outlines ~0.89pt; dashed boxes for Granny core and VM boundaries",
+    "font": "monospace (Cousine) for code, sans-serif (Arimo) for labels, 4.5-9pt",
+    "corners": "mixed",
+    "arrows": "black arrows with circled numbered steps (1-12) tracing execution and migration; curved arrows for cross-VM/cross-panel effects",
+    "icons": "small camera-like icons denoting snapshot actions, envelope icon for mailbox/message"
+  },
+  "encoding": {
+    "color_means": "red marks the MPI backend and green marks the POSIX backend, matching the color coding of the architecture figure (Fig. 2) so the same colors identify which backend handles each captured call",
+    "line_style_means": "dashed boxes mark the Granny core / runtime-managed regions as distinct from the plain application code boxes",
+    "emphasis": "circled numbers 1 through 12 walk the reader through one concrete horizontal-migration scenario across the three panels, from a normal MPI send/receive, through the barrier control point, to the completed migration",
+    "reusable_patterns": [
+      "three-panel before/during/after scenario walkthrough with a single numbered thread of circled steps spanning all three panels"
+    ],
+    "weaknesses": [
+      "twelve numbered steps packed into a dense, small three-panel figure make it hard to follow without the accompanying two paragraphs of text"
+    ]
+  },
+  "tags": [
+    "webassembly",
+    "process-migration",
+    "mpi",
+    "barrier-synchronization",
+    "cloud-runtime",
+    "checkpointing"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Granule Management (p.7)"
+    ],
+    "evidence": [
+      "Fig. 4 illustrates horizontal migration",
+      "the runtime can perform horizon- tal migrations safely",
+      "creating a snapshot of Granule 1, including any runtime state, and terminating the old Granule 1"
+    ]
+  },
+  "summary": "GRANNY manages cloud applications as 'Granules' that can be horizontally migrated between VMs at safe points. Figure 4 walks through one migration scenario in three panels. (a) Normal execution: Granule 0 on VM A sends an MPI message that its MPI backend copies into Granule 1's mailbox on VM B, which is delivered via a captured MPI_Recv; Granule 1 also performs a POSIX file write. (b) Barrier control point: both Granules reach MPI_Barrier and send BARRIER_JOIN to Granule 0, whose runtime queries the Scheduler ('Must migrate?'), which returns a Migration plan (G1: B to A). (c) Migration: the Granny core creates an empty Granule 1 on VM A while VM B snapshots and terminates the original, then VM A restores Granule 1 and broadcasts BARRIER_DONE so both resume. Circled numbers 1-12 trace the sequence.",
+  "summary_zh": "图4分(a)(b)(c)三面板展示GRANNY的Granule水平迁移全过程：正常收发消息、屏障点查询调度器获得迁移计划、Granny core创建/快照/恢复Granule并广播完成信号，编号1-12贯穿始终。",
+  "confidence": "high",
+  "notes": "layout-proposal: three-panel sequential-scenario — (a) Normal execution, (b) Barrier control point, (c) Migration are drawn as three side-by-side labeled sub-figures tracing one horizontal-migration scenario through numbered steps 1-12; two-panel is the closest named template but this figure has three panels, not two.",
+  "venue": "NSDI25"
+}

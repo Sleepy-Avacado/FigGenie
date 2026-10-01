@@ -1,0 +1,48 @@
+{
+  "id": "asplos26-014_fig5",
+  "paper_id": "asplos26-014",
+  "fig": "5",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 5. Overview of SuperOffload. At a high level, Super- Offload employs a Superchip-centric design that judiciously optimizes data placement, computation, and tensor migra- tion between the Hopper GPU and Grace CPU, while fully utilizing the NVLink-C2C via a combination of techniques.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.37,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-014/src/fig5_overview.svg",
+    "preview.png": "lab/extracted/asplos26-014/src/fig5_overview.png",
+    "print.png": "lab/extracted/asplos26-014/asplos26-014_fig5_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Three vertical lanes - Grace CPU | NVLINK-C2C (900GB/s) | Hopper GPU - with per-side optimisation boxes.",
+      "what_to_learn": "Give the interconnect its own lane and label it with its bandwidth; per-side contributions then sit in the lanes they belong to."
+    },
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The SA-DFG mini graph at top (Step, Cast, FWD, BWD nodes with per-node GPU/CPU cost labels) is the dataflow-dag content, sitting above a larger host-device split showing the five techniques it motivates.",
+      "what_to_learn": "Annotate each node of a small operator graph with the cost it would incur on each of two heterogeneous processors, so the graph itself argues for offloading; keep that graph compact and separate from the larger host-device architecture it motivates below it."
+    }
+  ]
+}

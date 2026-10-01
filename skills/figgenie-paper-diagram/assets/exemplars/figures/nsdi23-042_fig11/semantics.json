@@ -1,0 +1,192 @@
+{
+  "paper_id": "nsdi23-042",
+  "fig": "11",
+  "kind": "mechanism",
+  "system": {
+    "name": "Dashlet",
+    "one_liner": "a short-video streaming system that models per-user swipe timing to make robust chunk-prefetch decisions",
+    "domain": [
+      "video streaming",
+      "mobile networking"
+    ],
+    "abstraction": "streaming client"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "the three possible chunk-viewing sequences and their probabilities from chunk c11 to chunk c21",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "0",
+        "kind": "label",
+        "role": "timeline origin tick",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T",
+        "kind": "label",
+        "role": "timeline tick at one chunk duration",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "2T",
+        "kind": "label",
+        "role": "timeline tick at two chunk durations",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3T",
+        "kind": "label",
+        "role": "timeline tick at three chunk durations",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c11",
+        "kind": "cell",
+        "role": "first chunk of video 1, common start of all three sequences",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c12",
+        "kind": "cell",
+        "role": "second chunk of video 1, watched before swiping in the two longer sequences",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c13",
+        "kind": "cell",
+        "role": "third chunk of video 1, watched only in the longest sequence",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "c21",
+        "kind": "cell",
+        "role": "first chunk of video 2, reached once the viewer swipes",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Swipe",
+        "kind": "label",
+        "role": "marks the moment the viewer swipes away to the next video",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "c11",
+        "to": "c21",
+        "what": "swipe after 1 chunk: P_{D21}(1) = p11",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "c12",
+        "to": "c21",
+        "what": "swipe after 2 chunks: P_{D21}(2) = p12",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "c13",
+        "to": "c21",
+        "what": "swipe after 3 chunks: P_{D21}(3) = p13",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "three concrete chunk-viewing sequences from c11 to c21, one row per sequence length",
+      "linked_by": "position (row / number of chunk boxes before the swipe) and colour (red swipe arrow and label)",
+      "result_cells": "each row ends in a probability expression P_{D21}(k) = p_{1k} for k = 1, 2, 3"
+    },
+    "key_idea": "The random variable D21 (chunks watched before swiping to video 2) is the base case of the recursive model, enumerated here as exactly three possible chunk sequences, each with its own probability.",
+    "reading_order": "top row to bottom row (longest sequence to shortest), left to right along each timeline from c11 through the swipe point to c21, ending at the probability expression on the right"
+  },
+  "layout": {
+    "arrangement": "stacked-timeline",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.12,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "red swipe arrows, 'Swipe' labels, and the probability formulas"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray thin borders and leader lines around the timeline tick marks"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~1pt) solid gray borders, thin leader lines to the tick labels",
+    "corners": "square",
+    "arrows": "thin curved red arrows labelled 'Swipe' marking each transition",
+    "font": "serif (Cambria Math / Times), small labels with bold probability formulas",
+    "icons": "about a dozen small raster chunk-box icons (dark blue/navy) used as the c11/c12/c13/c21 timeline cells"
+  },
+  "encoding": {
+    "color_means": "red marks the swipe action and its resulting probability; the chunk-box icons are neutral dark blue with no colour coding between them",
+    "line_style_means": "not used to distinguish rows; a curved red arrow marks the swipe transition in every row",
+    "state_means": "the three possible outcomes (D21 = 1, 2, or 3) are told apart by how many chunk boxes precede the swipe in each row, not by colour",
+    "marker_means": "no numbered markers; the 'Swipe' label and curved arrow mark the transition point in each sequence",
+    "emphasis": "stacking the three sequences with a shared left-aligned c11 start emphasizes that they are alternative continuations of the same starting point",
+    "reusable_patterns": [
+      "three stacked timelines sharing a common origin chunk, each ending in a labelled probability expression"
+    ],
+    "weaknesses": [
+      "the chunk-box icons carry no colour or text distinguishing c11/c12/c13 from c21 beyond their tiny labels, and the top ruler's ticks are not repeated per row"
+    ]
+  },
+  "tags": [
+    "video-streaming",
+    "short-video",
+    "swipe-prediction",
+    "probability-model",
+    "prefetching",
+    "Dashlet"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design"
+    ],
+    "evidence": [
+      "We start from the base case, viewing sequences from c11 to c21.",
+      "Fig. 11 lists all three possible viewing sequences that start from c11",
+      "we see that random variable D21 = k1 (cf. Eq. 2)"
+    ]
+  },
+  "summary": "This figure works through the base case of Dashlet's recursive viewing-sequence model: the three possible ways a viewer can move from chunk c11 (the first chunk of video 1) to chunk c21 (the first chunk of video 2). Each of the three stacked timelines shows a different number of video-1 chunks watched before the viewer swipes away, from a single chunk directly to c21, up to three chunks (c11, c12, c13) before swiping. A curved red arrow and 'Swipe' label mark the transition point in every row, and each row concludes with the corresponding probability expression, P_{D21}(k) = p1k for k = 1, 2, or 3. This worked example grounds the abstract random variable D21, the number of chunks watched before the first swipe, in three concrete, enumerable cases that the paper's recursive derivation builds on for later chunks.",
+  "summary_zh": "该图列出从c11滑动到c21的三种具体观看序列，各行在播放1到3个视频1分片后滑动，标出滑动动作及对应概率P_{D21}(k)=p1k，作为递归模型的基例。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

@@ -1,0 +1,167 @@
+{
+  "paper_id": "asplos26-089",
+  "fig": "2",
+  "system": {
+    "name": "SNIP",
+    "one_liner": "an adaptive mixed-precision training framework that periodically re-solves per-layer subbyte precision for LLM pretraining",
+    "domain": [
+      "ml-systems",
+      "llm-training"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Fwd Bwd",
+        "role": "standard forward/backward training iteration running continuously along the timeline",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "1.Collect Statistics",
+        "role": "periodically collects statistics on activations, weights, and optimizer states",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "2. Analyze Divergence",
+        "role": "analyzes the collected statistics to estimate precision-loss impact",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "3. Solve ILP",
+        "role": "formulates and solves an Integer Linear Programming problem to pick optimal per-layer precision",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "4. Update New Model Precision",
+        "role": "asynchronously applies the newly computed layer-wise quantization assignment",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Old Model Precision",
+        "role": "the model's per-layer (L0-L3) precision before this update round",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "New Model Precision",
+        "role": "the model's per-layer (L0-L3) precision after applying the ILP solution, mixing FP8 and FP4",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Fwd Bwd",
+        "to": "1.Collect Statistics",
+        "what": "activation, gradient, and optimizer statistics",
+        "step": 1
+      },
+      {
+        "from": "1.Collect Statistics",
+        "to": "2. Analyze Divergence",
+        "what": "collected statistics",
+        "step": 2
+      },
+      {
+        "from": "2. Analyze Divergence",
+        "to": "3. Solve ILP",
+        "what": "loss/weight divergence metrics",
+        "step": 3
+      },
+      {
+        "from": "3. Solve ILP",
+        "to": "4. Update New Model Precision",
+        "what": "per-layer precision assignment",
+        "step": 4
+      },
+      {
+        "from": "Old Model Precision",
+        "to": "New Model Precision",
+        "what": "reassigned layer precisions (e.g., L2 from FP8 to FP4)",
+        "step": null
+      }
+    ],
+    "key_idea": "SNIP runs alongside the normal Fwd/Bwd training loop, periodically and asynchronously collecting statistics, analyzing divergence, solving an ILP, and updating per-layer subbyte precision without interrupting training",
+    "reading_order": "left to right along the top training timeline of Fwd/Bwd boxes, dropping down through the four numbered SNIP steps, then left to right from Old to New Model Precision at the bottom"
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.65,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbd5e1",
+        "used_for": "Fwd Bwd training-iteration boxes and FP8-precision layer boxes"
+      },
+      {
+        "hex": "#cfe8f6",
+        "used_for": "Fwd Bwd boxes (alternate/legend blue swatch)"
+      },
+      {
+        "hex": "#fce8a6",
+        "used_for": "SNIP's asynchronous analysis steps (Collect Statistics, Analyze Divergence, Solve ILP)"
+      },
+      {
+        "hex": "#d8e8d4",
+        "used_for": "FP4-precision layer boxes in the New Model Precision panel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt gray/black strokes on all boxes",
+    "font": "ArialMT sans-serif, 6.5-7pt",
+    "corners": "rounded",
+    "arrows": "orthogonal, thin, filled triangular heads connecting the timeline boxes and the precision-update pipeline",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pink = FP8 precision (and the standard Fwd/Bwd compute boxes), green = FP4 precision, yellow = SNIP's periodic statistics/analysis/ILP steps",
+    "line_style_means": null,
+    "emphasis": "the four numbered yellow boxes stand out against the plain blue/pink training timeline, marking SNIP's added asynchronous workflow as the contribution",
+    "reusable_patterns": [
+      "numbered analysis pipeline running asynchronously beside a repeating training-loop timeline, feeding a before/after per-layer precision comparison"
+    ],
+    "weaknesses": [
+      "legend for FP8/FP4 color coding is placed below the diagram rather than next to the precision panels it explains"
+    ]
+  },
+  "tags": [
+    "mixed-precision",
+    "llm-training",
+    "quantization",
+    "ilp",
+    "subbyte",
+    "adaptive-precision"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)"
+    ],
+    "evidence": [
+      "SNIP periodically updating layer-wise quantization decisions without interrupting the primary training loop",
+      "collect statistics on activations, gradients, and optimizer states",
+      "formulate an optimization problem to determine the optimal per-layer precision settings"
+    ]
+  },
+  "summary": "SNIP is a fine-grained adaptive mixed-precision training framework for LLM pretraining that supports subbyte precision. Figure 2 gives a system-level view of how SNIP integrates into a standard training loop: along a timeline of repeating forward/backward (Fwd Bwd) iterations, SNIP periodically and asynchronously runs four numbered steps -- collecting statistics on activations, weights and optimizer states, analyzing divergence metrics, solving an ILP for optimal per-layer precision, and updating the model's quantization assignment. Below the timeline, two small per-layer (L0-L3) panels contrast the Old Model Precision against the New Model Precision, using pink boxes for FP8 layers and green boxes for FP4 layers, with a small legend giving the resulting 50% FP4/50% FP8 efficiency budget. The figure is a single-column pipeline diagram built from flat, rounded pastel boxes with thin arrows, emphasizing that SNIP's precision search runs alongside, not inside, the critical training path.",
+  "summary_zh": "该图展示 SNIP 系统如何嵌入 LLM 训练流程：在持续进行的前向/反向训练时间线旁，SNIP 周期性异步执行“收集统计-分析散度-求解ILP-更新精度”四步，并对比更新前后各层（L0-L3）精度（粉色为FP8，绿色为FP4）。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

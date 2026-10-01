@@ -1,0 +1,185 @@
+{
+  "paper_id": "sosp24-011",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "ReCycle",
+    "one_liner": "a system for resilient DNN training that reroutes microbatches to data-parallel peers and adapts the pipeline schedule to tolerate worker failures without spare servers",
+    "domain": [
+      "distributed-training",
+      "fault-tolerance",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how ReCycle's worker grid tolerates worst-case single-group failures versus scattered 8-worker failures across a pipeline",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "Active Worker",
+        "kind": "icon",
+        "role": "legend icon (green GPU) marking a currently-functioning worker",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Failed Worker",
+        "kind": "icon",
+        "role": "legend icon (GPU with a red X) marking a currently-failed worker",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "4-Way Pipeline Parallelism",
+        "kind": "label",
+        "role": "names the horizontal axis; each column is one pipeline stage (0-3)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3-Way Data Parallelism",
+        "kind": "label",
+        "role": "names the vertical axis; each row is one data-parallel replica pipeline (0-2)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W_x_y",
+        "kind": "cell",
+        "role": "one worker GPU mapped to pipeline stage y of data-parallel pipeline x, drawn active (green) or failed (red X) depending on the scenario",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Data Parallel Group lost",
+        "kind": "label",
+        "role": "caption under the dashed red box in panel (a), naming that every data-parallel peer at one pipeline stage failed",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "W_x_y: Worker mapped to Pipeline Stage y of Data Parallel Pipeline x",
+        "kind": "label",
+        "role": "notation key defining what the W_x_y subscripts mean",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Worker (stage y)",
+        "to": "Worker (stage y+1)",
+        "what": "a microbatch is handed from one pipeline stage to the next within the same data-parallel row; ReCycle colours some of these hops red, which the text ties to rerouting around a failure",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) worst-case single data-parallel group loss",
+        "axis": "alternatives",
+        "differs": "all 3 workers at pipeline stage 1 fail (W0_1, W1_1, W2_1), wiping out one whole data-parallel group, marked by a dashed red box; each row reroutes around its own stage-1 failure",
+        "verdict": "worst case, but still recoverable"
+      },
+      {
+        "label": "(b) 8 simultaneous failures",
+        "axis": "alternatives",
+        "differs": "8 of 12 workers fail, scattered so every pipeline stage keeps exactly one active worker (W1_0, W0_1, W2_2, W1_3); no whole stage is wiped out",
+        "verdict": "recoverable despite losing 2/3 of the GPUs"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "which specific worker cells (W_x_y) are active versus failed in each of the two example configurations: panel (a) fails only column 1 (W0_1, W1_1, W2_1); panel (b) fails 8 of 12 cells (W0_0, W0_2, W0_3, W1_1, W1_2, W2_0, W2_1, W2_3), leaving exactly one active worker per column",
+      "linked_by": "colour (green/red) and position in the 3x4 grid, keyed by the W_x_y subscript notation",
+      "result_cells": "not a computed output table; the pattern of red/green cells is itself the example, showing which failure layouts ReCycle can keep training through"
+    },
+    "key_idea": "ReCycle keeps training alive as long as at least one worker per pipeline stage survives across the data-parallel peers, even losing an entire data-parallel group at one stage (a) or 8 of 12 workers scattered across the grid (b).",
+    "reading_order": "each panel's grid read left to right along a row (one data-parallel pipeline's stages), top to bottom across the three rows; panel (a) first highlights the dashed 'Data Parallel Group lost' column, panel (b) shows the same grid with a more scattered failure pattern"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "per-panel",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.58,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "dark-red text/outline for failed-worker labels, the dashed 'Data Parallel Group lost' box border, and arrows marking a rerouted hop"
+      },
+      {
+        "hex": "#196b24",
+        "used_for": "dark-green text/outline for active-worker labels and the active-worker GPU icon"
+      },
+      {
+        "hex": "#ff7e79",
+        "used_for": "salmon-pink fill of the X mark inside each failed-worker icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin green/red icon outlines; a dashed red rounded rectangle rings the lost data-parallel group in panel (a)",
+    "corners": "mixed",
+    "arrows": "thin arrows between adjacent pipeline stages within each row, coloured either black or red",
+    "font": "AvenirNext sans, coloured to match worker status (green for active, red for failed)",
+    "icons": "vector GPU icons: a green dual-fan graphics card for an active worker, the same icon overlaid with a salmon/red X for a failed worker"
+  },
+  "encoding": {
+    "color_means": "green marks an active worker (icon and W_x_y label); red marks a failed worker (icon, label) and, on some edges, a rerouted hop; the dashed red box in panel (a) singles out a pipeline stage that lost every one of its data-parallel workers",
+    "line_style_means": "solid arrows only; colour (red vs black), not dash pattern, is used to distinguish some hops from others",
+    "state_means": "active vs failed workers are told apart by icon (plain GPU vs GPU with an X) and by the colour of their W_x_y label (green vs red), consistently across both panels",
+    "marker_means": "no numbered markers; the X icon itself is the only symbolic marker, standing for a failed worker",
+    "emphasis": "the dashed red 'Data Parallel Group lost' box in panel (a) calls out the one named worst-case pattern the text discusses, while panel (b) relies on the sheer count of red X icons (8 of 12) to make its point",
+    "reusable_patterns": [
+      "an identical worker grid (data-parallel rows x pipeline-parallel columns) redrawn once per failure scenario, with only the active/failed colour pattern changing between panels",
+      "a dashed callout box isolating one failed group of cells that share a column"
+    ],
+    "weaknesses": [
+      "the rule for when a stage-to-stage arrow is coloured red versus black is not stated in the available caption/text and is not fully consistent between the two panels, so its exact meaning could not be verified from the given evidence",
+      "panel (b) has no '(a)'/'(b)' label printed on the figure itself; the distinction relies on the surrounding paper text"
+    ]
+  },
+  "tags": [
+    "fault-tolerance",
+    "pipeline-parallelism",
+    "data-parallelism",
+    "distributed-training",
+    "failure-recovery",
+    "ReCycle"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 ReCycle Techniques (p.6)",
+      "§3 ReCycle Techniques (p.7)"
+    ],
+    "evidence": [
+      "Example of ReCycle’s fault tolerance guarantees.",
+      "Despite 8 simultaneous failures – 2/3 of the GPUs! – ReCycle ensures continual training.",
+      "In the worst-case scenario, where simultaneous failures impact a single data-parallel group"
+    ]
+  },
+  "summary": "Figure 7 compares two concrete failure scenarios to illustrate ReCycle's fault-tolerance guarantees on a 3-way-data-parallel by 4-way-pipeline-parallel worker grid (12 workers, labelled W_x_y). In (a), the worst case for a single data-parallel group, all three workers at pipeline stage 1 fail together (dashed red box, 'Data Parallel Group lost'), yet each row still reroutes around its own missing stage-1 worker and continues. In (b), 8 of the 12 workers fail, two-thirds of the GPUs, scattered so that every pipeline stage still keeps exactly one active worker (W1_0, W0_1, W2_2, W1_3). Green GPU icons and green labels mark active workers, red GPU-with-X icons and red labels mark failed ones, and red arrows mark stage-to-stage hops that the text ties to ReCycle's microbatch rerouting. Both panels support the same underlying rule: training continues as long as one live worker remains per pipeline stage.",
+  "summary_zh": "该图对比ReCycle两个故障场景(12个worker)：(a)阶段1的3个worker全失效(红框标注)，各行绕过重路由；(b)8个worker失效(2/3)，但每阶段仍存1个存活worker，训练继续。",
+  "confidence": "medium",
+  "notes": "worked_example corrected from the prior False to True: the specific pattern of which grid cells are active/failed (and the '8 simultaneous failures' count) is itself the content, matching the marker's definition. Confidence set to medium because the provided text excerpt explains the general 'one live worker per stage' guarantee and a separate, simpler normalization example, but does not explain this figure's red-vs-black arrow colouring, which was not fully consistent between the two panels on close visual inspection; that specific encoding is reported descriptively rather than with an asserted rule.",
+  "venue": "SOSP24"
+}

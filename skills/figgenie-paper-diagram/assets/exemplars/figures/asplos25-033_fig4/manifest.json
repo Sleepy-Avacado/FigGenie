@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-033_fig4",
+  "kind": "mechanism",
+  "paper_id": "asplos25-033",
+  "fig": "4",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 4. Transaction support with the firmware-level log.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": false,
+  "base": "data-structure",
+  "subject": "how a transaction's data chunks are persisted in the firmware write log, committed via the TxLog, and later flushed to flash",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 2.85,
+  "n_elements": 9,
+  "n_relations": 3,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-033/src/fig4_transaction.svg",
+    "preview.png": "lab/extracted/asplos25-033/src/fig4_transaction.png",
+    "print.png": "lab/extracted/asplos25-033/asplos25-033_fig4_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "A transaction's updates are first persisted in a firmware write log tagged by TxID, a separate compact TxLog then records the commit order, and only afterward does log cleaning flush the committed data to flash in that recorded order.",
+      "what_to_learn": "Colour-tag the object being followed so it stays identifiable in every structure it passes through",
+      "note_source": "doc"
+    }
+  ]
+}

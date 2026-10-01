@@ -1,0 +1,227 @@
+{
+  "paper_id": "nsdi25-026",
+  "fig": "4",
+  "system": {
+    "name": "OTTER",
+    "one_liner": "a multi-WAN transport system for 5G that co-optimizes which NF/application compute serves a flow and the route that flow takes to it",
+    "domain": [
+      "networking",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Network APIs",
+        "role": "standardized Quality-on-Demand APIs through which applications submit 5G flow demands (identifiers and QoS profile)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Controller",
+        "role": "co-optimizes which 5G application/NF compute serves a flow and the route to it; allocates compute and calculates network paths within capacity limits",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Optimizer",
+        "role": "issues SQL queries for sliding-window path metrics (throughput, RTT, jitter, loss) and solves the placement/routing LP using the Gurobi solver",
+        "container": "Controller",
+        "novel": true
+      },
+      {
+        "name": "Orchestrator",
+        "role": "manages cloud resources and implements the forwarding mechanism to steer traffic along Controller-computed routes; provisions compute per the optimal placement",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Profile Database",
+        "role": "stores performance measurements queried by the Optimizer for sliding-window path metrics",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Measurement Coordinator",
+        "role": "automates periodic execution of measurement tools (iPerf3, sockperf) for path bandwidth, RTT, jitter, and loss",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "sources",
+        "role": "traffic sources in the operator WAN",
+        "container": "operator WAN",
+        "novel": false
+      },
+      {
+        "name": "operator edge",
+        "role": "edge compute site in the operator WAN available for compute placement",
+        "container": "operator WAN",
+        "novel": false
+      },
+      {
+        "name": "cloud edge",
+        "role": "edge compute site in the cloud WAN available for compute placement",
+        "container": "cloud WAN",
+        "novel": false
+      },
+      {
+        "name": "cloud DC",
+        "role": "datacenter compute site in the cloud WAN available for compute placement",
+        "container": "cloud WAN",
+        "novel": false
+      },
+      {
+        "name": "operator WAN",
+        "role": "the operator's wide-area network; one of the two WANs OTTER places flows and compute across",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "cloud WAN",
+        "role": "the cloud provider's wide-area network; the other WAN OTTER places flows and compute across",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Network APIs",
+        "to": "Controller",
+        "what": "5G flows (flow demands)",
+        "step": null
+      },
+      {
+        "from": "Profile Database",
+        "to": "Controller",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Controller",
+        "to": "Orchestrator",
+        "what": "flow allocations",
+        "step": null
+      },
+      {
+        "from": "Orchestrator",
+        "to": "cloud WAN",
+        "what": "cloud resource deployments",
+        "step": null
+      },
+      {
+        "from": "Measurement Coordinator",
+        "to": "Profile Database",
+        "what": "performance measurements",
+        "step": null
+      },
+      {
+        "from": "operator WAN",
+        "to": "Measurement Coordinator",
+        "what": "network path measurements",
+        "step": null
+      },
+      {
+        "from": "sources",
+        "to": "cloud edge",
+        "what": "an example flow path from a source to allocated cloud compute",
+        "step": null
+      },
+      {
+        "from": "cloud DC",
+        "to": "sources",
+        "what": "an alternate/measured network path between the cloud and operator WANs",
+        "step": null
+      }
+    ],
+    "key_idea": "OTTER co-optimizes 5G flow placement (which NF/application compute serves a flow) and routing (the path to it), then an Orchestrator provisions and steers traffic across both an operator WAN and a cloud WAN.",
+    "reading_order": "Left-right across the top control pipeline (Network APIs/Profile Database to Controller/Optimizer to Orchestrator), then down into the dashed panel showing the operator and cloud WAN topology."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.99,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffe6e6",
+        "used_for": "light-pink fill of the five control-plane boxes (Network APIs, Controller, Orchestrator, Profile Database, Measurement Coordinator)"
+      },
+      {
+        "hex": "#e6e6ff",
+        "used_for": "very light lavender fill of the Optimizer sub-box and the dashed multi-WAN background panel"
+      },
+      {
+        "hex": "#ffbf80",
+        "used_for": "orange fill of the arrow from sources to cloud edge"
+      },
+      {
+        "hex": "#e6ffe6",
+        "used_for": "light-green accent stripes on the server-rack icons (operator edge, cloud edge, cloud DC)"
+      },
+      {
+        "hex": "#df809f",
+        "used_for": "pink dashed arrow between cloud DC and sources"
+      },
+      {
+        "hex": "#cc3366",
+        "used_for": "darker-magenta arrowhead on the dashed cloud DC-to-sources arrow"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.31pt; solid outlines on boxes, dash-dot outline around the multi-WAN panel, cloud-shaped outlines for the two WANs",
+    "corners": "mixed",
+    "arrows": "solid black arrows with filled triangular heads for the control-plane pipeline, plus one thick curved orange arrow and one dashed curved magenta arrow inside the multi-WAN panel",
+    "font": "serif (Nimbus Roman-like), about 7-8pt",
+    "icons": "bitmap server-rack icons for operator edge/cloud edge/cloud DC, small circle icons for sources, cloud-outline shapes for the two WANs"
+  },
+  "encoding": {
+    "color_means": "pink boxes = OTTER's own control-plane components (Controller, Optimizer, Orchestrator, Profile Database, Measurement Coordinator); plain white = the external Network APIs; cloud outlines distinguish the operator WAN from the cloud WAN in the data plane below",
+    "line_style_means": "solid black arrows show the control-plane decision pipeline and its inputs; a solid orange arrow and a dashed magenta arrow inside the dashed panel show example/measured paths across the data plane",
+    "emphasis": "separates a top control-plane pipeline (APIs to Controller/Optimizer to Orchestrator) from a visually distinct dashed-outline data-plane panel showing the actual multi-WAN topology the Orchestrator provisions",
+    "reusable_patterns": [
+      "control-data split with a single vertical 'deployments' arrow bridging the two",
+      "two side-by-side cloud shapes representing distinct administrative WANs, each with example sites drawn as icons"
+    ],
+    "weaknesses": [
+      "the exact endpoint of the 'cloud resource deployments' arrow inside the data-plane panel is not individually labelled",
+      "Profile Database's relationship to the Cosmos DB NoSQL database described in the text is not made explicit by a shared name"
+    ]
+  },
+  "tags": [
+    "5G",
+    "multi-WAN",
+    "network-optimization",
+    "orchestration",
+    "flow-placement",
+    "edge-computing",
+    "SD-WAN"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Otter (p.5)",
+      "6 System Implementation (p.8)"
+    ],
+    "evidence": [
+      "Figure 4 shows OTTER's architecture consisting of the Controller and Orchestrator.",
+      "The Orchestrator manages cloud resources and implements the forwarding mechanism to steer traffic along routes",
+      "We have implemented the entire OTTER system shown in Figure 4 to operate on top of Azure and GCP"
+    ]
+  },
+  "summary": "OTTER is a system that places 5G flows across a multi-WAN environment by co-optimizing which application/NF compute serves a flow and the route to reach it. Figure 4 shows OTTER's architecture as a control-plane pipeline above a data-plane panel. Network APIs deliver 5G flow demands, and a Profile Database supplies performance history, both feeding the Controller, whose embedded Optimizer computes placement and routes; the Controller passes flow allocations to the Orchestrator, which provisions cloud resources and steers traffic. A Measurement Coordinator periodically measures network paths and writes performance measurements back to the Profile Database. Below, a dashed panel depicts the two WANs OTTER spans: an operator WAN (with traffic sources and an operator edge site) and a cloud WAN (with a cloud edge and a cloud DC), linked by an example flow path and a measured or alternate path.",
+  "summary_zh": "该图展示OTTER架构：控制面中APIs与数据库向Controller/Optimizer提供输入，经Orchestrator下发云资源；下方面板展示operator WAN与cloud WAN数据面拓扑及示例路径。",
+  "confidence": "high",
+  "notes": "Profile Database's exact correspondence to the Cosmos DB NoSQL database described in §6, and the precise semantics of the orange and dashed-magenta arrows inside the multi-WAN panel, are inferred from the figure rather than stated explicitly by name in the given text.",
+  "venue": "NSDI25"
+}

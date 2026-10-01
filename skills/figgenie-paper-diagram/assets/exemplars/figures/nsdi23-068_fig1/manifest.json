@@ -1,0 +1,53 @@
+{
+  "id": "nsdi23-068_fig1",
+  "paper_id": "nsdi23-068",
+  "fig": "1",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 1: The overview of DChannel. It has two main com- ponents: packet steerer that steers application traffic to LLC and HBC, and reordering buffer that reorders packets coming from LLC.",
+  "corpus_template": "two-panel",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.7,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-068/nsdi23-068_fig1_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-068/nsdi23-068_fig1_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "High-confidence nested-stack exemplar across a five-zone swimlane: the DChannel client box nests a Packet steerer and a Reordering buffer, and the mirrored DChannel proxy box nests the identical pair, tied by two colour-coded channel arrows.",
+      "what_to_learn": "Nest the same two named sub-modules inside both a client and its mirrored server box so the symmetry is legible from shape alone, then colour-code the parallel channel arrows between them; the weakness here notes those channel colours need a legend, so add one even for two lines."
+    },
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Five zone columns (User equipment to Base station to Core network to Gateway to Internet) frame a mirrored client/proxy pair, with HBC and LLC drawn as two distinctly coloured dashed paths crossing the same boundaries.",
+      "what_to_learn": "Draw the network path itself as a series of thin vertical zone columns behind the two mirrored endpoint boxes, and give each of the two parallel channels its own consistent colour end to end; add a small legend naming HBC and LLC, since this figure leaves those abbreviations uncoded."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Ranked first among mirrored-pair exemplars: client and proxy DChannel agents sit at the ends of five network swimlanes, each holding the same Packet steerer/Reordering buffer pair, mirrored in order, around the two crossing HBC/LLC channels.",
+      "what_to_learn": "Place the mirrored pair at the two ends of a swimlane network path rather than side by side, reverse the internal stacking order on the far side (steerer-then-buffer becomes buffer-then-steerer) to mirror it visually, and label the two crossing channel arrows in the figure itself, since no legend explains HBC and LLC here."
+    }
+  ]
+}

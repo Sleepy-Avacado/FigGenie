@@ -1,0 +1,205 @@
+{
+  "paper_id": "osdi23-018",
+  "fig": "4",
+  "system": {
+    "name": "Conveyor",
+    "one_liner": "a general-purpose continuous software deployment system built from stateless, worker-pool services that coordinate through a shared partitioned database",
+    "domain": [
+      "continuous-deployment",
+      "cloud",
+      "devops"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Conveyor Core",
+        "role": "the group of stateless services centered on the shared database",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Database",
+        "role": "shared, sharded store of pipelines, metadata, and the last step executed for each release and action",
+        "container": "Conveyor Core",
+        "novel": true
+      },
+      {
+        "name": "Release Creator",
+        "role": "periodically scans for new input artifacts and creates a release object when they are discovered",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Artifact Finders",
+        "role": "pluggable finders invoked to discover new input artifacts for a pipeline",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Backend Artifact Finder",
+        "role": "a standard finder for backend build artifacts",
+        "container": "Artifact Finders",
+        "novel": false
+      },
+      {
+        "name": "Mobile Artifact Finder",
+        "role": "a standard finder for mobile build artifacts",
+        "container": "Artifact Finders",
+        "novel": false
+      },
+      {
+        "name": "Configuration Artifact Finder",
+        "role": "a standard finder for configuration artifacts",
+        "container": "Artifact Finders",
+        "novel": false
+      },
+      {
+        "name": "Run Scheduler",
+        "role": "periodically scans releases and steps through each action in a pipeline to schedule execution",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Run Manager",
+        "role": "initiates action execution, tracks progress, and records the outcome back to the database",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Action Services",
+        "role": "services implementing the logic of standard or custom pipeline actions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Deploy",
+        "role": "standard action for deploying a new version to production",
+        "container": "Action Services",
+        "novel": false
+      },
+      {
+        "name": "Test",
+        "role": "standard testing action",
+        "container": "Action Services",
+        "novel": false
+      },
+      {
+        "name": "Build",
+        "role": "standard action for compiling source code and running unit tests",
+        "container": "Action Services",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Database",
+        "to": "Release Creator",
+        "what": "pipeline/release state read during the periodic scan",
+        "step": 1
+      },
+      {
+        "from": "Release Creator",
+        "to": "Artifact Finders",
+        "what": "invocation to discover new input artifacts",
+        "step": 2
+      },
+      {
+        "from": "Release Creator",
+        "to": "Database",
+        "what": "new release object recorded, triggering pipeline execution",
+        "step": 3
+      },
+      {
+        "from": "Database",
+        "to": "Run Scheduler",
+        "what": "releases and actions scanned periodically to schedule execution",
+        "step": 4
+      },
+      {
+        "from": "Run Scheduler",
+        "to": "Run Manager",
+        "what": "notification that an action should execute",
+        "step": 5
+      },
+      {
+        "from": "Run Manager",
+        "to": "Action Services",
+        "what": "invocation of the service implementing the action's logic",
+        "step": 6
+      },
+      {
+        "from": "Run Manager",
+        "to": "Database",
+        "what": "recorded outcome of the action",
+        "step": 7
+      }
+    ],
+    "key_idea": "Conveyor's stateless services (Release Creator, Run Scheduler, Run Manager) coordinate purely through a shared partitioned database, discovering artifacts and executing pipeline actions via pluggable Artifact Finders and Action Services, following a numbered seven-step create-release/schedule/run-action cycle.",
+    "reading_order": "Follow the seven circled numbers radiating from Conveyor Core: Release Creator and Artifact Finders on the left create releases (steps 1-3), then Run Scheduler and Run Manager on the right schedule and run actions via Action Services (steps 4-7)."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.7,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cfe2f3",
+        "used_for": "fill of all service and container boxes (Conveyor Core, Release Creator, Run Manager, Run Scheduler, Artifact Finders and Action Services groups)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed borders around the Artifact Finders and Action Services groups, solid borders on other boxes",
+    "font": "Arial sans-serif, 5.5-7pt, regular weight",
+    "corners": "rounded",
+    "arrows": "thin curved arrows radiating from the central Conveyor Core, each annotated with a circled step number 1-7",
+    "icons": "vector, a database cylinder icon inside Conveyor Core"
+  },
+  "encoding": {
+    "color_means": null,
+    "line_style_means": "dashed group borders mark pluggable/extensible sets of services (Artifact Finders, Action Services); numbered arrows show the sequential steps of one pipeline execution",
+    "emphasis": "all traffic is drawn passing through the central Conveyor Core/Database, visually reinforcing that Conveyor's services coordinate solely through shared state rather than direct calls to each other",
+    "reusable_patterns": [
+      "hub-and-spoke architecture where a shared database mediates all coordination between stateless workers",
+      "numbered walkthrough of a create-release/schedule/run-action lifecycle"
+    ],
+    "weaknesses": [
+      "no legend distinguishing box types beyond dashed vs. solid borders"
+    ]
+  },
+  "tags": [
+    "continuous-deployment",
+    "ci-cd",
+    "worker-pool",
+    "database-coordination",
+    "pipeline-orchestration",
+    "devops"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Design and Implementation of Conveyor (p.10)"
+    ],
+    "evidence": [
+      "Conveyor comprises several stateless services that share a database",
+      "The Release Creator periodically scans for new input artifacts (Step 1) by invoking Artifact Finders (Step 2)",
+      "The outcome of the action is recorded back to the database (Step 7)"
+    ]
+  },
+  "summary": "This figure depicts Conveyor's architecture as a set of stateless services coordinating through a shared, sharded Database inside Conveyor Core. On the create-release side, a Release Creator periodically scans state (step 1), invokes pluggable Artifact Finders such as Backend, Mobile and Configuration finders to discover new artifacts (step 2), and writes a new release object to the database to trigger the pipeline (step 3). On the run-action side, a Run Scheduler periodically scans releases and actions to decide what to run (step 4), notifies the Run Manager (step 5), which invokes the appropriate Action Service such as Deploy, Test or Build (step 6) and records the outcome back to the database (step 7). The diagram places Conveyor Core at the center with the other components as spokes, connected by curved arrows carrying circled step numbers 1 through 7, visually emphasizing that all coordination flows through the shared database rather than direct service-to-service calls.",
+  "summary_zh": "Conveyor 架构：无状态服务经共享数据库协作，Release Creator 发现制品创建 release，Run Scheduler 调度、Run Manager 执行动作并写回结果，步骤编号 1-7。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-071_fig3",
+  "paper_id": "osdi26-071",
+  "fig": "3",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 3: AEGIS Overview.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.26,
+  "n_components": 19,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-071/osdi26-071_fig3_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-071/osdi26-071_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated: a coarse lifecycle timeline (Factory to Data Center Operation) highlights one stage, Online SDC Detection, in red and drops a shaded wedge into AEGIS's per-GPU timeline, where circled steps 1-5 flag one suspicious op.",
+      "what_to_learn": "Draw a coarse lifecycle timeline across the top, pick out the one stage your system owns in a distinct color, and drop a shaded wedge straight down from it into the detailed mechanism diagram, reusing numbered steps to walk sense-then-verify across a per-unit execution timeline inside that mechanism."
+    }
+  ]
+}

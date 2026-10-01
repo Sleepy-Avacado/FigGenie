@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.912 81.412" width="76.912pt" height="81.412pt" data-symbol="primary-replica-failover-precondition-diagram" data-kind="motif" data-size-pt="76.912x81.412">
+  <title>primary-replica-failover-precondition-diagram</title>
+  <desc>primary/replica-0/replica-1 database cylinder topology with double-line arrows between them; one replica carries a red X precondition-failure badge, a starburst marks the failover() call, and a red arrow points to the resulting Error label; the other replica shows a green check Ready status | source: nsdi26-027_fig1 (nsdi26-027_fig1_p3_vector.svg) | candidate wave4:primary-replica-failover-precondition-diagram | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="primary-replica-failover-precondition-diagram" transform="scale(1) translate(-4.0550,-20.6660)"><defs>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_1">
+<path transform="matrix(1,0,0,-1,-51,722.9998)" d="M51 610.04367H303.81977V722.9998H51Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_2">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M0 0H310V127H0Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_3">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M0 .0181815H309.8182V126.99998H0Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_4">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M44.49094 10.67276H55.4V21.58182H44.49094Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_5">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M141.5818 10.67276H152.49094V21.58182H141.5818Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_6">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M238.6727 10.67276H249.58176V21.58182H238.6727Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_7">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M44.70906 90.52724H55.61819V101.21818H44.70906Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_8">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M142.8909 90.52724H153.79996V101.43637H142.8909Z"/>
+</clipPath>
+<clipPath id="nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_9">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M238.6727 91.18181H249.58176V101.87275H238.6727Z"/>
+</clipPath>
+</defs>
+<g clip-path="url(#nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_1)">
+<g clip-path="url(#nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_2)">
+<text xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 47.543966 131.45058)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0 29.790602 50.3972 64.1568 82.5084 100.86 121.4666">Unready</tspan></text>
+<text xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 48.72728 194.37226)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0 27.498703 45.813405 64.128108 84.73881">Ready</tspan></text>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M5.545433 95.54546C5.545433 94.15972 13.70199 93.03635 23.76362 93.03635 33.82525 93.03635 41.98181 94.15972 41.98181 95.54546V80.49092C41.98181 79.10518 33.82525 77.98181 23.76362 77.98181 13.70199 77.98181 5.545433 79.10518 5.545433 80.49092Z" fill="#336791" fill-rule="evenodd"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M5.545433 95.54546C5.545433 96.9312 13.70199 98.05457 23.76362 98.05457 33.82525 98.05457 41.98181 96.9312 41.98181 95.54546 41.98181 94.15972 33.82525 93.03635 23.76362 93.03635 13.70199 93.03635 5.545433 94.15972 5.545433 95.54546Z" fill="#85a4bd" fill-rule="evenodd"/>
+<path transform="matrix(.00006272914,0,0,.00006272914,7.4178249,26.059685)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M462742 31865.69C462742 49464.63 359153.6 63731.38 231371 63731.38 103588.3 63731.38 0 49464.63 0 31865.69 0 14266.76 103588.3 0 231371 0 359153.6 0 462742 14266.76 462742 31865.69V223058.3C462742 240657.3 359153.6 254924 231371 254924 103588.3 254924 0 240657.3 0 223058.3V31865.69"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 7.942115 138.75089)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0 27.498703 45.813405 66.4241 77.8918 89.3595 107.674198">Replica</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 29.850264 138.75089)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0">-</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 32.240243 138.75089)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0">0</tspan></text>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M5.109055 59.10908C5.109055 57.72334 13.26562 56.59997 23.32724 56.59997 33.38887 56.59997 41.54543 57.72334 41.54543 59.10908V44.05454C41.54543 42.6688 33.38887 41.54543 23.32724 41.54543 13.26562 41.54543 5.109055 42.6688 5.109055 44.05454Z" fill="#008bb9" fill-rule="evenodd"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M5.109055 59.10908C5.109055 60.49482 13.26562 61.61819 23.32724 61.61819 33.38887 61.61819 41.54543 60.49482 41.54543 59.10908 41.54543 57.72334 33.38887 56.59997 23.32724 56.59997 13.26562 56.59997 5.109055 57.72334 5.109055 59.10908Z" fill="#66b9d5" fill-rule="evenodd"/>
+<path transform="matrix(.00006272914,0,0,.00006272914,7.07018,55.087095)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M462742 31865.69C462742 49464.63 359153.6 63731.38 231371 63731.38 103588.3 63731.38 0 49464.63 0 31865.69 0 14266.76 103588.3 0 231371 0 359153.6 0 462742 14266.76 462742 31865.69V223058.3C462742 240657.3 359153.6 254924 231371 254924 103588.3 254924 0 240657.3 0 223058.3V31865.69"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 9.984387 167.95209)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0 22.914902 36.6458 48.121706 80.22061 98.54351 112.274417">Primary</tspan></text>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M5.109055 23.98183C5.109055 22.59609 13.26562 21.47273 23.32724 21.47273 33.38887 21.47273 41.54543 22.59609 41.54543 23.98183V8.927297C41.54543 7.541553 33.38887 6.418187 23.32724 6.418187 13.26562 6.418187 5.109055 7.541553 5.109055 8.927297Z" fill="#336791" fill-rule="evenodd"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M5.109055 23.98183C5.109055 25.36758 13.26562 26.49094 23.32724 26.49094 33.38887 26.49094 41.54543 25.36758 41.54543 23.98183 41.54543 22.59609 33.38887 21.47273 23.32724 21.47273 13.26562 21.47273 5.109055 22.59609 5.109055 23.98183Z" fill="#85a4bd" fill-rule="evenodd"/>
+<path transform="matrix(.00006272914,0,0,.00006272914,7.07018,83.07157)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M462742 31865.69C462742 49464.63 359153.6 63731.38 231371 63731.38 103588.3 63731.38 0 49464.63 0 31865.69 0 14266.76 103588.3 0 231371 0 359153.6 0 462742 14266.76 462742 31865.69V223058.3C462742 240657.3 359153.6 254924 231371 254924 103588.3 254924 0 240657.3 0 223058.3V31865.69"/>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 7.5944387 195.76274)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0 27.498703 45.813405 66.4241 77.8918 89.3595 107.674198">Replica</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 29.502585 195.76274)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0">-</tspan></text>
+<text fill="#ffffff" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 31.892565 195.76274)" font-size="41" font-family="TimesNewRomanPSMT, 'Times New Roman', Times, serif"><tspan y="-582" x="0">1</tspan></text>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M25.4 72.85453 23.54547 74.70906 21.69094 72.85453H22.61821V63.14543H24.47273V72.85453Z" fill="#336791" fill-rule="evenodd"/>
+<path transform="matrix(-.00006272914,-0,0,.00006272914,23.235165,44.658124)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M0 23552.53 23552.58 0 47105 23552.53H35328.71V146858H11776.29V23552.53Z"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M21.47276 29.65453 23.32729 27.8 25.18181 29.65453H24.25454V39.36362H22.40002V29.65453Z" fill="#336791" fill-rule="evenodd"/>
+<path transform="matrix(.00006272914,0,0,-.00006272914,20.10649,82.028697)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M0 23552.53 23552.58 0 47105 23552.53H35328.71V146858H11776.29V23552.53Z"/>
+<text fill="#ff0000" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 39.102563 172.99277)" font-size="41" font-family="Consolas, sans-serif"><tspan y="-582" x="0 22.9149 45.8298 68.7447 91.6596 114.5745 137.4894 160.4043 183.3192 206.2341">failover()</tspan></text>
+<text fill="#ff0000" xml:space="preserve" transform="matrix(.17381671 0 -0 .17381671 51.052465 181.5098)" font-size="41" font-family="Consolas, sans-serif"><tspan y="-582" x="0 22.9149 45.8298 68.7447 91.6596">Error</tspan></text>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M41.54543 51.02662H94.08188V88.51819H46.98188V87.51819H93.58188L93.08188 88.01819V51.52662L93.58188 52.02662H41.54543ZM47.98189 91.01819 41.98189 88.01819 47.98189 85.01819Z"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M63.25453 60.87472 67.2021 65.32724 66.81286 61.23936 71.29391 61.90571 69.51422 59.71169 74.17557 59.08066 70.47406 57.28583 74.70906 55.12482 69.6574 55.39197 71.04467 51.43614 66.66968 54.22894 65.84983 50.17561 62.97029 53.86199 60.79923 48.74543 59.98256 53.33076 56.8506 51.80309 57.81045 54.62813 51.94318 54.12915 55.74757 56.28785 51.8 58.71371 56.70742 59.47985 52.19242 63.56542 59.55514 60.47553 60.65817 63.56542Z" fill="#e50914" fill-rule="evenodd"/>
+<path transform="matrix(.00006272914,0,0,.00006272914,44.266988,52.132246)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M145472.5 56547.04 195606.6 0 190663.3 51916.04 247572.7 43453.48 224970.5 71317.53 284169.8 79331.61 237160.6 102125.9 290945 129570.7 226788.9 126177.9 244407.3 176417 188844.9 140948.4 178432.8 192425.7 141862.6 145608.6 114290.2 210589 103918.6 152355.3 64142.6 171756.8 76332.66 135878.7 1818.406 142215.8 50134.14 114800.3 0 83991.86 62324.19 74261.87 4983.78 22375.08 98490.28 61616.78 112498.7 22375.08Z"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M46.12724 34.12728H55.07275V35.43638L57.69094 32.81816 55.07275 30.19996V31.50906H46.12724Z" fill="#ff0000" fill-rule="evenodd"/>
+<path transform="matrix(.00006272914,0,0,.00006272914,39.747728,75.9451)" stroke-width="12700" stroke-linecap="butt" stroke-miterlimit="8" stroke-linejoin="miter" fill="none" stroke="#172c51" d="M0 16625.58H113607.9V0L146859 33251.32 113607.9 66502.48V49876.9H0Z"/>
+<g clip-path="url(#nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_4)">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M49.94547 21.58181C46.93696 21.58181 44.49094 19.1358 44.49094 16.12729 44.49094 13.11877 46.93696 10.67276 49.94547 10.67276 52.95398 10.67276 55.4 13.11877 55.4 16.12729 55.4 19.1358 52.95398 21.58181 49.94547 21.58181Z" fill="#4bae4f" fill-rule="evenodd"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M48.89505 13.63227C48.19832 14.329 47.50585 15.03212 46.80699 15.72885 46.73028 15.80555 46.73028 15.93339 46.80699 16.0101L47.61025 16.81336C47.68696 16.89007 47.8148 16.89007 47.8915 16.81336L49.03993 15.66493 51.99305 18.62017C52.07189 18.69688 52.1976 18.69688 52.27643 18.62017L53.08182 17.81478C53.16066 17.73594 53.16066 17.61023 53.08182 17.53353L49.1763 13.63226C49.09959 13.55343 48.97388 13.55343 48.89505 13.63226Z" fill="#ffffff"/>
+</g>
+<g clip-path="url(#nsdi26-027-fig1-primary-replica-failover-precondition-diagram-clip_7)">
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M55.43637 95.87272C55.43637 93.0189 53.07568 90.70543 50.16362 90.70543 47.25156 90.70543 44.89087 93.0189 44.89087 95.87272 44.89087 98.72653 47.25156 101.04 50.16362 101.04 53.07568 101.04 55.43637 98.72653 55.43637 95.87272Z" fill="#f74850"/>
+<path transform="matrix(.79666,0,0,-.79666,3,104.17584)" d="M50.93053 95.87272 52.27109 94.55898C52.37002 94.46164 52.37002 94.30423 52.27109 94.20689L51.86345 93.8074C51.76412 93.71045 51.6035 93.71045 51.50417 93.8074L50.16362 95.12114 48.82307 93.8074C48.72375 93.71045 48.56312 93.71045 48.4638 93.8074L48.05616 94.20689C47.95722 94.30423 47.95722 94.46164 48.05616 94.55898L49.39671 95.87272 48.05616 97.18646C47.95722 97.28379 47.95722 97.44121 48.05616 97.53854L48.4638 97.93803C48.56312 98.03499 48.72375 98.03499 48.82307 97.93803L50.16362 96.62429 51.50417 97.93803C51.6035 98.03499 51.76412 98.03499 51.86345 97.93803L52.27109 97.53854C52.37002 97.44121 52.37002 97.28379 52.27109 97.18646Z" fill="#ffffff"/>
+</g>
+</g>
+</g>
+</g>
+</svg>

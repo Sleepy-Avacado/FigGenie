@@ -1,0 +1,216 @@
+{
+  "paper_id": "asplos25-033",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "ByteFS",
+    "one_liner": "a file system for memory-semantic (CXL-based) SSDs that supports both byte- and block-granular data access",
+    "domain": [
+      "storage",
+      "file-systems",
+      "SSD-firmware"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a transaction's data chunks are persisted in the firmware write log, committed via the TxLog, and later flushed to flash",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "TxTable",
+        "kind": "box",
+        "role": "host-side global table tracking all ongoing transactions by TxID",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "TxID:A",
+        "kind": "row",
+        "role": "TxTable entry for transaction A",
+        "container": "TxTable",
+        "highlighted": false
+      },
+      {
+        "name": "TxID:B",
+        "kind": "row",
+        "role": "TxTable entry for transaction B",
+        "container": "TxTable",
+        "highlighted": false
+      },
+      {
+        "name": "Data Chunks",
+        "kind": "label",
+        "role": "the transaction's write data, colour-tagged to its TxID",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Write Log",
+        "kind": "box",
+        "role": "firmware DRAM log where transaction updates are persisted before commit",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "TxLog",
+        "kind": "box",
+        "role": "compact 2MB firmware log recording each transaction's commit order and status",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "A",
+        "kind": "cell",
+        "role": "commit entry for transaction A inside TxLog",
+        "container": "TxLog",
+        "highlighted": true
+      },
+      {
+        "name": "B",
+        "kind": "cell",
+        "role": "commit entry for transaction B inside TxLog",
+        "container": "TxLog",
+        "highlighted": true
+      },
+      {
+        "name": "Flash",
+        "kind": "box",
+        "role": "NAND flash media that committed updates are eventually flushed to",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Data Chunks",
+        "to": "Write Log",
+        "what": "encoded updates are persisted into the write log",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "TxTable",
+        "to": "TxLog",
+        "what": "on COMMIT(TxID) the firmware appends a commit entry into TxLog",
+        "kind": "control",
+        "step": "2"
+      },
+      {
+        "from": "Write Log",
+        "to": "Flash",
+        "what": "log cleaning flushes committed updates to flash in TxLog's recorded order",
+        "kind": "data",
+        "step": "3"
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Write Log",
+        "what": "transaction updates, encoded with their TxID, are persisted into the write log",
+        "carries": "data chunks tagged A/B"
+      },
+      {
+        "marker": "2",
+        "at": "TxLog",
+        "what": "once all updates are persisted, the host issues COMMIT(TxID) and the firmware appends a commit entry into TxLog",
+        "carries": "commit entry (TxID)"
+      },
+      {
+        "marker": "3",
+        "at": "Flash",
+        "what": "log cleaning flushes the committed updates from the write log to flash, following TxLog's commit order",
+        "carries": "committed data chunks"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "A transaction's updates are first persisted in a firmware write log tagged by TxID, a separate compact TxLog then records the commit order, and only afterward does log cleaning flush the committed data to flash in that recorded order.",
+    "reading_order": "left to right: ByteFS host's TxTable and data chunks, across the dashed host/firmware boundary to the M-SSD firmware's TxLog (circled 2, commit) and Write Log (circled 1, persist), then on to Flash (circled 3, flush)"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.85,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fad9d5",
+        "used_for": "pale pink/salmon fill marking transaction A's identity (TxID:A row and its data chunks)"
+      },
+      {
+        "hex": "#dae8fc",
+        "used_for": "pale blue fill marking transaction B's identity (TxID:B row and its data chunks)"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "light red fill of the 'A' commit cell inside TxLog"
+      },
+      {
+        "hex": "#ffcccc",
+        "used_for": "light pink accent fill on a data-chunk square in the write log"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.56pt) black box outlines; dashed vertical line separating host from firmware",
+    "corners": "mixed",
+    "arrows": "short thin black arrows with solid heads for Persist and Flush, one slightly curved arrow for Commit",
+    "font": "Arial sans, 4.5-8pt, bold section headers ('ByteFS', 'M-SSD Firmware')",
+    "icons": "small stacked-page icon representing Flash storage"
+  },
+  "encoding": {
+    "color_means": "pink/salmon = transaction A's identity across TxTable, data chunks and TxLog; blue = transaction B's identity, so a chunk's colour traces it from host table to firmware log to flash",
+    "line_style_means": "a dashed vertical line separates host-side ByteFS structures from M-SSD firmware structures; solid arrows carry the numbered persist/commit/flush actions",
+    "state_means": "not applicable; the figure is a single static frame showing one path through the structures rather than a before/after state change",
+    "marker_means": "circled numbers 1-3 order the persist, commit, and flush actions of one transaction's lifecycle",
+    "emphasis": "colour-tagging each transaction (pink=A, blue=B) across TxTable, Write Log and TxLog lets the reader visually follow one transaction's data through every structure it touches",
+    "reusable_patterns": [
+      "circled-number walkthrough tracing colour-tagged data chunks through a chain of named log/table structures split across a host/firmware boundary"
+    ],
+    "weaknesses": [
+      "small (4.5-8pt) text and closely spaced boxes make the TxLog vs Write Log distinction easy to miss at a glance"
+    ]
+  },
+  "tags": [
+    "file-system",
+    "SSD-firmware",
+    "transactions",
+    "logging",
+    "CXL",
+    "ByteFS"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Design and Implementation"
+    ],
+    "evidence": [
+      "Updates in a transaction are then encoded with the TxID and persisted in the write log",
+      "M-SSD firmware appends a 4B commit entry with TxID into TxLog",
+      "flushing the committed updates based on the commit order in TxLog"
+    ]
+  },
+  "summary": "This figure walks through ByteFS's transaction mechanism, split between the host-side file system and the M-SSD firmware. On the host, a global TxTable tracks ongoing transactions by TxID (TxID:A, TxID:B), each colour-tagged (pink for A, blue for B) to match its data chunks. The numbered steps trace one transaction's lifecycle: (1) Persist, the transaction's data chunks, encoded with their TxID, are written into the firmware's Write Log; (2) Commit, once all updates are persisted the host issues COMMIT(TxID) and the firmware appends a small commit entry (the coloured A/B cell) into a separate 2MB TxLog that records commit order and status; (3) Flush, during log cleaning the firmware propagates the committed updates from the Write Log back to Flash, in the order recorded by TxLog. Splitting the compact ordering log (TxLog) from the bulk data log (Write Log) lets ByteFS maintain crash consistency without slowing down the common persist path.",
+  "summary_zh": "该图展示ByteFS的事务机制：主机端TxTable按TxID跟踪事务（A为粉色、B为蓝色）；固件按①持久化数据块到Write Log，②提交时在TxLog记录提交项，③按TxLog的提交顺序将数据刷回Flash，从而保证崩溃一致性。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

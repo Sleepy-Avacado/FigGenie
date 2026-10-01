@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-020_fig1",
+  "paper_id": "nsdi26-020",
+  "fig": "1",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 1: AFC System Architecture",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 3.33,
+  "n_components": 10,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-020/nsdi26-020_fig1_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-020/nsdi26-020_fig1_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": false,
+      "why_chosen": "The AFC Server is the hub: a 2x3 grid packs six named functions into one box, flanked by a client access point on one side and two distinct NRA databases as spokes on the other.",
+      "what_to_learn": "When a hub's real content is a set of named functions rather than repeated workers, lay them out as a small labelled grid inside the hub box, but add a legend or colour convention separating request/response traffic from the database-feed arrows, since this exemplar leaves both unlabelled by anything but position."
+    }
+  ]
+}

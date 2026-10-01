@@ -1,0 +1,42 @@
+{
+  "id": "osdi26-044_fig4",
+  "paper_id": "osdi26-044",
+  "fig": "4",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 4: The architecture of RLinf.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "visio",
+  "aspect": 0.9,
+  "n_components": 21,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-044/src/fig4_rlinf_arch.svg",
+    "preview.png": "lab/extracted/osdi26-044/src/fig4_rlinf_arch.png",
+    "print.png": "lab/extracted/osdi26-044/osdi26-044_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Interface -> worker group -> scheduler -> data plane -> launcher, 21 components, 0 weaknesses, aspect 0.9.",
+      "what_to_learn": "A deep tier stack stays readable if each tier is a full-width row of equal height and the flow between rows uses hollow block arrows rather than thin lines."
+    }
+  ]
+}

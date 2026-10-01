@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-107_fig5",
+  "paper_id": "nsdi24-107",
+  "fig": "5",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 5: The overview of TECC",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.55,
+  "n_components": 15,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-107/nsdi24-107_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-107/nsdi24-107_fig5_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Client and Server run the same HTTP/QUIC/UDP base stack with only their role-specific additions differing, Tunnel wrapping versus rate-control modules, while the Tunnel Server's three named modules occupy the shared middle carrying TECC's contribution.",
+      "what_to_learn": "Keep the common base protocol stack identical on both end nodes and add only the role-specific boxes where the design differs, client-side tunnel wrapping, server-side rate control, then dedicate the entire middle box to the paper's own contribution with named sub-modules. Disambiguate repeated HTTP/QUIC/UDP labels by column position, since duplicates can confuse a fast reader."
+    }
+  ]
+}

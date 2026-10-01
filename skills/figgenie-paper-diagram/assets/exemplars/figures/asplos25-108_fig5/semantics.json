@@ -1,0 +1,243 @@
+{
+  "paper_id": "asplos25-108",
+  "fig": "5",
+  "system": {
+    "name": "POD-Attention",
+    "one_liner": "a GPU kernel that overlaps prefill and decode attention computation for hybrid-batch LLM inference",
+    "domain": [
+      "ml-systems",
+      "gpu-computing"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Stream 1",
+        "role": "queues kernel launches; operations within a stream are serialized",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Stream 2",
+        "role": "queues kernel launches; operations within a stream are serialized",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Kernel C",
+        "role": "GPU kernel executing within Stream 1",
+        "container": "Stream 1",
+        "novel": false
+      },
+      {
+        "name": "Kernel A",
+        "role": "GPU kernel executing within Stream 2",
+        "container": "Stream 2",
+        "novel": false
+      },
+      {
+        "name": "Kernel B",
+        "role": "GPU kernel executing within Stream 2",
+        "container": "Stream 2",
+        "novel": false
+      },
+      {
+        "name": "Queued CTA",
+        "role": "Cooperative Thread Array waiting to be scheduled onto an SM",
+        "container": "Kernel",
+        "novel": false
+      },
+      {
+        "name": "CTA scheduler",
+        "role": "selects CTAs from streams and assigns them to SMs when resources are available",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "device containing the SMs and the shared memory hierarchy",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SM",
+        "role": "Streaming Multiprocessor that executes CTAs; contains L1 cache/shared memory and execution units",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "Exec CTA",
+        "role": "CTA currently executing on an SM",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "L1 $ / Shared mem",
+        "role": "per-SM L1 cache with a user-addressable shared-memory partition",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "L2 $",
+        "role": "cache shared by all SMs on the path to DRAM",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "GPU global memory accessed by SMs through the shared L2 cache",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "Warp pool",
+        "role": "set of warps resident on the SM available for dispatch",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "Warp",
+        "role": "group of 32 threads that typically execute concurrently in lockstep",
+        "container": "Warp pool",
+        "novel": false
+      },
+      {
+        "name": "Warp scheduler",
+        "role": "dispatches eligible warps for execution every clock cycle",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "Exec unit",
+        "role": "integer/floating-point execution unit used by dispatched warps",
+        "container": "SM",
+        "novel": false
+      },
+      {
+        "name": "Ld/st unit",
+        "role": "load/store unit handling memory operations for the SM",
+        "container": "SM",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "CTA scheduler",
+        "to": "Queued CTA",
+        "what": "selects a CTA from a stream's kernel",
+        "step": null
+      },
+      {
+        "from": "CTA scheduler",
+        "to": "SM",
+        "what": "assigns the selected CTA to an SM for execution",
+        "step": null
+      },
+      {
+        "from": "L1 $ / Shared mem",
+        "to": "L2 $",
+        "what": "memory traffic from the SMs",
+        "step": null
+      },
+      {
+        "from": "L2 $",
+        "to": "DRAM",
+        "what": "memory traffic to GPU global memory",
+        "step": null
+      },
+      {
+        "from": "Warp pool",
+        "to": "Warp scheduler",
+        "what": "resident warps available for dispatch",
+        "step": null
+      },
+      {
+        "from": "Warp scheduler",
+        "to": "Exec unit",
+        "what": "dispatches an eligible warp for execution",
+        "step": null
+      }
+    ],
+    "key_idea": "GPU execution is a hierarchy: streams queue kernels' CTAs, a CTA scheduler assigns them to SMs, and within each SM a warp scheduler dispatches warps to execution units while memory flows L1 to L2 to DRAM.",
+    "reading_order": "left to right across streams and kernels, down through the CTA scheduler into the GPU's SMs and memory hierarchy, then into the zoomed SM panel on the right"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.97,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green fill for CTA/warp/execution-unit boxes (queued/executing CTAs, warps, execution units)"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "light orange fill for memory-hierarchy boxes (L1$/shared mem, L2$, DRAM, Ld/st unit)"
+      },
+      {
+        "hex": "#6d8764",
+        "used_for": "dark green fill for single-CTA kernel boxes (Kernel C, Kernel B queued CTA)"
+      },
+      {
+        "hex": "#006eaf",
+        "used_for": "dark blue stroke/accent on scheduler boxes and scheduling arrows"
+      },
+      {
+        "hex": "#1ba1e2",
+        "used_for": "bright blue fill for the scheduler boxes (CTA scheduler, Warp scheduler)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark or color-matched strokes on boxes; dashed strokes bound the Stream and Warp-pool groups",
+    "font": "Arial/Helvetica sans, bold labels, roughly 5-7.5pt",
+    "corners": "mixed",
+    "arrows": "blue curved arrows with filled triangular heads for scheduling actions; black orthogonal arrows for cache/memory traffic",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = CTA/warp/execution-unit boxes, orange = memory-hierarchy boxes (caches, DRAM), blue = the two scheduler components",
+    "line_style_means": "dashed boundaries group the streams and the warp pool; solid arrows show scheduling assignment and data movement",
+    "emphasis": "the bright blue fill singles out the CTA scheduler and warp scheduler as the two active decision points in the hierarchy",
+    "reusable_patterns": [
+      "nested hardware/software hierarchy with a zoomed inset panel for one sub-component"
+    ],
+    "weaknesses": [
+      "many repeated boxes share the same label (Queued CTA, Exec CTA, Exec unit), making individual instances hard to distinguish"
+    ]
+  },
+  "tags": [
+    "gpu",
+    "warp-scheduling",
+    "cta-scheduling",
+    "memory-hierarchy",
+    "streaming-multiprocessor",
+    "background-diagram"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "The GPU's hardware is arranged in a hierarchy that supports execution at a scale of hundreds",
+      "The main processor unit of a GPU is a Streaming Multiprocessor (SM), with modern GPUs",
+      "A group of 32 threads make up a warp, which typically execute concurrently in lockstep."
+    ]
+  },
+  "summary": "Figure 5 of the POD-Attention paper illustrates the generic GPU execution model that motivates the work, not POD-Attention's own contribution. Two streams each queue kernels (Kernel A, B, C); a CTA scheduler pulls queued CTAs from these kernels and assigns them to the GPU's Streaming Multiprocessors (SMs), each holding executing CTAs and an L1 cache/shared-memory partition that feeds a shared L2 cache and DRAM. A zoomed panel on the right expands one SM to show its warp pool, warp scheduler, execution units, and load/store unit, illustrating how the warp scheduler dispatches eligible warps every cycle. The diagram uses green boxes for CTA/warp/execution-unit elements, orange boxes for the memory hierarchy, and blue boxes to highlight the two scheduling components, with dashed borders grouping the streams and the warp pool.",
+  "summary_zh": "图5展示GPU的通用执行模型作为背景铺垫:两个流分别排队若干内核,CTA调度器将排队CTA分配到各SM;右侧放大单个SM,展示warp池、warp调度器、执行单元与访存单元。绿色表示CTA/warp/执行单元,橙色表示缓存与DRAM,蓝色突出两个调度器组件。",
+  "confidence": "high",
+  "notes": "This is a background diagram of generic GPU hardware/execution, not a depiction of POD-Attention's own novel design.",
+  "venue": "ASPLOS25"
+}

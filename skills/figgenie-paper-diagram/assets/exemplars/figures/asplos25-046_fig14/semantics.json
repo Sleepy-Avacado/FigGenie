@@ -1,0 +1,133 @@
+{
+  "paper_id": "asplos25-046",
+  "fig": "14",
+  "system": {
+    "name": "Coach",
+    "one_liner": "a cloud platform system that exploits temporal patterns for all-resource oversubscription using guaranteed/oversubscribed CoachVMs",
+    "domain": [
+      "cloud",
+      "resource-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "CVM 1",
+        "role": "a CoachVM with guaranteed and oversubscribed CPU/memory portions",
+        "container": "Server",
+        "novel": true
+      },
+      {
+        "name": "CVM 2",
+        "role": "a CoachVM with guaranteed and oversubscribed CPU/memory portions",
+        "container": "Server",
+        "novel": true
+      },
+      {
+        "name": "CVM 3",
+        "role": "a CoachVM with guaranteed and oversubscribed CPU/memory portions",
+        "container": "Server",
+        "novel": true
+      },
+      {
+        "name": "Cores",
+        "role": "per-CVM core allocation row",
+        "container": "CVM",
+        "novel": false
+      },
+      {
+        "name": "Mem",
+        "role": "per-CVM memory allocation row",
+        "container": "CVM",
+        "novel": false
+      },
+      {
+        "name": "Server",
+        "role": "aggregates guaranteed and oversubscribed cores/memory across all CVMs",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "Each CoachVM splits every resource into a guaranteed portion and a shared oversubscribed portion, letting a server pack more VM capacity than it physically has.",
+    "reading_order": "Left to right across the three CVM boxes, then down into the aggregated Server table of cores and memory."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.86,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e3e3e3",
+        "used_for": "underutilized resource"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "utilized guaranteed resource"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "utilized oversubscribed resource"
+      },
+      {
+        "hex": "#ffd44c",
+        "used_for": "oversubscribed pool label in the Server table"
+      },
+      {
+        "hex": "#434445",
+        "used_for": "box borders and section headers"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark gray (~0.5pt) on all boxes",
+    "font": "Arimo sans-serif, ~4.5-6.5pt",
+    "corners": "square",
+    "arrows": "a few thin orthogonal connectors linking CVM allocations to the Server table",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = utilized guaranteed capacity, pink/red = utilized oversubscribed capacity, gray = underutilized capacity, yellow = oversubscribed pool",
+    "line_style_means": null,
+    "emphasis": "CVM3's split into guaranteed vs. oversubscribed bars is called out, mirrored in the yellow-highlighted Oversubscribed cell of the Server table",
+    "reusable_patterns": [
+      "stacked resource bar split into guaranteed vs. oversubscribed segments",
+      "per-VM resource table aggregated into a server-level table"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "oversubscription",
+    "cloud",
+    "VM scheduling",
+    "resource management",
+    "CPU",
+    "memory"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Temporal pattern-based oversubscription (p.7)"
+    ],
+    "evidence": [
+      "Three CoachVMs in a server showing the guar- anteed and oversubscribed CPU and memory.",
+      "Figure 14 shows how Coach may allocate resources to three CVMs",
+      "Coach guarantees 8 cores and 26GB of memory"
+    ]
+  },
+  "summary": "Coach is a cloud platform system that improves VM packing by exploiting temporal resource-usage patterns to oversubscribe CPU and memory across virtual machines. This figure illustrates three CoachVMs (CVM1, CVM2, CVM3) hosted on one server, each with declared core and memory sizes split into a guaranteed portion (always reserved) and an oversubscribed portion (shared with other CVMs). Small per-CVM boxes show cores and memory colored by whether they are underutilized, utilized-guaranteed, or utilized-oversubscribed, following the legend at top. Below, a Server-level table aggregates the same cores and memory rows across all three CVMs, separating the always-available Guaranteed capacity from the smaller, shared Oversubscribed pool highlighted in yellow, showing how 10 cores and 36GB back VMs that nominally need 14 cores and 56GB.",
+  "summary_zh": "该图展示 Coach 系统中三个 CoachVM 在一台服务器上的资源分配，将 CPU 和内存各自划分为保证部分与超售部分，并用颜色区分利用状态，底部表格汇总服务器整体的保证与超售资源池。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

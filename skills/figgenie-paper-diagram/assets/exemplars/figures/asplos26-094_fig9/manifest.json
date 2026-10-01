@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-094_fig9",
+  "paper_id": "asplos26-094",
+  "fig": "9",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 9. Overview of Mugi architecture. 1 – 4 (yellow, red, green, and blue) correspond to 1 – 4 phases of VLP approximation in Figure 3. Purple is for mapping softmax, and gray marks the additional hardware for GEMM.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "omnigraffle",
+  "aspect": 3.88,
+  "n_components": 17,
+  "n_flows": 11,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 8,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-094/src/fig9_architecture_overview.svg",
+    "preview.png": "lab/extracted/asplos26-094/src/fig9_architecture_overview.png",
+    "print.png": "lab/extracted/asplos26-094/asplos26-094_fig9_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: panel (a) is one systolic-array overview and (b)-(h) are seven different circuit-block zooms, each a distinct block, not repeated copies of one drawing; this is composite-figure or overview-with-inset, not n-panel-comparison.",
+      "what_to_learn": "When lettered sub-panels each show a different, unique circuit block rather than the same block under different conditions, treat the figure as an overview with several distinct insets, not a comparison; keep one consistent colour-phase code (as this figure does) so each inset still maps back to its place in the main dataflow."
+    }
+  ]
+}

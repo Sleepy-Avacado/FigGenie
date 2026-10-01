@@ -1,0 +1,239 @@
+{
+  "paper_id": "nsdi24-107",
+  "fig": "5",
+  "system": {
+    "name": "TECC",
+    "one_liner": "a QUIC tunneling system using collaborative transmission control (RMDT) across a client, a tunnel server, and a server",
+    "domain": [
+      "networking",
+      "transport-protocols",
+      "tunneling"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "HTTP",
+        "role": "application-layer protocol generating E2E data for the client app",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "QUIC",
+        "role": "transport protocol carrying the client's E2E connection data packets",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Tunnel",
+        "role": "encapsulates the client's QUIC packets for the tunnel connection and unpacks tunnel network-info frames",
+        "container": "Client",
+        "novel": true
+      },
+      {
+        "name": "Tunnel Client",
+        "role": "client-side tunnel module preparing packets for the tunnel connection",
+        "container": "Tunnel",
+        "novel": true
+      },
+      {
+        "name": "QUIC",
+        "role": "tunnel-layer QUIC used inside the client's tunnel module",
+        "container": "Tunnel",
+        "novel": true
+      },
+      {
+        "name": "UDP",
+        "role": "underlying transport carrying the client's tunnel packets",
+        "container": "Tunnel",
+        "novel": false
+      },
+      {
+        "name": "Retransmission",
+        "role": "detects whether tunnel packets are lost and retransmits those lost packets",
+        "container": "Tunnel Server",
+        "novel": true
+      },
+      {
+        "name": "Data Forward",
+        "role": "forwards E2E packets to the client and the server",
+        "container": "Tunnel Server",
+        "novel": true
+      },
+      {
+        "name": "Network Sampler",
+        "role": "collects tunnel network and transmission status and generates network info frames for the client",
+        "container": "Tunnel Server",
+        "novel": true
+      },
+      {
+        "name": "HTTP",
+        "role": "application-layer protocol for the server's E2E application",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Pacing Rate Updater",
+        "role": "updates the smoothed sending rate based on parsed network feedback",
+        "container": "Server",
+        "novel": true
+      },
+      {
+        "name": "QUIC",
+        "role": "transport protocol for the server's E2E connection, containing the Pacer",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Pacer",
+        "role": "paces the server's packet sending according to the updated rate",
+        "container": "QUIC",
+        "novel": true
+      },
+      {
+        "name": "UDP",
+        "role": "underlying transport for the server",
+        "container": "Server",
+        "novel": false
+      },
+      {
+        "name": "Network Feedback Parser",
+        "role": "parses network feedback (tunnel RTT, sending rate, retransmission rate) from the client to drive rate updates",
+        "container": "Server",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Tunnel",
+        "to": "Data Forward",
+        "what": "encapsulated E2E QUIC packets entering the tunnel connection",
+        "step": null
+      },
+      {
+        "from": "Data Forward",
+        "to": "Server",
+        "what": "forwarded E2E packets",
+        "step": null
+      },
+      {
+        "from": "Data Forward",
+        "to": "Tunnel",
+        "what": "forwarded E2E packets to the client",
+        "step": null
+      },
+      {
+        "from": "Retransmission",
+        "to": "Data Forward",
+        "what": "retransmitted lost tunnel packets",
+        "step": null
+      },
+      {
+        "from": "Network Sampler",
+        "to": "Tunnel",
+        "what": "network info frame with collected tunnel network/transmission status",
+        "step": null
+      },
+      {
+        "from": "Tunnel",
+        "to": "Network Feedback Parser",
+        "what": "QUIC network info frame re-encapsulating tunnel feedback",
+        "step": null
+      },
+      {
+        "from": "Network Feedback Parser",
+        "to": "Pacing Rate Updater",
+        "what": "parsed network information (tunnel RTT, sending rate, retransmission rate)",
+        "step": null
+      },
+      {
+        "from": "Pacing Rate Updater",
+        "to": "Pacer",
+        "what": "smoothed sending rate",
+        "step": null
+      }
+    ],
+    "key_idea": "TECC tunnels E2E QUIC traffic through a dedicated RMDT tunnel server that forwards packets, retransmits tunnel losses, and samples network conditions, feeding rate-control feedback back to the server's pacer for collaborative transmission control.",
+    "reading_order": "Left to right across three dashed boxes: the Client's HTTP/QUIC/Tunnel stack, the Tunnel Server's Data Forward/Retransmission/Network Sampler modules, and the Server's QUIC/Pacer/rate-control modules."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.55,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#767171",
+        "used_for": "dark warm-gray borders, arrows and body text"
+      },
+      {
+        "hex": "#70ad47",
+        "used_for": "green dashed outline of the Client/Server boxes and 'app data' legend swatch"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "medium gray secondary text and lines"
+      },
+      {
+        "hex": "#a9d18e",
+        "used_for": "light green 'e2e packet' legend swatch and matching fills inside Client/Server"
+      },
+      {
+        "hex": "#5b9bd5",
+        "used_for": "blue Tunnel/Tunnel Server elements and 'tunnel packet' legend swatch"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.43pt) borders, dashed outlines for the Client/Tunnel Server/Server group boxes",
+    "font": "Calibri, ~6-10pt, bold for module titles",
+    "corners": "mixed",
+    "arrows": "many thin arrows (about 26 heads) with small colored packet squares riding along the queues",
+    "icons": "small colored square icons denoting packet types in the recvqueue/send queue, matching the figure's own legend"
+  },
+  "encoding": {
+    "color_means": "green marks the Client/Server boxes and 'app data'/'e2e packet' entities; blue marks the Tunnel/Tunnel Server boxes and 'tunnel packet' entities; small colored squares in the queues distinguish app data, e2e packet, tunnel packet, lost tunnel packet, and the two network-info-frame variants per the figure's own legend; orange highlights the Server's rate-control modules (Pacing Rate Updater, Network Feedback Parser)",
+    "line_style_means": "labelled arrows carry named frame types (E2E Packet, Network Info Frame, QLen Feedback) between modules; Upstream/Downstream labels mark the two directions through the RMDT tunnel",
+    "emphasis": "the Tunnel Server's three named modules (Retransmission, Data Forward, Network Sampler) sit in their own dashed box between Client and Server, visually foregrounding TECC's tunnel-side contribution over the more generic HTTP/QUIC/UDP stacks",
+    "reusable_patterns": [
+      "three side-by-side protocol stacks connected by a middle relay box",
+      "packet-type legend rendered as small colored squares reused inside queue icons"
+    ],
+    "weaknesses": [
+      "very dense small text and many overlapping arrows at this figure size",
+      "duplicate labels (HTTP, QUIC, UDP) across Client/Server require reading box position to disambiguate"
+    ]
+  },
+  "tags": [
+    "quic-tunneling",
+    "congestion-control",
+    "network-transport",
+    "rate-pacing",
+    "packet-retransmission"
+  ],
+  "provenance": {
+    "sections": [
+      "4 TECC design and implementation (p.6)"
+    ],
+    "evidence": [
+      "TECC is based primarily on the RMDT mode and includes three components: the client, the tunnel server, and the server",
+      "The data forward module is responsible for forward-ing E2E packets to the client and the server.",
+      "The retransmission module detects whether the tunnel packets are lost and retransmits those lost packets."
+    ]
+  },
+  "summary": "TECC is a QUIC tunneling system that improves transmission control by collaborating across three RMDT-based components: the Client, the Tunnel Server, and the Server. On the client, an application using QUIC hands its E2E packets to a Tunnel module (Tunnel Client/QUIC/UDP) for encapsulation into the tunnel connection, and unpacks tunnel network-info frames back into QUIC network-info frames for the server. The Tunnel Server sits in the middle with three modules: Data Forward relays E2E packets between client and server, Retransmission detects and resends lost tunnel packets, and Network Sampler collects tunnel network/transmission status and reports it to the client. The Server runs its own HTTP/QUIC/UDP stack plus a Network Feedback Parser that reads the client's feedback (tunnel RTT, sending rate, retransmission rate) and a Pacing Rate Updater that smooths the rate fed to QUIC's Pacer. The figure is a dense three-column diagram with a color-coded packet-type legend.",
+  "summary_zh": "图5展示TECC三大组件：客户端将QUIC包封装进隧道；隧道服务器的Data Forward转发、Retransmission重传丢包、Network Sampler采样网络状态；服务器据反馈调节Pacer发送速率。",
+  "confidence": "high",
+  "notes": "layout-proposal: bidirectional tunneling relay — three side-by-side protocol-stack boxes (Client, Tunnel Server, Server) exchange packets in both directions (E2E data forward, network feedback backward) through a middle relay; pipeline is the closest named template though the flow is bidirectional rather than strictly forward.",
+  "venue": "NSDI24"
+}

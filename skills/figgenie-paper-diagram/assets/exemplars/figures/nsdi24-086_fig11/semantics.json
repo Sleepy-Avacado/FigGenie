@@ -1,0 +1,242 @@
+{
+  "paper_id": "nsdi24-086",
+  "fig": "11",
+  "kind": "mechanism",
+  "system": {
+    "name": "NN-Defined Modulator",
+    "one_liner": "a reconfigurable, portable neural-network-based software modulator for IoT gateway radios",
+    "domain": [
+      "wireless communication",
+      "IoT",
+      "machine learning systems"
+    ],
+    "abstraction": "software signal-processing pipeline"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "how an NN-PD module and a fine-tuning loop are added to compensate for the RF front-end's fixed nonlinearity",
+    "base": "component",
+    "elements": [
+      {
+        "name": "Standard signal",
+        "kind": "port",
+        "role": "input to the front-end model in the baseline distortion-modeling diagram",
+        "container": "Modeling Distortion at Front-End",
+        "highlighted": false
+      },
+      {
+        "name": "FE Model",
+        "kind": "box",
+        "role": "neural network modeling the RF front-end's nonlinear distortion",
+        "container": "Modeling Distortion at Front-End",
+        "highlighted": false
+      },
+      {
+        "name": "Distorted signal",
+        "kind": "port",
+        "role": "output showing the front-end's modeled nonlinear distortion",
+        "container": "Modeling Distortion at Front-End",
+        "highlighted": false
+      },
+      {
+        "name": "Fine-tuning Algorithm",
+        "kind": "box",
+        "role": "tunes kernels in the NN-defined modulator and parameters in NN-PD",
+        "container": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "highlighted": true
+      },
+      {
+        "name": "NN-defined Modulator",
+        "kind": "box",
+        "role": "modulator whose kernels are fine-tuned to pre-distort the signal",
+        "container": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "highlighted": true
+      },
+      {
+        "name": "NN-PD",
+        "kind": "box",
+        "role": "predistortion module inserted between the modulator and the FE model",
+        "container": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "highlighted": true
+      },
+      {
+        "name": "FE Model (Fixed)",
+        "kind": "box",
+        "role": "same front-end model with parameters frozen during fine-tuning",
+        "container": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "highlighted": false
+      },
+      {
+        "name": "Pre-distorted signal",
+        "kind": "label",
+        "role": "labels the signal flowing from NN-PD into the fixed FE model",
+        "container": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "highlighted": true
+      },
+      {
+        "name": "Compensated signal",
+        "kind": "port",
+        "role": "output signal compensating for the front-end's non-linearity",
+        "container": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Standard signal",
+        "to": "FE Model",
+        "what": "input",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "FE Model",
+        "to": "Distorted signal",
+        "what": "nonlinear distortion output",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "NN-defined Modulator",
+        "to": "NN-PD",
+        "what": "modulated signal",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "NN-PD",
+        "to": "FE Model (Fixed)",
+        "what": "pre-distorted signal",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "FE Model (Fixed)",
+        "to": "Compensated signal",
+        "what": "compensated output",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Fine-tuning Algorithm",
+        "to": "NN-defined Modulator",
+        "what": "tunes modulator kernels",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Fine-tuning Algorithm",
+        "to": "NN-PD",
+        "what": "tunes NN-PD parameters",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Modeling Distortion at Front-End",
+        "axis": "time",
+        "differs": "baseline: only the FE model maps a standard signal to a distorted signal, with no predistortion or tuning",
+        "verdict": null
+      },
+      {
+        "label": "Fine-tuning of NN-defined Modulator with NN-PD module",
+        "axis": "time",
+        "differs": "adds NN-PD and a fine-tuning algorithm that tunes the modulator and NN-PD so the fixed FE model outputs a compensated signal",
+        "verdict": "ours"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Inserting a fine-tuned NN-PD module between the modulator and a fixed FE model lets the pipeline learn a pre-distorted signal that cancels the front-end's modeled nonlinearity.",
+    "reading_order": "Top panel first (FE Model alone), then down to the bottom chain: Modulator to NN-PD to fixed FE Model, fine-tuning arrows read last."
+  },
+  "layout": {
+    "arrangement": "frames-column",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.84,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "primary box borders/text and the baseline signal-flow arrows (Standard/Distorted signal, main chain)"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "fine-tuning feedback arrows and the pre-distorted-signal path introduced by this work"
+      },
+      {
+        "hex": "#b4c7e7",
+        "used_for": "fill of the Fine-tuning Algorithm box"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "orange neuron node in the NN-PD icon"
+      },
+      {
+        "hex": "#a9d18e",
+        "used_for": "green neuron node in the NN-PD icon"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "solid blue/black arrows for the main chain; dashed red/blue arrows for feedback and output; dashed rule separates the two stacked diagrams",
+    "font": "sans-serif (Calibri), small (5-6.5pt), bold",
+    "corners": "mixed (sharp box corners, rounded Fine-tuning Algorithm box)",
+    "arrows": "solid arrowheads for the main signal chain; dashed arrowheads for feedback/output paths",
+    "icons": "small multi-coloured node-and-edge glyph inside NN-PD representing a neural network"
+  },
+  "encoding": {
+    "color_means": "blue = baseline/fixed signal chain; red = the new fine-tuning feedback and pre-distortion path; light blue/orange/green = the fine-tuning box and NN-PD's internal neurons",
+    "line_style_means": "solid = concrete signal/control connections; dashed = the compensated-signal output and the rule separating the two panels",
+    "state_means": "the two stacked panels are told apart by box count and colour: plain blue chain (before) vs blue chain plus red feedback loop (after)",
+    "marker_means": "none: no numeric or symbolic markers are used, only colour and added boxes",
+    "emphasis": "red arrows and text isolate the new NN-PD predistortion and fine-tuning feedback loop that the baseline top diagram lacks",
+    "reusable_patterns": [
+      "baseline block chain stacked above an augmented block chain with a colour-coded feedback loop added"
+    ],
+    "weaknesses": [
+      "the left-most red input arrow into NN-defined Modulator is unlabeled"
+    ]
+  },
+  "tags": [
+    "predistortion",
+    "neural network",
+    "fine-tuning",
+    "RF front-end",
+    "modulator",
+    "IoT gateway"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Modulator Kernel Configuration"
+    ],
+    "evidence": [
+      "we first use a neural network, the front-end (FE) Model, to model the nonlinear behavior",
+      "we construct the NN-PD and insert it between the NN-defined modulator and the FE model",
+      "the parameters in the FE model are fixed"
+    ]
+  },
+  "summary": "Figure 11 contrasts two stacked block diagrams to motivate the paper's NN-PD fine-tuning mechanism. The top diagram, 'Modeling Distortion at Front-End,' shows a plain FE Model mapping a Standard signal to a Distorted signal, illustrating the RF front-end's nonlinearity in isolation. The bottom diagram, 'Fine-tuning of NN-defined Modulator with NN-PD module,' inserts a new NN-PD block between the NN-defined Modulator and a now-fixed FE Model; a Fine-tuning Algorithm box sends red arrows into both the Modulator and NN-PD to tune the modulator's kernels and the NN-PD's parameters. The red 'Pre-distorted signal' between NN-PD and the FE Model is deliberately distorted so the FE Model's fixed nonlinearity cancels it out, yielding the blue 'Compensated signal' at the output.",
+  "summary_zh": "图11用上下两张框图对比：上图为FE模型单独把标准信号变成失真信号；下图在NN调制器和固定FE模型之间插入NN-PD模块，微调算法用红色箭头同时调整调制器和NN-PD参数，生成预失真信号以抵消前端非线性，得到补偿信号。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

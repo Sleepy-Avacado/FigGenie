@@ -1,0 +1,54 @@
+{
+  "id": "asplos25-148_fig5",
+  "paper_id": "asplos25-148",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. Heterogeneous Architecture of Micro Blossom. The blue blocks and green cylinders represent vPUs and ePUs, respectively. An instruction is first broadcast to all PUs, then each PU updates its local state and generates a response which is convergecasted into a single response. Each PU only t",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.67,
+  "n_components": 8,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-148/src/fig5_architecture2.svg",
+    "preview.png": "lab/extracted/asplos25-148/src/fig5_architecture2.png",
+    "print.png": "lab/extracted/asplos25-148/asplos25-148_fig5_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Extreme size asymmetry: a small CPU/Controller pair broadcasts instructions into a large 3D grid of homogeneous vertex/edge PUs, with an inside dashed legend for the per-PU instruction/state/response cycle and a time axis beside the grid.",
+      "what_to_learn": "Let the two sides be wildly unequal in size when the paper's point is scale: a tiny controller box against a wall of identical device units, connected by fan-out (broadcast) and fan-in (convergecast) arrows, with a small dashed legend for the repeating per-unit cycle placed beside the small side."
+    },
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "An unusual phase variant: instead of a horizontal time arrow, five measurement-round labels (t=1us to t=5us) run along the receding depth of a 3D isometric grid of vertex/edge PUs, replacing dashed phase columns with perspective.",
+      "what_to_learn": "A time axis does not have to run left-to-right along the bottom: this figure stacks its five measurement rounds into the depth of a 3D grid instead, which is a legitimate but riskier alternative to labeled vertical phase rules, since perspective compresses the later time steps."
+    },
+    {
+      "template": "block-floorplan",
+      "star": false,
+      "why_chosen": "A grid-as-floorplan variant: identical vertex-PU and edge-PU cells tile a 3D block like a systolic array, with the CPU/Controller drawn off to the side as the control block rather than inside the compute grid.",
+      "what_to_learn": "Treat a homogeneous processing-unit array (vertex/edge PUs here) like a systolic array for floorplan purposes: tile it as one repeated grid, keep the controller as a separate small block feeding it from outside, and use fan-out/fan-in arrows only where the broadcast and convergecast genuinely cross the grid boundary."
+    }
+  ]
+}

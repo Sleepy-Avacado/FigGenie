@@ -1,0 +1,216 @@
+{
+  "template": "control-data",
+  "n": 26,
+  "stars": 15,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-046_fig13",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated two-tier control figure (19 components, nesting depth 4): a Cluster tier predicts and schedules above a Server tier, whose Oversubscription Agent manages a segmented memory bar mapping colored bands to concrete example VMs.",
+      "what_to_learn": "Stack a cluster-level control tier above a per-server agent tier inside two dashed regions, and instead of a separate legend, resolve the color coding by mapping each memory band directly to a named example VM (GPVM1, CoachVM2) below; label bands in the box itself since this figure's colors are not otherwise legended.",
+      "dir": "../figures/asplos25-046_fig13"
+    },
+    {
+      "id": "asplos25-077_figtex1",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "The most abstract control/data split in the corpus: a dashed horizontal divider with 'control plane' and 'data plane' as margin labels.",
+      "what_to_learn": "Borrow switch terminology literally - label the margins 'control plane' / 'data plane' and let the divider do all the grouping work. (No PDF-extracted print.png; this is a TeX-only figure.)",
+      "dir": "../figures/asplos25-077_figtex1"
+    },
+    {
+      "id": "asplos25-097_fig2",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Dense 15-component figure whose bottom legend spells out six path types (Tx/Rx control, Tx/Rx data, host data, auxiliary), all converging on one mandatory Attestation-kernel choke point between PCIe DMA and the RoCE protocol kernel.",
+      "what_to_learn": "Draw a security module as a literal inline choke point on both Tx and Rx paths, not a side box, so nothing bypasses it; this figure legends six path classes below, more than the template's usual three-class cap, so only go that far if every class needs its own arrow style.",
+      "dir": "../figures/asplos25-097_fig2"
+    },
+    {
+      "id": "asplos25-100_fig5",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "The corpus's clearest flow-type legend: a 'Legends' block naming inter-device data (black solid), intra-device data (blue solid) and control (orange dashed).",
+      "what_to_learn": "Name every arrow class explicitly in an in-figure legend; three classes is the practical maximum and dashed should be reserved for control.",
+      "dir": "../figures/asplos25-100_fig5"
+    },
+    {
+      "id": "asplos25-140_fig7",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Double-column control-data figure with a top-left legend defining both colour and arrow semantics plus 8 circled steps.",
+      "what_to_learn": "At double column there is room for a full legend block that defines module colours and arrow line styles together; put it in the top-left corner before the flow starts.",
+      "dir": "../figures/asplos25-140_fig7"
+    },
+    {
+      "id": "asplos26-036_fig8",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated triangular control loop: three subsystem boxes, each tagged with its paper section number, are joined by red arrows individually labeled with the action carried (Latency, Update, Plan, Compute) instead of a generic legend.",
+      "what_to_learn": "Name each control arrow with the verb it performs (Latency, Update, Plan, Compute) instead of a bare control/data label, tag each subsystem box with its own paper section number, and keep a tiny inline legend only for the one sub-panel (the timeline) that needs its own notation.",
+      "dir": "../figures/asplos26-036_fig8"
+    },
+    {
+      "id": "nsdi26-092_fig6",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated, high-confidence 5-component figure that separates a solid data path (direct read/write to a shared Object) from a dashed control path (createObject/getObject calls) with an in-figure legend and five circled steps ordering the whole exchange.",
+      "what_to_learn": "Draw two symmetric peers around a shared object in the middle, label its access rights (WO/RO) directly on the box, and run the mediating monitor as a full-width band underneath; if you mark denied access with a red X, add it to the legend, unlike this figure.",
+      "dir": "../figures/nsdi26-092_fig6"
+    },
+    {
+      "id": "nsdi26-124_fig4",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated: a dashed horizontal divider cleanly separates three data-plane pods above from a two-phase control plane below, with lettered (a)/(b)/(c) callouts tying each crossing arrow to body-text explanation instead of an in-figure legend.",
+      "what_to_learn": "Use one dashed rule as the entire plane boundary, then letter (not number) the arrows that cross it when their meaning needs the body text rather than a self-contained legend; color the two control-plane phases (orange pre-profiling, green slowdown) so their converging arrows read as one pipeline.",
+      "dir": "../figures/nsdi26-124_fig4"
+    },
+    {
+      "id": "osdi24-001_fig9",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated fast/slow-path variant: instead of two boxed planes, bold red Slow-Path and green Fast-Path bars sit beneath the shared Linux Driver, so color alone, not dashing, separates control-path IPC calls from the data-path IRQ.",
+      "what_to_learn": "When two paths share the same component, skip separate plane boxes and instead run a colored bar (red control, green data) directly under the shared box, with circled numbers 1-4 tracing the single request across both paths.",
+      "dir": "../figures/osdi24-001_fig9"
+    },
+    {
+      "id": "osdi26-047_fig5",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Densest figure in the batch (14 components, nesting depth 3, star-rated): two separate inside legends, one for chunk state and one for solid/dashed-red flow type, sit top-left above N replicated inference instances.",
+      "what_to_learn": "When one figure needs two kinds of legend, state (chunk fill/hatch) and flow type (solid vs dashed-red arrows), keep both inside the frame but in separate corners rather than merging them, and let the replicated instances below use a plain ellipsis so the control components above stay the visual anchor.",
+      "dir": "../figures/osdi26-047_fig5"
+    },
+    {
+      "id": "osdi26-063_fig8",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Three tinted regions (Input / Optimizer / Training Runtime) wired by circled numbers 1-6 with a hardware row at the bottom.",
+      "what_to_learn": "Tinted dashed regions name the planes, circled numbers order the loop, and a plain device row anchors the bottom - all at single-column width.",
+      "dir": "../figures/osdi26-063_fig8"
+    },
+    {
+      "id": "sosp23-013_fig3",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Numbered end-to-end flow over a control/data box layout in which exactly one of the repeated nodes is recoloured red-dashed.",
+      "what_to_learn": "To show a failure or special case among N identical elements, restyle one instance (red dashed) instead of adding a callout.",
+      "dir": "../figures/sosp23-013_fig3"
+    },
+    {
+      "id": "sosp24-027_fig4",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Minimal control-data instance: only 7 components and 2 flows separate one small Index/Client control box (top-right) from a dashed Memory-Node group whose ellipsis-joined pair forms the actual replicated data plane.",
+      "what_to_learn": "Group the replicated data-plane nodes in one dashed box separate from the small control-plane index/client pair, and use only two nodes plus an ellipsis rather than drawing every replica; avoid this figure's mistake of setting labels in a small serif font that hurts legibility.",
+      "dir": "../figures/sosp24-027_fig4"
+    },
+    {
+      "id": "sosp25-032_fig4",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Dispatcher to typed queues to typed engines with the control plane drawn as a separate box feeding back beneath the data path.",
+      "what_to_learn": "Draw the control plane as its own box under the data path with its own arrows, so 'who decides' is separable from 'what moves'.",
+      "dir": "../figures/sosp25-032_fig4"
+    },
+    {
+      "id": "sosp25-053_fig4",
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated: an offset stack of Pod 0/1/N cards (replication) sits inside a dashed Data-Plane box, wired by a bottom legend's orange data-flow and blue control-flow arrows to a separate dashed Control-Plane box.",
+      "what_to_learn": "Box the data plane and control plane as two separate dashed regions, use an offset card stack (Pod 0/1/N) to show replication inside the data-plane box without drawing every pod, and put a two-color arrow legend below to name data flow versus control flow.",
+      "dir": "../figures/sosp25-053_fig4"
+    },
+    {
+      "id": "asplos25-051_fig2",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Three coloured path overlays over a repeated protocol-stack lane, with the legend below spelling out each path.",
+      "what_to_learn": "Overlay alternative paths in different colours on one shared substrate rather than drawing the substrate twice; the legend below then reads as a path list.",
+      "dir": "../figures/asplos25-051_fig2"
+    },
+    {
+      "id": "asplos25-109_fig4",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Two named horizontal bands bridged by an identically labelled 'Communication Interface' in each, with two colour-coded channels.",
+      "what_to_learn": "When two subsystems talk over a channel, draw the same interface box in both bands - the repeated label is what makes the boundary legible.",
+      "dir": "../figures/asplos25-109_fig4"
+    },
+    {
+      "id": "asplos25-117_fig2",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "A microarchitecture reverse-engineering variant: circled steps 1-4 trace an enable-select-predict-update control loop through a 256-entry counter table, with two dashed 'Uncovered'/'Not fully studied' boxes marking the control logic this paper newly exposes.",
+      "what_to_learn": "When the control logic itself is the paper's discovery, dash-box exactly the parts labeled uncovered or not fully studied rather than a generic control-plane region, and walk the reader through the mechanism with circled steps overlaid on a decision-diamond flowchart plus one highlighted table row as a worked example.",
+      "dir": "../figures/asplos25-117_fig2"
+    },
+    {
+      "id": "nsdi23-025_fig4",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: two side-by-side mechanism panels (its own corpus label control-data) with a small embedded throughput-vs-load chart, not a zoom of a region drawn elsewhere in the same figure.",
+      "what_to_learn": "The transferable move is control-data's: mark both places a request can be dropped in matching red, feed the resulting failure path into one dashed arrow, and let a small embedded performance chart justify the credit-pool adjustment instead of asserting it, but legend the resource icons this exemplar leaves unexplained.",
+      "dir": "../figures/nsdi23-025_fig4"
+    },
+    {
+      "id": "nsdi23-070_fig3",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Names its two planes directly in the boxes (Valinor-H Data-plane inside the kernel stack, Valinor-H Control-plane outside it) and hands off through explicit Write/Read arrows into a shared per-CPU ring buffer across 20 components.",
+      "what_to_learn": "Label the two planes inline where they sit in an existing OS stack rather than boxing them separately, and embed a short struct snippet to document the wire format crossing the ring buffer; draw one explicit arrow from the hook point to the control plane instead of relying on adjacency.",
+      "dir": "../figures/nsdi23-070_fig3"
+    },
+    {
+      "id": "nsdi25-026_fig4",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Reassigned from multi-tier by the note-writer: a control pipeline (top) is split from a two-cloud WAN topology (bottom) by function, not by stacked machine tiers; this is a control-data split with one bridging arrow, matching its own corpus_template.",
+      "what_to_learn": "When a figure's real split is control-plane pipeline above versus data-plane topology below, bridge them with one clearly labelled vertical arrow rather than several, and reach for stacked tier rows only when boxes represent different machines, not different concerns; name the bridging arrow's endpoint, since this figure leaves it unlabelled.",
+      "dir": "../figures/nsdi25-026_fig4"
+    },
+    {
+      "id": "nsdi26-042_fig8",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: a single left-to-right mechanism diagram (segments to Rate Monitor to Token Update driving Main and Cheque Bucket gauges) draws one system, not two designs side by side; this is control-data, not baseline-vs-ours.",
+      "what_to_learn": "When two mechanisms coexist in one system rather than replacing each other, draw them as parallel sibling boxes (Main Bucket beside Cheque Bucket) fed by one control box with matching gauge icons, and spell the branch condition in words, since this figure's 'if tagged' icon needs the caption.",
+      "dir": "../figures/nsdi26-042_fig8"
+    },
+    {
+      "id": "osdi24-014_fig2",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Textbook top/bottom split: four numbered steps trace the operator's preference-tuning control loop above one dashed rule, while the critical path below runs jobs into a color-tiered Weighted-Fair-Queuing table with no legend needed.",
+      "what_to_learn": "Stack the slow control loop above a single dashed divider and the fast critical path below it; number only the control loop's steps (1-4) since that is what the operator actually walks through, and let color tiers in the resource table stand in for a legend.",
+      "dir": "../figures/osdi24-014_fig2"
+    },
+    {
+      "id": "osdi24-032_fig9",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Clean 7-component, 4-flow control/data split: an FPGA data plane with four SA Control Threads fans dashed lines into a single control-plane box stacking exactly three named components, avoiding a legend entirely.",
+      "what_to_learn": "Stack the control plane's three components vertically in one box, label each with its paper section number instead of a legend, and fan dashed lines from every data-plane unit into that shared box rather than drawing one arrow per component.",
+      "dir": "../figures/osdi24-032_fig9"
+    },
+    {
+      "id": "osdi25-033_fig4",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "14-component figure legends three devices below (dashed red = control via shmem, solid arrow = data, square = relay buffer) and reuses one blue hue across two GPUs to show a borrowed relay path.",
+      "what_to_learn": "Put the flow-class legend below the figure with icons for line style and shape (dashed=control, solid=data, square=buffer), and reuse one arrow color across two destinations when a worker's data can land in either place; but unlike here, also legend what each color itself means.",
+      "dir": "../figures/osdi25-033_fig4"
+    },
+    {
+      "id": "sosp25-065_fig6",
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "Overlays two named flow classes, black I/O Flow and blue Scheduling Flow, on the same Main Core/Worker Core boxes, with an inside top legend and circled steps 1-3 numbering only the control arrows.",
+      "what_to_learn": "Put the two-arrow-color legend and polling-icon key in one top-left inside block, then number only the control-flow arrows (steps 1-3) while leaving the data arrows unnumbered so the eye separates what happens always from what the scheduler decides.",
+      "dir": "../figures/sosp25-065_fig6"
+    }
+  ]
+}

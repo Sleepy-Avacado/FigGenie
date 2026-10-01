@@ -1,0 +1,42 @@
+{
+  "id": "osdi24-015_fig5",
+  "paper_id": "osdi24-015",
+  "fig": "5",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 5: Overview of the model loading scheduler design",
+  "corpus_template": "hub-spoke",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.14,
+  "n_components": 11,
+  "n_flows": 9,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-015/src/fig5_scheduler-design.svg",
+    "preview.png": "lab/extracted/osdi24-015/src/fig5_scheduler-design.png",
+    "print.png": "lab/extracted/osdi24-015/osdi24-015_fig5_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Controller hub wired to three peer servers each showing the same GPU/DRAM/SSD tier stack, with lettered placement markers.",
+      "what_to_learn": "Give every spoke an identical internal template and vary only its contents; letters (A, B) then annotate which spoke holds what."
+    }
+  ]
+}

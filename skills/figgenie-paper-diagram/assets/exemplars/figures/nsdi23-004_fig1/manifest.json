@@ -1,0 +1,48 @@
+{
+  "id": "nsdi23-004_fig1",
+  "paper_id": "nsdi23-004",
+  "fig": "1",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 1: Architectural comparison between current (RPC library + sidecar) and our proposed (RPC as a managed service) approaches.",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.47,
+  "n_components": 17,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-004/src/fig1_rpc.svg",
+    "preview.png": "lab/extracted/nsdi23-004/src/fig1_rpc.png",
+    "print.png": "lab/extracted/nsdi23-004/nsdi23-004_fig1_p2_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "'(a) Now: Library+Sidecar' vs '(b) Our Vision' with an inside legend and per-panel operation traces that can be counted.",
+      "what_to_learn": "Naming the panels by claim rather than by system, and adding a countable trace strip under each, turns a structural comparison into a quantitative one."
+    },
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Explicitly cross-referenced in the reference guide as a two-panel-filed baseline-vs-ours exemplar: identical Client/App/Kernel/NIC skeleton in both halves, with an in-figure legend and the M/U circles along each trace counting 12 steps versus 4.",
+      "what_to_learn": "Keep the client/app/kernel/NIC stack identical and in the same position in both panels, then let small repeated icons (the M/U marshal circles) along a bottom trace let the reader literally count the efficiency win; note the weakness that placing the legend far above the trace it explains hurts lookup."
+    }
+  ]
+}

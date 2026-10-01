@@ -1,0 +1,54 @@
+{
+  "id": "sosp25-015_fig2",
+  "paper_id": "sosp25-015",
+  "fig": "2",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 2. GPU Architecture.",
+  "corpus_template": "other",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.49,
+  "n_components": 11,
+  "n_flows": 0,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-015/src/fig2_arch.svg",
+    "preview.png": "lab/extracted/sosp25-015/src/fig2_arch.png",
+    "print.png": "lab/extracted/sosp25-015/sosp25-015_fig2_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "GPU hardware containment (HBM/L2 -> GPC -> TPC -> SM) with a magnified SM panel to the right; 11 components, 0 flows.",
+      "what_to_learn": "A containment figure needs no arrows at all; repeat the innermost box in a grid to convey count, and magnify one instance for its contents. Note: the print.png carries the paper title line from PDF extraction; preview.png is clean."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "A textbook zoom callout: HBM/L2 feeding a GPC grid of TPC/SM tiles on the left, with a dashed connector magnifying one SM into its six named internal units on the right.",
+      "what_to_learn": "Colour-code each level of a hardware hierarchy consistently (yellow memory, blue TPC, orange SM, green SM-internals) from the overview straight into the magnified callout, so the reader never loses track of which level of the zoom they are looking at."
+    },
+    {
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "The reference doc's own containment example: a GPC grid of TPC/SM boxes has zero arrows, HBM/L2 memory sits at the left edge, and a dashed leader zooms one SM into its Warp Scheduler and cores.",
+      "what_to_learn": "Trust adjacency alone when the point is containment: no arrows are needed between a GPC's nested TPC/SM boxes, only consistent color per hardware type and position (memory at the edge, compute in the middle); zoom one representative unit into a dashed-leader callout instead of labeling every internal detail in place."
+    }
+  ]
+}

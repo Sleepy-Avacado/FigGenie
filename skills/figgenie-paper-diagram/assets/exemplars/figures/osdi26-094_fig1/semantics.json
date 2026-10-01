@@ -1,0 +1,166 @@
+{
+  "paper_id": "osdi26-094",
+  "fig": "1",
+  "system": {
+    "name": "EcoServe",
+    "one_liner": "an LLM-serving system using temporal prefill/decode disaggregation within instances plus rolling activation across instances for commodity GPU clusters",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Requests",
+        "role": "incoming inference requests routed to instances",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Scheduler",
+        "role": "routes requests to instances: round robin in NoDG/FuDG, or inter-instance scheduling in PaDG",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Instance",
+        "role": "a serving unit running one LLM Model; in NoDG it colocates prefill and decode, in PaDG it time-multiplexes them",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "LLM Model",
+        "role": "model weights and KV cache resident on an instance, shown as colored blocks indicating prefill (green) vs decode (blue) work",
+        "container": "Instance",
+        "novel": null
+      },
+      {
+        "name": "Prefill Instance",
+        "role": "in FuDG, an instance dedicated solely to the prefill phase",
+        "container": null,
+        "novel": null
+      },
+      {
+        "name": "Decode Instance",
+        "role": "in FuDG, an instance dedicated solely to the decode phase, receiving KV cache transferred from a prefill instance",
+        "container": null,
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "Requests",
+        "to": "Scheduler",
+        "what": "incoming inference requests",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Instance",
+        "what": "round-robin routed requests (NoDG)",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Prefill Instance",
+        "what": "round-robin routed requests (FuDG)",
+        "step": null
+      },
+      {
+        "from": "Prefill Instance",
+        "to": "Decode Instance",
+        "what": "KV cache transfer",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Instance",
+        "what": "inter-instance scheduled requests (PaDG); intra-instance scheduling then times prefill vs decode",
+        "step": null
+      }
+    ],
+    "key_idea": "Contrasts three placements of LLM prefill/decode work: NoDG colocates both phases per instance (causing interference), FuDG fully separates them onto dedicated instances (requiring KV cache transfer over fast interconnects), and PaDG time-multiplexes both phases within each instance while scheduling across instances to avoid both problems.",
+    "reading_order": "Top row left-to-right: (a) NoDG then (b) FuDG; below, (c) PaDG spans the width, reusing the same Requests-Scheduler-Instance vocabulary and a shared Decode/Prefill legend."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.45,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4472c4",
+        "used_for": "dark-blue Scheduler box fill and the Decode legend swatch/blocks"
+      },
+      {
+        "hex": "#9ecb7f",
+        "used_for": "green Prefill legend swatch/blocks and the Prefill Instance outline"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "light-gray fill of the Instance/Decode Instance boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale fill of the Requests box"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "pale-blue fill of the Decode Instance box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.49pt thin solid box borders; a few annotation arrows (round robin, inter/intra-instance scheduling) are dotted",
+    "corners": "mixed",
+    "arrows": "solid arrows with filled heads for the request path; dotted curved arrows label round-robin and inter-/intra-instance scheduling",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green marks Prefill blocks/instances, blue marks Decode blocks/instances; the same two colors recur across all three strategies so the viewer compares how each arranges prefill/decode across instances and time",
+    "line_style_means": "dotted curved arrows annotate scheduling behavior (round robin; inter- and intra-instance scheduling) separately from the solid arrows showing the literal request path",
+    "emphasis": "identical visual vocabulary (Scheduler, Instance, LLM Model, green/blue blocks) repeated across three strategies isolates the one variable that differs: where and when prefill vs decode run",
+    "reusable_patterns": [
+      "small multiples comparing several design points with a shared visual vocabulary and color legend",
+      "colored block rows inside a box to show time- or resource-sharing within one unit"
+    ],
+    "weaknesses": [
+      "the Decode/Prefill legend sits far from panel (c), where the color coding matters most",
+      "panels are not grid-aligned (two on top, one spanning below), so eye movement is irregular"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "prefill-decode-disaggregation",
+    "scheduling",
+    "GPU-cluster",
+    "comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.3)",
+      "2 Preliminary and Motivation (p.5)"
+    ],
+    "evidence": [
+      "which colocates the two phases within a single instance and replicates multiple instances",
+      "FuDG proposes to fully eliminate the prefill-decode interference by assigning the two phases to separate instances",
+      "the prefill and decode phases are disaggregated along the time dimension in each instance"
+    ]
+  },
+  "summary": "EcoServe targets cost-effective LLM serving on commodity GPU clusters without relying on high-performance interconnects. This figure compares three strategies for placing an LLM's prefill and decode phases across serving instances. (a) NoDG colocates both phases within every instance and round-robins requests across replicated instances, causing prefill-decode interference. (b) FuDG fully separates the phases onto dedicated Prefill and Decode Instances, requiring KV cache transfer between them and thus high-performance interconnects. (c) PaDG, EcoServe's own strategy, keeps both phases on the same instances but disaggregates them along the time dimension via intra-instance scheduling, while an inter-instance scheduler coordinates multiple such instances so at least one is always available for prefill. A shared green/blue legend marks Prefill versus Decode blocks consistently across all three diagrams.",
+  "summary_zh": "图比较三种预填充/解码放置策略：(a)NoDG在每个实例内混合两阶段并轮询路由；(b)FuDG将两阶段分离到专用实例并靠KV缓存传输衔接；(c)EcoServe的PaDG在同一实例内按时间维度分离两阶段，并做跨实例调度。",
+  "confidence": "high",
+  "notes": "layout-proposal: comparison-triptych -- three side-by-side/stacked strategy diagrams (NoDG, FuDG, PaDG) sharing one visual vocabulary and legend, compared directly rather than connected by a pipeline or hierarchy.",
+  "venue": "OSDI26"
+}

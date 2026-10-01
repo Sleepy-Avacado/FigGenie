@@ -1,0 +1,55 @@
+{
+  "id": "asplos26-103_figtex7",
+  "kind": "mechanism",
+  "paper_id": "asplos26-103",
+  "fig": "tex7",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "graph",
+  "subject": "a STeP graph routing input to experts, tiling and loading one expert's weights, computing, then reassembling outputs",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "top-down",
+  "column": "",
+  "aspect": 0.66,
+  "n_elements": 13,
+  "n_relations": 14,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "tikz",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-103/src/texfig7b_big_example_step.svg",
+    "preview.png": "lab/extracted/asplos26-103/src/texfig7b_big_example_step.png",
+    "print.png": null
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "A STeP program graph shows one expert's full tile pipeline (flatten, reshape, accumulate, load its off-chip weight, matmul, retile) fully drawn while a sibling expert is left collapsed, and both outputs merge back together at Reassemble.",
+      "what_to_learn": "Collapse the repeated sibling into an empty placeholder and draw one instance in full; annotate every edge with the shape it carries",
+      "note_source": "doc"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "osdi26-082_fig3",
+  "kind": "mechanism",
+  "paper_id": "osdi26-082",
+  "fig": "3",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 3: Best-first graph search procedure.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "graph",
+  "subject": "how best-first graph search expands the nearest candidate node and maintains a sorted candidate pool of neighbors",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 3.06,
+  "n_elements": 14,
+  "n_relations": 4,
+  "n_panels": 0,
+  "n_steps": 2,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-082/osdi26-082_fig3_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-082/osdi26-082_fig3_p4_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Best-first search repeatedly pops the nearest unexpanded node from a sorted candidate pool, traverses its edges to discover new neighbors, and inserts them back into the pool by distance until every pooled node has been expanded.",
+      "what_to_learn": "Pair the walked structure with a small table that spells out the state after each step; corner legend; ❶/❷ used for roles, not order",
+      "note_source": "doc"
+    }
+  ]
+}

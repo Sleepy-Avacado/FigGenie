@@ -1,0 +1,41 @@
+{
+  "id": "sosp23-007_fig2",
+  "paper_id": "sosp23-007",
+  "fig": "2",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 2. Mira Runtime.",
+  "corpus_template": "host-device",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 0.62,
+  "n_components": 16,
+  "n_flows": 3,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-007/sosp23-007_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp23-007/sosp23-007_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Medium-confidence, top-down split: a large Local Node (DRAM cache sections, application processes, local Mira Runtime) sits above a small Far-Memory Node running the same-named Mira Runtime (remote), joined by one plain labeled network/interconnect arrow.",
+      "what_to_learn": "Reuse the exact same component name on both sides (Mira Runtime local vs remote) so the reader sees mirrored halves of one system, and let the two sides be unequal in size when one genuinely does more work; keep small repeated cache-section icons visually distinct, unlike here."
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "paper_id": "asplos25-051",
+  "fig": "1",
+  "system": {
+    "name": "EDM",
+    "one_liner": "an ultra-low latency Ethernet fabric for memory disaggregation implemented within the Ethernet PHY",
+    "domain": [
+      "networking",
+      "memory disaggregation"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Processor",
+        "role": "compute-side processor accessing memory",
+        "container": "Compute Node",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "memory-node DRAM accessed remotely",
+        "container": "Memory Node",
+        "novel": false
+      },
+      {
+        "name": "Memory Controller",
+        "role": "controls DRAM access",
+        "container": "Memory Node",
+        "novel": false
+      },
+      {
+        "name": "NIC",
+        "role": "host network interface implementing the remote-memory protocol stack",
+        "container": "Compute Node / Memory Node",
+        "novel": false
+      },
+      {
+        "name": "Network Protocol Stack for Remote Memory Access (e.g., RDMA)",
+        "role": "host-side protocol stack for memory messages",
+        "container": "NIC",
+        "novel": false
+      },
+      {
+        "name": "Ethernet MAC",
+        "role": "MAC layer of the Ethernet stack",
+        "container": "NIC / Ethernet Switch",
+        "novel": false
+      },
+      {
+        "name": "Ethernet PHY",
+        "role": "physical layer of the Ethernet stack, where EDM's logic resides",
+        "container": "NIC / Ethernet Switch",
+        "novel": true
+      },
+      {
+        "name": "Ethernet Switch",
+        "role": "forwards Ethernet frames between compute and memory nodes",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Layer 2 Packet Forwarding Pipeline",
+        "role": "switch forwarding logic",
+        "container": "Ethernet Switch",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Processor",
+        "to": "NIC",
+        "what": "processor/memory to NIC interconnect",
+        "step": null
+      },
+      {
+        "from": "NIC",
+        "to": "Ethernet Switch",
+        "what": "Ethernet fabric traffic",
+        "step": null
+      }
+    ],
+    "key_idea": "Replacing the intra-server processor-memory interconnect with an Ethernet fabric turns remote memory access into a NIC-to-switch-to-NIC path through PHY-level stacks, which is the paper's focus.",
+    "reading_order": "Top shows the baseline intra-server processor-to-memory path; a 'V.S.' divider separates it from the bottom Ethernet-based Compute Node/Memory Node architecture, read left to right through NIC, switch, NIC."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.23,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bfbfff",
+        "used_for": "NIC container header"
+      },
+      {
+        "hex": "#ffffbf",
+        "used_for": "Network Protocol Stack box"
+      },
+      {
+        "hex": "#ffbfbf",
+        "used_for": "Ethernet Switch header"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "Compute Node / Memory Node outer boxes"
+      },
+      {
+        "hex": "#b34400",
+        "used_for": "highlighted labels/arrows for the interconnects and the paper's focus"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin, dashed outlines for node/fabric boundary boxes, solid for internal component boxes",
+    "font": "HelveticaNeue sans, bold for headers",
+    "corners": "square",
+    "arrows": "thin solid/dashed connecting lines without arrowheads, orthogonal",
+    "icons": "bitmap icons for the processor chip and DRAM module"
+  },
+  "encoding": {
+    "color_means": "orange text/labels mark the interconnects that are the paper's focus; yellow = protocol stack box, pink = Ethernet Switch, purple = NIC container, gray = outer node boundaries",
+    "line_style_means": "dashed boxes mark node/fabric boundaries, solid boxes mark internal components",
+    "emphasis": "Bold orange label 'Ethernet Fabric (focus of this paper)' with a dashed bracket highlights the scope of the paper",
+    "reusable_patterns": [
+      "baseline vs. proposed interconnect stacked in a V.S. comparison",
+      "layered protocol stack box per network endpoint"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "memory disaggregation",
+    "Ethernet",
+    "RDMA",
+    "NIC",
+    "PHY",
+    "datacenter networking"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.1)"
+    ],
+    "evidence": [
+      "Memory disaggregation is a computing architecture in which compute and memory are physically separate nodes",
+      "Using Ethernet as the interconnect between the processor and the memory introduces two sources of latency",
+      "the processor/memory to NIC interconnect latency, and (ii) the Ethernet fabric latency"
+    ]
+  },
+  "summary": "EDM targets memory disaggregation over Ethernet, where compute and memory live on separate nodes connected by a network fabric. This figure contrasts the traditional intra-server processor-to-memory interconnect (top) with an Ethernet-based Compute Node/Memory Node architecture (bottom), separated by a 'V.S.' divider. Each node contains a processor or DRAM plus a NIC holding a network protocol stack (e.g., RDMA), an Ethernet MAC, and an Ethernet PHY; the two nodes connect through an Ethernet Switch that also has MAC/PHY layers and a Layer 2 forwarding pipeline. Dashed orange labels mark the 'Ethernet Fabric (focus of this paper)', spanning NIC PHYs and the switch, motivating why EDM targets the PHY layer to cut remote memory access latency instead of the traditional MAC-layer protocol stack.",
+  "summary_zh": "该图对比传统服务器内处理器-内存互连与基于以太网的内存分离架构：计算节点和内存节点通过网卡协议栈、MAC 和 PHY 层经以太网交换机互联，橙色标注圈出论文聚焦的以太网结构层（PHY）。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

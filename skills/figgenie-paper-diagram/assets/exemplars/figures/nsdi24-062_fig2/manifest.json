@@ -1,0 +1,41 @@
+{
+  "id": "nsdi24-062_fig2",
+  "paper_id": "nsdi24-062",
+  "fig": "2",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 2: RDMA virtualization schemes.",
+  "corpus_template": "matrix",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 5.06,
+  "n_components": 13,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-062/nsdi24-062_fig2_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi24-062/nsdi24-062_fig2_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar of four numbered Tenant/Host/NIC mini-stacks sharing one ownership-colour legend on the right, showing exactly which layer intercepts control verbs in each virtualization scheme.",
+      "what_to_learn": "Repeat the identical three-row stack across numbered variants and colour every box by a fixed ownership vocabulary so the eye compares roles, not shapes; the weakness here warns that without a visible border between variants, the layout can misread as one crowded panel instead of four."
+    }
+  ]
+}

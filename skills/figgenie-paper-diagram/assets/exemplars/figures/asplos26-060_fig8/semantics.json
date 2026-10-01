@@ -1,0 +1,234 @@
+{
+  "paper_id": "asplos26-060",
+  "fig": "8",
+  "system": {
+    "name": "HILOS",
+    "one_liner": "a near-storage-processing framework that boosts offline LLM inference throughput by offloading attention to SmartSSD accelerators",
+    "domain": [
+      "storage",
+      "ml-systems"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "User",
+        "role": "customizes HLS source code and benchmark configuration",
+        "container": "User-Level",
+        "novel": false
+      },
+      {
+        "name": "HLS Codes",
+        "role": "high-level synthesis source implementing (customized) attention variants",
+        "container": "User-Level",
+        "novel": false
+      },
+      {
+        "name": "LLM Config",
+        "role": "benchmark/model configuration used for verification",
+        "container": "User-Level",
+        "novel": false
+      },
+      {
+        "name": "C/C++ Simulator (lm_eval_harness)",
+        "role": "simulation and verification tool validating accelerator functional correctness on standard LLM benchmarks before synthesis",
+        "container": "User-Level",
+        "novel": true
+      },
+      {
+        "name": "Performance Estimator",
+        "role": "predicts hardware throughput from HLS-obtained cycle counts and clock frequency",
+        "container": "User-Level",
+        "novel": true
+      },
+      {
+        "name": "Writeback Manager",
+        "role": "manages delayed KV cache writeback to storage, hiding write latency and mitigating write amplification",
+        "container": "Middleware",
+        "novel": true
+      },
+      {
+        "name": "Weights Prefetcher",
+        "role": "stages model weights from host to GPU",
+        "container": "Middleware",
+        "novel": false
+      },
+      {
+        "name": "Inference Controller",
+        "role": "directs core LLM operations (e.g., MLP, QKV) during runtime",
+        "container": "Middleware",
+        "novel": false
+      },
+      {
+        "name": "Cache Scheduler",
+        "role": "determines the optimal X-cache ratio, partitions the KV cache between SmartSSDs and the GPU during prefill, and coordinates parallel execution",
+        "container": "Middleware",
+        "novel": true
+      },
+      {
+        "name": "Vitis Compiler",
+        "role": "compiles validated HLS source into a hardware design",
+        "container": "Middleware",
+        "novel": false
+      },
+      {
+        "name": "Bitstream Generator",
+        "role": "produces the FPGA bitstream deployed to the SmartSSDs",
+        "container": "Middleware",
+        "novel": false
+      },
+      {
+        "name": "System Interconnect",
+        "role": "links the middleware to the SmartSSD array via Storage I/O, cuFile I/O, OpenCL API and XRT API",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SmartSSD",
+        "role": "near-storage device with a PCIe switch, SSD controller, FPGA logic, FPGA DRAM and NAND running the attention accelerator",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "User",
+        "to": "HLS Codes",
+        "what": "customized high-level synthesis source for specialized attention variants",
+        "step": null
+      },
+      {
+        "from": "HLS Codes",
+        "to": "C/C++ Simulator (lm_eval_harness)",
+        "what": "functional verification on LLM benchmarks, together with LLM Config",
+        "step": null
+      },
+      {
+        "from": "C/C++ Simulator (lm_eval_harness)",
+        "to": "Performance Estimator",
+        "what": "cycle counts feeding throughput estimation",
+        "step": null
+      },
+      {
+        "from": "HLS Codes",
+        "to": "Vitis Compiler",
+        "what": "validated HLS source for synthesis",
+        "step": null
+      },
+      {
+        "from": "Vitis Compiler",
+        "to": "Bitstream Generator",
+        "what": "compiled hardware design",
+        "step": null
+      },
+      {
+        "from": "Bitstream Generator",
+        "to": "System Interconnect",
+        "what": "FPGA bitstream deployed to the SmartSSDs",
+        "step": null
+      },
+      {
+        "from": "Cache Scheduler",
+        "to": "System Interconnect",
+        "what": "KV cache partitioned between SmartSSDs and GPU per the X-cache ratio",
+        "step": null
+      },
+      {
+        "from": "Writeback Manager",
+        "to": "System Interconnect",
+        "what": "delayed KV cache writeback traffic",
+        "step": null
+      },
+      {
+        "from": "System Interconnect",
+        "to": "SmartSSD",
+        "what": "Storage I/O, cuFile I/O, OpenCL API and XRT API commands/data",
+        "step": null
+      }
+    ],
+    "key_idea": "HILOS provides a full design flow from user-customizable HLS attention kernels, through simulation/verification and performance estimation, to a middleware layer (writeback manager, prefetcher, controller, cache scheduler) that orchestrates a replicated array of SmartSSD near-storage accelerators.",
+    "reading_order": "Top-down through three horizontal bands: User-Level design flow (HLS code, config, simulator, estimator) at top, Middleware orchestration (writeback manager, prefetcher, controller, cache scheduler, compiler toolchain) in the middle, and the SmartSSD hardware array with shared interfaces at the bottom."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.52,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#231916",
+        "used_for": "near-black outlines and header text throughout"
+      },
+      {
+        "hex": "#f1e2c1",
+        "used_for": "tan background band for the 'Middleware' layer"
+      },
+      {
+        "hex": "#c1b1a0",
+        "used_for": "grayish-tan fill for secondary panel elements"
+      },
+      {
+        "hex": "#eac9b7",
+        "used_for": "peach background band for the SmartSSD hardware layer"
+      },
+      {
+        "hex": "#c6dfa9",
+        "used_for": "green fill highlighting HILOS's own novel components (simulator, estimator, writeback manager, cache scheduler)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark outlines (~0.64pt median) on all boxes",
+    "font": "sans (Tahoma), 5-8.5pt, mostly regular weight",
+    "corners": "square",
+    "arrows": "black orthogonal arrows connecting the design-flow, middleware and interconnect stages",
+    "icons": "small vector icons of documents/config and a user figure at the top"
+  },
+  "encoding": {
+    "color_means": "green fill highlights HILOS's own novel components (simulator/estimator, writeback manager, cache scheduler); tan and peach horizontal bands distinguish the Middleware layer from the SmartSSD hardware layer; white boxes are reused/conventional components (compiler toolchain, prefetcher, controller, SSD internals)",
+    "line_style_means": null,
+    "emphasis": "green highlighting picks HILOS's new contributions out from a background of conventional tool-flow and hardware components spread across three horizontal layers",
+    "reusable_patterns": [
+      "three-tier horizontal layered architecture (user tool flow, software middleware, hardware array)",
+      "color-highlighting novel components against reused/background components",
+      "replicated hardware unit (SmartSSD) drawn once with an ellipsis implying repetition"
+    ],
+    "weaknesses": [
+      "the small inset diagram inside Cache Scheduler (Batch/Head/KV/X) is hard to read at this size",
+      "several parallel interface labels (Storage I/O, cuFile I/O, OpenCL API, XRT API) are packed tightly together"
+    ]
+  },
+  "tags": [
+    "near-storage-processing",
+    "llm-inference",
+    "kv-cache-offloading",
+    "fpga-accelerator",
+    "system-integration",
+    "design-flow"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Full System Integration (p.7)"
+    ],
+    "evidence": [
+      "HILOS provides an end-to-end design flow for generating FPGA bitstreams for the SmartSSDs",
+      "The middleware layer (Figure 8) orchestrates the LLM inference pipeline",
+      "the Cache Scheduler...determines an optimal X-cache ratio, partitions the KV cache between SmartSSDs and the GPU"
+    ]
+  },
+  "summary": "HILOS is a ready-to-use near-storage-processing framework that boosts offline LLM inference throughput by offloading attention computation to SmartSSD accelerators. This figure gives HILOS's full-system overview in three horizontal layers. The User-Level layer (top) shows the design flow: a user customizes HLS attention kernels and LLM configuration, which a C/C++ simulator integrated with lm-evaluation-harness verifies functionally before a Performance Estimator predicts hardware throughput from HLS cycle counts. The Middleware layer (middle) orchestrates runtime inference: an Inference Controller directs core LLM operations while a Weights Prefetcher stages weights, a Cache Scheduler partitions the KV cache between SmartSSDs and the GPU via an X-cache ratio, and a Writeback Manager delays KV cache writeback; a Vitis Compiler and Bitstream Generator handle the hardware build path. The bottom layer shows the replicated SmartSSD hardware (PCIe switch, SSD controller, FPGA logic/DRAM, NAND) reached through a shared System Interconnect exposing Storage I/O, cuFile I/O, OpenCL and XRT APIs. Green fill highlights the components that are HILOS's own contributions.",
+  "summary_zh": "该图展示HILOS整体框架：用户层完成HLS注意力代码定制、经lm-evaluation-harness仿真验证并由性能估计器预测吞吐；中间件层的推理控制器、权重预取器、缓存调度器（按X-cache比例在SmartSSD与GPU间划分KV缓存）和回写管理器协调运行；底层为通过统一接口连接的多块SmartSSD近存储硬件，绿色标出HILOS自身的新增组件。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

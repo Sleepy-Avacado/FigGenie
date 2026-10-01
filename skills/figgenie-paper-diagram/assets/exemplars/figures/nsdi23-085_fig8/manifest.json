@@ -1,0 +1,54 @@
+{
+  "id": "nsdi23-085_fig8",
+  "paper_id": "nsdi23-085",
+  "fig": "8",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 8: An architecture overview of Pheromone.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.86,
+  "n_components": 6,
+  "n_flows": 3,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-085/src/fig8_architecture.svg",
+    "preview.png": "lab/extracted/nsdi23-085/src/fig8_architecture.png",
+    "print.png": "lab/extracted/nsdi23-085/nsdi23-085_fig8_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar with only 6 components and 3 flows: two redundant orange Coordinators cross-connect to two dashed Worker Node containers, each expanded into a scheduler-executor-store stack, over one shared durable store.",
+      "what_to_learn": "Draw redundant top-tier controllers with crossing arrows into every replica below to show any-to-any reachability without extra edges, give every role one flat colour so the internal stack reads at a glance, and let a single full-width bottom box stand for the one shared backing store beneath repeated node containers."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar with only 6 components: two dashed Worker Node boxes each contain a Scheduler, Executors and a Shared Memory Object Store stacked inside, reached by crossing arrows from two redundant Coordinators above.",
+      "what_to_learn": "Keep a replicated container's internal stack, scheduler over executors over object store, identical in both copies, and reserve one flat colour per role so containment reads correctly without a legend; let the outer dashed border, not colour, be the property that marks one node."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Two Worker Node containers mirror the same Scheduler/Executors/Object Store stack, cross-connected to each other's object store and to redundant Coordinators above via a crossing X of arrows, over one wide Durable Key-Value Store.",
+      "what_to_learn": "Draw a crossing X of bidirectional arrows between a redundant top layer and the two mirrored containers below to show any-to-any reachability, keep each container's role colours (scheduler green, executor yellow, store light blue) identical on both sides, and let one wide shared-store box at the bottom serve as the axis of symmetry."
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "paper_id": "osdi24-041",
+  "fig": "3",
+  "system": {
+    "name": "dLoRA",
+    "one_liner": "an LLM serving system that dynamically batches and migrates LoRA adapters and requests across replicas for better utilization and load balancing",
+    "domain": [
+      "ml-systems",
+      "llm-serving",
+      "gpu-scheduling"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Load Balancer",
+        "role": "routes requests and triggers adapter/request migration across replicas",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Proactive Mechanism",
+        "role": null,
+        "container": "Load Balancer",
+        "novel": true
+      },
+      {
+        "name": "Balance Dispatcher",
+        "role": null,
+        "container": "Proactive Mechanism",
+        "novel": true
+      },
+      {
+        "name": "Reactive Mechanism",
+        "role": null,
+        "container": "Load Balancer",
+        "novel": true
+      },
+      {
+        "name": "ILP Solver",
+        "role": "solves an integer linear program to plan migration",
+        "container": "Reactive Mechanism",
+        "novel": true
+      },
+      {
+        "name": "Migration Plan",
+        "role": null,
+        "container": "Reactive Mechanism",
+        "novel": true
+      },
+      {
+        "name": "Re-balance Trigger",
+        "role": null,
+        "container": "Reactive Mechanism",
+        "novel": true
+      },
+      {
+        "name": "LLM Replicas",
+        "role": "a cluster of GPU replicas serving multiple LoRA adapters",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cross-adapter Batching",
+        "role": "batches requests to different LoRA adapters together on one GPU",
+        "container": "LLM Replicas",
+        "novel": true
+      },
+      {
+        "name": "Base Model",
+        "role": null,
+        "container": "LLM Replicas",
+        "novel": false
+      },
+      {
+        "name": "Adapter 0",
+        "role": null,
+        "container": "LLM Replicas",
+        "novel": false
+      },
+      {
+        "name": "Adapter 1",
+        "role": null,
+        "container": "LLM Replicas",
+        "novel": false
+      },
+      {
+        "name": "Memory Management",
+        "role": null,
+        "container": "LLM Replicas",
+        "novel": true
+      },
+      {
+        "name": "Migration Controller",
+        "role": "executes adapter/request migration across replicas",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Global Monitor",
+        "role": "monitors cluster-wide load for migration decisions",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Request",
+        "to": "Load Balancer",
+        "what": "incoming request",
+        "step": null
+      },
+      {
+        "from": "Load Balancer",
+        "to": "LLM Replicas",
+        "what": "Requests",
+        "step": null
+      },
+      {
+        "from": "Load Balancer",
+        "to": "LLM Replicas",
+        "what": "Migration",
+        "step": null
+      },
+      {
+        "from": "Global Monitor",
+        "to": "Migration Controller",
+        "what": null,
+        "step": null
+      }
+    ],
+    "key_idea": "dLoRA's Load Balancer proactively dispatches requests and reactively plans adapter/request migrations via an ILP solver, while LLM Replicas batch requests across different LoRA adapters sharing a base model on each GPU.",
+    "reading_order": "Left panel (Load Balancer: proactive dispatch, reactive ILP-based migration planning) sends Requests and Migration traffic right, into the LLM Replicas panel (cross-adapter batching, migration controller, global monitor)."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.44,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b4c7e7",
+        "used_for": "header bars of the Load Balancer's Proactive/Reactive Mechanism panels"
+      },
+      {
+        "hex": "#f7dfdf",
+        "used_for": "background fill of the Load Balancer's sub-panels"
+      },
+      {
+        "hex": "#f1bcae",
+        "used_for": "the Migration Controller box"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "Global Monitor, Cross-adapter Batching, and Memory Management boxes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "Base Model and Adapter 0/Adapter 1 boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.84pt black, dashed outlines for the Load Balancer and LLM Replicas panels",
+    "font": "sans (Arial/Arial-Bold), 5.5-11pt",
+    "corners": "mixed",
+    "arrows": "mostly thin solid arrows, plus one bold double-headed arrow for Migration",
+    "icons": "vector; a person icon for the incoming Request and a stacked-card icon for multiple GPU replicas"
+  },
+  "encoding": {
+    "color_means": "light blue headers mark the Load Balancer's two mechanisms (proactive vs. reactive); green marks monitoring/memory-management and batching components; salmon marks the Migration Controller, tying together the pieces that implement cross-replica migration",
+    "line_style_means": "dashed outlines group the two top-level subsystems (Load Balancer, LLM Replicas); solid arrows show request/migration traffic between them",
+    "emphasis": "two clearly bounded dashed panels separate control (Load Balancer) from execution (LLM Replicas), with explicit Requests and Migration arrows crossing between them",
+    "reusable_patterns": [
+      "two dashed side-by-side panels (control subsystem vs. execution/replica pool) linked by labeled cross-panel arrows"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-serving",
+    "lora",
+    "load-balancing",
+    "gpu-scheduling",
+    "adapter-migration"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.5)"
+    ],
+    "evidence": [
+      "Within a replica, dLoRA employs a novel cross-adapter batching technique to process requests to different LoRA adapters in a single",
+      "Across replicas, dLoRA dynamically migrates LoRA adapters and requests in the cluster to achieve better load balancing",
+      "Figure 3 shows the overall architecture of dLoRA"
+    ]
+  },
+  "summary": "This figure shows the overall two-panel architecture of dLoRA, a system that serves multiple LoRA adapters on a cluster of GPU replicas. The left dashed panel, Load Balancer, dispatches incoming requests via a Proactive Mechanism (a Balance Dispatcher) and plans rebalancing via a Reactive Mechanism (an ILP Solver producing a Migration Plan, triggered by a Re-balance Trigger). The right dashed panel, LLM Replicas, shows stacked GPUs each running Cross-adapter Batching over a shared Base Model with per-request Adapter 0/Adapter 1 weights, plus Memory Management; a Migration Controller and a Global Monitor sit alongside the replica stack. Requests and Migration arrows cross between the two panels, matching the text's description of within-replica cross-adapter batching and across-replica dynamic migration for load balancing.",
+  "summary_zh": "该图展示 dLoRA 两栏架构：左侧 Load Balancer（主动分发、反应式 ILP 求解与再均衡）向右侧 LLM Replicas（跨适配器批处理、迁移控制器、全局监控）发送请求并迁移。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

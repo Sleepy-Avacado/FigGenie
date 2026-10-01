@@ -1,0 +1,276 @@
+{
+  "paper_id": "asplos26-094",
+  "fig": "9",
+  "system": {
+    "name": "Mugi",
+    "one_liner": "a value-level-parallelism (VLP) hardware architecture that accelerates nonlinear operations and GEMM in LLM inference",
+    "domain": [
+      "hardware-accelerator",
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Off-chip memory",
+        "role": "stores weights and inputs before they are streamed on-chip",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "iSRAM",
+        "role": "on-chip input SRAM buffer, double-buffered to hide access latency",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "wSRAM",
+        "role": "on-chip weight SRAM buffer, double-buffered",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "wFIFO",
+        "role": "weight FIFO feeding each PE row",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "CNT",
+        "role": "counter that generates the temporal signal used for mantissa subscription",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "iAcc",
+        "role": "input accumulator staging data from iSRAM before the PE array",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "iFIFO",
+        "role": "input FIFO buffering staged values before the PE array",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "SW",
+        "role": "switch/steering logic that routes staged input values",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "TC",
+        "role": "temporal converter that turns an approximate mantissa into a temporal signal",
+        "container": "PE array",
+        "novel": true
+      },
+      {
+        "name": "PE",
+        "role": "processing element performing pipelined temporal subscription via an AND gate, arranged in rows and columns",
+        "container": "PE array",
+        "novel": true
+      },
+      {
+        "name": "PP",
+        "role": "post-processing unit combining subscribed temporal results with the sign bit",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "oAcc",
+        "role": "output accumulator that simultaneously sums exp results for the softmax numerator",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "oFIFO",
+        "role": "output FIFO buffering final results out of the array",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "oSRAM",
+        "role": "output SRAM storing the accumulated exp sum and final results",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "M-proc",
+        "role": "mantissa-processing unit handling field split and value reuse phases",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "E-proc",
+        "role": "exponent-processing unit that subscribes the correct LUT-vector exponent, feeding Max/Min and Clamp logic",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Vec",
+        "role": "vector multiplication array that divides exp results by the reciprocal of the softmax sum",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Off-chip memory",
+        "to": "wSRAM",
+        "what": "weights",
+        "step": null
+      },
+      {
+        "from": "Off-chip memory",
+        "to": "iSRAM",
+        "what": "input activations",
+        "step": null
+      },
+      {
+        "from": "iSRAM",
+        "to": "iAcc",
+        "what": "staged input values",
+        "step": null
+      },
+      {
+        "from": "iAcc",
+        "to": "iFIFO",
+        "what": "buffered input values",
+        "step": null
+      },
+      {
+        "from": "wSRAM",
+        "to": "wFIFO",
+        "what": "buffered weight values",
+        "step": null
+      },
+      {
+        "from": "CNT",
+        "to": "TC",
+        "what": "counter-driven temporal signal",
+        "step": null
+      },
+      {
+        "from": "TC",
+        "to": "PE",
+        "what": "temporal signal pipelined via the T register",
+        "step": null
+      },
+      {
+        "from": "PE",
+        "to": "PP",
+        "what": "subscribed temporal results",
+        "step": null
+      },
+      {
+        "from": "PP",
+        "to": "oAcc",
+        "what": "results accumulated for the softmax sum",
+        "step": null
+      },
+      {
+        "from": "oAcc",
+        "to": "oSRAM",
+        "what": "accumulated exp sum",
+        "step": null
+      },
+      {
+        "from": "oSRAM",
+        "to": "Vec",
+        "what": "reciprocal of the softmax sum",
+        "step": null
+      }
+    ],
+    "key_idea": "Mugi fuses the four VLP approximation phases and softmax-specific hardware into one double-buffered systolic architecture that maximizes resource reuse across nonlinear approximation and GEMM computation",
+    "reading_order": "main panel (a) left to right, following data from off-chip memory through the PE array to the output SRAM/vector unit; sub-panels (b)-(h) around it zoom into individual circuit blocks referenced by letters"
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 8,
+    "column": "double",
+    "aspect": 3.88,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#6fd19f",
+        "used_for": "phase 3 (mantissa temporal subscription) hardware of VLP approximation - green"
+      },
+      {
+        "hex": "#fcc73c",
+        "used_for": "phase 1 (field split) hardware of VLP approximation - yellow"
+      },
+      {
+        "hex": "#f5786a",
+        "used_for": "phase 2 (value reuse) hardware of VLP approximation - red"
+      },
+      {
+        "hex": "#8ecae6",
+        "used_for": "phase 4 (exponent temporal subscription) hardware of VLP approximation - blue"
+      },
+      {
+        "hex": "#ef553b",
+        "used_for": "secondary red accent on phase-2-related hardware"
+      },
+      {
+        "hex": "#ab82ff",
+        "used_for": "hardware for mapping softmax - purple"
+      },
+      {
+        "hex": "#d6d6d6",
+        "used_for": "additional hardware needed for standard GEMM operations - gray"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1pt strokes, rounded box outlines",
+    "font": "GillSans sans-serif, ~7.5pt",
+    "corners": "rounded",
+    "arrows": "thin orthogonal connector lines forming a systolic dataflow, mostly without visible arrowheads",
+    "icons": "vector, small circuit-symbol icons (gates, muxes) in the b-h zoom-in sub-panels"
+  },
+  "encoding": {
+    "color_means": "yellow = phase 1 (field split), red = phase 2 (value reuse), green = phase 3 (mantissa temporal subscription), blue = phase 4 (exponent temporal subscription) of VLP approximation; purple = hardware for mapping softmax; gray = additional hardware for GEMM",
+    "line_style_means": null,
+    "emphasis": "the same four-color phase coding used in the algorithm walkthrough (Figure 3) is mapped directly onto the hardware blocks, letting the reader trace each VLP phase to its physical circuit",
+    "reusable_patterns": [
+      "systolic PE-array accelerator diagram with color-coded functional phases and zoomed circuit-level inset panels"
+    ],
+    "weaknesses": [
+      "very high panel and label density (8 panels, 128 text boxes) makes the overall dataflow hard to follow without also reading Figures 3 and 10"
+    ]
+  },
+  "tags": [
+    "value-level-parallelism",
+    "llm-inference",
+    "hardware-accelerator",
+    "softmax",
+    "quantization",
+    "systolic-array"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Mugi Architecture (p.6)"
+    ],
+    "evidence": [
+      "Figure 9 outlines our Mugi architecture. It double buffers all memory hierarchies",
+      "1 – 4 (yellow, red, green, and blue) correspond to 1 – 4 phases of VLP approximation",
+      "Purple is for mapping softmax, and gray marks the additional hardware for GEMM"
+    ]
+  },
+  "summary": "Mugi is a value-level-parallelism (VLP) hardware architecture that accelerates both nonlinear operations (softmax, exp, SiLU/GELU) and GEMM in LLM inference. Figure 9 gives an overview of the Mugi chip: a main panel (a) shows off-chip memory feeding double-buffered iSRAM/wSRAM through wFIFO, CNT, iAcc and iFIFO into a PE array built from temporal converters (TC) and processing elements (PE), whose outputs pass through a post-processing unit (PP), output accumulator (oAcc), output FIFO and output SRAM, with an M-proc/E-proc pair and a Vec array handling softmax division. Seven smaller panels (b)-(h) zoom into specific circuit blocks such as the PE, TC, counter/PP pairing, and mux logic. The figure reuses a four-color scheme (yellow, red, green, blue) from the paper's algorithm figure to mark hardware for each of the four VLP approximation phases, plus purple for softmax-specific mapping hardware and gray for hardware needed only for standard GEMM, tying the circuit directly back to the algorithmic walkthrough.",
+  "summary_zh": "该图展示 Mugi 硬件架构总览：主图(a)展示片外存储器经双缓冲 SRAM、FIFO、计数器进入由 TC 和 PE 构成的脉动阵列，再经后处理、累加器、输出 SRAM 与向量单元完成 softmax 计算；(b)-(h) 为各电路模块细节。颜色沿用 VLP 四阶段配色（黄红绿蓝），紫色代表 softmax 映射硬件，灰色代表 GEMM 额外硬件。",
+  "confidence": "high",
+  "notes": "The main dataflow (off-chip memory to PE array to output stage) is directly supported by the text; some fine-grained wiring among sub-panel (b)-(h) circuit blocks is read from the figure itself since the prose focuses on Figure 10's walkthrough rather than every connection in Figure 9.",
+  "venue": "ASPLOS26"
+}

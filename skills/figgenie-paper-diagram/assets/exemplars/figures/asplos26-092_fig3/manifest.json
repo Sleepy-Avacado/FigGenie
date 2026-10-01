@@ -1,0 +1,42 @@
+{
+  "id": "asplos26-092_fig3",
+  "paper_id": "asplos26-092",
+  "fig": "3",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 3. FlexiBits template microarchitecture. Yellow- colored components are fixed across all cores, while blue- colored elements vary with datapath width.",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.24,
+  "n_components": 14,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-092/src/fig3_Architecture_drawio.svg",
+    "preview.png": "lab/extracted/asplos26-092/src/fig3_Architecture_drawio.png",
+    "print.png": "lab/extracted/asplos26-092/asplos26-092_fig3_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "flanked-core",
+      "star": false,
+      "why_chosen": "Medium-confidence, 14-component microarchitecture instance of the pattern: a Data-plane core with six sub-blocks sits between top bus-address pills and a bottom Control Plane band, flanked left and right by matching Register File Interface columns.",
+      "what_to_learn": "The flanked-core sandwich also works for on-chip blocks: use bus-width labels on the connecting lines instead of arrows, and colour every block by whether it scales with datapath width so the tunable parameter is visible at a glance; the weakness is that wiring beyond bus widths stays unlabelled, so name the bus's purpose too."
+    }
+  ]
+}

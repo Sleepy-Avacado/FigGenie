@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-120_fig7",
+  "paper_id": "nsdi26-120",
+  "fig": "7",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 7: Snapshot and restore router status with message re- play. (a) When R2 is online, simulated data plane records all route messages sent to R2 before relaying them. (b) When R2 is ofﬂine, simulated data plane buffers all route messages sent to R2 without touching the message logs. (c) When re",
+  "corpus_template": "other",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.02,
+  "n_components": 10,
+  "n_flows": 9,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 3,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-120/nsdi26-120_fig7_p9_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-120/nsdi26-120_fig7_p9_vector.png"
+  },
+  "templates": [
+    {
+      "template": "n-panel-comparison",
+      "star": true,
+      "why_chosen": "Named in the reference as the three-temporal-states-stacked exemplar: online recording, offline buffering, and replay restoration reuse the identical R1/R3-Shim-R2 skeleton, changing only which structure, log or buffer, and which call is highlighted.",
+      "what_to_learn": "Stack temporal-state panels top to bottom with an identical endpoint-shim-plane skeleton in each, changing only the buffer/log structure and the highlighted system call; number each panel's own steps locally if they are truly separate states, but say so, since this figure's reused 1-6 numbering across panels (a weakness) can look like one global sequence."
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "paper_id": "asplos25-157",
+  "fig": "3",
+  "system": {
+    "name": "CMSwitch",
+    "one_liner": "a compiler that optimizes resource allocation for computing-in-memory accelerators with dynamic compute/memory mode switching",
+    "domain": [
+      "hardware-accelerators",
+      "compiler"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Dual-mode CIM array",
+        "role": "CIM array capable of switching between memory and compute modes via its driver inputs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Memory Mode",
+        "role": "operating mode in which the array performs a standard memory read",
+        "container": "Dual-mode CIM array",
+        "novel": true
+      },
+      {
+        "name": "Compute Mode",
+        "role": "operating mode in which the array performs in-memory MAC computation",
+        "container": "Dual-mode CIM array",
+        "novel": true
+      },
+      {
+        "name": "Memory circuits",
+        "role": "memory-cell array shared by both modes",
+        "container": "Memory Mode / Compute Mode",
+        "novel": false
+      },
+      {
+        "name": "Driver",
+        "role": "row/column driver whose GIA/GIAb/IA input signals determine the array's mode",
+        "container": "Memory Mode / Compute Mode",
+        "novel": true
+      },
+      {
+        "name": "matrix",
+        "role": "small logic block that changes the driver input to switch modes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Data IO",
+        "role": "outputs read DATA in memory mode",
+        "container": "Memory Mode",
+        "novel": false
+      },
+      {
+        "name": "PSUM",
+        "role": "outputs the MAC OUTPUT (partial sum) in compute mode",
+        "container": "Compute Mode",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Driver",
+        "to": "Memory circuits",
+        "what": "GIA/GIAb signal (memory mode)",
+        "step": null
+      },
+      {
+        "from": "Memory circuits",
+        "to": "Data IO",
+        "what": "DATA (READ)",
+        "step": null
+      },
+      {
+        "from": "matrix",
+        "to": "Driver",
+        "what": "Change Driver INPUT",
+        "step": null
+      },
+      {
+        "from": "Driver",
+        "to": "Memory circuits",
+        "what": "GIA/GIAb/IA signal (compute mode)",
+        "step": null
+      },
+      {
+        "from": "Memory circuits",
+        "to": "PSUM",
+        "what": "MAC OUTPUT",
+        "step": null
+      }
+    ],
+    "key_idea": "The same CIM array switches between a memory-read mode and a compute (MAC) mode simply by changing the driver's global input-activation signals, without changing the array itself.",
+    "reading_order": "Left panel (Memory Mode) is read top-to-bottom from Driver through Memory circuits to Data IO/DATA; the eye then crosses the central 'Change Driver INPUT' / matrix block to the mirrored right panel (Compute Mode) ending at PSUM/MAC OUTPUT."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.02,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#1f4e79",
+        "used_for": "Driver block fill"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "matrix / control block fill"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "Memory circuits background grid"
+      },
+      {
+        "hex": "#a6a6a6",
+        "used_for": "secondary gray fill"
+      },
+      {
+        "hex": "#8497b0",
+        "used_for": "Memory Mode / Compute Mode header bar fill"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black/gray borders, dashed outer boundary around the whole dual-mode array",
+    "font": "Nimbus Sans / Arial, 5-7.5pt",
+    "corners": "square",
+    "arrows": "thin solid signal-line arrows between driver and memory circuits",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "dark blue = driver blocks, light gray = memory-circuit cell grid, green = the matrix/control block that switches modes",
+    "line_style_means": "dashed outer boundary marks the overall dual-mode array; a vertical divider separates the Memory Mode and Compute Mode panels",
+    "emphasis": "the central 'Change Driver INPUT' / matrix block visually bridges the two mirrored mode panels, emphasizing that mode switching is a driver-input change rather than a different array",
+    "reusable_patterns": [
+      "mirrored two-panel diagram sharing a central control block to depict a mode switch"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "computing-in-memory",
+    "dual-mode CIM",
+    "mode switching",
+    "MAC computation",
+    "hardware architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background - 2.1.1 Dual Modes CIM Array (p.3)",
+      "2.1.2 CIM Compute Paradigm (p.4)"
+    ],
+    "evidence": [
+      "switching between memory and compute modes of CIM arrays can be achieved by altering the array's driver inputs",
+      "CIM arrays perform computations, they enable the multiply-accumulate (MAC) operations to be executed entirely within the array"
+    ]
+  },
+  "summary": "This figure illustrates the dual-mode CIM array that underlies CMSwitch's hardware abstraction: the same physical array can act as either memory or a compute unit depending on its driver input signals. The left panel, labelled Memory Mode, shows a Driver feeding Memory circuits whose GIA/GIAb-controlled READ path produces DATA at the Data IO. A central block, labelled 'Change Driver INPUT' with a small 'matrix' logic box, switches the global input-activation signals. The right panel, labelled Compute Mode, mirrors the same Driver/Memory-circuits layout but with GIA/GIAb/IA signals configured for multiply-accumulate, producing a MAC OUTPUT at the PSUM. The mirrored two-panel layout emphasizes that mode switching is purely a driver-input change, motivating CMSwitch's compiler-level modeling of switching overhead.",
+  "summary_zh": "该图展示双模 CIM 阵列：左侧内存模式下驱动器控制存储电路完成读操作输出 DATA；中间通过改变驱动器输入（matrix 模块）切换模式；右侧计算模式下同一阵列执行乘累加并输出 PSUM。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

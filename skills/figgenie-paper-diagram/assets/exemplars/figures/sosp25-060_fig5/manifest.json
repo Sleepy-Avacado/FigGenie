@@ -1,0 +1,42 @@
+{
+  "id": "sosp25-060_fig5",
+  "paper_id": "sosp25-060",
+  "fig": "5",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 5: Overview of JENGA: a two-level memory manage- ment system for different types of layers. JENGA is composed of the LCM allocator for first-level page allocation and the prefix subset evictor for page deallocation. Within the page, a customized allocator and evictor manage the memory for the",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.79,
+  "n_components": 10,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-060/src/fig5_overview.svg",
+    "preview.png": "lab/extracted/sosp25-060/src/fig5_overview.png",
+    "print.png": "lab/extracted/sosp25-060/sosp25-060_fig5_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar where one shared first-level allocator-evictor pair sits above two parallel colour-coded second-level allocator columns, the whole memory manager boxed in one dashed rounded container beneath a plain scheduler-to-workers request line.",
+      "what_to_learn": "Give a shared upper stage one neutral colour pair and let it feed two side-by-side lower columns that each keep their own colour for the rest of the figure, down to the small square page icons at the very bottom, so colour alone tracks which allocator produced which output."
+    }
+  ]
+}

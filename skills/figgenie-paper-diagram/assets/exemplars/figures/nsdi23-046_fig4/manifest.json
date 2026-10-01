@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-046_fig4",
+  "paper_id": "nsdi23-046",
+  "fig": "4",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 4: RingLeader Design.",
+  "corpus_template": "host-device",
+  "direction": "bottom-up",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.61,
+  "n_components": 11,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-046/nsdi23-046_fig4_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-046/nsdi23-046_fig4_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "One of the corpus's rare bottom-up host-device figures: a packet climbs from the tan RMT Pipeline through the on-NIC scheduler and load balancer, crosses PCIe, and lands in repeated Core 1...N schedulers above.",
+      "what_to_learn": "Bottom-up is almost never used in this corpus, but it works here because the physical packet path genuinely rises from NIC to host; if your data truly flows upward, orient the figure that way rather than forcing top-down, and repeat the identical per-core sub-structure (Core 1...N) to show scale-out feeding a shared Core Allocator."
+    }
+  ]
+}

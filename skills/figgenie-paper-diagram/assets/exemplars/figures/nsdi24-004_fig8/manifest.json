@@ -1,0 +1,48 @@
+{
+  "id": "nsdi24-004_fig8",
+  "paper_id": "nsdi24-004",
+  "fig": "8",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 8: Overview of MadEye’s end-to-end workflow.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "google-slides",
+  "aspect": 3.49,
+  "n_components": 8,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-004/src/fig8_madeye-fig_cropped.svg",
+    "preview.png": "lab/extracted/nsdi24-004/src/fig8_madeye-fig_cropped.png",
+    "print.png": "lab/extracted/nsdi24-004/nsdi24-004_fig8_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline with two nested feedback loops, a fast orientation-search loop on the left and a slower backend-retraining loop on the right, linked by one hand-off point, across 8 components and 8 flows.",
+      "what_to_learn": "Draw a fast inner loop and a slower outer loop as two visually distinct cycles joined at one hand-off point; the record's weakness notes that unboxed colour-square groups only work if proximity alone can carry their scope, so box small repeated icon groups instead of relying on adjacency."
+    },
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "Two nested loops span camera and backend: a local Approximation-models/Search-algorithm loop ranks orientations by colour, while a second Updated-weights arrow closes a longer loop from the backend's Approximation model trainer back into the camera.",
+      "what_to_learn": "Use small coloured squares as tokens for orientations so rank order and selection show through colour and position, not labelled boxes, and draw both the fast local loop and the slower cross-tier retraining loop as separate labelled arrows; enclose grouped tokens in a light box, since unboxed grouping here is easy to misread."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "sosp23-006_fig3",
+  "paper_id": "sosp23-006",
+  "fig": "3",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 3. Scaling up a ZooKeeper system (from 2 to 3 replicas) with a new desired-state declaration (CR).",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 2.19,
+  "n_components": 12,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-006/sosp23-006_fig3_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp23-006/sosp23-006_fig3_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A single concrete example (replicas 2 to 3, highlighted red) traces through the reconciliation chain, where small circular reload icons inside the Statefulset and Volume controllers stand in for repeating loops.",
+      "what_to_learn": "Trace one concrete input change (the red-highlighted replica diff) all the way through the system, and use a small self-loop icon inside a controller box to mean 'reconciles repeatedly' instead of a full drawn cycle; but this figure's ellipsis boxes elide most of the actual loop, so show at least one full traversal too."
+    }
+  ]
+}

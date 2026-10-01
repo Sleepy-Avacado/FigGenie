@@ -1,0 +1,41 @@
+{
+  "id": "nsdi23-027_fig1",
+  "paper_id": "nsdi23-027",
+  "fig": "1",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 1: Overview of LinkLab 2.0.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 0.82,
+  "n_components": 16,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-027/nsdi23-027_fig1_p2_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-027/nsdi23-027_fig1_p2_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Three layers (Cloud, Edge, IoT) are named top-down in the left margin, each split into a dashed management column and a solid programmable column, with a legend mapping three arrow colours to Experimental/Control/Monitoring data paths.",
+      "what_to_learn": "Split every tier into a dashed management column beside a solid programmable-infrastructure column so the same shape-code works at all three layers, and put one legend at the top mapping every line colour and box style used below, so the reader never has to guess a colour's meaning per layer."
+    }
+  ]
+}

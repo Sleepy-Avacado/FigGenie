@@ -1,0 +1,275 @@
+{
+  "paper_id": "nsdi26-023",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "MoEvement",
+    "one_liner": "sparse checkpointing for fast and reliable Mixture-of-Experts (MoE) training",
+    "domain": [
+      "distributed-training",
+      "MoE",
+      "fault-tolerance"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how Upstream Logging shrinks pipeline-failure recomputation from a full cluster-wide rollback to just the failed worker",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "W0",
+        "kind": "lane",
+        "role": "pipeline stage 0 / worker 0, upstream neighbor of the failing stage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "W1",
+        "kind": "lane",
+        "role": "pipeline stage 1 / worker 1, the stage that fails and must recover",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "W2",
+        "kind": "lane",
+        "role": "pipeline stage 2 / worker 2, downstream neighbor of the failing stage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Layer 0 / Layer 1 / Layer 2",
+        "kind": "box",
+        "role": "the model layer computed at each pipeline stage, each containing a gate G routing to experts E1-E4",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "G",
+        "kind": "box",
+        "role": "MoE gating module deciding which expert(s) a token is routed to within a stage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "E1 / E2 / E3 / E4",
+        "kind": "box",
+        "role": "the four experts a token can be dispatched to inside a stage",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Activation Log",
+        "kind": "box",
+        "role": "log of forward activations kept at the sender (upstream) stage, used to replay a failed downstream neighbor",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Gradient Log",
+        "kind": "box",
+        "role": "log of backward gradients kept at the sender (downstream) stage, used to replay a failed upstream neighbor",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "recomputation scope (dashed box)",
+        "kind": "box",
+        "role": "highlight marking which stages must roll back and recompute after a failure",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Time",
+        "kind": "label",
+        "role": "horizontal axis of the paired 1F1B Gantt schedules in panel (b)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Forward and Backward Pass for micro-batch x",
+        "kind": "cell",
+        "role": "legend/cells: blue = forward pass, green = backward pass of one micro-batch, numbered by micro-batch id",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Optimizer Step",
+        "kind": "cell",
+        "role": "dark cell marking the end-of-iteration optimizer update",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Bubbles in 1F1B",
+        "kind": "cell",
+        "role": "white/empty cell marking idle pipeline time lost to recomputation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "23% Faster Recovery",
+        "kind": "label",
+        "role": "bracketed annotation quantifying the reduction in recovery time between the two schedules",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Layer 0 / Layer 1 / Layer 2",
+        "to": "G",
+        "what": "a stage's layer computation feeds its gate",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "G",
+        "to": "E1 / E2 / E3 / E4",
+        "what": "the gate dispatches the token to one or more experts",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W0",
+        "to": "W1",
+        "what": "forward activations pass downstream to the next stage",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "W1",
+        "to": "W2",
+        "what": "forward activations pass downstream to the next stage",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Activation Log",
+        "to": "W1",
+        "what": "with Upstream Logging, W1 replays using the upstream-kept activation log instead of requiring W0 to recompute",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Gradient Log",
+        "to": "W1",
+        "what": "with Upstream Logging, W1 replays using the downstream-kept gradient log instead of requiring W2 to recompute",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "without Upstream Logging (dense checkpointing baseline)",
+        "axis": "time",
+        "differs": "the dashed recomputation-scope box spans all three stages (W0-W2), and the paired 1F1B Gantt schedule shows every worker replaying many forward/backward passes with long idle bubbles",
+        "verdict": "baseline"
+      },
+      {
+        "label": "with Upstream Logging (MoEvement)",
+        "axis": "time",
+        "differs": "the dashed recomputation-scope box shrinks to only the failed stage W1, which replays from the Activation Log (upstream) and Gradient Log (downstream); the Gantt schedule shows only W1 active, 23% faster",
+        "verdict": "ours"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "By locally logging cross-stage activations and gradients, MoEvement lets only the failed pipeline worker replay and recover instead of rolling back the whole pipeline, cutting recovery time by 23%.",
+    "reading_order": "left to right within each row: (a) compares the full three-stage rollback scope (dashed red box) against the narrowed single-stage (W1) scope; (b) below repeats the comparison as 1F1B Gantt schedules, ending in the 23% callout on the right"
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 4,
+    "frame_template": "aligned",
+    "delta_marking": "dashed-ghost",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.72,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffc000",
+        "used_for": "gold/yellow fill of the 'Layer 0' (W0) box"
+      },
+      {
+        "hex": "#e97132",
+        "used_for": "orange fill of the 'Layer 1' (W1) box, the stage that fails and recovers"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "gray fill of the 'Layer 2' (W2) box"
+      },
+      {
+        "hex": "#ff2600",
+        "used_for": "red dashed rounded-rectangle outline marking the recomputation scope, drawn around all three stages without Upstream Logging and around only W1 with it"
+      },
+      {
+        "hex": "#4372c4",
+        "used_for": "blue fill of Forward Pass cells in the 1F1B Gantt schedule (panel b)"
+      },
+      {
+        "hex": "#71ad47",
+        "used_for": "green fill of Backward Pass cells in the 1F1B Gantt schedule (panel b)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.23pt) black grid lines in the Gantt chart; dashed red for the recomputation-scope outline",
+    "corners": "mixed",
+    "arrows": "thin black arrows with solid heads linking stages left to right; a short dashed arrow returning between stage boxes",
+    "font": "sans (AvenirNext), small (~3-8pt), subscripted W0/W1/W2 worker labels",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gold/orange/gray mark the three pipeline stages (Layer 0/1/2 = W0/W1/W2); red dashed outline marks the scope that must roll back and recompute; blue marks forward pass and green marks backward pass in the Gantt schedule",
+    "line_style_means": "a dashed red outline marks the recomputation boundary in panel (a); solid vs dashed short arrows between stage boxes distinguish the forward activation path from a return/gradient path",
+    "state_means": "the without/with contrast is told apart by the size of the dashed-outline recomputation-scope box (all three stages vs just W1) and by the length of the colored bars and bubbles in the paired Gantt schedules",
+    "marker_means": "plain numbers in the Gantt cells identify which micro-batch's forward/backward pass each cell belongs to; dark cells mark the Optimizer Step and white cells mark 1F1B pipeline bubbles",
+    "emphasis": "the shrinking dashed red box and the much shorter, mostly-white W1 row in the right-hand Gantt schedule emphasize how little recomputation Upstream Logging leaves, closing with the boxed '23% Faster Recovery' callout",
+    "reusable_patterns": [
+      "a dashed highlight box redrawn smaller in the 'with-our-mechanism' panel to show a shrunken blast radius",
+      "paired Gantt/timeline schedules stacked so bar length itself argues the speedup, closed with a bracketed percentage callout"
+    ],
+    "weaknesses": [
+      "the source-SVG colour histogram available for this figure only covers the recomputation-scope panel (a); the Forward/Backward Gantt colours in panel (b) are taken from the measured full-figure palette rather than a per-file count"
+    ]
+  },
+  "tags": [
+    "MoEvement",
+    "MoE-training",
+    "pipeline-parallelism",
+    "fault-recovery",
+    "checkpointing",
+    "1F1B"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 The MOEVEMENT Approach"
+    ],
+    "evidence": [
+      "recovering stage W1 in a three-stage pipeline requires rolling back W0, W1, and W2",
+      "Only the affected DP group rolls back to its most recent sparse checkpoint",
+      "recomputation stays confined to W1, reducing recovery latency by 23%"
+    ]
+  },
+  "summary": "This two-part figure contrasts MoEvement's Upstream Logging against dense checkpointing's cluster-wide rollback. In (a), a three-stage pipeline (W0/W1/W2, each running a Layer with a gating module G routing to experts E1-E4) is shown with a dashed red box marking the recomputation scope: without Upstream Logging it spans all three stages, but with it, only the failed stage W1 is rolled back, replaying from the Activation Log kept by upstream W0 and the Gradient Log kept by downstream W2. In (b), paired 1F1B Gantt schedules make the same contrast concrete over time: without Upstream Logging, all three workers replay many forward (blue) and backward (green) passes with long bubbles before the optimizer step; with it, only W1's row is active, shrinking the recovery window and yielding the 23% faster recovery called out on the right.",
+  "summary_zh": "该图对比MoEvement的Upstream Logging与稠密检查点：(a)故障恢复范围从全部三阶段缩小到仅失败的W1，靠上下游的激活/梯度日志重放；(b)配对1F1B甘特图显示W1恢复窗口大幅缩短，实现23%更快恢复。",
+  "confidence": "high",
+  "notes": "content.groups kept as the prior label's ['evolution'] (before/after variant): the 'without/with Upstream Logging' framing is read as a before-after state change of the same recovery procedure rather than a design-space comparison. layout.panel_count is set to 4 (2 views x 2 states) even though the index's coarse panel count is 2, because the figure visibly nests a without/with split inside each of the two labelled sub-figures (a) and (b).",
+  "venue": "NSDI26"
+}

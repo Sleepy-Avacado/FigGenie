@@ -1,0 +1,197 @@
+{
+  "paper_id": "nsdi23-085",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "Pheromone",
+    "one_liner": "a serverless orchestration system that lets data flow directly between functions instead of being routed through the invoking workflow",
+    "domain": [
+      "serverless computing",
+      "data analytics",
+      "stream processing"
+    ],
+    "abstraction": "serverless platform"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "two serverless patterns existing platforms handle poorly: an all-to-all shuffle between two stages, and a periodically-invoked batched processor",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "Stage-1",
+        "kind": "lane",
+        "role": "container holding three map-stage function instances in the Shuffle example",
+        "container": "Shuffle (left)",
+        "highlighted": false
+      },
+      {
+        "name": "f",
+        "kind": "icon",
+        "role": "one of three identical Stage-1 (map) function instances",
+        "container": "Stage-1",
+        "highlighted": false
+      },
+      {
+        "name": "Stage-2",
+        "kind": "lane",
+        "role": "container holding three reduce-stage function instances in the Shuffle example",
+        "container": "Shuffle (left)",
+        "highlighted": false
+      },
+      {
+        "name": "f",
+        "kind": "icon",
+        "role": "one of three identical Stage-2 (reduce) function instances, each fed by every Stage-1 instance",
+        "container": "Stage-2",
+        "highlighted": false
+      },
+      {
+        "name": "f",
+        "kind": "icon",
+        "role": "upstream function instance in the Batched example whose output accumulates over a time window",
+        "container": "Batched data processing (right)",
+        "highlighted": false
+      },
+      {
+        "name": "f",
+        "kind": "icon",
+        "role": "downstream function instance periodically invoked to process the accumulated data",
+        "container": "Batched data processing (right)",
+        "highlighted": true
+      },
+      {
+        "name": "clock",
+        "kind": "icon",
+        "role": "timer that periodically triggers invocation of the downstream function",
+        "container": "Batched data processing (right)",
+        "highlighted": true
+      },
+      {
+        "name": "Function invocation flow",
+        "kind": "label",
+        "role": "legend entry for the solid-arrow visual encoding",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Data flow",
+        "kind": "label",
+        "role": "legend entry for the dashed-arrow visual encoding",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Stage-1",
+        "to": "Stage-2",
+        "what": "Shuffle: Stage-2 functions are invoked only after all of Stage-1 completes",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Stage-1",
+        "to": "Stage-2",
+        "what": "fine-grained all-to-all data exchange: every Stage-1 instance's output is key-partitioned and sent to every Stage-2 instance",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "clock",
+        "to": "f",
+        "what": "periodically invokes the downstream function to process data accumulated since the last invocation",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "f",
+        "to": "f",
+        "what": "output data flows continuously into the downstream function's accumulation buffer, in the Batched example",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "In current serverless platforms, how functions are invoked (coarse, workflow-driven) and how their data actually flows (fine-grained, all-to-all, or time-batched) are treated as one thing but are not.",
+    "reading_order": "left panel first, Stage-1 to Stage-2 via the solid invocation arrow and the dashed all-to-all mesh; then the right panel's two functions and the clock; legend last"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "none",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "below",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.92,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffc000",
+        "used_for": "amber/gold fill of all 8 'f' function icons across both panels"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the Stage-1/Stage-2 outline boxes and the clock face"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines and text, one thin gray minor line",
+    "corners": "rounded",
+    "arrows": "one solid black arrow for function invocation, plus dashed black arrows for data flow; the Shuffle panel's dashed arrows form a fully-connected all-to-all crisscross",
+    "font": "sans (a bold CJK-locale font, DengXian-Bold, renders the 8 'f' glyphs; Calibri-Light for panel titles and legend)",
+    "icons": "8 rounded-square amber icons each labelled f (function instances), plus one clock icon"
+  },
+  "encoding": {
+    "color_means": "amber/gold uniformly fills every function icon regardless of stage or panel; colour does not distinguish Stage-1 from Stage-2 or the two example patterns",
+    "line_style_means": "solid arrows mark function-invocation flow; dashed arrows mark data flow, per the explicit legend",
+    "state_means": "not applicable; the figure contrasts two different workflow patterns rather than states of one system",
+    "marker_means": "not applicable; no numbered or lettered markers are used",
+    "emphasis": "the dense all-to-all dashed crisscross on the left visually contrasts with the single dashed link on the right, underscoring how much finer-grained the shuffle's data flow is than its one coarse invocation arrow",
+    "reusable_patterns": [
+      "a single invocation arrow paired with a dense mesh of dashed data-flow arrows to show that control and data flow diverge",
+      "an explicit two-line legend distinguishing solid invocation arrows from dashed data arrows"
+    ],
+    "weaknesses": [
+      "the two panels do not share a template (different node counts and topology), so a viewer cannot compare them position-by-position the way a true side-by-side comparison would allow"
+    ]
+  },
+  "tags": [
+    "serverless",
+    "function-orchestration",
+    "shuffle",
+    "data-flow",
+    "batched-processing",
+    "Pheromone"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background and Motivation"
+    ],
+    "evidence": [
+      "the output data of a function in stage-1 are shuffled and selectively redistributed to multiple functions in stage-2",
+      "only after stage-1 completes can the workflow invoke all the stage-2 functions in parallel",
+      "a batched stream analytics job which periodically invokes a function to process the data continuously received during a time window"
+    ]
+  },
+  "summary": "This figure presents two motivating examples of serverless workflow patterns that current platforms handle poorly, contrasting function-invocation flow with data flow. On the left, a data-analytics shuffle: three Stage-1 (map) function instances each send fine-grained, key-partitioned data to all three Stage-2 (reduce) instances, a dense all-to-all dashed mesh, yet Stage-2 functions can only be invoked (solid arrow) once Stage-1 fully completes, since invocation and data flow are not the same thing. On the right, batched stream processing: a function's output accumulates over a window while a clock periodically invokes a separate downstream function to process everything received so far, rather than triggering it immediately per item. Both examples argue that a serverless workflow model tying invocation directly to data flow cannot express these patterns without external, serverful workarounds.",
+  "summary_zh": "该图示两种Serverless平台难表达的模式：左边shuffle中Stage-1函数全对全（虚线）发数据给Stage-2，需等其全部完成才被调用（实线）；右边批处理由时钟定期触发下游函数处理累积数据，说明调用与数据流不一致。",
+  "confidence": "high",
+  "notes": "Overrode the prior 'comparison' group to 'anatomy': the two panels do not share one template varied by alternative (per the comparison definition) but are two structurally different abstract sketches, matching the prior label's own note 'matches abstract-flow-sketch precedent' (an anatomy variant). content.panels is left empty per the anatomy rule, though layout still records two visually distinct sub-sketches. 'f' icons are generic and unlabelled individually, so identical icons within a container are described once each rather than as 8 separately-named elements.",
+  "venue": "NSDI23"
+}

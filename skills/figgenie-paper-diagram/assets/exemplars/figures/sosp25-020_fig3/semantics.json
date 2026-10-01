@@ -1,0 +1,167 @@
+{
+  "paper_id": "sosp25-020",
+  "fig": "3",
+  "system": {
+    "name": "Pie",
+    "one_liner": "a programmable LLM serving system where user-provided WebAssembly inferlets control the generation process via fine-grained service handlers",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Inferlet",
+        "role": "user-provided program that controls the generation process via API calls",
+        "container": "Application layer",
+        "novel": true
+      },
+      {
+        "name": "Inferlet Lifecycle Manager",
+        "role": "manages inferlet lifecycles: creation, destruction, communication; launches inferlets via RPC",
+        "container": "Application layer",
+        "novel": true
+      },
+      {
+        "name": "Controller",
+        "role": "central controller that handles API calls from many concurrent inferlets",
+        "container": "Control layer",
+        "novel": true
+      },
+      {
+        "name": "command queues",
+        "role": "per-type queues used to group GPU API calls for batching",
+        "container": "Control layer",
+        "novel": true
+      },
+      {
+        "name": "Batch scheduler",
+        "role": "groups GPU API calls for performance efficiency and forwards them to the inference layer",
+        "container": "Control layer",
+        "novel": true
+      },
+      {
+        "name": "Event dispatcher",
+        "role": "receives and broadcasts results from the inference layer back to inferlets",
+        "container": "Control layer",
+        "novel": true
+      },
+      {
+        "name": "API handler",
+        "role": "specialized handler that executes a batched API call via GPU-side tensor operations",
+        "container": "Inference layer",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Inferlet Lifecycle Manager",
+        "to": "Inferlet",
+        "what": "RPCs for querying, submitting, and launching inferlets",
+        "step": 1
+      },
+      {
+        "from": "Inferlet",
+        "to": "Controller",
+        "what": "Pie API calls",
+        "step": 2
+      },
+      {
+        "from": "Controller",
+        "to": "command queues",
+        "what": "GPU API calls grouped for the batch scheduler",
+        "step": 3
+      },
+      {
+        "from": "Batch scheduler",
+        "to": "API handler",
+        "what": "batched API calls",
+        "step": 4
+      },
+      {
+        "from": "API handler",
+        "to": "Event dispatcher",
+        "what": "results of the batched call",
+        "step": 5
+      },
+      {
+        "from": "Event dispatcher",
+        "to": "Inferlet",
+        "what": "results broadcast back to the inferlet",
+        "step": null
+      }
+    ],
+    "key_idea": "shows the three-layer (application/control/inference) request lifecycle of an inferlet's API call through Pie, numbered end-to-end",
+    "reading_order": "top-down through the three dashed horizontal bands (application, control, inference), following circled numbers 1 to 5"
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.26,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "Pie's own control-layer components in the traced path (Inferlet, ILM, Controller, Batch scheduler, Event dispatcher)"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "other, out-of-focus inferlets in the application layer"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "inference-layer API handlers"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black stroke (~0.46pt), dashed horizontal lines separating the three layers",
+    "font": "Helvetica sans, ~5-6.5pt",
+    "corners": "square",
+    "arrows": "curved arrows with circled step numbers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "white = Pie's control-layer components on the traced request path, gray = background inferlets and inference-layer API handlers",
+    "line_style_means": "dashed horizontal lines separate application/control/inference layers",
+    "emphasis": "circled numbers 1-5 trace the path of a single API call end-to-end through the layered architecture",
+    "reusable_patterns": [
+      "numbered request path across horizontal architectural layers"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "llm-serving",
+    "programmable-runtime",
+    "webassembly",
+    "batch-scheduling",
+    "layered-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "5 System Architecture (p.6)",
+      "5 System Architecture (p.7)"
+    ],
+    "evidence": [
+      "Pie employs a three-layer architecture—application, control, and inference",
+      "using a batch scheduler to group GPU API calls",
+      "Results are sent back to the control layer and then to the inferlets"
+    ]
+  },
+  "summary": "Pie is a programmable LLM serving system that decomposes the generation loop into fine-grained service handlers, letting user-supplied WebAssembly 'inferlets' control generation logic instead of a monolithic loop. Figure 3 shows Pie's three-layer request path: in the application layer, the Inferlet Lifecycle Manager launches an Inferlet (step 1); the inferlet issues API calls into the control layer's Controller (step 2), which routes GPU calls into per-type command queues handled by a Batch scheduler (step 3); the batch scheduler forwards batched calls to inference-layer API handlers (step 4), which execute GPU work and return results through an Event dispatcher back up to the inferlet (step 5). Dashed lines separate the three layers, and gray boxes mark other, out-of-focus inferlets and handlers, while white boxes trace the numbered path of one call.",
+  "summary_zh": "图3展示Pie的三层（应用/控制/推理）请求流程：推理程序通过生命周期管理器启动，经控制器与批调度器排队，由推理层API处理器执行，结果经事件分发器返回，步骤以圈码1-5标注。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

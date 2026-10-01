@@ -1,0 +1,237 @@
+{
+  "paper_id": "nsdi26-022",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "PlanetServe",
+    "one_liner": "a decentralized, scalable, and privacy-preserving overlay for serving large language models without a central coordinator",
+    "domain": [
+      "distributed-systems",
+      "LLM-serving",
+      "overlay-networks"
+    ],
+    "abstraction": "distributed-service"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how PlanetServe's forwarding logic chains cache-hit and reputation checks to reach a load-balanced target node",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Cache hit by searching HR-Tree?",
+        "kind": "node",
+        "role": "decision diamond checking whether the request's prompt matches an entry in the local Hash-Radix tree",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Exist cache-hit model node whose repu. > threshold?",
+        "kind": "node",
+        "role": "decision diamond checking whether any cache-hit node's reputation score clears the threshold",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Forward to the node with the lowest LB factor",
+        "kind": "box",
+        "role": "fallback action taken on either diamond's NO branch, prioritizing load balancing over cache reuse",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "From the nodes satisfying above condition, find the one with the lowest LB factor",
+        "kind": "box",
+        "role": "among qualifying cache-hit, high-reputation nodes, selects the least-loaded one",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Forward to the target model node",
+        "kind": "box",
+        "role": "sends the request to the node chosen by the above selection",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Model nodes serving the same LLM",
+        "kind": "icon",
+        "role": "the pool of candidate nodes that either forwarding action can target",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Synchronize HR-Tree and # of requests",
+        "kind": "label",
+        "role": "periodic state sync among the pool of nodes that keeps each node's local view current",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Cache hit by searching HR-Tree?",
+        "to": "Forward to the node with the lowest LB factor",
+        "what": "NO: no cache hit, so load balancing alone decides the target",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Cache hit by searching HR-Tree?",
+        "to": "Exist cache-hit model node whose repu. > threshold?",
+        "what": "YES: a cache hit exists, so its holder nodes are checked for reputation",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Exist cache-hit model node whose repu. > threshold?",
+        "to": "Forward to the node with the lowest LB factor",
+        "what": "NO: no cache-hit node clears the reputation threshold, falls back to load balancing",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Exist cache-hit model node whose repu. > threshold?",
+        "to": "From the nodes satisfying above condition, find the one with the lowest LB factor",
+        "what": "YES: qualifying cache-hit nodes are narrowed to the least-loaded one",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "From the nodes satisfying above condition, find the one with the lowest LB factor",
+        "to": "Forward to the target model node",
+        "what": "the selected node becomes the forwarding target",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Forward to the node with the lowest LB factor",
+        "to": "Model nodes serving the same LLM",
+        "what": "the fallback action targets one of the pool's nodes",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Forward to the target model node",
+        "to": "Model nodes serving the same LLM",
+        "what": "the cache-aware action also targets one of the pool's nodes",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [],
+      "transitions": [
+        {
+          "from": "Cache hit by searching HR-Tree?",
+          "to": "Exist cache-hit model node whose repu. > threshold?",
+          "guard": "YES (cache hit)"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "Cache hit by searching HR-Tree?",
+          "branches": [
+            "YES -> check reputation threshold of cache-hit nodes",
+            "NO -> forward to lowest-LB-factor node"
+          ]
+        },
+        {
+          "question": "Exist cache-hit model node whose repu. > threshold?",
+          "branches": [
+            "YES -> pick lowest-LB-factor node among qualifying cache-hit nodes",
+            "NO -> forward to lowest-LB-factor node"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "Every model node resolves a request locally by chaining two yes/no checks, cache hit then reputation, both of which fall back to the same load-balance-factor rule when unsatisfied, so PlanetServe forwards requests without any central router.",
+    "reading_order": "top to bottom through the two decision diamonds, following YES down the left column and both NO branches merging right into shared action boxes, then diagonally out to the model-node cluster on the right"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.83,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c1e5f5",
+        "used_for": "light-blue fill of the two decision diamonds"
+      },
+      {
+        "hex": "#f2cfee",
+        "used_for": "light-pink/lavender fill of the three forwarding-action boxes"
+      },
+      {
+        "hex": "#156082",
+        "used_for": "dark teal-blue fill of the small server/GPU rack icons in the model-node cluster"
+      },
+      {
+        "hex": "#042433",
+        "used_for": "near-black navy stroke outlining the diamonds, boxes, and connecting arrows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.56pt) navy outlines on diamonds and boxes",
+    "corners": "rounded",
+    "arrows": "solid navy arrows with small heads, right-angle routing, bold YES/NO text beside each diamond's two branches",
+    "font": "serif (Times New Roman), ~6-6.5pt, bold for YES/NO labels",
+    "icons": "small raster stacked-server/GPU rack icons (several, forming the model-node cluster) plus a megaphone icon for the synchronization broadcast"
+  },
+  "encoding": {
+    "color_means": "light-blue diamonds mark decision/check points; pink boxes mark forwarding actions; dark-teal icons mark individual model nodes",
+    "line_style_means": "solid navy arrows carry control flow; bold YES/NO text beside each diamond's two outgoing arrows marks the branch taken; a plain diagonal bracket line associates both action boxes with the shared pool of candidate nodes",
+    "state_means": "not applicable; a one-shot decision procedure rather than a before/after or alternatives figure",
+    "marker_means": "bold YES/NO text labels the two outcomes of each diamond; no numbered markers are used",
+    "emphasis": "the pink action boxes stand out against the blue decision diamonds, letting the reader see at a glance which branches terminate in a forwarding action versus which continue to another check",
+    "reusable_patterns": [
+      "two chained yes/no decision diamonds whose NO branches merge into a shared fallback action box, contrasted with the YES path's more specific action",
+      "a small pictorial icon cluster illustrating the pool of candidate targets, linked to the flowchart by a bracket line"
+    ],
+    "weaknesses": [
+      "the two NO branches merge into the same box via right-angle routing that runs close to the YES-path column, requiring care to trace which arrow belongs to which diamond"
+    ]
+  },
+  "tags": [
+    "PlanetServe",
+    "decentralized-LLM-serving",
+    "HR-Tree",
+    "load-balancing",
+    "reputation",
+    "forwarding-logic"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 System Design of PlanetServe"
+    ],
+    "evidence": [
+      "The forwarding logic, illustrated in Fig. 4, is designed to consider both KV cache reusing and load balancing objectives.",
+      "Its main objectives are to prevent overload and ensure each model serves enough requests to establish a reputation score.",
+      "If the search result is a match, the HR-tree identifies a list of model nodes that hold reusable KV caches."
+    ]
+  },
+  "summary": "This figure diagrams PlanetServe's decentralized overlay-forwarding logic, executed locally by every model node on each incoming request. A first decision diamond asks whether the request's prompt is a cache hit by searching the node's Hash-Radix tree (HR-Tree); on a NO, the request is forwarded to the model node with the lowest load-balance (LB) factor, prioritizing load balancing over cache reuse. On a YES, a second diamond checks whether any cache-hit node's reputation score exceeds a threshold; if none qualifies, forwarding again falls back to the lowest-LB-factor node, otherwise the node picks the lowest-LB-factor node among the qualifying cache-hit candidates and forwards the request to it. A side icon cluster shows the pool of model nodes serving the same LLM, which periodically synchronize their HR-Tree state and request counts so every node's local decision reflects a consistent, if occasionally slightly stale, view of the group.",
+  "summary_zh": "该图展示PlanetServe去中心化转发逻辑：先查HR-Tree判断缓存命中，未命中则转给LB因子最低节点；命中后判断节点声誉是否超阈值，达标则从中选LB最低者转发，否则同样退回最低LB节点。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior label 'graph' to 'flowchart' (the mechanism base enum explicitly includes 'flowchart'), since the figure is a decision flowchart with diamond checks and boxed actions.",
+  "venue": "NSDI26"
+}

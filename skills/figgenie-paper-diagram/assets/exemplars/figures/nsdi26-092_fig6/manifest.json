@@ -1,0 +1,47 @@
+{
+  "id": "nsdi26-092_fig6",
+  "paper_id": "nsdi26-092",
+  "fig": "6",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 6: Inter-function communication with data objects.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.98,
+  "n_components": 5,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-092/nsdi26-092_fig6_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-092/nsdi26-092_fig6_p10_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated, high-confidence 5-component figure that separates a solid data path (direct read/write to a shared Object) from a dashed control path (createObject/getObject calls) with an in-figure legend and five circled steps ordering the whole exchange.",
+      "what_to_learn": "Draw two symmetric peers around a shared object in the middle, label its access rights (WO/RO) directly on the box, and run the mediating monitor as a full-width band underneath; if you mark denied access with a red X, add it to the legend, unlike this figure."
+    },
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, rank-16 exemplar at only 5 components: two Trustlet peers flank an Object core marked with a red X, all resting on a Trusted Monitor band, a trusted-middle pattern at half the usual component count.",
+      "what_to_learn": "Mark a denied access path with one bold red X on the shared object rather than a caption, and give the figure a small top-right legend distinguishing solid data-path arrows from dashed control-path arrows; the weakness here is that the X itself has no legend entry, so give every ad hoc symbol one too."
+    }
+  ]
+}

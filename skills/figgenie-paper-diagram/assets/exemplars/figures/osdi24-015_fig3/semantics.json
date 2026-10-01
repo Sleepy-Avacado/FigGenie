@@ -1,0 +1,262 @@
+{
+  "paper_id": "osdi24-015",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": "ServerlessLLM",
+    "one_liner": "a low-latency serverless inference system for large language models that optimizes checkpoint loading, live migration and scheduling",
+    "domain": [
+      "ml-systems",
+      "cloud",
+      "serverless"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how four scheduling policies trade off model-A and model-B latency when starting up B while A is still running",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "Server 1 (S1)",
+        "kind": "lane",
+        "role": "server whose GPU is initially idle while model A sits in DRAM and model B sits in SSD",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Server 2 (S2)",
+        "kind": "lane",
+        "role": "server currently running inference of model A on GPU, with model B resident in DRAM",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Model A",
+        "kind": "box",
+        "role": "model A's weights, resident on S1's SSD or S2's DRAM/GPU depending on the policy step",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Model B",
+        "kind": "box",
+        "role": "model B's weights, the one being started up, initially only on S1's SSD",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU",
+        "kind": "box",
+        "role": "compute device that must hold a model's weights to run inference",
+        "container": "Server 1 (S1)",
+        "highlighted": false
+      },
+      {
+        "name": "DRAM",
+        "kind": "box",
+        "role": "host memory tier, faster to load from than SSD but slower than GPU-resident",
+        "container": "Server 1 (S1)",
+        "highlighted": false
+      },
+      {
+        "name": "SSD",
+        "kind": "box",
+        "role": "slowest storage tier holding a model not currently needed",
+        "container": "Server 1 (S1)",
+        "highlighted": false
+      },
+      {
+        "name": "Load B",
+        "kind": "cell",
+        "role": "time segment loading model B's weights into GPU memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Infer B",
+        "kind": "cell",
+        "role": "time segment running model B's inference once loaded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Infer A",
+        "kind": "cell",
+        "role": "time segment continuing/resuming model A's inference",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Recompute A",
+        "kind": "cell",
+        "role": "time segment re-computing model A's state after eviction, under the preemption-driven policy",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Live migration",
+        "kind": "label",
+        "role": "arrow marking model A's running state being migrated from S1 to S2 without a full reload",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "A Latency",
+        "kind": "label",
+        "role": "verdict column reporting whether model A's inference latency stayed low (check) or was hurt (cross)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "B Latency",
+        "kind": "label",
+        "role": "verdict column reporting whether model B's startup latency stayed low (check) or was hurt (cross)",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Server 1 (S1)",
+        "to": "Load B",
+        "what": "S1 begins loading model B after the request arrives",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Load B",
+        "to": "Infer B",
+        "what": "once loaded, S1 runs inference on B",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Model A",
+        "to": "Recompute A",
+        "what": "model A's evicted state must be recomputed after preemption",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Server 1 (S1)",
+        "to": "Server 2 (S2)",
+        "what": "live migration moves model A's running inference state across servers instead of reloading",
+        "kind": "pointer",
+        "step": null
+      },
+      {
+        "from": "SSD",
+        "to": "GPU",
+        "what": "a model must move from slow SSD storage up to the GPU before it can serve inference",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Availability-driven policy",
+        "axis": "alternatives",
+        "differs": "S1 loads and infers B immediately while S2 keeps infering A uninterrupted",
+        "verdict": "A ok, B slow"
+      },
+      {
+        "label": "(b) Locality-driven policy",
+        "axis": "alternatives",
+        "differs": "S2 finishes infering A first, then loads and infers B itself since B's DRAM copy is local",
+        "verdict": "A ok, B slow"
+      },
+      {
+        "label": "(c) Preemption-driven policy",
+        "axis": "alternatives",
+        "differs": "S1 preempts to load A fresh and must Recompute A after a long interruption while also starting B",
+        "verdict": "A slow, B ok"
+      },
+      {
+        "label": "(d) Live-migration-supported locality-driven policy",
+        "axis": "alternatives",
+        "differs": "A's running state is live-migrated from S1 to S2 instead of reloaded",
+        "verdict": "ours: A ok, B ok"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Comparing four ways to start model B while A infers shows that only live-migrating A's state (not reloading it) avoids hurting either model's latency.",
+    "reading_order": "top-left Setup boxes first, then down through the four lettered Timeline rows left-to-right, ending at each row's Performance verdict column"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 4,
+    "frame_template": "identical",
+    "delta_marking": "callout",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 4,
+    "column": "single",
+    "aspect": 1.29,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the Load/Infer timeline segments and GPU/DRAM/SSD boxes"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill of the Server 1/Server 2 outer setup boxes and alternating row backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines (~0.18pt), some dashed where a segment or arrow needs emphasis",
+    "corners": "mixed",
+    "arrows": "mostly plain rectangular timeline segments; one curved arrow marks the live-migration hand-off in panel (d)",
+    "font": "ArialNova sans, 5-6.5pt, mostly regular weight",
+    "icons": "8 small bitmap glyphs, likely the check-mark / cross-mark performance icons repeated across the 4 panels"
+  },
+  "encoding": {
+    "color_means": "no colour coding is used; the figure is grayscale, relying on box labels, checkmarks and crosses instead of colour",
+    "line_style_means": "solid black outlines box every segment; the one curved arrow in (d) marks the live-migration hand-off, distinct from ordinary segment borders",
+    "state_means": "the four policies are told apart by the order and presence of Load/Infer/Recompute segments on the same S1/S2 timeline template, not by colour",
+    "marker_means": "check marks and cross marks in the Performance column report whether each policy keeps model A's and model B's latency good or bad",
+    "emphasis": "callout text ('Long interruption time', 'Live migration') singles out exactly what changes in the Preemption-driven and Live-migration panels relative to the simpler two",
+    "reusable_patterns": [
+      "shared Setup diagram at top feeding four stacked identical Server1/Server2 Gantt-style timelines, each closed off by a checkmark/cross Performance column"
+    ],
+    "weaknesses": [
+      "greyscale-only encoding with small 5pt labels makes the four policies hard to tell apart at a glance without reading each segment"
+    ]
+  },
+  "tags": [
+    "live-migration",
+    "checkpoint-loading",
+    "GPU-scheduling",
+    "serverless-inference",
+    "ServerlessLLM"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Efficient Live Migration of LLM Inference (p.7)"
+    ],
+    "evidence": [
+      "Server 1 currently has Model A in DRAM and Model B in SSD and its GPU is idle",
+      "Server 2 currently has Model B in DRAM, and its GPU is running the inference of Model A",
+      "Our analysis is based on their impact on the latency performance of both Model A and B"
+    ]
+  },
+  "summary": "ServerlessLLM optimizes serverless LLM inference by speeding up checkpoint loading and adding live migration so GPUs are reused with minimal cold-start cost. This figure works through a two-server example: Server 1 (S1) is idle with model A in DRAM and model B on SSD, while Server 2 (S2) is busy running model A's inference with model B already in its DRAM. Four lettered, grayscale Gantt-style panels compare policies for starting model B: an availability-driven policy loads B on the idle S1 but pays a slow SSD load; a locality-driven policy waits for S2's local DRAM copy but delays behind A's inference; a preemption-driven policy interrupts A on S1, forcing a costly recompute; and the paper's live-migration-supported locality-driven policy instead migrates A's running state from S1 to S2 mid-flight, so both models keep good latency. Each panel closes with a Performance column marking A's and B's latency good or bad.",
+  "summary_zh": "该图用双服务器例子对比四种启动模型B的调度策略：可用性优先、局部性优先、抢占式和论文提出的支持热迁移的局部性策略，后者把A的运行状态从S1热迁移到S2，使A、B延迟都保持良好，其余策略均有一方延迟变差。",
+  "confidence": "high",
+  "notes": "verdict 'ours' on panel (d) inferred from it being the paper's live-migration contribution (section title), not stated verbatim as best in the excerpt.",
+  "venue": "OSDI24"
+}

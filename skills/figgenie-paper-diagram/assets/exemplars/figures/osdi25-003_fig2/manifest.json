@@ -1,0 +1,48 @@
+{
+  "id": "osdi25-003_fig2",
+  "paper_id": "osdi25-003",
+  "fig": "2",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 2: Overview of 4D parallelism for LLM training.",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.76,
+  "n_components": 20,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-003/src/fig2_4d_parallel.svg",
+    "preview.png": "lab/extracted/osdi25-003/src/fig2_4d_parallel.png",
+    "print.png": "lab/extracted/osdi25-003/osdi25-003_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "This is the named overview-plus-zoomed-detail two-panel variant: nested DP/PP/Layer boxes on the left, with a dashed callout zooming one pipeline stage into CP/TP sublayers on the right, 20 components at nesting depth 3.",
+      "what_to_learn": "When one panel is a zoomed slice of the other rather than a comparable structure, connect them with a single dashed callout instead of forcing a second full panel frame; watch the font size once nesting reaches DP/PP/Layer/CP/TP depth, since this exemplar's own weakness is text too small for its nested detail."
+    },
+    {
+      "template": "overview-with-inset",
+      "star": true,
+      "why_chosen": "The reference guide's own named example of the zoom pattern: nested DP/PP/Layer boxes are the overview, and a dashed callout expands one pipeline stage into CP/TP sublayers on the right at nesting depth 3.",
+      "what_to_learn": "Mark the exact source of a zoom (one pipeline stage) before expanding it, and keep colour consistent across the boundary (navy/blue on the left reappears inside the right-hand CP/TP detail); budget bigger type than this exemplar did, since its own weakness is text too small for four nested levels."
+    }
+  ]
+}

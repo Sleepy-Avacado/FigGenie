@@ -1,0 +1,42 @@
+{
+  "id": "osdi25-050_fig6",
+  "paper_id": "osdi25-050",
+  "fig": "6",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 6: System architecture of BLITZSCALE. New modules in- troduced by BLITZSCALE are marked with .",
+  "corpus_template": "control-data",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.23,
+  "n_components": 7,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-050/src/fig6_arch-v2.svg",
+    "preview.png": "lab/extracted/osdi25-050/src/fig6_arch-v2.png",
+    "print.png": "lab/extracted/osdi25-050/osdi25-050_fig6_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A numbered control row over a GPU-server row numbered 0..N with an ellipsis and a dashed annotation pointing at one server.",
+      "what_to_learn": "Number the replica row explicitly (0, 1, 2, 3, 4, ..., N) and use a dashed leader when you need to say something about one specific replica."
+    }
+  ]
+}

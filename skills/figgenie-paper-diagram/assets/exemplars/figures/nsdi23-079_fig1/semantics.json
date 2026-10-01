@@ -1,0 +1,318 @@
+{
+  "paper_id": "nsdi23-079",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "Canvas",
+    "one_liner": "isolates and adaptively swaps remote memory for multiple co-located applications",
+    "domain": [
+      "operating systems",
+      "remote memory",
+      "RDMA"
+    ],
+    "abstraction": "kernel"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how a page fault is handled: swap-cache lookup, memory accounting, optional eviction, and fetch, ending in a PTE update",
+    "base": "flowchart",
+    "elements": [
+      {
+        "name": "Begin",
+        "kind": "state",
+        "role": "start of handling one page fault",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Lookup Swap Cache",
+        "kind": "state",
+        "role": "checks whether the faulting page is already cached locally; lock-protected",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "cgroup Accounting",
+        "kind": "state",
+        "role": "checks whether there is enough local physical memory to swap in the page",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Swap Out (Entry Alloc)",
+        "kind": "state",
+        "role": "makes room and allocates a swap entry when local memory is insufficient; lock-protected",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Prefetching",
+        "kind": "state",
+        "role": "speculatively fetches additional pages predicted from recent swap history",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "RDMA Read",
+        "kind": "state",
+        "role": "issues the RDMA read that fetches the faulting page from remote memory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Update Metadata",
+        "kind": "state",
+        "role": "records the newly available page's metadata",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Set PTE",
+        "kind": "state",
+        "role": "installs the page table entry so the faulting access can proceed",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "End",
+        "kind": "state",
+        "role": "handling of the page fault completes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Use locks to serialize concurrent executions.",
+        "kind": "label",
+        "role": "legend explaining the pink fill and padlock icon on the two lock-protected steps",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Begin",
+        "to": "Lookup Swap Cache",
+        "what": "a page fault occurs",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Lookup Swap Cache",
+        "to": "Update Metadata",
+        "what": "Hit: page already in the swap cache, bypassing every other step",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Lookup Swap Cache",
+        "to": "cgroup Accounting",
+        "what": "Miss",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "cgroup Accounting",
+        "to": "Prefetching",
+        "what": "Enough local memory: bypasses Swap Out",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "cgroup Accounting",
+        "to": "RDMA Read",
+        "what": "Enough local memory: bypasses Swap Out",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "cgroup Accounting",
+        "to": "Swap Out (Entry Alloc)",
+        "what": "Otherwise (not enough local memory)",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Swap Out (Entry Alloc)",
+        "to": "Prefetching",
+        "what": "proceeds once room is made and an entry is allocated",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Swap Out (Entry Alloc)",
+        "to": "RDMA Read",
+        "what": "proceeds once room is made and an entry is allocated",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Prefetching",
+        "to": "Update Metadata",
+        "what": "prefetched pages recorded",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "RDMA Read",
+        "to": "Update Metadata",
+        "what": "fetched page recorded",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Update Metadata",
+        "to": "Set PTE",
+        "what": "metadata is ready",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Set PTE",
+        "to": "End",
+        "what": "page table entry installed",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Begin",
+        "Lookup Swap Cache",
+        "cgroup Accounting",
+        "Swap Out (Entry Alloc)",
+        "Prefetching",
+        "RDMA Read",
+        "Update Metadata",
+        "Set PTE",
+        "End"
+      ],
+      "transitions": [
+        {
+          "from": "Lookup Swap Cache",
+          "to": "Update Metadata",
+          "guard": "Hit"
+        },
+        {
+          "from": "Lookup Swap Cache",
+          "to": "cgroup Accounting",
+          "guard": "Miss"
+        },
+        {
+          "from": "cgroup Accounting",
+          "to": "Prefetching / RDMA Read",
+          "guard": "Enough local memory"
+        },
+        {
+          "from": "cgroup Accounting",
+          "to": "Swap Out (Entry Alloc)",
+          "guard": "Otherwise"
+        },
+        {
+          "from": "Swap Out (Entry Alloc)",
+          "to": "Prefetching / RDMA Read",
+          "guard": "always, after making room"
+        }
+      ],
+      "decisions": [
+        {
+          "question": "is the faulting page already in the swap cache?",
+          "branches": [
+            "Hit -> Update Metadata directly",
+            "Miss -> cgroup Accounting"
+          ]
+        },
+        {
+          "question": "is there enough local physical memory to swap in the page?",
+          "branches": [
+            "Enough local memory -> Prefetching & RDMA Read directly",
+            "Otherwise -> Swap Out (Entry Alloc) first"
+          ]
+        }
+      ]
+    },
+    "values": null,
+    "key_idea": "A page fault takes one of three shortcuts depending on cache and memory state, but every path converges on the same metadata-update and PTE-install finish, with only two steps needing locks.",
+    "reading_order": "left to right along Begin, Lookup Swap Cache, cgroup Accounting, Swap Out, Prefetching/RDMA Read, Update Metadata, Set PTE, End, with two long bypass arrows arcing over the top"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.59,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff0000",
+        "used_for": "fill (shown as a pastel pink/salmon tint) of the two lock-protected steps, 'Lookup Swap Cache' and 'Swap Out (Entry Alloc)', and of the legend swatch"
+      },
+      {
+        "hex": "#1f4e79",
+        "used_for": "dark-blue outlines of every box/diamond/oval and the arrows connecting them"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "fill of the unlocked process and decision boxes (cgroup Accounting, Prefetching, RDMA Read, Update Metadata, Set PTE)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~1pt) solid dark-blue outlines",
+    "corners": "mixed",
+    "arrows": "thin dark-blue solid arrows with right-angle routing, including two long bypass paths arcing across the top",
+    "font": "sans (Calibri), medium black labels",
+    "icons": "2 small raster gold padlock icons badging the two lock-protected steps"
+  },
+  "encoding": {
+    "color_means": "pink/salmon marks the two steps that require locking to serialize concurrent executions (per the legend); white marks steps that need no lock; dark blue is used uniformly for structure and text",
+    "line_style_means": "not used to distinguish paths; all arrows are solid dark-blue lines, distinguished only by their guard-text label and routing",
+    "state_means": "not applicable; this is a one-shot flowchart, not a before/after or alternatives figure",
+    "marker_means": "a gold padlock icon marks a step as lock-protected; no numbered markers are used",
+    "emphasis": "the pink fill and padlock icon pull the eye to exactly the two steps whose concurrency the paper's design must handle carefully",
+    "reusable_patterns": [
+      "a bypass arrow that skips several steps to reach a common downstream box, showing a fast path alongside the full path",
+      "a colour-plus-icon legend marking which steps in a flowchart need special (locking) treatment"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "kernel",
+    "remote-memory",
+    "swap",
+    "page-fault",
+    "RDMA",
+    "locking",
+    "Canvas"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background"
+    ],
+    "evidence": [
+      "Figure 1 illustrates the kernel's remote access data path where remote memory is mapped into the host server",
+      "If a page can be found there, it gets mapped to a virtual page and removed from the swap cache",
+      "If there is, the kernel issues an RDMA read request, which is then pushed into RDMA's dispatch queue."
+    ]
+  },
+  "summary": "This figure is a flowchart of the kernel's remote-access data path in Canvas, tracing how one page fault is handled from Begin to End. The kernel first looks up the swap cache: on a Hit the page is already available, so the flow jumps straight to updating metadata; on a Miss it proceeds to cgroup accounting, which checks whether local memory is sufficient. If there is enough local memory, the kernel goes directly to prefetching and issuing an RDMA read; otherwise it first performs Swap Out (Entry Alloc) to make room and allocate a swap entry before the same prefetching and RDMA read steps. Both paths converge at Update Metadata, then Set PTE, then End. A pink fill and padlock icon mark the two steps, Lookup Swap Cache and Swap Out (Entry Alloc), that must be serialized with locks against concurrent page faults.",
+  "summary_zh": "该图是Canvas内核远程访问数据路径流程图：缺页缓存命中则直接更新元数据；未命中经cgroup记账，内存充足则直接预取+RDMA读，否则先Swap Out分配条目再读取；两条路径汇合后更新元数据、设置PTE；粉色和锁标记需加锁两步。",
+  "confidence": "high",
+  "notes": "base set to 'flowchart' rather than the prior label's 'component' since the figure uses standard flowchart iconography (oval begin/end, diamond decisions, boxed steps); groups kept as ['logic'] since the guard labels (Hit/Miss/Otherwise/Enough local memory) carry no numbered or lettered markers, so 'walkthrough' does not apply. The arrow routing was traced directly from the high-resolution source image: the 'Enough local memory' branch and the 'Swap Out (Entry Alloc)' branch both merge into the same pair of arrows feeding 'Prefetching' and 'RDMA Read', while only the 'Hit' branch bypasses all the way to 'Update Metadata' -- this matches the paragraph's description.",
+  "venue": "NSDI23"
+}

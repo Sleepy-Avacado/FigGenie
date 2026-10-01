@@ -1,0 +1,251 @@
+{
+  "paper_id": "osdi26-071",
+  "fig": "3",
+  "system": {
+    "name": "AEGIS",
+    "one_liner": "an online two-stage silent-data-corruption detection system for large-scale LLM training that senses suspicious GPU computations then verifies them off the critical path",
+    "domain": [
+      "ml-systems",
+      "fault-tolerance"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Burn-in Test",
+        "role": "GPU lifecycle stage performed at the factory before deployment",
+        "container": "Factory",
+        "novel": false
+      },
+      {
+        "name": "Stress Tests",
+        "role": "GPU lifecycle stage performed at data-center bring-up",
+        "container": "Data Center Bring-up",
+        "novel": false
+      },
+      {
+        "name": "Proactive Diagnostics",
+        "role": "operational-stage fault check preceding online detection",
+        "container": "Data Center Operation",
+        "novel": false
+      },
+      {
+        "name": "Online SDC Detection",
+        "role": "the operational stage AEGIS targets, highlighted as the paper's contribution",
+        "container": "Data Center Operation",
+        "novel": true
+      },
+      {
+        "name": "Post-failure Analytics",
+        "role": "operational-stage analysis performed after a failure is detected",
+        "container": "Data Center Operation",
+        "novel": false
+      },
+      {
+        "name": "Corruption Sensor",
+        "role": "performs lightweight in-situ sensing of protected computations on the critical path",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Algorithmic Detection",
+        "role": "one sensing strategy used by the Corruption Sensor",
+        "container": "Corruption Sensor",
+        "novel": true
+      },
+      {
+        "name": "Deterministic Detection",
+        "role": "another sensing strategy used by the Corruption Sensor",
+        "container": "Corruption Sensor",
+        "novel": true
+      },
+      {
+        "name": "Different Sensors",
+        "role": "placeholder for additional heterogeneous sensor types unified via the vTask abstraction",
+        "container": "Corruption Sensor",
+        "novel": true
+      },
+      {
+        "name": "Op1",
+        "role": "a protected computation on the per-GPU execution timeline instrumented by the Corruption Sensor",
+        "container": "Per-GPU execution timeline",
+        "novel": false
+      },
+      {
+        "name": "Op2",
+        "role": "a protected computation later flagged as potentially corrupted",
+        "container": "Per-GPU execution timeline",
+        "novel": false
+      },
+      {
+        "name": "Op3",
+        "role": "a protected computation on the per-GPU execution timeline",
+        "container": "Per-GPU execution timeline",
+        "novel": false
+      },
+      {
+        "name": "Op2(R)",
+        "role": "a replay of Op2 executed later so cVerifier can check it against recorded evidence",
+        "container": "Per-GPU execution timeline",
+        "novel": false
+      },
+      {
+        "name": "vT",
+        "role": "a verification task (vTask) executed on the GPU during a naturally occurring idle period",
+        "container": "Per-GPU execution timeline",
+        "novel": true
+      },
+      {
+        "name": "OpN",
+        "role": "a later protected computation on the per-GPU execution timeline",
+        "container": "Per-GPU execution timeline",
+        "novel": false
+      },
+      {
+        "name": "vTasks Queue",
+        "role": "holds verification tasks created by the Corruption Sensor until they are scheduled",
+        "container": "Corruption Verifier",
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "dispatches vTasks to GPUs during idle periods for verification",
+        "container": "Corruption Verifier",
+        "novel": true
+      },
+      {
+        "name": "Corruption Verifier",
+        "role": "performs definitive confirmation of flagged computations off the critical path",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Platform",
+        "role": "receives confirmed SDC incident reports to enable restart and rollback",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Corruption Sensor",
+        "to": "Op1",
+        "what": "instruments a protected computation",
+        "step": 1
+      },
+      {
+        "from": "Op2",
+        "to": "Corruption Sensor",
+        "what": "compact sensing evidence and metadata recorded right after completion",
+        "step": 2
+      },
+      {
+        "from": "Corruption Sensor",
+        "to": "vTasks Queue",
+        "what": "a vTask created for a computation flagged as potentially corrupted",
+        "step": 3
+      },
+      {
+        "from": "Scheduler",
+        "to": "vT",
+        "what": "a vTask dispatched to the GPU during an idle period",
+        "step": 4
+      },
+      {
+        "from": "vT",
+        "to": "Corruption Verifier",
+        "what": "fingerprint comparison or replay against recorded evidence",
+        "step": 5
+      },
+      {
+        "from": "Corruption Verifier",
+        "to": "Platform",
+        "what": "SDC incident report with device and execution context",
+        "step": 6
+      }
+    ],
+    "key_idea": "AEGIS decouples a lightweight always-on sensor that flags suspicious GPU computations from a heavier verifier that confirms them off the critical path during idle GPU time.",
+    "reading_order": "Top lifecycle timeline first, zooming via the highlighted 'Online SDC Detection' stage into the architecture box below, then left-to-right through numbered steps 1-6."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.26,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b0e3e6",
+        "used_for": "cyan fill for the vT (vTask) box on the GPU timeline"
+      },
+      {
+        "hex": "#b1001d",
+        "used_for": "red text/highlight for the 'Online SDC Detection' stage and the Scheduler's arrow"
+      },
+      {
+        "hex": "#fff4cc",
+        "used_for": "pale yellow background of the Corruption Sensor container"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light gray fill for generic Op boxes on the timeline"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "light green fill for the Deterministic Detection box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark strokes (~0.5pt) on most boxes, dashed outline around the Algorithmic Detection box and the outer AEGIS architecture box",
+    "font": "Helvetica sans, roughly 3.5-13.5pt, bold for the AEGIS title and section headings",
+    "corners": "square",
+    "arrows": "thin orthogonal arrows, some curved, distinguishing cSensor flow from cVerifier flow",
+    "icons": "small vector legend glyphs (operator, sensing, vTask) plus an embedded raster element per the mixed PDF extraction"
+  },
+  "encoding": {
+    "color_means": "red marks the online-detection stage and scheduler; pale yellow marks the Corruption Sensor group; green marks deterministic detection; gray marks generic per-GPU operations; cyan marks the running vTask",
+    "line_style_means": "the legend distinguishes cSensor flow arrows from cVerifier flow arrows",
+    "emphasis": "the 'Online SDC Detection' stage is picked out in red from the surrounding lifecycle stages and connected by a shaded wedge down into AEGIS's detailed sense-then-verify pipeline",
+    "reusable_patterns": [
+      "lifecycle timeline with one stage highlighted and zoomed into a detailed diagram below",
+      "numbered steps overlaid on a sense-then-verify pipeline with a task queue and scheduler"
+    ],
+    "weaknesses": [
+      "combines a lifecycle timeline, a per-GPU trace, and a queue/verifier pipeline in one dense panel"
+    ]
+  },
+  "tags": [
+    "silent-data-corruption",
+    "fault-tolerance",
+    "gpu-training",
+    "llm-training",
+    "verification",
+    "online-detection"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Overview (p.5)",
+      "4 Overview (p.6)"
+    ],
+    "evidence": [
+      "AEGIS therefore targets the online stage with a sense-then-verify architecture",
+      "cVerifier's scheduler then dispatches vTasks to GPUs during naturally occurring idle periods",
+      "When verification confirms an SDC, AEGIS reports the incident"
+    ]
+  },
+  "summary": "AEGIS is a two-stage online silent-data-corruption (SDC) detection system for large-scale LLM training. The figure has two connected parts: a compact lifecycle timeline spanning Factory, Data Center Bring-up, and Data Center Operation (Burn-in Test, Stress Tests, Proactive Diagnostics, Post-failure Analytics), with the 'Online SDC Detection' stage highlighted in red and linked by a shaded wedge to a detailed architecture box below. That box shows a per-GPU execution timeline of operations (Op1...OpN) instrumented by a lightweight Corruption Sensor, which records evidence after each computation and, when suspicious, creates a vTask (step 3) placed in a queue; a scheduler dispatches vTasks to idle GPU periods (step 4) where the Corruption Verifier compares fingerprints or replays the computation (step 5) and reports confirmed corruptions to the Platform (step 6) for rollback.",
+  "summary_zh": "AEGIS是面向大规模LLM训练的两阶段在线SDC检测系统:图中展示GPU生命周期时间线聚焦到在线检测阶段,下方细化为cSensor感知生成vTask、排队后由cVerifier在GPU空闲期调度验证并上报平台的完整流程。",
+  "confidence": "high",
+  "notes": "layout-proposal: timeline-with-zoom-inset — a short GPU lifecycle timeline with one stage highlighted, connected by a shaded wedge to a detailed sense-then-verify pipeline diagram below it.",
+  "venue": "OSDI26"
+}

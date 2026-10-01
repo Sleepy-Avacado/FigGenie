@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-097_fig2",
+  "paper_id": "asplos25-097",
+  "fig": "2",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 2. tnic hardware architecture.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 0.92,
+  "n_components": 15,
+  "n_flows": 11,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-097/asplos25-097_fig2_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-097/asplos25-097_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Dense 15-component figure whose bottom legend spells out six path types (Tx/Rx control, Tx/Rx data, host data, auxiliary), all converging on one mandatory Attestation-kernel choke point between PCIe DMA and the RoCE protocol kernel.",
+      "what_to_learn": "Draw a security module as a literal inline choke point on both Tx and Rx paths, not a side box, so nothing bypasses it; this figure legends six path classes below, more than the template's usual three-class cap, so only go that far if every class needs its own arrow style."
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "paper_id": "nsdi24-029",
+  "fig": "7",
+  "system": {
+    "name": "Parcae",
+    "one_liner": "a proactive, liveput-optimized DNN training system for preemptible spot instances",
+    "domain": [
+      "ml-systems",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DNN Model",
+        "role": "the model a user submits as a training job",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Spot Service",
+        "role": "cloud provider's spot instance service (AWS/Azure/GCP)",
+        "container": "Cloud Provider",
+        "novel": false
+      },
+      {
+        "name": "ParcaeScheduler",
+        "role": "runs persistently on one on-demand CPU instance; determines the migration schedule and manages training data samples",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Migration Manager",
+        "role": "determines the migration schedule based on the liveput optimizer and availability predictor",
+        "container": "ParcaeScheduler",
+        "novel": true
+      },
+      {
+        "name": "Liveput Optimizer",
+        "role": "computes proactive reconfiguration decisions to optimize liveput",
+        "container": "Migration Manager",
+        "novel": true
+      },
+      {
+        "name": "Availability Predictor",
+        "role": "predicts spot instance availability",
+        "container": "Migration Manager",
+        "novel": true
+      },
+      {
+        "name": "Sample Manager",
+        "role": "manages the training data samples to maintain training semantics, exchanging sample ids with agents",
+        "container": "ParcaeScheduler",
+        "novel": true
+      },
+      {
+        "name": "ParcaeAgent",
+        "role": "runs on each spot GPU instance; performs the assigned training workload, monitors training progress, and executes migration strategies issued by the scheduler",
+        "container": "Spot GPU Instance",
+        "novel": true
+      },
+      {
+        "name": "ParcaePS",
+        "role": "runs on several on-demand CPU instances to keep model checkpoints for rare rollback cases",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Parameter Server",
+        "role": "stores and updates model parameters from gradients",
+        "container": "ParcaePS",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "DNN Model",
+        "to": "Spot Service",
+        "what": "job submit",
+        "step": null
+      },
+      {
+        "from": "Spot Service",
+        "to": "Cloud Provider",
+        "what": "spot instance provisioning/preemption",
+        "step": null
+      },
+      {
+        "from": "ParcaeScheduler",
+        "to": "ParcaeAgent",
+        "what": "migration instruction",
+        "step": null
+      },
+      {
+        "from": "ParcaeAgent",
+        "to": "ParcaeAgent",
+        "what": "sync",
+        "step": null
+      },
+      {
+        "from": "ParcaeAgent",
+        "to": "ParcaeScheduler",
+        "what": "training status",
+        "step": null
+      },
+      {
+        "from": "ParcaeAgent",
+        "to": "ParcaePS",
+        "what": "gradients",
+        "step": null
+      },
+      {
+        "from": "ParcaePS",
+        "to": "ParcaeAgent",
+        "what": "model states",
+        "step": null
+      }
+    ],
+    "key_idea": "Parcae consists of three main components: a persistent ParcaeScheduler on an on-demand CPU instance that computes migration schedules via a liveput optimizer and availability predictor, ParcaeAgents on each spot GPU instance that train and execute migrations, and a ParcaePS holding checkpoints on on-demand CPU instances for rare rollbacks.",
+    "reading_order": "top-down: user submits a job through the cloud provider's spot service, into ParcaeScheduler which coordinates two ParcaeAgent instances below it, which in turn connect down to the ParcaePS parameter servers."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.07,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#a199f4",
+        "used_for": "purple icon fills, e.g. Parcae Runtime/GPU icons"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "green background of on-demand CPU instance regions (ParcaeScheduler, ParcaePS)"
+      },
+      {
+        "hex": "#f6cecc",
+        "used_for": "salmon/pink background of spot GPU instance regions (ParcaeAgent boxes)"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "peach accents"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "neutral gray container backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin black outlines throughout",
+    "font": "Calibri sans, small (6.5pt), italic edge labels",
+    "corners": "square",
+    "arrows": "black solid lines connecting stacked boxes, no explicit arrowheads reported",
+    "icons": "bitmap icons for GPU, neural network model, cloud provider logos"
+  },
+  "encoding": {
+    "color_means": "green background = on-demand CPU instances, pink/salmon background = spot (preemptible) GPU instances, purple = Parcae runtime/agent icons",
+    "line_style_means": null,
+    "emphasis": "the two-tone green/pink instance-type shading visually separates the stable scheduler and parameter-server tiers from the preemptible GPU agent tier that Parcae must tolerate losing",
+    "reusable_patterns": [
+      "scheduler-agent-parameter-server three-tier stack annotated with paper section numbers per component"
+    ],
+    "weaknesses": [
+      "no in-figure legend explaining what the green vs. pink region colors mean"
+    ]
+  },
+  "tags": [
+    "dnn-training",
+    "spot-instances",
+    "preemption",
+    "fault-tolerance",
+    "parameter-server",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "Design and Implementation"
+    ],
+    "evidence": [
+      "runs persistently on one on-demand CPU instance, determining the migration schedule based on our liveput optimizer",
+      "each spot GPU instance runs a , which performs assigned training workload, monitors training progress",
+      "runs on several on-demand CPU instances to keep model checkpoints for rare rollback cases"
+    ]
+  },
+  "summary": "Parcae is a system for DNN training on preemptible (spot) cloud instances that proactively reconfigures training to maximize liveput. Figure 7 gives a whole-system overview, stacked top-down: a user submits a DNN model as a job through a cloud provider's Spot Service, which can gain or lose instances. Below, a green-shaded ParcaeScheduler box, running persistently on an on-demand CPU instance, contains a Migration Manager combining a Liveput Optimizer and an Availability Predictor to determine the migration schedule, plus a Sample Manager that manages training data samples to preserve training semantics. It issues migration instructions down to two pink-shaded ParcaeAgent boxes, each running on a spot GPU instance, performing the assigned training workload, monitoring progress, and executing the scheduler's migration strategies while syncing with its peer. The agents send gradients down to a ParcaePS box holding multiple Parameter Server instances on on-demand CPU instances, which keeps model checkpoints for rare rollback cases and returns model states.",
+  "summary_zh": "该图展示Parcae系统架构：作业经云端Spot服务提交后，运行在按需CPU实例上的ParcaeScheduler（含迁移管理器与样本管理器）依据liveput优化器和可用性预测器调度Spot GPU实例上的ParcaeAgent进行训练，并与保存模型检查点的ParcaePS交换梯度与模型状态。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI24"
+}

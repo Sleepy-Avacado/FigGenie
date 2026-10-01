@@ -1,0 +1,48 @@
+{
+  "id": "osdi23-003_fig4",
+  "paper_id": "osdi23-003",
+  "fig": "4",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 4: Realizing Rowan with oﬀ-the-shelf RNICs. (a) Rowan basic architecture using shared receive queue (SRQ). In this subﬁgure, the 32B write and 56B write are placed in the same XPLine. Yet, the 384B write fails to be received due to 64B receive buﬀers. (b) Rowan using multi-packet shared recei",
+  "corpus_template": "two-panel",
+  "direction": "top-down",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 3.2,
+  "n_components": 6,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-003/src/fig4_RowanImpl.svg",
+    "preview.png": "lab/extracted/osdi23-003/src/fig4_RowanImpl.png",
+    "print.png": "lab/extracted/osdi23-003/osdi23-003_fig4_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": false,
+      "why_chosen": "Double-column (a) naive / (b) fixed pair where a red cross marks the failure in (a).",
+      "what_to_learn": "Give both panels identical internal geometry and change exactly one thing; a red cross on the broken element is the whole argument."
+    },
+    {
+      "template": "baseline-vs-ours",
+      "star": true,
+      "why_chosen": "Textbook two-panel pair: identical Sender/RNIC/receiver skeleton in both halves, a red X on the failing 384B write in (a) versus the working multi-packet buffer in (b); explicitly listed as a two-panel-filed exemplar.",
+      "what_to_learn": "Keep sender icons, RNIC box, and the receive-buffer/CQ layout in the same position in both panels; mark the single failure point with a red X in the baseline panel, and let the working buffer geometry in the ours panel be the only visual difference."
+    }
+  ]
+}

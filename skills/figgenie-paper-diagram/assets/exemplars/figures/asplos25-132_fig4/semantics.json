@@ -1,0 +1,227 @@
+{
+  "paper_id": "asplos25-132",
+  "fig": "4",
+  "system": {
+    "name": "PICACHU",
+    "one_liner": "a plug-in coarse-grained reconfigurable accelerator (CGRA) that offloads nonlinear operations in LLM inference",
+    "domain": [
+      "ml-systems",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DRAM",
+        "role": "off-chip memory feeding the systolic array's input buffer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Systolic Array System",
+        "role": "matrix-multiply engine loosely coupled with the CPU and the CGRA",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Weight Buffer",
+        "role": "buffers weights for the MAC array",
+        "container": "Systolic Array System",
+        "novel": false
+      },
+      {
+        "name": "Input Buffer",
+        "role": "buffers activations for the MAC array",
+        "container": "Systolic Array System",
+        "novel": false
+      },
+      {
+        "name": "MAC",
+        "role": "multiply-accumulate cell of the systolic array grid",
+        "container": "Systolic Array System",
+        "novel": false
+      },
+      {
+        "name": "CPU",
+        "role": "issues accelerator commands to and receives responses from the systolic array and CGRA",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Shared Buffer",
+        "role": "on-chip buffer connecting the systolic array output to the PICACHU CGRA",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "PICACHU CGRA",
+        "role": "pluggable heterogeneous CGRA of 16 tiles interconnected through a mesh on-chip network",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "BaT",
+        "role": "Basic Tile: general-purpose functional-unit type in the CGRA mesh",
+        "container": "PICACHU CGRA",
+        "novel": true
+      },
+      {
+        "name": "BrT",
+        "role": "Branch-optimized Tile: functional-unit type specialized for control-flow-heavy nonlinear operations",
+        "container": "PICACHU CGRA",
+        "novel": true
+      },
+      {
+        "name": "CoT",
+        "role": "Compute Tile: functional-unit type specialized for compute-heavy nonlinear operations",
+        "container": "PICACHU CGRA",
+        "novel": true
+      },
+      {
+        "name": "Vector Adder",
+        "role": "precision-aware functional unit composing narrow additions into wider ones",
+        "container": "Precision-Aware FUs",
+        "novel": true
+      },
+      {
+        "name": "Vector Multiplier",
+        "role": "precision-aware functional unit composing narrow multiplications into wider ones",
+        "container": "Precision-Aware FUs",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DRAM",
+        "to": "Systolic Array System",
+        "what": "input data loaded into the Input Buffer",
+        "step": null
+      },
+      {
+        "from": "Weight Buffer",
+        "to": "MAC",
+        "what": "weights streamed into the MAC array",
+        "step": null
+      },
+      {
+        "from": "Input Buffer",
+        "to": "MAC",
+        "what": "activations streamed into the MAC array",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "Systolic Array System",
+        "what": "accelerator command",
+        "step": null
+      },
+      {
+        "from": "Systolic Array System",
+        "to": "CPU",
+        "what": "accelerator response",
+        "step": null
+      },
+      {
+        "from": "Systolic Array System",
+        "to": "Shared Buffer",
+        "what": "systolic array output made available to the CGRA",
+        "step": null
+      },
+      {
+        "from": "Shared Buffer",
+        "to": "PICACHU CGRA",
+        "what": "operands for nonlinear operations",
+        "step": null
+      },
+      {
+        "from": "CPU",
+        "to": "PICACHU CGRA",
+        "what": "control commands to the pluggable CGRA",
+        "step": null
+      }
+    ],
+    "key_idea": "A systolic array and a pluggable, heterogeneous 16-tile CGRA are loosely coupled through a CPU and a Shared Buffer, letting BaT/BrT/CoT tiles execute nonlinear operations right after matrix multiplication.",
+    "reading_order": "Left to right: DRAM and the systolic array system, through the CPU control link and Shared Buffer, into the color-coded CGRA tile mesh, with precision-aware FU internals zoomed in on the right."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.43,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#eeeeee",
+        "used_for": "background fill of the Systolic Array System and DRAM boxes"
+      },
+      {
+        "hex": "#990000",
+        "used_for": "fill of Branch-optimized Tile (BrT) cells"
+      },
+      {
+        "hex": "#b7b7b7",
+        "used_for": "fill of Basic Tile (BaT) cells and the CPU box"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "fill of Compute Tile (CoT) cells"
+      },
+      {
+        "hex": "#010000",
+        "used_for": "text labels and box borders"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin borders, dashed around the Systolic Array System and the zoomed precision-aware FU insets",
+    "font": "Arial sans-serif, roughly 4.5-9.5pt, bold for major box titles (DRAM, CPU, PICACHU CGRA)",
+    "corners": "mixed",
+    "arrows": "many thin straight arrows, especially dense inside the zoomed functional-unit datapath insets",
+    "icons": "small icons on the CPU command/response arrows"
+  },
+  "encoding": {
+    "color_means": "red = Branch-optimized Tile (BrT), gold/orange = Compute Tile (CoT), gray = Basic Tile (BaT), green = buffers (Weight/Input/Shared Buffer)",
+    "line_style_means": "dashed borders enclose the Systolic Array System and the zoomed-in precision-aware FU diagrams as separate insets",
+    "emphasis": "the heterogeneous 4x4 CGRA tile mesh and its Shared-Buffer link to the systolic array are the visual center, with precision-aware FU internals zoomed in on the right",
+    "reusable_patterns": [
+      "host CPU issuing commands to two loosely-coupled accelerator blocks",
+      "color-coded heterogeneous tile mesh with a zoomed inset of one tile's internal datapath"
+    ],
+    "weaknesses": [
+      "very dense (900+ shapes) at double-column width, small tile labels are hard to read",
+      "three separate zoomed insets compete for attention with the main architecture diagram"
+    ]
+  },
+  "tags": [
+    "cgra",
+    "systolic-array",
+    "hardware-accelerator",
+    "heterogeneous-tiles",
+    "llm-inference",
+    "precision-aware-computing"
+  ],
+  "provenance": {
+    "sections": [
+      "4.2 PICACHU Architecture (p.6)"
+    ],
+    "evidence": [
+      "the PICACHU architecture primarily consists of a systolic array and a CGRA, both loosely coupled with the CPU",
+      "It consists of 16 tiles interconnected through a mesh on-chip network",
+      "classified into three types: Branch-optimized Tile (BrT), Basic Tile (BaT) and Compute Tile (CoT), each with distinct FUs"
+    ]
+  },
+  "summary": "This figure shows PICACHU's overall hardware architecture: a systolic array system and the pluggable PICACHU CGRA, both loosely coupled to a CPU that issues accelerator commands and receives responses. The systolic array holds Weight and Input Buffers feeding a MAC grid fed from DRAM, and its output passes through a Shared Buffer to the CGRA for nonlinear post-processing. The CGRA itself is a 4x4 mesh of 16 heterogeneous tiles of three types - Basic Tile (BaT), Branch-optimized Tile (BrT) and Compute Tile (CoT) - each with distinct functional units, shown color-coded in the mesh. Zoomed insets on the right detail the Precision-Aware FUs: a Vector Adder and Vector Multiplier that compose narrow bit-width operations (e.g. four 16-bit adds into two 32-bit adds) into wider results, plus a generic tile datapath with a configuration memory, register file and an 8x9 operand crossbar.",
+  "summary_zh": "该图展示 PICACHU 硬件架构：CPU 松耦合控制脉动阵列与可插拔 CGRA；阵列输出经共享缓冲送入由 BaT、BrT、CoT 三类瓦片构成的 4x4 CGRA 网格，右侧放大展示精度感知加法器/乘法器等功能单元。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

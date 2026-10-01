@@ -1,0 +1,172 @@
+{
+  "paper_id": "nsdi24-106",
+  "fig": "2",
+  "system": {
+    "name": "Habitus",
+    "one_liner": "a software framework enabling immersive content delivery apps to exploit heterogeneous wireless links via mmWave throughput prediction and multipath networking",
+    "domain": [
+      "mobile-networking",
+      "edge-computing",
+      "multimedia-streaming"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Pre-trained Model",
+        "role": "offline pre-trained model seeding the throughput predictor's online transfer learning",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Full-body Pose Estimator",
+        "role": "estimates the viewer's full-body pose on the edge; exact interaction with other edge modules not detailed in the retrieved text",
+        "container": "Edge",
+        "novel": true
+      },
+      {
+        "name": "Throughput Predictor",
+        "role": "performs accurate runtime mmWave throughput prediction via online transfer learning from the pre-trained model",
+        "container": "Edge",
+        "novel": true
+      },
+      {
+        "name": "Multipath Scheduler",
+        "role": "schedules content delivery across the 802.11ac and 802.11ad links using throughput predictions",
+        "container": "Edge",
+        "novel": true
+      },
+      {
+        "name": "802.11ac",
+        "role": "omnidirectional radio link managed by the multipath scheduler",
+        "container": "Multipath Scheduler",
+        "novel": false
+      },
+      {
+        "name": "802.11ad",
+        "role": "mmWave radio link managed by the multipath scheduler",
+        "container": "Multipath Scheduler",
+        "novel": false
+      },
+      {
+        "name": "Client-side Feature Collector",
+        "role": "collects real-time features (e.g. headset's 6-DoF, network info) and sends them to the edge",
+        "container": "Client",
+        "novel": true
+      },
+      {
+        "name": "Frame Buffer",
+        "role": "buffers content frames received by the client",
+        "container": "Client",
+        "novel": false
+      },
+      {
+        "name": "Content Server",
+        "role": "streams immersive content, proxied by the edge to and from the client",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Client-side Feature Collector",
+        "to": "Throughput Predictor",
+        "what": "real-time collected features (headset's 6-DoF, network info)",
+        "step": null
+      },
+      {
+        "from": "Pre-trained Model",
+        "to": "Throughput Predictor",
+        "what": "offline pre-training for online transfer learning",
+        "step": null
+      },
+      {
+        "from": "Full-body Pose Estimator",
+        "to": "Multipath Scheduler",
+        "what": "pose information relevant to scheduling",
+        "step": null
+      },
+      {
+        "from": "Throughput Predictor",
+        "to": "Multipath Scheduler",
+        "what": "mmWave throughput prediction",
+        "step": null
+      },
+      {
+        "from": "Content Server",
+        "to": "Multipath Scheduler",
+        "what": "streamed content proxied through the edge",
+        "step": null
+      },
+      {
+        "from": "Multipath Scheduler",
+        "to": "Frame Buffer",
+        "what": "content delivered across 802.11ac/802.11ad links",
+        "step": null
+      }
+    ],
+    "key_idea": "Habitus splits work across a thin client (feature/pose collection, frame buffering) and an edge host that predicts mmWave throughput and schedules content delivery across 802.11ac/ad links, proxying between the client and the content server.",
+    "reading_order": "Left to right: a pre-trained model feeds the Edge's throughput predictor alongside the pose estimator, whose outputs drive the Multipath Scheduler delivering content to the Client on the right."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.71,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [],
+    "background": "white",
+    "fill": "none",
+    "stroke": "thin (~0.68pt) borders, dashed outlines around the Edge and Client group boxes",
+    "font": "Calibri sans, ~5.5-9pt",
+    "corners": "square",
+    "arrows": "thin arrows, dashed for control data and solid for content data, plus a labelled arrow for offline/online transfer learning",
+    "icons": "bitmap/vector icons for the headset display, neural-network predictor, radio/multipath links, and content server (11 embedded images cover roughly a quarter of the figure area)"
+  },
+  "encoding": {
+    "color_means": "the figure is unfilled icon-based line art with no systematic color-coding; meaning is carried by icon choice and by the dashed/solid line-style legend instead",
+    "line_style_means": "dashed lines carry control data (e.g. predictions, scheduling decisions) while solid lines carry content data (streamed frames), per the figure's own legend",
+    "emphasis": "grouping nearly all intelligence (pose estimation, throughput prediction, multipath scheduling) inside one Edge box highlights that the client stays thin, matching the text's point that only the feature collector remains client-side",
+    "reusable_patterns": [
+      "thin client / capable edge host split with a proxy role to an external server",
+      "a small dashed-vs-solid legend distinguishing control data from content data"
+    ],
+    "weaknesses": [
+      "icon-only components give little visual cue to their internal function without reading labels",
+      "the exact wiring among the three Edge sub-modules is not spelled out by an arrow-adjacent label"
+    ]
+  },
+  "tags": [
+    "multipath-networking",
+    "edge-computing",
+    "mmwave",
+    "immersive-streaming",
+    "pose-tracking",
+    "throughput-prediction"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Habitus Overview (p.4)",
+      "6 System Design of Habitus (p.9)"
+    ],
+    "evidence": [
+      "Figure 2 shows the workflow of Habitus.",
+      "the edge employs a machine learning model to perform accurate mmWave throughput pre-dictions",
+      "except the client-side feature collec- tor, all the other components of Habitus reside on the edge"
+    ]
+  },
+  "summary": "Habitus is a software framework that helps immersive content delivery apps exploit heterogeneous wireless links via mmWave throughput prediction and multipath networking. Figure 2 shows its architecture as an Edge/Client split: on the client, a Feature Collector gathers real-time signals (e.g. the headset's 6-DoF pose and network info) and forwards them to the Edge, while a Frame Buffer holds received content. On the edge -- where all components but the client-side collector reside -- a Full-body Pose Estimator and a Throughput Predictor (an online-transfer-learning model seeded by an offline Pre-trained Model) inform a Multipath Scheduler that splits delivery across an omnidirectional 802.11ac link and an mmWave 802.11ad link. The edge also proxies between the client and an external Content Server, forwarding requests and streamed content. The diagram is icon-heavy line art with no fill color, using dashed versus solid lines to separate control data from content data.",
+  "summary_zh": "图2展示Habitus的边缘/客户端架构：客户端采集特征传给边缘，边缘的姿态估计与吞吐预测（依托预训练加在线迁移学习）驱动多径调度，在802.11ac/ad间分配内容，边缘还代理与内容服务器的通信。",
+  "confidence": "medium",
+  "notes": "The sentence describing what uses the throughput-prediction results is truncated ('...utilized by the ap-'), and the retrieved text does not detail how the Full-body Pose Estimator interacts with the Throughput Predictor/Multipath Scheduler internally, so some intra-Edge flows are read from the figure's layout alone. layout-proposal: edge-mediated host-device — an Edge host (pose estimation, throughput prediction, multipath scheduling) sits between a thin Client device and an upstream Content Server, proxying both control and content data over two wireless links; host-device is the closest named template for the Edge/Client pair but does not capture the added Content Server node.",
+  "venue": "NSDI24"
+}

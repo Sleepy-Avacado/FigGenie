@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-076_fig5",
+  "paper_id": "osdi26-076",
+  "fig": "5",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 5: umap architecture. Files are divided into cache- block–sized segments and mapped on demand.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.36,
+  "n_components": 7,
+  "n_flows": 8,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-076/osdi26-076_fig5_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-076/osdi26-076_fig5_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar that annotates a numbered request path, steps 1-9, onto a vertical stack from user-space app boxes down to the DFS, with red hit/miss labels at the one decision point.",
+      "what_to_learn": "Overlay circled step numbers straight onto the tier-to-tier arrows of a vertical stack to narrate one concrete request, split a single decision into two coloured branch labels rather than separate diagrams, and use hatching to mark which address ranges are currently backed by a cache block."
+    }
+  ]
+}

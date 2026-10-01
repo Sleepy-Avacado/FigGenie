@@ -1,0 +1,217 @@
+{
+  "paper_id": "osdi26-063",
+  "fig": "8",
+  "system": {
+    "name": "Kareus",
+    "one_liner": "a system that jointly reduces dynamic and static energy in large model training by overlapping communication and computation",
+    "domain": [
+      "ml-systems",
+      "energy-efficiency"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Input",
+        "role": "the workload and target latency provided to Kareus",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Workload",
+        "role": "the training workload to be analyzed",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Target Latency",
+        "role": "the desired iteration latency constraint",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Partitions",
+        "role": "kernel partitions automatically detected from the workload",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Optimizer",
+        "role": "runs multi-objective Bayesian optimization per partition, evaluated with the thermally stable profiler",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Multi-objective Bayesian Optimization",
+        "role": "searches candidate execution schedules per partition to optimize time and energy jointly",
+        "container": "Optimizer",
+        "novel": true
+      },
+      {
+        "name": "Thermally Stable Profiler",
+        "role": "evaluates candidate schedules under thermally stable conditions",
+        "container": "Optimizer",
+        "novel": true
+      },
+      {
+        "name": "Iteration Frontier",
+        "role": "table of per-partition time-energy frontier points (T1..Tn) with SM, Timing, and Freq settings",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Training Runtime",
+        "role": "executes the training iteration using the selected frontier configuration",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Partitioned Overlap Execution Engine",
+        "role": "runs partitions with computation/communication overlap according to the selected schedule",
+        "container": "Training Runtime",
+        "novel": true
+      },
+      {
+        "name": "Frequency Controller",
+        "role": "sets GPU frequency per partition as invoked by the execution engine",
+        "container": "Training Runtime",
+        "novel": true
+      },
+      {
+        "name": "GPU",
+        "role": "the GPUs executing the training iteration",
+        "container": "Training Runtime",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Workload",
+        "to": "Partitions",
+        "what": "detect partitions",
+        "step": 1
+      },
+      {
+        "from": "Partitions",
+        "to": "Multi-objective Bayesian Optimization",
+        "what": "per-partition candidate schedules",
+        "step": null
+      },
+      {
+        "from": "Multi-objective Bayesian Optimization",
+        "to": "Thermally Stable Profiler",
+        "what": "candidate evaluation",
+        "step": 2
+      },
+      {
+        "from": "Optimizer",
+        "to": "Iteration Frontier",
+        "what": "per-partition time-energy frontier",
+        "step": 3
+      },
+      {
+        "from": "Target Latency",
+        "to": "Iteration Frontier",
+        "what": "latency constraint",
+        "step": 4
+      },
+      {
+        "from": "Iteration Frontier",
+        "to": "Partitioned Overlap Execution Engine",
+        "what": "selected SM/Timing/Freq configuration",
+        "step": 5
+      },
+      {
+        "from": "Partitioned Overlap Execution Engine",
+        "to": "Frequency Controller",
+        "what": "invoke",
+        "step": 6
+      },
+      {
+        "from": "Partitioned Overlap Execution Engine",
+        "to": "GPU",
+        "what": "execute training iteration",
+        "step": null
+      }
+    ],
+    "key_idea": "Kareus turns a workload and a target latency into per-partition time-energy frontiers via Bayesian optimization and a thermally stable profiler, then executes training using the selected frontier configuration with a partitioned overlap execution engine and frequency controller.",
+    "reading_order": "Top-left Input flows right into the Optimizer (Partitions, then Bayesian Optimization and the Thermally Stable Profiler), down into the Iteration Frontier table (also fed by Target Latency), and down into the Training Runtime's execution engine, frequency controller, and GPUs."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.36,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#042433",
+        "used_for": "dark teal fill/text for the Input panel border and titles"
+      },
+      {
+        "hex": "#fbe3d6",
+        "used_for": "light orange fill for the Input box"
+      },
+      {
+        "hex": "#d9f2d0",
+        "used_for": "light green fill for the Optimizer box"
+      },
+      {
+        "hex": "#dceaf7",
+        "used_for": "light blue fill for the Training Runtime box"
+      },
+      {
+        "hex": "#d1d1d1",
+        "used_for": "gray fill for the GPU boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.75pt dashed borders around the three main panels (Input, Optimizer, Training Runtime)",
+    "font": "ArialMT/Arial-BoldMT sans, 4-7pt, bold for panel/component titles",
+    "corners": "mixed",
+    "arrows": "orthogonal black arrows with circled step numbers (1-6)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pastel fill distinguishes the three top-level panels: orange = Input, green = Optimizer, blue = Training Runtime, with a gray Iteration Frontier table bridging them",
+    "line_style_means": "dashed panel borders group related components; solid arrows trace the data/control flow between panels",
+    "emphasis": "circled numbers 1-6 trace the pipeline from workload input through partition detection, optimization, frontier selection, and execution",
+    "reusable_patterns": [
+      "three pastel-colored panels connected by a numbered pipeline, with a shared table artifact (Iteration Frontier) bridging the optimizer and runtime"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "energy-efficiency",
+    "bayesian-optimization",
+    "large-model-training",
+    "gpu-frequency-scaling",
+    "system-architecture",
+    "pipeline-parallelism"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Implementation (p.9)"
+    ],
+    "evidence": [
+      "Figure 8 shows an overview of the Kareus system",
+      "Kareus identifies partitions (§4.2) and runs multi-objective Bayesian optimization per partition (§4.3)",
+      "evaluating candidates with the thermally stable profiler"
+    ]
+  },
+  "summary": "This figure gives Kareus's end-to-end system overview as a numbered, three-panel pipeline. An Input panel supplies a Workload and Target Latency. The Workload flows (step 1) into an Optimizer panel where Partitions are detected and a Multi-objective Bayesian Optimization module proposes candidate execution schedules, evaluated by a Thermally Stable Profiler (step 2). The optimizer produces an Iteration Frontier table listing per-partition time-energy trade-off points (T1..Tn) with SM allocation, timing, and frequency settings (steps 3-4, combined with the target latency). This frontier configuration is passed (step 5) to a Training Runtime panel, where a Partitioned Overlap Execution Engine runs the training iteration on GPUs and invokes (step 6) a Frequency Controller to apply the selected per-partition GPU frequency. Pastel orange/green/blue panel coloring and dashed borders group the three stages, while circled numbers trace the pipeline from input to execution.",
+  "summary_zh": "该图展示Kareus系统总览：输入(工作负载与目标延迟)经步骤1进入优化器检测分区，步骤2用多目标贝叶斯优化与热稳定分析器评估候选方案，得到步骤3-4的迭代前沿表，再于步骤5-6交由训练运行时的分区重叠执行引擎与频率控制器在GPU上执行。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

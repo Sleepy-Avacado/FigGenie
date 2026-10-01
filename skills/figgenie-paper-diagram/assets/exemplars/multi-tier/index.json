@@ -1,0 +1,136 @@
+{
+  "template": "multi-tier",
+  "n": 16,
+  "stars": 11,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-038_fig3",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Three named planes (Control / Scaling / Serving) labelled in the right gutter with 5 numbered actions crossing them.",
+      "what_to_learn": "Name the tiers as planes in a gutter and let numbered dashed arrows cross plane boundaries - crossing arrows are what makes it a lifecycle, not a stack.",
+      "dir": "../figures/asplos25-038_fig3"
+    },
+    {
+      "id": "asplos25-107_fig6",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Six numbered steps cross three tiers (Client Machine, Server Machine, and the SSD's own internal controller plus NAND flash), with a red 'Encrypted Data' label inside NAND Flash Memory showing matching runs entirely on ciphertext.",
+      "what_to_learn": "Nest a third tier inside the second (the SSD's controller and flash chips inside the Server Machine box) when the real system has a storage device with its own internal architecture, and number every cross-tier hop 1 through 6 so the client-to-flash-and-back round trip reads as one continuous path.",
+      "dir": "../figures/asplos25-107_fig6"
+    },
+    {
+      "id": "nsdi23-027_fig1",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Three layers (Cloud, Edge, IoT) are named top-down in the left margin, each split into a dashed management column and a solid programmable column, with a legend mapping three arrow colours to Experimental/Control/Monitoring data paths.",
+      "what_to_learn": "Split every tier into a dashed management column beside a solid programmable-infrastructure column so the same shape-code works at all three layers, and put one legend at the top mapping every line colour and box style used below, so the reader never has to guess a colour's meaning per layer.",
+      "dir": "../figures/nsdi23-027_fig1"
+    },
+    {
+      "id": "nsdi23-068_fig1",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Five zone columns (User equipment to Base station to Core network to Gateway to Internet) frame a mirrored client/proxy pair, with HBC and LLC drawn as two distinctly coloured dashed paths crossing the same boundaries.",
+      "what_to_learn": "Draw the network path itself as a series of thin vertical zone columns behind the two mirrored endpoint boxes, and give each of the two parallel channels its own consistent colour end to end; add a small legend naming HBC and LLC, since this figure leaves those abbreviations uncoded.",
+      "dir": "../figures/nsdi23-068_fig1"
+    },
+    {
+      "id": "nsdi24-029_fig7",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Scheduler / agents / parameter-server tiers with section tags, and two-tone shading separating stable from preemptible tiers.",
+      "what_to_learn": "Tier fill can encode a property of the tier (here: preemptible vs on-demand), not just identity; tag each tier box with its section.",
+      "dir": "../figures/nsdi24-029_fig7"
+    },
+    {
+      "id": "nsdi26-086_fig2",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Two tier columns (our orchestrator | the existing platform) with the critical path highlighted orange straight down the middle.",
+      "what_to_learn": "When your system sits beside an existing platform rather than above it, use two columns and highlight only the path that crosses between them.",
+      "dir": "../figures/nsdi26-086_fig2"
+    },
+    {
+      "id": "osdi23-003_fig5",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Circled numbers on Server 1 trace a write crossing from local per-thread logs to RDMA-replicated backup logs on Server 2 and Server 3, with a shard-map table (CM) above as the routing tier clients consult.",
+      "what_to_learn": "Number the write path only where it crosses a machine boundary (local append versus RDMA replication to the backup tier), and draw the routing/shard-map table as a small inset table above the tier stack rather than another full box, since compact tabular metadata reads faster there.",
+      "dir": "../figures/osdi23-003_fig5"
+    },
+    {
+      "id": "osdi23-008_fig3",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "A three-level stack (Cilantro Scheduler internals, Resource Manager/Kubernetes, and per-job Clients/Job Servers) is connected top-down by red-labelled feedback arrows naming the exact data crossing each level (Res-Perf Data, confidence bounds, allocations).",
+      "what_to_learn": "Label every cross-tier arrow with the exact data it carries (Res-Perf Data, Load Data, confidence bounds, allocations) in red so the feedback loop reads without extra explanation, and nest each tier's internal modules inside a dashed sub-box; add a legend for the box-fill colours, since this figure leaves that coding unexplained.",
+      "dir": "../figures/osdi23-008_fig3"
+    },
+    {
+      "id": "osdi24-015_fig1",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Two components (Controller, GPU Server) sit under one 'Serverless Cluster' label beside a separate 'LLM Inference' detail box, with three named contribution boxes along the bottom pointing dashed arrows up into the parts they optimize.",
+      "what_to_learn": "Label a background sub-system with one umbrella name (here 'Serverless Cluster') so a detail panel can sit beside it without seeming detached, and place each contribution as its own small box below with a dashed arrow pointing up into the exact component it modifies; enlarge label text well past this figure's 4.5-5.5pt, a listed weakness.",
+      "dir": "../figures/osdi24-015_fig1"
+    },
+    {
+      "id": "osdi24-039_fig1",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Three full-width tiers (Compute, Block, Persistence) are named in the left margin, each a nested box-in-box (VMs inside the Compute Server, GC/Snapshot Workers inside each Block Proxy), connected top-down by double-headed LSBD arrows.",
+      "what_to_learn": "Nest the repeated internal structure (VMs in the compute tier, GC/Snapshot workers in each block proxy) inside its tier's own box rather than flattening it, and name every tier once in a shared left margin; add one accent colour, since this figure's all-gray palette (a listed weakness) makes component roles hard to tell apart.",
+      "dir": "../figures/osdi24-039_fig1"
+    },
+    {
+      "id": "osdi26-044_fig4",
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Interface -> worker group -> scheduler -> data plane -> launcher, 21 components, 0 weaknesses, aspect 0.9.",
+      "what_to_learn": "A deep tier stack stays readable if each tier is a full-width row of equal height and the flow between rows uses hollow block arrows rather than thin lines.",
+      "dir": "../figures/osdi26-044_fig4"
+    },
+    {
+      "id": "asplos26-008_fig1",
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "A minimal three-hop client-server-kernel chain drawn left to right, with reserved GPU(s) explicitly labelled on the kernel icon and bold double-headed arrows naming the HTTP/WebSocket and ZMQ protocols crossing each machine boundary.",
+      "what_to_learn": "Label the protocol name directly on the arrow crossing each machine boundary (HTTP & WebSockets, ZMQ) instead of a generic line, and use flat, distinct icon colours per tier; a background/motivation tier diagram can stay this sparse since it only needs to set up the problem, not show internals.",
+      "dir": "../figures/asplos26-008_fig1"
+    },
+    {
+      "id": "nsdi24-089_fig1",
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "A literal Internet cloud icon is the network boundary between two dashed, mirrored Client and Server boxes, with one orange Congestion controller and its two red control-signal labels the only asymmetry in a symmetric pipeline.",
+      "what_to_learn": "Draw the network as a literal cloud icon between two mirrored, dashed-outline client/server boxes with matching internal module counts, and make the one contributed component (the Congestion controller) the only differently-coloured box; add a small legend for that colour, since this figure's green-vs-orange split otherwise goes unexplained.",
+      "dir": "../figures/nsdi24-089_fig1"
+    },
+    {
+      "id": "nsdi26-030_fig1",
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "Three full-width horizontal bands (In the container, Physical host, Inter-host) are named in a left gutter as the template prescribes, with colour separating software from hardware from network, though zero arrows leave dependency direction unstated.",
+      "what_to_learn": "Name every tier in a left gutter beside its full-width band and colour-code the bands by kind (software, hardware, network); but always add at least a downward dependency arrow between bands, since this figure's total absence of arrows (a listed weakness) leaves the reader to assume top-down dependency rather than see it.",
+      "dir": "../figures/nsdi26-030_fig1"
+    },
+    {
+      "id": "osdi24-009_fig4",
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "Only three logical components (clients / brokers / servers) wrapped in two labelled scope outlines that overlap deliberately.",
+      "what_to_learn": "Overlapping labelled scopes let one figure name two protocols over the same three tiers without drawing the tiers twice.",
+      "dir": "../figures/osdi24-009_fig4"
+    },
+    {
+      "id": "sosp25-054_fig3",
+      "template": "multi-tier",
+      "star": false,
+      "why_chosen": "A numbered three-step path crosses an IPC/LFC trust boundary from the in-process PhOS frontend to a separate PhOS backend, which plugs into any of four labelled checkpoint-image sources (Memory/SSD/RDMA/NVM).",
+      "what_to_learn": "Cross a trust boundary (here IPC/LFC) between an in-process frontend and a separate backend with one numbered arrow, and show a pluggable backend by listing its interchangeable sources (Memory/SSD/RDMA/NVM) in one small box rather than drawing each as a separate tier.",
+      "dir": "../figures/sosp25-054_fig3"
+    }
+  ]
+}

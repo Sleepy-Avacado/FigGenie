@@ -1,0 +1,213 @@
+{
+  "paper_id": "nsdi25-040",
+  "fig": "10",
+  "kind": "mechanism",
+  "system": {
+    "name": "ONCache",
+    "one_liner": "a cache-based container overlay network that rewrites packet headers, instead of encapsulating them, to cut per-packet overhead",
+    "domain": [
+      "networking",
+      "container-networking",
+      "overlay-networks"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one protocol exchange",
+    "subject": "how a container packet's IP/MAC header fields are rewritten to host addresses on egress and restored on ingress",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Payload",
+        "kind": "row",
+        "role": "the unchanged upper-layer payload (TCP/UDP/ICMP...) carried through all three stages",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "IP Header",
+        "kind": "row",
+        "role": "the packet's IP header field, whose addresses are rewritten and restored",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "MAC Header",
+        "kind": "row",
+        "role": "the packet's MAC header field, whose addresses are rewritten and restored",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Container IP addresses",
+        "kind": "label",
+        "role": "the original IP header content, present in the original and restored packets",
+        "container": "IP Header",
+        "highlighted": false
+      },
+      {
+        "name": "Host IP addresses & Restore key",
+        "kind": "label",
+        "role": "the masqueraded IP header content, carrying the host's address plus a key used to restore the original later",
+        "container": "IP Header",
+        "highlighted": true
+      },
+      {
+        "name": "Container MAC addresses",
+        "kind": "label",
+        "role": "the original MAC header content, present in the original and restored packets",
+        "container": "MAC Header",
+        "highlighted": false
+      },
+      {
+        "name": "Host MAC addresses",
+        "kind": "label",
+        "role": "the masqueraded MAC header content",
+        "container": "MAC Header",
+        "highlighted": true
+      },
+      {
+        "name": "Egress-Prog",
+        "kind": "icon",
+        "role": "the eBPF/tc program that masquerades the packet on the way out of the container",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Ingress-Prog",
+        "kind": "icon",
+        "role": "the eBPF/tc program that restores the packet on the way into the destination container",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Original Packet",
+        "to": "Masqed Packet",
+        "what": "Egress-Prog rewrites the IP/MAC headers to host addresses plus a restore key",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Masqed Packet",
+        "to": "Restored Packet",
+        "what": "Ingress-Prog rewrites the host header fields back to the original container addresses using the restore key",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Original Packet",
+        "axis": "time",
+        "differs": "template: payload plus IP/MAC headers carrying the container's own addresses",
+        "verdict": null
+      },
+      {
+        "label": "(b) Masqed Packet",
+        "axis": "time",
+        "differs": "the IP and MAC header rows (highlighted green/orange) are rewritten to host IP/MAC addresses plus a restore key, produced by Egress-Prog",
+        "verdict": null
+      },
+      {
+        "label": "(c) Restored Packet",
+        "axis": "time",
+        "differs": "the IP and MAC headers are rewritten back to the original container addresses by Ingress-Prog, restoring the packet to its (a) state",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the concrete header field contents at each stage: container IP/MAC addresses versus host IP/MAC addresses plus a restore key",
+      "linked_by": "position (same IP Header / MAC Header row across all three packet frames) and colour (rewritten fields highlighted)",
+      "result_cells": "the (c) Restored Packet frame shows the final result, matching (a) exactly"
+    },
+    "key_idea": "The rewriting-based tunneling protocol substitutes traditional outer-header encapsulation with in-place rewriting of the container's own IP/MAC header fields to host addresses (plus a restore key) on egress, then rewrites them back to the original container addresses on ingress at the destination.",
+    "reading_order": "left to right through the three frames (a) Original, (b) Masqed, (c) Restored, following the Egress-Prog and Ingress-Prog arrows between them"
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 3,
+    "frame_template": "identical",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.1,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "light green fill of the IP Header row across all three packet frames"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "light orange fill of the MAC Header row across all three packet frames"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light grey fill of the Payload row"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "gold stroke accents on the MAC Header box and Egress/Ingress-Prog icons"
+      },
+      {
+        "hex": "#82b366",
+        "used_for": "green stroke accents on the IP Header box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.7pt) black box outlines, grey (#666666) for secondary lines",
+    "corners": "square",
+    "arrows": "thin black arrows between the three packet frames, each labelled with a small gear/program icon (Egress-Prog, Ingress-Prog)",
+    "font": "Arial sans, ~6-7.5pt, italic for the rewritten field descriptions",
+    "icons": "a small gear-like icon on the Egress-Prog / Ingress-Prog arrows"
+  },
+  "encoding": {
+    "color_means": "green = IP Header row, orange = MAC Header row, grey = unchanged Payload row, consistent across all three frames so the reader can track each field",
+    "line_style_means": "solid arrows only; no dashed lines are used",
+    "state_means": "before/after states are told apart by the italic field-content text inside each row (container addresses vs host addresses/restore key) while the row layout and colour stay identical across frames",
+    "marker_means": "no numbered markers; the Egress-Prog/Ingress-Prog labels on the connecting arrows name the operation that produced each transition",
+    "emphasis": "keeping the payload row visually unchanged across all three frames isolates attention on just the IP/MAC header rows that the protocol rewrites",
+    "reusable_patterns": [
+      "three identical stacked-header frames in a row, connected by named-operation arrows, with only the rewritten rows' text changing"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "container-networking",
+    "overlay-network",
+    "header-rewriting",
+    "tunneling-protocol",
+    "eBPF"
+  ],
+  "provenance": {
+    "sections": [
+      "Rewriting-based Tunneling Protocol"
+    ],
+    "evidence": [
+      "substituting the encapsulation of outer headers in traditional tunneling protocols, with the rewriting of inner headers",
+      "The modifications to packet headers along the data path are depicted in Figure"
+    ]
+  },
+  "summary": "This figure from ONCache's appendix on its rewriting-based tunneling protocol shows how a container packet's headers change along the data path. Frame (a) is the Original Packet as sent by the container: a Payload row plus IP Header and MAC Header rows carrying the container's own addresses. An Egress-Prog operation transforms it into frame (b), the Masqed Packet, where the IP and MAC Header rows are rewritten to host IP/MAC addresses together with a restore key, while the Payload is untouched. An Ingress-Prog operation at the destination then transforms it into frame (c), the Restored Packet, rewriting the header rows back to the original container addresses. The three frames share an identical stacked-header layout and colour coding (green IP Header, orange MAC Header, grey Payload), so only the header text changes are visible, illustrating that this tunneling approach avoids adding any outer encapsulation headers.",
+  "summary_zh": "该图展示ONCache改写式隧道协议下报文变化：(a)原始报文含容器IP/MAC；Egress-Prog改写为(b)主机地址+还原密钥；Ingress-Prog在(c)还原为容器地址，不新增封装头。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI25"
+}

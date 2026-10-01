@@ -1,0 +1,64 @@
+{
+  "id": "asplos26-094_fig3",
+  "kind": "mechanism",
+  "paper_id": "asplos26-094",
+  "fig": "3",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 3. VLP approximation for nonlinear operations, exp here, with a floating-point input 𝑖, represented as S-M-E, denoting the sign, mantissa and exponent. More details are in Section 3.1.",
+  "groups_in_record": [
+    "evolution",
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "mixed",
+  "subject": "how a floating-point LUT lookup for exp() is split into row (mantissa) and element (exponent) temporal subscriptions",
+  "arrangement": "panels-grid",
+  "panel_count": 9,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "double",
+  "aspect": 1.9,
+  "n_elements": 9,
+  "n_relations": 6,
+  "n_panels": 9,
+  "n_steps": 4,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "zoom_callout": true,
+  "tool": "omnigraffle",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-094/src/fig3_vlp_for_nonlinear.svg",
+    "preview.png": "lab/extracted/asplos26-094/src/fig3_vlp_for_nonlinear.png",
+    "print.png": "lab/extracted/asplos26-094/asplos26-094_fig3_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "Computing exp() from a LUT is split into two temporal subscriptions: the mantissa selects which row of consecutive values to fetch (shared across inputs needing that row), and the exponent then picks the value from that row.",
+      "what_to_learn": "building a two-step (row, then element) addressing scheme across several small panels before showing the circuit that implements it; pairing a circuit/dataflow panel with an adjacent cycle-by-cycle timing diagram, linked by dashed zoom-callout lines; colour-coded rows/lanes so a shared resource (one LUT row) can be traced to every input that reuses it",
+      "note_source": "record"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Computing exp() from a LUT is split into two temporal subscriptions: the mantissa selects which row of consecutive values to fetch (shared across inputs needing that row), and the exponent then picks the value from that row.",
+      "what_to_learn": "building a two-step (row, then element) addressing scheme across several small panels before showing the circuit that implements it; pairing a circuit/dataflow panel with an adjacent cycle-by-cycle timing diagram, linked by dashed zoom-callout lines; colour-coded rows/lanes so a shared resource (one LUT row) can be traced to every input that reuses it",
+      "note_source": "record"
+    }
+  ]
+}

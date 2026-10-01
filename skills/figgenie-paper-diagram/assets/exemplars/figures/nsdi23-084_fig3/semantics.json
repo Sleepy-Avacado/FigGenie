@@ -1,0 +1,175 @@
+{
+  "paper_id": "nsdi23-084",
+  "fig": "3",
+  "system": {
+    "name": "Zeus",
+    "one_liner": "a system that jointly optimizes GPU power limit and training batch size to reduce the energy consumption of DNN training",
+    "domain": [
+      "ml-systems",
+      "energy"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Zeus",
+        "role": "the recurrent-job energy optimizer, containing the power and batch-size optimizers",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Power Optimizer",
+        "role": "determines the GPU power limit for a job",
+        "container": "Zeus",
+        "novel": true
+      },
+      {
+        "name": "JIT Profiler",
+        "role": "just-in-time profiler used by the power optimizer",
+        "container": "Power Optimizer",
+        "novel": true
+      },
+      {
+        "name": "Batch Size Optimizer",
+        "role": "selects the training batch size for a job",
+        "container": "Zeus",
+        "novel": true
+      },
+      {
+        "name": "Bandit",
+        "role": "multi-armed-bandit algorithm used by the batch size optimizer to explore/exploit batch sizes",
+        "container": "Batch Size Optimizer",
+        "novel": true
+      },
+      {
+        "name": "NVML",
+        "role": "interface used to read GPU power stats and set GPU power config",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DL Execution Engine",
+        "role": "executes DNN training with the given batch size and power configuration, reporting training stats",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "underlying hardware on which training and power control run",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Job1",
+        "to": "Zeus",
+        "what": "job submission with optimization metric (ETA & TTA)",
+        "step": 1
+      },
+      {
+        "from": "Job2",
+        "to": "Zeus",
+        "what": "job submission with optimization metric (ETA & TTA)",
+        "step": 1
+      },
+      {
+        "from": "Job3",
+        "to": "Zeus",
+        "what": "job submission with optimization metric (ETA & TTA)",
+        "step": 1
+      },
+      {
+        "from": "Zeus",
+        "to": "DL Execution Engine",
+        "what": "DNN training config (batch size, power limit)",
+        "step": 3
+      },
+      {
+        "from": "Zeus",
+        "to": "NVML",
+        "what": "GPU power config",
+        "step": 3
+      },
+      {
+        "from": "DL Execution Engine",
+        "to": "Zeus",
+        "what": "DNN training stats",
+        "step": 4
+      },
+      {
+        "from": "NVML",
+        "to": "Zeus",
+        "what": "GPU power stats",
+        "step": 4
+      }
+    ],
+    "key_idea": "Zeus sits between job submission and the DL execution engine, using a JIT-profiling power optimizer and a bandit-based batch-size optimizer to iteratively pick and refine energy-efficient training configurations from observed GPU power and training statistics.",
+    "reading_order": "top-down through four circled stages: Job Submission of recurrent jobs with an optimization metric, into Zeus's Optimization box (Power Optimizer / Batch Size Optimizer), down to Execution on the DL Execution Engine and GPU, and Observation feeding stats back up via NVML and the execution engine."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fbe5d6",
+        "used_for": "Zeus box fill (light orange), enclosing the Power Optimizer and Batch Size Optimizer"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "Optimization Metric box fill (light yellow)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed orange outline around the Zeus box; solid black outlines on all other boxes",
+    "font": "Nimbus Sans, 6.5-9pt, bold for the Zeus/box titles",
+    "corners": "rounded",
+    "arrows": "thin black arrows, some dashed to indicate a bidirectional config/stats relationship",
+    "icons": "vector: stacked-paper icon for jobs, a stylized bandit/slot-machine icon for the batch size optimizer's bandit algorithm"
+  },
+  "encoding": {
+    "color_means": "light orange = Zeus's own optimization components (Power Optimizer, Batch Size Optimizer), light yellow = the optimization metric target box",
+    "line_style_means": "the dashed orange box isolates Zeus as the paper's contributed system boundary; paired up/down arrows at the bottom distinguish configuration flowing down (Execution) from statistics flowing up (Observation)",
+    "emphasis": "the dashed orange bounding box visually separates Zeus's two optimizer submodules from the surrounding job-submission and execution-engine context, marking it as the contribution",
+    "reusable_patterns": [
+      "dashed bounding box used to mark 'this is our system' within a larger pipeline",
+      "paired up/down arrow icons labelling a bidirectional config-vs-telemetry interface"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "energy-efficiency",
+    "GPU-power",
+    "batch-size-optimization",
+    "bandit-algorithm",
+    "DNN-training"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Zeus Overview (p.5)"
+    ],
+    "evidence": [
+      "Figure 3 shows an overview of the high- level workﬂow of Zeus",
+      "users submit recurrent DNN training jobs (a tuple of data, model, optimizer, and the target validation metric) to Zeus, along with a set of feasible batch sizes B and power limits P to explore",
+      "Zeus then predicts the optimal batch size and power limit conﬁguration based on past execution history"
+    ]
+  },
+  "summary": "This figure shows Zeus's high-level workflow as a four-stage top-down pipeline. Users submit recurrent training jobs (Job1, Job2, Job3) along with an Optimization Metric (ETA & TTA) to Zeus (step 1). Inside the dashed Zeus box (step 2, Optimization), a Power Optimizer with a JIT Profiler determines the GPU power limit, while a Batch Size Optimizer using a multi-armed Bandit algorithm selects the batch size. These choices become a DNN Training Config sent down to the DL Execution Engine and a GPU Power Config sent to NVML for Execution (step 3). The Observation stage (step 4) feeds GPU power stats and DNN training stats back up from NVML and the DL Execution Engine to Zeus, closing the loop that lets Zeus refine future configurations from execution history.",
+  "summary_zh": "该图展示Zeus工作流：作业连同优化指标提交给Zeus，其内部功耗优化器（JIT剖析器）与批大小优化器（Bandit算法）确定配置并下发执行引擎与NVML，再从中获取功耗与训练统计以形成闭环观测。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI23"
+}

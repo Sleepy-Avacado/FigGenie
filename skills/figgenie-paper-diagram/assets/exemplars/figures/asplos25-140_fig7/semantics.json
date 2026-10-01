@@ -1,0 +1,276 @@
+{
+  "paper_id": "asplos25-140",
+  "fig": "7",
+  "system": {
+    "name": "CoServe",
+    "one_liner": "an efficient Collaboration-of-Experts model serving system that reduces expert-switching overhead on heterogeneous CPU/GPU with limited memory",
+    "domain": [
+      "ml-systems",
+      "llm-serving",
+      "moe-inference"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Performance Profiler",
+        "role": "offline profiler that automatically finds optimal resource allocation and configuration for each device",
+        "container": "(§4.4, 4.5) Offline",
+        "novel": true
+      },
+      {
+        "name": "Expert Model",
+        "role": "static list of experts (<Expert 1>, <Expert 2>, ...) used to configure the system",
+        "container": "(§4.4, 4.5) Offline",
+        "novel": true
+      },
+      {
+        "name": "Expert Information",
+        "role": "static routing-rule information used to configure the system",
+        "container": "(§4.4, 4.5) Offline",
+        "novel": true
+      },
+      {
+        "name": "Executor Creator",
+        "role": "creates the inference executors using offline configuration information",
+        "container": "System Initialization Phase",
+        "novel": true
+      },
+      {
+        "name": "Expert Initializer",
+        "role": "loads experts into the model pool for each executor",
+        "container": "System Initialization Phase",
+        "novel": true
+      },
+      {
+        "name": "Inference Controller",
+        "role": "groups the request scheduler and request queues that manage incoming requests",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Inference Request Scheduler",
+        "role": "dependency-aware scheduler that assigns incoming requests to an executor and determines their execution order",
+        "container": "Inference Controller",
+        "novel": true
+      },
+      {
+        "name": "Inference Request Queues",
+        "role": "holds queued requests (e.g., Req 0-13) awaiting processing",
+        "container": "Inference Controller",
+        "novel": false
+      },
+      {
+        "name": "Incoming Requests",
+        "role": "stream of incoming inference requests entering the system",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Batch Splitter",
+        "role": "dynamically divides a batch of requests based on expert performance and available memory",
+        "container": "Inference Executor 1 (GPU or CPU)",
+        "novel": true
+      },
+      {
+        "name": "Expert Manager",
+        "role": "dependency-aware manager that loads/unloads experts in the model pool to minimize future switching",
+        "container": "Inference Executor 1 (GPU or CPU)",
+        "novel": true
+      },
+      {
+        "name": "Model Pool",
+        "role": "holds the experts currently loaded and available for inference on an executor",
+        "container": "Inference Executor 1 (GPU or CPU)",
+        "novel": true
+      },
+      {
+        "name": "Expert 1",
+        "role": "an individual expert model (depicted as a small neural network) held in the model pool",
+        "container": "Model Pool",
+        "novel": false
+      },
+      {
+        "name": "Expert 2",
+        "role": "an individual expert model held in the model pool",
+        "container": "Model Pool",
+        "novel": false
+      },
+      {
+        "name": "Expert n",
+        "role": "an individual expert model held in the model pool",
+        "container": "Model Pool",
+        "novel": false
+      },
+      {
+        "name": "Inference Executor 1 (GPU or CPU)",
+        "role": "one of several stacked executors running batch splitting, expert management and inference against its model pool",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Performance Profiler",
+        "to": "Executor Creator",
+        "what": "Configuration",
+        "step": 1
+      },
+      {
+        "from": "Executor Creator",
+        "to": "Expert Initializer",
+        "what": "Create",
+        "step": 2
+      },
+      {
+        "from": "Expert Initializer",
+        "to": "Model Pool",
+        "what": "Create (loads experts into the model pool)",
+        "step": 3
+      },
+      {
+        "from": "Performance Profiler",
+        "to": "Inference Request Scheduler",
+        "what": "Configuration",
+        "step": 4
+      },
+      {
+        "from": "Inference Request Scheduler",
+        "to": "Inference Request Queues",
+        "what": "Inference Request",
+        "step": 5
+      },
+      {
+        "from": "Inference Request Queues",
+        "to": "Batch Splitter",
+        "what": "queued requests forwarded to the executor",
+        "step": 6
+      },
+      {
+        "from": "Batch Splitter",
+        "to": "Model Pool",
+        "what": "Batched Request",
+        "step": 7
+      },
+      {
+        "from": "Expert Manager",
+        "to": "Batch Splitter",
+        "what": "Required Experts",
+        "step": 7
+      },
+      {
+        "from": "Expert Manager",
+        "to": "Model Pool",
+        "what": "Manage (load/unload experts)",
+        "step": 8
+      }
+    ],
+    "key_idea": "CoServe schedules and batches dependency-aware LLM expert-inference requests across executors, using an offline profiler to configure the system and a dependency-aware expert manager to minimize costly expert switching in a shared model pool.",
+    "reading_order": "left-to-right through the offline profiler, system-initialization phase (executor/expert creation), then the inference controller's request scheduler/queues, into an executor's batch splitter, expert manager, and model pool"
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.02,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e6b612",
+        "used_for": "gold - the figure's 'Dynamic Information' legend color; fill of the queued Req N request boxes"
+      },
+      {
+        "hex": "#ffd6b7",
+        "used_for": "peach - neuron color of Expert 1 in the Model Pool"
+      },
+      {
+        "hex": "#dcd4e4",
+        "used_for": "light purple - neuron color of Expert 2 in the Model Pool"
+      },
+      {
+        "hex": "#98e8c7",
+        "used_for": "light green - neuron color of Expert n in the Model Pool"
+      },
+      {
+        "hex": "#25a0ed",
+        "used_for": "bright blue - the circled step-number badges (1-8)"
+      },
+      {
+        "hex": "#545f82",
+        "used_for": "dark slate blue - the figure's 'System Module' legend color; fill of Executor Creator, Expert Initializer, Request Scheduler, Batch Splitter, Expert Manager boxes"
+      },
+      {
+        "hex": "#d2e9e8",
+        "used_for": "pale teal - background fill of the grouping panels (Inference Controller, Inference Executor N, System Initialization Phase)"
+      },
+      {
+        "hex": "#fff5ea",
+        "used_for": "very pale peach - background fill of the Model Pool panel"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "red - dashed outline and text of the two phase-grouping boxes (System Initialization Phase, Offline)"
+      },
+      {
+        "hex": "#f6eedd",
+        "used_for": "pale tan - background fill of the Inference Request Queues panel"
+      },
+      {
+        "hex": "#ffbebd",
+        "used_for": "light pink - the figure's 'Static Information' legend color; fill of the Performance Profiler's Expert Model/Information box"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin (~0.17pt) black strokes, rounded corners; dashed red strokes outline the two phase-grouping boxes",
+    "font": "Microsoft YaHei sans, bold for module/group titles",
+    "corners": "rounded",
+    "arrows": "solid black arrows for data flow and dashed black arrows for control flow (per the figure's own legend), annotated with blue circled numbers 1-8",
+    "icons": "vector - a small neural-network icon (nodes and edges) representing each expert in the Model Pool"
+  },
+  "encoding": {
+    "color_means": "dark slate = system modules, pink/salmon = static information (expert model list, routing rules), gold = dynamic information (queued requests), pale teal = grouping panels, distinct pastel colors per expert in the Model Pool",
+    "line_style_means": "solid arrows = data movement, dashed arrows = control signals, per the figure's own top-left legend",
+    "emphasis": "an explicit legend defines module/information color coding and arrow semantics, while 8 blue circled numbers trace one concrete request's path from offline configuration through scheduling, batching, and expert management",
+    "reusable_patterns": [
+      "explicit in-figure legend defining color and line-style semantics",
+      "numbered steps overlaid on a control/data dual-arrow architecture diagram",
+      "stacked repeated executor panels to imply horizontal scaling"
+    ],
+    "weaknesses": [
+      "very dense (309 shapes, 64 text boxes) packed into a wide, short aspect ratio (3.02), requiring the reader to track many small labels and two grouping dashed boxes"
+    ]
+  },
+  "tags": [
+    "moe-inference",
+    "llm-serving",
+    "expert-switching",
+    "memory-management",
+    "request-scheduling",
+    "dependency-aware-scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "4 CoServe (p.5)"
+    ],
+    "evidence": [
+      "Figure 7 illustrates the overall architecture of CoServe, which operates in three phases: offline, system initialization",
+      "the executor creator creates the inference executors (Steps 1 to 2 in Figure 7).",
+      "the batch splitter dynamically divides the batch of requests based on expert performance and the available memory"
+    ]
+  },
+  "summary": "Figure 7 is CoServe's architecture overview, spanning offline, system-initialization, and online phases, with an explicit legend distinguishing solid data arrows, dashed control arrows, system-module boxes, static-information boxes, and dynamic-information boxes. Offline, a Performance Profiler produces configuration (expert model list, routing rules) that flows (1) to the Executor Creator, which creates (2) an Expert Initializer that loads experts (3) into each executor's Model Pool. The same configuration also flows (4) to the Inference Request Scheduler inside the Inference Controller, which enqueues incoming requests (5) into Inference Request Queues, which feed (6) an executor's Batch Splitter. The Batch Splitter sends batched requests (7) to the Model Pool and exchanges required-experts information (7) with the Expert Manager, which manages (8) loading/unloading experts in the Model Pool to minimize future switching. Stacked panels represent multiple GPU/CPU executors, each holding several color-coded expert models.",
+  "summary_zh": "图7展示CoServe架构,含离线、系统初始化与在线三阶段,并附图例区分数据/控制箭头与模块类型。离线分析器配置执行器创建者与专家初始化器加载模型池;在线调度器将请求入队,批量拆分器与专家管理器协同管理模型池,减少专家切换。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

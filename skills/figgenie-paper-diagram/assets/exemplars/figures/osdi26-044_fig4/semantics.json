@@ -1,0 +1,281 @@
+{
+  "paper_id": "osdi26-044",
+  "fig": "4",
+  "system": {
+    "name": "RLinf",
+    "one_liner": "a large-scale reinforcement learning system that realizes Macro-to-Micro Flow (M2Flow) transformation via a worker abstraction with flexible spatio-temporal scheduling",
+    "domain": [
+      "ml-systems",
+      "distributed"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Procedural Programming Interface",
+        "role": "user-facing interface for imperatively constructing RL workflows",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Worker Group",
+        "role": "set of RL components encapsulated as workers",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Worker",
+        "role": "encapsulates an RL component's main logic with communication and offloading functionality",
+        "container": "Worker Group",
+        "novel": true
+      },
+      {
+        "name": "Communicator",
+        "role": "communication functionality allowing workers to freely communicate",
+        "container": "Worker",
+        "novel": true
+      },
+      {
+        "name": "Offloading",
+        "role": "resource offloading mechanism enabling temporal multiplexing of hardware",
+        "container": "Worker",
+        "novel": true
+      },
+      {
+        "name": "Data Channel",
+        "role": "adaptive communication utility supporting scalable worker interaction",
+        "container": "Worker",
+        "novel": true
+      },
+      {
+        "name": "Workflow",
+        "role": "the procedural workflow describing data communication and interaction among RL components",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Scheduler",
+        "role": "core module producing a desirable micro execution flow via profiling-guided scheduling",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Profiler",
+        "role": "runtime profiling of worker characteristics",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Policy",
+        "role": "profiling-guided scheduling policy that searches for each worker's optimal execution mode",
+        "container": "Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Controller",
+        "role": "assigns workers to accelerators, manages connections, and orchestrates execution flow",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Worker Dispatcher",
+        "role": "dispatches function invocations to the corresponding workers",
+        "container": "Controller",
+        "novel": true
+      },
+      {
+        "name": "Exec Flow Manager",
+        "role": "orchestrates the execution flow",
+        "container": "Controller",
+        "novel": true
+      },
+      {
+        "name": "Connection Manager",
+        "role": "manages inter-worker connections",
+        "container": "Controller",
+        "novel": true
+      },
+      {
+        "name": "M2Flow Transformation & Scheduling",
+        "role": "combines spatial and temporal scheduling to produce the micro execution flow",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Spatial Scheduling",
+        "role": "assigns workers to accelerators",
+        "container": "M2Flow Transformation & Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Temporal Scheduling",
+        "role": "determines workers' execution periods over time",
+        "container": "M2Flow Transformation & Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Elastic Pipelining",
+        "role": "mechanism enabling spatial orchestration of workers",
+        "container": "M2Flow Transformation & Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Context Switch",
+        "role": "mechanism enabling temporal orchestration of workers",
+        "container": "M2Flow Transformation & Scheduling",
+        "novel": true
+      },
+      {
+        "name": "Data Plane: Adaptive communication",
+        "role": "point-to-point communication and data channel supporting scalable worker interactions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Launcher (Ray)",
+        "role": "remotely launches and controls workers using Ray",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Procedural Programming Interface",
+        "to": "Worker Group",
+        "what": "RL components encapsulated as workers",
+        "step": null
+      },
+      {
+        "from": "Procedural Programming Interface",
+        "to": "Workflow",
+        "what": "imperatively constructed RL workflow",
+        "step": null
+      },
+      {
+        "from": "Workflow",
+        "to": "Scheduler",
+        "what": "workflow driving execution-mode search",
+        "step": null
+      },
+      {
+        "from": "Workflow",
+        "to": "Controller",
+        "what": "workflow driving execution orchestration",
+        "step": null
+      },
+      {
+        "from": "Worker Group",
+        "to": "Scheduler",
+        "what": "runtime profiling of worker characteristics",
+        "step": null
+      },
+      {
+        "from": "Worker Group",
+        "to": "Controller",
+        "what": "inter-worker connections managed",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Controller",
+        "what": "determined execution mode",
+        "step": null
+      },
+      {
+        "from": "Worker Group",
+        "to": "M2Flow Transformation & Scheduling",
+        "what": "workers scheduled spatially and temporally",
+        "step": null
+      },
+      {
+        "from": "Controller",
+        "to": "M2Flow Transformation & Scheduling",
+        "what": "dispatched function invocations governing orchestration",
+        "step": null
+      }
+    ],
+    "key_idea": "RLinf encapsulates RL components as workers, then uses a profiling-guided scheduler and controller to jointly schedule them in space and time (elastic pipelining and context switch), realizing the Macro-to-Micro Flow transformation over an adaptive-communication data plane launched via Ray.",
+    "reading_order": "Top to bottom: user interacts with the Procedural Programming Interface, which produces a Worker Group and Workflow; these feed the Scheduler and Controller; their outputs drive M2Flow Transformation & Scheduling (spatial + temporal); underneath sit the Data Plane and the Ray Launcher."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.9,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5f1b6",
+        "used_for": "light green fill of the Worker Group / Worker boxes"
+      },
+      {
+        "hex": "#e8e8e8",
+        "used_for": "light gray fill of internal sub-component boxes (Communicator, Offloading, Data Channel, Profiler, Policy, Worker Dispatcher, Exec Flow Manager, Connection Manager, Elastic Pipelining, Context Switch)"
+      },
+      {
+        "hex": "#a6caec",
+        "used_for": "light blue fill of the Workflow box"
+      },
+      {
+        "hex": "#00f9b4",
+        "used_for": "teal-green diamond icons and stacked Worker Group card borders"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "very light gray background panel fill"
+      },
+      {
+        "hex": "#c1e5f5",
+        "used_for": "pale blue accent shade"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on all boxes, dashed boxes grouping same-colored worker-type icons",
+    "font": "DengXian sans-serif, 6-8pt",
+    "corners": "mixed",
+    "arrows": "hollow block/chevron arrows, orthogonal",
+    "icons": "vector; user icon with code symbol, colored square/diamond/triangle icons representing worker types in the scheduling diagrams"
+  },
+  "encoding": {
+    "color_means": "green = Worker Group/Worker components, blue = the Workflow box, gray = internal sub-components of Scheduler/Controller/M2Flow panels, colored squares/diamonds/triangles = distinct worker types scheduled spatially and temporally",
+    "line_style_means": "dashed boxes group same-colored worker-type icons within the Spatial/Temporal Scheduling diagrams; solid hollow block arrows show top-down and left-right data/control flow between modules",
+    "emphasis": "stacked, offset worker cards visually depict the Worker Group as multiple instances of the same worker abstraction; the M2Flow panel places Spatial and Temporal Scheduling diagrams side by side joined by a '+' to show they combine into the overall scheduling",
+    "reusable_patterns": [
+      "layered system diagram from a user-facing interface down through scheduling to a launcher, with a dedicated scheduling-visualization panel using colored shape icons for worker instances over space and time"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "reinforcement learning",
+    "worker abstraction",
+    "spatio-temporal scheduling",
+    "elastic pipelining",
+    "context switch",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "3 RLinf Design (p.5)"
+    ],
+    "evidence": [
+      "Figure 4 shows the architecture of RLinf that realizes M2Flow",
+      "RL components are then encapsulated as workers in RLinf",
+      "two mechanisms named elastic pipelining and context switch are devised"
+    ]
+  },
+  "summary": "This figure shows the architecture of RLinf, a system for large-scale reinforcement learning built around a Macro-to-Micro Flow (M2Flow) transformation. Users imperatively construct RL workflows via a Procedural Programming Interface, which encapsulates RL components as Workers (each with a Communicator, Offloading mechanism, and Data Channel) grouped into a Worker Group, and produces a Workflow description. A Scheduler (Profiler + Policy) uses runtime profiling to search for each worker's optimal execution mode, feeding a Controller (Worker Dispatcher, Exec Flow Manager, Connection Manager) that assigns workers to accelerators and orchestrates execution. Together these drive the M2Flow Transformation & Scheduling module, which combines Spatial Scheduling (elastic pipelining) and Temporal Scheduling (context switch), sitting atop a Data Plane of adaptive communication and a Ray-based Launcher. The figure is a vertically layered, flat-colored box diagram (green for workers, blue for workflow, gray for sub-components) with hollow block arrows, and a dedicated bottom panel using colored square/diamond/triangle icons to depict worker scheduling across space and time.",
+  "summary_zh": "该图展示了 RLinf 的整体架构：用户通过过程式编程接口构建工作流，RL 组件被封装为 Worker（含通信、卸载、数据通道）；调度器基于性能剖析确定执行模式，控制器据此分配加速器并编排执行；两者共同驱动 M2Flow 的空间与时间调度（弹性流水线与上下文切换），底层为自适应通信数据面与基于 Ray 的启动器。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

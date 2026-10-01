@@ -1,0 +1,188 @@
+{
+  "paper_id": "asplos25-004",
+  "fig": "tex9",
+  "system": {
+    "name": "PipeLLM",
+    "one_liner": "a user-transparent runtime that pipelines encryption with GPU computation for confidential LLM serving",
+    "domain": [
+      "security",
+      "ml-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "App",
+        "role": "application process running on the CPU that issues memory copies to the GPU",
+        "container": "CPU",
+        "novel": false
+      },
+      {
+        "name": "PipeInfer",
+        "role": "CPU-side runtime component; also reused as the name of the third placement policy",
+        "container": "CPU",
+        "novel": true
+      },
+      {
+        "name": "Plaintext",
+        "role": "unencrypted data buffer before encryption, always allocated in CVM private memory",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "temp",
+        "role": "ciphertext temp buffer; color indicates whether it sits in CVM private or shared memory",
+        "container": "Memory",
+        "novel": null
+      },
+      {
+        "name": "Bounce",
+        "role": "policy: encrypt into private memory then copy into shared memory before sending to the GPU",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "Zero-copy",
+        "role": "policy: encrypt directly into shared memory, avoiding the extra copy",
+        "container": "Memory",
+        "novel": false
+      },
+      {
+        "name": "PipeInfer",
+        "role": "policy: pipelines the encrypt step with GPU computation before copying to shared memory",
+        "container": "Memory",
+        "novel": true
+      },
+      {
+        "name": "Inplace",
+        "role": "policy: decrypts a shared ciphertext buffer, then re-encrypts it in place with a new IV",
+        "container": "Memory",
+        "novel": true
+      },
+      {
+        "name": "GPU",
+        "role": "receives ciphertext from shared memory via DMA for confidential computation",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Plaintext",
+        "to": "temp",
+        "what": "Encrypt into CVM private memory (Bounce policy)",
+        "step": null
+      },
+      {
+        "from": "temp",
+        "to": "temp",
+        "what": "Copy from private to shared memory (Bounce policy)",
+        "step": null
+      },
+      {
+        "from": "Plaintext",
+        "to": "temp",
+        "what": "Encrypt directly into shared memory (Zero-copy policy)",
+        "step": null
+      },
+      {
+        "from": "Plaintext",
+        "to": "temp",
+        "what": "piped Encrypt overlapped with GPU computation (PipeInfer policy)",
+        "step": null
+      },
+      {
+        "from": "temp",
+        "to": "temp",
+        "what": "Decrypt then re-Encrypt in place (Inplace policy)",
+        "step": null
+      },
+      {
+        "from": "temp",
+        "to": "GPU",
+        "what": "ciphertext DMA transfer to the GPU",
+        "step": null
+      }
+    ],
+    "key_idea": "Four alternative ciphertext-placement policies (Bounce, Zero-copy, PipeInfer, Inplace) trade off extra memory copies and buffer location for the ability to pipeline encryption with GPU computation.",
+    "reading_order": "Top-down through four stacked policy rows (Bounce, Zero-copy, PipeInfer, Inplace); each row read left to right from the CPU/App through Memory to the GPU box on the right."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.03,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "Plaintext buffers (green)"
+      },
+      {
+        "hex": "#f0a30a",
+        "used_for": "Ciphertext(S) — ciphertext in CVM shared memory (orange)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "light-orange background box grouping each policy's row"
+      },
+      {
+        "hex": "#e1d5e7",
+        "used_for": "Ciphertext(P) — ciphertext in CVM private memory (purple)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders on boxes, colored strokes matching each fill (green/orange/purple)",
+    "font": "Arimo sans-serif, 6-8.5pt",
+    "corners": "square",
+    "arrows": "solid arrows for ordinary runtime order, dashed arrows for piped (overlapped) operations, per the in-figure legend",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = plaintext, purple = ciphertext in CVM private memory, orange = ciphertext in CVM shared memory",
+    "line_style_means": "solid arrow = runtime (sequential) operation, dashed arrow = piped (overlapped) operation",
+    "emphasis": "stacking four policies with identical visual grammar lets the reader directly compare how each rearranges Encrypt/Copy/Decrypt steps and which are pipelined",
+    "reusable_patterns": [
+      "small repeated flow diagrams stacked to compare design-space alternatives",
+      "color-coded buffer states with an explicit legend"
+    ],
+    "weaknesses": [
+      "the generic label 'temp' is reused for both private- and shared-memory ciphertext, distinguishable only by fill color",
+      "'PipeInfer' labels both the overall CPU-side runtime and one specific policy row"
+    ]
+  },
+  "tags": [
+    "confidential computing",
+    "GPU",
+    "encryption",
+    "memory placement",
+    "pipelining",
+    "LLM serving",
+    "CVM"
+  ],
+  "provenance": {
+    "sections": [
+      "Side-Channal-Free Ciphertext Placement"
+    ],
+    "evidence": [
+      "Figure [ref:fig:design-cipher] depicts the four polices, showing how and when the plaintext is encrypted",
+      "Purple boxes refer to ciphertext allocated in CVM private memory; orange boxes refer to ciphertext",
+      "This policy allocates the ciphertext in shared memory, shown in the second dashed box"
+    ]
+  },
+  "summary": "PipeLLM is a runtime that hides GPU confidential-computing encryption overhead by pipelining encryption with computation. This figure compares four ciphertext placement policies inside a confidential VM's application address space: Bounce (encrypt into private memory, then copy to shared memory), Zero-copy (encrypt directly into shared memory), PipeInfer (pipeline the encrypt step with GPU computation, then copy), and Inplace (decrypt a shared buffer, then re-encrypt it in place). Each policy is drawn as a light-orange banded row showing the App issuing data, an Encrypt/Copy/Decrypt sequence acting on a 'temp' buffer colored by memory location (green plaintext, purple CVM-private ciphertext, orange CVM-shared ciphertext), and a final DMA arrow into the GPU box. A small legend defines the color coding and distinguishes solid 'Runtime' arrows from dashed 'Piped' arrows.",
+  "summary_zh": "该图比较了机密虚拟机中四种密文放置策略（Bounce、Zero-copy、PipeInfer、Inplace），展示明文如何加密、复制并通过 DMA 传给 GPU，并用颜色区分明文与不同内存位置的密文。",
+  "confidence": "high",
+  "notes": "Component label 'PipeInfer' is overloaded: it names both the CPU-side runtime process and the third policy row; treated here as a repeated label rather than distinct systems.",
+  "venue": "ASPLOS25"
+}

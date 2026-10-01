@@ -1,0 +1,41 @@
+{
+  "id": "osdi24-040_fig1",
+  "paper_id": "osdi24-040",
+  "fig": "1",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 1: An architecture of energy harvesting platforms (e.g., MSP430FR). Registers and SRAM (blue boxes) are volatile.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 3.31,
+  "n_components": 6,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-040/osdi24-040_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-040/osdi24-040_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from block-floorplan by the note-writer: this is a five-box linear energy-flow diagram (harvester, capacitor, MCU, two memory types) with no chip boundary, no bus, and no placement-based adjacency, closer to a simple pipeline than a floorplan.",
+      "what_to_learn": "Read this as a small linear pipeline instead: harvester feeds a capacitor which powers an MCU, and color alone (blue volatile, green non-volatile) tells the two memory types apart; add arrowheads throughout, since this figure's plain connectors leave flow direction implicit."
+    }
+  ]
+}

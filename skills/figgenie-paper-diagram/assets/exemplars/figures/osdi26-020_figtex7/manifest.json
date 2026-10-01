@@ -1,0 +1,47 @@
+{
+  "id": "osdi26-020_figtex7",
+  "paper_id": "osdi26-020",
+  "fig": "tex7",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Overview of Cocoon .",
+  "corpus_template": "host-device",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.49,
+  "n_components": 11,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-020/src/texfig7_overview.svg",
+    "preview.png": "lab/extracted/osdi26-020/src/texfig7_overview.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "GPU / CPU / CXL-Mem boxes with circled numbers 1-3 that index a right-hand list rather than an arrow sequence.",
+      "what_to_learn": "Circled numbers can be an index into a legend list instead of a temporal order; say which by where the numbers point. (No PDF-extracted print.png; TeX-only figure.)"
+    },
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "High-confidence, star-ranked (3rd) reading of a GPU training core fed by three circled, numbered noise sources, each cross-referenced against a three-item legend pill-stack labelled Distributed Noise History on the right.",
+      "what_to_learn": "When several distributed hardware sources all feed one engine box, number each source and give it a matching entry in a compact legend column instead of writing the source name on every arrow; keep the engine's internal stages in a dashed sub-box like the DP Training region here."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-020_figtex8",
+  "paper_id": "osdi26-020",
+  "fig": "tex8",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Overview of Cocoon-Emb .",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 2.37,
+  "n_components": 10,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-020/src/texfig8_Overview-crop.svg",
+    "preview.png": "lab/extracted/osdi26-020/src/texfig8_Overview-crop.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated, the reference doc's own baseline-vs-ours cross-reference for phase-lanes: two column-aligned stacked timelines (Baseline CPU-GEMV, Cocoon-Emb) share iteration boundaries as dotted verticals, with four circled steps and a red Speedup bracket comparing their total lengths.",
+      "what_to_learn": "Stack the before and after timelines directly on top of each other at the same horizontal scale, mark shared iteration boundaries with dotted verticals so the eye can compare like-for-like, number the optimization steps that shorten the new timeline, and close with one bracket that measures the total speedup."
+    }
+  ]
+}

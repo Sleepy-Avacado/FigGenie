@@ -1,0 +1,56 @@
+{
+  "id": "nsdi24-023_fig5",
+  "kind": "mechanism",
+  "paper_id": "nsdi24-023",
+  "fig": "5",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 5: GRACE’s reversible randomized packetization. The tensor elements mapped to a lost packet will be set to zeros.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": false,
+  "base": "data-structure",
+  "subject": "how GRACE's reversible random packetization maps tensor elements to packets so a lost packet only zeroes its mapped elements",
+  "arrangement": "frames-row",
+  "panel_count": 2,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.95,
+  "n_elements": 10,
+  "n_relations": 8,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-023/src/fig5_per-packet-coding-v6.svg",
+    "preview.png": "lab/extracted/nsdi24-023/src/fig5_per-packet-coding-v6.png",
+    "print.png": "lab/extracted/nsdi24-023/nsdi24-023_fig5_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "Mirrors one numbered, colour-grouped grid tensor on both sender and receiver sides, so a single simulated packet loss traces cleanly to exactly which grid cells go blank.",
+      "what_to_learn": "Number and colour-group the same grid tensor identically on both sides (sub-tensor = colour = packet); mark one packet lost with a red X, then blank only the grid cells that packet owned in the reconstructed tensor.",
+      "note_source": "agent"
+    }
+  ]
+}

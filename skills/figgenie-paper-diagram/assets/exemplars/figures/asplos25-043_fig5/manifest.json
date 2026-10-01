@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-043_fig5",
+  "paper_id": "asplos25-043",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Fig. 5. (a) IKS internal DRAM, scratchpad spaces, and configuration registers are mapped to the host address space. The scratchpad and configuration register address ranges are labeled as Context Buffers (CB). (b) IKS is a compute-enabled CXL memory expander that includes eight LPDDR5X packages with",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 0.51,
+  "n_components": 26,
+  "n_flows": 14,
+  "nesting_depth": 4,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 4,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-043/src/fig5a_architecture2.svg",
+    "preview.png": "lab/extracted/asplos25-043/src/fig5a_architecture2.png",
+    "print.png": "lab/extracted/asplos25-043/asplos25-043_fig5_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "nested-stack",
+      "star": false,
+      "why_chosen": "Four stacked drill-down panels (a)-(d) taking the reader from host address space to a single processing engine, tallest aspect here (0.51).",
+      "what_to_learn": "When four levels will not nest visually, stack them as lettered panels down the column and let each panel's caption name its level; add a control-vs-data legend at the level where signals first matter."
+    }
+  ]
+}

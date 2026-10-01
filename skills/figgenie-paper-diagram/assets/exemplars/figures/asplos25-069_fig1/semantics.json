@@ -1,0 +1,137 @@
+{
+  "paper_id": "asplos25-069",
+  "fig": "1",
+  "system": {
+    "name": "QECC-Synth",
+    "one_liner": "an automated compiler that implements quantum error-correction codes on sparse hardware using ancilla-bridge techniques instead of qubit swapping",
+    "domain": [
+      "quantum computing",
+      "compilers"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Error Syndrome Measurement Circuit",
+        "role": "quantum circuit that entangles a syndrome qubit with data qubits via controlled gates to detect errors",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Code Topology",
+        "role": "connectivity graph required by a QEC code, e.g. degree-4 connectivity for surface codes",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Hardware Topology",
+        "role": "sparse physical qubit connectivity of current quantum hardware, typically degree 2 or 3",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Swapping-Based Solution",
+        "role": "implements ESM circuits by inserting SWAP gates to route distant qubits adjacent for interaction",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Bridging-Based Solution",
+        "role": "connects data qubits via an ancilla bridge instead of swapping, fixing qubit locations and using fewer CNOT gates",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Code Topology",
+        "to": "Hardware Topology",
+        "what": "connectivity mismatch highlighted as 'Gap!'",
+        "step": null
+      }
+    ],
+    "key_idea": "Because QEC code connectivity outpaces sparse hardware connectivity, ancilla-bridge methods can implement error-syndrome circuits with fixed data-qubit locations and fewer gates than swapping-based routing.",
+    "reading_order": "Top row (a-c) frames the mismatch between a code's required connectivity and sparse hardware; bottom row (d-f) contrasts swapping-based routing with the bridging-based solution."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "letters",
+    "panels": 6,
+    "column": "double",
+    "aspect": 2.19,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#4d4d4d",
+        "used_for": "dark-gray Physical qubit dots and qubit wires"
+      },
+      {
+        "hex": "#ff6666",
+        "used_for": "red Ancilla qubit dots, also the 'Gap!' arrow and the bridge highlight in panel (f)"
+      },
+      {
+        "hex": "#317cb7",
+        "used_for": "blue Data qubit dots"
+      },
+      {
+        "hex": "#ffe599",
+        "used_for": "pale-yellow Controlled-Pauli gate (P) boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "lighter pale-yellow accents on gate boxes"
+      }
+    ],
+    "background": "light-gray card with distinct pastel-tinted panel backgrounds for (a)-(f)",
+    "fill": "flat",
+    "stroke": "~1.14pt, relatively thick, solid",
+    "corners": "mixed",
+    "arrows": "quantum-circuit wires drawn as plain lines with no arrowheads, plus a bold curved double-headed red arrow marking the topology 'Gap!'",
+    "font": "Calibri / STIXGeneral, 6-11pt",
+    "icons": "vector quantum-gate symbols (H box, measurement meter, controlled-dot/CNOT glyphs) drawn inline within the circuit diagrams"
+  },
+  "encoding": {
+    "color_means": "black marks a physical qubit, red marks an ancilla qubit, blue marks a data qubit, and yellow marks a controlled-Pauli gate, a legend applied consistently across all six panels",
+    "line_style_means": null,
+    "emphasis": "a bold red 'Gap!' arrow bridges panels (b) and (c) to call out the central connectivity mismatch the paper addresses, and a shared qubit-colour legend lets the six small circuit panels be compared directly",
+    "reusable_patterns": [
+      "problem-then-solutions layout: three panels establishing a mismatch followed by three panels comparing candidate fixes",
+      "one shared legend reused across a grid of circuit-diagram panels"
+    ],
+    "weaknesses": [
+      "six dense circuit panels at small size rely on the shared legend to stay legible",
+      "the extracted caption is truncated, cutting off the description of panel (f)"
+    ]
+  },
+  "tags": [
+    "quantum-error-correction",
+    "qubit-routing",
+    "ancilla-bridge",
+    "compiler",
+    "surface-code",
+    "quantum-hardware"
+  ],
+  "provenance": {
+    "sections": [
+      "I Introduction (p.1)"
+    ],
+    "evidence": [
+      "A typical ESM circuit (Fig. 1(a)) includes an syndrome qubit (red) and multiple data qubits (blue).",
+      "requires a qubit connectivity of degree 4 (Fig. 1(b)) to enable",
+      "current hardware (Fig. 1(c)) typically has sparser architectures with connectivity degrees of 2 or 3"
+    ]
+  },
+  "summary": "QECC-Synth is an automated compiler for implementing quantum error-correction (QEC) codes on hardware whose qubit connectivity is sparser than a code needs. This six-panel figure sets up that mismatch and previews two solution families. Panel (a) shows a typical error syndrome measurement (ESM) circuit, where a red syndrome qubit is entangled with blue data qubits through yellow controlled-Pauli gates. Panel (b) shows the degree-4 code topology a surface code requires, while panel (c) shows sparse hardware with only degree-2 or degree-3 connectivity, with a bold red 'Gap!' arrow calling out the mismatch. Panels (d) and (e), grouped under 'Swapping-Based Solution', show implementations that insert SWAP gates to route distant qubits together, without and then with fixed data-qubit locations. Panel (f), 'Bridging-Based Solution', shows an ancilla bridge connecting two ancilla qubits, fixing locations while using fewer CNOT gates than swapping. A shared legend (physical/ancilla/data qubit, gate types) applies across all panels.",
+  "summary_zh": "该图分六子图展示QEC综合问题与方案：(a)误差校验电路，(b)代码拓扑与(c)稀疏硬件拓扑间以红色箭头标出差距；(d)(e)为SWAP交换实现，(f)为辅助比特桥接方案，右上角给出图例。",
+  "confidence": "high",
+  "notes": "The figure caption is truncated in the extracted context ('...with fixed data q...'); panel (f)'s description is drawn from the body text about ancilla bridges rather than the cut-off caption.",
+  "venue": "ASPLOS25"
+}

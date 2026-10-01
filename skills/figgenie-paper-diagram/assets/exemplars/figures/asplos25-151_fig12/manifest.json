@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-151_fig12",
+  "kind": "mechanism",
+  "paper_id": "asplos25-151",
+  "fig": "12",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 12. A step-by-step pipelining diagram for three capacity-8 queries using the instruction set defined in Sec. A.1. Numbers in the operations refer to the information being moved by the operation with address qubits numbered 1 to 3 and 𝐵denoting the bus (e.g. 𝑆1 represents storing the first add",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": true,
+  "base": "table",
+  "subject": "the gate-level schedule of address-loading, memory-access, and unloading operations for three pipelined Fat-Tree QRAM queries",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 2.9,
+  "n_elements": 10,
+  "n_relations": 6,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "google-slides",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-151/src/fig12_Operations.svg",
+    "preview.png": "lab/extracted/asplos25-151/src/fig12_Operations.png",
+    "print.png": "lab/extracted/asplos25-151/asplos25-151_fig12_p15_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "One Fat-Tree QRAM query's address-routing gates (load, rotate, two-qubit gate, alternating SWAP-I/SWAP-II) are scheduled cycle by cycle down to a single controlled-gate memory access and back, and three such queries are staggered to pipeline the whole tree.",
+      "what_to_learn": "a coloured grid keyed to a small reference tree diagram, one colour per hierarchy level; trapezoidal shading linking a wide detailed table to narrow staggered summary bars repeating the same pattern over time; primed vs unprimed labels marking an outward mirror of an inward operation sequence",
+      "note_source": "record"
+    }
+  ]
+}

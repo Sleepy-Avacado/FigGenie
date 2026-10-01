@@ -1,0 +1,41 @@
+{
+  "id": "nsdi26-036_fig3",
+  "paper_id": "nsdi26-036",
+  "fig": "3",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 3: The MoCE system has four logical components: (a) the policy layer (b) a library of experts (c) the control plane and (d) the execution plane.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.27,
+  "n_components": 8,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 4,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-036/nsdi26-036_fig3_p5_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi26-036/nsdi26-036_fig3_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The Control plane's LazyDAG is a real branching graph: telemetry triangles and an anomaly feed green expert-diamond nodes (RC1 to RC3) that merge into orange root-cause boxes, at medium confidence.",
+      "what_to_learn": "Colour-code a small live DAG by node role, blue/cyan structure, green computation, orange merged output, light-blue triangles for inputs, and pair it with a small-multiples grid of the same icon style for a library holding many such graphs."
+    }
+  ]
+}

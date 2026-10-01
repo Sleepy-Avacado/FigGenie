@@ -1,0 +1,174 @@
+{
+  "paper_id": "nsdi26-020",
+  "fig": "1",
+  "system": {
+    "name": "AFC",
+    "one_liner": "a regulatory system that authorizes 6 GHz Wi-Fi access points to use specific channels and power levels without interfering with incumbent users",
+    "domain": [
+      "wireless networking",
+      "spectrum regulation"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Standard Power Access Point",
+        "role": "initiates the channel authorization process by sending an availableSpectrumInquiryRequest message to an AFC provider",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "AFC Server Key Functions",
+        "role": "queries NRA databases and applies standardized propagation models to calculate the maximum permissible transmission power per channel",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Device Responder",
+        "role": "handles the availableSpectrumInquiryReq/Rsp exchange with the AP",
+        "container": "AFC Server Key Functions",
+        "novel": false
+      },
+      {
+        "name": "Spectrum Availability",
+        "role": "computes available spectrum/power levels for the requesting AP",
+        "container": "AFC Server Key Functions",
+        "novel": false
+      },
+      {
+        "name": "Database Update",
+        "role": "keeps incumbent protection data current from the NRA Incumbent Database",
+        "container": "AFC Server Key Functions",
+        "novel": false
+      },
+      {
+        "name": "Activity Logging",
+        "role": "logs AFC server activity",
+        "container": "AFC Server Key Functions",
+        "novel": false
+      },
+      {
+        "name": "Incumbent Protection",
+        "role": "ensures protected incumbent systems are not harmfully interfered with",
+        "container": "AFC Server Key Functions",
+        "novel": false
+      },
+      {
+        "name": "Internal Database",
+        "role": "stores equipment authorization data from the NRA Equipment Authorization Database",
+        "container": "AFC Server Key Functions",
+        "novel": false
+      },
+      {
+        "name": "NRA Incumbent Database",
+        "role": "maintained by the National Regulatory Authority; provides information about protected incumbent systems in the area",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NRA Equipment Authorization Database",
+        "role": "maintained by the National Regulatory Authority; provides equipment authorization data",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Standard Power Access Point",
+        "to": "Device Responder",
+        "what": "availableSpectrumInquiryReq message (AP location, device parameters, metadata)",
+        "step": null
+      },
+      {
+        "from": "Device Responder",
+        "to": "Standard Power Access Point",
+        "what": "availableSpectrumInquiryRsp message (approved channel and power combinations)",
+        "step": null
+      },
+      {
+        "from": "NRA Incumbent Database",
+        "to": "Database Update",
+        "what": "protected incumbent system information",
+        "step": null
+      },
+      {
+        "from": "NRA Equipment Authorization Database",
+        "to": "Internal Database",
+        "what": "equipment authorization data",
+        "step": null
+      }
+    ],
+    "key_idea": "A Standard Power AP must request channel/power authorization from an AFC server, which checks NRA incumbent and equipment databases and returns only interference-safe channels and power levels.",
+    "reading_order": "Left to right: the AP sends an inquiry request into the AFC server's key functions, which consult two NRA databases on the right and return an approved response to the AP."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.33,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fad7ac",
+        "used_for": "the six AFC Server Key Functions boxes (Device Responder, Spectrum Availability, Database Update, Activity Logging, Incumbent Protection, Internal Database)"
+      },
+      {
+        "hex": "#eeeeee",
+        "used_for": "the AFC Server Key Functions outer container background"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt solid outlines",
+    "font": "Times New Roman serif for labels (italic for the AP/server captions), Lucida Console monospace for the message names",
+    "corners": "square",
+    "arrows": "solid black arrows with filled triangular heads; two crossing arrows between the AP and server for request/response, two horizontal arrows from the databases into the server",
+    "icons": "bitmap icons: a Wi-Fi access point/router icon and two database cylinder icons (reused for both NRA databases)"
+  },
+  "encoding": {
+    "color_means": "orange marks the six AFC server key-function boxes; gray marks the server's outer boundary; blue marks the access point icon",
+    "line_style_means": null,
+    "emphasis": "the crossing labelled arrows between the AP and the Device Responder foreground the two-message request/response protocol, while the six-cell grid inside the server enumerates its key functions",
+    "reusable_patterns": [
+      "central server box subdivided into a grid of named function cells",
+      "crossing bidirectional message arrows labelled with protocol message names",
+      "external database icons each feeding a specific internal function cell"
+    ],
+    "weaknesses": [
+      "arrows lack a shared visual convention (e.g., color) distinguishing request/response from database-query traffic",
+      "no legend even though functions and data sources are distinguished only by position"
+    ]
+  },
+  "tags": [
+    "spectrum coordination",
+    "AFC",
+    "6 GHz Wi-Fi",
+    "wireless regulation",
+    "incumbent protection",
+    "threat-model background"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "Figure 1 illustrates the overall architecture of the AFC system.",
+      "A Standard Power AP initiates the channel authorization process by sending an availableSpectrumInquiryRequest",
+      "the AFC server queries databases maintained by the National Regulatory Authority (NRA)"
+    ]
+  },
+  "summary": "This figure shows the architecture of the Automated Frequency Coordination (AFC) system, the 6 GHz spectrum-sharing mechanism this paper analyzes for security threats. A Standard Power Access Point sends an availableSpectrumInquiryReq message (with its GPS location, device parameters and metadata) to the AFC Server's Device Responder function, and receives back an availableSpectrumInquiryRsp with approved channel/power combinations. Internally, the AFC Server Key Functions box groups six standardized functions in a 2x3 grid: Device Responder, Spectrum Availability and Database Update on top, Activity Logging, Incumbent Protection and Internal Database below. Two external databases maintained by the National Regulatory Authority (NRA) feed the server: an NRA Incumbent Database updates Database Update with protected-system information, and an NRA Equipment Authorization Database feeds the Internal Database. Orange highlights the six function cells, and simple icons (router, database cylinders) mark the AP and the two external data sources.",
+  "summary_zh": "图1展示AFC（自动频率协调）架构：接入点向AFC服务器的Device Responder发送频谱查询请求并接收响应；服务器含六项关键功能，右侧两个NRA数据库分别向Database Update和Internal Database供数据。",
+  "confidence": "high",
+  "notes": "This is a background figure describing the pre-existing, standardized AFC system that the paper analyzes and attacks; none of its components are the paper's own contribution. The four sub-functions Spectrum Availability, Activity Logging and Incumbent Protection are named in the figure but not individually elaborated in the given paragraph, so their roles above are lightly inferred from their labels and standard AFC terminology rather than directly quoted.",
+  "venue": "NSDI26"
+}

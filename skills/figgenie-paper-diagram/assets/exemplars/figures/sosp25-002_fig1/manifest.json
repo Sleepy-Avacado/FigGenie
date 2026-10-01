@@ -1,0 +1,41 @@
+{
+  "id": "sosp25-002_fig1",
+  "paper_id": "sosp25-002",
+  "fig": "1",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 1. Simplified overview of a general full-stack simulation framework, in the style of Simbricks [33]. Gem5 simulates the host system, while RTL simulators or custom models simulate the accelerators. Accelerators are often simulated as PCIe attached devices, but different placements, such as ha",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.04,
+  "n_components": 13,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-002/sosp25-002_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-002/sosp25-002_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Star-rated three-zone host-device figure: tan software stack sits above blue gem5 host (CPU/cache/memory simulators) which reaches a pink Accelerator Simulator zone through a dedicated Interconnect Simulator box, with MMIO and DMA arrows individually labeled.",
+      "what_to_learn": "Give the interconnect itself a named box (Interconnect Simulator) between the two color-coded zones instead of a bare arrow, and label the crossing arrows with the actual interface name (MMIO Read/Write, DMA); but unlike here, draw an arrow, not just vertical adjacency, when one box is said to run inside another."
+    }
+  ]
+}

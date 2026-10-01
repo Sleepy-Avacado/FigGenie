@@ -1,0 +1,41 @@
+{
+  "id": "sosp24-028_fig2",
+  "paper_id": "sosp24-028",
+  "fig": "2",
+  "venue": "SOSP24",
+  "year": 2024,
+  "caption": "Figure 2. Anduril’s architecture and workflow.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.2,
+  "n_components": 13,
+  "n_flows": 14,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp24-028/sosp24-028_fig2_p4_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp24-028/sosp24-028_fig2_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "control-loop",
+      "star": true,
+      "why_chosen": "A shaded grey box explicitly labelled 'feedback loop' bounds Explorer's iterative search, drawn in thin bright-blue arrows that visually contrast with the thick gray one-shot arrows carrying code, logs, and the final script.",
+      "what_to_learn": "Bound the repeating search region with a shaded grey box labelled 'feedback loop' in plain words rather than leaving the reader to infer it, and give the iterative arrows a distinct thin bright colour against thick grey one-shot data arrows so the two kinds of flow never get confused."
+    }
+  ]
+}

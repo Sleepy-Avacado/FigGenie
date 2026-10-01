@@ -1,0 +1,55 @@
+{
+  "id": "asplos26-053_fig1",
+  "kind": "mechanism",
+  "paper_id": "asplos26-053",
+  "fig": "1",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 1. Tool flow, starting with a dot graph input and run- ning rewrites by matching a subgraph on a standard graph representation we call ExprHigh, followed by performing the rewrite on an inductively defined graph representation called ExprLow.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how Graphiti parses a circuit into ExprHigh, matches and rewrites a subgraph via ExprLow, then iterates or outputs",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 2.1,
+  "n_elements": 7,
+  "n_relations": 9,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-053/asplos26-053_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos26-053/asplos26-053_fig1_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "Graphiti wraps a dataflow circuit in a verified rewrite loop: it parses the circuit into ExprHigh, matches a subgraph, rewrites it on the verification-friendly ExprLow representation, and lifts the result back up, iterating or emitting the optimized circuit.",
+      "what_to_learn": "A dashed region boundary naming what is and is not the contribution, with matching caption colours; draw a loop by drawing its stages twice",
+      "note_source": "doc"
+    }
+  ]
+}

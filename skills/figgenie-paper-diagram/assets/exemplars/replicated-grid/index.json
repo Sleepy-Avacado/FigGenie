@@ -1,0 +1,208 @@
+{
+  "template": "replicated-grid",
+  "n": 25,
+  "stars": 16,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-012_fig2",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Two nested replication devices in one block: FFN 1, FFN 2, ellipsis, FFN N sit inside the MoE layer, while pale-yellow shaded layers stacked behind the whole block imply N repeated Transformer layers.",
+      "what_to_learn": "Nest two replication scales in one figure: an in-line ellipsis row (FFN 1, FFN 2, ..., FFN N) for experts inside a layer, and a background shadow stack for the layer itself repeating N times, then use dashed-vs-bold arrows from the router to show which single expert one example token actually takes.",
+      "dir": "../figures/asplos25-012_fig2"
+    },
+    {
+      "id": "asplos25-036_fig3",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated recursive variant: Stage 1 is drawn full-size and detailed, Stage 2 sits beside it at reduced scale repeating the same structure, and a 'Stage 3 ⋯' mark elides every further recursion level.",
+      "what_to_learn": "For a recursive/self-similar mechanism, draw the base stage full size and detailed, then draw the next stage smaller beside it repeating the same shapes, and elide any further recursion with a plain 'Stage N ⋯' label rather than nesting boxes indefinitely; label the one operator (here vector-matrix multiply) once in a foot legend.",
+      "dir": "../figures/asplos25-036_fig3"
+    },
+    {
+      "id": "asplos25-046_fig14",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Reassigned from mirrored-pair by the note-writer: three side-by-side CVM boxes (CVM1, CVM2, CVM3) roll up into one Server table below, a three-member replicated-grid aggregation, not two peers mirrored around a shared middle.",
+      "what_to_learn": "The transferable move is replicated-grid's: draw the same guaranteed-versus-oversubscribed split bar on every member, call out just one member's split in detail, then roll all members into one aggregate table below with the shared, scarce resource highlighted in its own colour, yellow for the oversubscribed pool here.",
+      "dir": "../figures/asplos25-046_fig14"
+    },
+    {
+      "id": "asplos25-100_fig5",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated, high-rank figure the reference doc itself cites as the canonical times-N annotation: 16 identical PIM Ctrl/GDDR6-PIM channels are drawn once, marked '×16', with an inside legend naming inter-device, intra-device, and control flow.",
+      "what_to_learn": "For a very large, fixed replica count, skip the ellipsis and just draw one instance with a bold '×16' label beside it; keep the flow-type legend (inter-device solid black, intra-device solid blue, control dashed orange) inside the frame since it is what makes the single-device diagram legible.",
+      "dir": "../figures/asplos25-100_fig5"
+    },
+    {
+      "id": "asplos26-060_fig8",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Three-tier stack whose bottom tier is one SmartSSD drawn twice with an ellipsis, with novel parts highlighted green.",
+      "what_to_learn": "Replication lives in one tier only; keep the tiers above it singular so the figure does not read as N whole systems.",
+      "dir": "../figures/asplos26-060_fig8"
+    },
+    {
+      "id": "asplos26-088_fig11",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated: dashed expansion lines fan from Sorting and Rasterization engines to two differently sized unit lists, sixteen Sorting Cores elided as '...' but only four Rasterization Cores enumerated in full since the count is small.",
+      "what_to_learn": "Match the elision to the count: when a repeated unit list is long (sixteen sorting cores here), collapse it with an ellipsis, but when short enough to read at a glance (four rasterization cores), just enumerate every one, using dashed leader lines to expand either list beside the main diagram.",
+      "dir": "../figures/asplos26-088_fig11"
+    },
+    {
+      "id": "nsdi23-047_fig7",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Three identical worker columns inside one outer boundary with a shared queue, plus an inside legend for link types.",
+      "what_to_learn": "Replicas as columns share a horizontal resource above and below them; the legend then only needs to explain the link colours between columns.",
+      "dir": "../figures/nsdi23-047_fig7"
+    },
+    {
+      "id": "nsdi24-003_fig1",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "A cautionary case: three concrete Core columns are drawn with no ellipsis at all, violating the template's own 'never three or more concrete copies' rule, even though the stacked Driver/Application/Monitoring bands are cleanly repeated.",
+      "what_to_learn": "Do not draw three or more full concrete replicas side by side as this figure does; collapse to two columns plus an ellipsis (or a Core N column) instead, while keeping its good idea of repeating the same colored Driver/Application/Monitoring bands identically in every column and fanning them back to one Aggregator.",
+      "dir": "../figures/nsdi24-003_fig1"
+    },
+    {
+      "id": "nsdi26-124_fig4",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: three Pod boxes are simultaneous identical peers in one system, not alternative designs or moments, and the lettered (a)(b)(c) tags label arrow types within one diagram, not separate panels; this is replicated-grid, not n-panel-comparison.",
+      "what_to_learn": "Reserve lettered (a)(b)(c) tags for distinct panels, not for naming different arrow or relationship types inside one diagram, which just needs a legend instead; draw N simultaneous identical peers (here three pods) as a repeated unit feeding one shared control plane below a dashed divider, replicated-grid's job, not a panel-by-panel comparison.",
+      "dir": "../figures/nsdi26-124_fig4"
+    },
+    {
+      "id": "osdi23-008_fig2",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "A minimal replicated-grid element inside a feedback-loop figure: two Job hexagons plus trailing ellipsis dots sit in the Shared Cluster, each with its own Online Learner performance model feeding one shared Policy above.",
+      "what_to_learn": "When replication is secondary to a feedback loop, keep it light: two named instances (Job 1, Job 2) plus trailing ellipsis dots is enough to imply the pool, while the closed loop between cluster feedback and the policy stays the visual main event.",
+      "dir": "../figures/osdi23-008_fig2"
+    },
+    {
+      "id": "osdi24-025_fig6",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Replication confined to exactly one tier, as the template recommends: only the bottom-most Parrot LLM Engine box carries a stacked-shadow icon for multiple backend instances, while the four layers above it stay singular.",
+      "what_to_learn": "Keep replication confined to exactly one tier of a layered stack, here the bottom engine, by giving only that box a stacked-shadow icon; leave every tier above it as a single box so the figure still reads as one layered system, not N whole systems.",
+      "dir": "../figures/osdi24-025_fig6"
+    },
+    {
+      "id": "osdi24-050_fig6",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated, the doc's own example of 'offset stacked boxes behind a single one': the Prefill Instance pool and Decoding Instance pool are each one shadow-stacked card, joined only by a labeled KV Cache Transfer arrow.",
+      "what_to_learn": "Draw a pool of homogeneous instances as one box with an offset shadow stack behind it rather than an ellipsis row, reserve that device for exactly the two pools the paper's contribution separates, and use one labeled transfer arrow (not a generic pipeline arrow) to name the specific handoff between them.",
+      "dir": "../figures/osdi24-050_fig6"
+    },
+    {
+      "id": "osdi26-061_fig2",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "PCIe switches, GPUs, and NICs each run '1 ⋯ 8' with an explicit last index inside this two-panel figure's hardware row, while panel (b) separately elides repeated connections and QPs.",
+      "what_to_learn": "Number the last replica explicitly (1 ⋯ 8) instead of using N when the paper's real hardware has a fixed, known count, and repeat that same ellipsis device at a second scale, connections or queue pairs inside one thread, when the implementation panel needs it too.",
+      "dir": "../figures/osdi26-061_fig2"
+    },
+    {
+      "id": "sosp23-013_fig3",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Cited in the reference doc for both control-data and replicated-grid: repeated identical node boxes fill the Node Cluster, and exactly one is restyled red-dashed to mark the failing instance instead of adding a callout.",
+      "what_to_learn": "To show one failure among many identical peers, restyle just that single node red and dashed rather than adding a separate callout box or arrow; keep circled numbers 1-5 tracing the unrelated job-submission-to-recovery flow so the failure marker and the process flow do not compete.",
+      "dir": "../figures/sosp23-013_fig3"
+    },
+    {
+      "id": "sosp23-016_fig4",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "A textbook match for the indexing rule: the coordinator (Scheduler plus KV Cache Manager) sits at left, and Worker 0, Worker 1, ellipsis, Worker N-1 stack at right, each an identical Cache-Engine-plus-Model-Shard card.",
+      "what_to_learn": "Index replicas from 0 and label the last one N-1 exactly as this figure does (Worker 0, Worker 1, ..., Worker N-1), stack them vertically to one side, and let a single coordinator box on the other side hold every piece of shared state (cache manager, block tables, allocators) so no worker box repeats it.",
+      "dir": "../figures/sosp23-016_fig4"
+    },
+    {
+      "id": "sosp25-061_fig7",
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Worker-0 and Worker-N drawn in full with a centred ellipsis, each expanded to nesting depth 4.",
+      "what_to_learn": "Two full replicas with an ellipsis between them beats three partial ones; index them 0 and N so the reader infers the range.",
+      "dir": "../figures/sosp25-061_fig7"
+    },
+    {
+      "id": "asplos25-056_fig3",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A thin pipeline where replication is confined to one tier: CPU Node and Memory Node repeat with an ellipsis while the developer layers, network, and accelerator stay singular; every stage carries its own section number.",
+      "what_to_learn": "Confine an ellipsis-based repeat to exactly one tier of an otherwise thin, single-file pipeline (CPU Node ... Memory Node here), and stamp each stage with the paper's own section number instead of a legend; avoid this figure's overly wide aspect ratio, which compresses every stage into a small strip.",
+      "dir": "../figures/asplos25-056_fig3"
+    },
+    {
+      "id": "asplos26-019_fig4",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A modest fit: inside a scheduler-centric hub figure, the shared GPU worker pool itself is drawn as small repeated model icons with an ellipsis between two example diffusion models, standing in for an arbitrary-sized pool.",
+      "what_to_learn": "When the replicated pool is only one stop in a bigger routing figure, keep it compact: two small labeled icons plus an ellipsis inside the pool box is enough, leaving the visual weight on the scheduler's queues and the monitor's feedback loop that are the actual point.",
+      "dir": "../figures/asplos26-019_fig4"
+    },
+    {
+      "id": "asplos26-056_fig5",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Stacked VQA-cluster cards (C_i, C_k, ellipsis, C_j) sit inside a dashed TreeVQA Controller box, with one card, C_j, linked by thin connectors to a zoomed panel below showing exactly how that instance decides to split.",
+      "what_to_learn": "Draw the replicated instances as stacked cards inside one coordinator box, then link exactly one of them by a thin connector to a separate zoomed panel that details its internal decision logic (here a Yes/No split diamond), instead of drawing that logic inside every card.",
+      "dir": "../figures/asplos26-056_fig5"
+    },
+    {
+      "id": "nsdi24-086_fig22",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Reassigned from mirrored-pair by the note-writer: four identically styled NN-defined modulator boxes (STF, LTF, SIG, DATA) run in parallel and converge into one Concatenate box, a four-way replicated-grid fan-in, not a two-peer mirrored pair.",
+      "what_to_learn": "The transferable move is replicated-grid's: draw every parallel member with identical size and fill so the reader reads them as interchangeable instances of one type, route each input to its member with a distinctly coloured dashed line, then converge all outputs into a single named merge box.",
+      "dir": "../figures/nsdi24-086_fig22"
+    },
+    {
+      "id": "nsdi26-142_fig4",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A modest fit inside a numbered hardware-block figure: n-1 VM Queue icons plus an ellipsis plus one distinguished LM Queue icon sit inside the LM Controller, echoing the index-and-distinguish-the-last-one replication rule at small scale.",
+      "what_to_learn": "Even inside a single hardware block, use the ellipsis-plus-one-distinguished-instance device for a queue array (ordinary VM queues, ellipsis, one dedicated LM queue) rather than drawing every queue, and number the resulting datapaths with a small color-coded legend the way this figure numbers its four.",
+      "dir": "../figures/nsdi26-142_fig4"
+    },
+    {
+      "id": "osdi23-040_fig6",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Canonical fan-in coordinator-over-replicas: 16 identical RX Pipe Manager trapezoids, elided with a vertical ellipsis, converge into one Notification Buffer Manager, while a separate parallel lane keeps the bulk Data FIFO independent of that metadata fan-in.",
+      "what_to_learn": "Fan-in works the same as fan-out: converge 16 elided, identical processing units into one shared manager using trapezoid connectors, and route a second kind of payload (bulk data) through its own separate, differently-shaped lane so the two never look like the same pipeline.",
+      "dir": "../figures/osdi23-040_fig6"
+    },
+    {
+      "id": "osdi25-050_fig6",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "A numbered control row over a GPU-server row numbered 0..N with an ellipsis and a dashed annotation pointing at one server.",
+      "what_to_learn": "Number the replica row explicitly (0, 1, 2, 3, 4, ..., N) and use a dashed leader when you need to say something about one specific replica.",
+      "dir": "../figures/osdi25-050_fig6"
+    },
+    {
+      "id": "osdi26-046_fig8",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "Reassigned from multi-tier by the note-writer: four same-level worker boxes in one row, each marked with a stacked-card icon for many parallel instances; there is no tier stack or network boundary, so this is pipeline/replicated-grid, not multi-tier.",
+      "what_to_learn": "Reuse one small stacked-rectangle icon on every box in a row to say 'this runs as many parallel instances' without redrawing each copy, and give a self-looping component (here EnvManager's Reset) its own tight loop-back arrow rather than routing it across the whole diagram.",
+      "dir": "../figures/osdi26-046_fig8"
+    },
+    {
+      "id": "osdi26-047_fig5",
+      "template": "replicated-grid",
+      "star": false,
+      "why_chosen": "The same figure judged for replicated-grid: Instance 1, 2, 3, ellipsis, N sit in one Inference Engine Pool row beneath the Request Buffer and Context Manager, each showing its own row of colored chunk states.",
+      "what_to_learn": "Keep the coordinator (Request Buffer, Context Manager) visually above the replicated pool it drives, index the instances 1, 2, 3, ellipsis, N, and repeat the same per-instance visual device, a row of colored chunk cells, in every box so the reader can read each instance's state directly.",
+      "dir": "../figures/osdi26-047_fig5"
+    }
+  ]
+}

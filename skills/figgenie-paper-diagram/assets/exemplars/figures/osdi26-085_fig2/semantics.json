@@ -1,0 +1,151 @@
+{
+  "paper_id": "osdi26-085",
+  "fig": "2",
+  "system": {
+    "name": "Helmsman",
+    "one_liner": "a cost-effective, high-performance clustering-based approximate nearest-neighbor search (ANNS) system for large-scale vector retrieval",
+    "domain": [
+      "ml-systems",
+      "storage"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Memory Shard",
+        "role": "one of several DRAM-resident shards that together hold the full HNSW graph when it exceeds a single shard's capacity",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "holds all graph data (neighbor lists and raw vectors) for in-memory HNSW search",
+        "container": "Memory Shard",
+        "novel": false
+      },
+      {
+        "name": "In-DRAM Graph Index",
+        "role": "HNSW graph searched via greedy best-neighbor descent layer by layer, then a best-first search over a candidate pool at the bottom layer",
+        "container": "Memory Shard",
+        "novel": false
+      },
+      {
+        "name": "Query Vector",
+        "role": "the query embedding used to start the graph search",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "DRAM-SSD Node",
+        "role": "a single node hosting a large-scale hybrid DRAM-SSD graph index to cut memory footprint",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SSD",
+        "role": "stores full-precision vectors and graph edges to reduce DRAM consumption",
+        "container": "DRAM-SSD Node",
+        "novel": false
+      },
+      {
+        "name": "DRAM-SSD Graph Index",
+        "role": "graph traversed with best-first search and beam search, fetching PQ-compressed/cached candidates from DRAM and full data from SSD in batches",
+        "container": "DRAM-SSD Node",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Query Vector",
+        "to": "In-DRAM Graph Index",
+        "what": "greedy best-neighbor descent from an entry node, layer by layer, then best-first search over a candidate pool at the bottom",
+        "step": null
+      },
+      {
+        "from": "Query Vector",
+        "to": "DRAM-SSD Graph Index",
+        "what": "best-first search with a beam-search procedure fetching candidates from SSD in batches",
+        "step": null
+      }
+    ],
+    "key_idea": "Two prior ANNS designs trade off differently: an all-DRAM sharded HNSW graph gives the lowest latency, while a hybrid DRAM-SSD graph trades some latency for far lower memory footprint on a single node.",
+    "reading_order": "Left panel (a) then right panel (b): each shows a query vector entering a graph index built on a different storage tier."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.4,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#231f20",
+        "used_for": "near-black text and graph-node outline color"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "gray fill for regular (non-highlighted) graph nodes"
+      },
+      {
+        "hex": "#6495ed",
+        "used_for": "cornflower-blue fill for the search-path highlighted nodes/edges"
+      },
+      {
+        "hex": "#cd5c5c",
+        "used_for": "indian-red fill for the final top-k result nodes"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "light gray fill for the DRAM/SSD icon boxes and shard/node container backgrounds"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed strokes (~0.9pt), rounded container corners",
+    "font": "mixed serif/sans (Nimbus Roman, ArialMT), 6.5-9pt",
+    "corners": "rounded",
+    "arrows": "thin blue arrows tracing the search path through the graph in each panel",
+    "icons": "a couple of vector icons for DRAM and SSD hardware"
+  },
+  "encoding": {
+    "color_means": "blue marks the nodes/edges visited along the search path, red marks the final top-k result nodes, gray marks unvisited graph nodes",
+    "line_style_means": null,
+    "emphasis": "the two panels are drawn with matching visual style (stacked shard/node cards, same graph-drawing convention) so the reader can directly compare the in-DRAM design against the hybrid DRAM-SSD design",
+    "reusable_patterns": [
+      "side-by-side comparison of two background/prior-art system designs using the same visual grammar",
+      "highlighted search path over a graph index to depict a query"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "ann-search",
+    "hnsw",
+    "vector-search",
+    "dram-ssd",
+    "background-comparison"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.4)"
+    ],
+    "evidence": [
+      "the HNSW search starts from an entry node on the top layer and performs greedy best-neighbor descent layer by layer",
+      "All graph data, including neighbor lists and raw vectors, are kept in DRAM",
+      "storing the full-precision vectors and graph edges on SSDs to cut memory footprint"
+    ]
+  },
+  "summary": "This is a background figure from the Helmsman paper (an ANNS system built around clustering-based indexes) comparing two prior approaches used at RedNote for approximate nearest-neighbor search. Panel (a) shows an in-DRAM HNSW design: the full graph's neighbor lists and vectors are kept in DRAM, partitioned across multiple Memory Shards when too large for one node, and a query descends greedily from an entry node layer by layer before a best-first search over a candidate pool yields the top-k results, favoring low latency and high QPS. Panel (b) shows a hybrid DRAM-SSD Node design used for more latency-relaxed workloads like content moderation and RAG: PQ-compressed and frequently accessed vectors stay cached in DRAM while full-precision vectors and edges live on SSD, and a query uses best-first search with a beam-search width that controls batched SSD I/O.",
+  "summary_zh": "Helmsman背景对比图,展示RedNote两种ANNS方案:(a)全内存HNSW跨Shard分片,逐层贪心搜索,低延迟;(b)DRAM-SSD混合方案,压缩/热点向量存DRAM、原始数据存SSD,beam-search批量读取省内存。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

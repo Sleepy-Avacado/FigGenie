@@ -1,0 +1,42 @@
+{
+  "id": "osdi26-063_fig5",
+  "paper_id": "osdi26-063",
+  "fig": "5",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 5: Kareus execution and optimization overview. The first row shows one training iteration with the 1F1B pipeline schedule. Inside each microbatch, partitions are sequentially executed; the second row illustrates this with the Transformer forward pass with tensor parallelism. The third row sho",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "omnigraffle",
+  "aspect": 1.11,
+  "n_components": 8,
+  "n_flows": 3,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-063/src/fig5_optimization_overview.svg",
+    "preview.png": "lab/extracted/osdi26-063/src/fig5_optimization_overview.png",
+    "print.png": "lab/extracted/osdi26-063/osdi26-063_fig5_p7_vector.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": false,
+      "why_chosen": "Four-row drill-down: a full 1F1B training-iteration timeline zooms via curved arrows into one transformer block's two-nanobatch overlap schedule, then a single partition's kernel timeline, ending in two Pareto-frontier scatterplots the schedule was chosen from.",
+      "what_to_learn": "Chain three Gantt-style rows at increasing zoom (full pipeline, one block's overlap, one partition's kernels) with dashed separators and curved arrows pointing to the row below, then close with the actual optimization plot the chosen schedule came from; keep one consistent color per category across every row."
+    }
+  ]
+}

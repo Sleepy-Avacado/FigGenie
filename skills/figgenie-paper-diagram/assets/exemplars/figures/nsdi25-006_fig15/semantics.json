@@ -1,0 +1,178 @@
+{
+  "paper_id": "nsdi25-006",
+  "fig": "15",
+  "system": {
+    "name": "Tooth",
+    "one_liner": "a control module that fine-tunes forward error correction to balance video QoE and redundancy cost in cloud gaming streaming",
+    "domain": [
+      "cloud-gaming",
+      "video-streaming",
+      "forward-error-correction"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Video Codec",
+        "role": "encodes the game's video frames",
+        "container": "Cloud Game Server",
+        "novel": false
+      },
+      {
+        "name": "Tooth",
+        "role": "pivotal control module positioned between Video Codec and FEC Codec, tuning fine-grained FEC to balance QoE and redundancy cost",
+        "container": "Cloud Game Server",
+        "novel": true
+      },
+      {
+        "name": "FEC Codec",
+        "role": "applies forward error correction coding to the video stream",
+        "container": "Cloud Game Server",
+        "novel": false
+      },
+      {
+        "name": "Data Sender",
+        "role": "transmits the encoded, FEC-protected data over the network",
+        "container": "Cloud Game Server",
+        "novel": false
+      },
+      {
+        "name": "Network Monitor",
+        "role": "monitors network conditions and supplies feedback to Tooth",
+        "container": "Cloud Game Server",
+        "novel": true
+      },
+      {
+        "name": "Internet",
+        "role": "network connecting the cloud game server to player devices",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Player Devices",
+        "role": "client devices (phones, laptop) receiving and rendering the streamed game",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Video Codec",
+        "to": "Tooth",
+        "what": "encoded video stream",
+        "step": null
+      },
+      {
+        "from": "Tooth",
+        "to": "FEC Codec",
+        "what": "fine-grained FEC control decision",
+        "step": null
+      },
+      {
+        "from": "Network Monitor",
+        "to": "Tooth",
+        "what": "network condition feedback",
+        "step": null
+      },
+      {
+        "from": "FEC Codec",
+        "to": "Data Sender",
+        "what": "FEC-protected video data",
+        "step": null
+      },
+      {
+        "from": "Data Sender",
+        "to": "Internet",
+        "what": "streamed game data",
+        "step": null
+      },
+      {
+        "from": "Internet",
+        "to": "Player Devices",
+        "what": "delivered game stream",
+        "step": null
+      }
+    ],
+    "key_idea": "Tooth sits between a cloud game server's Video Codec and FEC Codec, using network-monitor feedback to fine-tune forward error correction per session before the data sender streams protected video over the Internet to multiple player devices.",
+    "reading_order": "Left to right: inside the Cloud Game Server, video flows through Video Codec, Tooth, FEC Codec and Data Sender; the stream then crosses the Internet to three Player Devices."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.84,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#5e913b",
+        "used_for": "olive green on the Internet cloud icon or a connecting line"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "gold/mustard connecting line to one player device"
+      },
+      {
+        "hex": "#8497b0",
+        "used_for": "slate blue-gray box borders or the server rack icon"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "light blue background fill of the Cloud Game Server box"
+      },
+      {
+        "hex": "#077389",
+        "used_for": "teal accent, e.g. another connecting line or the Tooth box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.06pt fine borders with heavier (~5pt) accents on Tooth's outline",
+    "font": "Arial/Arial-Bold, ~5.5-8pt",
+    "corners": "mixed",
+    "arrows": "simple thin arrows linking the codec pipeline, plus colored lines from the server to each player device",
+    "icons": "113 embedded bitmap images: a server rack with a live code/terminal screen, and phone/laptop icons each showing an in-game scene"
+  },
+  "encoding": {
+    "color_means": "Tooth is highlighted in red to stand out from the neutral Video/FEC Codec boxes; differently colored lines (yellow, orange, green) link the server to each of the three player devices, suggesting distinct concurrent sessions",
+    "line_style_means": "plain solid lines/arrows are used throughout; no dashed-vs-solid distinction is evident at this resolution",
+    "emphasis": "Tooth's box is colored and outlined in red at the center of the codec pipeline, singling it out from the otherwise plain Video/FEC Codec and Data Sender boxes",
+    "reusable_patterns": [
+      "a control module inserted between two existing pipeline stages (Video Codec, FEC Codec)",
+      "realistic device/server artwork used in place of abstract boxes for a deployment-style figure"
+    ],
+    "weaknesses": [
+      "very little text (about nine labels) means several connections (e.g. Network Monitor's exact feed direction) rely on inferred arrow reading",
+      "photographic device icons take up more space than the architecturally informative codec pipeline"
+    ]
+  },
+  "tags": [
+    "cloud-gaming",
+    "video-streaming",
+    "forward-error-correction",
+    "qoe",
+    "fec"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Implementation (p.9)"
+    ],
+    "evidence": [
+      "Tooth serves as a pivotal control module of the game server, positioned between Video Codec and FEC Codec.",
+      "For each gaming session, Tooth acquires the receipt"
+    ]
+  },
+  "summary": "Tooth is a fine-grained forward-error-correction (FEC) control module for cloud gaming that balances video QoE against redundancy cost. Figure 15 shows its implementation as a pipeline inside a Cloud Game Server: a Video Codec encodes the game stream, which passes through Tooth -- highlighted in red as the pivotal control module positioned between Video Codec and FEC Codec -- before the FEC Codec applies error-correction coding and a Data Sender transmits the result. A Network Monitor alongside Tooth supplies the network-condition feedback Tooth uses to tune its per-session FEC decisions. The protected stream then crosses the Internet (drawn as a cloud with differently colored lines) to reach three Player Devices -- a phone, a laptop, and another handheld device -- each shown rendering the live game. The figure is a clean, icon-heavy illustration with realistic device/server artwork and very little text, leaning on recognizable pictures instead of abstract boxes.",
+  "summary_zh": "图15展示Tooth在云游戏服务器中的实现：位于Video Codec与FEC Codec之间，结合Network Monitor反馈调节FEC，经Data Sender通过互联网传给多台玩家设备。",
+  "confidence": "medium",
+  "notes": "The retrieved text is one sentence plus a truncated continuation ('Tooth acquires the receipt'), so the Network Monitor's exact feed direction and the Data Sender/Internet/Player Devices connections are read from the figure alone. layout-proposal: pipeline-into-fanout — a server-side codec pipeline (Video Codec, Tooth, FEC Codec, Data Sender) feeds a single Internet hub that fans out to multiple identical Player Device spokes; host-device captures the server/client split but not the internal pipeline or the multi-device fanout.",
+  "venue": "NSDI25"
+}

@@ -1,0 +1,55 @@
+{
+  "id": "osdi23-031_figtex1",
+  "kind": "mechanism",
+  "paper_id": "osdi23-031",
+  "fig": "tex1",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "and are naturally consistent. dOCC incurs unnecessary validation costs, and could be falsely aborted due to lock unavailability. NCC can commit both transactions with timestamp pre-assignment, refinement, and the safeguard check (denoted by SG). These techniques are detailed in Section . Each versio",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "timeline",
+  "subject": "comparing dOCC, which falsely aborts a naturally-consistent transaction, against NCC, which commits both via timestamps and a safeguard check",
+  "arrangement": "panels-row",
+  "panel_count": 3,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "double",
+  "aspect": 1.62,
+  "n_elements": 11,
+  "n_relations": 5,
+  "n_panels": 3,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "powerpoint",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-031/src/texfig1a_bg.svg",
+    "preview.png": "lab/extracted/osdi23-031/src/texfig1a_bg.png",
+    "print.png": null
+  },
+  "groups": [
+    {
+      "group": "logic",
+      "star": false,
+      "why_chosen": "The same two naturally-consistent transactions that dOCC's locking validation falsely aborts under contention are both committed by NCC's timestamp pre-assignment, refinement, and safeguard check, with a middle panel showing how per-version timestamps get refined.",
+      "what_to_learn": "swimlane timelines for two clients and the keys they touch, with per-client colour coding kept consistent across a 'before' and 'after' panel to highlight a protocol fix",
+      "note_source": "record"
+    }
+  ]
+}

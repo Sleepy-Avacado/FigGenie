@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-094_fig2",
+  "kind": "mechanism",
+  "paper_id": "asplos26-094",
+  "fig": "2",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 2. Illustration of VLP, detailed in Section 2.1.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "mixed",
+  "subject": "how a temporal-coded spike selects an accumulator's value to compute i×w without a real multiplier, then scales to arrays",
+  "arrangement": "panels-grid",
+  "panel_count": 6,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.82,
+  "n_elements": 11,
+  "n_relations": 8,
+  "n_panels": 6,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "omnigraffle",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-094/src/fig2_vlp_review.svg",
+    "preview.png": "lab/extracted/asplos26-094/src/fig2_vlp_review.png",
+    "print.png": "lab/extracted/asplos26-094/asplos26-094_fig2_p3_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "VLP replaces a multiplier with a shared accumulator plus per-input temporal comparators: each input's spike, timed to its own value, subscribes to the accumulator's sum at the right cycle to read off its product, scaling to a full outer-product array.",
+      "what_to_learn": "Six construction stages inside one column, each adding a block to one running example; waveform under its circuit",
+      "note_source": "doc"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-038_fig3",
+  "paper_id": "asplos25-038",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. The system architecture of Dilu.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.48,
+  "n_components": 13,
+  "n_flows": 10,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-038/src/fig3_archi-new-revision.svg",
+    "preview.png": "lab/extracted/asplos25-038/src/fig3_archi-new-revision.png",
+    "print.png": "lab/extracted/asplos25-038/asplos25-038_fig3_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Three named planes (Control / Scaling / Serving) labelled in the right gutter with 5 numbered actions crossing them.",
+      "what_to_learn": "Name the tiers as planes in a gutter and let numbered dashed arrows cross plane boundaries - crossing arrows are what makes it a lifecycle, not a stack."
+    }
+  ]
+}

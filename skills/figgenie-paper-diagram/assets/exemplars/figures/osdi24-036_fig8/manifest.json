@@ -1,0 +1,42 @@
+{
+  "id": "osdi24-036_fig8",
+  "paper_id": "osdi24-036",
+  "fig": "8",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 8: Llumnix architecture.",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "tikz",
+  "aspect": 1.2,
+  "n_components": 8,
+  "n_flows": 4,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-036/src/fig8_arch.svg",
+    "preview.png": "lab/extracted/osdi24-036/src/fig8_arch.png",
+    "print.png": "lab/extracted/osdi24-036/osdi24-036_fig8_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "Two-level global/local scheduler hierarchy with a right-hand legend separating migration control (orange solid) from other control (dashed).",
+      "what_to_learn": "One expanded instance beside two schematic ones communicates scale-out; the legend then only has to explain the one arrow class that matters."
+    }
+  ]
+}

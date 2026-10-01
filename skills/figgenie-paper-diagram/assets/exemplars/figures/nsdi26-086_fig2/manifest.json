@@ -1,0 +1,48 @@
+{
+  "id": "nsdi26-086_fig2",
+  "paper_id": "nsdi26-086",
+  "fig": "2",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 2: Architecture of Kubernetes-based FaaS platform. We highlight the narrow waist in orange. 1 to 5 are from Figure 1 and are indirect calls via the API Server.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "quartz",
+  "aspect": 1.86,
+  "n_components": 9,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "circled-numbers",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-086/src/fig2_2_faas-arch.svg",
+    "preview.png": "lab/extracted/nsdi26-086/src/fig2_2_faas-arch.png",
+    "print.png": "lab/extracted/nsdi26-086/nsdi26-086_fig2_p4_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence layered exemplar arranged as two side-by-side columns rather than pure horizontal bands, with an orange highlight isolating the shared narrow-waist controllers and circled numbers 1-5 tracing the critical scale-out path through both columns.",
+      "what_to_learn": "When two parallel software stacks share one critical sub-path, draw them as two columns and recolour only the shared boxes that carry the argument, then number the request path across both columns so the highlighted path reads as one continuous route rather than two separate stacks."
+    },
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Two tier columns (our orchestrator | the existing platform) with the critical path highlighted orange straight down the middle.",
+      "what_to_learn": "When your system sits beside an existing platform rather than above it, use two columns and highlight only the path that crosses between them."
+    }
+  ]
+}

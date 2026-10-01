@@ -1,0 +1,256 @@
+{
+  "paper_id": "asplos26-013",
+  "fig": "8",
+  "kind": "mechanism",
+  "system": {
+    "name": "AGS",
+    "one_liner": "an algorithm-hardware co-designed accelerator for 3D Gaussian Splatting SLAM that exploits inter-frame similarity via CODEC-assisted covisibility detection",
+    "domain": [
+      "SLAM",
+      "3D-reconstruction",
+      "hardware-acceleration"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how AGS designates key vs non-key frames and skips low-contribution Gaussians in mapping using recorded pixel counts",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "Frame",
+        "kind": "icon",
+        "role": "raw camera frame captured at one timestep by the SLAM system",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Key Frame / Non-key Frame",
+        "kind": "label",
+        "role": "the frame-type decision resulting from comparing covisibility with ThreshM",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Full Mapping / Selective Mapping",
+        "kind": "label",
+        "role": "names which mapping procedure runs: baseline 3DGS training on all Gaussians, or skipping the ones already known to be non-contributory",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Gaussian scene",
+        "kind": "box",
+        "role": "the dashed-border box showing the frame's 3D Gaussians as coloured, numbered ellipses",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GS_n (Gaussian ellipse)",
+        "kind": "icon",
+        "role": "one numbered 3D Gaussian splat; solid colour when computed, grey with a dashed outline when skipped by prediction",
+        "container": "Gaussian scene",
+        "highlighted": false
+      },
+      {
+        "name": "Gaussian Contribution Information",
+        "kind": "box",
+        "role": "a table recording, per Gaussian ID, how many pixels it contributed negligibly to",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Thresh_M",
+        "kind": "label",
+        "role": "the covisibility threshold that separates key from non-key frames",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Thresh_alpha",
+        "kind": "label",
+        "role": "the alpha threshold below which a Gaussian is non-contributory to a given pixel",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Thresh_N",
+        "kind": "label",
+        "role": "the non-contributory pixel-count threshold (=2 in this example) above which a Gaussian is skipped in later non-key frames",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Frame",
+        "to": "Key Frame / Non-key Frame",
+        "what": "a frame's covisibility with the previous key frame decides its designation",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Key Frame / Non-key Frame",
+        "to": "Full Mapping / Selective Mapping",
+        "what": "key frames run Full Mapping; non-key frames run Selective Mapping",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Full Mapping / Selective Mapping",
+        "to": "Gaussian scene",
+        "what": "the chosen mapping procedure produces or reuses this frame's Gaussian scene",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Gaussian scene",
+        "to": "Gaussian Contribution Information",
+        "what": "thresholding each Gaussian's alpha per pixel populates its non-contributory pixel count",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Gaussian Contribution Information",
+        "to": "GS_n (Gaussian ellipse)",
+        "what": "a key frame's recorded counts, compared against Thresh_N, mark which Gaussian IDs to grey out and skip in the next non-key frame's scene",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "Frame",
+        "to": "Frame",
+        "what": "covisibility above ThreshM keeps the next frame non-key; covisibility below ThreshM starts a new key frame",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Frame_t (key frame)",
+        "axis": "time",
+        "differs": "baseline: runs Full Mapping on all four Gaussians (1,2,3,4) and records each one's non-contributory pixel count in a fresh table",
+        "verdict": "key frame"
+      },
+      {
+        "label": "Frame_t+1 (non-key frame)",
+        "axis": "time",
+        "differs": "high covisibility (> ThreshM) with Frame_t triggers Selective Mapping, which greys out and skips GS2 and GS3 using Frame_t's recorded counts (both >= ThreshN=2) instead of recomputing them",
+        "verdict": "non-key frame"
+      },
+      {
+        "label": "Frame_t+2 (key frame)",
+        "axis": "time",
+        "differs": "low covisibility (< ThreshM) with the prior key frame ends the skip streak: a new key frame runs Full Mapping again on a changed Gaussian set (2,3,4,5) and records a fresh contribution table",
+        "verdict": "key frame"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the per-Gaussian non-contributory pixel counts in each table (0,3,3,1 for Frame_t; 2,1,3,0 for Frame_t+2) and the ThreshN=2 comparison",
+      "linked_by": "colour (grey row = at/above ThreshN, flagged) and matching GS_n numbers between the ellipse scene and the table rows",
+      "result_cells": "grey-highlighted table rows name exactly which Gaussians (GS2, GS3 in this example) get skipped in the following non-key frame"
+    },
+    "key_idea": "A key frame runs full 3DGS mapping and records each Gaussian's non-contributory pixel count; as long as covisibility stays high, later non-key frames reuse that record to skip the same low-contribution Gaussians, until falling covisibility forces a fresh key frame.",
+    "reading_order": "left to right across three time-ordered frames: camera frame, then down through the mapping-type arrow into the Gaussian-splat scene, then down into the contribution table; a key frame's table feeds the skip decision drawn into the next non-key frame's scene"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.22,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fee599",
+        "used_for": "pale yellow fill of table rows/cells for Gaussians still counted as contributory"
+      },
+      {
+        "hex": "#0000ff",
+        "used_for": "blue text marking the Gaussian IDs flagged as non-contributory in each table, and the 'Skip GS2, GS3' annotation"
+      },
+      {
+        "hex": "#bfbfbf",
+        "used_for": "grey fill of flagged table rows and of the skipped Gaussian ellipses in the non-key frame's scene"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "very light grey background fill of each dashed-border Gaussian-scene box"
+      },
+      {
+        "hex": "#e76254",
+        "used_for": "red/orange fill of Gaussian ellipse 3"
+      },
+      {
+        "hex": "#bfb1d0",
+        "used_for": "light purple fill of Gaussian ellipse 4"
+      },
+      {
+        "hex": "#dae2f3",
+        "used_for": "pale blue fill of Gaussian ellipse 2 when not flagged"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines; dashed black border around each Gaussian-scene box; dashed blue outlines ring the skipped ellipses in the non-key frame",
+    "corners": "mixed",
+    "arrows": "thick black arrows for the mapping/evaluation pipeline; thin grey elbow arrows for the covisibility-comparison loop above the frames",
+    "font": "sans-serif (Calibri), small (3.5-6.5pt) table text with larger bold headings",
+    "icons": "photographic camera-frame thumbnails; Frame_t and Frame_t+1 reuse the identical photo (illustrating high covisibility) while Frame_t+2 shows a visibly shifted viewpoint"
+  },
+  "encoding": {
+    "color_means": "yellow = a Gaussian or table row still contributing, grey = a Gaussian or table row marked non-contributory (skip candidate), blue text = the specific Gaussian IDs flagged for skipping, red/purple/pale-blue = individual Gaussian identities 3/4/2 tracked across frames",
+    "line_style_means": "dashed borders mark the Gaussian-scene boxes and, in the non-key frame, ring the specific ellipses being skipped; solid arrows carry the mapping/evaluation control flow",
+    "state_means": "key vs non-key frame is told apart by the mapping-type label (Full vs Selective) and by whether the scene's Gaussians are solid-coloured (computed) or grey/dashed (skipped via prediction)",
+    "marker_means": "numbers on each ellipse are Gaussian IDs (GS_n) kept consistent across frames so the reader can track the same Gaussian being kept or skipped",
+    "emphasis": "the same grey fill and dashed blue outline applied to GS2/GS3 in both the table and the scene link the two representations and highlight exactly what selective mapping skips",
+    "reusable_patterns": [
+      "three time-ordered columns sharing one template (photo -> mapping arrow -> annotated scene -> data table)",
+      "a small worked data table whose flagged rows are cross-referenced by colour into the diagram above it",
+      "a feedback arrow carrying one frame's recorded values into the next frame's decision"
+    ],
+    "weaknesses": [
+      "the top covisibility-comparison arrows and the bottom mapping pipeline are drawn separately without an explicit connecting line, so the reader must infer that one produces the label the other consumes",
+      "Gaussian numbering is not exhaustive (Frame_t+2 jumps from 2 to 5), which could confuse readers about whether Gaussian 1 disappeared or was simply not drawn"
+    ]
+  },
+  "tags": [
+    "3D-Gaussian-Splatting",
+    "SLAM",
+    "keyframe-selection",
+    "covisibility",
+    "selective-mapping",
+    "AGS"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 Algorithm"
+    ],
+    "evidence": [
+      "For the next frame (framet+2) with low covisibility, we designate it as a new key frame",
+      "GS2 and GS3 (colored in gray) have α values lower than Threshα for three pixels",
+      "Since both GS2 and GS3 are non-contributory to ≥2 pixels, we exclude them in the following non-key frames"
+    ]
+  },
+  "summary": "This figure walks through AGS's Gaussian contribution-aware mapping across three time-ordered frames. Frame_t is a key frame: it runs Full Mapping over its four Gaussians, then records each one's non-contributory pixel count (from thresholding alpha per pixel) in a Gaussian Contribution Information table; GS2 and GS3 both score 3, at or above ThreshN=2, so they are flagged with grey rows and blue IDs. Because Frame_t+1 has covisibility above ThreshM with Frame_t, it is designated non-key and reuses that table to run Selective Mapping, skipping GS2 and GS3 (drawn grey with dashed outlines) instead of recomputing them. Frame_t+2's covisibility instead falls below ThreshM, so it becomes a fresh key frame, runs Full Mapping on its own changed Gaussian set, and records a new contribution table, restarting the cycle.",
+  "summary_zh": "该图按时间演化展示AGS的高斯贡献感知建图：关键帧frame_t全量建图并记录各高斯非贡献像素数，GS2、GS3达阈值被标记；高共视的frame_t+1据此跳过它们做选择性建图；共视度低的frame_t+2则成为新关键帧重新全量建图。",
+  "confidence": "high",
+  "notes": "Corrected base from prior 'scene' to 'mixed': the figure combines photographic frames, an abstract ellipse/scene diagram, and data tables, none of which alone is 'scene'. Index measured panels=1 for a figure that plainly draws three time-ordered columns; kept layout.panels=1 (from the index) while layout.panel_count and content.panels reflect the actual 3. Measured icons=2 matches the observation that Frame_t and Frame_t+1 reuse the same photo while Frame_t+2 uses a different one.",
+  "venue": "ASPLOS26"
+}

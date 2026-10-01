@@ -1,0 +1,63 @@
+{
+  "id": "nsdi23-003_fig7",
+  "kind": "mechanism",
+  "paper_id": "nsdi23-003",
+  "fig": "7",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 7: An example of B-node operations. In this example, A and C are talking to each other, B talks to herself (idle client), and the message from someone to D is blocked.",
+  "groups_in_record": [
+    "evolution",
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "table",
+  "subject": "how B-nodes obliviously sort, detect/patch/swap, and re-sort message records to pair conversations and hide access patterns",
+  "arrangement": "frames-row",
+  "panel_count": 4,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.2,
+  "n_elements": 8,
+  "n_relations": 3,
+  "n_panels": 4,
+  "n_steps": 3,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "circled-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-003/nsdi23-003_fig7_p10_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-003/nsdi23-003_fig7_p10_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": false,
+      "why_chosen": "Sorting message records by private label makes same-label pairs adjacent so they can be detected, patched and swapped into complete sender/receiver pairs, then re-sorting by entry_id restores each enclave's original slots without ever revealing who talked to whom.",
+      "what_to_learn": "a grid of small record-tables repeated in successive columns to show a multi-pass sort/transform pipeline; colour- and value-linking a handful of tracked records across frames whose row/column position is not stable; numbered stage-name boxes placed between columns rather than inside them",
+      "note_source": "record"
+    },
+    {
+      "group": "walkthrough",
+      "star": false,
+      "why_chosen": "Sorting message records by private label makes same-label pairs adjacent so they can be detected, patched and swapped into complete sender/receiver pairs, then re-sorting by entry_id restores each enclave's original slots without ever revealing who talked to whom.",
+      "what_to_learn": "a grid of small record-tables repeated in successive columns to show a multi-pass sort/transform pipeline; colour- and value-linking a handful of tracked records across frames whose row/column position is not stable; numbered stage-name boxes placed between columns rather than inside them",
+      "note_source": "record"
+    }
+  ]
+}

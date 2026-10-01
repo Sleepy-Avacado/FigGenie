@@ -1,0 +1,175 @@
+{
+  "paper_id": "osdi26-076",
+  "fig": "5",
+  "system": {
+    "name": "umap",
+    "one_liner": "a memory-mapped I/O library that lets applications access files on a distributed file system as if mapped in memory, loading cache-block-sized segments on demand",
+    "domain": [
+      "storage",
+      "distributed-systems"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "APP",
+        "role": "application process performing memory accesses to a umap-mapped file",
+        "container": "User Space",
+        "novel": false
+      },
+      {
+        "name": "CET",
+        "role": "Cache Entry Table: index arrays, one per mapped file, indicating whether each file segment has been loaded",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "tracker",
+        "role": "decides cache allocation/replacement based on reuse policies on a cache miss",
+        "container": "Cache Manager",
+        "novel": true
+      },
+      {
+        "name": "maintainer",
+        "role": "background thread that enacts the tracker's decisions by allocating or reusing cache blocks",
+        "container": "Cache Manager",
+        "novel": true
+      },
+      {
+        "name": "Cache Set",
+        "role": "global pool of fixed-size cache blocks (CB) that temporarily store fetched file segments",
+        "container": "Cache Manager",
+        "novel": true
+      },
+      {
+        "name": "Communication Manager",
+        "role": "merges I/O requests, manages concurrency and performs asynchronous transfers between the DFS and the local cache set",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "files",
+        "role": "file segments stored on the distributed file system, divided into cache-block-sized pieces",
+        "container": "DFS",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "APP",
+        "to": "CET",
+        "what": "virtual address access intercepted and mapped to a segment index in the file's index array",
+        "step": 1
+      },
+      {
+        "from": "CET",
+        "to": "Cache Set",
+        "what": "valid CB entry located (cache hit)",
+        "step": 2
+      },
+      {
+        "from": "Cache Set",
+        "to": "APP",
+        "what": "data returned directly from the cache set",
+        "step": 3
+      },
+      {
+        "from": "CET",
+        "to": "tracker",
+        "what": "cache miss on the entry triggers cache-block selection",
+        "step": 4
+      },
+      {
+        "from": "tracker",
+        "to": "Cache Set",
+        "what": "selects a CB, potentially evicting an existing one",
+        "step": 5
+      },
+      {
+        "from": "maintainer",
+        "to": "Cache Set",
+        "what": "prepares the selected CB for reuse",
+        "step": 6
+      },
+      {
+        "from": "Communication Manager",
+        "to": "files",
+        "what": "asynchronously fetches the required file segment from the DFS",
+        "step": 8
+      },
+      {
+        "from": "files",
+        "to": "Cache Set",
+        "what": "fetched segment delivered into the prepared CB",
+        "step": 9
+      }
+    ],
+    "key_idea": "umap intercepts memory accesses to a mapped file and transparently loads only the touched cache-block-sized segments from the distributed file system on demand.",
+    "reading_order": "Top-down: applications in user space, down through the address space and Cache Entry Table into the Cache Manager, then down to the Communication Manager and the DFS."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.36,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#deebf7",
+        "used_for": "light blue fill for the Cache Set blocks and hatched address-space segments representing mapped file regions"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray background fill for the Cache Manager and Communication Manager boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "mixed",
+    "stroke": "thin dashed strokes overall (~0.55pt), varying box borders",
+    "font": "Times New Roman serif, ~5-7.5pt, bold for headers",
+    "corners": "mixed",
+    "arrows": "many thin arrows linking APP through CET, tracker, maintainer, Cache Set and Communication Manager down to DFS",
+    "icons": "a couple of small vector icons; otherwise plain labeled boxes"
+  },
+  "encoding": {
+    "color_means": "light blue marks mapped/cached data regions (address-space stripes and cache blocks) while gray marks the manager boxes",
+    "line_style_means": "red 'hit'/'miss' labels on arrows distinguish the cache-hit path from the cache-miss path; hatched blocks mark address ranges currently mapped to a cache block",
+    "emphasis": "the red 'miss' and 'hit' labels on the two branch arrows call out the two execution paths through the cache",
+    "reusable_patterns": [
+      "vertical layered stack from application/address space down to a two-tier cache manager and a shared communication layer to the backing store",
+      "numbered request path annotated directly on a layered stack"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "memory-mapped-io",
+    "caching",
+    "distributed-file-system",
+    "storage",
+    "page-cache"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview of umap (p.6)"
+    ],
+    "evidence": [
+      "umap comprises two main components: the Cache Manager (CaM) and the Com- munication Manager (CoM)",
+      "umap intercepts memory accesses from applications",
+      "Otherwise, a cache miss occurs"
+    ]
+  },
+  "summary": "umap is a library that exposes memory-mapped I/O on a distributed file system, loading files as cache-block-sized segments on demand. The figure is a layered stack: applications (APP) in user space access a mapped address space; each access is intercepted (step 1) and looked up in the Cache Entry Table (CET). A hit returns data directly from the Cache Set (steps 2-3). A miss (step 4) invokes the Cache Manager's tracker, which selects a cache block, potentially evicting one (step 5), while the maintainer background thread prepares it for reuse (step 6). The Communication Manager then asynchronously fetches the missing segment from the underlying DFS (steps 8-9) and the CET entry is updated. Hatched fill marks address ranges currently backed by a cache block, and red hit/miss labels distinguish the two paths.",
+  "summary_zh": "umap在分布式文件系统上实现按需加载的内存映射I/O:访问拦截后查CET,命中返回Cache Set数据;未命中由tracker选块、maintainer准备复用,再经Communication Manager异步从DFS取回。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI26"
+}

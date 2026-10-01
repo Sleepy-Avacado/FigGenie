@@ -1,0 +1,198 @@
+{
+  "paper_id": "asplos26-026",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "TLT",
+    "one_liner": "a system that losslessly accelerates reasoning RL training by integrating adaptive speculative decoding with a continuously-trained lightweight drafter",
+    "domain": [
+      "LLM-serving",
+      "reinforcement-learning-training",
+      "speculative-decoding"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how tree-based speculative drafting branches topK candidate tokens by probability and selects the top 8 to verify",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Prompt (Climate)",
+        "kind": "node",
+        "role": "the input prompt token that seeds the draft tree",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Depth = 1/2/3/4",
+        "kind": "label",
+        "role": "names each column as one drafting step deeper into the candidate tree",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Drafted Token (black)",
+        "kind": "node",
+        "role": "a candidate token proposed by the draft model but not selected for verification by the target model",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Token to Verify (blue)",
+        "kind": "node",
+        "role": "a candidate token among the Tokens_to_Verify=8 highest-confidence tokens submitted to the target model",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "(Prob.)",
+        "kind": "label",
+        "role": "the draft model's confidence score attached to each candidate token",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Drafting Stage",
+        "kind": "box",
+        "role": "the dotted orange boundary marking the whole tree as happening in the draft model's exploration phase, before target-model verification",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Prompt (Climate)",
+        "to": "Token to Verify (blue)",
+        "what": "the draft model proposes topK=2 next-token candidates from the prompt",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Token to Verify (blue)",
+        "to": "Token to Verify (blue)",
+        "what": "each accepted candidate is expanded by another topK=2 draft step, for Draft_Depth=4 levels",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Token to Verify (blue)",
+        "to": "Drafted Token (black)",
+        "what": "branching from a high-probability node yields both a top candidate (stays blue) and a lower-probability sibling (falls to black)",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Token to Verify (blue)",
+        "to": "Drafting Stage",
+        "what": "the 8 highest-confidence tokens across the whole tree are the ones collected for target-model verification",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the draft-model probability attached to every candidate token (e.g. change 0.4, control 0.25, will 0.12, is 0.25, global 0.07)",
+      "linked_by": "position (parenthesised under each token) and colour (blue tokens are the ones counted into Tokens_to_Verify=8)",
+      "result_cells": "no single result cell; the set of blue tokens across the tree is collectively the Tokens_to_Verify=8 output"
+    },
+    "key_idea": "Starting from a prompt, the draft model branches topK candidate tokens at each of Draft_Depth levels, building a probability-scored tree; only the Tokens_to_Verify highest-confidence tokens in that tree (highlighted blue) are ultimately sent to the target model for verification.",
+    "reading_order": "left to right from the prompt 'Climate' through four Depth columns, following the branching arrows; probabilities in parentheses sit below each token; blue vs black distinguishes tokens chosen for verification from those merely drafted"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.26,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0081cc",
+        "used_for": "blue fill of 'Token to Verify' arrows and token text"
+      },
+      {
+        "hex": "#007fc8",
+        "used_for": "near-identical blue, separate vector instances of the same 'Token to Verify' colour (e.g. arrowheads vs text)"
+      },
+      {
+        "hex": "#0080cb",
+        "used_for": "near-identical blue, additional 'Token to Verify' instances"
+      },
+      {
+        "hex": "#fbe9c5",
+        "used_for": "pale orange/tan fill of the 'Drafting Stage' bounding box background"
+      },
+      {
+        "hex": "#f8b62b",
+        "used_for": "gold/orange 'Drafting Stage' label text and dotted border"
+      },
+      {
+        "hex": "#f8fbfe",
+        "used_for": "near-white background fill of the 'Prompt: Climate' dotted callout"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thick grey dashed vertical rules separating Depth columns; dotted orange border around the whole drafting-stage box",
+    "corners": "rounded",
+    "arrows": "solid arrowheads, black for drafted-only tokens and blue for tokens selected to verify",
+    "font": "sans-serif (HelveticaNeue), 5.5-7.5pt, bold for headings",
+    "icons": "none; only text nodes and arrows"
+  },
+  "encoding": {
+    "color_means": "blue = a token among the Tokens_to_Verify=8 sent to the target model; black = a token the draft model proposed but did not select for verification; orange = the drafting-stage boundary",
+    "line_style_means": "dashed grey rules separate the four Depth levels; solid arrows (colour-coded) connect each parent token to its drafted children",
+    "state_means": "verify vs draft-only status is told apart purely by arrow/text colour (blue vs black), not by shape or position",
+    "marker_means": "the probability in parentheses under each token is the draft model's confidence; no numbered step markers are used, order is conveyed by the Depth column headers",
+    "emphasis": "blue picks out a single connected high-probability path (and its immediate siblings) out of the larger candidate tree, showing at a glance which tokens matter",
+    "reusable_patterns": [
+      "a branching probability tree with a coloured highlight marking the subset actually used downstream",
+      "column headers naming each depth/step level of a search or drafting procedure",
+      "an inline legend distinguishing two arrow colours by role rather than a separate colour-swatch key"
+    ],
+    "weaknesses": [
+      "the tree is visibly pruned after depth 2 (not every node expands topK further) but the text doesn't explain the rule that decides which branches continue",
+      "black (drafted-only) nodes at depth 3 still sprout depth-4 children, which could read as those tokens also being verified"
+    ]
+  },
+  "tags": [
+    "speculative-decoding",
+    "tree-decoding",
+    "draft-model",
+    "token-tree",
+    "topK-sampling",
+    "TLT"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Adaptive Rollout Engine, 5.1 Adaptive SD Manager"
+    ],
+    "evidence": [
+      "Example of Tree Decoding. We set topK=2, Draft_Depth=4, and Tokens_to_Verify=8 in this example.",
+      "The tree-based approach explores the topK most likely options at each step",
+      "the Tokens_to_Verify=8 highest-confidence tokens within the tree are chosen and submitted to the target model"
+    ]
+  },
+  "summary": "This figure gives a worked example of tree-based speculative drafting. Starting from the prompt 'Climate', the draft model proposes topK=2 next-token candidates at each step, branching for Draft_Depth=4 levels and attaching each candidate's probability (e.g. change 0.4, control 0.25). All depth-1 and depth-2 tokens are drawn in blue, meaning they rank among the Tokens_to_Verify=8 highest-confidence candidates in the whole tree; branching then continues selectively past depth 2, and only one token per remaining level ('a' at depth 3, 'global' at depth 4) stays blue, while sibling tokens (very, are, often, serious, urgent, important) are drafted (black) but fall outside the top 8. The dotted orange box marks this entire branching process as the drafting stage, which precedes the target model's verification of the 8 blue tokens.",
+  "summary_zh": "该图示树形推测解码示例：从提示词Climate出发，草稿模型按topK=2逐层分支，共Draft_Depth=4层并标注各候选词概率；蓝色词为全树中概率最高的8个待验证词，黑色词为已起草但未入选验证的词。",
+  "confidence": "high",
+  "notes": "The tree is visibly pruned past depth 2 (only 'is' and 'systems' branch further, and at depth 3-4 only the single highest node per level continues), but the quoted text only states the topK/Draft_Depth/Tokens_to_Verify parameters and does not explain the exact rule for which nodes are expanded further; this is described descriptively rather than attributed to a stated algorithm.",
+  "venue": "ASPLOS26"
+}

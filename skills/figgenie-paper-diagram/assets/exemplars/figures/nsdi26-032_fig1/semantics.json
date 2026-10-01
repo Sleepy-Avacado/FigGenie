@@ -1,0 +1,187 @@
+{
+  "paper_id": "nsdi26-032",
+  "fig": "1",
+  "system": {
+    "name": "switched CXL memory pool",
+    "one_liner": "hardware architecture and testbed for pooling remote CXL memory across hosts through a CXL switch fabric",
+    "domain": [
+      "storage",
+      "networking",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Processors",
+        "role": "host CPUs with local DIMMs",
+        "container": "Host Servers (1...n)",
+        "novel": false
+      },
+      {
+        "name": "Local DIMMs",
+        "role": "conventional locally-attached DRAM",
+        "container": "Host Servers (1...n)",
+        "novel": false
+      },
+      {
+        "name": "CXL Host Adapter (HA)",
+        "role": "host-side adapter connecting processors to the CXL switch, labeled RP (root port)",
+        "container": "Host Servers (1...n)",
+        "novel": false
+      },
+      {
+        "name": "CXL Switch",
+        "role": "switches CXL traffic between host adapters and endpoint adapters",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CXL Endpoint Adapter (EA)",
+        "role": "device-side adapter connecting the switch to memory expanders",
+        "container": "CXL Memory Chassis (1...n)",
+        "novel": false
+      },
+      {
+        "name": "CXL Memory Controller",
+        "role": "controller managing the pooled remote memory in the chassis",
+        "container": "CXL Memory Chassis (1...n)",
+        "novel": false
+      },
+      {
+        "name": "rDIMMs",
+        "role": "remote DIMMs providing pooled memory capacity",
+        "container": "CXL Memory Chassis (1...n)",
+        "novel": false
+      },
+      {
+        "name": "CXL Switch architecture",
+        "role": "internal crossbar-switching structure of the CXL switch with per-port VL, vPPB, and CEngine",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VL",
+        "role": "Virtual Lane receiving incoming FLITs at a switch port",
+        "container": "CXL switch architecture",
+        "novel": false
+      },
+      {
+        "name": "vPPB",
+        "role": "Virtual PCI-to-PCI Bridge, logical connection point that routes FLITs and can be organized hierarchically",
+        "container": "CXL switch architecture",
+        "novel": false
+      },
+      {
+        "name": "Crossbar Switching",
+        "role": "switching fabric connecting all vPPBs",
+        "container": "CXL switch architecture",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Host Servers (1...n)",
+        "to": "CXL Switch",
+        "what": "CXL.mem traffic via upstream ports (UPs)",
+        "step": null
+      },
+      {
+        "from": "CXL Switch",
+        "to": "CXL Memory Chassis (1...n)",
+        "what": "CXL.mem traffic via downstream ports (DPs)",
+        "step": null
+      },
+      {
+        "from": "VL",
+        "to": "vPPB",
+        "what": "FLIT forwarded via an arbiter/multiplexer",
+        "step": null
+      },
+      {
+        "from": "vPPB",
+        "to": "Crossbar Switching",
+        "what": "routed CXL traffic between virtual switches",
+        "step": null
+      }
+    ],
+    "key_idea": "Multiple hosts and memory expander chassis are connected through a CXL switch's upstream/downstream ports, and internally the switch routes per-port virtual-lane traffic through virtual PCI-to-PCI bridges over a crossbar fabric.",
+    "reading_order": "Left to right across three panels: (a) the abstract memory-pooling architecture connecting host servers and memory chassis through a CXL switch, (b) the physical evaluated hardware testbed, and (c) the internal architecture of the CXL switch itself."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.81,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#666666",
+        "used_for": "dark gray fill for hardware component boxes (Processors, CXL switch, adapters)"
+      },
+      {
+        "hex": "#a5a5a5",
+        "used_for": "medium gray fill for secondary boxes"
+      },
+      {
+        "hex": "#dadada",
+        "used_for": "light gray fill for background groupings"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "gray fill accent"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.68pt) gray/black outlines, mixed corner styles",
+    "font": "HelveticaNeue sans-serif (some italic), small sizes ~4-7pt",
+    "corners": "mixed",
+    "arrows": "straight lines with filled heads (22 heads)",
+    "icons": "photographic/bitmap images of the physical testbed hardware in panel (b)"
+  },
+  "encoding": {
+    "color_means": "grayscale shading distinguishes component types (adapters vs. switch vs. memory) rather than encoding a semantic like novel/existing",
+    "line_style_means": null,
+    "emphasis": "the three side-by-side panels move from abstract architecture to physical hardware photo to internal switch detail, grounding the abstract design in a real testbed",
+    "reusable_patterns": [
+      "abstract-architecture + hardware-photo + internal-detail three-panel figure"
+    ],
+    "weaknesses": [
+      "grayscale-only palette makes it hard to distinguish component roles by color alone"
+    ]
+  },
+  "tags": [
+    "CXL",
+    "memory-pooling",
+    "hardware-testbed",
+    "switch-architecture",
+    "PCIe",
+    "storage"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Understanding Switched CXL MEM Pooling (p.3)",
+      "2 Understanding Switched CXL MEM Pooling (p.4)"
+    ],
+    "evidence": [
+      "Figure 1 depicts the system architecture of a switched CXL memory pool",
+      "We take the recent Titan platform from the XConn Tech as the evaluation target (Figure 1-b)",
+      "A CXL switch provides high-performance and lossless connectivity between upstream and downstream ports (Figure 1-c)"
+    ]
+  },
+  "summary": "This figure presents the hardware architecture and evaluation testbed for a switched CXL memory pool, in three panels. Panel (a) shows the abstract memory-pooling architecture: multiple Host Servers, each with processors, local DIMMs, and a CXL Host Adapter, connect via upstream ports to a central CXL Switch, which connects via downstream ports to one or more CXL Memory Chassis, each with an endpoint adapter, a memory controller, and remote DIMMs (rDIMMs). Panel (b) shows a photograph of the physical evaluated hardware testbed (the Titan platform), including host adapters, the CXL switch, and CXL DIMMs. Panel (c) zooms into the internal CXL switch architecture, showing how an incoming FLIT at a Virtual Lane (VL) passes through a Virtual PCI-to-PCI Bridge (vPPB) and is routed across a crossbar switching fabric, with a credit engine (CEngine) coordinating flow control. The figure is rendered in flat grayscale shades with straight connecting lines.",
+  "summary_zh": "该图分三部分展示可交换 CXL 内存池的架构与测试平台：(a) 多台主机通过 CXL 交换机连接多个内存扩展机箱的抽象架构；(b) 实际测试平台（Titan）硬件照片；(c) CXL 交换机内部结构，展示 FLIT 经虚拟通道、vPPB 桥接后在交叉开关中转发。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

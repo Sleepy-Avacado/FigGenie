@@ -1,0 +1,53 @@
+{
+  "id": "osdi26-061_fig2",
+  "paper_id": "osdi26-061",
+  "fig": "2",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 2: Overview of UCCL-Tran extensible transport for GPU networking. We assume a common intra-server topology for GPU servers [23] where individual PCIe switches directly connect a few GPUs, NICs, and CPU, providing high-bandwidth data transfer among them.",
+  "corpus_template": "two-panel",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 3.24,
+  "n_components": 21,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 2,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-061/osdi26-061_fig2_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-061/osdi26-061_fig2_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "two-panel",
+      "star": true,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: panel (b) is a different abstraction level (the threading model), not a magnified sub-block of a region in panel (a); no dashed leader connects them, so this is a plain two-panel figure.",
+      "what_to_learn": "The transferable move is two-panel's: stack a software layer directly above the hardware topology it runs on in panel (a), colour-code control/data/network traffic by one shared legend, then reuse the same component names in panel (b)'s separate threading-model view instead of drawing a zoom."
+    },
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "PCIe switches, GPUs, and NICs each run '1 ⋯ 8' with an explicit last index inside this two-panel figure's hardware row, while panel (b) separately elides repeated connections and QPs.",
+      "what_to_learn": "Number the last replica explicitly (1 ⋯ 8) instead of using N when the paper's real hardware has a fixed, known count, and repeat that same ellipsis device at a second scale, connections or queue pairs inside one thread, when the implementation panel needs it too."
+    },
+    {
+      "template": "composite-figure",
+      "star": true,
+      "why_chosen": "Panel (a)'s legend (orange control-header, green data-payload, blue network traffic) traces flows through one concrete 2-CPU, 8-GPU server, while panel (b) switches vocabulary entirely to TX, RX, Pacer engine threads and per-connection queue pairs.",
+      "what_to_learn": "Draw a layered software stack directly above the physical server hardware it runs on so flows can be colour-coded end to end (orange control, green data, blue network), and repeat that legend in the internal threading panel too, since this figure leaves it unstated there, a listed weakness."
+    }
+  ]
+}

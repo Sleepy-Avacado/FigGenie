@@ -1,0 +1,168 @@
+{
+  "paper_id": "nsdi26-126",
+  "fig": "8",
+  "system": {
+    "name": "FalconFS",
+    "one_liner": "a distributed file system optimized for large-scale deep learning data pipelines",
+    "domain": [
+      "storage",
+      "distributed-systems"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Request Queue",
+        "role": "per-request-type ring buffers (create/open/others) that buffer incoming requests",
+        "container": "Connection Pool",
+        "novel": true
+      },
+      {
+        "name": "Worker Thread Pool",
+        "role": "fixed pool of database worker threads that pull batches of requests for processing",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Batch in Transaction",
+        "role": "coalesces requests sharing common near-root path prefixes into one committed batch",
+        "container": "Database",
+        "novel": true
+      },
+      {
+        "name": "Namespace Replica",
+        "role": "in-memory directory-tree structure locked once per batch instead of once per request",
+        "container": "Database",
+        "novel": false
+      },
+      {
+        "name": "Inode Table",
+        "role": "inode metadata store locked as part of the batched transaction",
+        "container": "Database",
+        "novel": false
+      },
+      {
+        "name": "Write-Ahead Log",
+        "role": "durability log the coalesced batch commits to",
+        "container": "Database",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "create(/a/c), create(/a/d), create(/b/e)",
+        "to": "Request Queue",
+        "what": "incoming concurrent create requests",
+        "step": null
+      },
+      {
+        "from": "Request Queue",
+        "to": "Worker Thread Pool",
+        "what": "dequeued batch of requests",
+        "step": null
+      },
+      {
+        "from": "Worker Thread Pool",
+        "to": "Batch in Transaction",
+        "what": "requests coalesced by shared path prefix",
+        "step": null
+      },
+      {
+        "from": "Batch in Transaction",
+        "to": "Namespace Replica",
+        "what": "single coalesced lock acquisition on shared path nodes",
+        "step": null
+      },
+      {
+        "from": "Batch in Transaction",
+        "to": "Inode Table",
+        "what": "lock acquisition for new inodes",
+        "step": null
+      },
+      {
+        "from": "Batch in Transaction",
+        "to": "Write-Ahead Log",
+        "what": "commit write",
+        "step": null
+      }
+    ],
+    "key_idea": "FalconFS's metadata server merges concurrent requests that share common path prefixes into one batched transaction, so three create() calls that would need nine separate locks instead acquire only six by coalescing shared-prefix lock operations.",
+    "reading_order": "top-down: incoming create() calls funnel into the Request Queue, pass through the Worker Thread Pool, and coalesce into a single Batch in Transaction committed against the Database"
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.54,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b1001c",
+        "used_for": "incoming create-request arrows (red) into the Request Queue"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "ring-buffer (Request Queue) fills"
+      },
+      {
+        "hex": "#bfffbf",
+        "used_for": "directory/file tree nodes inside Batch in Transaction (green)"
+      },
+      {
+        "hex": "#40ffff",
+        "used_for": "Namespace Replica box fill (cyan)"
+      },
+      {
+        "hex": "#c6e2ff",
+        "used_for": "Inode Table box fill (light blue)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "gray/black ~0.44pt",
+    "font": "GillSans-Italic sans, 7-8.5pt",
+    "corners": "mixed",
+    "arrows": "red arrows funnel individual create() calls into the request ring buffer; black arrows connect worker threads to the batched transaction and onward to storage",
+    "icons": "vector ring-buffer/wheel icons for each request-type queue"
+  },
+  "encoding": {
+    "color_means": "red highlights incoming client requests being merged; green marks the shared directory-tree nodes being locked once instead of per-request; cyan/blue distinguish the two storage structures (Namespace Replica, Inode Table)",
+    "line_style_means": null,
+    "emphasis": "the dashed box around the coalesced tree in Batch in Transaction isolates the paper's lock-coalescing optimization from the surrounding request pipeline",
+    "reusable_patterns": [
+      "ring-buffer request queue feeding a worker pool that batches work before a transactional commit"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "distributed file system",
+    "lock coalescing",
+    "metadata server",
+    "batching",
+    "request merging"
+  ],
+  "provenance": {
+    "sections": [
+      "4 System Design (p.8-9)"
+    ],
+    "evidence": [
+      "Fig. 8 illustrates the metadata servers' request-handling mechanism, which employs concurrent request merging.",
+      "the worker coalesces shared path prefixes and eliminates redundant lock acquisitions.",
+      "the three create operations each walk two directories and one file."
+    ]
+  },
+  "summary": "Figure 8 illustrates FalconFS's concurrent request-merging mechanism inside a metadata server (MNode). Incoming create/open/other requests are funneled into per-type ring-buffer Request Queues (e.g., three create() calls for /a/c, /a/d, and /b/e). A Worker Thread Pool pulls batches of requests from the queues and, because the file namespace is tree-structured, coalesces requests that share common near-root path prefixes into a single Batch in Transaction. Rather than acquiring nine separate locks for the three create operations, the worker locks the shared prefix nodes once, acquiring only six locks total, on the Namespace Replica and Inode Table, before committing the batch to the Write-Ahead Log. The figure demonstrates FalconFS's lock-coalescing optimization for reducing per-request lock overhead under concurrent metadata operations.",
+  "summary_zh": "图8展示FalconFS元数据服务器的并发请求合并机制：多个create请求进入环形队列，工作线程池按共享路径前缀将其合并入同一事务批次，仅对命名空间副本和inode表加锁一次，再写入预写日志提交，从而减少锁开销。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

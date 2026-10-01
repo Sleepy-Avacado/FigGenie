@@ -1,0 +1,213 @@
+{
+  "paper_id": "asplos26-127",
+  "fig": "11",
+  "system": {
+    "name": "Autonomy-Adaptive Voltage Scaling (AAVS)",
+    "one_liner": "an entropy-predictor-driven voltage scaling subsystem that adjusts an embodied-AI controller's supply voltage in real time",
+    "domain": [
+      "embodied-ai",
+      "hardware-architecture",
+      "energy-efficiency"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "CNN",
+        "role": "processes the observed image through Conv2d/ReLU/MaxPool2d and Conv2d/ReLU/AvgPool2d stages",
+        "container": "Entropy Predictor",
+        "novel": true
+      },
+      {
+        "name": "MLP",
+        "role": "processes the subtask prompt embedding",
+        "container": "Entropy Predictor",
+        "novel": true
+      },
+      {
+        "name": "Fusion",
+        "role": "combines CNN and MLP feature outputs",
+        "container": "Entropy Predictor",
+        "novel": true
+      },
+      {
+        "name": "ReLU",
+        "role": "activation applied after fusion",
+        "container": "Entropy Predictor",
+        "novel": true
+      },
+      {
+        "name": "Dropout",
+        "role": "regularization before the final entropy prediction",
+        "container": "Entropy Predictor",
+        "novel": true
+      },
+      {
+        "name": "Pred Entropy",
+        "role": "the predicted error-free entropy output of the network",
+        "container": "Entropy Predictor",
+        "novel": true
+      },
+      {
+        "name": "Entropy Predictor",
+        "role": "pre-execution predictor estimating the controller's error-free entropy from subtask prompt and observed image, running at nominal voltage",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LDO",
+        "role": "digital low-dropout regulator that converts the predicted entropy into an operating-voltage adjustment",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Controller (RL)",
+        "role": "the RL-based controller model running on PE arrays, whose supply voltage (VDD) is set by the LDO",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "observed image",
+        "to": "CNN",
+        "what": "image input",
+        "step": null
+      },
+      {
+        "from": "subtask prompt",
+        "to": "MLP",
+        "what": "prompt embedding",
+        "step": null
+      },
+      {
+        "from": "CNN",
+        "to": "Fusion",
+        "what": "image features",
+        "step": null
+      },
+      {
+        "from": "MLP",
+        "to": "Fusion",
+        "what": "prompt features",
+        "step": null
+      },
+      {
+        "from": "Fusion",
+        "to": "ReLU",
+        "what": "fused features",
+        "step": null
+      },
+      {
+        "from": "ReLU",
+        "to": "Dropout",
+        "what": "activated features",
+        "step": null
+      },
+      {
+        "from": "Dropout",
+        "to": "Pred Entropy",
+        "what": "predicted entropy value",
+        "step": null
+      },
+      {
+        "from": "Entropy Predictor",
+        "to": "LDO",
+        "what": "real-time entropy prediction",
+        "step": null
+      },
+      {
+        "from": "LDO",
+        "to": "Controller (RL)",
+        "what": "adjusted supply voltage (VDD)",
+        "step": null
+      },
+      {
+        "from": "Controller (RL)",
+        "to": "action",
+        "what": "low-level action",
+        "step": null
+      }
+    ],
+    "key_idea": "a lightweight CNN+MLP entropy predictor, kept at nominal voltage for accuracy, estimates the controller's per-step entropy so an LDO can scale the controller's PE-array voltage down during non-critical, high-entropy steps and up during critical, low-entropy steps",
+    "reading_order": "panel (a) top-down: subtask prompt and observed image through CNN/MLP branches, fused and reduced to Pred Entropy; panel (b) left-right: predictor output drives the LDO, which sets the Controller (RL) PE array's VDD to produce an action"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.69,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b2c7e6",
+        "used_for": "CNN block in the Entropy Predictor"
+      },
+      {
+        "hex": "#a8d18c",
+        "used_for": "MLP block in the Entropy Predictor"
+      },
+      {
+        "hex": "#f7caac",
+        "used_for": "input icon backgrounds (subtask prompt / observed image)"
+      },
+      {
+        "hex": "#f6cecc",
+        "used_for": "LDO block"
+      },
+      {
+        "hex": "#004a8e",
+        "used_for": "Controller (RL) PE-array block"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.5pt strokes, dashed grouping boxes for the Entropy Predictor and the ×2 CNN block",
+    "font": "Nimbus Sans, 3-11.5pt",
+    "corners": "mixed",
+    "arrows": "thin straight/orthogonal arrows with small filled heads linking network stages and the voltage-scaling chain",
+    "icons": "bitmap icons for the subtask prompt and observed image inputs"
+  },
+  "encoding": {
+    "color_means": "blue marks the CNN image branch, green marks the MLP prompt branch, pink marks the LDO regulator, navy marks the controller's PE array",
+    "line_style_means": null,
+    "emphasis": "panel (b) visually chains the predictor output straight into the LDO and then into the Controller, making the closed-loop, real-time nature of the voltage adjustment explicit",
+    "reusable_patterns": [
+      "small neural-network block diagram (panel a) paired with the system-level control loop it feeds (panel b)"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "voltage-scaling",
+    "entropy-prediction",
+    "cnn",
+    "embodied-ai",
+    "ldo",
+    "dynamic-voltage-scaling"
+  ],
+  "provenance": {
+    "sections": [
+      "5 CREATE Framework (p.8)",
+      "5 CREATE Framework (p.9)"
+    ],
+    "evidence": [
+      "the predictor uses a CNN for image processing",
+      "an LDO dynamically adjusts the controller model's supply voltage based on real-time entropy predictions",
+      "the predictor operates at nominal voltage to ensure an error-free entropy prediction"
+    ]
+  },
+  "summary": "This figure details CREATE's autonomy-adaptive voltage scaling (AAVS) subsystem. Panel (a) shows the entropy predictor's network architecture: a CNN (with two Conv2d/ReLU/pooling blocks) processes the observed image while an MLP processes the subtask prompt embedding; their outputs are fused, passed through ReLU and Dropout, and reduced to a predicted entropy value. Panel (b) shows how this prediction is used at the system level: the subtask prompt and observed image feed the Entropy Predictor, whose real-time entropy estimate drives a digital LDO, which in turn sets the supply voltage (VDD) of the Controller (RL) PE array that produces the next action. The predictor itself runs at nominal voltage to keep its estimate error-free, while the controller's voltage is scaled based on that estimate -- lower for high-entropy (non-critical) steps and higher for low-entropy (critical) steps.",
+  "summary_zh": "该图展示CREATE的自适应电压调节子系统：(a) 熵预测器架构，CNN处理观测图像、MLP处理子任务提示，融合后经ReLU、Dropout输出预测熵；(b) 系统级电压调节回路，预测熵驱动LDO实时调整控制器PE阵列的供电电压VDD，进而生成动作，预测器本身在标称电压下运行以保证精度。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

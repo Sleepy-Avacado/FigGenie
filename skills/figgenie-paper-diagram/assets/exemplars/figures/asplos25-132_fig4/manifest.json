@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-132_fig4",
+  "paper_id": "asplos25-132",
+  "fig": "4",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 4. Overall architecture of PICACHU.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 2.43,
+  "n_components": 13,
+  "n_flows": 8,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-132/asplos25-132_fig4_p7_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-132/asplos25-132_fig4_p7_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": true,
+      "why_chosen": "Densest host-device figure here (900+ shapes, double column, star-rated): a CPU issues commands over a Shared Buffer to a color-coded 4x4 heterogeneous CGRA tile mesh (red BrT, gold CoT, gray BaT tiles).",
+      "what_to_learn": "Color each tile type in a heterogeneous accelerator mesh by function (red, gold, gray) so the reader sees the mix at a glance, and use dashed insets to zoom into one tile's internal datapath; cap the insets at one or two, since three competing zooms in this figure fight the main diagram for attention."
+    }
+  ]
+}

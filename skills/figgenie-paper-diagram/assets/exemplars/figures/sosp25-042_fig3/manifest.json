@@ -1,0 +1,55 @@
+{
+  "id": "sosp25-042_fig3",
+  "kind": "mechanism",
+  "paper_id": "sosp25-042",
+  "fig": "3",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 3. Moirai dynamically optimizes job and data place- ment. The Job Scheduler routes jobs to the cloud or on- premises. The Spinner builds a job-data dependency graph from access logs, while the Allotter’s optimizer computes new placements and uses the Job Scheduler and Data Place- ment Enactor",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "component",
+  "subject": "how Moirai's Spinner/Allotter/Enacter pipeline turns job-data access logs into updated job-scheduling and data-placement plans",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.33,
+  "n_elements": 10,
+  "n_relations": 10,
+  "n_panels": 0,
+  "n_steps": 3,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "labelled-arrows",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-042/sosp25-042_fig3_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-042/sosp25-042_fig3_p6_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Stacks a concrete worked routing example directly above the abstract pipeline that computes it, letting the reader match each component box to the exact job/table it produced.",
+      "what_to_learn": "Draw the worked example (jobs routed to lettered on-prem/cloud nodes) directly above the component diagram that generates those routes, marking only the pipeline stages with red 'Step 1/2a/2b' labels, distinct from the small circled job-ID numbers.",
+      "note_source": "agent"
+    }
+  ]
+}

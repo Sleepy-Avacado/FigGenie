@@ -1,0 +1,201 @@
+{
+  "paper_id": "osdi24-024",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "InfiniGen",
+    "one_liner": "a KV cache management framework that offloads the KV cache to CPU memory and speculatively prefetches only the important tokens for GPU attention",
+    "domain": [
+      "ml-systems",
+      "llm-inference"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how InfiniGen picks a small set of Top-K columns from the summed query/key matrix to form partial prefetch weights",
+    "base": "data-structure",
+    "elements": [
+      {
+        "name": "Absolute Sum of Skewed Query and Key",
+        "kind": "cell",
+        "role": "input heatmap: per-element absolute sum of the skewed query and key matrices, dark columns show which columns are large",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Partial Weight Index Generation",
+        "kind": "box",
+        "role": "the two-step process box that turns the heatmap into a small set of column indices",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Column Sum",
+        "kind": "row",
+        "role": "step 1: sums each column of the heatmap into a single row of per-column magnitudes",
+        "container": "Partial Weight Index Generation",
+        "highlighted": false
+      },
+      {
+        "name": "Top-K",
+        "kind": "row",
+        "role": "step 2: picks the K largest column sums (highlighted dark cells)",
+        "container": "Partial Weight Index Generation",
+        "highlighted": true
+      },
+      {
+        "name": "Selected Idx",
+        "kind": "label",
+        "role": "the resulting column indices (3, 6, 7) chosen by Top-K",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Selected Partial Weights",
+        "kind": "cell",
+        "role": "output matrix keeping only the columns at the selected indices (3, 6 highlighted blue), used for the decoding stage",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Absolute Sum of Skewed Query and Key",
+        "to": "Column Sum",
+        "what": "each column of the heatmap is summed",
+        "kind": "data",
+        "step": 1
+      },
+      {
+        "from": "Column Sum",
+        "to": "Top-K",
+        "what": "the K largest column sums are picked out",
+        "kind": "data",
+        "step": 2
+      },
+      {
+        "from": "Top-K",
+        "to": "Selected Idx",
+        "what": "produces the list of selected column indices",
+        "kind": "data",
+        "step": 2
+      },
+      {
+        "from": "Selected Idx",
+        "to": "Selected Partial Weights",
+        "what": "indices select which columns of the weight/key matrix are kept as the partial matrices",
+        "kind": "pointer",
+        "step": 3
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "Column Sum",
+        "what": "sum the absolute skewed query/key values down each column",
+        "carries": "per-column magnitude row"
+      },
+      {
+        "marker": "2",
+        "at": "Top-K",
+        "what": "select the K columns with the largest summed magnitude",
+        "carries": "Top-K column indices (3, 6, 7)"
+      }
+    ],
+    "logic": null,
+    "values": null,
+    "key_idea": "Summing the skewed query-key matrix by column and keeping only the Top-K largest columns yields a small partial-weight index set used to speculate the attention pattern cheaply.",
+    "reading_order": "left heatmap first, into the boxed two-step process (Column Sum then Top-K), out to the selected indices, then onto the right output matrix"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "plain-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.51,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "palest yellow cells of the low-magnitude heatmap and column-sum entries"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "medium yellow/gold cells of medium-magnitude heatmap entries"
+      },
+      {
+        "hex": "#bf9000",
+        "used_for": "darker gold cells of higher-magnitude heatmap/column-sum entries"
+      },
+      {
+        "hex": "#7f6000",
+        "used_for": "darkest olive-brown cells marking the largest, Top-K-selected column magnitudes"
+      },
+      {
+        "hex": "#dae3f3",
+        "used_for": "pale blue fill of the unselected columns in the output 'Selected Partial Weights' matrix"
+      },
+      {
+        "hex": "#8faadc",
+        "used_for": "medium blue fill marking the selected columns (3, 6, 7) in the output matrix"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.65pt black cell borders; the 'Selected Idx' box uses a dashed outline",
+    "corners": "mixed",
+    "arrows": "plain thin black arrows chaining the heatmap to the process box to the output matrix",
+    "font": "Arial sans, 6-7pt, bold-italic for the 'Partial Weight Index Generation' box title",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "a yellow-to-dark-olive heat scale encodes per-column magnitude in the query/key sum and its column-sum row; blue shading in the output matrix marks which columns were kept",
+    "line_style_means": "solid arrows chain the three stages left to right; a dashed box frames the selected-index callout",
+    "state_means": "not applicable, the figure shows one forward pass through the index-selection pipeline, not alternative states",
+    "marker_means": "the numbers '1.' and '2.' label the Column Sum and Top-K steps; '3, 6, 7' name the resulting selected column indices",
+    "emphasis": "the darkest heatmap cells and the blue-highlighted output columns single out exactly which columns survive Top-K selection",
+    "reusable_patterns": [
+      "heatmap feeding a labelled two-step process box that outputs a small highlighted index set, then re-applied as a column mask on a second matrix"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "KV-cache",
+    "LLM-inference",
+    "attention-sparsity",
+    "Top-K",
+    "InfiniGen",
+    "prefill"
+  ],
+  "provenance": {
+    "sections": [
+      "§4 InfiniGen Design (p.9)"
+    ],
+    "evidence": [
+      "InfiniGen selects several important columns from the query weight matrix and the key cache",
+      "query weight and key cache matrices used in the decoding stage",
+      "we multiply each column in the query matrix with the corresponding row in the transposed key matrix"
+    ]
+  },
+  "summary": "InfiniGen manages the KV cache for LLM inference by offloading it to CPU memory and prefetching only the tokens the model's attention pattern will actually need. This figure shows how, during the prefill stage, InfiniGen turns a full query/key matrix into a small set of partial weights. Starting from a heatmap of the absolute sum of the skewed query and key matrices, a 'Partial Weight Index Generation' box first sums each column into a single row of magnitudes (step 1, Column Sum), then keeps only the K columns with the largest sums (step 2, Top-K), here yielding indices 3, 6 and 7. Those indices are then used as a column mask on a second matrix, producing 'Selected Partial Weights' where only the chosen columns are kept (highlighted blue) and the rest are left pale. The two numbered steps make the whole index-selection algorithm traceable in one small diagram.",
+  "summary_zh": "该图展示InfiniGen在prefill阶段生成部分权重：对query/key绝对值热力图按列求和（步骤1），取Top-K列得索引3、6、7（步骤2），再用该索引在输出矩阵中高亮对应列。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

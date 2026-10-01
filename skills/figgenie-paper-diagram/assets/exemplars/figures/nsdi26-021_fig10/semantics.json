@@ -1,0 +1,241 @@
+{
+  "paper_id": "nsdi26-021",
+  "fig": "10",
+  "system": {
+    "name": "BIFROST",
+    "one_liner": "Alibaba's next-generation VPC network providing high-performance multipath reliable transport",
+    "domain": [
+      "networking",
+      "cloud"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "VMs",
+        "role": null,
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "VM1",
+        "role": "a guest VM sending or receiving packets",
+        "container": "VMs",
+        "novel": false
+      },
+      {
+        "name": "VM2",
+        "role": null,
+        "container": "VMs",
+        "novel": false
+      },
+      {
+        "name": "vNIC",
+        "role": "buffers a sent packet in VM memory until acknowledged; receives out-of-order placements and in-order notifications on the receive side",
+        "container": "VM1",
+        "novel": false
+      },
+      {
+        "name": "CIPU",
+        "role": "Alibaba's in-house SmartNIC hosting the Hardware Accelerator and Software layers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Hardware Accelerator",
+        "role": "hosts Bifrost offloading and AVS offloading, connected to the network via Port0/Port1",
+        "container": "CIPU",
+        "novel": true
+      },
+      {
+        "name": "Bifrost offloading",
+        "role": "hardware-accelerated path for Bifrost's reliable-transport processing (get pkt, free buf, packet spraying, in-order notification)",
+        "container": "Hardware Accelerator",
+        "novel": true
+      },
+      {
+        "name": "AVS offloading",
+        "role": "hardware-accelerated path for AVS's VPC network forwarding; places out-of-order packets directly into guest VM memory",
+        "container": "Hardware Accelerator",
+        "novel": false
+      },
+      {
+        "name": "Port0",
+        "role": "a physical network port used for multipath packet spraying",
+        "container": "Hardware Accelerator",
+        "novel": false
+      },
+      {
+        "name": "Port1",
+        "role": "a physical network port used for multipath packet spraying",
+        "container": "Hardware Accelerator",
+        "novel": false
+      },
+      {
+        "name": "Software",
+        "role": null,
+        "container": "CIPU",
+        "novel": null
+      },
+      {
+        "name": "Ctrlpath",
+        "role": "CM, Keepalive... control-path functions",
+        "container": "Software",
+        "novel": null
+      },
+      {
+        "name": "RT Engine",
+        "role": "the reliable transport engine: sprays packets across paths based on historical RTT, reorders packet metadata, and aggregates ACKs into a bitmap",
+        "container": "Software",
+        "novel": true
+      },
+      {
+        "name": "AVS",
+        "role": "for VPC network forwarding",
+        "container": "Software",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "vNIC",
+        "to": "Bifrost offloading",
+        "what": "get pkt",
+        "step": 1
+      },
+      {
+        "from": "Bifrost offloading",
+        "to": "RT Engine",
+        "what": "metadata",
+        "step": 2
+      },
+      {
+        "from": "Bifrost offloading",
+        "to": "Port0",
+        "what": "multipath-sprayed packet (vxlan|Bifrost|packet) based on historical RTT",
+        "step": 3
+      },
+      {
+        "from": "AVS offloading",
+        "to": "vNIC",
+        "what": "out-of-order packet placement directly into guest VM memory",
+        "step": 4
+      },
+      {
+        "from": "Bifrost offloading",
+        "to": "RT Engine",
+        "what": "metadata",
+        "step": 5
+      },
+      {
+        "from": "RT Engine",
+        "to": "RT Engine",
+        "what": "ACK accumulated into a bitmap",
+        "step": 6
+      },
+      {
+        "from": "Bifrost offloading",
+        "to": "vNIC",
+        "what": "in-order notification",
+        "step": 7
+      },
+      {
+        "from": "RT Engine",
+        "to": "Port0",
+        "what": "ACK bitmap reply to sender (vxlan|Bifrost|ACK bitmap)",
+        "step": 8
+      },
+      {
+        "from": "Bifrost offloading",
+        "to": "vNIC",
+        "what": "free buf",
+        "step": 9
+      }
+    ],
+    "key_idea": "Bifrost's CIPU accelerator sprays packets across multiple paths, places out-of-order data directly in guest memory, reorders only metadata, and reports delivery via a delayed ACK bitmap.",
+    "reading_order": "Left panel (sender) and right panel (receiver) mirror each other top-down from VMs to CIPU; nine circled numbers, keyed by the middle legend, trace the send-spray-receive-reorder-ACK sequence."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.52,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c10805",
+        "used_for": "red fill for the 'Biforst' segment in the packet-format graphic and the metadata/ACK-accumulated arrow labels"
+      },
+      {
+        "hex": "#4674c5",
+        "used_for": "blue fill for the 'vxlan' segment in the packet-format graphic and the Hardware Accelerator band"
+      },
+      {
+        "hex": "#7131a0",
+        "used_for": "purple fill for the 'packet'/'ACK bitmap' segments and the step-arrow captions (get pkt, free buf, packet placement, notification)"
+      },
+      {
+        "hex": "#fce0ce",
+        "used_for": "pale peach fill for the Software layer background and its Ctrlpath/RT Engine/AVS boxes"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark red accent, closely matching #c10805, used for emphasis text such as ACK accumulated"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.8pt outlines, mixed square/rounded corners",
+    "font": "Calibri sans-serif, ~5.5-9pt, mostly bold",
+    "corners": "mixed",
+    "arrows": "many solid arrows with filled heads (Dataflow) and a few dotted arrows (If necessary), per the figure's own legend; one curved self-loop arrow for ACK accumulation",
+    "icons": "the index measures 5 embedded raster images covering roughly 71% of the figure area, alongside vector-drawn boxes and arrows for the diagram details"
+  },
+  "encoding": {
+    "color_means": "blue marks the VXLAN header, red marks the Bifrost protocol header/metadata signaling, purple marks the payload (packet or ACK bitmap) and the step-arrow captions, peach marks the Software-layer function boxes",
+    "line_style_means": "solid arrows show the main Dataflow; dotted arrows show a path used only 'If necessary'; circled numbers 1-9 order the steps across both the sender and receiver sides",
+    "emphasis": "mirrored sender (left) and receiver (right) diagrams with matching internal layout (VMs over CIPU's Hardware Accelerator and Software) emphasize that Bifrost's four optimizations are symmetric protocol behaviors; a middle panel keys each numbered step to its optimization and paper section",
+    "reusable_patterns": [
+      "mirrored sender/receiver diagrams with swapped internal box order to show protocol symmetry",
+      "circled step numbers keyed to a separate legend mapping steps to named optimizations and paper sections",
+      "a labelled packet-format strip (header segments as colored blocks) shown inline with the dataflow"
+    ],
+    "weaknesses": [
+      "heavy reliance on raster images (measured ~71% image area) may reduce sharpness at print resolution",
+      "splitting the legend into a separate middle panel requires the reader to look away from both diagrams to decode the numbers"
+    ]
+  },
+  "tags": [
+    "multipath transport",
+    "SmartNIC offload",
+    "packet spraying",
+    "reliable transport",
+    "ACK bitmap",
+    "guest reordering",
+    "VPC"
+  ],
+  "provenance": {
+    "sections": [
+      "3 BIFROST Overview (p.6)"
+    ],
+    "evidence": [
+      "Figure 10 illustrates the overview of BIFROST, which integrates several key components",
+      "The RTE generates ACKs, which are aggregated into a bitmap and sent to the sender.",
+      "OOO packets are placed directly into the guest VM memory...without extra buffering on the CIPU"
+    ]
+  },
+  "summary": "Figure 10 gives BIFROST's end-to-end overview, drawn as two mirrored diagrams (sender left, receiver right) plus a middle legend. On the sender, a packet flows from the VM's vNIC into the CIPU's Bifrost-offloading hardware (1, get pkt), exchanges metadata with the RT Engine (2), and is sprayed across multiple physical ports as a vxlan|Bifrost|packet based on historical RTT (3); once acknowledged, the buffer is freed (9). On the receiver, out-of-order packets are placed straight into guest VM memory via AVS offloading (4) while the RT Engine reorders only their metadata (5), accumulates ACKs into a bitmap (6), and Bifrost offloading issues an in-order notification to the VM (7); the ACK bitmap is then sent back to the sender (8). Circled numbers tie each arrow to one of Bifrost's four optimizations (multipath spraying, in-place reordering, delayed ACK bitmap, efficient reliability management) listed in the legend.",
+  "summary_zh": "图10为BIFROST整体流程：发送端经CIPU的Bifrost offloading获取报文并多路径喷发；接收端由AVS offloading将乱序报文直接放入VM内存，RT Engine重排元数据并聚合ACK位图后按序通知VM。",
+  "confidence": "high",
+  "notes": "layout-proposal: mirrored sender/receiver host-device pair - each panel is itself a host-device split (VMs over CIPU), repeated twice with swapped internal box order for sender vs. receiver and tied together by a numbered-step legend in the middle; neither plain host-device nor plain two-panel captures both the internal split and the left/right mirroring at once. Ctrlpath's novelty is unclear from the given text (grouped with the Bifrost-specific RT Engine but could be pre-existing CIPU control-plane software).",
+  "venue": "NSDI26"
+}

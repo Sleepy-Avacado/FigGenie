@@ -1,0 +1,178 @@
+{
+  "paper_id": "osdi23-033",
+  "fig": "10",
+  "system": {
+    "name": "Hyrax",
+    "one_liner": "a fail-in-place server operation system that lets degraded cloud servers keep running with reduced capacity instead of full repair",
+    "domain": [
+      "cloud",
+      "reliability",
+      "systems-management"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Server Health Monitor",
+        "role": "detects server health issues such as NVMe read errors and follows the offlining workflow",
+        "container": "Online",
+        "novel": false
+      },
+      {
+        "name": "Diagnostics",
+        "role": "receives the health alert from SHM and reports the failing component for a policy decision",
+        "container": "Offline",
+        "novel": false
+      },
+      {
+        "name": "Hyrax Policy",
+        "role": "new policy engine that decides the remediation/offlining action for a diagnosed component",
+        "container": "Offline",
+        "novel": true
+      },
+      {
+        "name": "Hyrax Inventory",
+        "role": "tracks component and server offlining/degradation state, informs downstream scheduling and health monitoring",
+        "container": "Online",
+        "novel": true
+      },
+      {
+        "name": "VM Scheduler",
+        "role": "schedules VMs onto servers, informed by Hyrax Inventory about a server's reduced capacity",
+        "container": "Online",
+        "novel": false
+      },
+      {
+        "name": "Hardware Inventory",
+        "role": "existing inventory of hardware components feeding data into Hyrax Inventory",
+        "container": "Online",
+        "novel": false
+      },
+      {
+        "name": "Online",
+        "role": "region of the control plane comprising components that operate while the server stays online",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Offline",
+        "role": "region of the control plane comprising components that operate once the server/component is taken offline",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Server Health Monitor",
+        "to": "Diagnostics",
+        "what": "reports a detected health issue (e.g. NVMe read errors) for diagnosis",
+        "step": 1
+      },
+      {
+        "from": "Diagnostics",
+        "to": "Hyrax Policy",
+        "what": "reports the failing component for a policy decision",
+        "step": 2
+      },
+      {
+        "from": "Hyrax Policy",
+        "to": "Hyrax Inventory",
+        "what": "policy decision / updated component state",
+        "step": 4
+      },
+      {
+        "from": "Hyrax Inventory",
+        "to": "VM Scheduler",
+        "what": "updated capacity/inventory state used for VM placement",
+        "step": 5
+      },
+      {
+        "from": "Hyrax Inventory",
+        "to": "Server Health Monitor",
+        "what": "feedback closing the loop back to health monitoring",
+        "step": 6
+      },
+      {
+        "from": "Hardware Inventory",
+        "to": "Hyrax Inventory",
+        "what": "hardware component inventory data",
+        "step": null
+      }
+    ],
+    "key_idea": "A server health event flows through Diagnostics and the new Hyrax Policy engine to update Hyrax Inventory, which adjusts VM scheduling and reports back, closing the remediation loop.",
+    "reading_order": "Numbered steps 1-6 trace a loop: Server Health Monitor to Diagnostics to Hyrax Policy to Hyrax Inventory to VM Scheduler and back to Server Health Monitor."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "right",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.14,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#800000",
+        "used_for": "red ring/server icon fill inside the Hyrax Policy box"
+      },
+      {
+        "hex": "#005500",
+        "used_for": "green gear icon fill below Hyrax Policy"
+      },
+      {
+        "hex": "#d4e0f3",
+        "used_for": "light-blue background fill of the Online region"
+      }
+    ],
+    "background": "white, with a light-blue tint over the Online region",
+    "fill": "flat",
+    "stroke": "thin (~0.5pt) colored box borders: dark gold for boxes marked 'Modified existing system', dark red for boxes marked 'New control plane system' per the legend, plain black for the untouched Hardware Inventory; a vertical dashed line separates Online from Offline",
+    "font": "Verdana sans-serif, ~7.5pt (small ~3.5pt legend text), italic for the Online/Offline/legend captions, mostly non-bold",
+    "corners": "square",
+    "arrows": "thin black lines with small open arrowheads, each numbered (1)-(6); one bidirectional double-line arrow near Hyrax Policy",
+    "icons": "vector icons: a red ring/server glyph inside the Hyrax Policy box, and an unlabeled green gear icon below it linked by a bidirectional arrow"
+  },
+  "encoding": {
+    "color_means": "gold-bordered boxes are existing Azure systems that Hyrax modified (Server Health Monitor, Diagnostics, VM Scheduler); red-bordered boxes are entirely new control-plane systems (Hyrax Policy, Hyrax Inventory); the plain black-bordered Hardware Inventory is untouched; light-blue shading marks the Online half versus the white Offline half",
+    "line_style_means": "a vertical dashed line separates components that run Online from those that run Offline; a bidirectional double-line arrow marks two-way interaction between Hyrax Policy and the unlabeled gear icon",
+    "emphasis": "the gold-vs-red border legend shows how much of the control plane is newly built versus merely adapted, and the numbered arrows walk through one concrete SSD-failure example end to end",
+    "reusable_patterns": [
+      "numbered walkthrough of a single failure example overlaid on a static component diagram",
+      "border-color legend distinguishing new vs. modified-existing vs. untouched systems",
+      "vertical dashed divider separating an Online/Offline operating-mode split"
+    ],
+    "weaknesses": [
+      "step (3), an interaction with an unlabeled gear icon, is not textually explained in the figure",
+      "six densely packed numbered arrows in a small area can be hard to trace at this size"
+    ]
+  },
+  "tags": [
+    "fail-in-place",
+    "cloud-control-plane",
+    "server-reliability",
+    "datacenter-management",
+    "hardware-failure"
+  ],
+  "provenance": {
+    "sections": [
+      "6 Hyrax Control Plane (p.9)"
+    ],
+    "evidence": [
+      "Figure 10 shows a simplified view of Azure's control plane.",
+      "We change three and add two new control plane systems.",
+      "The Server Health Monitor (SHM) detects NVMe read errors and follows the offlining workflow"
+    ]
+  },
+  "summary": "This figure gives a simplified view of Hyrax's control plane within Microsoft Azure, walking through one SSD-failure example via six numbered steps. (1) The existing Server Health Monitor detects NVMe read errors and signals Diagnostics, which (2) reports the failing component to the newly added Hyrax Policy engine; Server Health Monitor and Diagnostics are modified existing systems (gold borders), while Hyrax Policy is a new control-plane system (red border). After an unlabeled step (3) shown as interaction with a gear icon, Hyrax Policy (4) updates the also-new Hyrax Inventory, which (5) informs the modified VM Scheduler of the server's reduced capacity and (6) reports back to the Server Health Monitor, closing the loop; a separate, untouched Hardware Inventory box also feeds Hyrax Inventory. A dashed line and shading separate Online from Offline components, and a legend explains the gold/red border colors.",
+  "summary_zh": "该图简化展示 Hyrax 控制平面：健康监控器检测故障并通知诊断模块，交由新建的 Hyrax Policy 决策，更新 Hyrax Inventory，再通知 VM 调度器并反馈给健康监控器，图例区分改造旧系统(金框)与全新系统(红框)。",
+  "confidence": "high",
+  "notes": "Step (3), an interaction between Hyrax Policy and an unlabeled green gear icon, is not named in the figure or in the available paragraph text, so it is omitted from components/flows.",
+  "venue": "OSDI23"
+}

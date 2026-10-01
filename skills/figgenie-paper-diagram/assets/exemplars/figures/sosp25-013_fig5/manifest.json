@@ -1,0 +1,47 @@
+{
+  "id": "sosp25-013_fig5",
+  "paper_id": "sosp25-013",
+  "fig": "5",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 5. System overview of KTransformers.",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.2,
+  "n_components": 22,
+  "n_flows": 4,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-013/sosp25-013_fig5_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-013/sosp25-013_fig5_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The small diamond-shaped graph inside the purple core is drawn twice, plain then recoloured green/blue/orange, the transformation-arrow variant showing exactly which nodes Module Injection, Kernel Replacement and Overhead Reduction touch.",
+      "what_to_learn": "Show a transformation as the same small DAG twice, before plain and after recoloured, with an arrow between; match each recoloured node's fill to its named optimization label outside the graph, but add explicit callout lines since colour and adjacency alone leave that mapping implicit here."
+    },
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Star, high-confidence textbook case, 22 components: a purple KTransformers core sits between a tan User Interface band above and a tan Heterogeneous Hardware band below, with MoE Models and Advanced Operators as pill-stack side columns.",
+      "what_to_learn": "Use large white block arrows on all four sides to funnel bands and side columns into the core, keep both side columns as plain stacked pills naming interchangeable models or kernels, and show the core's own transformation as a small before/after computation-graph icon rather than prose."
+    }
+  ]
+}

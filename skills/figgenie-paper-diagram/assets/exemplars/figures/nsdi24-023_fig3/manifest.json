@@ -1,0 +1,48 @@
+{
+  "id": "nsdi24-023_fig3",
+  "paper_id": "nsdi24-023",
+  "fig": "3",
+  "venue": "NSDI24",
+  "year": 2024,
+  "caption": "Figure 3: Workflow of GRACE’s neural video codec.",
+  "corpus_template": "pipeline",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "quartz",
+  "aspect": 4.0,
+  "n_components": 10,
+  "n_flows": 7,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi24-023/src/fig3_workflow-new.svg",
+    "preview.png": "lab/extracted/nsdi24-023/src/fig3_workflow-new.png",
+    "print.png": "lab/extracted/nsdi24-023/nsdi24-023_fig3_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Double-column pipeline (aspect 4.0) with an inside legend and a mirrored encoder/decoder around a transmitted artefact.",
+      "what_to_learn": "At double column, mirror the two halves around the one object that crosses between them, and park a two-entry legend in the empty top strip."
+    },
+    {
+      "template": "mirrored-pair",
+      "star": true,
+      "why_chosen": "Grace Encoder's and Grace Decoder's chains mirror each other left and right around one small coded-tensor icon at the centre, with a shared orange/blue NN-vs-non-NN legend applied identically to both sides.",
+      "what_to_learn": "Mirror an encoder and decoder around one small icon standing in for the data actually transmitted between them, and apply one binary colour legend, orange for learned modules, blue for classical ones, to both chains identically so a reader sees at a glance how much of the traditional codec structure survives."
+    }
+  ]
+}

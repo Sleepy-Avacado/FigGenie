@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-101_fig5",
+  "paper_id": "asplos25-101",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5: Overview of the PAPI computing system, and an example of its dynamic parallelism-aware scheduler.",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "double",
+  "tool": "powerpoint",
+  "aspect": 2.0,
+  "n_components": 10,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 4,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-101/src/fig5_heter_arch2.svg",
+    "preview.png": "lab/extracted/asplos25-101/src/fig5_heter_arch2.png",
+    "print.png": "lab/extracted/asplos25-101/asplos25-101_fig5_p5_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "High-confidence matrix exemplar whose grid element is one labelled panel, a worked RLP/TLP/Reschedule/RESULT decision table walking through the scheduler token by token, attached beside a system diagram and two internal zoom-in panels.",
+      "what_to_learn": "When a design-space matrix is only part of a larger figure, give it its own labelled panel with named row headers and step through one concrete worked example column by column, rather than describing the decision rule in prose."
+    }
+  ]
+}

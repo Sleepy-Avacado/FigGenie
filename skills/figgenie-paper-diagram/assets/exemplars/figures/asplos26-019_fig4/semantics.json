@@ -1,0 +1,232 @@
+{
+  "paper_id": "asplos26-019",
+  "fig": "4",
+  "system": {
+    "name": "MoDM",
+    "one_liner": "a caching-based serving system for diffusion models that mixes small and large models to balance latency and image quality",
+    "domain": [
+      "ml-systems",
+      "serving/inference",
+      "generative AI"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "User",
+        "role": "submits a text prompt and receives the generated output image",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Request Scheduler",
+        "role": "manages the flow of incoming requests and routes them based on cache match",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cache Retrieval",
+        "role": "matches a new prompt's embedding against cached images",
+        "container": "Request Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Cache Maintenance",
+        "role": "stores newly generated images and evicts older ones",
+        "container": "Request Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Request Router",
+        "role": "directs each request to the cache hit or cache miss queue",
+        "container": "Request Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Image Cache",
+        "role": "stores final generated images retrievable across model families",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cache Miss Queue",
+        "role": "holds requests with no sufficiently close cached image",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Cache Hit Queue",
+        "role": "holds requests with a matching cached image",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Mixture of Diffusion Models (GPU Workers)",
+        "role": "pool of diffusion models (e.g. Stable Diffusion, SANA) that serve cache-hit/cache-miss requests",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Global Monitor",
+        "role": "tracks request patterns and system load to optimize model allocation",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Stats Collector",
+        "role": "gathers request-rate and cache-hit-rate statistics",
+        "container": "Global Monitor",
+        "novel": true
+      },
+      {
+        "name": "PID Controller",
+        "role": "uses collected stats to control model/resource allocation to meet SLOs",
+        "container": "Global Monitor",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "User",
+        "to": "Request Scheduler",
+        "what": "Input: Prompt",
+        "step": null
+      },
+      {
+        "from": "Request Scheduler",
+        "to": "Image Cache",
+        "what": "retrieval, maintenance",
+        "step": null
+      },
+      {
+        "from": "Request Scheduler",
+        "to": "Cache Miss Queue",
+        "what": "cache-miss requests",
+        "step": null
+      },
+      {
+        "from": "Request Scheduler",
+        "to": "Cache Hit Queue",
+        "what": "cache-hit requests",
+        "step": null
+      },
+      {
+        "from": "Cache Miss Queue",
+        "to": "Mixture of Diffusion Models (GPU Workers)",
+        "what": "requests needing full inference",
+        "step": null
+      },
+      {
+        "from": "Cache Hit Queue",
+        "to": "Mixture of Diffusion Models (GPU Workers)",
+        "what": "requests needing refinement from cached image",
+        "step": null
+      },
+      {
+        "from": "Mixture of Diffusion Models (GPU Workers)",
+        "to": "Image Cache",
+        "what": "new image to cache",
+        "step": null
+      },
+      {
+        "from": "Mixture of Diffusion Models (GPU Workers)",
+        "to": "User",
+        "what": "Output: Image",
+        "step": null
+      },
+      {
+        "from": "Request Scheduler",
+        "to": "Global Monitor",
+        "what": "request rates, cache hit rates",
+        "step": null
+      },
+      {
+        "from": "Global Monitor",
+        "to": "Mixture of Diffusion Models (GPU Workers)",
+        "what": "model allocation",
+        "step": null
+      }
+    ],
+    "key_idea": "A Request Scheduler routes prompts to a cache-hit or cache-miss queue based on similarity to cached final images, feeding a shared pool of diffusion-model GPU workers whose allocation a Global Monitor continuously tunes to meet SLOs.",
+    "reading_order": "User prompt enters the Request Scheduler at top, splits into cache-hit/cache-miss queues, flows down into the GPU worker pool, loops back to update the Image Cache, and exits as the output image, with the Global Monitor observing and steering allocation from the side."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.43,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for the GPU Workers container"
+      },
+      {
+        "hex": "#99d8c9",
+        "used_for": "teal/green fill for Request Scheduler sub-boxes"
+      },
+      {
+        "hex": "#bcbddc",
+        "used_for": "purple fill for Global Monitor sub-boxes"
+      },
+      {
+        "hex": "#e7e1ef",
+        "used_for": "pale purple fill accents"
+      },
+      {
+        "hex": "#e5f5f9",
+        "used_for": "pale teal fill accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.66pt) solid strokes",
+    "font": "Arial/ArialMT sans, 3.5-7pt, lightly bold section headers",
+    "corners": "mixed",
+    "arrows": "orthogonal arrows with filled heads (12) linking scheduler, queues, workers, cache and monitor",
+    "icons": "bitmap/vector icons for the user figure, the image cache cylinder, model logos, and the generated owl image"
+  },
+  "encoding": {
+    "color_means": "teal marks Request Scheduler functions, purple marks Global Monitor functions, gray marks the shared GPU worker pool",
+    "line_style_means": null,
+    "emphasis": "the Request Scheduler sits centrally with the queues and cache below it, visually anchoring routing as the system's core decision point",
+    "reusable_patterns": [
+      "central scheduler fanning out to hit/miss queues feeding a shared worker pool, with a side monitor closing the feedback loop"
+    ],
+    "weaknesses": [
+      "many small labeled arrows around the scheduler make the routing logic somewhat dense to trace"
+    ]
+  },
+  "tags": [
+    "diffusion models",
+    "request scheduling",
+    "caching",
+    "GPU serving",
+    "load monitoring",
+    "SLO"
+  ],
+  "provenance": {
+    "sections": [
+      "4 MoDM Design Overview (p.4)"
+    ],
+    "evidence": [
+      "Fig. 4 presents an overview of the MoDM system architecture, highlighting its key design components",
+      "The Request Scheduler manages the flow of incoming image generation requests, ensuring efficient resource utilization",
+      "The Global Monitor continuously tracks request patterns and system load in real time"
+    ]
+  },
+  "summary": "This figure is the full system architecture of MoDM. A user's text prompt enters a Request Scheduler, which computes a text embedding, checks it against the Image Cache for a close match, and routes the request to either a cache-hit or cache-miss queue. Both queues feed a shared pool of GPU workers running a mixture of diffusion models (e.g. Stable Diffusion, SANA); cache-miss requests get full inference from a large model while cache-hit requests get a shorter refinement. Newly generated images are written back to the Image Cache, and the final image is returned to the user. A separate Global Monitor, with a stats collector and PID controller, watches request and cache-hit rates from the scheduler and adjusts model allocation across GPU workers to meet SLOs. The diagram is a flat, icon-annotated architecture diagram with teal, purple and gray color-coded component groups.",
+  "summary_zh": "该图展示MoDM系统架构：请求调度器接收用户提示，检索图像缓存并将请求路由至缓存命中/未命中队列，二者共用GPU工作节点上的混合扩散模型池生成图像并回写缓存；全局监控器（统计收集器+PID控制器）根据请求与命中率动态调整模型分配。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

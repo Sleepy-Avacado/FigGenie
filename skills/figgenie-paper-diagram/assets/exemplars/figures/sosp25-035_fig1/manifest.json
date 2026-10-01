@@ -1,0 +1,47 @@
+{
+  "id": "sosp25-035_fig1",
+  "paper_id": "sosp25-035",
+  "fig": "1",
+  "venue": "SOSP25",
+  "year": 2025,
+  "caption": "Figure 1. Architecture of typical COSSs with the constrained application interfaces. Note that a single COSS often hosts a number of applications that share the internal metadata and data services.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.98,
+  "n_components": 11,
+  "n_flows": 3,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp25-035/sosp25-035_fig1_p3_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/sosp25-035/sosp25-035_fig1_p3_vector.png"
+  },
+  "templates": [
+    {
+      "template": "layered",
+      "star": true,
+      "why_chosen": "Star, high-confidence baseline layered exemplar with a named dashed API boundary separating an apps-side gutter label from a cloud-side gutter label, and a horizontally repeated Proxy 1...Proxy n sub-box standing for a stateless replica pool.",
+      "what_to_learn": "Label the two sides of a dashed interface line with a short margin tag rather than titling each box separately, and draw a replicated stateless pool as one small sub-box holding numbered instances plus an ellipsis rather than drawing every replica full size."
+    },
+    {
+      "template": "nested-stack",
+      "star": true,
+      "why_chosen": "High-confidence nested-stack exemplar with only 11 components: the Object Storage Service box nests a Proxy Layer box nesting a horizontally repeated Proxy 1 through Proxy n row, three levels of containment for one stateless pool.",
+      "what_to_learn": "Wrap a replicated pool in its own labelled sub-box one level inside the service that owns it, rather than drawing the instances loose in the parent box, so containment alone tells the reader the pool is one interchangeable unit, not several separate services."
+    }
+  ]
+}

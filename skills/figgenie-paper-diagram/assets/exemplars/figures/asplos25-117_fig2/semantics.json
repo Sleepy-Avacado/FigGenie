@@ -1,0 +1,164 @@
+{
+  "paper_id": "asplos25-117",
+  "fig": "2",
+  "system": {
+    "name": "MDPeek",
+    "one_liner": "a control-flow attack on SGX that exploits Memory Disambiguation Unit (MDU) side channels to break balanced-branch defenses",
+    "domain": [
+      "security",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Instructions",
+        "role": "example delayed-store/load code snippet used to explain how the MDU is driven",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MDU Enable Logic (Uncovered)",
+        "role": "decision logic, reverse-engineered by this paper, that determines when the MDU becomes active",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Memory Order Buffer",
+        "role": "tracks in-flight stores referenced when checking delayed address generation",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory Disambiguation Unit",
+        "role": "table of 256 4-bit counters, selected by the lowest 8 bits of the load's PC",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CPU Execution Engine",
+        "role": "issues the load in order or out of order based on the selected counter value",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MDU Update Logic (Not fully studied)",
+        "role": "logic that updates the selected counter once the true store-load dependency is resolved",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Instructions",
+        "to": "MDU Enable Logic (Uncovered)",
+        "what": "delayed store address generation that enables the MDU",
+        "step": 1
+      },
+      {
+        "from": "Instructions",
+        "to": "Memory Disambiguation Unit",
+        "what": "load PC used to select one of 256 counters",
+        "step": 2
+      },
+      {
+        "from": "Memory Disambiguation Unit",
+        "to": "CPU Execution Engine",
+        "what": "counter value predicts in-order or out-of-order execution",
+        "step": 3
+      },
+      {
+        "from": "CPU Execution Engine",
+        "to": "MDU Update Logic (Not fully studied)",
+        "what": "resolved store-load dependency triggers a counter update",
+        "step": 4
+      },
+      {
+        "from": "MDU Update Logic (Not fully studied)",
+        "to": "Memory Disambiguation Unit",
+        "what": "counter set to 15 if aliased, otherwise decremented by 1",
+        "step": null
+      }
+    ],
+    "key_idea": "The MDU predicts load reordering using a PC-indexed table of 256 saturating counters, enabled by delayed store addresses and updated once the real dependency is known.",
+    "reading_order": "Left to right from the example instructions, through the counter table and CPU execution engine, down to the update-logic box that feeds back into the table."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.22,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fff2cc",
+        "used_for": "highlighted row in the counter table (the 0x15 entry selected by the example load's PC)"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "fill of plain informational boxes such as Instructions and Memory Order Buffer"
+      },
+      {
+        "hex": "#fff1ff",
+        "used_for": "fill of the dashed callout boxes for MDU Enable Logic and MDU Update Logic"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "fill of the CPU Execution Engine box and the counter-table header"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dashed borders around the two logic callout boxes; thin solid lines elsewhere",
+    "font": "Calibri sans-serif, about 5-5.5pt, bold for headings and the highlighted counter",
+    "corners": "square",
+    "arrows": "thin straight connecting lines between boxes and decision diamonds, ordering conveyed mainly by circled step numbers",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "yellow/tan highlight marks the one counter table entry (0x15) selected for the example load's PC; other fills just separate the code, table, and logic boxes",
+    "line_style_means": "dashed borders enclose the two logic boxes whose internal behavior this paper reverse-engineers ('Uncovered' / 'Not fully studied'); solid lines and diamonds show the rest of the decision flow",
+    "emphasis": "circled numbers 1-4 trace enable-select-predict-update, drawing attention to the dashed boxes that were previously unknown microarchitectural logic",
+    "reusable_patterns": [
+      "decision-diamond flowchart annotated with circled numbered steps",
+      "single highlighted entry in a large indexed table to illustrate one concrete lookup example"
+    ],
+    "weaknesses": [
+      "combines a code listing, a data table, and two flowcharts in one dense figure",
+      "labels 'Uncovered' and 'Not fully studied' require the caption to know which parts are newly reverse-engineered"
+    ]
+  },
+  "tags": [
+    "side-channel",
+    "sgx",
+    "speculative-execution",
+    "memory-disambiguation",
+    "microarchitecture",
+    "reverse-engineering"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Related Work (p.3)",
+      "4 Reverse-Engineering the MDU Enable (p.5)"
+    ],
+    "evidence": [
+      "the MDU in Intel CPUs consists of 256 counters, selected by the lowest 8 bits of the load's PC",
+      "the MDU is enabled (❶), and the CPU selects an MDU counter to make a prediction based on the lowest 8 bits",
+      "the counter is set to 15. Otherwise, the counter is decreased by 1 until it reaches 0."
+    ]
+  },
+  "summary": "This figure explains the Memory Disambiguation Unit (MDU), an Intel CPU hardware structure that MDPeek exploits for a new SGX control-flow side channel. An example delayed-store/load instruction pair drives the MDU: when the store's address generation is delayed, the MDU Enable Logic activates the unit. The CPU then selects one of 256 4-bit counters using the lowest 8 bits of the load's program counter, shown with the example entry 0x15 highlighted. The CPU Execution Engine reads that counter to predict whether the load can run out of order (counter at 0) or must be blocked (nonzero). Once the true dependency is resolved, the MDU Update Logic sets the counter to 15 if aliased or decrements it otherwise, closing the loop. Four circled steps and two decision diamonds walk the reader through enable, select, predict, and update, with dashed boxes marking the logic newly reverse-engineered by this paper.",
+  "summary_zh": "该图解析 Intel MDU 硬件结构：存储地址延迟时启用 MDU，按 load 的 PC 低 8 位选中 256 个 4 位计数器之一，用其值预测 load 乱序或阻塞执行，依赖关系确定后再更新计数器，虚线框标出本文新逆向的启用与更新逻辑。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

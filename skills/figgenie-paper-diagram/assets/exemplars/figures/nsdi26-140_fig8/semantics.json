@@ -1,0 +1,306 @@
+{
+  "paper_id": "nsdi26-140",
+  "fig": "8",
+  "system": {
+    "name": "Themis",
+    "one_liner": "a scheduling-aware buffer manager that lets a single hierarchical-bitmap queue structure efficiently manage a hybrid SRAM+HBM packet buffer in router chips",
+    "domain": [
+      "networking",
+      "hardware",
+      "packet-buffering"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Traffic Manager",
+        "role": "panel (a): the router-chip module containing buffer management, on caption Traffic Manager (TM)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Buffer Manager",
+        "role": "admits each packet and decides whether it is stored in on-chip or off-chip memory",
+        "container": "Traffic Manager",
+        "novel": false
+      },
+      {
+        "name": "Scheduler",
+        "role": "enqueues and later dequeues packets for departure",
+        "container": "Traffic Manager",
+        "novel": false
+      },
+      {
+        "name": "Buffer Read/Write Controller",
+        "role": "stores packet data and descriptors on write, and reads out packets and releases buffer space on dequeue",
+        "container": "Traffic Manager",
+        "novel": false
+      },
+      {
+        "name": "Hybrid Buffer",
+        "role": "combined on-chip/off-chip packet storage managed by the TM",
+        "container": "Traffic Manager",
+        "novel": true
+      },
+      {
+        "name": "On-Chip Buffer (e.g., SRAM)",
+        "role": "fast on-chip packet storage",
+        "container": "Hybrid Buffer",
+        "novel": false
+      },
+      {
+        "name": "Off-Chip Buffer (e.g., DRAM)",
+        "role": "larger off-chip packet storage",
+        "container": "Hybrid Buffer",
+        "novel": false
+      },
+      {
+        "name": "Statistics Module",
+        "role": "tracks buffer occupancy/usage statistics",
+        "container": "Traffic Manager",
+        "novel": false
+      },
+      {
+        "name": "Ingress Packet Processing",
+        "role": "pipeline stage feeding packets into the Buffer Manager",
+        "container": "Traffic Manager",
+        "novel": false
+      },
+      {
+        "name": "Egress Packet Processing",
+        "role": "pipeline stage receiving packets read out of the buffer",
+        "container": "Traffic Manager",
+        "novel": false
+      },
+      {
+        "name": "PD Memory",
+        "role": "panel (b): stores per-packet descriptors as a linked list with a Head pointer",
+        "container": "Buffer Architecture",
+        "novel": false
+      },
+      {
+        "name": "Packet descriptor",
+        "role": "metadata record for a buffered packet, chained into PD Memory's linked list",
+        "container": "PD Memory",
+        "novel": false
+      },
+      {
+        "name": "Cell Pointer Memory",
+        "role": "holds linked cell-pointer lists per packet plus a free-cell pointer list",
+        "container": "Buffer Architecture",
+        "novel": false
+      },
+      {
+        "name": "Free Cell Pointer List",
+        "role": "linked list of unused cell pointers available for allocation",
+        "container": "Cell Pointer Memory",
+        "novel": false
+      },
+      {
+        "name": "Cell Data Memory",
+        "role": "fixed-size storage cells holding the actual packet data",
+        "container": "Buffer Architecture",
+        "novel": false
+      },
+      {
+        "name": "L1",
+        "role": "first-level counters/bitmap over the hybrid buffer used by the scheduler's FLS/FFS logic",
+        "container": "Themis",
+        "novel": true
+      },
+      {
+        "name": "L2",
+        "role": "second-level counters/bitmap refining the L1 hierarchy",
+        "container": "Themis",
+        "novel": true
+      },
+      {
+        "name": "PB",
+        "role": "priority buckets organized as a tree beneath the L1/L2 bitmap hierarchy",
+        "container": "Themis",
+        "novel": true
+      },
+      {
+        "name": "SRAM Free List",
+        "role": "free-cell-pointer list for the SRAM portion of the hybrid buffer",
+        "container": "Themis",
+        "novel": true
+      },
+      {
+        "name": "HBM Free List",
+        "role": "free-cell-pointer list for the HBM portion of the hybrid buffer",
+        "container": "Themis",
+        "novel": true
+      },
+      {
+        "name": "SRAM R/W Controller",
+        "role": "reads/writes packets in SRAM and participates in swap-out/swap-in with HBM",
+        "container": "Hybrid Buffer",
+        "novel": true
+      },
+      {
+        "name": "HBM R/W Controller",
+        "role": "reads/writes packets in HBM and participates in swap-out/swap-in with SRAM",
+        "container": "Hybrid Buffer",
+        "novel": true
+      },
+      {
+        "name": "SRAM",
+        "role": "on-chip tier of Themis's hybrid buffer",
+        "container": "Hybrid Buffer",
+        "novel": false
+      },
+      {
+        "name": "HBM",
+        "role": "off-chip high-bandwidth-memory tier of Themis's hybrid buffer",
+        "container": "Hybrid Buffer",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Ingress Packet Processing",
+        "to": "Buffer Manager",
+        "what": "incoming packet admitted; Buffer Manager decides on-chip vs off-chip storage",
+        "step": 1
+      },
+      {
+        "from": "Buffer Manager",
+        "to": "Buffer Read/Write Controller",
+        "what": "admitted packet forwarded to be written",
+        "step": 2
+      },
+      {
+        "from": "Buffer Read/Write Controller",
+        "to": "Hybrid Buffer",
+        "what": "Write In: packet data and descriptor stored",
+        "step": null
+      },
+      {
+        "from": "Scheduler",
+        "to": "Buffer Read/Write Controller",
+        "what": "scheduler dequeues the packet",
+        "step": 3
+      },
+      {
+        "from": "Buffer Read/Write Controller",
+        "to": "Egress Packet Processing",
+        "what": "buffer read/write controller reads out the packet and releases the associated buffer space",
+        "step": 4
+      },
+      {
+        "from": "PD Memory",
+        "to": "Cell Pointer Memory",
+        "what": "a packet descriptor's cell pointer list identifies the cells holding its data",
+        "step": null
+      },
+      {
+        "from": "Cell Pointer Memory",
+        "to": "Cell Data Memory",
+        "what": "cell pointers reference the fixed-size cells storing packet data",
+        "step": null
+      },
+      {
+        "from": "L1",
+        "to": "PB",
+        "what": "hierarchical bitmap traversal locates the target priority bucket and updates path counters/bitmaps, storing the packet in SRAM",
+        "step": null
+      },
+      {
+        "from": "SRAM R/W Controller",
+        "to": "HBM R/W Controller",
+        "what": "a unified centralized controller orchestrates swap-out (FLS) to HBM and swap-in (FFS) from HBM",
+        "step": null
+      },
+      {
+        "from": "PB",
+        "to": "SRAM R/W Controller",
+        "what": "FFS identifies the highest-priority non-empty bucket across SRAM and HBM and dequeues the corresponding packet",
+        "step": null
+      }
+    ],
+    "key_idea": "A single hierarchical-bitmap priority-queue structure (bitmap trie over priority buckets, BBQ) can manage a hybrid SRAM+HBM packet buffer with minimal extra logic by adding a centralized controller that transparently swaps packets between SRAM and HBM using FLS/FFS bitmap operations.",
+    "reading_order": "Left to right across three sub-figures: (a) the generic Traffic Manager pipeline from ingress to egress, (b) the packet-descriptor/cell-pointer/cell-data memory layout underlying any such buffer, (c) Themis's own hierarchical bitmap scheduler and dual SRAM/HBM controllers."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.95,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#70ad47",
+        "used_for": "green fill for Hybrid Buffer / Cell Data Memory boxes"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark red for the Data Path legend arrow"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple fill for the Scheduler box and Themis's PB tree nodes"
+      },
+      {
+        "hex": "#dde7fa",
+        "used_for": "pale blue background regions (e.g., PD/Cell Pointer memory panels)"
+      },
+      {
+        "hex": "#d0cece",
+        "used_for": "light gray fill for Statistics Module and generic boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.44pt, dashed for the Control Path legend arrow and several internal connectors",
+    "font": "Times New Roman serif, 4-7.5pt",
+    "corners": "mixed",
+    "arrows": "many thin orthogonal arrows (45 heads) plus circled-number step markers",
+    "icons": "small colored dot/node icons forming the PB priority-bucket tree in panel (c)"
+  },
+  "encoding": {
+    "color_means": "green = hybrid buffer / cell storage, purple = scheduler and priority-bucket nodes, red/gray = generic control boxes; per the top-left legend, red = data path and green dashed = control path",
+    "line_style_means": "solid red arrows carry packet data, dashed green arrows carry control/scheduling signals (per the Data Path / Control Path legend)",
+    "emphasis": "placing the generic TM pipeline (a) and generic buffer memory layout (b) beside Themis's own hierarchical-bitmap scheduler (c) emphasizes how little Themis changes beyond adding centralized SRAM/HBM swap control",
+    "reusable_patterns": [
+      "numbered pipeline steps over a hardware block diagram",
+      "three-panel progressive zoom from generic module, to its memory layout, to the paper's own extension"
+    ],
+    "weaknesses": [
+      "very dense multi-panel figure (337 shapes) with small (4-5pt) text makes fine details hard to read at preview resolution"
+    ]
+  },
+  "tags": [
+    "traffic-manager",
+    "packet-buffer",
+    "sram-hbm",
+    "hierarchical-bitmap",
+    "hardware-scheduling",
+    "router-chip"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Implementing Themis in Hardware (p.9)",
+      "5 Implementing Themis in Hardware (p.10)"
+    ],
+    "evidence": [
+      "the TM processes a packet through four main steps",
+      "a unified centralized controller orchestrates swap-in and swap-out between SRAM and HBM",
+      "FFS identifies the highest-priority non-empty bucket across both SRAM and HBM"
+    ]
+  },
+  "summary": "Figure 8 shows, in three panels, how Themis fits into a router chip's existing Traffic Manager. Panel (a) is the generic TM pipeline: a Buffer Manager admits packets and picks on-chip or off-chip storage, a Buffer Read/Write Controller stores packet data and descriptors, a Scheduler later dequeues packets, and the controller reads them out and frees buffer space, backed by a Hybrid Buffer (on-chip SRAM plus off-chip DRAM/HBM) and a Statistics Module. Panel (b) shows the buffer's memory layout: PD Memory holding linked packet descriptors, Cell Pointer Memory holding per-packet cell-pointer lists and a free list, and Cell Data Memory holding fixed-size data cells. Panel (c) is Themis itself: a hierarchical bitmap (L1/L2 counters, priority buckets PB) that locates buckets and stores packets in SRAM on enqueue, plus a centralized controller that swaps packets between SRAM and HBM (FLS/FFS) and, on dequeue, finds the highest-priority non-empty bucket across both tiers.",
+  "summary_zh": "图8分三部分展示Themis在路由器芯片中的位置：(a)通用流量管理器；(b)缓冲区底层的包描述符、指针链表、数据单元内存布局；(c)Themis自身层级位图调度与SRAM/HBM统一控制器，实现入队定位、跨层交换与出队查找。",
+  "confidence": "medium",
+  "notes": "layout-proposal: three-panel subsystem gallery — a linear TM pipeline (a), a linked-list buffer-pointer memory diagram (b), and a hierarchical bitmap/tree scheduler diagram (c) placed side by side under one Data-Path/Control-Path legend, not matching any single named template. The context text describes panels (a) and (c) in detail but has no paragraph for panel (b) (Buffer Architecture), whose components are read from figure labels only; the mapping of all eight circled step numbers in panel (a) to specific arrows is a best-effort reconstruction from the four macro-steps described in prose.",
+  "venue": "NSDI26"
+}

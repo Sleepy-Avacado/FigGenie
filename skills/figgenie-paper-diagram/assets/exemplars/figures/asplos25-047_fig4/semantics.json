@@ -1,0 +1,225 @@
+{
+  "paper_id": "asplos25-047",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "DarwinGame",
+    "one_liner": "a tournament-based performance tuner that compares application configurations reliably under interference-prone, noisy cloud environments",
+    "domain": [
+      "performance-tuning",
+      "cloud-computing",
+      "autotuning"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one algorithm run",
+    "subject": "how DarwinGame's tournament narrows a large pool of candidate configurations down to one winner through four differently-styled phases",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "Regional Phase (Swiss Style)",
+        "kind": "label",
+        "role": "first phase: the search space is split into regions and played Swiss-style",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Main Bracket",
+        "kind": "label",
+        "role": "winners' side of the Global Phase's double-elimination bracket",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Loser Bracket",
+        "kind": "label",
+        "role": "losers' side of the Global Phase's double-elimination bracket, giving a second chance",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Global Phase (Double Elimination Style)",
+        "kind": "label",
+        "role": "second phase, where regional winners compete in a double-elimination format",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Consistency Score",
+        "kind": "label",
+        "role": "one of two criteria (legend icon) used to judge configurations in the Global Phase",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Execution Score",
+        "kind": "label",
+        "role": "the other criterion (legend icon) used to judge configurations in the Global Phase",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Playoffs (Barrage Style)",
+        "kind": "label",
+        "role": "third phase, a small cyclic round among the remaining top candidates",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Final",
+        "kind": "label",
+        "role": "fourth phase, the last comparison that picks the single winning configuration",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "All configurations in a phase",
+        "kind": "label",
+        "role": "legend entry: a white dot represents any configuration still in the running",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Winner configurations",
+        "kind": "label",
+        "role": "legend entry: a dark green dot represents a configuration that has won and advances",
+        "container": null,
+        "highlighted": true
+      }
+    ],
+    "relations": [
+      {
+        "from": "Regional Phase (Swiss Style)",
+        "to": "Global Phase (Double Elimination Style)",
+        "what": "the most promising configurations from each region advance into the global phase's brackets",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "Main Bracket",
+        "to": "Playoffs (Barrage Style)",
+        "what": "double-elimination winners advance to the playoff phase",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Loser Bracket",
+        "to": "Playoffs (Barrage Style)",
+        "what": "double-elimination losers get a second chance to reach the playoff phase",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Playoffs (Barrage Style)",
+        "to": "Final",
+        "what": "the playoff phase converges on the single final winning configuration",
+        "kind": "transition",
+        "step": "3"
+      }
+    ],
+    "panels": [
+      {
+        "label": "Regional Phase (Swiss Style)",
+        "axis": "time",
+        "differs": "the full grid of candidate configurations is grouped by region and played Swiss-style; the most promising (dark green) configurations progress out of the full white-dot grid",
+        "verdict": null
+      },
+      {
+        "label": "Global Phase (Double Elimination Style)",
+        "axis": "time",
+        "differs": "regional winners compete in a circular double-elimination bracket with a Main Bracket and Loser Bracket, scored by Consistency and Execution Score",
+        "verdict": null
+      },
+      {
+        "label": "Playoffs (Barrage Style)",
+        "axis": "time",
+        "differs": "a small surviving set plays a cyclic barrage-style round to further narrow the field",
+        "verdict": null
+      },
+      {
+        "label": "Final",
+        "axis": "time",
+        "differs": "the two remaining configurations are compared to pick the single tuning-configuration winner",
+        "verdict": "winner selected"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "DarwinGame structures configuration selection as a four-phase tournament, from Swiss-style regional play through double-elimination and barrage-style playoffs to a final, so that noisy single comparisons don't eliminate a good configuration too early.",
+    "reading_order": "left to right through the four phases: the Regional Phase grid, the Global Phase's circular double-elimination brackets (Main/Loser), the Playoffs barrage cluster, and the Final pair, with white vs dark-green dots marking surviving vs winning configurations throughout"
+  },
+  "layout": {
+    "arrangement": "frames-row",
+    "panel_count": 4,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.25,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f78d1e",
+        "used_for": "orange vector-drawn connecting arrows/icons linking successive phases"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.48pt) black outlines",
+    "corners": "square",
+    "arrows": "a few thin curved black arrows linking phases, with solid heads into the Playoffs and Final",
+    "font": "sans-serif (embedded Type3 font), uniform ~5.5pt",
+    "icons": "raster (bitmap) images make up roughly 82% of the figure area, rendering the coloured configuration grids, brackets, and dots; small vector arrows and two score-icon glyphs (Consistency Score, Execution Score) are overlaid on top"
+  },
+  "encoding": {
+    "color_means": "in the underlying raster art, dark green marks winner configurations and white marks other configurations still in a phase; the only vector-drawn colour, orange, appears in the small overlaid connecting arrows",
+    "line_style_means": "not used to distinguish relation kinds; curved arrows link one phase to the next in a single style",
+    "state_means": "successive phases are told apart by their different bracket shapes (grid, circular double-elimination, small cyclic graph, final pair) and by how many white vs dark-green dots remain",
+    "marker_means": "no numbered markers; small Consistency/Execution Score icons next to the Global Phase indicate the criteria that decide advancement there",
+    "emphasis": "the shrinking dot count and the shift from a dense grid to a single final pair visually emphasize the tournament's narrowing-down purpose",
+    "reusable_patterns": [
+      "a left-to-right chain of differently-shaped 'population' visualizations (grid, bracket, cluster, pair) connected by arrows, with a colour marking which members survive"
+    ],
+    "weaknesses": [
+      "most of the figure's meaning-carrying colour lives in embedded raster images rather than the vector layer, so it cannot be verified or restyled from the SVG alone",
+      "the four phase names differ sharply in visual metaphor (grid vs circle vs graph vs pair), which the shared 'phase' language does not fully prepare the reader for"
+    ]
+  },
+  "tags": [
+    "performance-tuning",
+    "tournament-selection",
+    "autotuning",
+    "noisy-cloud",
+    "configuration-search",
+    "DarwinGame"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Design of DarwinGame"
+    ],
+    "evidence": [
+      "DarwinGame structures the tournament to select application tuning configuration in four phases",
+      "the regional phase in a Swiss tournament style",
+      "the global phase, the tournament is played in a double elimination style"
+    ]
+  },
+  "summary": "This figure gives an overview of DarwinGame's tournament-based tuning procedure, which narrows a large pool of candidate application configurations down to one winner across four phases with different playing styles. The Regional Phase (Swiss Style) first splits the whole search space into regions and plays each Swiss-style, promoting the most promising configurations (dark green dots) out of the full grid (white dots). Winners advance into the Global Phase (Double Elimination Style), where a Main Bracket and Loser Bracket, scored by Consistency Score and Execution Score, give losing configurations a second chance rather than eliminating them outright. Survivors proceed to Playoffs (Barrage Style), a small cyclic round among the remaining top candidates, before the tournament converges on a single Final comparison that picks the winning tuning configuration. Consistent white/dark-green dot colouring across all four differently-shaped phases lets the reader track survival versus elimination even as the visual metaphor for each phase changes.",
+  "summary_zh": "该图展示DarwinGame基于锦标赛的调优流程：区域赛（瑞士轮）从整片配置网格中选出优胜者（深绿点）；全局赛（双败淘汰制）用一致性分和执行分在主/败者组中评选；季后赛（barrage赛制）进一步淘汰；最终决赛选出唯一获胜配置。",
+  "confidence": "high",
+  "notes": "content.base corrected from the prior 'none' (not a valid v3 base value) to 'mixed', since the four phases are drawn with different visual metaphors (grid, circular bracket, small cyclic cluster, pair). style.palette reflects only the one vector fill (#f78d1e) found in the source-SVG histogram; roughly 82% of the figure's area is embedded raster images (per the measured attributes), which is where the grid/bracket colours and the green/white configuration dots actually live, so their hex values do not appear in the histogram.",
+  "venue": "ASPLOS25"
+}

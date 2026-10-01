@@ -1,0 +1,174 @@
+{
+  "paper_id": "asplos26-088",
+  "fig": "11",
+  "system": {
+    "name": "Neo",
+    "one_liner": "a hardware accelerator for real-time on-device 3D Gaussian Splatting using reuse-and-update sorting",
+    "domain": [
+      "computer-graphics",
+      "hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DRAM",
+        "role": "off-chip memory supplying Gaussian data and feature/scene data to the accelerator",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory Controller",
+        "role": "arbitrates data movement between DRAM and the three on-chip engines",
+        "container": "Neo Architecture",
+        "novel": true
+      },
+      {
+        "name": "Preprocess Engine",
+        "role": "performs frustum culling and feature extraction, producing the feature table and incoming Gaussian tables",
+        "container": "Neo Architecture",
+        "novel": true
+      },
+      {
+        "name": "Sorting Engine",
+        "role": "performs dynamic partial sorting and sorting of incoming Gaussian tables using parallel Sorting Cores",
+        "container": "Neo Architecture",
+        "novel": true
+      },
+      {
+        "name": "Rasterization Engine",
+        "role": "performs subtile-based rasterization and deferred depth updates enabling reuse-and-update sorting",
+        "container": "Neo Architecture",
+        "novel": true
+      },
+      {
+        "name": "Sorting Core 1..16",
+        "role": "16 parallel cores composing the Sorting Engine",
+        "container": "Sorting Engine",
+        "novel": true
+      },
+      {
+        "name": "Rasterization Core 1..4",
+        "role": "4 parallel cores composing the Rasterization Engine",
+        "container": "Rasterization Engine",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "DRAM",
+        "to": "Memory Controller",
+        "what": "Gaussian and scene data",
+        "step": null
+      },
+      {
+        "from": "Memory Controller",
+        "to": "Preprocess Engine",
+        "what": "input data",
+        "step": null
+      },
+      {
+        "from": "Preprocess Engine",
+        "to": "Memory Controller",
+        "what": "feature table, incoming Gaussian tables",
+        "step": null
+      },
+      {
+        "from": "Memory Controller",
+        "to": "Sorting Engine",
+        "what": "Gaussian tables for sorting",
+        "step": null
+      },
+      {
+        "from": "Sorting Engine",
+        "to": "Memory Controller",
+        "what": "sorted Gaussian tables",
+        "step": null
+      },
+      {
+        "from": "Memory Controller",
+        "to": "Rasterization Engine",
+        "what": "sorted tables and feature table",
+        "step": null
+      },
+      {
+        "from": "Sorting Engine",
+        "to": "Sorting Core 1..16",
+        "what": "expansion/detail of 16 parallel sorting cores",
+        "step": null
+      },
+      {
+        "from": "Rasterization Engine",
+        "to": "Rasterization Core 1..4",
+        "what": "expansion/detail of 4 parallel rasterization cores",
+        "step": null
+      }
+    ],
+    "key_idea": "Neo's accelerator is organized as three pipelined engines (Preprocessing, Sorting, Rasterization) around a shared memory controller and DRAM, with the Sorting and Rasterization engines each internally parallelized into many identical cores.",
+    "reading_order": "Left to right: DRAM feeds the Memory Controller, which connects bidirectionally to the three stacked engines (Preprocessing, Sorting, Rasterization) inside the green Neo Architecture box; dashed lines expand the Sorting and Rasterization engines into their parallel core lists on the right."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.09,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d8f3dc",
+        "used_for": "light green fill for the Neo Architecture bounding box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines, green stroke (#40916c) on the architecture bounding box, dashed lines expanding engines to their core lists",
+    "font": "HelveticaNeue / HelveticaNeue-Bold sans, 8-13pt",
+    "corners": "square",
+    "arrows": "thin black double-headed arrows between blocks",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "light green shading distinguishes the overall Neo Architecture boundary from external DRAM",
+    "line_style_means": "dashed lines connect each engine to its expanded list of parallel cores, distinguishing structural containment from data-flow arrows",
+    "emphasis": "the three engine names are bolded within the green-bordered architecture box, and dashed expansion lines lead the eye to the parallel core counts (16 sorting cores, 4 rasterization cores)",
+    "reusable_patterns": [
+      "central architecture box with bidirectional arrows to off-chip memory",
+      "dashed callout expanding a block into its repeated sub-units"
+    ],
+    "weaknesses": [
+      "figure omits directionality of arrows between individual sub-blocks and DRAM beyond bidirectional double arrows"
+    ]
+  },
+  "tags": [
+    "3D-gaussian-splatting",
+    "hardware-accelerator",
+    "AR-VR",
+    "sorting",
+    "rasterization",
+    "on-device-rendering"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Neo Accelerator Architecture (p.8)"
+    ],
+    "evidence": [
+      "Figure 11 illustrates the architecture of Neo",
+      "Our design consists of three main engines, Preprocessing Engine, Sorting Engine, and Rasterization Engine",
+      "employs specialized parallel sorting units"
+    ]
+  },
+  "summary": "This figure gives the top-level architecture of the Neo accelerator for real-time 3D Gaussian Splatting. A Memory Controller sits between off-chip DRAM and the Neo Architecture block, which contains three main engines connected in a pipeline: the Preprocessing Engine (frustum culling and feature extraction, producing feature and incoming-Gaussian tables), the Sorting Engine (dynamic partial sorting and incoming-table sorting), and the Rasterization Engine (subtile-based rasterization with deferred depth updates). Dashed lines expand the Sorting Engine into its 16 parallel Sorting Cores and the Rasterization Engine into its 4 parallel Rasterization Cores, foreshadowing the more detailed microarchitecture figures that follow. The layout is simple and sparse, emphasizing the pipeline of three engines over a green-bordered chip boundary.",
+  "summary_zh": "该图展示Neo加速器的顶层架构：DRAM通过内存控制器连接三大引擎——预处理引擎（视锥剔除与特征提取）、排序引擎（动态部分排序与新增高斯排序）、光栅化引擎（子瓦片光栅化与延迟深度更新），虚线展开显示排序引擎含16个并行排序核心，光栅化引擎含4个并行光栅化核心。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

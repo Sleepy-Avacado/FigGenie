@@ -1,0 +1,178 @@
+{
+  "paper_id": "nsdi24-097",
+  "fig": "7",
+  "kind": "mechanism",
+  "system": {
+    "name": "BFMSense",
+    "one_liner": "a WiFi sensing system that extracts fine-grained human motion such as respiration from the beamforming feedback matrix (BFM) reported by commodity WiFi devices",
+    "domain": [
+      "wireless-sensing",
+      "networked-systems"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how a target's initial position shapes its BFM trajectory and thus the size of its respiration-induced amplitude/phase variation",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Good position",
+        "kind": "label",
+        "role": "names the initial position whose BFM trajectory sweeps a longer arc, yielding strong respiration-induced variation",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Bad position",
+        "kind": "label",
+        "role": "names the initial position whose BFM trajectory covers only a short fragment, yielding weak respiration-induced variation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "(a)",
+        "kind": "icon",
+        "role": "phase-plane panel plotting the BFM signal trajectory on the complex plane for both positions",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "BFM amplitude variation",
+        "kind": "label",
+        "role": "titles panel (b), the BFM amplitude waveform over time for both positions",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "BFM phase variation",
+        "kind": "label",
+        "role": "titles panel (c), the BFM phase waveform over time for both positions",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "(a)",
+        "to": "BFM amplitude variation",
+        "what": "each position's trajectory shape produces its amplitude waveform",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "(a)",
+        "to": "BFM phase variation",
+        "what": "each position's trajectory shape produces its phase waveform",
+        "kind": "mapping",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Good position",
+        "axis": "alternatives",
+        "differs": "trajectory sweeps a longer arc of the circle, producing large-amplitude oscillations in the top rows of (b) and (c)",
+        "verdict": "good"
+      },
+      {
+        "label": "Bad position",
+        "axis": "alternatives",
+        "differs": "trajectory covers only a short, nearly straight fragment, producing small, noise-prone waveforms in the bottom rows of (b) and (c)",
+        "verdict": "bad"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "The shape of the BFM trajectory on the complex plane at a given initial position determines whether the resulting amplitude and phase waveforms show strong (good position) or weak (bad position) respiration-induced variation.",
+    "reading_order": "left to right: the phase-plane trajectory in (a) for both positions, then its derived amplitude waveform in (b), then its derived phase waveform in (c), comparing the top (good) and bottom (bad) rows"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.54,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ffc000",
+        "used_for": "gold dashed trajectory arc and top waveform rows for the 'Good position' case"
+      },
+      {
+        "hex": "#fec000",
+        "used_for": "near-duplicate gold tone from anti-aliasing, same 'Good position' curves"
+      },
+      {
+        "hex": "#c55a11",
+        "used_for": "dark orange, the 'Good position' text label"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "mid-grey, the 'Bad position' trajectory arc and axis rules"
+      },
+      {
+        "hex": "#262626",
+        "used_for": "near-black axis ticks, numeric labels and 'Bad position' text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.8pt) curve strokes, some dashed for the good-position trajectory",
+    "corners": "square",
+    "arrows": "a few thin arrows/leader lines linking the trajectory panel to the waveform panels",
+    "font": "Times New Roman serif, ~6.5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gold/orange = the 'Good position' case (larger trajectory arc, larger amplitude/phase swings); grey = the 'Bad position' case and axis lines",
+    "line_style_means": "dashed = Good position's trajectory; solid = Bad position's trajectory",
+    "state_means": "the two positions are told apart by which row (top vs bottom) of each waveform panel they occupy, plus curve colour and dash style in the trajectory panel",
+    "marker_means": "no numbered markers; text labels 'Good position' / 'Bad position' identify the two cases directly",
+    "emphasis": "stacking each case's waveform directly above/below the other in (b) and (c) lets the reader see at a glance that the good-position oscillation is much larger",
+    "reusable_patterns": [
+      "a phase-plane trajectory plot paired with stacked good/bad time-series waveforms sharing the same time axis"
+    ],
+    "weaknesses": [
+      "axis tick labels are very small and the two trajectory arcs in (a) are not clearly tied by colour to their corresponding rows in (b)/(c)"
+    ]
+  },
+  "tags": [
+    "wifi-sensing",
+    "beamforming-feedback-matrix",
+    "respiration-monitoring",
+    "signal-trajectory",
+    "good-bad-position"
+  ],
+  "provenance": {
+    "sections": [
+      "3.2.4 Case study (p.7)",
+      "3 Understanding the relationship between (p.7)"
+    ],
+    "evidence": [
+      "The curve fragments differ when a subject is at different positions",
+      "We call such positions ‘good positions’ for sensing",
+      "Those positions with small amplitude variations can be buried by noise"
+    ]
+  },
+  "summary": "This figure from BFMSense's case study on respiration monitoring explains why sensing quality depends on a target's initial position. Panel (a) plots the beamforming feedback matrix (BFM) signal's trajectory on the complex plane for a 'Good position' (gold dashed arc) versus a 'Bad position' (grey solid arc): the good-position trajectory sweeps a longer arc of the underlying circle, while the bad-position one covers only a short, nearly straight fragment. Panels (b) and (c) show the corresponding BFM amplitude and phase waveforms over time, each split into a top row (good position, large oscillations) and bottom row (bad position, small, noise-prone oscillations). The figure argues that respiration-induced BFM variation is only a fragment of a full rotation, so its size, and therefore how easily it can be detected, depends on where along the circle that fragment falls.",
+  "summary_zh": "该图展示BFMSense呼吸监测案例：(a)对比好/坏初始位置在复平面上的BFM信号轨迹弧长；(b)(c)分别给出对应幅度和相位随时间变化，好位置振荡明显，坏位置振荡微弱、易被噪声淹没。",
+  "confidence": "medium",
+  "notes": "prior base 'none' is not a valid v3 value; corrected to 'graph' since the figure is a trajectory plot plus waveform charts. content.panels captures the Good-vs-Bad comparison (2), while the raw index panel count (3) counts the three lettered sub-plots (a)/(b)/(c). The extracted top-5 palette (gold/orange/grey) does not include the blue tone visible for the bad-position trajectory in the PNG preview; palette entries follow the extracted hex data as instructed.",
+  "venue": "NSDI24"
+}

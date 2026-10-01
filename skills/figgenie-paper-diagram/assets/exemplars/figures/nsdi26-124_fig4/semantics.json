@@ -1,0 +1,206 @@
+{
+  "paper_id": "nsdi26-124",
+  "fig": "4",
+  "system": {
+    "name": "Slowpoke",
+    "one_liner": "a control-plane system that predicts a microservice application's end-to-end throughput under a hypothetical optimization without implementing it",
+    "domain": [
+      "microservices",
+      "performance-modeling",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Pod",
+        "role": "Kubernetes pod hosting one microservice instance and its co-located POKER controller",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Service",
+        "role": "a microservice instance that communicates via Slowpoke's instrumented libraries",
+        "container": "Pod",
+        "novel": false
+      },
+      {
+        "name": "Target Service",
+        "role": "the microservice hypothetically being optimized; its instrumented library notifies the co-located POKER once a request threshold is reached",
+        "container": "Pod",
+        "novel": false
+      },
+      {
+        "name": "HTTP",
+        "role": "Slowpoke's instrumented, API-compatible HTTP/gRPC library that records requests received and downstream calls",
+        "container": "Service",
+        "novel": true
+      },
+      {
+        "name": "Poker",
+        "role": "lightweight C controller co-located with each service that collects metrics, injects slowdowns, and coordinates with neighboring POKERs",
+        "container": "Pod",
+        "novel": true
+      },
+      {
+        "name": "Data Plane",
+        "role": "groups the running pods, services, and instrumented libraries",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Control Plane",
+        "role": "groups Slowpoke's own orchestration logic: pre-profiling, the performance model, and slowdown coordination",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "(1) Pre-profiling Load/CPUs/Neighbors",
+        "role": "phase that collects load statistics, allocated CPUs, and neighbor services from each POKER",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "(2) Slowdown",
+        "role": "phase that selectively slows non-target services to produce a bottleneck-equivalent execution",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Model: Slowdown Calculation & Prediction",
+        "role": "Slowpoke's performance model that computes per-service slowdown amounts and predicts end-to-end throughput",
+        "container": "Control Plane",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Service",
+        "to": "Target Service",
+        "what": "instrumented HTTP/gRPC traffic between neighboring services (a)",
+        "step": null
+      },
+      {
+        "from": "Target Service",
+        "to": "Service",
+        "what": "instrumented HTTP/gRPC traffic between neighboring services (a)",
+        "step": null
+      },
+      {
+        "from": "HTTP",
+        "to": "Poker",
+        "what": "runtime metrics (requests received, downstream services) sent over a UNIX pipe (b)",
+        "step": null
+      },
+      {
+        "from": "HTTP",
+        "to": "Poker",
+        "what": "notification once the target service reaches a predefined number of incoming requests (c)",
+        "step": null
+      },
+      {
+        "from": "Poker",
+        "to": "Poker",
+        "what": "coordinated slowdown-propagation messages between neighboring POKERs",
+        "step": null
+      },
+      {
+        "from": "Poker",
+        "to": "(1) Pre-profiling Load/CPUs/Neighbors",
+        "what": "aggregated load/CPU/neighbor metadata reported to the control plane",
+        "step": null
+      },
+      {
+        "from": "Model: Slowdown Calculation & Prediction",
+        "to": "(2) Slowdown",
+        "what": "computed per-service slowdown amounts",
+        "step": null
+      },
+      {
+        "from": "Poker",
+        "to": "Service",
+        "what": "POSIX signal (Sig) pausing the service process during coordinated slowdown",
+        "step": null
+      }
+    ],
+    "key_idea": "Slowpoke's control-plane logic aggregates per-pod metrics gathered by instrumented libraries and co-located POKER controllers, then computes and injects a coordinated slowdown that turns the deployment into a bottleneck-equivalent version of a hypothetically optimized application.",
+    "reading_order": "Left to right across three pods in the data plane (Service/Target Service, HTTP, Poker), then down across the dashed divider to the control-plane pre-profiling, slowdown, and model boxes."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.66,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#efefef",
+        "used_for": "Pod background fill"
+      },
+      {
+        "hex": "#cfe2f3",
+        "used_for": "Service/Target Service and HTTP box fills"
+      },
+      {
+        "hex": "#b45f06",
+        "used_for": "orange text/arrows for the (1) Pre-profiling label and its metric flows"
+      },
+      {
+        "hex": "#38761d",
+        "used_for": "green text/arrows for the (2) Slowdown label and its coordination flows"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.82pt, dashed line separating data plane from control plane",
+    "font": "Times New Roman serif, ~8.5pt, bold-italic for Target Service and Pod",
+    "corners": "rounded",
+    "arrows": "mix of straight and curved orthogonal arrows, filled heads, colored orange/green where they carry pre-profiling or slowdown information",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = pre-profiling phase and its data flow, green = slowdown phase and its data flow, light blue = instrumented service/library boxes, light gray = pod boundary",
+    "line_style_means": "dashed horizontal line separates the data plane (running pods) from the control plane (Slowpoke's own logic)",
+    "emphasis": "converging orange/green arrows from all three POKERs into the labeled (1)/(2) control-plane phases highlight Slowpoke's centralized aggregation and coordinated slowdown",
+    "reusable_patterns": [
+      "data-plane/control-plane split with per-node agents feeding a centralized controller",
+      "lettered callouts (a)/(b)/(c) tying figure elements to body-text explanations"
+    ],
+    "weaknesses": [
+      "three lettered callouts (a)/(b)/(c) are dense and require reading the body text to disambiguate exactly what each arrow represents"
+    ]
+  },
+  "tags": [
+    "microservices",
+    "kubernetes",
+    "throughput-prediction",
+    "profiling",
+    "slowdown-injection",
+    "control-plane"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Slowpoke Overview (p.4)",
+      "2 Slowpoke Overview (p.5)"
+    ],
+    "evidence": [
+      "Its core logic runs on the control plane of the orchestration platform.",
+      "POKER collects metrics from the communication library through a standard UNIX pipe (Fig. 4 (b))",
+      "pause the corresponding service processes by sending POSIX signals"
+    ]
+  },
+  "summary": "Figure 4 gives the architecture of Slowpoke, a system that predicts the throughput impact of hypothetically optimizing one microservice without implementing the optimization. The data plane (top) shows three Kubernetes pods, each running a Service (the middle one is the Target Service) behind Slowpoke's instrumented, API-compatible HTTP/gRPC library, alongside a lightweight POKER controller. Instrumented libraries record request counts and downstream calls, relay them to POKER over a UNIX pipe, and notify POKER when the target service crosses a request threshold. Below a dashed divider, the control plane aggregates this information during a pre-profiling phase (orange) to build a performance model, then during a slowdown phase (green) computes and coordinates POSIX-signal-based slowdowns of non-target services, producing a bottleneck-equivalent execution used to predict end-to-end throughput.",
+  "summary_zh": "图4展示Slowpoke架构：数据平面中每个Pod内的服务通过插桩HTTP/gRPC库与同置的POKER交互；控制平面先预分析负载和邻居信息，再计算并协调对非目标服务的减速，从而预测端到端吞吐量。",
+  "confidence": "high",
+  "notes": "Arrow endpoints for callouts (a) and (c) are inferred from the Fig. 4(a)/(b)/(c) references in the body text rather than from crisp arrowheads in the preview image.",
+  "venue": "NSDI26"
+}

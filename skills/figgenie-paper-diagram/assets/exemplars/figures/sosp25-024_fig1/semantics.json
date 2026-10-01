@@ -1,0 +1,237 @@
+{
+  "paper_id": "sosp25-024",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "HedraRAG",
+    "one_liner": "a runtime system built on a graph-based abstraction (RAGraph) that coordinates generation and retrieval across heterogeneous RAG workflows",
+    "domain": [
+      "retrieval-augmented-generation",
+      "LLM-serving",
+      "runtime-systems"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "a design comparison",
+    "subject": "how everyday, multi-hop, and knowledge-summary questions require increasingly complex retrieval-generation workflows",
+    "base": "scene",
+    "elements": [
+      {
+        "name": "LLM",
+        "kind": "icon",
+        "role": "the generative model in the base RAG system, alternating with retrieval",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Vector Search",
+        "kind": "icon",
+        "role": "the retrieval component in the base RAG system, alternating with generation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "External knowledge",
+        "kind": "icon",
+        "role": "the knowledge store Vector Search queries",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Everyday question",
+        "kind": "label",
+        "role": "category heading for the simplest workflow, a single-hop factual question",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Document",
+        "kind": "box",
+        "role": "a retrieved passage feeding the generator; the basic unit reused in every workflow example",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Answer",
+        "kind": "box",
+        "role": "the generated response produced from retrieved documents",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Multi-hop reasoning",
+        "kind": "label",
+        "role": "category heading for questions requiring chained sub-questions and multiple retrievals",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Subquestion",
+        "kind": "box",
+        "role": "an intermediate question the workflow generates and retrieves for, decomposing the original multi-hop question",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Knowledge summary",
+        "kind": "label",
+        "role": "category heading for open-ended questions needing broad, iterative evidence gathering",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Question",
+        "kind": "box",
+        "role": "the original open-ended question driving iterative retrieval-generation (IRG)",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "LLM",
+        "to": "Vector Search",
+        "what": "the LLM and Vector Search repeatedly hand off to each other",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Vector Search",
+        "to": "External knowledge",
+        "what": "Vector Search queries external knowledge to fetch documents",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Document",
+        "to": "Answer",
+        "what": "retrieved documents are consumed by generation to produce an answer",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Subquestion",
+        "to": "Document",
+        "what": "a subquestion triggers a further retrieval",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Everyday question / One-shot",
+        "axis": "alternatives",
+        "differs": "template: a single Document is retrieved once and a single Answer is generated once (1 retrieval, 1 generation)",
+        "verdict": null
+      },
+      {
+        "label": "Multi-hop reasoning / Multistep",
+        "axis": "alternatives",
+        "differs": "the question is decomposed into a chained Subquestion, each triggering its own Document retrieval, before a final Answer (2 retrievals, 3 generations)",
+        "verdict": null
+      },
+      {
+        "label": "Knowledge summary / IRG",
+        "axis": "alternatives",
+        "differs": "an open-ended Question drives more than 3 rounds of retrieving a Document and generating a partial summary, iterating until enough evidence is gathered (>3 retrievals and generations)",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the worked example content for each workflow: actual questions, retrieved 'documents', and generated answers/summaries (e.g. 'Wilhelm Rontgen', 'June, 1516', 'Alexander Fleming')",
+      "linked_by": "position along each row's left-to-right arrow chain, coloured by role (blue = question/answer text, green = document)",
+      "result_cells": "each row ends in a boxed Answer (or, for IRG, an open-ended chain of Document/summary pairs) plus a caption naming the retrieval/generation count"
+    },
+    "key_idea": "RAG workflows are heterogeneous: a one-shot question needs one retrieval and one generation, a multi-hop question needs chained sub-questions each triggering its own retrieval, and an open-ended summary needs more than three rounds of iterative retrieval and generation.",
+    "reading_order": "top RAG-system loop first, then down the three rows, each read left (example question) to right (its workflow graph)"
+  },
+  "layout": {
+    "arrangement": "panels-column",
+    "panel_count": 3,
+    "frame_template": "aligned",
+    "delta_marking": "callout",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e6f0ff",
+        "used_for": "pale blue fill of the LLM icon box and the Answer/Subquestion/Question text boxes"
+      },
+      {
+        "hex": "#bdd7ee",
+        "used_for": "a deeper blue accent on borders/highlights of the blue boxes"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "pale green fill of the Vector Search icon box and every Document box"
+      },
+      {
+        "hex": "#dbdbdb",
+        "used_for": "light gray fill of the three workflow-category boxes (Everyday question, Multi-hop reasoning, Knowledge summary)"
+      },
+      {
+        "hex": "#ebebed",
+        "used_for": "very light gray background/border of the dashed workflow-example panels"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed rounded-rectangle borders around each workflow example; thin black connecting arrows",
+    "corners": "rounded",
+    "arrows": "thin black curved arrows linking question/subquestion/document/answer boxes; a double-line arrow linking Vector Search to External knowledge",
+    "font": "sans-serif (Nimbus Sans/Arial), bold for box headers (Document, Answer, Subquestion, Question) and category names",
+    "icons": "a head-with-gears LLM icon, a magnifying-glass Vector Search icon, a stack-of-books External-knowledge icon, plus a question-mark/lightbulb/book icon beside each workflow category"
+  },
+  "encoding": {
+    "color_means": "green marks retrieved Document boxes and the Vector Search icon; blue marks generated/asked text (Answer, Subquestion, Question) and the LLM icon; gray marks the three workflow-category boxes",
+    "line_style_means": "solid curved arrows link a box to whatever it produces or triggers next; a double line shows Vector Search querying External knowledge; dashed rounded rectangles frame each workflow's worked example",
+    "state_means": "not applicable; the three panels are alternative workflow shapes, not states of one instance",
+    "marker_means": null,
+    "emphasis": "the caption under each panel ('One-shot (1 retrieval, 1 generation)', ..., 'IRG (>3 iterative retrieval and generations)') names the escalating retrieval/generation cost so the three panels read as increasing complexity",
+    "reusable_patterns": [
+      "a shared two-icon RAG-system overview (LLM <-> Vector Search <-> External knowledge) unpacked into concrete worked-example graphs for three workflow complexities, growing from a single Document/Answer pair to a chained sub-question graph to an open-ended iterative chain"
+    ],
+    "weaknesses": [
+      "node names repeat across panels ('Document 1', 'Answer') so without the dashed panel boundaries and captions the three examples could be misread as one connected graph"
+    ]
+  },
+  "tags": [
+    "retrieval-augmented-generation",
+    "RAG",
+    "multi-hop-QA",
+    "iterative-retrieval",
+    "HedraRAG"
+  ],
+  "provenance": {
+    "sections": [
+      "§1 Introduction"
+    ],
+    "evidence": [
+      "recent advances in RAG techniques have led to increasing heterogeneity in RAG requests",
+      "The number of stages often increases in workflows that perform multiple iterations of retrieval and generation",
+      "different tasks often adopt distinct workflow patterns by design"
+    ]
+  },
+  "summary": "Figure 1 motivates HedraRAG by showing how RAG workflows differ in structure and cost. At top, a generic RAG system alternates between an LLM and Vector Search over external knowledge. Below, three worked examples show increasing heterogeneity: an Everyday question ('Who got the first Nobel prize in physics?') is answered One-shot with a single Document retrieval and a single generated Answer; a Multi-hop reasoning question ('When did John V of Anhalt-Zerbst father die?') is solved Multistep by decomposing it into a chained Subquestion, each triggering its own Document retrieval, across 2 retrievals and 3 generations; and a Knowledge summary question ('Discovery of penicillin and subsequent impact') requires IRG, iterating more than 3 rounds of retrieval and generation while chaining documents into a running summary.",
+  "summary_zh": "该图示RAG工作流的异构性：顶部为LLM与向量检索交替的通用系统；下方三例复杂度递增——单跳问题仅需1次检索1次生成；多跳推理拆解子问题经2次检索3次生成；知识总结需迭代3轮以上检索生成，链接文档得出综述。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

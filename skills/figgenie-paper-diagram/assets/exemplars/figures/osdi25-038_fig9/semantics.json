@@ -1,0 +1,259 @@
+{
+  "paper_id": "osdi25-038",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "Scalio",
+    "one_liner": "a DPU-based JBOF key-value store that offloads NVMe-oF target processing to scale storage throughput",
+    "domain": [
+      "key-value-store",
+      "storage-systems",
+      "DPU-offload"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "logic"
+    ],
+    "worked_example": false,
+    "depicts": "one data structure",
+    "subject": "how a cache slot's occupied/complete flags step through four states under Fill, Lock, Invalidate, and Evict",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Legends",
+        "kind": "label",
+        "role": "header row naming the four fields shown in every state's record: key, occupied, value, complete",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "key",
+        "kind": "cell",
+        "role": "field holding the slot's key",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "occupied",
+        "kind": "cell",
+        "role": "flag indicating whether the slot holds a valid key",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "value",
+        "kind": "cell",
+        "role": "field holding the slot's value data",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "complete",
+        "kind": "cell",
+        "role": "flag indicating whether the value has been fully written",
+        "container": "Legends",
+        "highlighted": false
+      },
+      {
+        "name": "(A) A clean empty slot",
+        "kind": "state",
+        "role": "occupied=0, complete=1: the slot holds no valid data and is safe to reuse",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "(D) Invalidated while value being filled",
+        "kind": "state",
+        "role": "occupied=0, complete=0, value partially written: the slot was invalidated before its in-flight fill finished",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "(C) A valid cache item",
+        "kind": "state",
+        "role": "occupied=1, complete=1: the slot holds a fully written, valid key/value pair",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "(B) Value being filled",
+        "kind": "state",
+        "role": "occupied=1, complete=0, value partially written: the slot is claimed and its value is still being written",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "(A) A clean empty slot",
+        "to": "(B) Value being filled",
+        "what": "locking a clean slot claims it and starts writing a new value",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "(B) Value being filled",
+        "to": "(C) A valid cache item",
+        "what": "the fill completes while the slot is still claimed, producing a fully written valid item",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "(B) Value being filled",
+        "to": "(D) Invalidated while value being filled",
+        "what": "the slot is invalidated (unclaimed) before its in-flight fill finishes",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "(D) Invalidated while value being filled",
+        "to": "(A) A clean empty slot",
+        "what": "the stale fill completes on an already-invalidated slot, leaving it clean and reusable",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "(C) A valid cache item",
+        "to": "(A) A clean empty slot",
+        "what": "the valid item is invalidated or evicted, returning the slot to a clean, reusable state",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "(A) A clean empty slot",
+        "to": "(A) A clean empty slot",
+        "what": "invalidating an already-clean slot has no further effect",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "(D) Invalidated while value being filled",
+        "to": "(D) Invalidated while value being filled",
+        "what": "invalidating an already-invalidated slot has no further effect",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "(A) A clean empty slot",
+        "(B) Value being filled",
+        "(C) A valid cache item",
+        "(D) Invalidated while value being filled"
+      ],
+      "transitions": [
+        {
+          "from": "(A) A clean empty slot",
+          "to": "(B) Value being filled",
+          "guard": "Lock"
+        },
+        {
+          "from": "(B) Value being filled",
+          "to": "(C) A valid cache item",
+          "guard": "Fill"
+        },
+        {
+          "from": "(B) Value being filled",
+          "to": "(D) Invalidated while value being filled",
+          "guard": "Invalidate"
+        },
+        {
+          "from": "(D) Invalidated while value being filled",
+          "to": "(A) A clean empty slot",
+          "guard": "Fill"
+        },
+        {
+          "from": "(C) A valid cache item",
+          "to": "(A) A clean empty slot",
+          "guard": "Invalidate / Evict"
+        },
+        {
+          "from": "(A) A clean empty slot",
+          "to": "(A) A clean empty slot",
+          "guard": "Invalidate"
+        },
+        {
+          "from": "(D) Invalidated while value being filled",
+          "to": "(D) Invalidated while value being filled",
+          "guard": "Invalidate"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "Two per-slot flags, occupied and complete, define four states - clean, being filled, valid, and invalidated-while-filling - and the Fill/Lock/Invalidate/Evict transitions between them let Scalio detect the race where a slot is invalidated while still being filled.",
+    "reading_order": "Top-left (A) reads right to (D) via Fill; bottom-left (C) reads right to (B) via Fill, with vertical and diagonal arrows linking the two rows and looping self-invalidations."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.55,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#000000",
+        "used_for": "all state boxes, record cells, arrows, and text - the figure is a monochrome black-and-white line diagram with no colour coding"
+      }
+    ],
+    "background": "white",
+    "fill": "none",
+    "stroke": "uniform thin black strokes (median ~1.15pt), solid, no dashing",
+    "corners": "square",
+    "arrows": "thin black straight and curved arrows (6 heads, 2 curved) labelled with the transition name",
+    "font": "bold sans-serif (Arial)",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "no colour is used; the figure is monochrome black-and-white",
+    "line_style_means": "all edges are solid lines; two are curved self-loops and the rest are straight arrows between states",
+    "state_means": "each of the four states is drawn as its own labelled record box (A/B/C/D) with the occupied and complete flag values shown as 0/1 inside the cells, so the flag bits themselves distinguish the states",
+    "marker_means": "the letters (A)-(D) name each state; 0/1 values inside the record cells show the occupied and complete flag settings for that state",
+    "emphasis": "the record layout is repeated identically in every state so only the flag values and the value/key cell contents change between states",
+    "reusable_patterns": [
+      "a 4-state machine drawn as four repeated record-layout boxes in a 2x2 grid, connected by labelled transition arrows including two self-loops"
+    ],
+    "weaknesses": [
+      "the arrow from (D) to (A) and from (B) to (C) share the same 'Fill' label, so the two different completions are only distinguishable by which state they originate from",
+      "the figure does not show which entity (client, background thread) triggers each transition"
+    ]
+  },
+  "tags": [
+    "cache-consistency",
+    "state-machine",
+    "key-value-store",
+    "DPU-offload",
+    "Scalio",
+    "concurrency"
+  ],
+  "provenance": {
+    "sections": [
+      "§5 Cache Consistency Protocol"
+    ],
+    "evidence": [
+      "The core of this protocol is based on two flags — occupied and complete",
+      "These two flags result in four distinct states",
+      "A slot is empty and safe to be reused when occupied is false and complete is true."
+    ]
+  },
+  "summary": "Figure 9 defines the four-state lifecycle of a Scalio cache slot, driven by two flags recorded in each slot's record - occupied (does the slot hold a valid key) and complete (has the value been fully written). State (A), a clean empty slot, has occupied=0 and complete=1 and is safe to reuse; a Lock transition claims it and moves it to (B), value being filled (occupied=1, complete=0). From (B), a Fill completing normally reaches (C), a valid cache item (occupied=1, complete=1), while an Invalidate during the fill instead reaches (D), invalidated while value being filled (occupied=0, complete=0). A stale Fill completing from (D) simply resets the slot back to (A), and Invalidate/Evict on (C) also returns it to (A); invalidating an already-clean (A) or already-invalidated (D) slot is a no-op self-loop.",
+  "summary_zh": "图9定义Scalio缓存槽四态生命周期，由occupied/complete标志决定：(A)空槽经Lock到(B)填充中；(B)完成经Fill到(C)有效项，中途Invalidate则到(D)；(D)/(C)最终都回到(A)。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI25"
+}

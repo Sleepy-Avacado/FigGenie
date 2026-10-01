@@ -1,0 +1,157 @@
+{
+  "paper_id": "asplos26-152",
+  "fig": "5",
+  "system": {
+    "name": "SQLancer++",
+    "one_liner": "a platform that applies automated test oracles to any SQL-based DBMS via an adaptive SQL statement generator",
+    "domain": [
+      "databases",
+      "testing"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "sql-stmt ::= select | analyze | index ...",
+        "role": "grammar production rules with per-option generation probabilities",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "DBMS",
+        "role": "the database under test; executes generated SQL statements and returns success/error status",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Feature sets",
+        "role": "the set of SQL features contained in each generated statement",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Execution attempts",
+        "role": "records how often statements containing a feature succeed vs. fail",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Est. Prob.",
+        "role": "estimated probability that a feature is supported, computed from execution attempts",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "sql-stmt ::= select | analyze | index ...",
+        "to": "DBMS",
+        "what": "randomly generated SQL statement",
+        "step": 2
+      },
+      {
+        "from": "DBMS",
+        "to": "Feature sets",
+        "what": "execution status (success/error) attributed to the feature set used",
+        "step": 2
+      },
+      {
+        "from": "Feature sets",
+        "to": "Execution attempts",
+        "what": "pass/fail counts for each feature",
+        "step": 3
+      },
+      {
+        "from": "Execution attempts",
+        "to": "Est. Prob.",
+        "what": "estimated support probability per feature",
+        "step": 3
+      },
+      {
+        "from": "Est. Prob.",
+        "to": "sql-stmt ::= select | analyze | index ...",
+        "what": "updated generation probabilities, unsupported features set to zero probability",
+        "step": 4
+      }
+    ],
+    "key_idea": "The adaptive generator iteratively generates SQL statements, executes them against the DBMS to observe which features succeed or fail, and updates its grammar's generation probabilities so it increasingly avoids unsupported features.",
+    "reading_order": "left to right through four circled steps: (1) initialize uniform probabilities, (2) generate and execute statements, (3) update feature sets from execution feedback, (4) update probabilities; a loop arrow at the bottom returns to step 1."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 2.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e8d4",
+        "used_for": "green tag/box for a supported (passed) SQL feature"
+      },
+      {
+        "hex": "#f8cecc",
+        "used_for": "pink/red tag/box for an unsupported (failed) SQL feature"
+      },
+      {
+        "hex": "#fdf1c4",
+        "used_for": "light yellow highlight on grammar keywords under test"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "yellow tag variant"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "neutral gray background/box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on statement and DBMS boxes",
+    "font": "mixed sans and monospace (Menlo) for SQL code",
+    "corners": "square",
+    "arrows": "thin black arrows between pipeline stages, plus a long feedback arrow along the bottom",
+    "icons": "vector: green check mark and red cross mark for feature validity; a cylinder for DBMS"
+  },
+  "encoding": {
+    "color_means": "green = a SQL feature the DBMS supports (execution succeeded), red/pink = a feature the DBMS rejects (execution failed), yellow highlight = the SQL keyword/feature under test in an example statement",
+    "line_style_means": "solid arrows show the forward data pipeline; a separate long arrow along the bottom shows the feedback loop back to the grammar",
+    "emphasis": "green check marks and red cross marks on individual feature tags make the pass/fail outcome of each generated statement immediately visible",
+    "reusable_patterns": [
+      "numbered circular-step pipeline with an explicit feedback loop drawn back to step 1",
+      "color-coded pass/fail tags attached to example code snippets"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "fuzzing",
+    "SQL-testing",
+    "adaptive-generation",
+    "feedback-loop",
+    "DBMS"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Adaptive Statement Generator (p.5-6)"
+    ],
+    "evidence": [
+      "Figure 5 illustrates the steps of adaptive statement genera- tion, which is at the core of SQLancer++",
+      "we initialize the generator with each feature sharing the same probability",
+      "we update the prob- ability of the generator choices based on the states of the SQL features"
+    ]
+  },
+  "summary": "This figure shows the four-step loop of SQLancer++'s adaptive SQL statement generator. Step 1 initializes the generation grammar with uniform probabilities across feature options. Step 2 generates SQL statements (e.g., CREATE INDEX, ANALYZE, SELECT with CASE/SIN expressions) and executes them against the DBMS, recording success or failure. Step 3 groups the features used in each statement into feature sets and tallies execution attempts, marking sets as passed (green) or failed (red/pink), for example marking INDEX as failed and CASE/!=/SIN/SIN1INT as succeeded. Step 4 recomputes each feature's estimated support probability from these attempts and updates the grammar, assigning zero probability to confirmed-unsupported features like the '<=>' operator. An arrow loops back to step 1 to repeat with the updated configuration.",
+  "summary_zh": "该图展示 SQLancer++ 自适应 SQL 生成器的四步循环：初始化统一概率、生成语句并在DBMS执行、依据执行反馈标记特征通过/失败、据此更新语法概率，循环迭代以避免生成不支持的特征。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS26"
+}

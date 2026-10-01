@@ -1,0 +1,197 @@
+{
+  "paper_id": "asplos25-100",
+  "fig": "5",
+  "system": {
+    "name": "CENT",
+    "one_liner": "a CXL-enabled, GPU-free system for LLM inference using near-bank and near-memory processing units",
+    "domain": [
+      "ml-systems",
+      "hardware",
+      "memory-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "CXL Port",
+        "role": "interface connecting the device to the CXL switch/host",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Instruction Buffer (2MB)",
+        "role": "receives instructions transmitted from the host",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Decoder",
+        "role": "decodes instructions into micro-ops directed to PIM controllers and PNM units",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "PC",
+        "role": "program counter driving instruction decoding",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PNM Units",
+        "role": "perform operations beyond MAC (accumulation, reduction, activation) that LLMs need",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Shared Buffer (64KB)",
+        "role": "buffer used for inter-device communication and PNM data staging",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Inter-Device Communication Controller",
+        "role": "orchestrates communication between CXL devices together with the CXL port",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LD/ST",
+        "role": "load/store units bridging the decoder and PIM controllers",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "PIM Ctrl",
+        "role": "PIM controller managing PIM channels (×16), converting micro-ops to DRAM commands",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GDDR6-PIM",
+        "role": "near-bank PIM memory channel executing DRAM commands",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "CXL Port",
+        "to": "Instruction Buffer (2MB)",
+        "what": "instructions from host",
+        "step": null
+      },
+      {
+        "from": "Instruction Buffer (2MB)",
+        "to": "Decoder",
+        "what": "instructions",
+        "step": null
+      },
+      {
+        "from": "Decoder",
+        "to": "PNM Units",
+        "what": "micro-ops",
+        "step": null
+      },
+      {
+        "from": "Decoder",
+        "to": "PIM Ctrl",
+        "what": "micro-ops / DRAM commands via LD/ST",
+        "step": null
+      },
+      {
+        "from": "PIM Ctrl",
+        "to": "GDDR6-PIM",
+        "what": "DRAM commands",
+        "step": null
+      },
+      {
+        "from": "Inter-Device Communication Controller",
+        "to": "Shared Buffer (64KB)",
+        "what": "inter-device data",
+        "step": null
+      },
+      {
+        "from": "PNM Units",
+        "to": "Shared Buffer (64KB)",
+        "what": "data",
+        "step": null
+      }
+    ],
+    "key_idea": "A CENT CXL device receives host instructions into an instruction buffer, decodes them into micro-ops routed to 16 parallel PIM controllers (driving GDDR6-PIM banks) and to PNM units, while an inter-device communication controller and shared buffer support peer-to-peer data flow between devices.",
+    "reading_order": "Left to right: the CXL Port receives host input, feeding the Instruction Buffer and Decoder, which fan out to PNM Units and 16 replicated PIM Ctrl/GDDR6-PIM channels at the bottom; the Shared Buffer and Inter-Device Communication Controller sit at top-right for peer-to-peer traffic."
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#2e75b6",
+        "used_for": "Instruction Buffer and Shared Buffer boxes (blue)"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "PNM Units box (orange)"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "GDDR6-PIM channel boxes (light orange)"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "accent fill (light blue)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.62pt median, dashed orange lines mark control flow",
+    "font": "Times New Roman serif, ~7.5pt",
+    "corners": "square",
+    "arrows": "44 arrowheads, straight lines, color-coded by flow type",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = instruction/buffer components, orange = PNM/PIM compute components",
+    "line_style_means": "black solid = inter-device data flow, blue solid = intra-device data flow, orange dashed = control flow (per in-figure legend)",
+    "emphasis": "the ×16 replication of PIM Ctrl/GDDR6-PIM channels shown with an ellipsis emphasizes the massive per-device parallelism",
+    "reusable_patterns": [
+      "single-device block diagram with an explicit flow-type legend distinguishing control vs. data paths"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "cxl",
+    "processing-in-memory",
+    "pnm",
+    "gddr6",
+    "llm-inference",
+    "hardware-accelerator"
+  ],
+  "provenance": {
+    "sections": [
+      "4 CENT Architecture (p.5)",
+      "4 CENT Architecture (p.6)"
+    ],
+    "evidence": [
+      "Figure 5 shows the architecture of a CXL device.",
+      "CENT instructions are transmitted from the host to a 2MB instruction buffer in each device",
+      "The CXL device integrates 16 PIM controllers, each managing two PIM channels"
+    ]
+  },
+  "summary": "CENT is a CXL-enabled, GPU-free system that uses near-bank processing units inside CXL-attached memory devices to run LLM inference without expensive GPUs. Figure 5 shows the architecture of one CENT CXL device: a CXL Port feeds a 2MB Instruction Buffer, which a Decoder (with its own PC) turns into micro-ops distributed to PNM Units and to 16 parallel PIM Ctrl/GDDR6-PIM channel pairs via LD/ST paths. An Inter-Device Communication Controller and a 64KB Shared Buffer, alongside the CXL Port, support inter-device data flow and a broadcast primitive between CENT devices. An in-figure legend distinguishes black inter-device data flow, blue intra-device data flow, and orange dashed control flow.",
+  "summary_zh": "图5展示CENT单个CXL设备架构：CXL端口接收主机指令进入2MB指令缓冲区，解码器生成微操作分发给PNM单元及16路并行的PIM控制器/GDDR6-PIM通道；片间通信控制器与64KB共享缓冲区支持设备间数据交换，图例区分设备间数据流、设备内数据流与控制流。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

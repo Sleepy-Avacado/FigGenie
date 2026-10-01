@@ -1,0 +1,215 @@
+{
+  "paper_id": "nsdi26-109",
+  "fig": "3",
+  "system": {
+    "name": "OneSidedMW",
+    "one_liner": "an RNIC-offloaded memory management scheme for disaggregated memory that lets compute nodes allocate, free, and access remote memory via one-sided RDMA without memory-node CPU involvement",
+    "domain": [
+      "storage",
+      "networking"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "CNs",
+        "role": "compute nodes that run tenant applications needing remote memory",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "CN runtime (e.g., KVS or swap)",
+        "role": "existing CN-side system (e.g., a disaggregated key-value store or the Linux swap subsystem) that uses OneSidedMW's API",
+        "container": "CNs",
+        "novel": false
+      },
+      {
+        "name": "OneSidedMW API",
+        "role": "provides APIs to allocate, free, and access remote memory without involving the MN's CPU",
+        "container": "CNs",
+        "novel": true
+      },
+      {
+        "name": "RDMA NIC",
+        "role": "issues one-sided RDMA requests from the CN and receives/replies to them at the MN",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MN",
+        "role": "memory node that hosts fine-grained memory chunks managed via memory windows",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Meta Data",
+        "role": "MN-side metadata region holding the WR Chains logic and the Free MW Queue",
+        "container": "MN",
+        "novel": true
+      },
+      {
+        "name": "WR Chains",
+        "role": "offloaded (de)allocation logic executed by the RNIC itself",
+        "container": "Meta Data",
+        "novel": true
+      },
+      {
+        "name": "Free MW Queue",
+        "role": "circular-buffer queue of available memory windows, tracked with Head and Tail pointers",
+        "container": "Meta Data",
+        "novel": true
+      },
+      {
+        "name": "MWTable",
+        "role": "table storing each memory chunk's base address and its memory window's rkey",
+        "container": "MN",
+        "novel": true
+      },
+      {
+        "name": "MWs",
+        "role": "type-2 memory windows, each pre-allocated and later bound to a memory chunk",
+        "container": "MN",
+        "novel": true
+      },
+      {
+        "name": "Memory Chunks",
+        "role": "fine-grained, configurable-size units of MN memory that MWs are (un)bound to",
+        "container": "MN",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "OneSidedMW API",
+        "to": "RDMA NIC",
+        "what": "memory allocation/access request",
+        "step": null
+      },
+      {
+        "from": "RDMA NIC",
+        "to": "RDMA NIC",
+        "what": "one-sided RDMA request sent from CN to MN",
+        "step": 1
+      },
+      {
+        "from": "RDMA NIC",
+        "to": "WR Chains",
+        "what": "triggers the offloaded (de)allocation logic",
+        "step": 2
+      },
+      {
+        "from": "WR Chains",
+        "to": "Free MW Queue",
+        "what": "dequeues (allocates) an MW from the head of the queue",
+        "step": 3
+      },
+      {
+        "from": "MWs",
+        "to": "Memory Chunks",
+        "what": "(un)bind the allocated MW to its corresponding memory chunk",
+        "step": 4
+      },
+      {
+        "from": "RDMA NIC",
+        "to": "RDMA NIC",
+        "what": "returns the MW's metadata (address, rkey) to the requesting CN",
+        "step": 5
+      },
+      {
+        "from": "MWTable",
+        "to": "MWs",
+        "what": "each MWTable entry (addr, rkey) corresponds to one MW",
+        "step": null
+      }
+    ],
+    "key_idea": "A CN's OneSidedMW API issues a one-sided RDMA request that the MN's RNIC handles alone via offloaded WR Chains: dequeuing a free memory window, binding it to a memory chunk, and returning its address/rkey -- without involving the MN's CPU.",
+    "reading_order": "Left to right, following steps 1-5: CN's OneSidedMW API through the RDMA NICs into the MN's WR Chains, Free MW Queue, MWTable, and MW-Chunk binding, back to the CN."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.16,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5e7d2",
+        "used_for": "pale green fill of CN runtime, WR Chains, and Free MW Queue boxes"
+      },
+      {
+        "hex": "#656565",
+        "used_for": "dark gray fill of the RDMA NIC boxes"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "light gray fill of the Memory Chunks boxes"
+      },
+      {
+        "hex": "#e2d5e8",
+        "used_for": "pale purple fill of MWTable entry rows"
+      },
+      {
+        "hex": "#d0e7ee",
+        "used_for": "pale blue background tint of the CNs/MN outer boxes"
+      },
+      {
+        "hex": "#ff914a",
+        "used_for": "orange fill of the MW (memory window) boxes"
+      },
+      {
+        "hex": "#f6cdcb",
+        "used_for": "pale pink fill of the OneSidedMW API box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "median ~0.93pt rounded-corner borders; dashed lines link MWTable entries to MWs and mark internal region boundaries",
+    "font": "Segoe UI sans-serif (Gill Sans italic for <addr, rkey> notation), 6.5-9.5pt",
+    "corners": "rounded",
+    "arrows": "bold straight black arrows for the five numbered steps, plus curved gray arrows within the Free MW Queue ring",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "pink = OneSidedMW's own API (the paper's contribution), green = CN runtime and MN metadata-management logic, gray = RDMA NIC and raw memory chunks, purple = MWTable entries, orange = memory windows (MWs)",
+    "line_style_means": "dashed lines link each MWTable entry to its corresponding MW; solid bold black arrows carry the five numbered workflow steps",
+    "emphasis": "the five circled numbers trace one allocation request end-to-end across the CN/MN (host/device) boundary, and the pink OneSidedMW API box marks the paper's own contribution against otherwise generic CN/MN components",
+    "reusable_patterns": [
+      "host-device split (CN vs MN) with a numbered request/response round trip",
+      "circular free-list (ring buffer) diagram with Head/Tail pointers",
+      "indirection chain from table entry to resource (MWTable -> MW -> Memory Chunk)"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "disaggregated-memory",
+    "rdma",
+    "memory-window",
+    "rnic-offload",
+    "one-sided-rdma",
+    "resource-management"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.5)"
+    ],
+    "evidence": [
+      "Figure 3 illustrates the system architecture and workflow.",
+      "the offloaded logic allocates an MW from the free MW queue, binds the MW to its corresponding memory chunk",
+      "OneSidedMW offloads the memory (de)allocation logic (i.e., WR chains) to the RNIC"
+    ]
+  },
+  "summary": "This figure shows OneSidedMW's architecture and one allocation workflow across the CN/MN (host/device) boundary. On CNs, a CN runtime (e.g., a KVS or the Linux swap subsystem) calls the OneSidedMW API, which issues a one-sided RDMA request over the RDMA NIC (step 1) to the MN's RDMA NIC. There, the offloaded WR Chains logic (step 2) dequeues a free memory window from the circular Free MW Queue, tracked by Head/Tail pointers (step 3), binds that MW to its corresponding Memory Chunk (step 4), and the RDMA NIC returns the MW's address and rkey to the requesting CN (step 5). An MWTable on the MN records each chunk's base address and its MW's rkey, linking table entries to MWs via dashed connectors. The whole allocation and binding runs on the MN's RNIC without involving its CPU.",
+  "summary_zh": "OneSidedMW架构：CN经RDMA网卡发单边请求(1)；MN的RNIC卸载WR Chains(2)从Free MW Queue取空闲窗口(3)并bind内存块(4)，网卡返回地址rkey给CN(5)，无需MN CPU参与。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

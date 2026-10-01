@@ -1,0 +1,175 @@
+{
+  "paper_id": "sosp25-043",
+  "fig": "6",
+  "system": {
+    "name": "Coyote v2",
+    "one_liner": "an open-source, three-layer hierarchical FPGA shell supporting dynamic partial reconfiguration and multi-tenancy for data-center FPGAs",
+    "domain": [
+      "fpga",
+      "hardware",
+      "networking"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "TLB",
+        "role": "address translation for the application-layer vFPGA",
+        "container": "Application Layer",
+        "novel": false
+      },
+      {
+        "name": "vFPGA",
+        "role": "traffic sniffer application logic built on Coyote v2, exposes control registers to the host",
+        "container": "Application Layer",
+        "novel": true
+      },
+      {
+        "name": "Control-Unit",
+        "role": "configures the filter selection from host software via axi_ctrl",
+        "container": "vFPGA",
+        "novel": true
+      },
+      {
+        "name": "Stream Merger & Mem. Access",
+        "role": "merges RX/TX streams, handles memory access, and forwards data via host_send",
+        "container": "vFPGA",
+        "novel": true
+      },
+      {
+        "name": "100G Network Stack",
+        "role": "Coyote v2 shell service providing RoCE v2 and TCP/IP network stacks",
+        "container": "Dynamic Layer",
+        "novel": false
+      },
+      {
+        "name": "RoCE v2",
+        "role": "RDMA network stack module",
+        "container": "100G Network Stack",
+        "novel": false
+      },
+      {
+        "name": "TCP / IP",
+        "role": "TCP/IP network stack module",
+        "container": "100G Network Stack",
+        "novel": false
+      },
+      {
+        "name": "Filter",
+        "role": "network filter inserted between the network stacks and the 100G CMAC, filters RX/TX traffic based on user configuration",
+        "container": "100G Network Stack",
+        "novel": true
+      },
+      {
+        "name": "HBM",
+        "role": "on-card memory accessible from the dynamic layer",
+        "container": "Dynamic Layer",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Control-Unit",
+        "to": "Filter",
+        "what": "Filter Selection configuration",
+        "step": null
+      },
+      {
+        "from": "Filter",
+        "to": "Stream Merger & Mem. Access",
+        "what": "RX traffic",
+        "step": null
+      },
+      {
+        "from": "Stream Merger & Mem. Access",
+        "to": "Filter",
+        "what": "TX traffic",
+        "step": null
+      },
+      {
+        "from": "Stream Merger & Mem. Access",
+        "to": "HBM",
+        "what": "memory access",
+        "step": null
+      }
+    ],
+    "key_idea": "shows how a Coyote v2 application (a traffic sniffer vFPGA) in the application layer configures and taps into a Filter inserted into the shell's shared 100G network stack (RoCE v2/TCP-IP) in the dynamic layer to inspect RX/TX traffic",
+    "reading_order": "left to right: application layer (TLB, vFPGA with Control-Unit and Stream Merger) then dynamic layer (100G Network Stack with RoCE v2/TCP-IP/Filter and HBM)"
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.81,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ccdefc",
+        "used_for": "100G Network Stack container and HBM (dynamic-layer shell services)"
+      },
+      {
+        "hex": "#e3e5e5",
+        "used_for": "TLB, Control-Unit, Stream Merger & Mem. Access, and Filter (gray functional blocks)"
+      },
+      {
+        "hex": "#d5f5d9",
+        "used_for": "vFPGA (Traffic Sniffer) application container"
+      },
+      {
+        "hex": "#b80c35",
+        "used_for": "RX data-path label/lines"
+      },
+      {
+        "hex": "#34a741",
+        "used_for": "TX data-path label/lines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dark navy (#042433) strokes, ~1.04pt median, dashed vertical divider between layers",
+    "font": "HelveticaNeue sans, ~7pt",
+    "corners": "square",
+    "arrows": "bidirectional solid arrows, 11 arrowheads",
+    "icons": "small bitmap HBM chip icon"
+  },
+  "encoding": {
+    "color_means": "green = user application (vFPGA) block, blue = shell-provided network/memory services, gray = internal functional sub-blocks, red = RX path, green line = TX path",
+    "line_style_means": "dashed vertical line separates the application layer from the dynamic (shell) layer; red/green colored lines distinguish RX vs. TX traffic",
+    "emphasis": "bold 'vFPGA' label and colored RX/TX arrows emphasize the user application tapping into the shell's shared network filter",
+    "reusable_patterns": [
+      "two-column application-vs-shell-service diagram with colored directional data paths"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "fpga",
+    "smartnic",
+    "traffic-filtering",
+    "network-stack",
+    "case-study"
+  ],
+  "provenance": {
+    "sections": [
+      "8 Case Study: Traffic Sniffer (p.9)"
+    ],
+    "evidence": [
+      "a network filter is inserted between the available network stacks (RDMA, TCP/IP) and the 100G CMAC",
+      "the traffic sniffer can be configured from the host software",
+      "RX- and TX-traffic is filtered based on a user-configured filter"
+    ]
+  },
+  "summary": "Coyote v2 is an open-source, dynamically reconfigurable FPGA shell for data-center use. Figure 6 is a case-study diagram of a traffic sniffer application built on Coyote v2: in the Application Layer, a vFPGA (Traffic Sniffer) contains a Control-Unit, configured via the host-facing axi_ctrl interface, and a Stream Merger & Mem. Access block that outputs to host_send and reads/writes HBM. A dashed vertical line separates this from the Dynamic Layer, where Coyote v2's shared 100G Network Stack (RoCE v2 and TCP/IP) is intercepted by a Filter; the Control-Unit sends a Filter Selection signal to configure it, and red/green lines trace RX and TX traffic through the filter into and out of the Stream Merger. The figure illustrates how a user application taps into a shell-provided, dynamically reconfigured network service without reimplementing it.",
+  "summary_zh": "图6为Coyote v2案例研究：应用层的vFPGA流量嗅探器通过控制单元配置动态层100G网络栈中插入的Filter，红/绿线分别表示RX/TX流量路径，体现应用复用共享服务的设计。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

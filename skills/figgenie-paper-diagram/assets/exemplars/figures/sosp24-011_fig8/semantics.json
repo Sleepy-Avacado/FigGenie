@@ -1,0 +1,170 @@
+{
+  "paper_id": "sosp24-011",
+  "fig": "8",
+  "system": {
+    "name": "ReCycle",
+    "one_liner": "a resilient DNN training system that reroutes microbatches to data-parallel peers to tolerate failures without spare servers",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "fault-tolerance"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Profiler",
+        "role": "collects key performance data from a short profiling job",
+        "container": "Offline Phase",
+        "novel": true
+      },
+      {
+        "name": "Failure Normalization",
+        "role": "normalizes failure scenarios for schedule planning",
+        "container": "Offline Phase",
+        "novel": true
+      },
+      {
+        "name": "Adaptive Schedule Generation",
+        "role": "generates adaptive pipeline schedules ahead of time",
+        "container": "Offline Phase",
+        "novel": true
+      },
+      {
+        "name": "Planner",
+        "role": "offline component producing adaptive schedules from profiling and failure/threshold inputs",
+        "container": "Offline Phase",
+        "novel": true
+      },
+      {
+        "name": "Adaptive Schedule Store",
+        "role": "stores precomputed adaptive schedules for retrieval at runtime",
+        "container": "Online Phase",
+        "novel": true
+      },
+      {
+        "name": "Coordinator",
+        "role": "retrieves schedules and adapts the job to work around faults at runtime",
+        "container": "Online Phase",
+        "novel": true
+      },
+      {
+        "name": "Training Cluster",
+        "role": "set of executors running the training job",
+        "container": "Online Phase",
+        "novel": false
+      },
+      {
+        "name": "Executor",
+        "role": "worker running a pipeline stage; can fail and be rerouted around",
+        "container": "Training Cluster",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Profiler",
+        "to": "Planner",
+        "what": "profiling data",
+        "step": null
+      },
+      {
+        "from": "Planner",
+        "to": "Adaptive Schedule Store",
+        "what": "precomputed adaptive schedule for the training job",
+        "step": null
+      },
+      {
+        "from": "Adaptive Schedule Store",
+        "to": "Coordinator",
+        "what": "retrieved adaptive 1F1B schedule",
+        "step": null
+      },
+      {
+        "from": "Coordinator",
+        "to": "Training Cluster",
+        "what": "adapt job to work around faults",
+        "step": null
+      },
+      {
+        "from": "Training Cluster",
+        "to": "Coordinator",
+        "what": "new node addition or failure detection",
+        "step": null
+      }
+    ],
+    "key_idea": "An offline Planner precomputes adaptive pipeline schedules from profiling data and a fault-tolerance threshold; an online Coordinator retrieves these schedules and reroutes microbatches around failed executors in the training cluster without spare servers.",
+    "reading_order": "top-down: Offline Phase (Profiler, Planner) at top, Online Phase below with the Adaptive Schedule Store and Coordinator, and the Training Cluster row of Executors (one highlighted as failed) at the bottom."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.13,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#c00000",
+        "used_for": "failed/faulty executor highlight and fault-related arrows"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "Offline/Online Phase section backgrounds"
+      },
+      {
+        "hex": "#aeaeae",
+        "used_for": "Training Cluster panel background"
+      },
+      {
+        "hex": "#196b24",
+        "used_for": "3D-parallelism worker icon accents"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.6pt black strokes, red dashed outline on the failed executor, rounded corners on phase containers",
+    "font": "AvenirNext sans, bold for headers",
+    "corners": "rounded",
+    "arrows": "black solid arrows for data/control flow, red dashed box highlighting the failed executor",
+    "icons": "small bitmap icons representing GPU/parallelism grids inside each executor box"
+  },
+  "encoding": {
+    "color_means": "red = failed/faulty executor and fault-handling paths, gray = phase/cluster groupings, green icon accents = healthy 3D-parallel workers",
+    "line_style_means": "red dashed outline marks the failed Executor (Worker 4)",
+    "emphasis": "red dashed highlight on one executor draws attention to the failure that ReCycle recovers from by rerouting microbatches",
+    "reusable_patterns": [
+      "offline profiling/planning phase feeding an online coordinator that manages a row of worker executors"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "fault-tolerance",
+    "distributed-training",
+    "pipeline-parallelism",
+    "scheduling",
+    "gpu"
+  ],
+  "provenance": {
+    "sections": [
+      "4 ReCycle Design (p.7)"
+    ],
+    "evidence": [
+      "ReCycle consists of three key components, the Profiler, the Executors, and critically the Planner, as shown in Figure 8.",
+      "ReCycle runs a short profiling job to collect key performance"
+    ]
+  },
+  "summary": "ReCycle tolerates GPU failures during large-scale DNN training by rerouting microbatches to data-parallel peers instead of relying on spare servers. Figure 8 shows the system overview split into an Offline Phase and an Online Phase. Offline, a Profiler collects performance data feeding a Planner that performs failure normalization and adaptive schedule generation, taking the training job configuration and a fault-tolerance threshold as inputs. Online, an Adaptive Schedule Store holds the precomputed schedule, which a Coordinator retrieves as an adaptive 1F1B schedule; the Coordinator then adapts the job to route around faults across the Training Cluster, a row of Executors (Worker 1 through Worker W), reacting to new node additions or failure detections. One executor is highlighted with a red dashed outline to depict a failure being handled.",
+  "summary_zh": "图8展示ReCycle系统架构：离线阶段的Profiler和Planner生成自适应流水线调度并存入调度库；在线阶段的协调器（Coordinator）取出调度并在训练集群的多个Executor间动态避开故障（红色虚线标出的失败节点）重新路由微批次。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

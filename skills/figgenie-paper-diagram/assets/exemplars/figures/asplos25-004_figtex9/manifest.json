@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-004_figtex9",
+  "paper_id": "asplos25-004",
+  "fig": "tex9",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "ciphertext placement policies. Each light orange box depicts a policy. Purple boxes refer to ciphertext allocated in CVM private memory; orange boxes refer to ciphertext allocated in CVM shared memory; and green boxses refer to plaintext (always allocated in CVM private memory). Data marked with \"te",
+  "corpus_template": "matrix",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.03,
+  "n_components": 9,
+  "n_flows": 6,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-004/src/texfig9_design-cipher.svg",
+    "preview.png": "lab/extracted/asplos25-004/src/texfig9_design-cipher.png",
+    "print.png": null
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": true,
+      "why_chosen": "Star, high-confidence matrix exemplar of a design-space table: four stacked policy rows share the identical CPU-to-GPU column structure, with an inside legend defining buffer-location colours and solid-versus-dashed arrow meaning.",
+      "what_to_learn": "Stack design-space alternatives as rows sharing one identical column skeleton so only the boxes that differ stand out, and put a compact legend inside the frame when colour marks buffer location and line style marks timing; the record warns that reusing one generic label for different colours invites confusion."
+    }
+  ]
+}

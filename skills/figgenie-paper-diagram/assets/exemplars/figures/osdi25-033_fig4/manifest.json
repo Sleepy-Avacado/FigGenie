@@ -1,0 +1,41 @@
+{
+  "id": "osdi25-033_fig4",
+  "paper_id": "osdi25-033",
+  "fig": "4",
+  "venue": "OSDI25",
+  "year": 2025,
+  "caption": "Figure 4: FuseLink architecture in a GPU server with four parallel GPU workers and four NICs. W0 is using both NIC 0 and NIC 1 for inter-server communication when W1 is not sending any trafﬁc. W0 sending buffers are mapped to GPU0 and GPU1 for efﬁcient data transmission",
+  "corpus_template": "control-data",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.41,
+  "n_components": 14,
+  "n_flows": 13,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi25-033/osdi25-033_fig4_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi25-033/osdi25-033_fig4_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": false,
+      "why_chosen": "14-component figure legends three devices below (dashed red = control via shmem, solid arrow = data, square = relay buffer) and reuses one blue hue across two GPUs to show a borrowed relay path.",
+      "what_to_learn": "Put the flow-class legend below the figure with icons for line style and shape (dashed=control, solid=data, square=buffer), and reuse one arrow color across two destinations when a worker's data can land in either place; but unlike here, also legend what each color itself means."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi26-094_fig5",
+  "paper_id": "osdi26-094",
+  "fig": "5",
+  "venue": "OSDI26",
+  "year": 2026,
+  "caption": "Figure 5: EcoServe adopts a hierarchical architecture in which the system consists of multiple macro-instances, and each macro-instance comprises multiple instances. The macro instance is the basic unit, within which multiple instances collaborate.",
+  "corpus_template": "layered",
+  "direction": "top-down",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 1.78,
+  "n_components": 12,
+  "n_flows": 5,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "right",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi26-094/osdi26-094_fig5_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi26-094/osdi26-094_fig5_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "phase-lanes",
+      "star": true,
+      "why_chosen": "Star-rated: four Instance Scheduler lanes share one Time axis, blue/green Gantt blocks marked with check or cross insert points, TTFT/TPOT brackets on the bars, and a fourth lane drawn as a dashed ghost for scaling.",
+      "what_to_learn": "Give each parallel scheduler its own named lane under one shared Time axis, mark exact insertion points on the Gantt blocks with tiny check/cross icons instead of prose, measure TTFT/TPOT as brackets directly on the bars, and draw a not-yet-existing lane as a dashed ghost copy to show elastic scale-out."
+    }
+  ]
+}

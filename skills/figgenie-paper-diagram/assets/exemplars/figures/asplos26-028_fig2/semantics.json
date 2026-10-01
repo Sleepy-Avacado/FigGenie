@@ -1,0 +1,180 @@
+{
+  "paper_id": "asplos26-028",
+  "fig": "2",
+  "system": {
+    "name": "GS-Scale",
+    "one_liner": "a fast, memory-efficient 3D Gaussian Splatting training system that offloads Gaussians to host memory",
+    "domain": [
+      "ml-systems",
+      "graphics"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Initialized Gaussians",
+        "role": "starting set of 3D Gaussians initialized from a Structure-from-Motion point cloud",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "3D Gaussians",
+        "role": "per-viewpoint set of 3D Gaussians before projection",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "2D Gaussians",
+        "role": "Gaussians projected into 2D screen space and sorted by depth",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Rendered Image",
+        "role": "image produced by alpha-compositing sorted 2D Gaussians per pixel",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Ground truth Image",
+        "role": "reference image compared against the rendered image to compute loss",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Initialized Gaussians",
+        "to": "3D Gaussians",
+        "what": "Gaussians viewed from a camera viewpoint",
+        "step": null
+      },
+      {
+        "from": "3D Gaussians",
+        "to": "2D Gaussians",
+        "what": "projected Gaussians",
+        "step": 1
+      },
+      {
+        "from": "2D Gaussians",
+        "to": "2D Gaussians",
+        "what": "depth-sorted Gaussians",
+        "step": 2
+      },
+      {
+        "from": "2D Gaussians",
+        "to": "Rendered Image",
+        "what": "per-pixel rasterized color",
+        "step": 3
+      },
+      {
+        "from": "Rendered Image",
+        "to": "Ground truth Image",
+        "what": "photometric loss computation",
+        "step": 4
+      },
+      {
+        "from": "Ground truth Image",
+        "to": "3D Gaussians",
+        "what": "gradient propagation",
+        "step": 5
+      },
+      {
+        "from": "3D Gaussians",
+        "to": "Initialized Gaussians",
+        "what": "parameter update",
+        "step": 6
+      },
+      {
+        "from": "Initialized Gaussians",
+        "to": "Initialized Gaussians",
+        "what": "periodic densification of the Gaussian set",
+        "step": 7
+      }
+    ],
+    "key_idea": "The standard 3D Gaussian Splatting training loop projects, sorts and rasterizes Gaussians per view, computes an image loss, then backpropagates to update and periodically densify the Gaussians.",
+    "reading_order": "Left to right along the top row from Initialized Gaussians through projection, sorting, rendering and loss; numbered feedback arrows run along the bottom back to the Gaussians."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "double",
+    "aspect": 4.82,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e7e6e6",
+        "used_for": "light gray fill for Gaussian dot icons and process boxes"
+      },
+      {
+        "hex": "#afabab",
+        "used_for": "medium gray fill for viewpoint frustum / grid elements"
+      },
+      {
+        "hex": "#d9d9d9",
+        "used_for": "gray fill for 2D Gaussian grid cells"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "very light gray panel backgrounds"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow highlight around the pixel / loss elements"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "single red accent mark"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark gray/black lines (~0.56pt median), some dashed for the frustum and long feedback arrows",
+    "font": "sans (Arial), 6-11pt, bold for step-circle numerals",
+    "corners": "mixed",
+    "arrows": "thin black arrows, feedback arrows curved along the bottom of the figure",
+    "icons": "vector icons of colored Gaussian ellipses/dots, no bitmap icons"
+  },
+  "encoding": {
+    "color_means": "distinct dot colors (gray/pink/green/purple/yellow) individuate separate Gaussians rather than encode a semantic category",
+    "line_style_means": "dashed lines mark the viewpoint frustum and the long feedback-loop arrows; solid lines mark the main forward pipeline",
+    "emphasis": "circled step numbers 1-7 guide the reader through the forward-then-backward training loop",
+    "reusable_patterns": [
+      "numbered circular step markers over a linear pipeline with a feedback loop back to the start"
+    ],
+    "weaknesses": [
+      "many small individual Gaussian icons increase visual density at this figure size"
+    ]
+  },
+  "tags": [
+    "3d-gaussian-splatting",
+    "training-pipeline",
+    "rasterization",
+    "background-figure",
+    "graphics",
+    "gradient-descent"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background (p.2)"
+    ],
+    "evidence": [
+      "The 3D Gaussian Splatting pipeline, illustrated in Figure 2, begins with 3D Gaussians",
+      "Figure 2. Overview of 3D Gaussian Splatting Training Pipeline."
+    ]
+  },
+  "summary": "GS-Scale is a memory-efficient training system for large-scale 3D Gaussian Splatting that keeps all Gaussians in host memory and transfers only a working subset to the GPU per pass. This figure is a background illustration (not GS-Scale's own architecture) of the standard 3D Gaussian Splatting training pipeline that GS-Scale must accelerate. It shows, left to right, Gaussians initialized from an SfM point cloud, viewed from a camera viewpoint as 3D Gaussians, projected into 2D Gaussians, sorted by depth, and rasterized into a rendered image. The rendered image is compared to a ground-truth image to compute a loss, whose gradients propagate back to update Gaussian parameters and periodically densify the Gaussian set, closing the loop. Seven circled numbers mark the ordered steps: projection, sorting, rendering, loss computation, gradient propagation, parameter update, and periodic densification.",
+  "summary_zh": "该图展示3D高斯溅射的标准训练流程背景图：初始化高斯经视角投影、深度排序、光栅化渲染后与真值图像计算损失，梯度回传更新参数并周期性增稠高斯集合，形成闭环，非GS-Scale自身架构图。",
+  "confidence": "medium",
+  "notes": "The context file lists a 'source SVG' (src/fig2_figures-crop.svg / .png) whose content (a Host Memory/CPU/GPU/PCIe offloading diagram) does not match this figure's caption or the PDF-extracted preview; the source asset appears mismatched. This record is based on the PDF-extracted preview PNG and caption, which agree with the paragraph text about the standard 3DGS training pipeline.",
+  "venue": "ASPLOS26"
+}

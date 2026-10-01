@@ -1,0 +1,164 @@
+{
+  "paper_id": "nsdi26-030",
+  "fig": "2",
+  "system": {
+    "name": "EROICA",
+    "one_liner": "an online performance-troubleshooting service for large-scale model training on production GPU clusters",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "observability"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "Hardware issues (44.4%)",
+        "role": "top-level category of LMT performance issues caused by hardware",
+        "container": "Type",
+        "novel": false
+      },
+      {
+        "name": "Application-level issues (48.2%)",
+        "role": "top-level category of LMT performance issues caused by code/configuration",
+        "container": "Type",
+        "novel": false
+      },
+      {
+        "name": "Unknown (7.4%)",
+        "role": "issues whose type could not be determined",
+        "container": "Type",
+        "novel": false
+      },
+      {
+        "name": "GPU problems (11.1%)",
+        "role": "hardware issue subtype",
+        "container": "Issues",
+        "novel": false
+      },
+      {
+        "name": "Network problems (14.8%)",
+        "role": "hardware issue subtype",
+        "container": "Issues",
+        "novel": false
+      },
+      {
+        "name": "Other hardware problems (18.5%)",
+        "role": "hardware issue subtype",
+        "container": "Issues",
+        "novel": false
+      },
+      {
+        "name": "Configuration issues (22.2%)",
+        "role": "application-level issue subtype",
+        "container": "Issues",
+        "novel": false
+      },
+      {
+        "name": "Problem of users' code (26.0%)",
+        "role": "application-level issue subtype",
+        "container": "Issues",
+        "novel": false
+      },
+      {
+        "name": "Unknown (7.4%)",
+        "role": "issue subtype that could not be determined",
+        "container": "Issues",
+        "novel": false
+      },
+      {
+        "name": "Identified online (29.6%)",
+        "role": "issues that existing online monitors could diagnose",
+        "container": "Diagnosis",
+        "novel": false
+      },
+      {
+        "name": "Need offline experiments (63.0%)",
+        "role": "issues that required offline reproduction/profiling to diagnose",
+        "container": "Diagnosis",
+        "novel": false
+      },
+      {
+        "name": "Undiagnosed (7.4%)",
+        "role": "issues that could not be diagnosed at all",
+        "container": "Diagnosis",
+        "novel": false
+      }
+    ],
+    "flows": [],
+    "key_idea": "LMT performance issues split almost evenly between hardware and application-level root causes, and only 29.6% can be diagnosed by existing online monitors, motivating EROICA's finer-grained online profiling.",
+    "reading_order": "Left to right across three columns: issue Type, the detailed Issues within each type, and the Diagnosis outcome, colored consistently by category."
+  },
+  "layout": {
+    "template": "matrix",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.88,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e2f0d9",
+        "used_for": "pale green fill for high-level/identified categories (Hardware issues, Application-level issues, Identified online)"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "pale yellow fill for detailed issue subtypes and issues needing offline experiments"
+      },
+      {
+        "hex": "#ff7e79",
+        "used_for": "salmon/pink fill for Unknown and Undiagnosed categories"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.78pt) black outlines, square boxes",
+    "font": "Calibri sans-serif with DengXian-Bold headers, ~7.5pt",
+    "corners": "square",
+    "arrows": "none",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = identified/high-level categories, yellow = granular issue subtypes and offline-diagnosed cases, pink/salmon = unknown or undiagnosed cases",
+    "line_style_means": null,
+    "emphasis": "consistent green/yellow/pink coloring across the three columns visually links each issue type to its diagnosis difficulty",
+    "reusable_patterns": [
+      "three-column categorical breakdown with percentages and consistent color coding across columns"
+    ],
+    "weaknesses": [
+      "no connecting lines between the three columns, so the reader must infer correspondence from color alone"
+    ]
+  },
+  "tags": [
+    "performance-troubleshooting",
+    "GPU-cluster",
+    "root-cause-analysis",
+    "motivation-figure",
+    "statistics",
+    "large-model-training"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)",
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "Figure 2 breaks down all LMT performance issues in our production GPU cluster",
+      "only 29.6% of performance issues can be diagnosed and root-caused by these tools",
+      "44.4% of them are caused by hardware issues, and 48.2% are software issues"
+    ]
+  },
+  "summary": "This motivation figure breaks down all large-model-training (LMT) performance issues observed in the authors' production GPU cluster (~100,000 GPUs) over nine months. It is drawn as a three-column categorical chart: the Type column splits issues into Hardware (44.4%), Application-level (48.2%), and Unknown (7.4%); the Issues column further breaks these into GPU, network, and other hardware problems, plus configuration and user-code problems; and the Diagnosis column shows that only 29.6% of issues could be identified online, while 63.0% required offline experiments and 7.4% went undiagnosed. Boxes are flat-filled in green, yellow, or pink/salmon to signal whether a category is high-level/identified, a granular subtype, or unknown/undiagnosed, with no arrows connecting the columns. The figure motivates EROICA's need for finer-grained, on-demand online profiling since most issues currently escape existing monitors.",
+  "summary_zh": "该图展示生产集群中大模型训练性能问题的三栏分类统计：类型（硬件 44.4%、应用层 48.2%、未知 7.4%）、细分问题及诊断结果（仅 29.6% 可在线定位，63.0% 需离线实验，7.4% 无法诊断），以此论证 EROICA 在线细粒度诊断的必要性。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

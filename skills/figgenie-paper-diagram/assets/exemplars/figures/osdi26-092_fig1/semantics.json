@@ -1,0 +1,226 @@
+{
+  "paper_id": "osdi26-092",
+  "fig": "1",
+  "system": {
+    "name": "GoodKit",
+    "one_liner": "a VM-introspection framework that runs the observer as a separate guest OS instead of hypervisor-embedded logic",
+    "domain": [
+      "virtualization",
+      "security"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "VMM",
+        "role": "existing VM-monitor process hosting both the target and the observer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Target",
+        "role": "the guest VM being introspected",
+        "container": "VMM",
+        "novel": false
+      },
+      {
+        "name": "task_struct",
+        "role": "kernel data structure inside the target that the observer inspects, guarded by lock icons",
+        "container": "Target",
+        "novel": false
+      },
+      {
+        "name": "Observer",
+        "role": "the observer's software context, running as a separate guest OS that hosts the introspection logic",
+        "container": "VMM",
+        "novel": true
+      },
+      {
+        "name": "Custom obs service",
+        "role": "tenant-supplied introspection logic built on top of LibGK",
+        "container": "Observer",
+        "novel": true
+      },
+      {
+        "name": "LibGK",
+        "role": "GoodKit's introspection library exposing its programming model/API to observer services",
+        "container": "Observer",
+        "novel": true
+      },
+      {
+        "name": "GKModule",
+        "role": "in-guest module that enforces an access-control list and communicates with GKProbe",
+        "container": "Observer",
+        "novel": true
+      },
+      {
+        "name": "GKBuilder",
+        "role": "new VMM subcomponent that launches both target and observer guests via KVM run, sets up the observer's EPT memory slots, and receives symbols and configuration",
+        "container": "VMM",
+        "novel": true
+      },
+      {
+        "name": "GKProbe",
+        "role": "new VMM subcomponent that communicates with GKModule and handles the observer's VM exits and KVM API calls",
+        "container": "VMM",
+        "novel": true
+      },
+      {
+        "name": "Hypervisor",
+        "role": "existing hypervisor layer beneath the VMM hosting the EPT structures",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "EPT Target",
+        "role": "new extended page table built for the target, with some regions shared into the observer's EPT",
+        "container": "Hypervisor",
+        "novel": true
+      },
+      {
+        "name": "EPT Obs",
+        "role": "new extended page table built for the observer, combining mapped target regions and private slots",
+        "container": "Hypervisor",
+        "novel": true
+      },
+      {
+        "name": "Tenant",
+        "role": "the cloud tenant who configures and deploys the observer through GKBuilder",
+        "container": null,
+        "novel": null
+      }
+    ],
+    "flows": [
+      {
+        "from": "GKBuilder",
+        "to": "EPT Obs",
+        "what": "KVM run launching the observer guest",
+        "step": 1
+      },
+      {
+        "from": "GKBuilder",
+        "to": "EPT Target",
+        "what": "KVM run launching the target guest",
+        "step": 2
+      },
+      {
+        "from": "Tenant",
+        "to": "GKBuilder",
+        "what": "configuration of the observer to be deployed",
+        "step": 3
+      },
+      {
+        "from": "GKBuilder",
+        "to": "GKModule",
+        "what": "access-control list (ACL)",
+        "step": 4
+      },
+      {
+        "from": "Target",
+        "to": "GKBuilder",
+        "what": "kernel symbols used to build introspection access",
+        "step": 5
+      },
+      {
+        "from": "EPT Obs",
+        "to": "GKProbe",
+        "what": "VM exit from the observer",
+        "step": 6
+      },
+      {
+        "from": "GKModule",
+        "to": "GKProbe",
+        "what": "bidirectional communication for introspection actions",
+        "step": 7
+      },
+      {
+        "from": "GKProbe",
+        "to": "Hypervisor",
+        "what": "KVM API calls",
+        "step": 8
+      }
+    ],
+    "key_idea": "GoodKit runs the introspection observer as its own guest OS, with two new VMM components (GKBuilder, GKProbe) launching it, wiring its access to selected target memory through per-observer EPT slots, and mediating its VM exits, instead of embedding introspection logic in the hypervisor.",
+    "reading_order": "Starts at the Target/Observer pair inside the VMM box, follows the circled numbers 1-5 through GKBuilder (launch, configuration, ACL, symbols), then 6-8 through GKProbe down to the Hypervisor's EPT structures."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.27,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ff2600",
+        "used_for": "red hatched fill/outline on the Target and EPT Target boxes, and the red circled component-letter badges"
+      },
+      {
+        "hex": "#ffff88",
+        "used_for": "yellow fill marking the observer's own context (Custom obs service, LibGK, GKModule, EPT Obs)"
+      },
+      {
+        "hex": "#00188d",
+        "used_for": "blue padlock icons guarding access to task_struct"
+      },
+      {
+        "hex": "#e6e6e6",
+        "used_for": "light-gray fill of the existing VMM/Hypervisor boxes and the new GKBuilder/GKProbe boxes"
+      },
+      {
+        "hex": "#97d077",
+        "used_for": "green fill of the task_struct box and the green 'Observer' label text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.0pt solid strokes; thick rounded outer boundaries for the VMM and Hypervisor containers",
+    "corners": "mixed",
+    "arrows": "solid black arrows with filled triangular heads for the eight numbered steps, plus one bidirectional double-headed arrow between GKModule and GKProbe",
+    "icons": "vector icons: a tenant/person silhouette, blue padlock icons guarding task_struct, and a small eye glyph at the Target/Observer boundary signifying introspection"
+  },
+  "encoding": {
+    "color_means": "gray marks existing Hypervisor/VMM infrastructure; white marks new VMM subcomponents introduced by GoodKit (GKBuilder, GKProbe, EPT Target); yellow marks the observer's own context; red highlights the target's protected memory and the lettered component call-outs",
+    "line_style_means": null,
+    "emphasis": "red circled letters (A-H) label each architectural element for cross-reference with the text, while black circled numbers (1-8) overlay a separate numbered walkthrough of the runtime interactions, both anchored on GKBuilder and GKProbe",
+    "reusable_patterns": [
+      "two-tier existing-infrastructure layering (VMM over Hypervisor) with new components colored distinctly from old ones",
+      "dual lettered/numbered annotation overlaying both a static component key and a dynamic interaction sequence"
+    ],
+    "weaknesses": [
+      "two independent numbering schemes (letters for components, digits for steps) on one diagram slow parsing",
+      "GKProbe's exact interactions (steps 6-8) are labeled in the figure but not explained in the retrieved text"
+    ]
+  },
+  "tags": [
+    "VM-introspection",
+    "hypervisor",
+    "KVM",
+    "EPT",
+    "virtualization",
+    "security"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Overview (p.5)"
+    ],
+    "evidence": [
+      "GKBUILDER launches observers as separate guests using the same KVM interfaces as for the target",
+      "how GOODKIT runs observers as guest OSes",
+      "it sets up memory slots in the VMM process that KVM uses to build the observer's EPT"
+    ]
+  },
+  "summary": "GoodKit is a VM-introspection framework that runs an observer as a separate guest OS instead of embedding introspection logic in the hypervisor. This figure shows GoodKit's architecture inside a two-layer existing infrastructure (VMM over Hypervisor), color-coded by origin: gray for existing Hypervisor/VMM layers, white for new VMM subcomponents, yellow for the observer's own context. Two new components act as hubs. GKBuilder launches both the target and the observer via KVM run (steps 1-2), receives tenant configuration (3) and target kernel symbols (5), and pushes an access-control list to the observer's GKModule (4). GKProbe handles the observer's VM exits and KVM API calls and talks to GKModule (steps 6-8). The observer's EPT maps selected target-memory regions, guarded by lock icons on the target's task_struct, alongside private slots, giving it controlled, direct access to target state.",
+  "summary_zh": "图示GoodKit：VMM叠于Hypervisor上，灰色为既有组件，白色为新增组件（GKBuilder、GKProbe），黄色为观察者上下文；GKBuilder启动目标与观察者并下发ACL，GKProbe处理VMExit与KVM API。",
+  "confidence": "medium",
+  "notes": "layout-proposal: hub-in-layer -- two stacked existing layers (VMM over Hypervisor) whose top layer is wired as two small hubs (GKBuilder for launch/config/ACL/symbols; GKProbe for VMExit/KVM-API/GKModule) rather than a plain top-down stack. Steps 6-8 are read from the figure's own labels; the retrieved paragraph is truncated before it explains them, so their exact direction/semantics are lower-confidence.",
+  "venue": "OSDI26"
+}

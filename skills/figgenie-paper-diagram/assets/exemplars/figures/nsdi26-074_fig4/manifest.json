@@ -1,0 +1,56 @@
+{
+  "id": "nsdi26-074_fig4",
+  "kind": "mechanism",
+  "paper_id": "nsdi26-074",
+  "fig": "4",
+  "venue": "NSDI26",
+  "year": 2026,
+  "caption": "Figure 4: An illustration of the multi-solution phenomenon of SO. In this SO, using multiple split ratios will obtain the same MLU.",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": true,
+  "base": "graph",
+  "subject": "how two different split-ratio solutions for one demand pair both reach the same optimal link utilization",
+  "arrangement": "panels-grid",
+  "panel_count": 4,
+  "frame_template": "aligned",
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.38,
+  "n_elements": 9,
+  "n_relations": 10,
+  "n_panels": 2,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "inside",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi26-074/src/fig4_multi-solution.svg",
+    "preview.png": "lab/extracted/nsdi26-074/src/fig4_multi-solution.png",
+    "print.png": "lab/extracted/nsdi26-074/nsdi26-074_fig4_p7_vector.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": true,
+      "why_chosen": "Four-panel comparison: a legend table defining three coloured path variables, a shared background-traffic graph, then two solutions overlaying different numeric splits on those same coloured paths.",
+      "what_to_learn": "Define each alternate path's colour once in a legend table, redraw the identical background graph per solution, and change only the numbers stacked on each coloured edge — but two stacked numbers per short segment make the graph dense.",
+      "note_source": "agent"
+    }
+  ]
+}

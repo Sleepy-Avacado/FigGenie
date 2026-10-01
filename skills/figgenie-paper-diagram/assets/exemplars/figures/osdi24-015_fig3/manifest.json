@@ -1,0 +1,56 @@
+{
+  "id": "osdi24-015_fig3",
+  "kind": "mechanism",
+  "paper_id": "osdi24-015",
+  "fig": "3",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 3: Analysis of different locality-driven policies",
+  "groups_in_record": [
+    "comparison"
+  ],
+  "worked_example": false,
+  "base": "timeline",
+  "subject": "how four scheduling policies trade off model-A and model-B latency when starting up B while A is still running",
+  "arrangement": "panels-column",
+  "panel_count": 4,
+  "frame_template": "identical",
+  "delta_marking": "callout",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 1.29,
+  "n_elements": 14,
+  "n_relations": 5,
+  "n_panels": 4,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "letters",
+  "zoom_callout": false,
+  "tool": "quartz",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-015/src/fig3_migration-motivation.svg",
+    "preview.png": "lab/extracted/osdi24-015/src/fig3_migration-motivation.png",
+    "print.png": "lab/extracted/osdi24-015/osdi24-015_fig3_p7_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "comparison",
+      "star": false,
+      "why_chosen": "Comparing four ways to start model B while A infers shows that only live-migrating A's state (not reloading it) avoids hurting either model's latency.",
+      "what_to_learn": "shared Setup diagram at top feeding four stacked identical Server1/Server2 Gantt-style timelines, each closed off by a checkmark/cross Performance column",
+      "note_source": "record"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "asplos25-092_fig5",
+  "kind": "mechanism",
+  "paper_id": "asplos25-092",
+  "fig": "5",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 5. Finite input sequences are sufficient to trigger all possible behaviors. (a) The same circuit as LHS in Figure 4, with a Buffer at the condition input and with the correspond- ing context and the generator. (b) The state spaces obtained using different token sequence lengths at the input.",
+  "groups_in_record": [
+    "evolution"
+  ],
+  "worked_example": true,
+  "base": "state-machine",
+  "subject": "how bounding the input token sequence length still reaches all 7 states of a dataflow circuit's full (unbounded) state space",
+  "arrangement": "panels-grid",
+  "panel_count": 7,
+  "frame_template": "identical",
+  "delta_marking": "colour",
+  "direction": "top-down",
+  "column": "single",
+  "aspect": 0.87,
+  "n_elements": 10,
+  "n_relations": 5,
+  "n_panels": 7,
+  "n_steps": 0,
+  "n_values": 3,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "unknown",
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-092/asplos25-092_fig5_p6_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-092/asplos25-092_fig5_p6_vector.png"
+  },
+  "groups": [
+    {
+      "group": "evolution",
+      "star": true,
+      "why_chosen": "Seven reachable states of one small circuit are drawn as seven copies of the same Buf1+Branch stub, nested inside two colour boxes that name which input-length bound reaches each subset.",
+      "what_to_learn": "Repeat the same small sub-diagram once per state, varying only its token values, and nest the tighter bound's states inside the looser bound's box as a literal subset — but draw no arrow back to the source circuit.",
+      "note_source": "agent"
+    }
+  ]
+}

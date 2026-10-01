@@ -1,0 +1,214 @@
+{
+  "paper_id": "osdi23-008",
+  "fig": "3",
+  "system": {
+    "name": "Cilantro",
+    "one_liner": "a resource allocation system that uses online performance feedback to optimize general scheduling objectives",
+    "domain": [
+      "resource-management",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Cilantro Scheduler",
+        "role": "central scheduler that generates resource allocations for jobs",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Learning Modules",
+        "role": "groups the learners that model performance and load from feedback",
+        "container": "Cilantro Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Performance Learners",
+        "role": "learns a performance model from reported performance data",
+        "container": "Learning Modules",
+        "novel": true
+      },
+      {
+        "name": "Load Forecasters",
+        "role": "forecasts future load from reported load data",
+        "container": "Learning Modules",
+        "novel": true
+      },
+      {
+        "name": "Data Loggers",
+        "role": "collects performance and load data reported by clients",
+        "container": "Cilantro Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Uncertainty-aware Policy",
+        "role": "computes resource allocations using confidence bounds from the learners and the objective",
+        "container": "Cilantro Scheduler",
+        "novel": true
+      },
+      {
+        "name": "User-defined Objective",
+        "role": "the general scheduling objective supplied by the operator",
+        "container": "Uncertainty-aware Policy",
+        "novel": false
+      },
+      {
+        "name": "Resource Allocator",
+        "role": "issues resource allocation decisions to the resource manager",
+        "container": "Cilantro Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Resource Manager (Kubernetes)",
+        "role": "enforces allocations and hosts jobs",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Job 1",
+        "role": "example job running under Cilantro",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Cilantro Client",
+        "role": "collects and reports the job's performance feedback to the scheduler",
+        "container": "Job 1",
+        "novel": true
+      },
+      {
+        "name": "Job Server",
+        "role": "a server process of the job",
+        "container": "Job 1",
+        "novel": false
+      },
+      {
+        "name": "Physical Resources",
+        "role": "the underlying cluster machines shared with other jobs",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Data Loggers",
+        "to": "Performance Learners",
+        "what": "Res-Perf Data",
+        "step": null
+      },
+      {
+        "from": "Data Loggers",
+        "to": "Load Forecasters",
+        "what": "Load Data",
+        "step": null
+      },
+      {
+        "from": "Performance Learners",
+        "to": "Uncertainty-aware Policy",
+        "what": "Res-Perf Confidence Bounds",
+        "step": null
+      },
+      {
+        "from": "Load Forecasters",
+        "to": "Uncertainty-aware Policy",
+        "what": "Load Confidence Bounds",
+        "step": null
+      },
+      {
+        "from": "Uncertainty-aware Policy",
+        "to": "Resource Allocator",
+        "what": "allocation decision informed by the user-defined objective",
+        "step": null
+      },
+      {
+        "from": "Resource Allocator",
+        "to": "Resource Manager (Kubernetes)",
+        "what": "Resource Allocations",
+        "step": null
+      },
+      {
+        "from": "Cilantro Client",
+        "to": "Data Loggers",
+        "what": "Perf Data",
+        "step": null
+      }
+    ],
+    "key_idea": "Cilantro closes an online feedback loop: clients report performance data that scheduler-side learners turn into confidence-bounded models driving an uncertainty-aware allocation policy.",
+    "reading_order": "Top-down inside the Cilantro Scheduler box from the Learning Modules to the Uncertainty-aware Policy and Resource Allocator, then down to the Resource Manager and the jobs below."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 0.9,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#cfe2f3",
+        "used_for": "fill of the User-defined Objective box"
+      },
+      {
+        "hex": "#d9ead3",
+        "used_for": "fill of the Performance Learners and Load Forecasters boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "fill of the Data Loggers, Resource Allocator and Cilantro Client boxes"
+      },
+      {
+        "hex": "#f8fcff",
+        "used_for": "background fill of the outer Cilantro Scheduler box"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin dark borders on solid boxes, dashed borders around the Learning Modules, Job 1 and Physical Resources groups",
+    "font": "Roboto/Arial bold sans-serif, 5-10pt, bold for box labels",
+    "corners": "square",
+    "arrows": "thin black arrows for structural containment and connections, with red text labels naming the data carried",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = learning components, yellow = data-handling/allocation components, blue = the user-supplied objective, white/gray = infrastructure",
+    "line_style_means": "dashed borders group related components (Learning Modules, a job, physical resources); solid arrows show data and control flow",
+    "emphasis": "red arrow labels call out the specific data (Res-Perf Data, Load Data, confidence bounds, allocations) moving through the scheduler's feedback loop",
+    "reusable_patterns": [
+      "layered box-in-box architecture with a labeled feedback loop between a client tier and a central scheduler"
+    ],
+    "weaknesses": [
+      "no legend explaining the color coding of box fills"
+    ]
+  },
+  "tags": [
+    "resource-allocation",
+    "scheduling",
+    "online-learning",
+    "kubernetes",
+    "feedback-control",
+    "cluster-management"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Cilantro Architecture (p.5)"
+    ],
+    "evidence": [
+      "The scheduler generates resource allocations for jobs and the clients collect performance feedback to report to the scheduler.",
+      "We leverage these learnings to build Cilantro (Figure 3)."
+    ]
+  },
+  "summary": "This figure shows the architecture of Cilantro, a resource allocation system that optimizes general scheduling objectives using online performance feedback. The central Cilantro Scheduler contains Learning Modules with Performance Learners and Load Forecasters that build confidence-bounded models from performance and load data supplied by Data Loggers. These confidence bounds feed an Uncertainty-aware Policy, which also takes a User-defined Objective, and its output drives a Resource Allocator that issues Resource Allocations to a Resource Manager (Kubernetes) shown below. Each job is shown with a Cilantro Client and Job Servers; the client reports Perf Data back up to the Data Loggers, closing the feedback loop, while a row of circles and 'More Jobs' indicates other jobs sharing the same physical resources. The diagram is a nested box architecture with red text labeling the data flowing along each arrow.",
+  "summary_zh": "Cilantro 调度器的学习模块依据反馈数据生成置信区间，驱动不确定性感知策略与资源分配器，下发给 Kubernetes；客户端回传性能数据形成闭环。",
+  "confidence": "medium",
+  "notes": "The paragraph describing Figure 3 is truncated mid-sentence in the context file ('composed of two key components: the central-'), so component roles are inferred primarily from the figure's own labels and the caption.",
+  "venue": "OSDI23"
+}

@@ -1,0 +1,178 @@
+{
+  "paper_id": "asplos25-098",
+  "fig": "2",
+  "system": {
+    "name": "Past-Future Scheduler",
+    "one_liner": "an LLM-serving request scheduler that predicts future output lengths and required memory to decide when to admit queued requests under SLA goodput goals",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Request queue",
+        "role": "waiting requests S^{k+1},...,S^n not yet admitted to the running batch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Running Batch",
+        "role": "requests S^1,...,S^k currently being served",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Historical Output Length Distribution P(l)",
+        "role": "distribution of past request output lengths used to sample predictions",
+        "container": "Predicting Output Length Distribution",
+        "novel": true
+      },
+      {
+        "name": "Output Length Prediction at t time",
+        "role": "predicted output lengths for queued and running requests, sampled from P(l)",
+        "container": "Predicting Output Length Distribution",
+        "novel": true
+      },
+      {
+        "name": "Timeline",
+        "role": "projected GPU memory usage M_{t+1}, M_{t+2}, M_{t+3} at future time points",
+        "container": "Estimating Future Required Memory",
+        "novel": true
+      },
+      {
+        "name": "peak memory",
+        "role": "max({M_{t+1}, M_{t+2}, M_{t+3}}), the computed peak future memory requirement",
+        "container": "Estimating Future Required Memory",
+        "novel": true
+      },
+      {
+        "name": "Available Memory",
+        "role": "current system memory budget compared against the computed peak memory to decide admission",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Request queue",
+        "to": "Historical Output Length Distribution P(l)",
+        "what": "waiting requests sampled for predicted output length",
+        "step": 1
+      },
+      {
+        "from": "Running Batch",
+        "to": "Historical Output Length Distribution P(l)",
+        "what": "running requests' predicted length updated",
+        "step": 1
+      },
+      {
+        "from": "Output Length Prediction at t time",
+        "to": "Timeline",
+        "what": "predicted lengths used to project future memory usage",
+        "step": 2
+      },
+      {
+        "from": "Timeline",
+        "to": "peak memory",
+        "what": "future memory values M_{t+1}, M_{t+2}, M_{t+3}",
+        "step": 3
+      },
+      {
+        "from": "peak memory",
+        "to": "Available Memory",
+        "what": "comparison used to decide scheduling",
+        "step": 4
+      },
+      {
+        "from": "Available Memory",
+        "to": "Running Batch",
+        "what": "update the running batch to t+1",
+        "step": 5
+      }
+    ],
+    "key_idea": "The scheduler predicts each request's future output length from the historical distribution, projects the running batch's memory usage at future time points, and admits queued requests only when the resulting peak memory stays within the available budget.",
+    "reading_order": "Left to right: the request queue and running batch feed the output-length predictor, whose predictions drive a memory timeline whose peak is compared against available memory, looping back to update the batch."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "double",
+    "aspect": 3.57,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f8cbad",
+        "used_for": "Request queue boxes and the Estimating Future Required Memory panel background"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "Running Batch boxes and the future-memory timeline bars"
+      },
+      {
+        "hex": "#deebf7",
+        "used_for": "Predicting Output Length Distribution panel background"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "minor accent element"
+      },
+      {
+        "hex": "#e2f0d9",
+        "used_for": "minor accent element"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.57pt median, dashed box highlights the compared memory window",
+    "font": "Arial/Cambria Math sans, 5-10.5pt",
+    "corners": "mixed",
+    "arrows": "7 filled straight arrowheads",
+    "icons": "small histogram icon inside the distribution panel"
+  },
+  "encoding": {
+    "color_means": "orange = queued/incoming-request elements, green = running-batch/memory elements, blue = the prediction-panel background",
+    "line_style_means": "dashed red box highlights the memory window being compared to available memory",
+    "emphasis": "the peak-memory-vs-available-memory comparison on the right is the decision the figure builds toward",
+    "reusable_patterns": [
+      "two-stage pipeline panel diagram with a feedback loop back to the batch state"
+    ],
+    "weaknesses": [
+      "dense mathematical notation may be hard to parse without reading the accompanying text"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "request-scheduling",
+    "memory-management",
+    "continuous-batching",
+    "sla",
+    "goodput"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Past-Future Request Scheduler (p.4)",
+      "3 Past-Future Request Scheduler (p.7)"
+    ],
+    "evidence": [
+      "the proposed Past-Future scheduler consists of two steps: predicting output length distribution and estimating future required memory",
+      "the future required memory will inevitably occur at the moment a request ends",
+      "determine the future required memory, and schedule the requests"
+    ]
+  },
+  "summary": "The Past-Future scheduler targets goodput-optimal LLM serving under SLA guarantees by precisely estimating the peak memory a running batch will need. Figure 2 shows its two-step pipeline: on the left, the request queue and running batch feed a Predicting Output Length Distribution panel, which samples each request's likely output length from the historical distribution P(l); on the right, an Estimating Future Required Memory panel projects memory usage M_{t+1}, M_{t+2}, M_{t+3} along a timeline, takes their maximum as the peak required memory, and compares it against Available Memory before updating the running batch to the next time step. Orange marks queue/memory-panel elements, green marks running-batch/timeline elements, and blue marks the prediction panel, with a dashed box calling out the compared memory window.",
+  "summary_zh": "图2展示Past-Future调度器：左侧请求队列与运行批次输入到输出长度预测面板，依据历史分布采样预测长度；右侧据此在时间轴上估算未来各时刻显存占用，取最大值作为峰值需求与可用内存比较，再据此更新运行批次。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

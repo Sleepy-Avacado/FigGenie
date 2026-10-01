@@ -1,0 +1,41 @@
+{
+  "id": "nsdi25-006_fig15",
+  "paper_id": "nsdi25-006",
+  "fig": "15",
+  "venue": "NSDI25",
+  "year": 2025,
+  "caption": "Figure 15: The implementation of Tooth.",
+  "corpus_template": "host-device",
+  "direction": "left-right",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.84,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi25-006/nsdi25-006_fig15_p9_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi25-006/nsdi25-006_fig15_p9_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "host-device",
+      "star": false,
+      "why_chosen": "Deployment-style figure with photographic server and device icons instead of abstract boxes: only the inserted Tooth module is outlined red inside a plain codec pipeline, and three colored lines fan out to three player devices.",
+      "what_to_learn": "When the paper's contribution is one small module inserted into an existing pipeline, outline just that box in red and leave its neighbors plain rather than recoloring the whole chain; realistic device photos can stand in for the host and client, but keep enough labels that arrow direction is not left to guesswork."
+    }
+  ]
+}

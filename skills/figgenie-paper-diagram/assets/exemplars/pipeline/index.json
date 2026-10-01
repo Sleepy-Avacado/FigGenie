@@ -1,0 +1,312 @@
+{
+  "template": "pipeline",
+  "n": 38,
+  "stars": 16,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-082_fig3",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Star exemplar of the pipeline-plus-aligned-timeline variant: a two-phase checkpoint pipeline (GPU-to-CPU snapshot, CPU-to-storage persist) sits directly above a synchronized train/checkpoint timeline that red-flags the one stall case.",
+      "what_to_learn": "Stack a structural diagram directly over a time axis sharing its horizontal alignment, so a highlighted timeline event reads as a direct consequence of the boxes above it; reserve red for the one failure case and use dashed brackets to group timeline phases.",
+      "dir": "../figures/asplos25-082_fig3"
+    },
+    {
+      "id": "asplos25-131_fig2",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Cleanest top-down pipeline: colour-coded stage bands, a paper-section gutter on the left, one feedback arrow on the right.",
+      "what_to_learn": "Put a narrow left gutter with section numbers (Sec 3, 4.1, 4.2, 4.3) beside the stage column and route the feedback arrow up the opposite margin so it never crosses the main path.",
+      "dir": "../figures/asplos25-131_fig2"
+    },
+    {
+      "id": "asplos25-146_fig3",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "A starred, high-confidence core pipeline exemplar: a depth-3 dashed Solver group nests two title-bar stages (Sequence Blaster, Parallelism Planner) before handing off to a separate solid Executor box, in 7 components and 4 flows.",
+      "what_to_learn": "Use a dashed box to group a multi-stage sub-pipeline as one unit distinct from the solid downstream stage, append section references directly onto stage titles, and use small coloured-bar card icons to encode variable-length data instead of prose.",
+      "dir": "../figures/asplos25-146_fig3"
+    },
+    {
+      "id": "asplos25-147_fig2",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Vertical five-stage pipeline that pairs every stage with a thumbnail of the artefact it produces; legend on the right.",
+      "what_to_learn": "An output-artefact column beside the stage column turns abstract stage names into concrete data structures without any extra prose.",
+      "dir": "../figures/asplos25-147_fig2"
+    },
+    {
+      "id": "asplos25-157_fig7",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "The most extreme banner aspect among clean pipelines (5.57 at 485x87 pt) - the shape a double-column strip pipeline actually takes.",
+      "what_to_learn": "At aspect >5 every stage must be one box-and-caption tall; wrap only the paper's contribution (here DACO) in a dashed group so the eye finds it in a long strip.",
+      "dir": "../figures/asplos25-157_fig7"
+    },
+    {
+      "id": "asplos26-013_fig7",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: three linked stages, covisibility detection feeding tracking feeding mapping, form a pipeline in three different diagram styles where one upstream signal gates two downstream decisions; this is pipeline or composite-figure, not N comparable alternatives.",
+      "what_to_learn": "When one upstream signal feeds two downstream decision paths in sequence, draw it as a linked pipeline with arrows carrying that signal forward, not as side-by-side comparison panels; let each stage keep its natural diagram type (block-matching grid, neural-net flowchart, point-cloud view) since forcing one shared vocabulary here would flatten real differences.",
+      "dir": "../figures/asplos26-013_fig7"
+    },
+    {
+      "id": "asplos26-078_fig3",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Reassigned from phase-lanes by the note-writer: 'Profiling / Models / Use Cases' are pipeline stage headers, not time phases, and the three parallel branches inside Models are computation lanes converging on a Slowdown score; no time axis appears anywhere.",
+      "what_to_learn": "Read this as a pipeline with parallel converging branches instead: three same-shaped signal-to-slowdown conversions run side by side under a dashed group box, then merge into one combined score; label the arrows themselves next time, since this figure leaves them unlabeled and relying on box-name adjacency.",
+      "dir": "../figures/asplos26-078_fig3"
+    },
+    {
+      "id": "asplos26-088_fig11",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Near-monochrome tikz pipeline (1 hue, gray_frac 0.0) whose dashed callouts expand two engines into their replicated cores.",
+      "what_to_learn": "Dashed leader lines mean containment/zoom, solid arrows mean data flow; keeping the two line styles disjoint lets one figure carry both relations.",
+      "dir": "../figures/asplos26-088_fig11"
+    },
+    {
+      "id": "asplos26-097_fig4",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Reassigned from dataflow-dag by the note-writer: a plain five-box left-to-right pipeline; the 'Serverless Graph' is a named artifact passed between boxes but never actually drawn as nodes and edges anywhere in the figure.",
+      "what_to_learn": "The transferable move is pipeline's: run coloured dashed bands along the bottom naming which paper section documents each stage, and group the plugin-style services (S3, SQS, Pub/Sub) as small icons inside one stage rather than drawing each as a separate box.",
+      "dir": "../figures/asplos26-097_fig4"
+    },
+    {
+      "id": "asplos26-132_fig6",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Offline-phase box stacked over an online-phase box with circled numbers 1-4 driving only the online loop.",
+      "what_to_learn": "Split one-time setup from the per-iteration loop with a dashed group boundary, and number only the steps that repeat.",
+      "dir": "../figures/asplos26-132_fig6"
+    },
+    {
+      "id": "nsdi23-045_fig2",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Star, high-confidence double-column pipeline with 7 circled numbered stages along the main line and matching dashed callouts hanging below expanding four of them, ending in a small rendered heatmap thumbnail.",
+      "what_to_learn": "Keep the numbered main path as one row of plain boxes and drop expanded explanation into dashed callout boxes underneath, tied by leader lines and annotation text back to the numbered step they detail; finish a signal-processing pipeline with a rendered-output thumbnail, not just a label.",
+      "dir": "../figures/nsdi23-045_fig2"
+    },
+    {
+      "id": "nsdi24-023_fig3",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Double-column pipeline (aspect 4.0) with an inside legend and a mirrored encoder/decoder around a transmitted artefact.",
+      "what_to_learn": "At double column, mirror the two halves around the one object that crosses between them, and park a two-entry legend in the empty top strip.",
+      "dir": "../figures/nsdi24-023_fig3"
+    },
+    {
+      "id": "nsdi24-043_fig1",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "High-confidence, dense pipeline exemplar with 25 components, near the template's upper range, that abandons a single line for a five-box numbered grid, each nested with its own sub-pipeline, plus one gray loop arrow.",
+      "what_to_learn": "When a pipeline is really a whole-lifecycle map, arrange the numbered stages in a compact grid rather than one long row, nest each stage's own sub-steps inside it, and draw a periodic feedback relationship as one separate curved arrow in a second colour rather than reusing the numbered arrows.",
+      "dir": "../figures/nsdi24-043_fig1"
+    },
+    {
+      "id": "nsdi26-133_fig4",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "High-confidence pipeline nesting five numbered sub-stages inside just two top-level hardware containers, using a worked example highlighted in blue and threaded through the boxes to make an abstract packet pipeline concrete.",
+      "what_to_learn": "Nest a fine-grained numbered sequence inside two or three coarse top-level containers rather than one box per step, highlight one concrete instance in an accent colour as it moves through every stage, and drop dashed leaders from bottom annotations up to the exact stage that consumes each field.",
+      "dir": "../figures/nsdi26-133_fig4"
+    },
+    {
+      "id": "osdi23-039_fig3",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "Star, high-confidence pipeline flanked by labelled Input and Output panels, with a dotted Perspect boundary separating the paper's own compute-filter-refine loop from off-the-shelf tools attached above and below the main line.",
+      "what_to_learn": "Bookend a pipeline with explicit Input/Output panels rather than bare arrows at the edges, attach third-party tool names as small boxes above or below the stage they instrument instead of putting them on the main line, and mark the contribution with a dotted boundary plus one internal feedback arrow.",
+      "dir": "../figures/osdi23-039_fig3"
+    },
+    {
+      "id": "osdi24-050_fig6",
+      "template": "pipeline",
+      "star": true,
+      "why_chosen": "The smallest complete pipeline in the corpus (6 components, 4 flows, high confidence, 0 weaknesses) at exactly single-column width.",
+      "what_to_learn": "A two-stage pipeline needs only a controller, two stage groups and one labelled hand-off arrow; stacked/offset boxes stand in for 'a pool of N identical instances' without drawing N of them.",
+      "dir": "../figures/osdi24-050_fig6"
+    },
+    {
+      "id": "asplos25-034_fig8",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from baseline-vs-ours by the note-writer: a single three-stage pipeline (Projection, Sorting, Rasterization) over a shared DRAM bus, where two accent colours mark added units against an uncoloured baseline, pipeline emphasis coding, not a two-halves comparison.",
+      "what_to_learn": "When the contribution is scattered across one pipeline rather than isolated in a second panel, mark each added unit with its own accent colour (here yellow for foveation, blue for load-balancing) against an otherwise uncoloured baseline pipeline, and add an in-figure legend rather than relying on the caption to map colour to purpose.",
+      "dir": "../figures/asplos25-034_fig8"
+    },
+    {
+      "id": "asplos25-083_fig1",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "A floor-sized pipeline, 4 components and 3 flows, pairing a compact cache-in-front-of-tree diagram with a results-callout panel; the record itself flags this mixing of architecture and results as a weakness.",
+      "what_to_learn": "Keep the architecture path itself tiny and legible, batch to cache table to evicted-and-reordered write to tree, using just two colours for the two paths; avoid this figure's flaw of parking results text beside the diagram instead of encoding it in the diagram.",
+      "dir": "../figures/asplos25-083_fig1"
+    },
+    {
+      "id": "asplos25-096_figtex5",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from block-floorplan by the note-writer: this is a software test-generation pipeline feeding a paired-trace equality/inequality comparison that concludes in a Violation Found ellipse; there is no hardware vocabulary, chip boundary, or physical placement anywhere.",
+      "what_to_learn": "Treat this as a generator/model/executor pipeline instead: fork one test case into a Leakage Model and an Executor that each produce a trace, then join the traces with a visual == / != gate feeding an AND into a bold Violation Found result; draw the missing arrow linking the two halves.",
+      "dir": "../figures/asplos25-096_figtex5"
+    },
+    {
+      "id": "asplos26-008_figtex6",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline with 5 circled step markers and a dashed zoom callout that expands one stage into 3 sub-steps, rendered in an icon-illustrated style rather than plain boxes.",
+      "what_to_learn": "Circle-number every step in traversal order even across a callout boundary (1 outside, 2-4 inside, 5 outside); hang the callout as a dashed-border box off the stage it details, and use one colour per role (active vs passive) instead of a legend.",
+      "dir": "../figures/asplos26-008_figtex6"
+    },
+    {
+      "id": "asplos26-026_fig4",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Three named phases separated by dashed vertical rules, with phase headers set above the band.",
+      "what_to_learn": "Dashed vertical rules plus bold phase headers are enough to segment a pipeline; the same component may legitimately reappear per phase if the headers disambiguate it.",
+      "dir": "../figures/asplos26-026_fig4"
+    },
+    {
+      "id": "asplos26-100_fig6",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from n-panel-comparison by the note-writer: a single pipeline diagram with lettered arrows (a)-(e) indexing prose explanations of signals, not separate comparison panels; there is only one frame here, not multiple copies of a drawing.",
+      "what_to_learn": "Reserve lettered tags for indexing prose explanations of individual signals on one diagram (as this figure correctly does) rather than assuming letters always mean separate panels; box exactly the stages that changed (here the out-of-order I/X/W group) and colour only the new components, leaving the rest uncoloured.",
+      "dir": "../figures/asplos26-100_fig6"
+    },
+    {
+      "id": "asplos26-113_fig8",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Double-column pipeline with 5 stages labelled by their section numbers (5.1-5.5), each its own boxed sub-diagram, and a big return arrow at the bottom literally closing the loop, in 6 components and 6 flows.",
+      "what_to_learn": "Number stages with the section numbers already used in the prose instead of plain digits, so panels map straight to text, and keep one consistent colour per semantic role across every panel (blue=ambiguous, yellow=candidate, green/red=accept/reject) instead of a legend.",
+      "dir": "../figures/asplos26-113_fig8"
+    },
+    {
+      "id": "asplos26-125_fig4",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from flanked-core by the note-writer: a 19-component, 14-flow left-to-right compiler pipeline (LLVM to DSL to E-graph) runs through one boxed iterative Phase loop and out to HLS-synthesized instructions, a pipeline with a loop, not an engine between bands.",
+      "what_to_learn": "Box one iterative loop (equality saturation, anti-unification, vectorization, selection) inside a highlighted sub-region of a longer pipeline rather than drawing every pass as a separate top-level stage; the weakness here is that those sub-step boxes carry only short keywords, so a reader needs the matching subsection to interpret them.",
+      "dir": "../figures/asplos26-125_fig4"
+    },
+    {
+      "id": "nsdi23-009_fig1",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: a plain three-stage pipeline (its own corpus label) with small decorative rate-over-time sparkline icons beside the inputs, not a magnified sub-block of any drawn component.",
+      "what_to_learn": "The transferable move is pipeline's: give each of several parallel input streams its own tiny characterizing chart, and distinguish repeated content (four differently-shaped models packed in one worker's GPU memory) by both shape and colour, then legend the shapes explicitly, since this exemplar leaves them unexplained.",
+      "dir": "../figures/nsdi23-009_fig1"
+    },
+    {
+      "id": "nsdi23-046_fig6",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: a plain microarchitecture block diagram (its own corpus label pipeline), storage feeding a scheduler, with an inline eligibility-mask icon, but no magnified callout connected by dashed leaders.",
+      "what_to_learn": "The transferable move is pipeline's: draw the concrete bit pattern (1-1-1-0) the mechanism evaluates right next to the step that reads it, but connect it with a line to the specific queue slots it filters and vary the shade of same-coloured boxes, since near-identical orange boxes here need label-reading to tell apart.",
+      "dir": "../figures/nsdi23-046_fig6"
+    },
+    {
+      "id": "nsdi23-070_fig2",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "A clean floor-level pipeline exemplar: 9 plain blue-outlined stage boxes in one strict left-right row from App Containers to Wire, with gray funnel icons marking the two places where per-core queues fan in.",
+      "what_to_learn": "When the point is just that packets pass through these layers in order, skip numbering and legends entirely, and reuse one small funnel or trapezoid glyph wherever parallel per-core resources converge instead of drawing every core's queue.",
+      "dir": "../figures/nsdi23-070_fig2"
+    },
+    {
+      "id": "nsdi24-004_fig8",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline with two nested feedback loops, a fast orientation-search loop on the left and a slower backend-retraining loop on the right, linked by one hand-off point, across 8 components and 8 flows.",
+      "what_to_learn": "Draw a fast inner loop and a slower outer loop as two visually distinct cycles joined at one hand-off point; the record's weakness notes that unboxed colour-square groups only work if proximity alone can carry their scope, so box small repeated icon groups instead of relying on adjacency.",
+      "dir": "../figures/nsdi24-004_fig8"
+    },
+    {
+      "id": "nsdi24-086_fig22",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence top-down pipeline for the fan-out/fan-in variant: 4 identical uniformly-styled boxes inside one outer container fan out from a single input and reconverge at a Concatenate stage, in only 5 components.",
+      "what_to_learn": "Give parallel same-role branches identical fill and shape so the eye reads them as one repeated unit, and reserve differently coloured dashed lines for the routing step, keeping solid black arrows for the shared input split and final concatenation.",
+      "dir": "../figures/nsdi24-086_fig22"
+    },
+    {
+      "id": "nsdi24-095_fig2",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline with a below-figure legend, one of only 19% of pipelines that legend, explaining that every green full-precision layer is paired with a pink STE band, across 11 components and 12 flows.",
+      "what_to_learn": "Pair each functional layer box with a thin coloured band directly beneath it to show a per-layer transform without extra boxes, route the one recurrent connection as a curved dashed arrow into a distinctly coloured memory block, and define the colour code in a legend below the figure.",
+      "dir": "../figures/nsdi24-095_fig2"
+    },
+    {
+      "id": "nsdi25-045_fig4",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence double-column pipeline in the phase-divided variant: a dashed horizontal rule splits the canvas into a Policy-Authoring band and an Implementing/Monitoring band, while three circled numbers trace the green process boxes across both.",
+      "what_to_learn": "Use a single dashed rule across the whole canvas to separate two operational phases instead of drawing two boxes, keep the numbered main-path boxes one colour against plain icon inputs, and label each phase in coloured text at the rule itself.",
+      "dir": "../figures/nsdi25-045_fig4"
+    },
+    {
+      "id": "nsdi26-054_fig1",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline in the zoom-into-lanes variant: a short top row of alternating Dense/MoE boxes expands into 3 parallel GPU lanes, with the two AlltoAllv arrows recoloured red to flag the operation under study.",
+      "what_to_learn": "Zoom a single stage of a short top-level chain into a lower panel of repeated per-worker lanes to show what happens inside one step, and recolour only the specific operation under study in the accent colour, leaving the rest gray or blue.",
+      "dir": "../figures/nsdi26-054_fig1"
+    },
+    {
+      "id": "nsdi26-126_fig8",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "A six-component top-down pipeline that illustrates a mechanism (prefix coalescing) rather than a whole system.",
+      "what_to_learn": "A dashed box around the one step that changed is the cheapest way to say 'this is the optimisation' inside an otherwise ordinary queue-worker-commit pipeline.",
+      "dir": "../figures/nsdi26-126_fig8"
+    },
+    {
+      "id": "osdi23-022_fig2",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence double-column pipeline with 15 flows, near the template's high end, that nests a fourth numbered stage into a much larger sub-pipeline box, ending in a highlighted test case and a check/cross verdict.",
+      "what_to_learn": "Let the last numbered stage expand into its own multi-step boxed sub-pipeline with its own internal feedback loop rather than forcing every step to the same size, and close a two-execution comparison with a check/cross icon pair; the record's weakness warns to add a legend once icons and dashed groups get this dense.",
+      "dir": "../figures/osdi23-022_fig2"
+    },
+    {
+      "id": "osdi23-040_fig6",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "High-confidence pipeline in the fan-out/fan-in variant: a trapezoid connector splits Metadata across 16 identical Pipe Manager boxes elided with a vertical ellipsis, while a separate lower lane carries bulk Data to the same DMA Engine.",
+      "what_to_learn": "Use trapezoid connectors, not sixteen arrows, to fan data to and from N identical replicated boxes, elide the middle instances with a vertical ellipsis, and keep the bulk-data lane physically separate from the control lane; draw side-channel control inputs thinner so they are not mistaken for the main dataflow.",
+      "dir": "../figures/osdi23-040_fig6"
+    },
+    {
+      "id": "osdi24-040_fig1",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from block-floorplan by the note-writer: this is a five-box linear energy-flow diagram (harvester, capacitor, MCU, two memory types) with no chip boundary, no bus, and no placement-based adjacency, closer to a simple pipeline than a floorplan.",
+      "what_to_learn": "Read this as a small linear pipeline instead: harvester feeds a capacitor which powers an MCU, and color alone (blue volatile, green non-volatile) tells the two memory types apart; add arrowheads throughout, since this figure's plain connectors leave flow direction implicit.",
+      "dir": "../figures/osdi24-040_fig1"
+    },
+    {
+      "id": "osdi26-078_fig3",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from composite-figure by the note-writer: three block diagrams (flow control, retransmission, ICRC pipeline) are fully independent modules with no shared component, dominant panel, or dataflow between them; the rule that unrelated panels are two figures, not one, applies directly.",
+      "what_to_learn": "When three block diagrams genuinely share no component or dataflow, do not force them into one composite just to save space; either draw a connecting line to the larger system they belong to, or split them into separate figures, since grouping unrelated modules under one caption reads as three mini-diagrams, not one architecture.",
+      "dir": "../figures/osdi26-078_fig3"
+    },
+    {
+      "id": "osdi26-090_fig7",
+      "template": "pipeline",
+      "star": false,
+      "why_chosen": "Reassigned from overview-with-inset by the note-writer: a straight three-stage left-to-right pipeline (its own corpus label) with a user/kernel divider and four colour-coded thread tokens, no magnified callout or dashed zoom anywhere in the figure.",
+      "what_to_learn": "The transferable move is pipeline's: assign each parallel worker (t1-t4) one consistent colour and trace a single one of them (t4, dashed outline) through every stage as the worked example, converging all four at the end into one aggregated operation instead of four separate ones.",
+      "dir": "../figures/osdi26-090_fig7"
+    }
+  ]
+}

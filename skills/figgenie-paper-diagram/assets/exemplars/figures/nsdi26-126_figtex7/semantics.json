@@ -1,0 +1,228 @@
+{
+  "paper_id": "nsdi26-126",
+  "fig": "tex7",
+  "kind": "mechanism",
+  "system": {
+    "name": "FalconFS",
+    "one_liner": "a distributed file system tailored for large-scale deep learning data pipelines",
+    "domain": [
+      "distributed file systems",
+      "deep learning storage",
+      "metadata management"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how FalconFS's MNodes lazily replicate namespace dentries via remote lookups and invalidations across mkdir/open/rmdir",
+    "base": "tree",
+    "elements": [
+      {
+        "name": "Client",
+        "kind": "actor",
+        "role": "issues one filesystem request (mkdir/open/rmdir) per panel and receives the reply",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "MNode",
+        "kind": "box",
+        "role": "a metadata node holding one local namespace replica and inode table; instantiated per panel as MNode 0, MNode 1, and (in panel c) a Coordinator",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Namespace Replica",
+        "kind": "box",
+        "role": "local partial copy of the directory tree cached at this node",
+        "container": "MNode",
+        "highlighted": false
+      },
+      {
+        "name": "Inode Table",
+        "kind": "box",
+        "role": "local table of inode entries this node owns or has fetched",
+        "container": "MNode",
+        "highlighted": false
+      },
+      {
+        "name": "/",
+        "kind": "node",
+        "role": "root directory entry, present (green) in every replica shown",
+        "container": "Namespace Replica",
+        "highlighted": false
+      },
+      {
+        "name": "a",
+        "kind": "node",
+        "role": "existing child directory entry of root, present (green) in every replica shown",
+        "container": "Namespace Replica",
+        "highlighted": false
+      },
+      {
+        "name": "b",
+        "kind": "node",
+        "role": "the directory being created/looked up/removed; green when the local replica holds a valid dentry for it, gray when missing or the target of an in-flight operation",
+        "container": "Namespace Replica",
+        "highlighted": true
+      },
+      {
+        "name": "c",
+        "kind": "node",
+        "role": "the file opened in panel (b), open(/b/c); appears only at MNode 1's inode table",
+        "container": "Inode Table",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Client",
+        "to": "MNode",
+        "what": "sends the filesystem request: mkdir(/b), open(/b/c), or rmdir(/b)",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "MNode",
+        "to": "Client",
+        "what": "returns the result once local/replica processing completes",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "MNode",
+        "to": "MNode",
+        "what": "a blue remote-lookup arrow fetches a missing dentry from the owner MNode",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "MNode",
+        "to": "MNode",
+        "what": "a red invalidation arrow broadcasts from the owner MNode, clearing or checking a now-stale dentry at a peer MNode",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) mkdir(/b)",
+        "axis": "time",
+        "differs": "single MNode 0 box: the client creates /b directly there, and its replica/inode table already show 'b' as valid (green)",
+        "verdict": null
+      },
+      {
+        "label": "(b) open(/b/c)",
+        "axis": "time",
+        "differs": "two MNode boxes: MNode 0 is fully valid (green); MNode 1 misses 'b' (gray) until a blue lookup arrow fetches it from MNode 0",
+        "verdict": null
+      },
+      {
+        "label": "(c) rmdir(/b)",
+        "axis": "time",
+        "differs": "three boxes (Coordinator, MNode 0, MNode 1): target 'b' is gray (locked); red invalidation arrows fan out, clearing 'b' at both MNodes",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Three example operations show how each MNode's cached namespace tree can fall behind the owner's copy, and how remote lookups and invalidation broadcasts keep replicas eventually consistent.",
+    "reading_order": "left to right through panels (a), (b), (c); within each, Client at top issuing the request, then down into the MNode boxes, tracing the coloured arrow"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 3,
+    "column": "double",
+    "aspect": 5.01,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#7fff7f",
+        "used_for": "light-green fill of valid/present tree and inode-table nodes ('/', 'a', 'b', 'c' when synced)"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill of a node not yet valid at that replica (missing dentry) or the operation's locked target"
+      },
+      {
+        "hex": "#c6e2ff",
+        "used_for": "light-blue background fill of each 'Namespace Replica' sub-box"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light-gray background fill of each 'Inode Table' sub-box"
+      },
+      {
+        "hex": "#0433ff",
+        "used_for": "blue remote-lookup arrow in panel (b), fetching a missing dentry from the owner MNode"
+      },
+      {
+        "hex": "#b1001c",
+        "used_for": "dark-red invalidation arrows in panel (c), broadcasting invalidation and children-check responses"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the Client bubble and the MNode/Coordinator outer boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on all boxes and nodes",
+    "corners": "mixed",
+    "arrows": "thin black double-arrows between Client and MNode/Coordinator; curved blue arrow for remote lookup; curved dark-red arrows for invalidation broadcast/response",
+    "font": "italic serif-like display font for labels, small",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "green = a valid/present dentry or inode entry; gray = a missing or locked/target entry; blue = remote lookup traffic (panel b only); dark red = invalidation traffic (panel c only)",
+    "line_style_means": "plain black arrows carry request/response between Client and MNode; curved coloured arrows specifically mark cross-MNode lookup or invalidation traffic",
+    "state_means": "green vs gray fill tells a synced dentry from a missing/stale one at a given node",
+    "marker_means": "not applicable, no numeric markers; colour alone encodes the action",
+    "emphasis": "the gray-to-green fill change on 'b' draws the eye to exactly which node's copy is stale in each scenario",
+    "reusable_patterns": [
+      "a repeating MNode box template (Namespace Replica tree over an Inode Table) instantiated 1-3 times per panel, with cross-box arrows coloured by traffic type"
+    ],
+    "weaknesses": [
+      "reusing the letters '/', 'a', 'b', 'c' identically in every box requires reading the container label (MNode 0 vs MNode 1 vs Coordinator) to know which instance is meant"
+    ]
+  },
+  "tags": [
+    "FalconFS",
+    "namespace-replication",
+    "metadata-server",
+    "distributed-file-system",
+    "invalidation",
+    "lazy-replication"
+  ],
+  "provenance": {
+    "sections": [
+      "§Lazy Namespace Replication"
+    ],
+    "evidence": [
+      "creates an inode for /b in the inode table, adds a dentry for /b to its local namespace replica",
+      "it finds the dentry for /b missing in its local namespace replica",
+      "$MNode_1$ locks /b's inode to block subsequent lookup requests and broadcasts an invalidation request to other MNodes."
+    ]
+  },
+  "summary": "This three-panel figure from FalconFS's Lazy Namespace Replication section shows how MNodes keep their locally cached namespace trees consistent, using blue arrows for remote lookups and red arrows for invalidation. In (a) mkdir(/b), the client's create request is handled entirely at MNode 0, whose Namespace Replica and Inode Table both already mark the new dentry b valid (green). In (b) open(/b/c), MNode 1's replica is missing b (gray) until a blue remote-lookup arrow fetches the dentry from owner MNode 0. In (c) rmdir(/b), the Coordinator locks and forwards the delete to the owning MNode, which broadcasts red invalidation arrows to its own replica and to MNode 1 before replying, clearing the stale b entry everywhere the tree had cached it.",
+  "summary_zh": "该图展示FalconFS在三种场景下如何保持命名空间副本一致：mkdir在MNode0本地创建目录项b(绿色)；open时MNode1本地缺失b(灰色)，通过蓝色箭头远程查找从属主MNode0补全；rmdir时协调者锁定并转发删除请求，红色箭头广播失效通知给MNode1，清除各处残留的b项后再应答客户端。",
+  "confidence": "medium",
+  "notes": "Prior groups kept as ['evolution'] (matching the earlier pass) since the three lettered panels form a temporal narrative (create, then access, then remove /b) over an increasing number of MNode-template boxes (1, then 2, then 3), matching v3's step-sequence variant; they could also be read as 'comparison' of three request-handling cases sharing one template, but evolution was kept as the more specific/primary reading. Elements/relations describe the shared MNode template (Namespace Replica + Inode Table over tree nodes); panel-specific box counts and colouring are described in content.panels. Palette combines fill/stroke counts across all three source SVGs (texfig7a/b/c), since the context file's given colour histogram only covers file (a); grepping all three directly confirmed the blue (#0433ff) and dark-red (#b1001c) arrow colours used only in panels (b) and (c). In panel (c), the black arrow from the Coordinator visibly terminates at MNode 0's inode table 'b' entry, but the paper text names '$MNode_1$' as the directory inode's owner that locks and broadcasts invalidation; this naming mismatch (figure vs quoted text) is unresolved from the given evidence, so confidence is set to medium and the owner MNode is described generically rather than asserting one numbering is correct.",
+  "venue": "NSDI26"
+}

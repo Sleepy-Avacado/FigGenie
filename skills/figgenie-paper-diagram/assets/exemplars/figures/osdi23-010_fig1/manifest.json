@@ -1,0 +1,41 @@
+{
+  "id": "osdi23-010_fig1",
+  "paper_id": "osdi23-010",
+  "fig": "1",
+  "venue": "OSDI23",
+  "year": 2023,
+  "caption": "Figure 1: The architectural evolvement of mainstream hypervisors (a →b →c) that gradually demote hypervisor functionalities out of kernel mode and the delegated virtualization proposed by this paper (d). U and K represent user mode and kernel mode; H and V are hypervisor mode and virtualization mode",
+  "corpus_template": "matrix",
+  "direction": "left-right",
+  "column": "double",
+  "tool": "unknown",
+  "aspect": 3.61,
+  "n_components": 6,
+  "n_flows": 5,
+  "nesting_depth": 2,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "letters",
+  "panels": 4,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi23-010/osdi23-010_fig1_p3_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi23-010/osdi23-010_fig1_p3_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "matrix",
+      "star": false,
+      "why_chosen": "Medium-confidence matrix exemplar of four lettered panels arranged left to right to show a historical progression, each a swimlane stack of privilege-mode rows, with one legend at the top shared by all four.",
+      "what_to_learn": "When variants show an evolution rather than a static comparison, order the lettered panels left to right to match that history, encode privilege or execution mode as horizontal lanes inside every panel, and keep the arrow-meaning legend at the top since it applies to every panel below it."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "osdi24-015_fig1",
+  "paper_id": "osdi24-015",
+  "fig": "1",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Figure 1: Overview of GPU serverless clusters, LLM infer- ence and new designs introduced by ServerlessLLM.",
+  "corpus_template": "layered",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 1.94,
+  "n_components": 14,
+  "n_flows": 12,
+  "nesting_depth": 3,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-015/src/fig1_ServerlessLLMOverview.svg",
+    "preview.png": "lab/extracted/osdi24-015/src/fig1_ServerlessLLMOverview.png",
+    "print.png": "lab/extracted/osdi24-015/osdi24-015_fig1_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "multi-tier",
+      "star": true,
+      "why_chosen": "Two components (Controller, GPU Server) sit under one 'Serverless Cluster' label beside a separate 'LLM Inference' detail box, with three named contribution boxes along the bottom pointing dashed arrows up into the parts they optimize.",
+      "what_to_learn": "Label a background sub-system with one umbrella name (here 'Serverless Cluster') so a detail panel can sit beside it without seeming detached, and place each contribution as its own small box below with a dashed arrow pointing up into the exact component it modifies; enlarge label text well past this figure's 4.5-5.5pt, a listed weakness."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "sosp23-002_fig5",
+  "kind": "mechanism",
+  "paper_id": "sosp23-002",
+  "fig": "5",
+  "venue": "SOSP23",
+  "year": 2023,
+  "caption": "Figure 5. Bagpipe setup: All the components of Bagpipe can be individually scaled. The dashed arrows signify async RPCs while solid ones signify sync RPCs.",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "component",
+  "subject": "how Bagpipe's four pipeline stages (data processors, oracle cachers, trainers, embedding servers) each scale independently via full RPC connectivity",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "none",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 4.34,
+  "n_elements": 11,
+  "n_relations": 10,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "right",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/sosp23-002/src/fig5_system_schematic.svg",
+    "preview.png": "lab/extracted/sosp23-002/src/fig5_system_schematic.png",
+    "print.png": "lab/extracted/sosp23-002/sosp23-002_fig5_p5_vector.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": true,
+      "why_chosen": "A four-stage pipeline anatomy where every stage is an identical '1...N' box pair with fully crossing connections to the next stage, illustrating independent, elastic per-stage scaling.",
+      "what_to_learn": "Give every stage an identical '1...N' box pair and fully cross-connect neighboring stages so any replica can reach any replica — but the dashed-vs-solid arrow meaning (async vs sync RPC) is explained only in the caption, never on the figure.",
+      "note_source": "agent"
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "paper_id": "asplos26-013",
+  "fig": "13",
+  "system": {
+    "name": "AGS",
+    "one_liner": "an algorithm-hardware co-design accelerator for 3D Gaussian Splatting SLAM using CODEC-assisted frame covisibility detection",
+    "domain": [
+      "ml-systems",
+      "robotics/SLAM",
+      "hardware accelerator"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "GPE1",
+        "role": "Gaussian Processing Element that finishes rendering earlier and sits idle",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "GPE2",
+        "role": "Gaussian Processing Element that finishes later, causing load imbalance",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Stage 1: α Computation",
+        "role": "independent first rendering stage, majority of rendering time",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Stage 2: Color Rendering",
+        "role": "recursive second rendering stage with data dependencies",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GPE Scheduler",
+        "role": "traverses the workload table and assigns an idle GPE to assist an unfinished one",
+        "container": "Hardware Support",
+        "novel": true
+      },
+      {
+        "name": "Workload Table",
+        "role": "tracks per-GPE workload/progress used by the scheduler",
+        "container": "Hardware Support",
+        "novel": true
+      },
+      {
+        "name": "Alpha Buffer",
+        "role": "stores pre-computed alpha (Stage 1) results tagged by GPE for later reuse",
+        "container": "Hardware Support",
+        "novel": true
+      },
+      {
+        "name": "Gaussian Feature Buffer",
+        "role": "supplies Gaussian ID and feature/value data to the GPE array",
+        "container": "Hardware Support",
+        "novel": false
+      },
+      {
+        "name": "GS Array",
+        "role": "array of GPEs consuming the workload table and alpha buffer",
+        "container": "Hardware Support",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "GPE1",
+        "to": "GPE2",
+        "what": "assists by pre-computing alpha for GPE2's Gaussians (GS5, GS6)",
+        "step": null
+      },
+      {
+        "from": "GPE Scheduler",
+        "to": "Workload Table",
+        "what": "assignment lookup",
+        "step": null
+      },
+      {
+        "from": "GPE1",
+        "to": "Alpha Buffer",
+        "what": "pre-computed alpha values tagged with GPE2's id",
+        "step": null
+      },
+      {
+        "from": "Alpha Buffer",
+        "to": "GPE2",
+        "what": "pre-computed alpha values retrieved via tag hit",
+        "step": null
+      }
+    ],
+    "key_idea": "Splitting each Gaussian's rendering into an independent alpha stage and a dependent color stage lets an idle GPE pre-compute alpha for a busy GPE, balancing load across the GPE array.",
+    "reading_order": "Panel (a) unbalanced timeline first, then panel (b) the rebalanced timeline, then panel (c) the hardware (scheduler, workload table, alpha buffer) that implements it."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "digits",
+    "panels": 3,
+    "column": "single",
+    "aspect": 2.89,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f7c97e",
+        "used_for": "orange fill, likely Gaussian/Stage-1 segments in the timelines"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "light gray fill for idle/background segments and hardware block outlines"
+      },
+      {
+        "hex": "#a7c0de",
+        "used_for": "blue fill for GPE hardware blocks in panel (c)"
+      },
+      {
+        "hex": "#eca8a9",
+        "used_for": "pink/red fill, likely idle-time or Stage-2 segments"
+      },
+      {
+        "hex": "#d3e2b7",
+        "used_for": "green accent, minor use"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.34pt) dark strokes, dashed borders on some blocks",
+    "font": "Calibri sans, very small (2-3.5pt at figure scale), bold used heavily",
+    "corners": "mixed",
+    "arrows": "many thin connecting lines (164), no arrowheads reported",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange segments mark active alpha/Gaussian computation blocks, gray/pink segments likely mark idle GPE time",
+    "line_style_means": null,
+    "emphasis": "side-by-side (a) vs (b)/(c) timeline comparison highlights the reduction in idle (gray) time after rebalancing",
+    "reusable_patterns": [
+      "Gantt-style per-lane timeline used to show hardware workload imbalance and its fix"
+    ],
+    "weaknesses": [
+      "extremely small font (2-3.5pt) makes labels illegible without zooming"
+    ]
+  },
+  "tags": [
+    "load balancing",
+    "GPU/accelerator scheduling",
+    "3D Gaussian Splatting",
+    "workload table",
+    "pipeline stages"
+  ],
+  "provenance": {
+    "sections": [
+      "5 Architecture (p.9)"
+    ],
+    "evidence": [
+      "the rendering of GPE1 completes after processing two Gaussians, while GPE2 continues until",
+      "we propose a GPE scheduler, a workload table, and an alpha buffer to redistribute the workload",
+      "GPE2 checks the alpha buffer and successfully hits the tag so as to obtain the alpha values"
+    ]
+  },
+  "summary": "This figure explains AGS's fix for unbalanced GPE (Gaussian Processing Element) workloads during rendering. Panel (a) shows a timeline where GPE1 finishes after two Gaussians while GPE2 needs six, leaving GPE1 idle for 66% of the time, because Gaussian rendering splits into an independent alpha-computation stage and a data-dependent color-rendering stage. Panels (b) and (c) show the fix: a GPE scheduler consults a workload table to assign an idle GPE (GPE1) to pre-compute alpha values for a busy GPE's (GPE2's) remaining Gaussians, storing results in a tagged alpha buffer that the busy GPE later hits to skip redundant work. The figure is drawn as small Gantt-style per-GPE timelines next to a block diagram of the scheduler, workload table, alpha buffer and Gaussian feature buffer.",
+  "summary_zh": "该图展示AGS如何解决GPE负载不均：面板(a)显示GPE1提前完成而GPE2仍在渲染；面板(b)(c)展示GPE调度器借助工作负载表与Alpha缓冲区，让空闲GPE预先计算忙碌GPE的α值，实现负载均衡。",
+  "confidence": "medium",
+  "notes": "The exact color-to-stage mapping in the timeline panels is inferred from the thumbnail and figure structure rather than stated explicitly in the surrounding text.",
+  "venue": "ASPLOS26"
+}

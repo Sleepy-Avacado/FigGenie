@@ -1,0 +1,243 @@
+{
+  "paper_id": "sosp24-035",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "PowerInfer",
+    "one_liner": "a high-speed LLM inference engine that exploits neuron-activation locality to hybrid-serve large models on a single consumer GPU plus CPU",
+    "domain": [
+      "machine-learning-systems",
+      "LLM-serving",
+      "GPU-CPU-offloading"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "comparison",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "how two existing offloading designs move transformer layers between CPU and GPU memory during inference",
+    "base": "component",
+    "elements": [
+      {
+        "name": "CPU Mem",
+        "kind": "box",
+        "role": "host memory holding transformer layers that exceed GPU capacity",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L4 (CPU Mem)",
+        "kind": "row",
+        "role": "layer waiting in CPU memory, dashed white to mark it as the layer about to be transferred to the GPU",
+        "container": "CPU Mem",
+        "highlighted": true
+      },
+      {
+        "name": "L5",
+        "kind": "row",
+        "role": "another layer resident in CPU memory",
+        "container": "CPU Mem",
+        "highlighted": false
+      },
+      {
+        "name": "L6",
+        "kind": "row",
+        "role": "another layer resident in CPU memory",
+        "container": "CPU Mem",
+        "highlighted": false
+      },
+      {
+        "name": "Ln (CPU Mem)",
+        "kind": "row",
+        "role": "last layer resident in CPU memory",
+        "container": "CPU Mem",
+        "highlighted": false
+      },
+      {
+        "name": "CPU",
+        "kind": "icon",
+        "role": "CPU compute unit, drawn idle since GPU-centric offloading does not use it for computation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "GPU",
+        "kind": "icon",
+        "role": "GPU compute unit, drawn busy since it processes every layer",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "GPU Mem",
+        "kind": "box",
+        "role": "GPU memory holding the layers currently available for GPU computation",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "L4 (GPU Mem)",
+        "kind": "row",
+        "role": "the newly transferred layer, now resident in GPU memory",
+        "container": "GPU Mem",
+        "highlighted": true
+      },
+      {
+        "name": "L3",
+        "kind": "row",
+        "role": "layer already resident in GPU memory",
+        "container": "GPU Mem",
+        "highlighted": false
+      },
+      {
+        "name": "L2",
+        "kind": "row",
+        "role": "layer already resident in GPU memory",
+        "container": "GPU Mem",
+        "highlighted": false
+      },
+      {
+        "name": "L1",
+        "kind": "row",
+        "role": "layer already resident in GPU memory",
+        "container": "GPU Mem",
+        "highlighted": false
+      },
+      {
+        "name": "PCIe",
+        "kind": "label",
+        "role": "interconnect bar across which layer transfers between CPU Mem and GPU Mem travel",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "L4 (CPU Mem)",
+        "to": "L4 (GPU Mem)",
+        "what": "layer L4 is copied from CPU memory to GPU memory across PCIe as needed",
+        "kind": "data",
+        "step": "1"
+      },
+      {
+        "from": "GPU",
+        "to": "GPU Mem",
+        "what": "the GPU reads and processes the layers now resident in GPU memory",
+        "kind": "control",
+        "step": "2"
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) GPU-Centric Offloading",
+        "axis": "alternatives",
+        "differs": "template: only the GPU computes; the idle CPU merely stores overflow layers, which are copied into GPU memory as needed",
+        "verdict": null
+      },
+      {
+        "label": "(b) GPU-CPU Hybrid Offloading",
+        "axis": "alternatives",
+        "differs": "layers are split by Transformer layer between devices; the CPU also computes on its resident layers (L1..Ln-3) and sends 'CPU Results' across PCIe for the GPU to use when computing its own layers (Ln-2..Ln)",
+        "verdict": null
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "GPU-centric offloading transfers needed layers to the GPU and computes everything there; GPU-CPU hybrid offloading instead splits layers between devices, lets the CPU compute its share, then hands intermediate results to the GPU.",
+    "reading_order": "left to right in each panel: CPU Mem contents, the CPU/GPU compute icons, then GPU Mem contents, following the numbered arrows across the PCIe bus"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "callout",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 2.65,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#f6e1a7",
+        "used_for": "pale tan background shading the CPU Mem column in each panel"
+      },
+      {
+        "hex": "#f1ffff",
+        "used_for": "pale cyan background shading the GPU Mem column in each panel"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "solid gray fill of layer rows already resident in memory"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white dashed fill marking a layer/result slot that is pending, not yet arrived"
+      },
+      {
+        "hex": "#003dff",
+        "used_for": "blue 'CPU'/'GPU' labels and the dotted blue arrows tracing compute/result actions"
+      },
+      {
+        "hex": "#0000ff",
+        "used_for": "solid blue fill of the 'CPU Results' box once it has arrived in GPU memory"
+      },
+      {
+        "hex": "#313232",
+        "used_for": "dark charcoal fill of the black title bars ('CPU Mem'/'GPU Mem' headers) and step-number badges"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black outlines on boxes; dashed strokes on pending slots",
+    "corners": "square",
+    "arrows": "black dashed arrows with arrowheads for cross-PCIe transfers; blue dotted arrows for compute/result actions; circled numeric badges on each arrow",
+    "font": "sans (Helvetica/Arial), bold for CPU Mem/GPU Mem headers",
+    "icons": "small raster compute-unit icons (yellow dashed squares for CPU cores, cyan dashed squares for GPU cores)"
+  },
+  "encoding": {
+    "color_means": "tan vs pale-cyan panel backgrounds separate the CPU-memory side from the GPU-memory side; blue marks the hybrid design's compute-result path; gray marks a layer already resident versus white for a pending slot",
+    "line_style_means": "black dashed arrows carry parameter/result transfers across PCIe; blue dotted arrows trace which layers a compute unit reads or writes",
+    "state_means": "a dashed white outline marks a slot that is empty/pending versus solid gray for an already-resident layer; the two panels are the two alternative designs, told apart by which compute icon has outgoing arrows",
+    "marker_means": "circled numbers order the transfer/compute actions within each panel (1-2 in (a), 1-3 in (b))",
+    "emphasis": "dashed outlines and blue colour draw attention to the one layer or result currently in flight between CPU and GPU",
+    "reusable_patterns": [
+      "side-by-side CPU Mem / compute-icon / compute-icon / GPU Mem block template repeated per alternative, with circled numbers tracing data movement across a shared PCIe bar"
+    ],
+    "weaknesses": [
+      "the small compute-unit icons are raster images with no text labels, so busy vs idle must be read from colour and fill density rather than a legend"
+    ]
+  },
+  "tags": [
+    "LLM-inference",
+    "GPU-CPU-offloading",
+    "PCIe",
+    "PowerInfer",
+    "memory-management"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background and Motivation"
+    ],
+    "evidence": [
+      "GPU-centric offloading utilizes CPU memory to store portions of the model parameters that exceed the GPU's capacity",
+      "Hybrid offloading distributes model parameters between GPU and CPU, splitting them at the Transformer layer level",
+      "The CPU processes its layers first, then sends intermediate results to the GPU for token generation"
+    ]
+  },
+  "summary": "Figure 2 contrasts two existing offloading designs for running LLMs that exceed a single GPU's memory. In (a) GPU-Centric Offloading, all computation happens on the GPU: CPU memory only stores overflow layers (L5, L6, ..., Ln), and a needed layer such as L4 is copied across PCIe into GPU memory (step 1) before the GPU processes the layers now resident there (step 2); the CPU itself stays idle. In (b) GPU-CPU Hybrid Offloading, layers are split by Transformer layer between the two devices: the CPU first computes its own resident layers (L1...Ln-3), producing 'CPU Results' (step 1), sent across PCIe to GPU memory (step 2) so the GPU can finish computing its own layers (Ln-2, Ln-1, Ln) using those results (step 3). This motivates PowerInfer's finer-grained, activation-aware split.",
+  "summary_zh": "该图对比两种offloading方案：(a) GPU中心式由GPU统一计算，所需层经PCIe传入显存，CPU仅存溢出层；(b) 混合式按层切分，CPU先算完自身层，经PCIe将结果传给GPU计算剩余层。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP24"
+}

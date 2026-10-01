@@ -1,0 +1,260 @@
+{
+  "paper_id": "nsdi26-069",
+  "fig": "3",
+  "system": {
+    "name": "HydraServe",
+    "one_liner": "a serverless LLM serving system that minimizes cold-start latency in public clouds",
+    "domain": [
+      "ml-systems",
+      "cloud"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Resource Allocation Algorithm (§4.1)",
+        "role": "allocates resources for each cold-start model based on user SLOs",
+        "container": "Cluster Level",
+        "novel": true
+      },
+      {
+        "name": "Network-Contention-Aware Worker Placement (§4.2)",
+        "role": "places pipeline workers to avoid network contention that could cause SLO violations",
+        "container": "Cluster Level",
+        "novel": true
+      },
+      {
+        "name": "Partition",
+        "role": "splits the model into parts assigned to workers/nodes",
+        "container": "Cluster Level",
+        "novel": true
+      },
+      {
+        "name": "Worker 0",
+        "role": "a pipeline worker assigned to a node by the placement strategy",
+        "container": "Cluster Level",
+        "novel": false
+      },
+      {
+        "name": "Worker 1",
+        "role": "a pipeline worker assigned to a node by the placement strategy",
+        "container": "Cluster Level",
+        "novel": false
+      },
+      {
+        "name": "Node 0",
+        "role": "a GPU server node hosting a placed worker",
+        "container": "Cluster Level",
+        "novel": false
+      },
+      {
+        "name": "Node 1",
+        "role": "a GPU server node hosting a placed worker",
+        "container": "Cluster Level",
+        "novel": false
+      },
+      {
+        "name": "Model Prefetcher (§5)",
+        "role": "proactively fetches model weights for cold-start workers, overlapping fetching with container creation and runtime init",
+        "container": "Worker Level",
+        "novel": true
+      },
+      {
+        "name": "Parameter Manager (§5)",
+        "role": "loads parameters to the GPU in parallel with library loading",
+        "container": "Worker Level",
+        "novel": true
+      },
+      {
+        "name": "GPU 0",
+        "role": "GPU used by Worker 0 to load and run the model",
+        "container": "Worker Level",
+        "novel": false
+      },
+      {
+        "name": "GPU 1",
+        "role": "GPU used by Worker 1 to load and run the model",
+        "container": "Worker Level",
+        "novel": false
+      },
+      {
+        "name": "Pipeline Consolidation (§6)",
+        "role": "consolidates pipeline workers into a standalone worker hosting all parameters",
+        "container": "Inference Level",
+        "novel": true
+      },
+      {
+        "name": "New Worker",
+        "role": "the consolidated standalone worker resulting from merging pipeline workers",
+        "container": "Inference Level",
+        "novel": true
+      },
+      {
+        "name": "KV Cache Migration",
+        "role": "migrates KV cache state as a worker is terminated during consolidation",
+        "container": "Inference Level",
+        "novel": true
+      },
+      {
+        "name": "Terminate",
+        "role": "shuts down a pipeline worker after its state is migrated/consolidated",
+        "container": "Inference Level",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Resource Allocation Algorithm (§4.1)",
+        "to": "Partition",
+        "what": "resource allocation decisions per SLO",
+        "step": null
+      },
+      {
+        "from": "Partition",
+        "to": "Network-Contention-Aware Worker Placement (§4.2)",
+        "what": "model partitions to be placed",
+        "step": null
+      },
+      {
+        "from": "Network-Contention-Aware Worker Placement (§4.2)",
+        "to": "Worker 0",
+        "what": "placement assignment",
+        "step": null
+      },
+      {
+        "from": "Network-Contention-Aware Worker Placement (§4.2)",
+        "to": "Worker 1",
+        "what": "placement assignment",
+        "step": null
+      },
+      {
+        "from": "Worker 0",
+        "to": "Node 0",
+        "what": "worker scheduled onto node",
+        "step": null
+      },
+      {
+        "from": "Worker 1",
+        "to": "Node 1",
+        "what": "worker scheduled onto node",
+        "step": null
+      },
+      {
+        "from": "Model Prefetcher (§5)",
+        "to": "Parameter Manager (§5)",
+        "what": "prefetched model weights",
+        "step": null
+      },
+      {
+        "from": "Parameter Manager (§5)",
+        "to": "GPU 0",
+        "what": "parameters loaded to GPU 0",
+        "step": null
+      },
+      {
+        "from": "Parameter Manager (§5)",
+        "to": "GPU 1",
+        "what": "parameters loaded to GPU 1",
+        "step": null
+      },
+      {
+        "from": "Worker 1",
+        "to": "Worker 0",
+        "what": "KV cache migration during consolidation",
+        "step": null
+      },
+      {
+        "from": "Worker 0",
+        "to": "New Worker",
+        "what": "pipeline consolidation into a standalone worker",
+        "step": null
+      },
+      {
+        "from": "Worker 1",
+        "to": "Terminate",
+        "what": "worker terminated after consolidation",
+        "step": null
+      }
+    ],
+    "key_idea": "HydraServe organizes cold-start optimization into three hierarchical levels: cluster-level SLO-aware resource allocation and contention-aware placement, worker-level overlapped model prefetching and parallel parameter loading, and inference-level consolidation of pipeline workers into standalone workers.",
+    "reading_order": "Top-down and left-right across three labeled quadrants: Cluster Level (top-left, allocation and placement), Worker Level (right, prefetching and parameter loading onto GPUs), and Inference Level (bottom-left, pipeline consolidation and KV cache migration)."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.38,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#bdd7ee",
+        "used_for": "light blue fill for Worker/Node boxes at the cluster and worker levels"
+      },
+      {
+        "hex": "#f0a0a2",
+        "used_for": "salmon/red fill for the Model Prefetcher box"
+      },
+      {
+        "hex": "#ededed",
+        "used_for": "gray fill for section title bars"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "orange fill for the Parameter Manager boxes"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "green fill for Node boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin (~0.65pt) dark-blue outlines, dashed borders around each of the three level panels",
+    "font": "ArialMT / Arial-BoldMT sans-serif, ~8pt",
+    "corners": "mixed",
+    "arrows": "solid and curved, filled triangular heads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = worker/node placement boxes, salmon = the model prefetcher, orange = the parameter manager, green = physical nodes",
+    "line_style_means": null,
+    "emphasis": "the three dashed panels (Cluster/Inference/Worker Level) partition the architecture by scope, matching the paper's three-level hierarchical design",
+    "reusable_patterns": [
+      "three-quadrant hierarchical architecture diagram (cluster/worker/inference levels)",
+      "before/after worker boxes showing consolidation and termination"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "serverless",
+    "LLM-serving",
+    "cold-start",
+    "resource-allocation",
+    "pipeline-parallelism",
+    "GPU-cluster"
+  ],
+  "provenance": {
+    "sections": [
+      "3 HydraServe Overview (p.5)"
+    ],
+    "evidence": [
+      "As shown in Figure 3, HydraServe adopts a three-level hierarchical architecture",
+      "At the cluster level, the central controller employs a resource allocation algorithm (§4.1) and a network-contention-aware worker placement strategy (§4.2)",
+      "HydraServe consolidates pipeline workers into standalone workers that host all parameters (§6)"
+    ]
+  },
+  "summary": "This figure gives the system overview of HydraServe, a serverless LLM serving system for minimizing cold-start latency, organized into a three-level hierarchical architecture. The Cluster Level (top-left) shows a Resource Allocation Algorithm partitioning work per user SLO and a Network-Contention-Aware Worker Placement strategy assigning Worker 0 and Worker 1 to Node 0 and Node 1. The Worker Level (right) shows a Model Prefetcher overlapping model-weight fetching with container/runtime initialization, and per-worker Parameter Managers loading parameters onto GPU 0 and GPU 1 in parallel with library loading. The Inference Level (bottom-left) shows Pipeline Consolidation, where Worker 1 migrates its KV cache to Worker 0, which becomes a New Worker hosting the entire model, while Worker 1 is terminated. Each of the three levels is drawn as a separate dashed panel, with color-coded boxes (blue for workers/placement, salmon for the prefetcher, orange for the parameter manager, green for nodes) tying the visual layout directly to the paper's three-level design.",
+  "summary_zh": "该图展示 HydraServe 的三层架构总览：集群层（资源分配算法与网络争用感知的工作节点放置）、工作节点层（模型预取器与参数管理器并行加载 GPU 参数）、推理层（流水线整合，KV 缓存从 Worker 1 迁移到 Worker 0 并终止 Worker 1，形成独立完整的新 Worker）。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "NSDI26"
+}

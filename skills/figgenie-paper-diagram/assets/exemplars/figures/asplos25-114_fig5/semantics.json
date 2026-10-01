@@ -1,0 +1,247 @@
+{
+  "paper_id": "asplos25-114",
+  "fig": "5",
+  "system": {
+    "name": "COMET",
+    "one_liner": "an inference framework enabling practical W4A4KV4 quantized serving of LLMs via a mixed-precision GEMM kernel",
+    "domain": [
+      "ml-systems",
+      "gpu computing"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "Activation tensor with INT4 & INT8",
+        "role": "input activation tensor divided into blocks at different quantization precisions (FMPQ)",
+        "container": "(a) Tile-based computing",
+        "novel": true
+      },
+      {
+        "name": "INT8 Weight",
+        "role": "weight block quantized to 8-bit",
+        "container": "(a) Tile-based computing",
+        "novel": false
+      },
+      {
+        "name": "INT4 Weight",
+        "role": "weight block quantized to 4-bit",
+        "container": "(a) Tile-based computing",
+        "novel": false
+      },
+      {
+        "name": "Computation tile",
+        "role": "unit of GEMM computation invoking one thread block (TB)",
+        "container": "(a) Tile-based computing",
+        "novel": true
+      },
+      {
+        "name": "INT4 GEMM with fewer warps",
+        "role": "illustrates that an INT4 tile is computed with fewer warps than an INT8 tile",
+        "container": "(a) Tile-based computing",
+        "novel": true
+      },
+      {
+        "name": "Reduction",
+        "role": "reduction operator accumulating compute results across multiple thread blocks/tiles",
+        "container": "(a) Tile-based computing",
+        "novel": true
+      },
+      {
+        "name": "RF",
+        "role": "register file holding data for tensor-core computation",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": false
+      },
+      {
+        "name": "mma",
+        "role": "matrix-multiply-accumulate tensor-core instruction, INT4 or INT8 depending on the tile",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": false
+      },
+      {
+        "name": "INT4+INT8 Conversion (CUDA Cores)",
+        "role": "converts INT4 data to INT8 on CUDA cores to support W4A8 GEMM",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": true
+      },
+      {
+        "name": "SMEM",
+        "role": "shared memory holding loaded/converted mixed-precision data",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": false
+      },
+      {
+        "name": "cp.async",
+        "role": "asynchronous copy instruction loading data from global memory",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": false
+      },
+      {
+        "name": "L2",
+        "role": "L2 cache in the memory hierarchy feeding the SMs",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": false
+      },
+      {
+        "name": "HBM",
+        "role": "GPU high-bandwidth memory, source of tile data",
+        "container": "(b) Instruction issued for different SMs",
+        "novel": false
+      },
+      {
+        "name": "On-chip Buffers",
+        "role": "double shared-memory buffers (W0/W1, A0/A1) used to pipeline loading and computation",
+        "container": "(c) SIMT-enhanced software pipeline",
+        "novel": true
+      },
+      {
+        "name": "Initializing Pipeline",
+        "role": "pipeline warm-up stage before the steady-state iteration loop",
+        "container": "(c) SIMT-enhanced software pipeline",
+        "novel": true
+      },
+      {
+        "name": "Iteration loop",
+        "role": "steady-state loop overlapping cp.async, permute/dequant, and INT4/INT8 mma across buffers",
+        "container": "(c) SIMT-enhanced software pipeline",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "HBM",
+        "to": "L2",
+        "what": "tile data read from global memory",
+        "step": null
+      },
+      {
+        "from": "L2",
+        "to": "cp.async",
+        "what": "data loaded via cp.async toward shared memory/registers",
+        "step": null
+      },
+      {
+        "from": "cp.async",
+        "to": "SMEM",
+        "what": "loaded data placed in shared memory awaiting conversion",
+        "step": null
+      },
+      {
+        "from": "SMEM",
+        "to": "INT4+INT8 Conversion (CUDA Cores)",
+        "what": "INT4 data converted to INT8 for W4A8 GEMM",
+        "step": null
+      },
+      {
+        "from": "INT4+INT8 Conversion (CUDA Cores)",
+        "to": "mma",
+        "what": "converted/dequantized data mapped to tensor cores",
+        "step": null
+      },
+      {
+        "from": "Activation tensor with INT4 & INT8",
+        "to": "Computation tile",
+        "what": "tensor divided into tiles, each invoking one thread block",
+        "step": null
+      },
+      {
+        "from": "Computation tile",
+        "to": "Reduction",
+        "what": "per-tile compute results accumulated across thread blocks",
+        "step": null
+      },
+      {
+        "from": "On-chip Buffers",
+        "to": "Iteration loop",
+        "what": "double-buffered data (W0/W1, A0/A1) feeds the overlapped iteration loop",
+        "step": null
+      }
+    ],
+    "key_idea": "COMET-W4Ax computes GEMM at tile granularity with per-block INT4/INT8 mixed precision, converts INT4 to INT8 on CUDA cores for W4A8 tiles, and uses a double-buffered software pipeline to overlap loading, dequantization, and tensor-core computation.",
+    "reading_order": "Left to right across three sub-figures: (a) tile-based mixed-precision GEMM layout, (b) per-SM instruction issue and INT4-to-INT8 conversion, (c) the double-buffered software pipeline timeline."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "inside",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "double",
+    "aspect": 2.96,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ef8025",
+        "used_for": "data-dependency arrows and highlight accents (e.g., panel c diagonal arrows)"
+      },
+      {
+        "hex": "#e68c7c",
+        "used_for": "INT8-related highlight / underutilized tensor-core callout in panel (b)"
+      },
+      {
+        "hex": "#a9d18e",
+        "used_for": "INT4 data/warp legend color"
+      },
+      {
+        "hex": "#0070c0",
+        "used_for": "INT4 Weight fill / register read-write cells in panel (c)"
+      },
+      {
+        "hex": "#172c51",
+        "used_for": "dark text and border accents"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "~0.36pt thin strokes, dashed on highlighted/annotation boxes (e.g., the CUDA-core conversion box), mixed square/rounded corners",
+    "font": "Nimbus Sans / Linux Libertine, very small 2.5-9pt, mostly non-bold with bold for panel/section titles",
+    "corners": "mixed",
+    "arrows": "thin orthogonal and some curved arrows; orange diagonal arrows in panel (c) mark data dependencies between pipeline stages",
+    "icons": "a few small bitmap/vector icons alongside text labels, mainly in the mixed-precision tile legend"
+  },
+  "encoding": {
+    "color_means": "green marks INT4 data/weight/warp, a contrasting warm tone marks INT8 data/weight/warp (per the panel (a) legend); distinct cell colors in panel (c) mark shared-memory vs. register reads/writes",
+    "line_style_means": "dashed boxes flag specific hardware operations (e.g., the INT4-to-INT8 CUDA-core conversion, underutilized tensor cores); solid arrows trace normal data movement",
+    "emphasis": "Panel (b) calls out tensor-core 'Underutilize' to visually justify the fine-grained SM scheduling the paper introduces to fix it; panel (c)'s color-coded buffer grid literalizes the double-buffering overlap that hides memory-load latency",
+    "reusable_patterns": [
+      "three-part figure moving from data layout (a) to instruction issue (b) to pipeline schedule (c)",
+      "color-coded precision legend (INT4 vs INT8) reused across sub-panels",
+      "buffer x iteration grid to depict a software pipeline"
+    ],
+    "weaknesses": [
+      "very high text and shape density across three dense sub-panels makes the figure hard to read at reduced size",
+      "reused generic labels (RF, SMEM, mma) without per-instance qualifiers require cross-referencing the caption/text to fully disambiguate"
+    ]
+  },
+  "tags": [
+    "LLM inference",
+    "quantization",
+    "GEMM kernel",
+    "GPU tensor cores",
+    "software pipelining",
+    "mixed precision",
+    "CUDA"
+  ],
+  "provenance": {
+    "sections": [
+      "4 COMET-W4Ax: Kernel Design (p.5-6)"
+    ],
+    "evidence": [
+      "Figure 5a illustrates the tile-based GEMM computing in COMET using mixed-precision values",
+      "we utilize CUDA cores to efficiently convert INT4 to INT8 data formats",
+      "COMET utilizes a two-level overlapping strategy to pipeline the memory access and computation stages"
+    ]
+  },
+  "summary": "COMET is an inference framework enabling practical W4A4KV4 serving of large language models by fully exploiting INT4 tensor cores. This three-panel figure details the design of its COMET-W4Ax kernel. Panel (a) shows tile-based GEMM computing: the activation tensor is split into blocks at different precisions (INT4 vs. INT8, per FMPQ), each block's tiles invoking a thread block, with a Reduction step accumulating results across tiles. Panel (b) shows how different SMs issue W4A4 (direct mma) versus W4A8 (requiring INT4-to-INT8 conversion on CUDA cores before mma) GEMM instructions simultaneously, highlighting that W4A4's faster tensor cores can sit underutilized waiting on W4A8 SMs. Panel (c) shows the resulting SIMT-enhanced software pipeline: double on-chip buffers (W0/W1, A0/A1) let cp.async global-memory loads, permutation/dequantization, and INT4/INT8 mma computation overlap across iterations, hiding data-loading and conversion latency behind tensor-core compute.",
+  "summary_zh": "该图分三部分示COMET-W4Ax内核：(a)混合精度分块GEMM；(b)不同SM发射W4A4/W4A8指令，W4A8需CUDA核转换INT4为INT8；(c)双缓冲流水线重叠加载与张量核计算。",
+  "confidence": "medium",
+  "notes": "This is a dense three-panel PowerPoint-authored figure (per the index's tool metadata); fine-grained wiring inside panels (b) and (c) is read from the low-resolution preview and may not capture every label exactly.",
+  "venue": "ASPLOS25"
+}

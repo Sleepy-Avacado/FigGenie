@@ -1,0 +1,294 @@
+{
+  "paper_id": "asplos26-094",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Mugi",
+    "one_liner": "a value-level-parallelism (VLP) accelerator that replaces multipliers with temporal spike-coded comparators and shared accumulators to compute LLM GEMMs and nonlinear operations efficiently",
+    "domain": [
+      "ml-systems",
+      "hardware-accelerators"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how a temporal-coded spike selects an accumulator's value to compute i×w without a real multiplier, then scales to arrays",
+    "base": "mixed",
+    "elements": [
+      {
+        "name": "i",
+        "kind": "port",
+        "role": "the input value being encoded as a spike time; e.g. i=3 in the running example",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "c",
+        "kind": "label",
+        "role": "a counting-up cycle counter compared against i every cycle",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "=",
+        "kind": "icon",
+        "role": "the temporal converter's equivalence comparator; fires a spike only when c equals i",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "TC",
+        "kind": "box",
+        "role": "Temporal Converter: packages the counter and comparator, emitting one spike at cycle i",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "w",
+        "kind": "port",
+        "role": "the weight value accumulated once per cycle; e.g. w=1",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "ACC",
+        "kind": "box",
+        "role": "accumulator that adds w every cycle, producing a running sum (0,1,2,... at cycles 0,1,2,...)",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Val",
+        "kind": "label",
+        "role": "the accumulator's output value at a given cycle, equal to (cycle number) x w",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Sub",
+        "kind": "label",
+        "role": "the temporal-subscription signal (the TC's spike) that captures ACC's value at cycle i, yielding the product iw",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "i[0], i[1], i[k]",
+        "kind": "port",
+        "role": "a batch/vector of input values, each with its own TC, sharing one ACC (value reuse) to compute every element's product in parallel",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Weights",
+        "kind": "label",
+        "role": "multiple weight columns, each with its own ACC, broadcast to every activation row to form a 2D outer-product array",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Batched activations",
+        "kind": "lane",
+        "role": "multiple activation rows (each its own TC), broadcasting their spikes across every weight column's ACC",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "i",
+        "to": "=",
+        "what": "input i is compared against the counter every cycle",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "c",
+        "to": "=",
+        "what": "the counter increments each cycle and is compared against i",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "=",
+        "to": "TC",
+        "what": "the equivalence comparator's logic is packaged as the Temporal Converter block",
+        "kind": "mapping",
+        "step": null
+      },
+      {
+        "from": "w",
+        "to": "ACC",
+        "what": "w is added into the accumulator every cycle, building a running sum over time",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "TC",
+        "to": "Sub",
+        "what": "TC emits a single spike at cycle i",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "Sub",
+        "to": "Val",
+        "what": "the spike selects (subscribes to) ACC's current value at that cycle, capturing iw",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "i[0], i[1], i[k]",
+        "to": "ACC",
+        "what": "every vector element's own TC subscribes to the same shared ACC output, each at its own cycle (value reuse)",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Batched activations",
+        "to": "Weights",
+        "what": "each activation row's spikes broadcast across every weight column's ACC to fill the outer-product array",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) temporal coding",
+        "axis": "time",
+        "differs": "introduces the Temporal Converter: an equivalence comparator fires a red spike only at the cycle where counter c equals input i (shown at c=0, c=1, c=3)",
+        "verdict": null
+      },
+      {
+        "label": "(b) target product",
+        "axis": "time",
+        "differs": "states the arithmetic goal directly: i=3 times w=1 equals 3, via ordinary multiplication, as the value the circuit must reproduce",
+        "verdict": null
+      },
+      {
+        "label": "(c) accumulation",
+        "axis": "time",
+        "differs": "replaces multiplication with repeated accumulation: feeding w into an ACC every cycle produces the sequence 0..5, matching i·w at cycle i",
+        "verdict": null
+      },
+      {
+        "label": "(d) temporal subscription",
+        "axis": "time",
+        "differs": "combines (a) and (c): the TC's spike for i=3 selects ACC's value at cycle 3, capturing Val=iw=3 into a register (Sub)",
+        "verdict": null
+      },
+      {
+        "label": "(e) value reuse",
+        "axis": "time",
+        "differs": "shares one ACC across a vector of inputs i[0..k]; each element's own TC subscribes to the same accumulator trace at its own cycle, computing all products in parallel",
+        "verdict": null
+      },
+      {
+        "label": "(f) outer product array",
+        "axis": "time",
+        "differs": "arranges multiple weight columns (each its own ACC) against multiple batched-activation rows (each its own TC), broadcasting spikes to fill a 2D array of products",
+        "verdict": "full VLP mechanism"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": {
+      "what": "the running example's concrete input/weight/counter values (i=3, w=1, c=0/1/3), the accumulator's 0-5 sequence, and the resulting product iw=3, plus a second example value i[1]=1",
+      "linked_by": "colour: red marks every occurrence of the value 3 (counter match, spike, captured register); blue marks the second example value 1",
+      "result_cells": "the captured product is shown as a numeral inside a yellow hexagon/register at the end of each subscription lane"
+    },
+    "key_idea": "VLP replaces a multiplier with a shared accumulator plus per-input temporal comparators: each input's spike, timed to its own value, subscribes to the accumulator's sum at the right cycle to read off its product, scaling to a full outer-product array.",
+    "reading_order": "Read (a) to (f) left to right, top to bottom: comparator basics, the target product, accumulation, their combination via subscription, then vector and 2D-array replication."
+  },
+  "layout": {
+    "arrangement": "panels-grid",
+    "panel_count": 6,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "letters",
+    "zoom_callout": false,
+    "panels": 6,
+    "column": "single",
+    "aspect": 1.82,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#fcc73c",
+        "used_for": "fill of the captured-value registers (hexagons) and the 2D outer-product array's cells in panel (f)"
+      },
+      {
+        "hex": "#6fd19f",
+        "used_for": "fill of the TC (temporal converter) boxes and the equivalence-comparator triangles in panel (a)"
+      },
+      {
+        "hex": "#ef553b",
+        "used_for": "the spike-pulse waveforms and border of the primary example's input boxes (i=3, i[0], i[k])"
+      },
+      {
+        "hex": "#cc2d1d",
+        "used_for": "the highlighted numeral '3' text inside counters and captured-value registers"
+      },
+      {
+        "hex": "#8ecae6",
+        "used_for": "the secondary example value (i[1]=1): its spike, box border and captured register, kept visually distinct from the value-3 example"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed vertical gridlines mark clock-cycle boundaries on every waveform; solid black outlines on boxes and triangles",
+    "font": "sans-serif (GillSans), uniform small size (~7.5pt)",
+    "corners": "rounded",
+    "arrows": "no arrowheads anywhere; plain wires and waveform traces imply signal flow by left-to-right / top-to-bottom position",
+    "icons": "equivalence-comparator triangles (labelled '='); no pictorial icons"
+  },
+  "encoding": {
+    "color_means": "green = temporal-converter (TC) logic; yellow = a captured value register or array cell; red tones = the primary worked example's value (3) everywhere it appears; blue = a second example value (1) kept visually distinct",
+    "line_style_means": "dashed vertical gridlines mark clock-cycle boundaries in every waveform; solid horizontal traces are the actual spike/wire signal, coloured red or blue per lane",
+    "state_means": "panels are successive construction stages, not alternatives: each reuses the same red/blue value-3/value-1 example so the reader can track the same numbers as the mechanism gains parts",
+    "marker_means": "letters (a)-(f) order the construction stages; there are no circled numbers",
+    "emphasis": "the same numeral (3, later 1) is carried in red/blue through every panel, from the comparator match to the final captured register, so the reader can trace one concrete value through increasingly complex circuit variants",
+    "reusable_patterns": [
+      "a lettered sequence of panels that each add one new circuit block to a running worked example, rather than six unrelated diagrams",
+      "clock-cycle waveforms with dashed gridlines paired directly beneath the block diagram that produces them",
+      "colour-linking one concrete numeric value across every representation of it (counter, spike, register) in a figure"
+    ],
+    "weaknesses": [
+      "very dense for a single-column figure: six panels, waveforms, and a 2D array packed into about 244x134pt, so individual wires are hard to trace without zooming",
+      "panel (f)'s 2D array does not repeat the explicit i=3/w=1 numeric example, so the reader must infer each yellow cell is computed the same way as (d)"
+    ]
+  },
+  "tags": [
+    "value-level-parallelism",
+    "temporal-coding",
+    "spike-timing",
+    "multiplier-free-arithmetic",
+    "accelerator-datapath",
+    "outer-product",
+    "llm-inference-hardware"
+  ],
+  "provenance": {
+    "sections": [
+      "2.1 Value Level Parallelism (p.2)"
+    ],
+    "evidence": [
+      "the TC asserts a temporal spike in red at the 3rd cycle; otherwise, no spikes is generated",
+      "Value reuse and temporal subscription together formulate VLP",
+      "Carat maps batched input activations to rows and weights to columns"
+    ]
+  },
+  "summary": "Figure 2 builds up Value Level Parallelism (VLP) through six lettered panels using one running example, i=3 and w=1. (a) shows a Temporal Converter: a counter c compared against i fires a red spike only when c equals i (cycle 3). (b) states the arithmetic target, i times w equals 3. (c) shows an accumulator (ACC) fed w every cycle instead, producing a running sum. (d) combines them: the TC's spike at cycle 3 subscribes to (selects) the ACC's value at that exact cycle, capturing the product Val=iw without ever using a multiplier. (e) shares one ACC across a vector of inputs, each with its own TC and its own spike time, computing every element's product in parallel (value reuse). (f) replicates this across multiple weight columns and batched-activation rows to compute a full outer-product array.",
+  "summary_zh": "图2用i=3、w=1逐步构建VLP：(a)c等于i时TC发脉冲；(b)目标积为3；(c)累加器每周期加w得序列；(d)脉冲在第3周期订阅累加值得iw=3；(e)多输入共享累加器并行订阅(值复用)；(f)推广为多列权重与多行激活的外积阵列。",
+  "confidence": "high",
+  "notes": "Corrected worked_example from prior False to True: the figure is explicitly a concrete numeric walkthrough (i=3, w=1, c=0/1/3, iw=3) reused across every panel to ground the mechanism, matching the worked-example marker. Corrected base from prior 'circuit' (not in this schema's enum) to 'mixed', since the figure combines circuit-block diagrams, cycle waveforms (timeline-like) and a 2D array. Panel (f)'s exact grid size (3 activation rows x 3 weight columns) and the precise split between the two similar reds (#ef553b vs #cc2d1d) are inferred from the visual, since both encode the same 'value 3' example and are hard to disambiguate at this resolution.",
+  "venue": "ASPLOS26"
+}

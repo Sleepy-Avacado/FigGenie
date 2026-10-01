@@ -1,0 +1,41 @@
+{
+  "id": "asplos25-036_fig3",
+  "paper_id": "asplos25-036",
+  "fig": "3",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 3. Linear-time encoder.",
+  "corpus_template": "pipeline",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.03,
+  "n_components": 7,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "below",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-036/asplos25-036_fig3_p5_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/asplos25-036/asplos25-036_fig3_p5_vector.png"
+  },
+  "templates": [
+    {
+      "template": "replicated-grid",
+      "star": true,
+      "why_chosen": "Star-rated recursive variant: Stage 1 is drawn full-size and detailed, Stage 2 sits beside it at reduced scale repeating the same structure, and a 'Stage 3 ⋯' mark elides every further recursion level.",
+      "what_to_learn": "For a recursive/self-similar mechanism, draw the base stage full size and detailed, then draw the next stage smaller beside it repeating the same shapes, and elide any further recursion with a plain 'Stage N ⋯' label rather than nesting boxes indefinitely; label the one operator (here vector-matrix multiply) once in a foot legend."
+    }
+  ]
+}

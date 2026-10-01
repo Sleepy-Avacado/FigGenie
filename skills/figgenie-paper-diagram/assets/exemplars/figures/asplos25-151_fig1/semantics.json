@@ -1,0 +1,158 @@
+{
+  "paper_id": "asplos25-151",
+  "fig": "1",
+  "system": {
+    "name": "Fat-Tree QRAM",
+    "one_liner": "a shared quantum random access memory architecture that pipelines multiple independent queries from many QPUs in parallel",
+    "domain": [
+      "quantum-computing",
+      "memory-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "QPU Array",
+        "role": "group of quantum processing units that concurrently access the shared QRAM",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "QPU 1",
+        "role": "individual quantum processing unit sharing the QRAM",
+        "container": "QPU Array",
+        "novel": false
+      },
+      {
+        "name": "QPU 2",
+        "role": "individual quantum processing unit sharing the QRAM",
+        "container": "QPU Array",
+        "novel": false
+      },
+      {
+        "name": "QPU 3",
+        "role": "individual quantum processing unit sharing the QRAM",
+        "container": "QPU Array",
+        "novel": false
+      },
+      {
+        "name": "Quantum High-bandwidth Bus",
+        "role": "interconnect between the QPU array and the query queue",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Query Queue",
+        "role": "buffers and pipelines incoming queries before they enter the shared QRAM",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Shared QRAM",
+        "role": "quantum random access memory concurrently serving queries from multiple QPUs",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "QPU Array",
+        "to": "Quantum High-bandwidth Bus",
+        "what": "queries",
+        "step": null
+      },
+      {
+        "from": "Quantum High-bandwidth Bus",
+        "to": "Query Queue",
+        "what": "queries",
+        "step": null
+      },
+      {
+        "from": "Query Queue",
+        "to": "Shared QRAM",
+        "what": "query access",
+        "step": null
+      }
+    ],
+    "key_idea": "Multiple QPUs share one QRAM via a high-bandwidth bus and query queue; panel (b) shows this Fat-Tree design achieves O(log N) query latency and parallelism versus O(log^2 N) for Bucket-Brigade QRAM at the same O(N) qubit cost.",
+    "reading_order": "Panel (a) on the left shows the QPU array feeding down through the bus and query queue into the shared QRAM; panel (b) on the right is a table comparing Fat-Tree against Bucket-Brigade QRAM costs."
+  },
+  "layout": {
+    "template": "two-panel",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "letters",
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.93,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#117788",
+        "used_for": "QPU boxes fill"
+      },
+      {
+        "hex": "#f4b183",
+        "used_for": "Query Queue box fill"
+      },
+      {
+        "hex": "#e7e7e7",
+        "used_for": "QPU Array outer box and bus background"
+      },
+      {
+        "hex": "#cbcbcb",
+        "used_for": "table row shading in panel (b)"
+      },
+      {
+        "hex": "#262626",
+        "used_for": "text and outlines"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin solid gray borders, square corners",
+    "font": "Calibri sans, 3.5-8pt",
+    "corners": "square",
+    "arrows": "thin double-headed arrow between Query Queue and Shared QRAM",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "teal = QPU boxes, orange = query queue, green = shared QRAM, gray = grouping backgrounds",
+    "line_style_means": null,
+    "emphasis": "panel (b)'s side-by-side Big-O table directly contrasts Fat-Tree QRAM against shared Bucket-Brigade QRAM on qubit count, parallelism, latency and fidelity to highlight the parallelism advantage",
+    "reusable_patterns": [
+      "schematic architecture diagram paired with a Big-O cost comparison table"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "QRAM",
+    "quantum computing",
+    "shared memory",
+    "parallel queries",
+    "fat-tree",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "1 Introduction (p.2)",
+      "3 Challenges and Motivation (p.4)"
+    ],
+    "evidence": [
+      "a shared memory approach, where multiple quantum processing units (QPUs) share QRAM resources",
+      "Fat-Tree QRAM architecture pipelines O(log(N)) independent queries",
+      "a BB QRAM inevitably leads to resource contention"
+    ]
+  },
+  "summary": "Fat-Tree QRAM is a shared quantum random access memory architecture that lets multiple QPUs pipeline independent queries in parallel, unlike the Bucket-Brigade (BB) QRAM baseline where a single query occupies the whole tree. Panel (a) is a schematic showing three QPUs in a QPU Array connected via a Quantum High-bandwidth Bus down to a Query Queue, which double-arrows into the Shared QRAM box, illustrating that many QPUs contend for one memory resource. Panel (b) is a small comparison table contrasting Fat-Tree QRAM (this work) against Shared BB QRAM across four metrics in Big-O notation: qubit count (both O(N)), query parallelism (log(N) vs 1), query latency (log(N) vs log^2(N)), and fidelity, showing Fat-Tree's asymptotic advantage in enabling parallel queries without sacrificing qubit-count scaling.",
+  "summary_zh": "面板(a)展示多个 QPU 通过高带宽总线和查询队列共享同一 QRAM 的架构；面板(b)用大 O 表格对比 Fat-Tree QRAM 与 Bucket-Brigade QRAM 在比特数、并行度、延迟和保真度上的差异，凸显本文方案的并行优势。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

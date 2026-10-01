@@ -1,0 +1,176 @@
+{
+  "paper_id": "osdi24-036",
+  "fig": "8",
+  "system": {
+    "name": "Llumnix",
+    "one_liner": "a dynamic scheduling system for LLM serving that reschedules requests across instances via a two-level global/local scheduler and live migration",
+    "domain": [
+      "ml-systems",
+      "llm-serving"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Global Scheduler",
+        "role": "tracks per-instance memory loads and makes instance-oriented dispatch, migration-pairing, and auto-scaling decisions",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "New requests",
+        "role": "incoming requests handled by the global scheduler for dispatch",
+        "container": "Global Scheduler",
+        "novel": false
+      },
+      {
+        "name": "Instance loads",
+        "role": "periodic load reports from llumlets used for scheduling decisions",
+        "container": "Global Scheduler",
+        "novel": true
+      },
+      {
+        "name": "Local Scheduler",
+        "role": "queues, batches, manages blocks, and calculates the instance's memory load; decides which requests to migrate",
+        "container": "llumlet",
+        "novel": true
+      },
+      {
+        "name": "Migration Coordinator",
+        "role": "coordinates with the local scheduler and the peer instance to execute request migration",
+        "container": "llumlet",
+        "novel": true
+      },
+      {
+        "name": "llumlet",
+        "role": "the per-instance dynamic scheduler pairing a local scheduler and migration coordinator",
+        "container": "Instance",
+        "novel": true
+      },
+      {
+        "name": "Executor",
+        "role": "the model executor that performs inference and memory copying for migration on the GPU",
+        "container": "Instance",
+        "novel": false
+      },
+      {
+        "name": "Instance",
+        "role": "a model-serving instance running an llumlet and executor",
+        "container": "Model Instance",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Global Scheduler",
+        "to": "Instance",
+        "what": "dispatch",
+        "step": null
+      },
+      {
+        "from": "Instance",
+        "to": "Global Scheduler",
+        "what": "report load",
+        "step": null
+      },
+      {
+        "from": "Local Scheduler",
+        "to": "Migration Coordinator",
+        "what": "chosen requests to migrate",
+        "step": null
+      },
+      {
+        "from": "Migration Coordinator",
+        "to": "Executor",
+        "what": "trigger migration",
+        "step": null
+      }
+    ],
+    "key_idea": "Llumnix separates a lightweight global scheduler, which only reasons about instance-level memory loads, from per-instance llumlets that decide and execute request migration autonomously, enabling scalable continuous rescheduling.",
+    "reading_order": "Top-down from the Global Scheduler box, following Dispatch/Report load arrows down into the left Instance's llumlet (Local Scheduler and Migration Coordinator) and Executor, then across (orange Trigger migration arrow) to the scaled-out Instances on the right."
+  },
+  "layout": {
+    "template": "hub-spoke",
+    "direction": "top-down",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.2,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange fill/stroke of the Migration Coordinator box and migration-control arrows"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "blue fill of the Local Scheduler box"
+      },
+      {
+        "hex": "#c5e0b4",
+        "used_for": "light green fill of the Global Scheduler container"
+      },
+      {
+        "hex": "#fbe5d6",
+        "used_for": "light peach fill accents"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill of Executor/GPU blocks"
+      },
+      {
+        "hex": "#e7e6e6",
+        "used_for": "gray fill of secondary boxes and instance placeholders"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin dark/orange/blue borders, dashed borders around scheduler sub-boxes and instance boundaries",
+    "font": "Calibri sans, small (6.5-8.5pt)",
+    "corners": "mixed",
+    "arrows": "thin black arrows for dispatch/report, bold orange arrow for triggered migration",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange = migration-related component and control flow, blue = local scheduling, green = global scheduler region, gray = instance/executor placeholders",
+    "line_style_means": "dashed = instance/module boundaries and 'other control', solid orange = migration control (per in-figure legend)",
+    "emphasis": "an explicit legend distinguishes migration control (orange) from other control (dashed), highlighting migration as the paper's key mechanism",
+    "reusable_patterns": [
+      "two-level global/local scheduler hierarchy",
+      "one detailed instance expanded next to collapsed replica instances to show scale-out"
+    ],
+    "weaknesses": [
+      "dense small text and nested boxes at nesting depth 3"
+    ]
+  },
+  "tags": [
+    "llm-serving",
+    "scheduling",
+    "live-migration",
+    "autoscaling",
+    "distributed-systems",
+    "architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "4 Llumnix Design (p.7)"
+    ],
+    "evidence": [
+      "schedulers, named llumlets, to enable continuous rescheduling efficiently (Figure 8)",
+      "The llumlet of each instance consists of a local scheduler and a migration coordinator",
+      "instruct the model executor to do the memory copying, as described before"
+    ]
+  },
+  "summary": "This figure presents the architecture of Llumnix, a dynamic scheduling system for LLM serving. A Global Scheduler at the top receives new requests and periodic instance load reports, and makes dispatch, migration-pairing, and auto-scaling decisions purely based on instance-level memory loads. Below it, each serving Instance runs an llumlet containing a Local Scheduler (handling queuing, batching, block management, and load calculation) and a Migration Coordinator (which executes migration by instructing the model Executor on the GPU). The figure shows one instance expanded in detail on the left, connected by Dispatch/Report load arrows to the Global Scheduler, and an orange Trigger migration arrow reaching across to additional, more schematically drawn Instances on the right that represent scale-out. A small legend distinguishes orange migration-control arrows from dashed other-control arrows. The style is a flat, hatch-filled architecture diagram in an orange/blue/green PowerPoint-like palette with dashed module boundaries.",
+  "summary_zh": "该图展示 Llumnix 的架构：顶部全局调度器根据各实例内存负载做出派发与迁移配对决策，每个实例内的 llumlet 由本地调度器和迁移协调器组成，协调器通过橙色箭头触发对执行器的实际迁移操作，右侧以简化实例表示可扩展性。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

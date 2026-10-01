@@ -1,0 +1,197 @@
+{
+  "paper_id": "osdi23-048",
+  "fig": "4",
+  "kind": "mechanism",
+  "system": {
+    "name": "SNIC",
+    "one_liner": "an empirical characterization of off-path SmartNICs (SNIC), comparing their RDMA READ/WRITE datapath and latency against a direct-attached RNIC baseline",
+    "domain": [
+      "SmartNIC",
+      "RDMA",
+      "PCIe",
+      "networking-hardware"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "comparing READ/WRITE round-trip datapaths through SNIC's extra PCIe switch hop versus RNIC's single-hop baseline path",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "RNIC",
+        "kind": "lane",
+        "role": "top lane: the on-board RNIC core issuing/completing the request",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Switch",
+        "kind": "lane",
+        "role": "PCIe switch inside the SmartNIC, between the on-board RNIC and the host",
+        "container": "SNIC",
+        "highlighted": true
+      },
+      {
+        "name": "Host",
+        "kind": "lane",
+        "role": "bottom lane: the host CPU/memory that ultimately holds the data",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PCIe1",
+        "kind": "label",
+        "role": "the PCIe hop between the SNIC's on-board RNIC and its internal switch",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "PCIe0",
+        "kind": "label",
+        "role": "the PCIe hop between the switch (or RNIC, in the baseline panel) and the host",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "READ",
+        "kind": "label",
+        "role": "a READ request's round trip",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "WRITE",
+        "kind": "label",
+        "role": "a WRITE request's round trip",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "RNIC",
+        "to": "Host",
+        "what": "READ request travels down from RNIC through the Switch to Host, crossing PCIe1 then PCIe0",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Host",
+        "to": "RNIC",
+        "what": "READ's completion travels back up through the Switch to RNIC, crossing both PCIe hops a second time",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "RNIC",
+        "to": "Host",
+        "what": "WRITE request travels down from RNIC through the Switch to Host",
+        "kind": "timeline-message",
+        "step": null
+      },
+      {
+        "from": "Host",
+        "to": "Switch",
+        "what": "WRITE's completion travels back up only as far as the Switch, omitting the final PCIe1 hop to RNIC",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "SNIC",
+        "axis": "alternatives",
+        "differs": "an extra Switch lane splits the path into two PCIe hops; READ crosses both hops twice, WRITE's return stops at the Switch",
+        "verdict": "higher latency (extra PCIe hop)"
+      },
+      {
+        "label": "RNIC",
+        "axis": "alternatives",
+        "differs": "no Switch lane; RNIC and Host joined by a single PCIe0 hop, so READ and WRITE both round-trip with one crossing each way",
+        "verdict": "baseline, lower latency"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "SNIC's extra internal PCIe switch adds a second PCIe hop that READ must cross twice round-trip, while WRITE saves one hop by completing at the switch instead of returning all the way to the RNIC core.",
+    "reading_order": "left panel top-to-bottom (RNIC, Switch, Host) following the READ then WRITE zigzag arrows down and back up; then the same for the simpler right (RNIC baseline) panel"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.76,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0433ff",
+        "used_for": "blue 'READ' and 'WRITE' labels marking each traced request type"
+      },
+      {
+        "hex": "#ffffff",
+        "used_for": "white fill of the small boxed 'RNIC / Switch' grouping rectangle on the SNIC side"
+      }
+    ],
+    "background": "white",
+    "fill": "none",
+    "stroke": "thin black lines for lanes and the zigzag request/response arrows",
+    "corners": "square",
+    "arrows": "thin black diagonal arrows with open/hollow triangular heads, zigzagging down then up between lanes",
+    "font": "sans (Segoe UI Semibold/Light), ~7.5pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue marks the READ and WRITE labels; all lanes, edges, and arrows are otherwise plain black",
+    "line_style_means": "not applicable; all lines are solid black, undifferentiated by style",
+    "state_means": "the two panels (SNIC vs RNIC) are told apart structurally, by the presence or absence of the Switch lane and a second PCIe hop label, not by colour or ghosting",
+    "marker_means": "not applicable, no numbered or symbolic markers",
+    "emphasis": "drawing WRITE's return arrow stopping at the Switch lane (instead of reaching RNIC, as READ's does) visually isolates the one-hop saving the text attributes to WRITE",
+    "reusable_patterns": [
+      "a small swimlane diagram where the same two message types (READ, WRITE) are re-traced over a baseline path and a path with one extra hop inserted, so the reader can count crossings directly"
+    ],
+    "weaknesses": [
+      "with no colour or label distinguishing the down-arrow from the up-arrow of a round trip, the reader must follow arrowheads carefully to see which leg is outbound vs return"
+    ]
+  },
+  "tags": [
+    "SmartNIC",
+    "SNIC",
+    "RNIC",
+    "PCIe",
+    "RDMA",
+    "off-path-processing"
+  ],
+  "provenance": {
+    "sections": [
+      "§3 Characterizing SmartNIC Performance (p.6)",
+      "§3 Characterizing SmartNIC Performance (p.7)"
+    ],
+    "evidence": [
+      "Compared to RNIC, READ on SNIC passes through the PCIe switch twice (see Figure 4).",
+      "the increased latency of WRITE on SNIC is lower than that of READ, because it omits one pass through PCIe",
+      "because requests still must go through the PCIe switch at PCIe1."
+    ]
+  },
+  "summary": "This figure from the SmartNIC characterization paper compares the READ/WRITE execution datapath of an off-path SmartNIC (SNIC) against a direct-attached RNIC baseline. In the SNIC panel, an extra on-board Switch lane sits between the RNIC core and the Host, splitting the path into two PCIe hops (PCIe1, PCIe0); a READ request travels down through both hops to the Host and back up through both a second time, while a WRITE's completion returns only as far as the Switch, skipping the final PCIe1 hop back to the RNIC core. In the RNIC panel, RNIC and Host are joined directly by a single PCIe0 hop, so both READ and WRITE round-trip with only one PCIe crossing each way. The extra switch hop is exactly why SNIC's measured READ/WRITE latency exceeds RNIC's, and why WRITE is cheaper than READ on SNIC.",
+  "summary_zh": "该图对比旁路SmartNIC(SNIC)与直连RNIC的READ/WRITE执行数据通路：SNIC一侧多了一层片上Switch，路径分为PCIe1、PCIe0两段，READ往返各需两次穿越，而WRITE的完成只回到Switch层，省去最后一次PCIe1；RNIC一侧只有一段PCIe0，READ/WRITE往返各穿越一次，这正是SNIC延迟高于RNIC、且WRITE比READ更快的原因。",
+  "confidence": "high",
+  "notes": "Corrected content.base from prior 'component' to 'timeline': the figure is a swimlane/sequence-style diagram (named horizontal lanes plus diagonal message arrows over an implicit time axis), matching the same paper's and corpus's convention for this base value rather than a components-and-connectors diagram. layout.panels is kept at 1 to mirror the index's measured single-panel count, even though content.panels lists 2 semantic alternatives (SNIC vs RNIC), consistent with the schema's index-derived layout fields. delta_marking is set to 'none' since the SNIC/RNIC difference is conveyed by an added lane and hop label rather than by colour, ghosting, or another highlighting device.",
+  "venue": "OSDI23"
+}

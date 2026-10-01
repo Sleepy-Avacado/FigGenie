@@ -1,0 +1,171 @@
+{
+  "paper_id": "asplos25-082",
+  "fig": "3",
+  "system": {
+    "name": "MoC-System",
+    "one_liner": "a fault-tolerance system for sparse Mixture-of-Experts model training that reduces checkpoint size via partial-expert checkpointing",
+    "domain": [
+      "ml-systems",
+      "distributed-training",
+      "fault-tolerance"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "depicts": "one path/request flow",
+    "components": [
+      {
+        "name": "Rank-0",
+        "role": "a GPU rank holding model parameters, part of Node-0",
+        "container": "Node-0",
+        "novel": false
+      },
+      {
+        "name": "Rank-1",
+        "role": "a GPU rank holding model parameters, part of Node-0",
+        "container": "Node-0",
+        "novel": false
+      },
+      {
+        "name": "Rank-2",
+        "role": "a GPU rank holding model parameters, part of Node-1",
+        "container": "Node-1",
+        "novel": false
+      },
+      {
+        "name": "Rank-3",
+        "role": "a GPU rank holding model parameters, part of Node-1",
+        "container": "Node-1",
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "holds Parameters and executes training on each rank",
+        "container": "Rank",
+        "novel": false
+      },
+      {
+        "name": "Parameters",
+        "role": "model parameters stored in GPU memory",
+        "container": "GPU",
+        "novel": false
+      },
+      {
+        "name": "PCIe",
+        "role": "interconnect used for the GPU-to-CPU snapshot transfer",
+        "container": "Rank",
+        "novel": false
+      },
+      {
+        "name": "CPU-Memory",
+        "role": "per-rank CPU-side shard receiving the snapshot of that rank's parameters",
+        "container": "Rank",
+        "novel": true
+      },
+      {
+        "name": "Distributed Persistent Storage",
+        "role": "remote storage that receives sharded parameters over the network during persist",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Train",
+        "role": "timeline row showing forward/backward (F&B) training steps, stalls (S) and updates (U)",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Checkpoint",
+        "role": "timeline row showing the overlapping Snapshot and Persist phases",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "GPU",
+        "to": "CPU-Memory",
+        "what": "GPU-to-CPU snapshot over PCIe",
+        "step": 1
+      },
+      {
+        "from": "CPU-Memory",
+        "to": "Distributed Persistent Storage",
+        "what": "CPU-to-Storage persist over the network",
+        "step": 2
+      }
+    ],
+    "key_idea": "Checkpointing proceeds in two overlapped, asynchronous phases -- an intra-node GPU-to-CPU snapshot over PCIe, sharded per rank, followed by a CPU-to-Storage persist over the network -- and a timeline shows these phases overlapping with ongoing forward/backward training, stalling only when the snapshot outruns the F&B window.",
+    "reading_order": "Top block: across Node-0 and Node-1's four ranks showing GPU->PCIe->CPU-Memory shards feeding the shared Distributed Persistent Storage; bottom: a left-to-right Train/Checkpoint timeline aligning F&B iterations with Snapshot and Persist phases."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "mixed",
+    "nesting_depth": 2,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.44,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#56957d",
+        "used_for": "GPU Parameters boxes"
+      },
+      {
+        "hex": "#fff2cc",
+        "used_for": "CPU-memory Shard boxes"
+      },
+      {
+        "hex": "#9dc3e6",
+        "used_for": "Distributed Persistent Storage box"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "checkpoint stall (S) marker on the training timeline"
+      }
+    ],
+    "background": "white",
+    "fill": "hatch",
+    "stroke": "thin black borders (~0.48pt), dashed grouping boxes around Snapshot/Persist regions, rounded corners",
+    "font": "Tw Cen MT sans, 8pt uniform",
+    "corners": "rounded",
+    "arrows": "mostly straight thin connector lines from GPU/PCIe to shards to storage, one curved arrow",
+    "icons": "small GPU/node icons"
+  },
+  "encoding": {
+    "color_means": "green = GPU-held parameters, yellow = CPU-memory shard after snapshot, blue = distributed persistent storage, red = a checkpoint stall on the training timeline",
+    "line_style_means": "dashed brackets group the Snapshot and Persist phases on the timeline",
+    "emphasis": "A red-highlighted stall (S) block on the Train/Checkpoint timeline calls out when an incomplete GPU-to-CPU snapshot blocks training",
+    "reusable_patterns": [
+      "two-phase pipeline diagram paired with an aligned execution timeline underneath"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "checkpointing",
+    "Mixture-of-Experts",
+    "asynchronous snapshot",
+    "distributed training",
+    "fault tolerance"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background & Related Work (p.4)"
+    ],
+    "evidence": [
+      "checkpointing model states from GPU memory to distributed persistent storage involves two phases",
+      "the asyn- chronous GPU-to-CPU snapshot can proceed concurrently with the forward and backward passes",
+      "If the snapshot duration exceeds the \"F&B\" period, it will trigger a checkpoint stall"
+    ]
+  },
+  "summary": "Figure 3 explains the two-phase asynchronous checkpointing workflow that MoC-System builds on. The top half shows four GPU ranks (Rank-0..3) split across two nodes; each rank's Parameters are copied from GPU to a per-rank CPU-Memory shard over PCIe (the GPU-to-CPU snapshot), and all shards are later serialized and written to Distributed Persistent Storage over the network (the CPU-to-Storage persist), illustrating data-parallel sharded checkpointing. The bottom half is a timeline aligning the Train row (forward-and-backward, F&B, iterations with weight updates, U) against the Checkpoint row, showing the Snapshot phase overlapping with F&B of the next iteration and the Persist phase extending further since it does not block training; a red-highlighted stall (S) marks the case where a snapshot overruns its F&B window and blocks training. Together the two halves motivate why shrinking snapshot/persist duration matters.",
+  "summary_zh": "图3展示两阶段异步检查点流程：上半部分四个 rank 通过 PCIe 将参数从 GPU 快照到各自 CPU 内存分片，再经网络持久化到分布式存储；下半部分时间线显示快照/持久化阶段与训练 F&B 的重叠，红色标出快照超时导致的训练停顿(S)。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

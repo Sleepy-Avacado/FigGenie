@@ -1,0 +1,47 @@
+{
+  "id": "nsdi23-083_fig3",
+  "paper_id": "nsdi23-083",
+  "fig": "3",
+  "venue": "NSDI23",
+  "year": 2023,
+  "caption": "Figure 3: Architecture of the intercloud broker.",
+  "corpus_template": "hub-spoke",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "unknown",
+  "aspect": 1.61,
+  "n_components": 12,
+  "n_flows": 6,
+  "nesting_depth": 2,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "medium",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/nsdi23-083/nsdi23-083_fig3_p6_mixed.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/nsdi23-083/nsdi23-083_fig3_p6_mixed.png"
+  },
+  "templates": [
+    {
+      "template": "hub-spoke",
+      "star": true,
+      "why_chosen": "The broker is one large box literally straddling two symmetric Cloud A / Cloud B backends below, at medium confidence, illustrating hub-spoke's coordinator-over-peers idea with dashed catalog-feed lines distinct from the solid job-spec arrow.",
+      "what_to_learn": "Use a lighter dashed line for background catalog/status traffic into the hub and a solid line for the actual job request. This exemplar's weakness: with only two named clouds and no ellipsis, it does not visually confirm the broker scales beyond a pair."
+    },
+    {
+      "template": "flanked-core",
+      "star": true,
+      "why_chosen": "Medium-confidence, star exemplar: an Intercloud Broker core with two internal sub-columns (Catalog/Tracker, Optimizer/Provisioner/Executor) stacks above two symmetric Cloud A and Cloud B backends, a hub-above-peers reading of the same trusted-middle shape.",
+      "what_to_learn": "Draw the coordinator as one wide box straddling its two backend boxes below to assert one design generalizes across them, and split the coordinator's own internals into two adjacent stacks (bookkeeping versus execution); the weakness is that only two backends are shown, so add an ellipsis if the claim is meant to scale further."
+    }
+  ]
+}

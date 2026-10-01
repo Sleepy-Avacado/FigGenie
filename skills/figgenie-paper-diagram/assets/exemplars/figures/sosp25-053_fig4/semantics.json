@@ -1,0 +1,187 @@
+{
+  "paper_id": "sosp25-053",
+  "fig": "4",
+  "system": {
+    "name": "ByteRobust",
+    "one_liner": "a large-scale GPU infrastructure management system that detects, diagnoses, and recovers from failures during LLM training",
+    "domain": [
+      "ml-systems",
+      "distributed-systems",
+      "reliability"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Pod 0 / Pod 1 / Pod N",
+        "role": "per-job training pods, each running the data plane's monitoring and diagnostic modules",
+        "container": "Data Plane",
+        "novel": false
+      },
+      {
+        "name": "Training Processes",
+        "role": "the LLM training job's processes running on the pod's GPUs",
+        "container": "Pod 0",
+        "novel": false
+      },
+      {
+        "name": "GPU",
+        "role": "GPU used by the training job",
+        "container": "Training Processes",
+        "novel": false
+      },
+      {
+        "name": "Monitor",
+        "role": "collects multifaceted data to detect outliers and triggers aggregation analysis",
+        "container": "Pod 0",
+        "novel": true
+      },
+      {
+        "name": "Diagnoser",
+        "role": "runs domain-specific benchmarks and test suites after job suspension for in-depth diagnosis",
+        "container": "Pod 0",
+        "novel": true
+      },
+      {
+        "name": "CKPT Manager",
+        "role": "performs asynchronous checkpointing with cross-parallel-group backups to CPU memory and local disk",
+        "container": "Pod 0",
+        "novel": true
+      },
+      {
+        "name": "On-demand Tracer",
+        "role": "captures stack traces from training processes and uploads them to the Runtime Analyzer",
+        "container": "Pod 0",
+        "novel": true
+      },
+      {
+        "name": "Robust Agent",
+        "role": "daemon running in each training pod, processing control signals from the Robust Controller",
+        "container": "Data Plane",
+        "novel": true
+      },
+      {
+        "name": "Runtime Analyzer",
+        "role": "aggregates stack traces from training pods to isolate and (over-)evict suspected machines",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Robust Controller",
+        "role": "orchestrates automated failure mitigation, hot-update restarts, and requests warm standby machines",
+        "container": "Control Plane",
+        "novel": true
+      },
+      {
+        "name": "Warm Standby Pods",
+        "role": "pre-validated standby machines the Robust Controller requests to resume a job",
+        "container": null,
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "On-demand Tracer",
+        "to": "Runtime Analyzer",
+        "what": "data flow: aggregated stack traces",
+        "step": null
+      },
+      {
+        "from": "Robust Controller",
+        "to": "Robust Agent",
+        "what": "control flow: control signals",
+        "step": null
+      },
+      {
+        "from": "Robust Controller",
+        "to": "Runtime Analyzer",
+        "what": "control flow: coordination between the two control-plane modules",
+        "step": null
+      },
+      {
+        "from": "Robust Controller",
+        "to": "Warm Standby Pods",
+        "what": "control flow: request for pre-validated standby machines",
+        "step": null
+      }
+    ],
+    "key_idea": "shows ByteRobust's two-part architecture — an external control plane (Robust Controller + Runtime Analyzer) that detects/localizes/recovers from failures, and a data plane of per-pod Robust Agents (Monitor, Diagnoser, CKPT Manager, On-demand Tracer) that provide real-time observability and diagnostics — connected by explicit data-flow and control-flow arrows",
+    "reading_order": "left (Data Plane with stacked Pod 0..N and their sub-modules) to right (Control Plane with Runtime Analyzer and Robust Controller, plus Warm Standby Pods), following the color-coded legend at the bottom"
+  },
+  "layout": {
+    "template": "control-data",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.94,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d0f4ed",
+        "used_for": "GPU boxes inside Training Processes"
+      },
+      {
+        "hex": "#deeaf6",
+        "used_for": "Robust Agent and Runtime Analyzer boxes"
+      },
+      {
+        "hex": "#fce5d8",
+        "used_for": "Robust Controller box"
+      },
+      {
+        "hex": "#ed7d31",
+        "used_for": "data-flow arrows (legend)"
+      },
+      {
+        "hex": "#4471c4",
+        "used_for": "control-flow arrows (legend)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "black plus colored arrow strokes (orange/blue), ~0.24pt thin",
+    "font": "Verdana sans, 4.5-6pt",
+    "corners": "square",
+    "arrows": "solid orange/blue directional arrows, 8 arrowheads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange arrows = data flow, blue arrows = control flow (explicit legend); pastel box colors differentiate data-plane pod components from control-plane components",
+    "line_style_means": "solid orange lines denote data flow, solid blue lines denote control flow, per the figure's own legend",
+    "emphasis": "the explicit data-flow/control-flow legend and the stacked Pod 0..N boxes emphasize per-pod replication and the separation of control from data paths",
+    "reusable_patterns": [
+      "control-plane/data-plane split with an explicit color-coded flow-type legend"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "gpu-infrastructure",
+    "fault-tolerance",
+    "llm-training",
+    "observability",
+    "control-plane-data-plane"
+  ],
+  "provenance": {
+    "sections": [
+      "3 ByteRobust Overview (p.5)"
+    ],
+    "evidence": [
+      "ByteRobust consists of two core components, control plane and data plane",
+      "The data plane resides within each training pod and integrates modules for monitoring, diagnosing",
+      "Robust Controller orchestrates an automated failure mitigation framework"
+    ]
+  },
+  "summary": "ByteRobust is a large-scale GPU infrastructure management system for ByteDance's LLM training that automatically detects, diagnoses, localizes, and recovers from training failures to maximize effective training time. Figure 4 shows its two-part architecture with an explicit data-flow/control-flow legend: the Data Plane (left) stacks per-job Pod 0..Pod N, each containing Training Processes (eight GPUs) alongside Monitor, Diagnoser, CKPT Manager, and On-Demand Tracer modules, all coordinated by a Robust Agent daemon; the Control Plane (right) contains the Runtime Analyzer, which aggregates stack traces (orange data-flow arrows) to isolate hung or degraded machines, and the Robust Controller, which exchanges control signals (blue arrows) with the Robust Agent and can pull in Warm Standby Pods to replace evicted machines. The color-coded arrow legend at the bottom makes the data-versus-control distinction explicit throughout the diagram.",
+  "summary_zh": "图4展示ByteRobust架构：数据面由多个Pod（含GPU训练进程及监控/诊断/检查点/追踪模块）经Robust Agent管理，控制面的运行时分析器与Robust控制器负责故障定位与恢复，图例区分数据流与控制流。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "SOSP25"
+}

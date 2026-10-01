@@ -1,0 +1,42 @@
+{
+  "id": "asplos25-046_fig13",
+  "paper_id": "asplos25-046",
+  "fig": "13",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 13. Design overview of Coach.",
+  "corpus_template": "control-data",
+  "direction": "top-down",
+  "column": "single",
+  "tool": "drawio",
+  "aspect": 1.1,
+  "n_components": 19,
+  "n_flows": 10,
+  "nesting_depth": 4,
+  "lanes": true,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-046/src/fig13_overview-new.svg",
+    "preview.png": "lab/extracted/asplos25-046/src/fig13_overview-new.png",
+    "print.png": "lab/extracted/asplos25-046/asplos25-046_fig13_p6_vector.png"
+  },
+  "templates": [
+    {
+      "template": "control-data",
+      "star": true,
+      "why_chosen": "Star-rated two-tier control figure (19 components, nesting depth 4): a Cluster tier predicts and schedules above a Server tier, whose Oversubscription Agent manages a segmented memory bar mapping colored bands to concrete example VMs.",
+      "what_to_learn": "Stack a cluster-level control tier above a per-server agent tier inside two dashed regions, and instead of a separate legend, resolve the color coding by mapping each memory band directly to a named example VM (GPVM1, CoachVM2) below; label bands in the box itself since this figure's colors are not otherwise legended."
+    }
+  ]
+}

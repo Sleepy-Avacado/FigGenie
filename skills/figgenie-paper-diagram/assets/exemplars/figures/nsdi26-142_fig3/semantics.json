@@ -1,0 +1,203 @@
+{
+  "paper_id": "nsdi26-142",
+  "fig": "3",
+  "system": {
+    "name": "Pyrocumulus",
+    "one_liner": "a SmartNIC-based hardware hypervisor that live-migrates storage-optimized VMs by intercepting and coordinating I/O without host CPU involvement",
+    "domain": [
+      "storage",
+      "virtualization",
+      "smartnic"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "comparison",
+    "components": [
+      {
+        "name": "VM",
+        "role": "the virtual machine issuing storage read/write accesses",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Host Software",
+        "role": "host-side software stack containing the hypervisor",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Hypervisor",
+        "role": "software hypervisor mediating VM storage access when host software is on the path",
+        "container": "Host Software",
+        "novel": false
+      },
+      {
+        "name": "FPGA SmartNIC",
+        "role": "hardware that can mediate all VM I/O; during LM it acts as a hardware-based hypervisor",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Local Disks",
+        "role": "NVMe storage attached to the host",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "NVMe SSD",
+        "role": "individual NVMe disk instances backing Local/Remote Disks",
+        "container": "Local Disks",
+        "novel": false
+      },
+      {
+        "name": "Source Host",
+        "role": "the host the VM is migrating from, containing its hypervisor and FPGA SmartNIC",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "FPGA SmartNIC (Source Host)",
+        "role": "intercepts all VM I/O and initiates LM I/Os directly, bypassing the source host's CPU",
+        "container": "Source Host",
+        "novel": true
+      },
+      {
+        "name": "FPGA SmartNIC (Dest. Host)",
+        "role": "receives migration data directly from the source SmartNIC over the network",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Remote Disks",
+        "role": "NVMe storage attached to the destination host receiving migrated data",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "VM",
+        "to": "Host Software",
+        "what": "user read/write access mediated by the hypervisor (option 1)",
+        "step": null
+      },
+      {
+        "from": "Host Software",
+        "to": "FPGA SmartNIC",
+        "what": "I/O mediated through the SmartNIC before reaching disks (option 1)",
+        "step": null
+      },
+      {
+        "from": "FPGA SmartNIC",
+        "to": "Local Disks",
+        "what": "mediated I/O reaching local NVMe SSDs (option 1)",
+        "step": null
+      },
+      {
+        "from": "VM",
+        "to": "Local Disks",
+        "what": "native, directly-mapped data path where neither host software nor the SmartNIC sits on the critical path (option 2)",
+        "step": null
+      },
+      {
+        "from": "VM",
+        "to": "Hypervisor",
+        "what": "user read/write access on the source host during live migration",
+        "step": null
+      },
+      {
+        "from": "FPGA SmartNIC (Source Host)",
+        "to": "Local Disks",
+        "what": "consistency write traffic coordinating ongoing VM I/O with LM I/O",
+        "step": null
+      },
+      {
+        "from": "FPGA SmartNIC (Source Host)",
+        "to": "FPGA SmartNIC (Dest. Host)",
+        "what": "data copy traffic transferring migration data directly between SmartNICs, bypassing the source host CPU",
+        "step": null
+      },
+      {
+        "from": "FPGA SmartNIC (Dest. Host)",
+        "to": "Remote Disks",
+        "what": "migrated data written to the destination host's disks",
+        "step": null
+      }
+    ],
+    "key_idea": "Pyrocumulus's FPGA SmartNIC can sit on the common-case I/O path in two configurations (mediating access, or staying off the critical path for directly-mapped storage), and during live migration it becomes a hardware hypervisor that intercepts VM I/O and copies data directly to the destination host's SmartNIC without involving either host's CPU.",
+    "reading_order": "Left to right across three labeled panels: (a) and (b) show the common-case (no LM) data path as a VM-to-disk vertical stack with two user-path options; (c) shows the same stack duplicated across source and destination hosts, linked by a horizontal data-copy arrow, for the live-migration protocol."
+  },
+  "layout": {
+    "template": "layered",
+    "direction": "top-down",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "right",
+    "step_markers": "none",
+    "panels": 3,
+    "column": "double",
+    "aspect": 3.74,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ea6b66",
+        "used_for": "salmon/red fill, likely accenting the VM or hypervisor box"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "light gray fill for Host Software and Source Host grouping boxes"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "yellow/gold fill for the FPGA SmartNIC boxes"
+      },
+      {
+        "hex": "#cccccc",
+        "used_for": "gray fill/outline for Local Disks and Remote Disks boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.72pt solid outlines, square corners on all boxes",
+    "font": "Verdana / Nimbus Roman, 5-9pt",
+    "corners": "square",
+    "arrows": "straight double-headed and dashed/dotted arrows with filled heads (23 heads total)",
+    "icons": "disk icons on the NVMe SSD boxes"
+  },
+  "encoding": {
+    "color_means": "yellow = FPGA SmartNIC (the paper's hardware focus), gray = host software / disks (existing infrastructure)",
+    "line_style_means": "per the legend: solid double-headed arrows = user read/write access, red dashed = consistency write traffic, black dotted = data copy traffic",
+    "emphasis": "placing panels (a)/(b)/(c) side by side with the identical VM-to-disk vertical stack highlights which layer (host software vs. SmartNIC) sits on the critical path in each configuration",
+    "reusable_patterns": [
+      "side-by-side comparison of alternative data paths through the same layered stack",
+      "duplicated per-host stack linked by a single cross-host arrow to depict a migration protocol"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "live-migration",
+    "smartnic",
+    "virtualization",
+    "storage",
+    "fpga",
+    "data-path"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Motivation (p.5)"
+    ],
+    "evidence": [
+      "Fig. 3(a) and Fig. 3(b) show two optional data paths that Pyrocumulus supports in the common case",
+      "both the host software and the SmartNIC are not on the critical path",
+      "the FPGA SmartNIC works as the hardware-based hypervisor, intercepting all I/Os from the VM"
+    ]
+  },
+  "summary": "Figure 3 compares Pyrocumulus's data paths across three panels. In the common case (no live migration), panel (a) shows the FPGA SmartNIC mediating all VM storage I/O between the host software's hypervisor and local NVMe disks, while panel (b) shows an alternative native, directly-mapped path where neither the host software nor the SmartNIC sits on the critical path. Panel (c) shows the protocol used during live migration: the source host's FPGA SmartNIC acts as a hardware-based hypervisor, intercepting VM I/O, sending consistency write traffic to local disks, and copying migration data directly to the destination host's FPGA SmartNIC, which writes it to remote disks, all without involving either host's CPU. A legend distinguishes user read/write access, consistency write traffic, and data copy traffic by arrow style.",
+  "summary_zh": "图3对比Pyrocumulus三种数据路径：(a)(b)为无迁移时SmartNIC是否介入VM到本地磁盘的两种方案；(c)为迁移协议，源主机FPGA SmartNIC充当硬件hypervisor，将数据直接拷贝到目的主机，绕过主机CPU。",
+  "confidence": "high",
+  "notes": "layout-proposal: repeated layered I/O stack — three comparison panels each stack VM/Host-Software/FPGA-SmartNIC/Local-Disks vertically in the same order, with panel (c) duplicating the stack across source and destination hosts linked by a horizontal data-copy arrow; 'layered' is used as the closest named template but the side-by-side comparison and cross-host duplication go beyond a single layered stack.",
+  "venue": "NSDI26"
+}

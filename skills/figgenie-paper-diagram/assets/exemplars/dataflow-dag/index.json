@@ -1,0 +1,192 @@
+{
+  "template": "dataflow-dag",
+  "n": 23,
+  "stars": 13,
+  "how_to_read": "open ../figures/<id>/print.png (or preview.png) and manifest.json; star = must-see",
+  "exemplars": [
+    {
+      "id": "asplos25-025_fig3",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A real DAG appears as the input artefact at the top, then reappears as small inline sub-diagrams inside the system's stage boxes.",
+      "what_to_learn": "A DAG can be an inline glyph: draw it small inside the box that consumes it rather than giving it its own panel.",
+      "dir": "../figures/asplos25-025_fig3"
+    },
+    {
+      "id": "asplos25-031_fig9",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "Panel (a) draws a genuine hierarchical DAG, LD/XOR/add nodes grouped by dashed motif outlines, and links it with red leader lines straight to the ALU, router and ALSU that execute it in panel (c).",
+      "what_to_learn": "Group recurring three-node motifs in the dataflow graph with dashed outlines, then draw red leader lines from each motif straight to the physical ALU, router or ALSU tile that executes it, so the graph-to-hardware mapping needs no separate legend.",
+      "dir": "../figures/asplos25-031_fig9"
+    },
+    {
+      "id": "asplos25-142_fig5",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A star exemplar: the Graph Optimizer panel stacks three small labelled graphs, each with visible branching nodes, to show three different query-specific dataflow-graph optimizations produced from the same declarative input.",
+      "what_to_learn": "Stack two or three small example graphs inside the box that produces them to show a family of possible transformations, using small filled and outlined circles for operators; label each of the three so a reader can tell which optimization pass produced which graph, since this exemplar leaves that unlabelled.",
+      "dir": "../figures/asplos25-142_fig5"
+    },
+    {
+      "id": "asplos25-147_fig2",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The inline-glyph variant: a tiny Computation Graph icon of two branching tasks sits at the very start of the pipeline, exactly the 20-30pt DAG-as-icon convention the template calls out, feeding into a five-stage annotated planner.",
+      "what_to_learn": "When a DAG is only the trigger for a pipeline rather than the figure's subject, shrink it to a small multi-coloured icon (20-30pt) rather than drawing it at full scale, and let the rest of the figure show what consumes it.",
+      "dir": "../figures/asplos25-147_fig2"
+    },
+    {
+      "id": "asplos26-014_fig5",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The SA-DFG mini graph at top (Step, Cast, FWD, BWD nodes with per-node GPU/CPU cost labels) is the dataflow-dag content, sitting above a larger host-device split showing the five techniques it motivates.",
+      "what_to_learn": "Annotate each node of a small operator graph with the cost it would incur on each of two heterogeneous processors, so the graph itself argues for offloading; keep that graph compact and separate from the larger host-device architecture it motivates below it.",
+      "dir": "../figures/asplos26-014_fig5"
+    },
+    {
+      "id": "asplos26-113_fig8",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A star exemplar of the graph-editing convention: each of five loop panels draws a branching subgraph, yellow-shaded ambiguous regions, coloured circles for the MaxSAT-solved fix, arranged as a closed 5-panel loop rather than one DAG.",
+      "what_to_learn": "This is really control-loop's shape, not dataflow-dag's, but it still teaches a graph-editing device: shade the ambiguous subgraph region in one flat colour, then redraw the same nodes with green checkmarks or red crosses over each candidate fix so accept/reject reads at a glance.",
+      "dir": "../figures/asplos26-113_fig8"
+    },
+    {
+      "id": "asplos26-154_fig9",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The LoD trees are real branching graphs, colour-coded by reuse state per node, with a red cut line marking the frontier, and a separate small subgraph diagram showing the client's local update.",
+      "what_to_learn": "Draw a hierarchy that gets pruned as a tree with a red cut line across it marking the current frontier, colour each node by its reuse/cache state rather than its type, and put a 3-colour arrow legend at the top since this dense a figure otherwise relies entirely on it to separate three overlapping flows.",
+      "dir": "../figures/asplos26-154_fig9"
+    },
+    {
+      "id": "osdi23-001_fig3",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The Tile-graph row shows a real merge, two input nodes converging into the first operator, before flowing through alternating orange/blue nodes, nested inside a layered compiler stack down to a memory hierarchy.",
+      "what_to_learn": "Even a mostly-linear operator graph earns dataflow-dag treatment the moment two nodes merge into one, so draw that merge explicitly (two boxes, one arrowhead) rather than smoothing it into a chain, and carry a highlighted path in one colour (red) down through the memory-hierarchy bands it maps onto.",
+      "dir": "../figures/osdi23-001_fig3"
+    },
+    {
+      "id": "osdi23-053_fig3",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "Panel (a) draws the same Conv3x3/Relu/Add subgraph three times, original then after intra- and inter-expression derivation, marking only the newly discovered red eOperator boxes against unchanged tan ones across all three steps.",
+      "what_to_learn": "To show a graph transformation, redraw the exact same operator graph two or three times under labelled derivation arrows and colour only the newly discovered operators red against unchanged tan ones. Qualify reused names like Matmul per panel, since bare repetition across panels can blur which instance is meant.",
+      "dir": "../figures/osdi23-053_fig3"
+    },
+    {
+      "id": "osdi24-052_fig6",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "Six panels reuse one green/orange/red op-node vocabulary, Element-wise, Compute-intensive, Reduction, defined once in a legend at the bottom, to show the same neural-network graph being formulated, rescheduled, tuned and finally fused into a Monolithic Kernel.",
+      "what_to_learn": "Carry one small set of node-colour meanings across all six panels, and run a single shared example, SIS1, SIS2, CI Op, through every stage so a reader tracks one case end to end. Repeat the legend near the top too, since it sits only at the bottom here, far from the first panels.",
+      "dir": "../figures/osdi24-052_fig6"
+    },
+    {
+      "id": "osdi25-009_fig3",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The DFG of operators, two round nodes, A into B, sits directly above the sTask-partition box as an inline glyph, then recurs as coloured A/B tiles through scheduling and hardware mapping.",
+      "what_to_learn": "Draw the operator graph as small circular nodes beside the stage that consumes it, keep one colour per operator (blue A, orange B) as it moves through partitioning and onto heterogeneous execution units, and close the loop with a labelled Profiling arrow feeding measurements back into an earlier stage.",
+      "dir": "../figures/osdi25-009_fig3"
+    },
+    {
+      "id": "osdi26-127_fig1",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "A star exemplar: blue Vertex boxes V1 to VD form the labelled DAG search space, then curved edges in Search Space Relaxation connect them before Discretize turns the graph back into purple Layer boxes.",
+      "what_to_learn": "Carry the same small coloured-square operator code through every stage, layer boxes to superproxy bars to DAG vertex boxes, so identity survives four transformations without a fresh legend each time; add a real legend regardless, since none decodes what the squares mean here.",
+      "dir": "../figures/osdi26-127_fig1"
+    },
+    {
+      "id": "sosp25-013_fig5",
+      "template": "dataflow-dag",
+      "star": true,
+      "why_chosen": "The small diamond-shaped graph inside the purple core is drawn twice, plain then recoloured green/blue/orange, the transformation-arrow variant showing exactly which nodes Module Injection, Kernel Replacement and Overhead Reduction touch.",
+      "what_to_learn": "Show a transformation as the same small DAG twice, before plain and after recoloured, with an arrow between; match each recoloured node's fill to its named optimization label outside the graph, but add explicit callout lines since colour and adjacency alone leave that mapping implicit here.",
+      "dir": "../figures/sosp25-013_fig5"
+    },
+    {
+      "id": "asplos25-132_fig6",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Beside the five-stage MLIR pipeline, a separate inset walks one small DFG (ph1/mu1 inputs merging through add nodes) through Generation, Tuning and cycle-mapped Mapping, the DAG-inside-a-pipeline variant of this template.",
+      "what_to_learn": "Nest a compact three-step DFG-evolution inset, generation, tuning, cycle-mapped scheduling, beside the main pipeline row instead of folding it into the stage boxes; tie the inset to the top bar visually, since here it reads as a detached second figure.",
+      "dir": "../figures/asplos25-132_fig6"
+    },
+    {
+      "id": "asplos26-066_fig6",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Five lettered panels carrying one computation from source code through expression IR to a fused dataflow graph, with consistent colour.",
+      "what_to_learn": "Keep one colour meaning (here schedule vs sparsity) constant across every representation so the reader can track the same tensor across panels.",
+      "dir": "../figures/asplos26-066_fig6"
+    },
+    {
+      "id": "asplos26-132_fig7",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "A genuine branching computation graph: coloured grid cells for two modalities and a backbone are linked by red curved data-dependency arrows crossing rows, feeding a tree-search icon and a pipeline-interleave grid.",
+      "what_to_learn": "Colour each node by which of several node types it belongs to (green/orange/blue for the three modality classes here) and let curved red arrows, not orthogonal routing, carry the cross-row data dependencies; pair the graph with a small tree icon standing in for the search procedure that reorders it.",
+      "dir": "../figures/asplos26-132_fig7"
+    },
+    {
+      "id": "nsdi23-052_fig5",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The tensor operator graph (op1 and op2 merging into op3) and the per-device training DAG sit as small inline glyphs beside the four-step App/Comm Layer stack they illustrate, at high confidence.",
+      "what_to_learn": "Place a small branching operator graph and a per-device schedule diagram beside the pipeline stage that emits them rather than inside the stage box, and keep the layer-group brackets (App Layer, Comm Layer) tight against the boxes they enclose, since this exemplar lets them drift visually apart.",
+      "dir": "../figures/nsdi23-052_fig5"
+    },
+    {
+      "id": "nsdi24-087_fig2",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The Application graph is a genuine small DAG (a Gateway node branching into several server nodes that converge again), not a chain, drawn as a compact icon distinct from the hub-spoke control fan-out above it.",
+      "what_to_learn": "Draw the small application-level DAG as plain blue nodes with simple branching edges, kept visually separate from the dotted control lines that fan out from the Tower above it, so the reader does not confuse the data-flow graph with the control-relationship fan-out.",
+      "dir": "../figures/nsdi24-087_fig2"
+    },
+    {
+      "id": "nsdi25-067_fig7",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Panel (b) traces read-after-write dependencies with curved orange lines from an instruction stream into a small branching DAG of latency-annotated nodes, one of three dense panels at 22 components total.",
+      "what_to_learn": "Build the DAG panel directly from a labelled instruction stream by drawing curved dependency lines from each entry to its node, in a colour distinct from the architecture diagram's plain arrows, and pair it with a schema panel of the tables that track per-node state; keep node labels specific, not generic.",
+      "dir": "../figures/nsdi25-067_fig7"
+    },
+    {
+      "id": "nsdi26-036_fig3",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The Control plane's LazyDAG is a real branching graph: telemetry triangles and an anomaly feed green expert-diamond nodes (RC1 to RC3) that merge into orange root-cause boxes, at medium confidence.",
+      "what_to_learn": "Colour-code a small live DAG by node role, blue/cyan structure, green computation, orange merged output, light-blue triangles for inputs, and pair it with a small-multiples grid of the same icon style for a library holding many such graphs.",
+      "dir": "../figures/nsdi26-036_fig3"
+    },
+    {
+      "id": "nsdi26-044_fig3",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "The left DFG uses small blue Remote-Pipe circles and an inline Main/Merger/Regular legend to show two pipe-chains, blk1 and blk2, actually merging at a sort -m node, all tied to prose by A1-A6/B1-B4 callouts.",
+      "what_to_learn": "Key a pipe-chain DFG with an inline colour-swatch legend right next to the graph, mark actual merge points with a small circle glyph, and tag every region with letter-number callouts (A1-A6, B1-B4); keep the DFG's pipe-chain style and the downstream box architecture visually consistent, since here they read as two stitched figures.",
+      "dir": "../figures/nsdi26-044_fig3"
+    },
+    {
+      "id": "nsdi26-082_fig6",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Four operator-chain variants sharing one backbone, with an inside legend and dashed edges for pruned activations.",
+      "what_to_learn": "For operator graphs, keep the backbone chain identical in every panel and colour only the inserted operators; dashed edges mark edges that do not exist at runtime.",
+      "dir": "../figures/nsdi26-082_fig6"
+    },
+    {
+      "id": "sosp25-007_fig2",
+      "template": "dataflow-dag",
+      "star": false,
+      "why_chosen": "Reassigned from hub-spoke by the note-writer: this is a 4-component trust-dependency mesh (Microvium depends directly on all three of Switcher, Allocator and Scheduler) with no single coordinator, closer to dataflow-dag than to hub-spoke.",
+      "what_to_learn": "The transferable lesson is a small trust/dependency graph, not hub-spoke: colour each node by its one narrow privilege, number each node to a legend entry below stating exactly what it is trusted for, and let a non-trusted example component (Microvium) hang off the graph to show what depending on the TCB looks like.",
+      "dir": "../figures/sosp25-007_fig2"
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+{
+  "paper_id": "osdi23-039",
+  "fig": "3",
+  "system": {
+    "name": "Perspect",
+    "one_liner": "a relational-debugging tool that pinpoints root causes of performance problems by comparing good and bad program executions",
+    "domain": [
+      "debugging",
+      "performance-analysis",
+      "program-analysis"
+    ],
+    "abstraction": "application"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Input",
+        "role": "provides the good_run/bad_run scripts plus the symptom instructions that seed the analysis",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "./good_run",
+        "role": "script that reproduces a normal (non-symptomatic) execution",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "./bad_run",
+        "role": "script that reproduces the symptomatic execution",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Symptom",
+        "role": "instructions (insn 1...m) identified as related to the observed symptom, the starting points of the analysis",
+        "container": "Input",
+        "novel": false
+      },
+      {
+        "name": "Perspect",
+        "role": "the overall relational-debugging system comprising static/dynamic causality analysis and the relational debugger",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Dyninst",
+        "role": "dynamic binary instrumentation tool supporting the static causality analysis stage",
+        "container": "Perspect",
+        "novel": false
+      },
+      {
+        "name": "Static causality analysis",
+        "role": "identifies instructions related to the input symptom to narrow the analysis search space",
+        "container": "Perspect",
+        "novel": true
+      },
+      {
+        "name": "RR",
+        "role": "record-and-replay tool feeding recorded runtime instances into the static causality analysis",
+        "container": "Perspect",
+        "novel": false
+      },
+      {
+        "name": "Dynamic causality analysis",
+        "role": "further reduces the search space to instructions and runtime instances causally related to the symptom",
+        "container": "Perspect",
+        "novel": true
+      },
+      {
+        "name": "PIN",
+        "role": "dynamic binary instrumentation tool supporting the dynamic causality analysis stage",
+        "container": "Perspect",
+        "novel": false
+      },
+      {
+        "name": "Relational debugger",
+        "role": "builds, filters, refines and ranks relations between symptom instructions and their causal predecessors",
+        "container": "Perspect",
+        "novel": true
+      },
+      {
+        "name": "Compute",
+        "role": "computes relations between symptom instructions and their causal predecessors from runtime dependencies",
+        "container": "Relational debugger",
+        "novel": true
+      },
+      {
+        "name": "Filter",
+        "role": "filters out relations unchanged between the good and bad executions",
+        "container": "Relational debugger",
+        "novel": true
+      },
+      {
+        "name": "Refine",
+        "role": "refines each relation until it captures a specific root cause of the symptom change",
+        "container": "Relational debugger",
+        "novel": true
+      },
+      {
+        "name": "Output",
+        "role": "the ranked list of candidate root-cause relations Perspect produces",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Ranked list",
+        "role": "root-cause candidate relations (Relation 1...n) ranked by their impact on the observed symptom",
+        "container": "Output",
+        "novel": true
+      }
+    ],
+    "flows": [
+      {
+        "from": "Input",
+        "to": "Static causality analysis",
+        "what": "good_run/bad_run executions and symptom instructions",
+        "step": null
+      },
+      {
+        "from": "Dyninst",
+        "to": "Static causality analysis",
+        "what": "static binary instrumentation",
+        "step": null
+      },
+      {
+        "from": "RR",
+        "to": "Static causality analysis",
+        "what": "recorded runtime instance data",
+        "step": null
+      },
+      {
+        "from": "Static causality analysis",
+        "to": "Dynamic causality analysis",
+        "what": "reduced set of instructions causally related to the symptom",
+        "step": null
+      },
+      {
+        "from": "PIN",
+        "to": "Dynamic causality analysis",
+        "what": "dynamic binary instrumentation",
+        "step": null
+      },
+      {
+        "from": "Dynamic causality analysis",
+        "to": "Relational debugger",
+        "what": "causally related instructions and runtime instances",
+        "step": null
+      },
+      {
+        "from": "Compute",
+        "to": "Filter",
+        "what": "candidate relations to filter",
+        "step": null
+      },
+      {
+        "from": "Filter",
+        "to": "Refine",
+        "what": "relations changed between the good/bad executions, to refine",
+        "step": null
+      },
+      {
+        "from": "Refine",
+        "to": "Compute",
+        "what": "iterates filtering and refinement toward a minimal relation set",
+        "step": null
+      },
+      {
+        "from": "Relational debugger",
+        "to": "Output",
+        "what": "ranked root-cause candidate relations",
+        "step": null
+      }
+    ],
+    "key_idea": "Perspect narrows a symptom to causally related instructions via static and dynamic causality analysis, then iteratively computes, filters, and refines relations until a small ranked list of root-cause candidates remains.",
+    "reading_order": "Left to right: Input (good/bad runs, symptom instructions) through Static then Dynamic causality analysis into the Relational debugger's compute-filter-refine loop, ending at the ranked Output list."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.74,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d9d9d9",
+        "used_for": "fill of the Compute/Filter/Refine boxes inside the Relational debugger"
+      },
+      {
+        "hex": "#030404",
+        "used_for": "arrow strokes and text"
+      },
+      {
+        "hex": "#f2f2f2",
+        "used_for": "background fill inside the dotted Perspect boundary"
+      }
+    ],
+    "background": "white outside Perspect; very light gray inside the dotted Perspect boundary",
+    "fill": "flat",
+    "stroke": "thin black borders on boxes; a dotted border outlines the overall Perspect boundary",
+    "font": "Times-Roman serif for box labels, Courier monospace for the instruction listing and ranked-list text, mostly non-bold (bold for the 'Perspect' title)",
+    "corners": "square",
+    "arrows": "thin black arrows, mostly straight, with paired up/down arrows between each analysis box and its instrumentation tool (Dyninst, RR, PIN), plus a feedback arrow looping Refine back to Compute",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "gray fill picks out the three Relational-debugger sub-stages (Compute, Filter, Refine) against the plain white analysis boxes; the light gray background simply marks the Perspect system boundary",
+    "line_style_means": "a dotted border demarcates Perspect from its Input/Output; solid arrows show the main left-to-right pipeline plus vertical arrows to supporting tools (Dyninst, RR, PIN) and a feedback loop from Refine back to Compute",
+    "emphasis": "the dotted Perspect boundary and gray-filled compute/filter/refine loop visually separate Perspect's own pipeline from the external inputs, outputs, and off-the-shelf instrumentation tools (Dyninst, RR, PIN) it relies on",
+    "reusable_patterns": [
+      "left-to-right analysis pipeline flanked by labeled Input/Output panels",
+      "supporting tools attached above/below the main pipeline boxes they instrument",
+      "an internal compute-filter-refine loop with an explicit feedback arrow"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "performance-debugging",
+    "causality-analysis",
+    "root-cause-analysis",
+    "dynamic-instrumentation",
+    "relational-debugging"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Perspect (p.6)",
+      "3 Perspect (p.7)"
+    ],
+    "evidence": [
+      "Perspect uses causality analysis to reduce the search space of relational debugging to a small set of instructions",
+      "It filters out relations that are irrelevant to the symptom, refines relations to be specific to the root cause",
+      "The filtering and refinement steps are iterated repeatedly to select a minimal set of relations"
+    ]
+  },
+  "summary": "This figure gives an overview of Perspect's workflow for relational debugging. Perspect takes as input a good_run and a bad_run script plus a symptom, a set of instructions (insn 1...m) suspected of recording the performance problem. A Static causality analysis stage, aided by Dyninst and a record-replay tool (RR), and a Dynamic causality analysis stage, aided by PIN, together narrow the search to instructions and runtime instances causally related to the symptom. The Relational debugger then loops through Compute, Filter, and Refine stages: it computes relations between symptom instructions and their causal predecessors, filters out relations unchanged between the good and bad executions, and refines the remaining ones until each captures a specific root cause, iterating until a minimal set remains. Perspect finally ranks these candidate relations by their impact on the symptom and outputs them as a Ranked list (Relation 1...n).",
+  "summary_zh": "该图展示 Perspect 的调试工作流：输入好/坏运行及症状指令；经静态与动态因果分析缩小范围后，由关系调试器循环计算-过滤-精化，按影响排序输出候选根因列表。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

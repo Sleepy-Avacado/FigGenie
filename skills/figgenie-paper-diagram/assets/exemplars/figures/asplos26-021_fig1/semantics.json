@@ -1,0 +1,262 @@
+{
+  "paper_id": "asplos26-021",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "DARTH-PUM",
+    "one_liner": "a general-purpose hybrid processing-using-memory architecture that integrates analog and digital PUM to execute full kernels in memory",
+    "domain": [
+      "processing-in-memory",
+      "analog-computing"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "walkthrough",
+      "comparison"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how an analog PUM crossbar performs a 2x2 matrix by 2x1 vector multiply via conductances, row voltages, and column currents",
+    "base": "component",
+    "elements": [
+      {
+        "name": "2, 7 (vector boxes)",
+        "kind": "box",
+        "role": "the 2x1 input vector values in the plain-arithmetic reference panel",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "5, 9, 8, 7 (matrix boxes)",
+        "kind": "box",
+        "role": "the 2x2 matrix values in the plain-arithmetic reference panel",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "66, 67 (result boxes)",
+        "kind": "box",
+        "role": "the resulting 2x1 output vector from standard arithmetic",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "input vector pointer (2, 7)",
+        "kind": "port",
+        "role": "row-wise voltage inputs in the crossbar encoding the vector values 2 and 7",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "1/5, 1/9, 1/8, 1/7 (conductances)",
+        "kind": "icon",
+        "role": "zigzag resistor symbols at each crossbar junction, programmed as conductances G=1/R to encode the matrix values 5, 9, 8, 7",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Multiply",
+        "kind": "label",
+        "role": "names step 2a: the row-wise multiplication of each input voltage by that column's conductance",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Accumulate",
+        "kind": "label",
+        "role": "names step 2b: the column-wise summation of currents by Kirchhoff's current law",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "circled step markers (1, 2a, 2b, 3)",
+        "kind": "label",
+        "role": "number the four stages of the crossbar operation in order",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "5, 9, 8, 7 (matrix boxes)",
+        "to": "1/5, 1/9, 1/8, 1/7 (conductances)",
+        "what": "the same matrix values are programmed as conductances G=1/R",
+        "kind": "mapping",
+        "step": "1"
+      },
+      {
+        "from": "input vector pointer (2, 7)",
+        "to": "1/5, 1/9, 1/8, 1/7 (conductances)",
+        "what": "each row's input value multiplies that column's programmed conductance (Ohm's law)",
+        "kind": "data",
+        "step": "2a"
+      },
+      {
+        "from": "1/5, 1/9, 1/8, 1/7 (conductances)",
+        "to": "Accumulate",
+        "what": "the resulting currents on each column are summed",
+        "kind": "data",
+        "step": "2b"
+      },
+      {
+        "from": "Accumulate",
+        "to": "66, 67 (result boxes)",
+        "what": "the accumulated column currents equal the matrix-vector product entries, matching the arithmetic result",
+        "kind": "mapping",
+        "step": "3"
+      }
+    ],
+    "panels": [
+      {
+        "label": "(a) Matrix-vector multiply",
+        "axis": "alternatives",
+        "differs": "the reference computation done as plain arithmetic on coloured number boxes, with no circuit",
+        "verdict": "conventional arithmetic"
+      },
+      {
+        "label": "(b) Analog matrix-vector multiply",
+        "axis": "alternatives",
+        "differs": "the same computation realized physically as a crossbar: conductances encode the matrix, row voltages encode the vector, and Ohm's/Kirchhoff's laws perform the multiply-accumulate",
+        "verdict": "analog PUM realization"
+      }
+    ],
+    "steps": [
+      {
+        "marker": "1",
+        "at": "crossbar",
+        "what": "matrix values (5,9,8,7) are programmed into the crossbar as resistances/conductances G=1/R",
+        "carries": "matrix values as conductances"
+      },
+      {
+        "marker": "2a",
+        "at": "rows",
+        "what": "input vector values (2, 7) are applied as voltages along the rows and multiplied by each cell's conductance",
+        "carries": "input vector values"
+      },
+      {
+        "marker": "2b",
+        "at": "columns",
+        "what": "the per-cell products (currents) are accumulated down each column",
+        "carries": "partial products / currents"
+      },
+      {
+        "marker": "3",
+        "at": "column output",
+        "what": "each column's accumulated current equals one output entry, matching the reference arithmetic result (66, 67)",
+        "carries": "matrix-vector product"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "the worked 2x2-by-2x1 example itself: inputs 2 and 7, matrix entries 5, 9, 8, 7, conductances 1/5, 1/9, 1/8, 1/7, and results 66 and 67",
+      "linked_by": "colour, carried consistently from the crossbar labels into the verification equations at the bottom",
+      "result_cells": "the two black result boxes (66, 67) in panel (a) and the two summed equations below panel (b)"
+    },
+    "key_idea": "An analog crossbar reproduces a matrix-vector multiply physically: matrix values become programmed conductances, input-vector values become row voltages, Ohm's law multiplies them at each junction, and Kirchhoff's current law accumulates the products down each column into the result.",
+    "reading_order": "panel (a) first, reading the plain arithmetic left to right; then panel (b), following circled steps 1 (programming) then 2a (multiply along rows) then 2b (accumulate down columns) to 3 (result checked against panel (a))"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "free",
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 0,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 2,
+    "column": "single",
+    "aspect": 1.7,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#0070c0",
+        "used_for": "blue fill of panel (a)'s vector boxes; blue outline of the '2' input pointer in panel (b); blue '2' in the equations"
+      },
+      {
+        "hex": "#ab74d5",
+        "used_for": "light purple fill of panel (a)'s matrix boxes (5,9,8,7)"
+      },
+      {
+        "hex": "#4f81bd",
+        "used_for": "medium blue fill of the Multiply and Accumulate chevron arrows"
+      },
+      {
+        "hex": "#00b050",
+        "used_for": "green zigzag, wire, and label for the 1/5 conductance and matching '5' in the equation"
+      },
+      {
+        "hex": "#c00000",
+        "used_for": "dark red outline of the '7' input pointer and red digits for 7 in the equations"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "bright red zigzag, wire, and label for the 1/9 conductance"
+      },
+      {
+        "hex": "#00b0f0",
+        "used_for": "cyan zigzag, wire, and label for the 1/8 conductance and matching '8' in the equation"
+      },
+      {
+        "hex": "#7030a0",
+        "used_for": "purple zigzag, wire, and label for the 1/7 conductance and matching final '7' in the equation"
+      },
+      {
+        "hex": "#1c334e",
+        "used_for": "dark navy outline stroke of the chevron arrows and circled step badges"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "medium (~0.7pt) solid black wires for the crossbar grid; coloured dashed zigzags for each resistor/conductance",
+    "corners": "square",
+    "arrows": "two large solid chevron arrows (Multiply, Accumulate) crossing the crossbar; thin black arrowheads terminating each column wire",
+    "font": "mixed sans/serif (Calibri, LinLibertine), 6.5-9pt labels",
+    "icons": "zigzag resistor glyphs at each of the four crossbar junctions; arrow-shaped pointer glyphs for the row inputs"
+  },
+  "encoding": {
+    "color_means": "each matrix/vector value gets its own colour (blue=2, dark-red=7, green=5/1-5, bright-red=9/1-9, cyan=8/1-8, purple=7/1-7) carried from the crossbar's conductance labels into the arithmetic check at the bottom",
+    "line_style_means": "dashed zigzag resistor symbols mark each programmed conductance; solid lines are the row/column wires; solid chevron arrows show the Multiply and Accumulate directions",
+    "state_means": "not a before/after state; colour instead ties each physical crossbar element to its arithmetic counterpart in panel (a) and in the bottom equations",
+    "marker_means": "circled 1/2a/2b/3 number the four stages of the crossbar operation: programming, row-wise multiply, column-wise accumulate, and reading out the result",
+    "emphasis": "the two large blue chevrons labelled Multiply and Accumulate, crossing the whole crossbar, visually separate the row operation from the column operation on the same physical wires",
+    "reusable_patterns": [
+      "a plain arithmetic panel paired with a physically-realized circuit panel computing the same worked example",
+      "consistent per-value colour coding carried from a circuit diagram into the arithmetic equations that verify it",
+      "circled step numbers overlaid on a crossbar to narrate program -> multiply -> accumulate -> result"
+    ],
+    "weaknesses": [
+      "circled step '1' (programming the matrix into the crossbar) is placed to the side without a clear arrow into the crossbar, unlike steps 2a/2b/3",
+      "reusing red tones for both the '7' input pointer and the unrelated 1/9 conductance risks a false visual association between them"
+    ]
+  },
+  "tags": [
+    "processing-using-memory",
+    "analog-compute",
+    "crossbar",
+    "matrix-vector-multiply",
+    "worked-example",
+    "DARTH-PUM"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background"
+    ],
+    "evidence": [
+      "Figure 1 shows an example of a 2×2 matrix multiplied by a 2×1 input vector.",
+      "the matrix values are first programmed into the crossbar, usually in the form of resistances",
+      "Matrix–vector multiply with analog PUM."
+    ]
+  },
+  "summary": "This figure walks through how an analog processing-using-memory crossbar physically performs a matrix-vector multiply, alongside a plain-arithmetic reference. Panel (a) shows the reference: a 2x1 vector [2,7] times a 2x2 matrix [[5,9],[8,7]] equals [66,67], computed as ordinary arithmetic in coloured boxes. Panel (b) shows the same computation realized in a crossbar, narrated by four circled steps: (1) the matrix values are programmed into the crossbar as conductances 1/5, 1/9, 1/8, 1/7; (2a) the input vector's values are applied as row voltages and multiplied by each conductance (Ohm's law); (2b) the resulting currents are accumulated down each column (Kirchhoff's current law); and (3) each column's total current equals one output entry, verified against panel (a) by two colour-coded equations. The figure demonstrates that electrical multiply-accumulate reproduces exact matrix-vector arithmetic.",
+  "summary_zh": "该图演示模拟PUM交叉阵列如何物理实现矩阵向量乘法：(a)为普通算术参考([2,7]乘[[5,9],[8,7]]得[66,67])；(b)按编程电导、按行加压相乘、按列汇流累加、读出结果四个圈码步骤，展示模电乘加精确复现该运算。",
+  "confidence": "high",
+  "notes": "Corrected groups primary from prior 'anatomy' to 'walkthrough': the figure has explicit circled step markers (1, 2a, 2b, 3) tracing the crossbar's program->multiply->accumulate->result procedure in order, which the v3 rules treat as a plain walkthrough signal. Added 'comparison' as a secondary group for the two side-by-side panels (plain arithmetic vs analog realization), a listed common pairing with walkthrough. Remapped base from prior 'circuit' (not in the mechanism base enum) to 'component', the closest and most common base for walkthrough-group figures in the corpus.",
+  "venue": "ASPLOS26"
+}

@@ -1,0 +1,149 @@
+{
+  "paper_id": "osdi24-004",
+  "fig": "2",
+  "kind": "mechanism",
+  "system": {
+    "name": "Fairness in Serving Large Language Models",
+    "one_liner": "a study defining fairness for LLM inference serving, where request cost and server capacity both vary with input/output token counts",
+    "domain": [
+      "ml-systems",
+      "llm-inference",
+      "scheduling"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "groups": [
+      "comparison"
+    ],
+    "worked_example": false,
+    "depicts": "a design comparison",
+    "subject": "why servers process fewer tokens per second when requests have long prompts and many decode tokens, versus many short requests",
+    "base": "timeline",
+    "elements": [
+      {
+        "name": "prompt",
+        "kind": "row",
+        "role": "blue segment representing the request's prompt (input) tokens, processed in parallel",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "decode tokens",
+        "kind": "row",
+        "role": "orange segmented block representing the sequentially generated output tokens; each cell is one decode step",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "one decode token",
+        "kind": "cell",
+        "role": "a single cell marking the width/duration of generating exactly one output token",
+        "container": "decode tokens",
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "prompt",
+        "to": "decode tokens",
+        "what": "prompt processing is followed sequentially by decode-token generation",
+        "kind": "timeline-message",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "left: few long requests",
+        "axis": "alternatives",
+        "differs": "two requests with long prompts and many decode tokens each, so total latency is high",
+        "verdict": "lower throughput for longer requests"
+      },
+      {
+        "label": "right: many short requests",
+        "axis": "alternatives",
+        "differs": "four requests with short prompts and few decode tokens each, so total latency is low",
+        "verdict": "higher throughput for shorter requests"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "Illustrates why a server's effective throughput drops when it serves few long requests instead of many short ones, since more decode tokens serialize into longer per-request time.",
+    "reading_order": "left pair of long bars first (prompt then many decode-token cells, bracketed 'lower throughput'), then the right group of four shorter bars ('higher throughput')"
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 2,
+    "frame_template": "aligned",
+    "delta_marking": "callout",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.52,
+    "text_density": "sparse"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#ed7d31",
+        "used_for": "orange fill of the decode-token cells in every request bar"
+      },
+      {
+        "hex": "#4472c4",
+        "used_for": "blue fill of the prompt segment in every request bar"
+      },
+      {
+        "hex": "#262626",
+        "used_for": "near-black fill used for bracket/brace glyphs and body text"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.3pt dark navy (#172c51) outlines on the bars, thin gray (#7f7f7f) brace/bracket lines",
+    "corners": "square",
+    "arrows": "no arrowheads; curved bracket/brace lines group segments and connect labels to the bars",
+    "font": "Calibri sans, 8.5pt, regular weight throughout",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "blue = prompt (input) tokens processed in parallel; orange = decode (output) tokens generated sequentially, one cell per token",
+    "line_style_means": "curved brace lines group a bar's segments or tie multiple bars to one throughput verdict; no directional arrows are used",
+    "state_means": "the two scenarios are told apart by request count and bar length (2 long bars vs 4 short bars), not by colour, which stays blue/orange throughout",
+    "marker_means": "no numeric markers; bracket callouts label which segment is the prompt, which single cell is one decode token, and what the aggregate effect on throughput is",
+    "emphasis": "grouping braces on the right of each scenario single out the throughput verdict text ('lower'/'higher throughput') as the takeaway",
+    "reusable_patterns": [
+      "stacked request bars split into a solid prompt segment and a cell-segmented decode-token tail, bracketed with a plain-language throughput verdict"
+    ],
+    "weaknesses": [
+      "the caption itself admits the bar lengths are illustrative and not precise, so the figure cannot be read quantitatively"
+    ]
+  },
+  "tags": [
+    "LLM-serving",
+    "fairness",
+    "throughput",
+    "request-length",
+    "scheduling"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 Background (p.5)"
+    ],
+    "evidence": [
+      "the capacity depends on the mix between input and output tokens of existing requests",
+      "If all requests have long past tokens, then the capacity is likely to be low",
+      "input tokens are processed in parallel while output tokens must be generated sequentially"
+    ]
+  },
+  "summary": "This background figure from a paper on fairness in LLM serving illustrates why a server's effective throughput depends on request length rather than being fixed, unlike classic fair-queuing settings. Each request is drawn as a bar split into a solid blue 'prompt' segment and an orange, cell-segmented 'decode tokens' tail, where one cell marks the time to generate one output token. On the left, two long requests each carry a long prompt and many decode-token cells, so their per-request time is high and the server processes fewer tokens overall, yielding 'lower throughput for longer requests'. On the right, four short requests with brief prompts and few decode tokens each let the server cycle through more requests per unit time, yielding 'higher throughput for shorter requests'. Because prompt tokens process in parallel while decode tokens must be generated one at a time, request mix determines a server's usable capacity.",
+  "summary_zh": "该图展示LLM服务吞吐量为何随请求长度变化：蓝色prompt加橙色逐格解码token的条形图对比，左侧两条长请求解码token多、吞吐低；右侧四条短请求解码token少、吞吐高，说明输入并行而输出需顺序生成。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI24"
+}

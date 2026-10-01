@@ -1,0 +1,261 @@
+{
+  "paper_id": "osdi26-082",
+  "fig": "3",
+  "kind": "mechanism",
+  "system": {
+    "name": null,
+    "one_liner": "a GPU-based approximate nearest neighbor search system for billion-scale vector search over a disentangled KNN graph",
+    "domain": [
+      "vector-search",
+      "ANNS",
+      "GPU-systems"
+    ],
+    "abstraction": "ml-system"
+  },
+  "content": {
+    "groups": [
+      "walkthrough"
+    ],
+    "worked_example": true,
+    "depicts": "one algorithm run",
+    "subject": "how best-first graph search expands the nearest candidate node and maintains a sorted candidate pool of neighbors",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "entry point",
+        "kind": "label",
+        "role": "names node 3 as the search's starting node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "1",
+        "kind": "node",
+        "role": "a graph node discovered and then expanded as the parent early in the walkthrough",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "2",
+        "kind": "node",
+        "role": "a graph node discovered from expanding node 1, left unexpanded",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "3",
+        "kind": "node",
+        "role": "the entry-point graph node",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "4",
+        "kind": "node",
+        "role": "a graph node discovered from expanding node 1, later itself expanded",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "5",
+        "kind": "node",
+        "role": "a graph node adjacent to node 4 and node 6",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "6",
+        "kind": "node",
+        "role": "a graph node discovered from expanding node 4, near the query",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "7",
+        "kind": "node",
+        "role": "a graph node adjacent to node 6 and node 8",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "8",
+        "kind": "node",
+        "role": "a graph node adjacent to node 7, near the query",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "query",
+        "kind": "icon",
+        "role": "the red star marking the query point's approximate position among the graph nodes",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "expansion path",
+        "kind": "label",
+        "role": "legend: names the orange arrows tracing which node was expanded to reach the next",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "discovered & unexpanded",
+        "kind": "label",
+        "role": "legend: names the yellow node-state colour",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "expanded",
+        "kind": "label",
+        "role": "legend: names the blue node-state colour",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "expanding",
+        "kind": "label",
+        "role": "legend: names the orange/peach node-state colour",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "3",
+        "to": "1",
+        "what": "the entry point's edge is traversed toward neighbor node 1",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "2",
+        "what": "expanding node 1 as parent discovers neighbor node 2 via its edge",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "1",
+        "to": "4",
+        "what": "expanding node 1 as parent also discovers neighbor node 4 via its edge",
+        "kind": "control",
+        "step": null
+      },
+      {
+        "from": "4",
+        "to": "6",
+        "what": "the expansion path continues along node 4's edge toward node 6, nearer the query",
+        "kind": "control",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [
+      {
+        "marker": "❶",
+        "at": "node 1",
+        "what": "expand as parent: the nearest unexpanded node from the candidate pool is selected as parent and its edges are traversed",
+        "carries": "the parent node's outgoing edges"
+      },
+      {
+        "marker": "❷",
+        "at": "node 2 and node 4",
+        "what": "discover: each neighbor reached by traversing the parent's edges has its distance to the query computed and is inserted into the sorted candidate pool",
+        "carries": "a newly discovered neighbor and its computed distance"
+      }
+    ],
+    "logic": null,
+    "values": {
+      "what": "the sorted candidate pool's contents at step1, step2, step3, and the final result (node IDs 3; 1,3; 4,1,3,2; and the top-5 result 7,6,8,4,5)",
+      "linked_by": "colour (orange=expanding, blue=expanded, yellow=discovered-and-unexpanded) and left-to-right sorted position in each pool row",
+      "result_cells": "the bottom 'result' row of five light-blue cells listing the final top-k node IDs returned by the search"
+    },
+    "key_idea": "Best-first search repeatedly pops the nearest unexpanded node from a sorted candidate pool, traverses its edges to discover new neighbors, and inserts them back into the pool by distance until every pooled node has been expanded.",
+    "reading_order": "Start at entry point node 3, follow the orange expansion-path arrows through nodes 1 and 4 toward the query star, while the pool table sorts the same nodes alongside."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "colour",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "below",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.06,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#84d3ea",
+        "used_for": "medium-blue fill marking 'expanded' nodes and pool cells"
+      },
+      {
+        "hex": "#d1ecf3",
+        "used_for": "pale-blue highlight shading tracing the active expansion region behind nodes 1/2/4"
+      },
+      {
+        "hex": "#66cbf3",
+        "used_for": "brighter cyan accents on the expanded-state legend swatch"
+      },
+      {
+        "hex": "#fde4c8",
+        "used_for": "pale peach/orange fill marking 'expanding' nodes and pool cells"
+      },
+      {
+        "hex": "#ebebeb",
+        "used_for": "light-grey fill of empty, not-yet-filled pool cells"
+      }
+    ],
+    "background": "white",
+    "fill": "flat pastel fills keyed to node/cell state (expanding, expanded, discovered-and-unexpanded)",
+    "stroke": "thin black outlines on every node circle and pool cell (median ~0.87pt)",
+    "corners": "mixed",
+    "arrows": "bold orange arrows trace the expansion path between graph nodes; thin black arrows and one dashed arrow link successive candidate-pool rows",
+    "font": "sans italic (Calibri-Italic for captions, Calibri for pool numbers)",
+    "icons": "a red star icon marking the query point"
+  },
+  "encoding": {
+    "color_means": "yellow marks a discovered-but-unexpanded node, blue marks an already-expanded node, and orange/peach marks the node currently being expanded as parent, applied identically to graph nodes and candidate-pool cells",
+    "line_style_means": "bold orange arrows trace the expansion path actually taken through the graph; a dashed arrow on the right shows a newly discovered node being merged into the sorted pool",
+    "state_means": "not applicable in the before/after sense - colour instead marks each node's current role (expanding/expanded/discovered) at the single moment the figure depicts",
+    "marker_means": "circled ❶/❷ label the two roles a node plays as it is processed: ❶ being expanded as parent, ❷ being newly discovered",
+    "emphasis": "the pale-blue path shading and bold orange arrows pick the actual expansion path out of the full graph, while the adjoining sorted pool table literally spells out the resulting queue contents",
+    "reusable_patterns": [
+      "a node-link graph with a coloured expansion path paired with a same-coloured sorted array table that grows step by step alongside it"
+    ],
+    "weaknesses": [
+      "the paper's prose defines 'discovery' and 'expansion' with the opposite step numbering (❶ discovery, ❷ expansion) from what the figure's own ❶/❷ callouts show (❶ expand, ❷ discover), which could confuse a reader moving between text and figure",
+      "the candidate pool's step1/step2/step3 progression is not directly wired to specific ❶/❷ callouts on the graph, so matching one to the other takes inference"
+    ]
+  },
+  "tags": [
+    "ANNS",
+    "best-first-search",
+    "KNN-graph",
+    "candidate-pool",
+    "GPU-vector-search",
+    "graph-traversal"
+  ],
+  "provenance": {
+    "sections": [
+      "§2 GPU Graph ANNS: Fast yet Memory-bound"
+    ],
+    "evidence": [
+      "it maintains a candidate pool that contains a fixed number of the closest nodes found so far",
+      "it selects the nearest unexpanded node from the candidate pool as the parent",
+      "it is reached as a neighbor via an edge and is inserted into the candidate pool"
+    ]
+  },
+  "summary": "Figure 3 illustrates best-first search over a KNN graph, starting from an entry point (node 3) and maintaining a sorted candidate pool of the closest nodes found so far. At each iteration, the nearest unexpanded node in the pool is selected as parent and expanded (marker 1): its edges are traversed to reach new neighbors, which are discovered (marker 2), scored by distance to the query, and inserted into the pool. The graph shows an orange expansion path from the entry point through nodes 1 and 4 toward the query star, with nodes colour-coded expanding, expanded, or discovered-and-unexpanded. Beside it, the sorted candidate pool table tracks the same process concretely: step1 holds just node 3, step2 adds node 1 ahead of it, step3 adds nodes 4 and 2, and the final result row lists the top-5 nearest nodes returned: 7, 6, 8, 4, 5.",
+  "summary_zh": "图3展示KNN图上最优优先搜索：从入口点维护按距离排序的候选池；每轮选最近未扩展节点扩展(标记1)，发现新邻居(标记2)并插入池中。候选池表格显示插入过程及最终top-5结果。",
+  "confidence": "high",
+  "notes": "the figure's own ❶/❷ callouts label ❶=expand-as-parent, ❷=discover, the reverse of the order the paper's summary sentence uses when defining 'discovery' and 'expansion' as node lifecycle stages; this record follows the figure's own labelling.",
+  "venue": "OSDI26"
+}

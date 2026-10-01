@@ -1,0 +1,56 @@
+{
+  "id": "asplos26-148_fig4",
+  "kind": "mechanism",
+  "paper_id": "asplos26-148",
+  "fig": "4",
+  "venue": "ASPLOS26",
+  "year": 2026,
+  "caption": "Figure 4. Frustum Culling: Gaussians outside of camera frustum will not be accessed when rendering the camera’s view. Further, the Gaus- sians accessed when rendering a view are in the same region, i.e., the process exhibits spatial locality. Our approach uses these observations to improve performan",
+  "groups_in_record": [
+    "anatomy"
+  ],
+  "worked_example": false,
+  "base": "scene",
+  "subject": "why only Gaussians inside the camera's view frustum, clustered in one region, need to be accessed when rendering",
+  "arrangement": "single",
+  "panel_count": 1,
+  "frame_template": null,
+  "delta_marking": "colour",
+  "direction": "mixed",
+  "column": "single",
+  "aspect": 1.72,
+  "n_elements": 5,
+  "n_relations": 3,
+  "n_panels": 0,
+  "n_steps": 0,
+  "n_values": 0,
+  "nesting_depth": 1,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "zoom_callout": false,
+  "tool": "quartz",
+  "confidence": "high",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos26-148/src/fig4_bg_FrstumCulling.svg",
+    "preview.png": "lab/extracted/asplos26-148/src/fig4_bg_FrstumCulling.png",
+    "print.png": "lab/extracted/asplos26-148/asplos26-148_fig4_p3_mixed.png"
+  },
+  "groups": [
+    {
+      "group": "anatomy",
+      "star": false,
+      "why_chosen": "Only the Gaussians that fall inside the camera's view frustum, a small, spatially clustered region of the whole scene, are accessed when rendering a view; everything outside the frustum can safely stay off the GPU.",
+      "what_to_learn": "A textless figure: colour-vs-grey to separate the relevant subset, a tinted region, a hand-drawn camera glyph",
+      "note_source": "doc"
+    }
+  ]
+}

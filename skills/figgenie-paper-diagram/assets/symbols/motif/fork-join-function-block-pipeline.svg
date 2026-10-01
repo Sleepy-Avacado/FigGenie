@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172.387 75.256" width="172.387pt" height="75.256pt" data-symbol="fork-join-function-block-pipeline" data-kind="motif" data-size-pt="172.387x75.256">
+  <title>fork-join-function-block-pipeline</title>
+  <desc>single input box forks via diagonal connector lines into two parallel branches (each its own 2-stage box pipeline), then rejoins into one output box; every connecting edge carries a set-membership label | source: nsdi25-037_fig22 (nsdi25-037_fig22_p22_vector.svg) | candidate wave3:fork-join-function-block-pipeline | units: pt at print size | colours as drawn, recolour by role</desc>
+  <g data-symbol="fork-join-function-block-pipeline" transform="scale(1) translate(-218.7510,-8.9560)"><defs>
+<clipPath id="nsdi25-037-fig22-fork-join-function-block-pipeline-clip_1">
+<path transform="matrix(1,0,0,-1,-54.132974,722.8293)" d="M54.132974 301.99455H554.54257V722.8293H54.132974Z" clip-rule="evenodd"/>
+</clipPath>
+<clipPath id="nsdi25-037-fig22-fork-join-function-block-pipeline-clip_2">
+<path transform="matrix(.8703,0,0,-.8703,-.13297272,417.02128)" d="M0 0H579.12V475.91999H0Z"/>
+</clipPath>
+<clipPath id="nsdi25-037-fig22-fork-join-function-block-pipeline-clip_3">
+<path transform="matrix(.20887199,0,0,.20887199,-.13297272,2.828125)" d="M0 0H2412.0118V1983.0078H0Z" clip-rule="evenodd"/>
+</clipPath>
+</defs>
+<g clip-path="url(#nsdi25-037-fig22-fork-join-function-block-pipeline-clip_1)">
+<g clip-path="url(#nsdi25-037-fig22-fork-join-function-block-pipeline-clip_2)">
+<g clip-path="url(#nsdi25-037-fig22-fork-join-function-block-pipeline-clip_3)">
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" d="M378.15 60H422.15V90H378.15Z" fill="#ffffff"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="4" stroke-linejoin="miter" fill="none" stroke="#000000" d="M378.15 60H422.15V90H378.15Z"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="72" x="396.3125">A</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="87" x="380.875 384.211 390.211 394.879 402.883 408.883 413.10743">forward</tspan></text>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" d="M442.97 30H482.99V60H442.97Z" fill="#ffffff"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="4" stroke-linejoin="miter" fill="none" stroke="#000000" d="M442.97 30H482.99V60H442.97Z"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="42" x="451.98439 459.31639 467.32038">ACL</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif"><tspan y="57" x="448.82814 454.82814 460.82814 464.82414 468.16014 471.16014">port 1</tspan></text>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" d="M442.97 90H482.99V120H442.97Z" fill="#ffffff"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="4" stroke-linejoin="miter" fill="none" stroke="#000000" d="M442.97 90H482.99V120H442.97Z"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="102" x="451.98439 459.31639 467.32038">ACL</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif"><tspan y="117" x="448.82814 454.82814 460.82814 464.82414 468.16014 471.16014">port 3</tspan></text>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" d="M503.01 30H548.01V60H503.01Z" fill="#ffffff"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="4" stroke-linejoin="miter" fill="none" stroke="#000000" d="M503.01 30H548.01V60H503.01Z"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="42" x="521.8125">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="57" x="506.375 509.711 515.711 520.379 528.38308 534.38308 538.6074">forward</tspan></text>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" d="M503.01 90H548.01V120H503.01Z" fill="#ffffff"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="4" stroke-linejoin="miter" fill="none" stroke="#000000" d="M503.01 90H548.01V120H503.01Z"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="102" x="521.4844">C</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="117" x="506.375 509.711 515.711 520.379 528.38308 534.38308 538.6074">forward</tspan></text>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" d="M568.07 60H613.07V90H568.07Z" fill="#ffffff"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="4" stroke-linejoin="miter" fill="none" stroke="#000000" d="M568.07 60H613.07V90H568.07Z"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="72" x="586.15628">D</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="12" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="87" x="571.375 574.711 580.711 585.379 593.38308 599.38308 603.6074">forward</tspan></text>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M422.15 60 442.97 45"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M422.15 90 442.97 105"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M422.15 75H568.07"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M482.99 105H503.01"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M482.99 45H503.01"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M548.01 105 568.07 90"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M548.01 45 568.07 60"/>
+<path transform="matrix(.6263507,0,0,.6263507,-11.719242,.4793098)" stroke-width="1" stroke-linecap="butt" stroke-miterlimit="10" stroke-linejoin="miter" fill="none" stroke="#000000" d="M613.07 75H632.99"/>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="42" x="423.21876">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="45.796876" x="431.78126">1</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="112" x="423.21876">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="115.796878" x="431.78126">3</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="70" x="425.21876">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="73.796878" x="433.78126">2</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="37" x="485.21876">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="40.796876" x="493.78126">4</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="117" x="485.21876">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="120.796878" x="493.78126">5</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="42" x="553.21878">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="45.796876" x="561.78128">1</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="112" x="553.21878">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="115.796878" x="561.78128">3</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="67" x="615.21878">B</tspan></text>
+<text xml:space="preserve" transform="matrix(.6263507 0 0 .6263507 -12.032417 .1661346)" font-size="14" font-family="'Times New Roman', Times, serif" font-style="italic"><tspan y="70.796878" x="623.78128">6</tspan></text>
+</g>
+</g>
+</g>
+</g>
+</svg>

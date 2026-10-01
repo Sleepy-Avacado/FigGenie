@@ -1,0 +1,185 @@
+{
+  "paper_id": "nsdi26-142",
+  "fig": "4",
+  "system": {
+    "name": "Pyrocumulus",
+    "one_liner": "a SmartNIC-based hardware hypervisor that live-migrates storage-optimized VMs by intercepting and coordinating I/O without host CPU involvement",
+    "domain": [
+      "storage",
+      "virtualization",
+      "smartnic"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "depicts": "one subsystem",
+    "components": [
+      {
+        "name": "VM",
+        "role": "issues NVMe commands mediated by the FPGA",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "SmartNIC",
+        "role": "FPGA-based hardware hosting the LM controller and network stack; boundary of this figure",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "LM Controller",
+        "role": "generates LM-related send/receive commands and mediates VM access to local disks via a direct-access interface",
+        "container": "SmartNIC",
+        "novel": true
+      },
+      {
+        "name": "n Emulated Host Queues",
+        "role": "the full set of host-facing queues the LM controller emulates, split into regular VM queues and a dedicated LM queue",
+        "container": "LM Controller",
+        "novel": true
+      },
+      {
+        "name": "n-1 VM Queues",
+        "role": "queues handling ordinary VM NVMe access",
+        "container": "n Emulated Host Queues",
+        "novel": true
+      },
+      {
+        "name": "1 LM Queue",
+        "role": "dedicated queue for live-migration traffic, kept separate from ordinary VM queues",
+        "container": "n Emulated Host Queues",
+        "novel": true
+      },
+      {
+        "name": "LM Module",
+        "role": "groups the network-facing components handling migration traffic",
+        "container": "SmartNIC",
+        "novel": true
+      },
+      {
+        "name": "Network Stack",
+        "role": "sends/receives migration data over the network to/from the peer SmartNIC",
+        "container": "LM Module",
+        "novel": false
+      },
+      {
+        "name": "Local Disk",
+        "role": "NVMe storage attached to this host",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "n Disk Queues",
+        "role": "per-disk command queues the LM controller issues NVMe commands through",
+        "container": "Local Disk",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "VM",
+        "to": "n-1 VM Queues",
+        "what": "VM access: each NVMe command mediated by the FPGA before reaching the NVMe controller",
+        "step": 1
+      },
+      {
+        "from": "n-1 VM Queues",
+        "to": "n Disk Queues",
+        "what": "VM access path continuing to local disk queues",
+        "step": 1
+      },
+      {
+        "from": "n-1 VM Queues",
+        "to": "1 LM Queue",
+        "what": "LM double write: a write is duplicated into the LM queue for migration consistency",
+        "step": 2
+      },
+      {
+        "from": "1 LM Queue",
+        "to": "Network Stack",
+        "what": "LM send (source): migration data sent out over the network stack",
+        "step": 3
+      },
+      {
+        "from": "Network Stack",
+        "to": "n Emulated Host Queues",
+        "what": "LM recv (dst): the destination SmartNIC receives migration data into its emulated host queues",
+        "step": 4
+      }
+    ],
+    "key_idea": "Pyrocumulus's FPGA SmartNIC emulates n host-facing queues (n-1 ordinary VM queues plus 1 dedicated LM queue) and a network stack, giving its LM controller full visibility to mediate VM NVMe access, double-write for consistency, and send/receive migration data directly between SmartNICs without host CPU involvement.",
+    "reading_order": "Top-down on the left (VM into the LM controller's emulated queues, then to local disk queues via PCIe), with a branch right into the LM module/network stack for the numbered migration datapaths (1-4)."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 4,
+    "lanes": false,
+    "legend": "inside",
+    "step_markers": "circled-numbers",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.41,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#009966",
+        "used_for": "green arrow for the LM send (source) datapath"
+      },
+      {
+        "hex": "#ffd966",
+        "used_for": "yellow arrow for the LM recv (dst) datapath"
+      },
+      {
+        "hex": "#a680b8",
+        "used_for": "purple arrow for the LM double write datapath"
+      },
+      {
+        "hex": "#999999",
+        "used_for": "gray arrow for the VM access datapath"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.32pt solid outlines",
+    "font": "Verdana/Arial sans, 6-8pt",
+    "corners": "mixed",
+    "arrows": "thin colored arrows keyed to the top legend, numbered 1-4",
+    "icons": "small stacked-rectangle icons representing queue groups"
+  },
+  "encoding": {
+    "color_means": "per the legend: gray = VM access, green = LM send (source), purple = LM double write, yellow = LM recv (dst)",
+    "line_style_means": null,
+    "emphasis": "numbering all four datapaths through one SmartNIC box emphasizes that ordinary VM access and every live-migration path share the same emulated-queue hardware",
+    "reusable_patterns": [
+      "single hardware block diagram with numbered, color-coded datapaths keyed to a legend"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "smartnic",
+    "fpga",
+    "live-migration",
+    "queue-emulation",
+    "storage-datapath",
+    "network-stack"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Motivation (p.5)",
+      "3 Motivation (p.6)"
+    ],
+    "evidence": [
+      "The LM controller module on the SmartNIC is responsible for triggering, monitoring, and managing an LM process",
+      "each NVMe command is mediated by the FPGA before going into the NVMe controller",
+      "the controller has full visibility over commands on all paths shown in Fig. 4"
+    ]
+  },
+  "summary": "Figure 4 is the internal architecture of Pyrocumulus's FPGA-based SmartNIC. An LM Controller emulates n host-facing queues, split into n-1 ordinary VM queues and 1 dedicated LM queue, and mediates every NVMe command between the VM and n Disk Queues on the Local Disk. Four numbered, color-coded datapaths run through this box: (1) ordinary VM access, mediated by the FPGA; (2) LM double write, duplicating writes into the LM queue for consistency; (3) LM send (source), pushing migration data out through the LM Module's Network Stack; and (4) LM recv (dst), the same network stack receiving migration data into a peer SmartNIC's emulated host queues. Because the LM controller sees all four paths, it can enforce consistency between ongoing VM I/O and in-flight migration I/O without involving the host CPU.",
+  "summary_zh": "图4展示Pyrocumulus的FPGA SmartNIC内部架构：LM控制器模拟n个主机队列（n-1个VM队列加1个迁移队列），统一调度VM访问、迁移双写、发送与接收四条数据通路，全部经FPGA中转磁盘与网络。",
+  "confidence": "medium",
+  "notes": "layout-proposal: single-box device-internal dataflow — one SmartNIC box exposes four numbered, legend-colored datapaths connecting an external VM (top) and Local Disk (bottom) through internal emulated queues and a network-facing LM module; none of the seven named templates cleanly describes an annotated device cross-section like this. The body text is truncated right after naming datapaths 2 and 3, so path 4 (LM recv) and the exact queue-to-network-stack wiring are inferred from the legend and caption rather than confirmed prose.",
+  "venue": "NSDI26"
+}

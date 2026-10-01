@@ -1,0 +1,292 @@
+{
+  "paper_id": "nsdi25-027",
+  "fig": "1",
+  "kind": "mechanism",
+  "system": {
+    "name": "CCF",
+    "one_liner": "a confidential, permissioned framework for building highly available stateful services on trusted hardware, using a Raft-based consensus protocol",
+    "domain": [
+      "distributed-systems",
+      "consensus",
+      "confidential-computing"
+    ],
+    "abstraction": "distributed"
+  },
+  "content": {
+    "groups": [
+      "logic",
+      "walkthrough"
+    ],
+    "worked_example": false,
+    "depicts": "one protocol exchange",
+    "subject": "how CCF extends Raft's Follower/Candidate/Leader state machine with a Joiner state and the CheckQuorum/ProposeVote extensions",
+    "base": "state-machine",
+    "elements": [
+      {
+        "name": "Join",
+        "kind": "actor",
+        "role": "external event admitting a new node into the network",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Joiner",
+        "kind": "state",
+        "role": "CCF-added state for a node bootstrapping into the network before it has caught up",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Follower",
+        "kind": "state",
+        "role": "Raft's passive replica state that replicates the leader's log",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Candidate",
+        "kind": "state",
+        "role": "Raft's state for a node campaigning for leadership",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Leader",
+        "kind": "state",
+        "role": "Raft's state for the node proposing and replicating new transactions",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Join",
+        "to": "Joiner",
+        "what": "a new node is admitted to the network",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Joiner",
+        "to": "Follower",
+        "what": "Receive AE: the joiner catches up via AppendEntries and becomes a follower",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Follower",
+        "to": "Candidate",
+        "what": "election timeout with no leader heartbeat",
+        "kind": "transition",
+        "step": "1"
+      },
+      {
+        "from": "Candidate",
+        "to": "Leader",
+        "what": "candidate wins a strict majority of votes",
+        "kind": "transition",
+        "step": "2"
+      },
+      {
+        "from": "Leader",
+        "to": "Follower",
+        "what": "CheckQuorum: leader steps down after not hearing back from a quorum within a time period",
+        "kind": "transition",
+        "step": "3"
+      },
+      {
+        "from": "Leader",
+        "to": "Candidate",
+        "what": "ProposeVote: a retiring leader nominates a successor, fast-tracking the election",
+        "kind": "transition",
+        "step": "4"
+      },
+      {
+        "from": "Candidate",
+        "to": "Candidate",
+        "what": "Restart: candidate restarts its own election",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Follower",
+        "to": "Follower",
+        "what": "Discover new term: follower updates its current term",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Candidate",
+        "to": "Follower",
+        "what": "Discover new term: candidate steps down on learning of a higher term",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Leader",
+        "to": "Follower",
+        "what": "Discover new term: leader steps down on learning of a higher term",
+        "kind": "transition",
+        "step": null
+      },
+      {
+        "from": "Candidate",
+        "to": "Leader",
+        "what": "Force become primary (an administrative override not detailed in the excerpted text)",
+        "kind": "transition",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": {
+      "states": [
+        "Joiner",
+        "Follower",
+        "Candidate",
+        "Leader"
+      ],
+      "transitions": [
+        {
+          "from": "Joiner",
+          "to": "Follower",
+          "guard": "Receive AE"
+        },
+        {
+          "from": "Follower",
+          "to": "Candidate",
+          "guard": "① Election timeout"
+        },
+        {
+          "from": "Candidate",
+          "to": "Leader",
+          "guard": "② Win election"
+        },
+        {
+          "from": "Leader",
+          "to": "Follower",
+          "guard": "③ Check quorum (CheckQuorum extension)"
+        },
+        {
+          "from": "Leader",
+          "to": "Candidate",
+          "guard": "④ Propose vote (ProposeVote extension)"
+        },
+        {
+          "from": "Candidate",
+          "to": "Candidate",
+          "guard": "Restart"
+        },
+        {
+          "from": "Follower",
+          "to": "Follower",
+          "guard": "Discover new term"
+        },
+        {
+          "from": "Candidate",
+          "to": "Follower",
+          "guard": "Discover new term"
+        },
+        {
+          "from": "Leader",
+          "to": "Follower",
+          "guard": "Discover new term"
+        },
+        {
+          "from": "Candidate",
+          "to": "Leader",
+          "guard": "Force become primary"
+        }
+      ],
+      "decisions": []
+    },
+    "values": null,
+    "key_idea": "CCF extends Raft's Follower/Candidate/Leader state machine with a Joiner bootstrapping state and two protocol extensions, CheckQuorum (a leader steps down without a quorum) and ProposeVote (a retiring leader fast-tracks a successor), drawn as dashed additions over Raft's solid original states and transitions.",
+    "reading_order": "starts at Joiner (top left) via Join/Receive AE, then follows the circled ①-④ transitions around the Follower/Candidate/Leader triangle"
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "dashed-ghost",
+    "direction": "mixed",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "circled-numbers",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.92,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e1d5e7",
+        "used_for": "pale purple fill of the Follower, Candidate and Leader boxes (Raft's original states)"
+      },
+      {
+        "hex": "#9673a6",
+        "used_for": "medium purple stroke of those boxes and Raft's original solid transition arrows"
+      },
+      {
+        "hex": "#ffe6cc",
+        "used_for": "pale orange fill of the Joiner box (CCF's added state)"
+      },
+      {
+        "hex": "#d79b00",
+        "used_for": "dark gold stroke of the Joiner box border and CCF's additional dashed transition arrows/labels"
+      },
+      {
+        "hex": "#333333",
+        "used_for": "dark grey text labels"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~1.5-2pt; solid purple for Raft's original boxes/arrows, dashed gold for CCF's additions",
+    "corners": "square",
+    "arrows": "open arrowheads on curved routes among the four states; solid purple for Raft-original transitions, dashed gold for CCF additions; four transitions carry small circled numbers ①-④",
+    "font": "Arial sans, ~6.5-7pt",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "purple = Raft's original states/transitions (Follower, Candidate, Leader and their core edges); gold/orange = CCF's additions (the Joiner state and its edges, plus the CheckQuorum and ProposeVote extensions)",
+    "line_style_means": "per the caption, solid lines/boxes are Raft's original states and transitions; dashed lines/boxes are CCF's additional states and transitions",
+    "state_means": "Raft's three original roles are purple solid boxes; CCF's added Joiner role is a pale-orange dashed box",
+    "marker_means": "circled numbers ①-④ mark the four transitions the paper text calls out explicitly (election timeout, win election, check quorum, propose vote)",
+    "emphasis": "dashing isolates exactly what CCF layered on top of vanilla Raft, letting the reader see the extension without losing the familiar Raft skeleton",
+    "reusable_patterns": [
+      "a well-known protocol's state machine redrawn in the same layout, using solid vs dashed styling to isolate a paper's extensions"
+    ],
+    "weaknesses": [
+      "three same-named 'Discover new term' edges appear at different places in the diagram, and 'Force become primary' is unlabelled in the paper text, so their exact direction and solid/dashed status are harder to confirm than the numbered transitions"
+    ]
+  },
+  "tags": [
+    "consensus",
+    "raft",
+    "state-machine",
+    "CCF",
+    "leader-election",
+    "checkquorum",
+    "reconfiguration"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Ccf (p.4)",
+      "2 Ccf (p.5)"
+    ],
+    "evidence": [
+      "a leader steps down if it does not hear back from a quorum of nodes within a specified time period",
+      "CCF also adds a message to the protocol, ProposeVote which is utilized by a retiring leader to nominate a successor",
+      "CCF's additional states and transitions are shown with dashed lines"
+    ]
+  },
+  "summary": "Figure 1 of the CCF verification paper redraws Raft's classic Follower/Candidate/Leader role state machine and overlays CCF's extensions on top of it. Solid purple boxes and arrows are Raft's original states and transitions: a Follower becomes a Candidate on election timeout (①), and a Candidate becomes Leader on winning a majority vote (②). Dashed gold elements are CCF's additions: a new Joiner state that a node passes through while bootstrapping (entered via Join, promoted to Follower on Receive AE), the CheckQuorum extension where a Leader steps down to Follower after failing to hear from a quorum (③), and the ProposeVote extension where a retiring Leader nominates a successor Candidate to fast-track re-election (④). By keeping Raft's familiar triangle layout and only changing line style and colour for the new parts, the figure lets a reader familiar with Raft see exactly what CCF changed.",
+  "summary_zh": "该图在Raft的角色状态机上叠加CCF扩展：紫色实线为原有的①选举超时、②赢得选举；金色虚线为CCF新增的Joiner状态、③失去法定人数降级、④指定继任者投票。",
+  "confidence": "high",
+  "notes": "Follower/Candidate/Leader and edges ①/② are Raft-original (solid, purple); Joiner, Join, Receive AE, and edges ③ (Check quorum) / ④ (Propose vote) are CCF additions per the caption and text. The direction and solid/dashed status of 'Force become primary' and the three 'Discover new term' edges are inferred from the image layout only, since the excerpted paper text does not name them; treat that part of the record with lower confidence.",
+  "venue": "NSDI25"
+}

@@ -1,0 +1,181 @@
+{
+  "paper_id": "asplos25-051",
+  "fig": "4",
+  "system": {
+    "name": "EDM",
+    "one_liner": "an ultra-low latency Ethernet fabric for memory disaggregation implemented within the Ethernet PHY",
+    "domain": [
+      "networking",
+      "memory disaggregation"
+    ],
+    "abstraction": "network"
+  },
+  "content": {
+    "depicts": "deployment",
+    "components": [
+      {
+        "name": "Compute Node (FPGA 1)",
+        "role": "emulates the compute node in the testbed",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Memory Node (FPGA 2)",
+        "role": "emulates the memory node in the testbed",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Switch (FPGA 3)",
+        "role": "2-port EDM FPGA switch connecting compute and memory nodes",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Application",
+        "role": "generates memory requests on the compute node",
+        "container": "Compute Node (FPGA 1)",
+        "novel": false
+      },
+      {
+        "name": "AXI4 bus",
+        "role": "host interconnect connecting the Network Interface to the processor/DDR4 controller",
+        "container": "Compute Node (FPGA 1) / Memory Node (FPGA 2)",
+        "novel": false
+      },
+      {
+        "name": "Network Interface",
+        "role": "implements EDM's Ethernet PHY and SerDes on each node",
+        "container": "Compute Node (FPGA 1) / Switch (FPGA 3) / Memory Node (FPGA 2)",
+        "novel": true
+      },
+      {
+        "name": "Ethernet PHY",
+        "role": "physical layer with EDM logic on ports P0/P1",
+        "container": "Network Interface",
+        "novel": true
+      },
+      {
+        "name": "EDM Scheduler",
+        "role": "central scheduler on the switch FPGA",
+        "container": "Switch (FPGA 3)",
+        "novel": true
+      },
+      {
+        "name": "DDR4 controller",
+        "role": "memory controller on the memory node",
+        "container": "Memory Node (FPGA 2)",
+        "novel": false
+      },
+      {
+        "name": "Ethernet SerDes",
+        "role": "serializer/deserializer connecting FPGA ports over the physical link",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Port P0",
+        "role": "physical port connecting a node to the switch",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Port P1",
+        "role": "physical port connecting a node to the switch",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Compute Node (FPGA 1)",
+        "to": "Switch (FPGA 3)",
+        "what": "Ethernet link carrying memory requests",
+        "step": null
+      },
+      {
+        "from": "Switch (FPGA 3)",
+        "to": "Memory Node (FPGA 2)",
+        "what": "Ethernet link carrying memory responses",
+        "step": null
+      }
+    ],
+    "key_idea": "The testbed emulates EDM's compute node, memory node and switch on three separate FPGAs connected by real Ethernet links, with each node's Network Interface exposing the memory bus (AXI4) to its local application or DDR4 controller.",
+    "reading_order": "Left-to-right across Compute Node, Switch, and Memory Node boxes, following the orange Ethernet SerDes links at the bottom that join their ports."
+  },
+  "layout": {
+    "template": "host-device",
+    "direction": "left-right",
+    "nesting_depth": 2,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 1.44,
+    "text_density": "moderate"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#d5d5d5",
+        "used_for": "outer node/switch container boxes"
+      },
+      {
+        "hex": "#e38300",
+        "used_for": "Ethernet SerDes links and port highlight arrows"
+      },
+      {
+        "hex": "#c0bfff",
+        "used_for": "Compute Node title bar"
+      },
+      {
+        "hex": "#ffbfbf",
+        "used_for": "Memory Node title bar"
+      },
+      {
+        "hex": "#fdffb3",
+        "used_for": "Switch title bar"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dashed component-box outlines, solid orange link lines, median ~0.47pt",
+    "font": "HelveticaNeue / Linux Biolinum T sans, bold titles",
+    "corners": "square",
+    "arrows": "solid orange arrows linking ports across boxes",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "purple = Compute Node, red/pink = Memory Node, yellow = Switch, orange = physical Ethernet links between ports",
+    "line_style_means": null,
+    "emphasis": "Orange arrows and matching port labels (P0/P1) visually trace the physical cabling between the three FPGA boards",
+    "reusable_patterns": [
+      "three-box testbed diagram with color-coded roles and physical port connections"
+    ],
+    "weaknesses": []
+  },
+  "tags": [
+    "testbed",
+    "FPGA",
+    "Ethernet",
+    "memory disaggregation",
+    "evaluation setup"
+  ],
+  "provenance": {
+    "sections": [
+      "3 Design (p.10)",
+      "4 Evaluation (p.11)"
+    ],
+    "evidence": [
+      "We connected two EDM FPGAs to a 2-port EDM FPGA switch",
+      "We use one FPGA to emulate the memory node, and the other to emulate the compute node",
+      "such as an AXI4 bus (used in our prototype (Figure 4))"
+    ]
+  },
+  "summary": "Figure 4 shows EDM's FPGA-based testbed setup used for evaluation. Three FPGA boards play the roles of Compute Node, Switch, and Memory Node. The Compute Node runs an Application over an AXI4 bus connected to a Network Interface with EDM-enabled Ethernet PHY ports (P0, P1); the Memory Node mirrors this with a DDR4 controller in place of the application. The Switch FPGA hosts the EDM Scheduler and forwards traffic between its two ports. Orange arrows and Ethernet SerDes labels trace the physical cabling connecting each node's ports to the switch's ports, illustrating how two EDM FPGAs and an EDM FPGA switch are wired together to emulate a real compute-memory disaggregated link for latency measurements.",
+  "summary_zh": "图4展示 EDM 的 FPGA 测试床：计算节点与内存节点各用一块 FPGA，通过 AXI4 总线连接应用/DDR4 控制器与带 EDM 逻辑的以太网 PHY 网络接口，二者经以太网 SerDes 与另一块交换机 FPGA 的端口相连。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "ASPLOS25"
+}

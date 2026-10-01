@@ -1,0 +1,318 @@
+{
+  "paper_id": "osdi26-051",
+  "fig": "2",
+  "system": {
+    "name": "Espresso",
+    "one_liner": "constructs a cost-efficient CXL-based JBOF by sharing computing resources across SSDs",
+    "domain": [
+      "storage",
+      "ssd"
+    ],
+    "abstraction": "storage"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "DPU",
+        "role": "Data Processing Unit replacing separate CPU/DRAM/NIC as the JBOF host in recent products",
+        "container": "(a) JBOF architecture",
+        "novel": false
+      },
+      {
+        "name": "NIC/HCA",
+        "role": "network/host-channel adapter integrated into the DPU",
+        "container": "DPU",
+        "novel": false
+      },
+      {
+        "name": "ARM Processor",
+        "role": "general-purpose cores inside the DPU host",
+        "container": "DPU",
+        "novel": false
+      },
+      {
+        "name": "DRAM",
+        "role": "DPU's onboard memory",
+        "container": "DPU",
+        "novel": false
+      },
+      {
+        "name": "DDR Ctrl.",
+        "role": "DRAM controller inside the DPU",
+        "container": "DPU",
+        "novel": false
+      },
+      {
+        "name": "PCIe Root Complex",
+        "role": "PCIe root inside the DPU connecting to the interconnection fabric",
+        "container": "DPU",
+        "novel": false
+      },
+      {
+        "name": "PCIe Interconnection",
+        "role": "PCIe fabric connecting the DPU host to the SSDs",
+        "container": "(a) JBOF architecture",
+        "novel": false
+      },
+      {
+        "name": "SSD 0 | SSD 1 | ... | SSD n",
+        "role": "the tens of SSDs comprising the JBOF, connected over PCIe",
+        "container": "(a) JBOF architecture",
+        "novel": false
+      },
+      {
+        "name": "SSD Controller",
+        "role": "controller chip inside each SSD, integrating an ARM processor, DRAM controller and DMA engine",
+        "container": "(b) SSD architecture",
+        "novel": false
+      },
+      {
+        "name": "Host Interface Controller",
+        "role": "connects the SSD controller to the host over PCIe lanes",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "ARM Processor (SSD)",
+        "role": "runs SSD Firmware tasks: command parsing (Cmd. Parse), address translation (Addr. Trans.), and garbage collection/wear leveling (GC, WL)",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "DMA Eng.",
+        "role": "specialized engine handling host-SSD data transfers",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "DRAM (SSD)",
+        "role": "onboard memory caching the mapping table",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "DDR Ctrl. (SSD)",
+        "role": "DRAM controller inside the SSD controller",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "Mapping Table",
+        "role": "cached LPN-to-PPN address-translation table (LPN / PPN)",
+        "container": "DRAM (SSD)",
+        "novel": false
+      },
+      {
+        "name": "Flash Controller",
+        "role": "couples the SSD controller to the flash backbone",
+        "container": "SSD Controller",
+        "novel": false
+      },
+      {
+        "name": "Channel 0...Channel D / Die 0...Die D / Plane 0...Plane P (Block 0, Page 0)",
+        "role": "flash backbone's physical hierarchy: 8-16 channels, each with several dies, each divisible into planes, blocks and pages, over an NV-DDR interface",
+        "container": "(b) SSD architecture",
+        "novel": false
+      },
+      {
+        "name": "Upper-layer Software (e.g., Block Layer)",
+        "role": "host-side software issuing an I/O Request",
+        "container": "(c) Details of I/O path",
+        "novel": false
+      },
+      {
+        "name": "NVMe Driver",
+        "role": "host driver that submits NVMe commands to a submission queue and rings its doorbell",
+        "container": "(c) Details of I/O path",
+        "novel": false
+      },
+      {
+        "name": "Queue Pair (QP)",
+        "role": "submission/completion queue pair used by the NVMe driver",
+        "container": "NVMe Driver",
+        "novel": false
+      },
+      {
+        "name": "SSD Firmware",
+        "role": "firmware running the device-side I/O path from doorbell to flash operation",
+        "container": "(c) Details of I/O path",
+        "novel": false
+      },
+      {
+        "name": "SQ Tail Fetch",
+        "role": "fetches NVMe commands from the submission queue via the host interface controller",
+        "container": "SSD Firmware",
+        "novel": false
+      },
+      {
+        "name": "DMA Engine",
+        "role": "performs the host-SSD data transfer (DMA OP) for the command",
+        "container": "SSD Firmware",
+        "novel": false
+      },
+      {
+        "name": "Parse & Slice",
+        "role": "parses the NVMe command and slices it into 4KB units",
+        "container": "SSD Firmware",
+        "novel": false
+      },
+      {
+        "name": "Address Translation",
+        "role": "translates LPN to PPN via the cached mapping table (Directory + Cache Lookup)",
+        "container": "SSD Firmware",
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "DPU",
+        "to": "PCIe Interconnection",
+        "what": "PCIe link from host to SSDs",
+        "step": null
+      },
+      {
+        "from": "PCIe Interconnection",
+        "to": "SSD 0 | SSD 1 | ... | SSD n",
+        "what": "PCIe fabric connecting DPU host to each SSD",
+        "step": null
+      },
+      {
+        "from": "Upper-layer Software (e.g., Block Layer)",
+        "to": "NVMe Driver",
+        "what": "I/O Request",
+        "step": null
+      },
+      {
+        "from": "NVMe Driver",
+        "to": "Queue Pair (QP)",
+        "what": "submits NVMe commands to the submission queue (SQ)",
+        "step": 1
+      },
+      {
+        "from": "NVMe Driver",
+        "to": "SSD Firmware",
+        "what": "rings the SQ doorbell to notify the SSD of command arrival",
+        "step": 2
+      },
+      {
+        "from": "Host Interface Controller",
+        "to": "SQ Tail Fetch",
+        "what": "SSD firmware fetches NVMe commands from SQ",
+        "step": 3
+      },
+      {
+        "from": "SQ Tail Fetch",
+        "to": "Parse & Slice",
+        "what": "fetched command handed off for parsing",
+        "step": 4
+      },
+      {
+        "from": "Parse & Slice",
+        "to": "Address Translation",
+        "what": "sliced 4KB-unit command needs LPN to PPN translation",
+        "step": 5
+      },
+      {
+        "from": "SSD Firmware",
+        "to": "DMA Engine",
+        "what": "orchestrates host-SSD data transfer (DMA OP)",
+        "step": 6
+      },
+      {
+        "from": "SSD Firmware",
+        "to": "Flash Controller",
+        "what": "sends the translated flash command",
+        "step": 7
+      },
+      {
+        "from": "Flash Controller",
+        "to": "Channel 0...Channel D / Die 0...Die D / Plane 0...Plane P (Block 0, Page 0)",
+        "what": "performs flash I/O",
+        "step": null
+      }
+    ],
+    "key_idea": "A traditional JBOF pairs a DPU host with many independent SSDs over PCIe; each SSD's own ARM-based firmware independently fetches, parses, translates, DMAs, and flashes every NVMe I/O end-to-end, with no sharing of computing resources across SSDs.",
+    "reading_order": "Panel (a) top-left: DPU host to SSDs over PCIe. Panel (b) bottom-left: one SSD's controller and flash backbone. Panel (c) right: the numbered NVMe I/O path through that SSD's firmware."
+  },
+  "layout": {
+    "template": "other",
+    "direction": "mixed",
+    "nesting_depth": 3,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "labelled-arrows",
+    "panels": 3,
+    "column": "single",
+    "aspect": 1.33,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#2c2c2c",
+        "used_for": "near-black primary text and box borders"
+      },
+      {
+        "hex": "#feffff",
+        "used_for": "near-white fill of most boxes"
+      },
+      {
+        "hex": "#7f7f7f",
+        "used_for": "mid-gray fill/border of the outer DPU and SSD Controller boxes"
+      },
+      {
+        "hex": "#f8f3f9",
+        "used_for": "very pale lavender fill of the panel (c) SSD Firmware region"
+      },
+      {
+        "hex": "#d8d8d8",
+        "used_for": "light gray fill of secondary inner boxes"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "~0.4pt; dashed group boundaries (JBOF, SSD Controller, Flash Backbone) with solid inner box borders",
+    "font": "Calibri sans-serif, 5-9.5pt, bold-italic for panel titles and emphasis",
+    "corners": "mixed",
+    "arrows": "many thin straight connecting lines with a modest number of filled arrowheads",
+    "icons": "none"
+  },
+  "encoding": {
+    "color_means": "orange (outside the top-5 palette entries) marks firmware/lookup annotations (Firmware, Lookup) in panels (b) and (c); grayscale fills otherwise just distinguish nested boxes (DPU / SSD Controller / Flash Backbone)",
+    "line_style_means": "dashed borders group each of the three labeled sub-systems (JBOF, SSD Controller, Flash Backbone) while solid lines connect internal components and the numbered I/O-path steps",
+    "emphasis": "panel (c) numbers every hop of one NVMe I/O request 1-7 directly on its connecting arrows, turning an otherwise static three-panel architecture into a traceable step-by-step request walkthrough",
+    "reusable_patterns": [
+      "three-panel teardown: system-level overview, one-node internal architecture, and a numbered request-path detail, all in one figure",
+      "physical storage hierarchy (channel > die > plane > block > page) drawn as nested labeled boxes"
+    ],
+    "weaknesses": [
+      "extremely high density (135 text labels, 310 shapes) across three sub-panels asks a lot of the reader in one figure",
+      "the given caption/body text is truncated before explaining what happens after the flash controller receives the command"
+    ]
+  },
+  "tags": [
+    "ssd",
+    "jbof",
+    "nvme",
+    "flash-translation-layer",
+    "dma",
+    "storage-architecture"
+  ],
+  "provenance": {
+    "sections": [
+      "2 Background and Motivation (p.3)",
+      "2 Background and Motivation (p.4)"
+    ],
+    "evidence": [
+      "a JBOF comprises CPU, DRAM, NIC, and tens of SSDs, connected via PCIe interconnections",
+      "The ARM processor is mainly responsible for performing firmware tasks (e.g., command parsing, address translation, and garbage collection)",
+      "SSD firmware then parses these commands, slices them into unit size (e.g., 4KB, 4), and translates the host logical address"
+    ]
+  },
+  "summary": "This figure details the traditional JBOF system that the paper's own design (Espresso) targets, in three panels. (a) A JBOF pairs a DPU host, containing NIC/HCA, ARM Processor, DRAM, DDR Ctrl. and a PCIe Root Complex, with tens of SSDs (SSD 0...SSD n) over a PCIe Interconnection. (b) Each SSD's controller integrates a Host Interface Controller, an ARM Processor running firmware (command parsing, address translation, GC/wear-leveling), a DMA Engine, and DRAM caching a mapping table, all coupled through a Flash Controller to a flash backbone of channels, dies, planes, blocks and pages. (c) A zoomed, numbered I/O path shows an NVMe Driver's request ringing a doorbell (1-2), the SSD firmware fetching (3), parsing/slicing (4), translating LPN to PPN (5), DMA-transferring (6), and finally issuing the flash command (7).",
+  "summary_zh": "该图分三部分展示传统 JBOF 架构：(a) DPU 主机经 PCIe 接多块 SSD；(b) SSD 控制器含 ARM 固件、DMA 引擎与映射表缓存，经闪存控制器接闪存阵列；(c) 编号展示 NVMe I/O 路径各步骤。",
+  "confidence": "high",
+  "notes": "The index marks this figure's role as 'motivation' (section 2, Background and Motivation): it depicts the traditional/baseline JBOF-SSD-NVMe architecture that Espresso's design targets, not Espresso's own novel mechanism, so all components are marked novel:false. The given body text is truncated right after step 7, so the completion path (flash controller back to host doorbell/CQ) shown in the figure is not independently confirmed by the provided text. layout-proposal: multi-panel teardown — two small overview diagrams (JBOF architecture, SSD architecture) paired with one large numbered I/O-path pipeline detail panel in an L-shaped/2x2 grid; no single named template captures an overview+detail-pipeline teardown like this.",
+  "venue": "OSDI26"
+}

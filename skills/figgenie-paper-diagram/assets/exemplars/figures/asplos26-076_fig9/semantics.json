@@ -1,0 +1,218 @@
+{
+  "paper_id": "asplos26-076",
+  "fig": "9",
+  "kind": "mechanism",
+  "system": {
+    "name": "Ouroboros",
+    "one_liner": "a wafer-scale SRAM computing-in-memory architecture that performs all LLM inference operations in situ within first-level SRAM using token-grained pipelining",
+    "domain": [
+      "ml-systems",
+      "hardware-accelerators",
+      "memory-systems"
+    ],
+    "abstraction": "hardware"
+  },
+  "content": {
+    "groups": [
+      "evolution"
+    ],
+    "worked_example": false,
+    "depicts": "one policy decision",
+    "subject": "how Ouroboros remaps tasks and evicts a KV cache along a replacement chain from a failed core to nearest KV core",
+    "base": "topology",
+    "elements": [
+      {
+        "name": "T1",
+        "kind": "node",
+        "role": "first pipeline task, root of the task graph, mapped to the top-left core",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T2",
+        "kind": "node",
+        "role": "pipeline task depending on T1, mapped to the bottom-left core",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T3",
+        "kind": "node",
+        "role": "pipeline task depending on T1, mapped to a top-row core",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T4",
+        "kind": "node",
+        "role": "pipeline task depending on T2, mapped to a bottom-row core; shifts one core left when its neighbor fails",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "T5",
+        "kind": "node",
+        "role": "pipeline task depending on T3, mapped to a top-row core",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "T6",
+        "kind": "node",
+        "role": "final task depending on T4 and T5; its core fails and its weights are relocated by remapping",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "KV",
+        "kind": "node",
+        "role": "a core dedicated to KV-cache storage instead of a compute task; the nearest KV core anchors the replacement chain",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "T1",
+        "to": "T2",
+        "what": "task dependency in the pipeline's task graph",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T1",
+        "to": "T3",
+        "what": "task dependency in the pipeline's task graph",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T2",
+        "to": "T4",
+        "what": "task dependency in the pipeline's task graph",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T3",
+        "to": "T5",
+        "what": "task dependency in the pipeline's task graph",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T4",
+        "to": "T6",
+        "what": "task dependency in the pipeline's task graph",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T5",
+        "to": "T6",
+        "what": "task dependency in the pipeline's task graph",
+        "kind": "dependency",
+        "step": null
+      },
+      {
+        "from": "T1",
+        "to": "KV",
+        "what": "every core is bidirectionally linked to its physical neighbors on the on-wafer mesh (shown for one pair, repeated throughout the grid)",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [
+      {
+        "label": "Initial Mapping",
+        "axis": "time",
+        "differs": "starting placement: T1-T6 and two dedicated KV cores fill the 2x4 core grid, all cores healthy",
+        "verdict": null
+      },
+      {
+        "label": "Remapping with Fault",
+        "axis": "time",
+        "differs": "the core holding T6 fails (red X); T6's weights shift into the neighboring former-T4 core and T4's weights shift into the next former-KV core, evicting that KV cache, forming a replacement chain from the fault to the nearest KV core",
+        "verdict": "recovered"
+      }
+    ],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "When a core fails, Ouroboros forms a replacement chain to the nearest KV-storing core: each core's weights shift one hop toward the fault, evicting that KV cache, covering the failure without full remapping optimization.",
+    "reading_order": "Left to right: the abstract task graph, then the healthy Initial Mapping grid, then the Remapping with Fault grid; compare matching grid positions to see which tasks shifted."
+  },
+  "layout": {
+    "arrangement": "panels-row",
+    "panel_count": 3,
+    "frame_template": "identical",
+    "delta_marking": "badge",
+    "direction": "left-right",
+    "nesting_depth": 1,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "single",
+    "aspect": 3.51,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#b9ddb9",
+        "used_for": "fill of every task-node circle (T1-T6), repeated across all three panels"
+      },
+      {
+        "hex": "#ff0000",
+        "used_for": "the single X mark on the one failed core in the Remapping with Fault panel"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "dark-navy outlines on the task circles; black outlines on the core boxes and connecting arrows",
+    "font": "bold sans-serif (Microsoft YaHei Bold), uniform small size (~5.5pt)",
+    "corners": "rounded core boxes; circular task nodes",
+    "arrows": "single-headed arrows trace task-graph dependencies; double-headed (bidirectional) arrows link every pair of physically adjacent cores in the mesh",
+    "icons": "a red X glyph marks the single failed/faulty core"
+  },
+  "encoding": {
+    "color_means": "green fill marks every task (T1-T6) in all three panels; red marks the one core that has failed in the Remapping panel; KV cores and the graph/grid boxes themselves stay unfilled white",
+    "line_style_means": "solid arrows only; single-headed arrows trace task dependencies in the Task Graph, double-headed arrows link every pair of physically adjacent cores in the mesh",
+    "state_means": "Initial Mapping and Remapping with Fault are the same core grid at two points in time (before/after a fault); the difference is read from the red X and from which tasks occupy which boxes",
+    "marker_means": "a red X marks the one core taken out of service; no numbers or letters are used",
+    "emphasis": "placing the healthy Initial Mapping directly beside the post-fault Remapping, with every other box unchanged, isolates attention on the one failed core and the short chain of boxes that shift to route around it",
+    "reusable_patterns": [
+      "a small dependency graph shown beside the physical grid it is mapped onto, so node names carry over from graph to grid",
+      "identical grid layouts before/after a fault, with only the affected boxes' contents changed and the fault marked by a coloured X"
+    ],
+    "weaknesses": [
+      "arrows are not labelled, so the figure alone does not show which mesh links carry the evicted KV data or propagated weights versus idle interconnect",
+      "no intermediate state of the replacement chain is shown, only before and after"
+    ]
+  },
+  "tags": [
+    "wafer-scale-cim",
+    "fault-tolerance",
+    "task-remapping",
+    "kv-cache-management",
+    "network-on-wafer",
+    "llm-inference-hardware"
+  ],
+  "provenance": {
+    "sections": [
+      "4 End-to-End Inference Framework (p.8)"
+    ],
+    "evidence": [
+      "we configure all cores spanning from a faulty core to the nearest core storing KV caches into a replacement chain",
+      "weights of each core are deterministically propagated to neighboring cores and ultimately to dedicated KV cores",
+      "This recovery mechanism operates locally without invoking MIQP, completes within sub-millisecond latency"
+    ]
+  },
+  "summary": "Figure 9 illustrates Ouroboros's fault-tolerance scheme for its wafer-scale SRAM computing-in-memory grid. On the left, a small task graph shows the dependency structure among six pipeline tasks, T1 through T6. The middle panel, Initial Mapping, places these tasks plus two dedicated KV-cache cores onto a 2x4 grid of cores connected by a bidirectional mesh network. The right panel, Remapping with Fault, shows the same grid after the core holding T6 fails (marked with a red X): the recovery mechanism forms a replacement chain from the faulty core to the nearest KV-storing core, so T6's weights move into the neighboring core that held T4, and T4's weights move into the core beyond it that held a KV cache, evicting that cache. This local, chain-based remapping completes in sub-millisecond time without invoking the system's full mixed-integer placement optimizer.",
+  "summary_zh": "图9展示Ouroboros的故障容错重映射：左侧任务图给出T1-T6依赖关系；中间初始映射把任务和KV核放入2x4网格；右侧核心故障(红叉)后，沿故障核到最近KV核形成替换链，逐核前移权重并驱逐KV缓存，亚毫秒级完成恢复。",
+  "confidence": "high",
+  "notes": "Kept primary group 'evolution' from prior labels; content.panels holds only the two grid-mapping frames (Initial Mapping / Remapping with Fault), which are the actual before/after pair, while the leftmost Task Graph sub-diagram is treated as supporting context (it supplies the T1-T6 dependency edges used in 'relations') rather than a third evolution frame. layout.panel_count=3 reflects all three drawn sub-diagrams; layout.panels=1 is kept as given by the index, which appears to undercount.",
+  "venue": "ASPLOS26"
+}

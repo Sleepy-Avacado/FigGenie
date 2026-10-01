@@ -1,0 +1,229 @@
+{
+  "paper_id": "osdi23-045",
+  "fig": "tex1",
+  "system": {
+    "name": "MGG",
+    "one_liner": "a system that accelerates multi-GPU GNN computation via fine-grained intra-kernel communication-computation pipelining",
+    "domain": [
+      "ml-systems",
+      "gpu"
+    ],
+    "abstraction": "runtime"
+  },
+  "content": {
+    "depicts": "whole-system architecture",
+    "components": [
+      {
+        "name": "Graph Structure",
+        "role": "input graph data fed to the graph loader",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "Node Embedding",
+        "role": "input node feature data fed to the graph loader",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "GNN Model",
+        "role": "input GNN model definition fed to the model initializer",
+        "container": null,
+        "novel": false
+      },
+      {
+        "name": "MGG",
+        "role": "overall system boundary generating pipeline-centric GPU kernels for multi-GPU GNN execution",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "Graph Loader & Model Initializer",
+        "role": "loads graph/embedding inputs and initializes the GNN model",
+        "container": "MGG",
+        "novel": true
+      },
+      {
+        "name": "SHMEM Library (e.g., NVSHMEM)",
+        "role": "provides shared-memory-style communication primitives across GPUs",
+        "container": "MGG",
+        "novel": false
+      },
+      {
+        "name": "Kernel & Runtime Manager",
+        "role": "core of MGG: constructs GNN-tailored pipelines and maps them to communication primitives and GPU processing units",
+        "container": "MGG",
+        "novel": true
+      },
+      {
+        "name": "GNN-tailored Pipeline Construct. (§4)",
+        "role": "constructs communication-computation pipelines tailored to GNN workloads",
+        "container": "Kernel & Runtime Manager",
+        "novel": true
+      },
+      {
+        "name": "Pipeline-aware Workload Management",
+        "role": "manages workload distribution across the pipeline stages",
+        "container": "GNN-tailored Pipeline Construct. (§4)",
+        "novel": true
+      },
+      {
+        "name": "Hybrid Data Placement",
+        "role": "places graph/embedding data across memory tiers for the pipeline",
+        "container": "GNN-tailored Pipeline Construct. (§4)",
+        "novel": true
+      },
+      {
+        "name": "GPU-aware Pipeline Mapping (§5)",
+        "role": "maps the constructed pipeline onto GPU warps and memory",
+        "container": "Kernel & Runtime Manager",
+        "novel": true
+      },
+      {
+        "name": "Warp-based Mapping & Pipelining",
+        "role": "maps pipeline stages onto GPU warps for execution",
+        "container": "GPU-aware Pipeline Mapping (§5)",
+        "novel": true
+      },
+      {
+        "name": "Specialized Memory Design & Optimization",
+        "role": "optimizes GPU memory layout/usage for the pipeline",
+        "container": "GPU-aware Pipeline Mapping (§5)",
+        "novel": true
+      },
+      {
+        "name": "Runtime Param. Optimizer (§6)",
+        "role": "monitors runtime performance (e.g. latency) and generates new configurations for the next iteration",
+        "container": null,
+        "novel": true
+      },
+      {
+        "name": "NVIDIA DGX Multi-GPU Platform",
+        "role": "target multi-GPU hardware platform executing the optimized design",
+        "container": null,
+        "novel": false
+      }
+    ],
+    "flows": [
+      {
+        "from": "Graph Structure",
+        "to": "Graph Loader & Model Initializer",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Node Embedding",
+        "to": "Graph Loader & Model Initializer",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "GNN Model",
+        "to": "Graph Loader & Model Initializer",
+        "what": null,
+        "step": null
+      },
+      {
+        "from": "Kernel & Runtime Manager",
+        "to": "NVIDIA DGX Multi-GPU Platform",
+        "what": "Optimized Design",
+        "step": null
+      },
+      {
+        "from": "NVIDIA DGX Multi-GPU Platform",
+        "to": "Runtime Param. Optimizer (§6)",
+        "what": "Performance Feedbacks",
+        "step": null
+      },
+      {
+        "from": "Runtime Param. Optimizer (§6)",
+        "to": "Kernel & Runtime Manager",
+        "what": "Optimized Param.",
+        "step": null
+      }
+    ],
+    "key_idea": "MGG loads a graph and GNN model, builds a GNN-tailored communication-computation pipeline and maps it onto GPU warps inside its Kernel & Runtime Manager, then iteratively tunes runtime parameters using performance feedback from the deployed multi-GPU platform.",
+    "reading_order": "Left to right: graph/embedding/model inputs feed into MGG's loader and initializer, through the Kernel & Runtime Manager, out to the DGX platform, with a feedback loop back through the Runtime Parameter Optimizer."
+  },
+  "layout": {
+    "template": "pipeline",
+    "direction": "left-right",
+    "nesting_depth": 3,
+    "lanes": false,
+    "legend": "none",
+    "step_markers": "none",
+    "panels": 1,
+    "column": "single",
+    "aspect": 2.52,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#36393d",
+        "used_for": "dark gray fill of the MGG label box"
+      },
+      {
+        "hex": "#cc0000",
+        "used_for": "red text for the 'Optimized Param.' feedback annotation"
+      },
+      {
+        "hex": "#f5f5f5",
+        "used_for": "light gray fill for the outer MGG dashed container"
+      },
+      {
+        "hex": "#ff1a1a",
+        "used_for": "bright red border/fill for the Runtime Param. Optimizer box"
+      },
+      {
+        "hex": "#666666",
+        "used_for": "gray fill/stroke for secondary boxes"
+      },
+      {
+        "hex": "#bac8d3",
+        "used_for": "light blue-gray fill for input data boxes (Graph Structure, Node Embedding, GNN Model)"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "thin black borders, dashed outer container",
+    "font": "Arial/Helvetica sans-serif, bold group titles",
+    "corners": "square",
+    "arrows": "orthogonal, filled arrowheads",
+    "icons": "bitmap image depicting an NVIDIA DGX multi-GPU platform"
+  },
+  "encoding": {
+    "color_means": "red = optimizer/feedback components and labels, blue-gray = input data",
+    "line_style_means": "dashed lines outline the MGG system boundary and the feedback path to the runtime parameter optimizer",
+    "emphasis": "red highlighting on the Runtime Param. Optimizer box draws attention to the feedback-driven tuning loop that closes around the Kernel & Runtime Manager",
+    "reusable_patterns": [
+      "input data feeding a system box with an external hardware platform and a feedback optimization loop"
+    ],
+    "weaknesses": [
+      "dense nested boxes with small subsystem labels (§4/§5/§6) that need the section text to fully interpret"
+    ]
+  },
+  "tags": [
+    "GNN",
+    "multi-GPU",
+    "pipelining",
+    "NVSHMEM",
+    "runtime optimization",
+    "kernel manager"
+  ],
+  "provenance": {
+    "sections": [
+      "Introduction"
+    ],
+    "evidence": [
+      "The core of is its Kernel & Runtime Manager, which constructs GNN-tailored pipelines",
+      "also incorporates a Runtime Parameter Optimizer, which will monitor the performance",
+      "will automatically generate pipeline-centric GPU kernels for multi-GPU platforms"
+    ]
+  },
+  "summary": "MGG accelerates graph neural network (GNN) computation on multi-GPU platforms through fine-grained intra-kernel communication-computation pipelining. This overview figure shows graph structure, node embedding, and GNN model inputs flowing into MGG's Graph Loader & Model Initializer, which works alongside an SHMEM library (e.g. NVSHMEM) to feed the Kernel & Runtime Manager, the system's core. That manager comprises two labeled subsystems: a GNN-tailored Pipeline Construct (with pipeline-aware workload management and hybrid data placement) and a GPU-aware Pipeline Mapping (with warp-based mapping/pipelining and specialized memory design). The optimized design is deployed to an NVIDIA DGX multi-GPU platform, whose performance feedback flows to a Runtime Param. Optimizer that refines runtime parameters and feeds them back into the Kernel & Runtime Manager, closing a tuning loop confirmed by the paper's description of monitoring latency and generating new configurations each iteration. The diagram is a dense, left-to-right flat architecture diagram with a dashed system boundary, nested labeled boxes, and a bitmap icon of the target GPU hardware.",
+  "summary_zh": "图为MGG系统概览：图结构、节点嵌入与GNN模型输入经加载器与SHMEM库进入核心运行时管理器，其中包含GNN定制流水线构建与GPU感知流水线映射两个子模块，优化后的设计部署到NVIDIA DGX多GPU平台，平台性能反馈驱动运行时参数优化器进行闭环调优。",
+  "confidence": "high",
+  "notes": null,
+  "venue": "OSDI23"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "osdi24-046_fig2",
+  "paper_id": "osdi24-046",
+  "fig": "2",
+  "venue": "OSDI24",
+  "year": 2024,
+  "caption": "Fig. 2: The architecture of programmable switches (PS) and the internal structure of match-action units (MAU).",
+  "corpus_template": "other",
+  "direction": "mixed",
+  "column": "single",
+  "tool": "powerpoint",
+  "aspect": 2.28,
+  "n_components": 14,
+  "n_flows": 7,
+  "nesting_depth": 3,
+  "lanes": false,
+  "legend": "none",
+  "step_markers": "none",
+  "panels": 1,
+  "confidence": "high",
+  "source_kind": "pdf",
+  "files": {
+    "source.svg": "SVG extracted from the published PDF (PyMuPDF; text kept as <text>, fonts embedded)",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/osdi24-046/osdi24-046_fig2_p4_vector.svg",
+    "preview.png": null,
+    "print.png": "lab/extracted/osdi24-046/osdi24-046_fig2_p4_vector.png"
+  },
+  "templates": [
+    {
+      "template": "block-floorplan",
+      "star": true,
+      "why_chosen": "Named exemplar in the template reference itself: a control plane sits above a parser and match-action pipeline inside one switch boundary, with a single match-action unit exploded at larger scale beside the pipeline it repeats.",
+      "what_to_learn": "Draw the recurring block once at full size with its internals exploded, ALUs, tables, register arrays, next to the compact pipeline where it appears twice, then add arrowheads and a legend for its two colour shades; this figure's own recorded weakness is undirected lines and an unexplained second shade."
+    }
+  ]
+}

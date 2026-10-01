@@ -1,0 +1,308 @@
+{
+  "paper_id": "asplos26-103",
+  "fig": "tex7",
+  "kind": "mechanism",
+  "system": {
+    "name": "STeP",
+    "one_liner": "a streaming dataflow abstraction with flexible routing operators, an explicit memory hierarchy, and symbolic-shape semantics that lets dynamic tensor workloads run efficiently on spatial dataflow accelerators",
+    "domain": [
+      "ml-systems",
+      "compilers",
+      "hardware-accelerators"
+    ],
+    "abstraction": "compiler"
+  },
+  "content": {
+    "groups": [
+      "anatomy"
+    ],
+    "worked_example": false,
+    "depicts": "one component",
+    "subject": "a STeP graph routing input to experts, tiling and loading one expert's weights, computing, then reassembling outputs",
+    "base": "graph",
+    "elements": [
+      {
+        "name": "Partition",
+        "kind": "box",
+        "role": "splits the input stream into per-expert sub-streams using a selector stream",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Expert 1",
+        "kind": "box",
+        "role": "collapsed placeholder representing another routed expert's identical pipeline, drawn without internal detail",
+        "container": null,
+        "highlighted": false
+      },
+      {
+        "name": "Expert 2",
+        "kind": "box",
+        "role": "container for one routed expert's fully detailed tile-and-compute pipeline",
+        "container": null,
+        "highlighted": true
+      },
+      {
+        "name": "Flatten (0D, 1D)",
+        "kind": "box",
+        "role": "flattens a stream's leading dimensions; drawn once for the routed activations and again for the loaded weight tile",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Reshape (rank=0, chunk=4, pad=Zero(1,64))",
+        "kind": "box",
+        "role": "reshapes and zero-pads the flattened activation stream into 4-element chunks for tiling",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Accum (fn: RetileRow)",
+        "kind": "box",
+        "role": "retiles rows of a stream into tiles; instantiated once for the padded path and once for the reshaped tile path",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "LinearOffChipLoadRef",
+        "kind": "box",
+        "role": "loads this expert's weight tile from off-chip memory, referenced against the accumulated activation rows",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Reshape (r=0, c=1)",
+        "kind": "box",
+        "role": "reshapes the accumulated activation tile ahead of broadcasting it to the weight",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Expand (n=4)",
+        "kind": "box",
+        "role": "broadcasts the loaded weight tile by a factor of 4 to match the activation tiling",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Map (fn: matmul)",
+        "kind": "box",
+        "role": "applies matrix multiply across the expanded activation and weight tiles",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Accum (1D) (fn: RetileCol)",
+        "kind": "box",
+        "role": "retiles the matmul output's columns back into tile layout",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Flatmap (fn: RetileStreamify)",
+        "kind": "box",
+        "role": "flattens the retiled tile back into a plain output stream for this expert",
+        "container": "Expert 2",
+        "highlighted": false
+      },
+      {
+        "name": "Reassemble",
+        "kind": "box",
+        "role": "merges every expert's output stream, including the collapsed Expert 1 path, back into one output stream",
+        "container": null,
+        "highlighted": false
+      }
+    ],
+    "relations": [
+      {
+        "from": "Partition",
+        "to": "Expert 1",
+        "what": "routed sub-stream to the collapsed expert",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Partition",
+        "to": "Flatten (0D, 1D)",
+        "what": "routed sub-stream, annotated shape [D2,1]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Flatten (0D, 1D)",
+        "to": "Reshape (rank=0, chunk=4, pad=Zero(1,64))",
+        "what": "flattened stream, shape [D2,]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Reshape (rank=0, chunk=4, pad=Zero(1,64))",
+        "to": "Accum (fn: RetileRow)",
+        "what": "reshaped/padded tile stream feeds both parallel Accum instances",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Accum (fn: RetileRow)",
+        "to": "LinearOffChipLoadRef",
+        "what": "accumulated row tile, shape [[D2/4]]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Accum (fn: RetileRow)",
+        "to": "Reshape (r=0, c=1)",
+        "what": "accumulated row tile, shape [[D2/4]]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "LinearOffChipLoadRef",
+        "to": "Flatten (0D, 1D)",
+        "what": "loaded weight tile, shape [[D2/4],1,4]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Reshape (r=0, c=1)",
+        "to": "Expand (n=4)",
+        "what": "reshaped activation tile",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Flatten (0D, 1D)",
+        "to": "Map (fn: matmul)",
+        "what": "flattened weight tile, shape [[D2/4],4]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Expand (n=4)",
+        "to": "Map (fn: matmul)",
+        "what": "expanded activation tile, shape [[D2/4],4]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Map (fn: matmul)",
+        "to": "Accum (1D) (fn: RetileCol)",
+        "what": "matmul result, shape [[D2/4],4]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Accum (1D) (fn: RetileCol)",
+        "to": "Flatmap (fn: RetileStreamify)",
+        "what": "column-retiled tile, shape [[D2/4]]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Flatmap (fn: RetileStreamify)",
+        "to": "Reassemble",
+        "what": "this expert's output stream, shape [D2]",
+        "kind": "data",
+        "step": null
+      },
+      {
+        "from": "Expert 1",
+        "to": "Reassemble",
+        "what": "the collapsed expert's output stream, shape [D1]",
+        "kind": "data",
+        "step": null
+      }
+    ],
+    "panels": [],
+    "steps": [],
+    "logic": null,
+    "values": null,
+    "key_idea": "A STeP program graph shows one expert's full tile pipeline (flatten, reshape, accumulate, load its off-chip weight, matmul, retile) fully drawn while a sibling expert is left collapsed, and both outputs merge back together at Reassemble.",
+    "reading_order": "Top to bottom following the arrows: Partition splits by expert; follow Expert 2's detailed column downward through tiling, weight load, matmul and retiling to Reassemble at the bottom."
+  },
+  "layout": {
+    "arrangement": "single",
+    "panel_count": 1,
+    "frame_template": null,
+    "delta_marking": "none",
+    "direction": "top-down",
+    "nesting_depth": 1,
+    "lanes": true,
+    "legend": "none",
+    "step_markers": "none",
+    "zoom_callout": false,
+    "panels": 1,
+    "column": "",
+    "aspect": 0.66,
+    "text_density": "dense"
+  },
+  "style": {
+    "palette": [
+      {
+        "hex": "#e6d0de",
+        "used_for": "fill of the Partition and Reassemble boxes (routing stages)"
+      },
+      {
+        "hex": "#fdd0a2",
+        "used_for": "fill of the Flatten, Reshape and Expand boxes (shape/layout operators)"
+      },
+      {
+        "hex": "#d5e8d4",
+        "used_for": "fill of the Accum, Map and Flatmap boxes (compute/accumulate operators)"
+      },
+      {
+        "hex": "#e9e9e9",
+        "used_for": "background fill of the Expert 1 / Expert 2 grouping containers"
+      },
+      {
+        "hex": "#606060",
+        "used_for": "colour of the phase-name labels (Route, Pack to Tile, ...) and the Expert 1/2 headings"
+      }
+    ],
+    "background": "white",
+    "fill": "flat",
+    "stroke": "each box family outlined in a darker shade of its own fill (purple/orange/green borders); black data-flow arrows; a purple arrow for the selector-stream input and Expert 1's output",
+    "font": "sans-serif (Arial), bold for operator names, regular for parameters, small dark-red text for shape annotations",
+    "corners": "rounded",
+    "arrows": "solid black arrows for data-flow edges; a purple arrow routed around the left margin for the selector-stream input and for Expert 1's collapsed output reaching Reassemble",
+    "icons": "none; curly braces along the right margin group rows of boxes under a phase name"
+  },
+  "encoding": {
+    "color_means": "pink/lavender = routing operators (Partition, Reassemble); orange = shape/layout operators (Flatten, Reshape, Expand); green = compute/accumulate operators (Accum, Map, Flatmap); blue = the off-chip weight-load operator; grey background = one expert's grouping box",
+    "line_style_means": "solid black arrows carry tensors between operators, each annotated in dark red with the shape it carries; a purple arrow marks the selector-stream input and Expert 1's direct path to Reassemble",
+    "state_means": "not applicable: this is a single static graph, not multiple frames or alternatives",
+    "marker_means": "no numeric or symbolic step markers are used; curly braces on the right just name which pipeline phase a row of boxes belongs to",
+    "emphasis": "Expert 2 is drawn in full operator-by-operator detail while Expert 1 is left an empty grey box, so attention goes to the one detailed pipeline that stands in for every expert",
+    "reusable_patterns": [
+      "a collapsed placeholder sibling beside one fully detailed instance of a repeated subgraph",
+      "colour-coding operator boxes by category (route/shape/compute/memory) with a phase legend named in curly braces along the margin",
+      "annotating every edge with the tensor shape it carries, in a colour distinct from the operator labels"
+    ],
+    "weaknesses": [
+      "no caption or in-text discussion is available alongside this extracted panel, so operator semantics (e.g. exactly what 'RetileRow' or 'RetileStreamify' do) rest on the box names alone",
+      "Expert 1 being left empty could be misread as a missing part of the figure rather than an intentional collapse of a repeated structure"
+    ]
+  },
+  "tags": [
+    "streaming-dataflow",
+    "spatial-dataflow-accelerator",
+    "expert-routing",
+    "tensor-graph",
+    "dynamic-tiling",
+    "dataflow-graph",
+    "step-abstraction"
+  ],
+  "provenance": {
+    "sections": [],
+    "evidence": [
+      "STeP introduces flexible routing operators, an explicit memory hierarchy, and symbolic-shape semantics",
+      "dynamic tiling, dynamic parallelization, and configuration time-multiplexing, that adapt SDA execution to dynamic behaviors",
+      "many widely used models contain data-dependent tensor shapes and control flow"
+    ]
+  },
+  "summary": "This figure shows one STeP program's dataflow graph, opened up in full operator-by-operator detail. At the top, Partition routes an incoming stream to per-expert sub-streams using a selector stream; Expert 1 is left an empty grey placeholder while Expert 2 shows the complete pipeline. Inside Expert 2, activations are flattened, reshaped and zero-padded into 4-element chunks, then two parallel Accum (RetileRow) steps retile the rows; one path feeds LinearOffChipLoadRef, loading that expert's weight tile, while the other reshapes and expands the activations for broadcast. A Map (matmul) combines them, followed by Accum (RetileCol) and Flatmap (RetileStreamify) to retile the result into a plain stream. Every edge is annotated with the tensor shape it carries, and curly braces on the right name each phase: Route, Pack to Tile, Broadcast & Load weight, Compute, Pack Tile, Unpack Tile, and Merge. Both experts' outputs converge at Reassemble.",
+  "summary_zh": "该图展示STeP的数据流图：Partition按专家路由输入，Expert1留空，Expert2展开为展平、分块、Accum重排、加载权重、matmul、再重排为输出流；每条边标注张量形状，两专家输出汇入Reassemble。",
+  "confidence": "medium",
+  "notes": "No caption or paragraph mentions were available for this figure, per the context file; system framing and terminology (e.g. 'expert') are drawn only from the abstract and the labels actually printed in the figure. Corrected primary group from prior 'walkthrough' to 'anatomy': close inspection of the image shows no circled/lettered markers anywhere, and the purple side arrow is Partition's own selector-stream input (routed around the left margin) plus Expert 1's collapsed output feeding Reassemble at the bottom -- not a loop back to the top as the prior grammar note described, so there is no loop and no numbered path to justify 'walkthrough'. Confidence set to medium: the graph's structure and every label are directly visible, but the higher-level workload it implements is not confirmed by any prose in the context file.",
+  "venue": "ASPLOS26"
+}

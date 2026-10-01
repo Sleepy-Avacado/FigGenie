@@ -1,0 +1,56 @@
+{
+  "id": "asplos25-046_fig16",
+  "kind": "mechanism",
+  "paper_id": "asplos25-046",
+  "fig": "16",
+  "venue": "ASPLOS25",
+  "year": 2025,
+  "caption": "Figure 16. Memory allocation and mapping between time windows and PA/VA-backing. Two 32GB VM with 3 time windows map to 44GB (28GB PA and 16GB VA-backed). Num- bers in parentheses refer to the formula that computes them.",
+  "groups_in_record": [
+    "walkthrough"
+  ],
+  "worked_example": true,
+  "base": "timeline",
+  "subject": "how per-window predicted memory demand for two CoachVMs is turned into a shared server's guaranteed (PA) and oversubscribed (VA) memory backing",
+  "arrangement": "panels-row",
+  "panel_count": 2,
+  "frame_template": "free",
+  "delta_marking": "colour",
+  "direction": "left-right",
+  "column": "single",
+  "aspect": 1.72,
+  "n_elements": 12,
+  "n_relations": 8,
+  "n_panels": 0,
+  "n_steps": 4,
+  "n_values": 3,
+  "nesting_depth": 1,
+  "lanes": true,
+  "legend": "inside",
+  "step_markers": "plain-numbers",
+  "zoom_callout": false,
+  "tool": "drawio",
+  "confidence": "medium",
+  "source_kind": "author",
+  "files": {
+    "source.svg": "author source SVG (from the paper's arXiv/source bundle)",
+    "preview.png": "PNG render of the author SVG",
+    "print.png": "the figure as extracted from the published PDF, at print size",
+    "semantics.json": "full semantic record for this figure",
+    "manifest.json": "this file"
+  },
+  "original_paths": {
+    "source.svg": "lab/extracted/asplos25-046/src/fig16_design_va_pa_multiplex_min_hatches.svg",
+    "preview.png": "lab/extracted/asplos25-046/src/fig16_design_va_pa_multiplex_min_hatches.png",
+    "print.png": "lab/extracted/asplos25-046/asplos25-046_fig16_p9_vector.png"
+  },
+  "groups": [
+    {
+      "group": "walkthrough",
+      "star": true,
+      "why_chosen": "Turns a provisioning formula into a picture: PA-demand stacks (sums) while VA-demand overlaps (multiplexes/maxes), with small numbered sub-segments literally carried from the per-window source bars into the combined bar.",
+      "what_to_learn": "Encode 'sum' as stacked blocks and 'take-the-max' as overlaid/multiplexed blocks in the same bar, so the arithmetic operator is legible from the drawing; carry each numbered sub-segment from the source bars into the same spot in the combined bar.",
+      "note_source": "agent"
+    }
+  ]
+}
